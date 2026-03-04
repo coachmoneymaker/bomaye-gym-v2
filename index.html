@@ -70,7 +70,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM Startseite">
-      <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="logo-img" />
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -177,6 +177,31 @@
     </div>
   </section>
 
+  <!-- ── TRUST STRIP ── -->
+  <div class="trust-strip" aria-label="Trust-Signale">
+    <div class="trust-strip-inner">
+      <div class="trust-strip-item">
+        <i class="fa-solid fa-gift"></i>
+        <span>KOSTENLOSES PROBETRAINING</span>
+      </div>
+      <div class="trust-strip-divider" aria-hidden="true"></div>
+      <div class="trust-strip-item">
+        <i class="fa-solid fa-euro-sign"></i>
+        <span>100€ AUFNAHMEGEBÜHR EINMALIG</span>
+      </div>
+      <div class="trust-strip-divider" aria-hidden="true"></div>
+      <div class="trust-strip-item">
+        <i class="fa-solid fa-calendar-week"></i>
+        <span>WOCHENPREISE (52 WOCHEN/JAHR)</span>
+      </div>
+      <div class="trust-strip-divider" aria-hidden="true"></div>
+      <div class="trust-strip-item">
+        <i class="fa-solid fa-train-subway"></i>
+        <span>S-BAHN HIRSCHGARTEN</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ── INTRO ── -->
   <section id="intro">
     <div class="container">
@@ -191,8 +216,8 @@
           </button>
         </div>
         <div class="intro-brand reveal delay-2">
-          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="intro-brand-logo"
-               onerror="this.style.display='none'; document.getElementById('intro-wordmark').style.display='block';" />
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="intro-brand-logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
           <div class="intro-brand-wordmark" id="intro-wordmark" style="display:none;">BOMAYE</div>
           <div class="intro-brand-sub">GYM MUNICH</div>
           <div class="intro-brand-divider"></div>
@@ -236,8 +261,8 @@
           </div>
         </div>
         <div class="dna-visual reveal delay-3">
-          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym" class="dna-visual-logo"
-               onerror="this.style.display='none'; document.getElementById('dna-wordmark').style.display='block';" />
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="dna-visual-logo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
           <div class="dna-visual-wordmark" id="dna-wordmark" style="display:none;">BOMAYE</div>
           <div class="dna-visual-sub">GYM MUNICH</div>
           <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.35);"></div>
@@ -464,9 +489,94 @@
 
       <div class="pricing-footer reveal">
         <p>Alle Preise sind Wochenpreise (52 Wochen/Jahr). Preise zzgl. 100€ einmaliger Aufnahmegebühr.</p>
-        <a href="Preisliste Bomaye Gym.pdf" target="_blank" rel="noopener" class="pdf-link">
-          <i class="fa-solid fa-file-pdf"></i> VOLLSTÄNDIGE PREISLISTE ALS PDF
-        </a>
+      </div>
+
+      <!-- Weitere Preise expandable -->
+      <div class="mehr-preise-wrap reveal">
+        <button
+          id="mehr-preise-btn"
+          class="mehr-preise-btn"
+          type="button"
+          onclick="toggleMehrPreise()"
+          aria-expanded="false"
+          aria-controls="mehr-preise-panel"
+        >
+          <span>Weitere Preise anzeigen</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div id="mehr-preise-panel" class="mehr-preise-panel" role="region" aria-label="Weitere Preise">
+          <div class="mehr-preise-table-wrap">
+            <table class="mehr-preise-table" aria-label="Preisübersicht">
+              <thead>
+                <tr>
+                  <th scope="col">MITGLIEDSCHAFT</th>
+                  <th scope="col">PREIS</th>
+                  <th scope="col">LAUFZEIT</th>
+                  <th scope="col">INKLUSIVE</th>
+                  <th scope="col">AKTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Early Bird</strong></td>
+                  <td><span class="price-em">ab 11,90€</span> / Woche</td>
+                  <td>12 Monate</td>
+                  <td>Alle Kurse · Lifetime Preissperre</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking('Early Bird')">Sichern</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Youth U18</strong></td>
+                  <td><span class="price-em">ab 12,90€</span> / Woche</td>
+                  <td>12 Monate</td>
+                  <td>Youth Boxing · Mentoring</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking('Youth Boxing')">Anmelden</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Regular</strong></td>
+                  <td><span class="price-em">15,90€</span> / Woche</td>
+                  <td>12 Monate</td>
+                  <td>1 Kurs nach Wahl</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+                </tr>
+                <tr>
+                  <td><strong>3-Month</strong></td>
+                  <td><span class="price-em">18,90€</span> / Woche</td>
+                  <td>3 Monate</td>
+                  <td>1 Kurs nach Wahl</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Flex</strong></td>
+                  <td><span class="price-em">20,90€</span> / Woche</td>
+                  <td>Monatlich kündbar</td>
+                  <td>1 Kurs nach Wahl</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Day Pass</strong></td>
+                  <td><span class="price-em">15€</span> / Tag</td>
+                  <td>Einmalig</td>
+                  <td>Alle Kurse des Tages</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Personal Training</strong></td>
+                  <td><span class="price-em">ab 90€</span> / Session</td>
+                  <td>Flexibel</td>
+                  <td>1:1 mit Coach · Individuell</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Corporate Event</strong></td>
+                  <td><span class="price-em">Auf Anfrage</span></td>
+                  <td>Flexibel</td>
+                  <td>Team ab 5 Personen · Catering optional</td>
+                  <td><a href="#" onclick="event.preventDefault(); openBooking('Corporate Boxing')">Anfragen</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -595,9 +705,8 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="logo-img"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-          <span class="logo-text" style="display:none;">BOMAYE</span>
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" />
+          <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">

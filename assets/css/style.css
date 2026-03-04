@@ -135,15 +135,19 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* Logo */
 .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; flex-shrink: 0; }
 .logo-img {
-  height: 38px; width: auto;
-  display: none; /* shown only when image loads */
+  width: 140px; height: auto;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
-.logo-img.loaded { display: block; }
+.logo-img.hidden { display: none; }
 .logo-text {
   font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.12em; color: var(--gold);
   line-height: 1;
+  display: none; /* shown only as fallback when image fails */
 }
-.logo-text-sub { display: none; } /* hidden — logo-text handles it */
+.logo-text.visible { display: block; }
+.logo-text-sub { display: none; }
 
 .nav-links { display: flex; align-items: center; gap: 0.15rem; }
 .nav-link {
@@ -151,7 +155,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   color: rgba(255,255,255,0.65); padding: 0.5rem 0.8rem; border-radius: 4px;
   transition: color 0.2s; white-space: nowrap;
 }
-.nav-link:hover { color: var(--gold); }
+.nav-link:hover, .nav-link.active { color: var(--gold); }
 .burger { display: none; color: var(--white); font-size: 1.25rem; padding: 0.5rem; line-height: 1; }
 .back-btn {
   display: none; align-items: center; gap: 0.5rem;
@@ -253,6 +257,24 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 @keyframes scrollPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 @keyframes fadeUpHero  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Trust Strip ───────────────────────────────────────────── */
+.trust-strip {
+  background: rgba(197,160,89,0.06); border-top: 1px solid rgba(197,160,89,0.12);
+  border-bottom: 1px solid rgba(197,160,89,0.12); padding: 0.85rem 1.5rem;
+}
+.trust-strip-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  gap: 2rem; flex-wrap: wrap;
+}
+.trust-strip-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2px;
+  color: rgba(255,255,255,0.5); white-space: nowrap;
+}
+.trust-strip-item i { color: var(--gold); font-size: 0.75rem; }
+.trust-strip-divider { width: 1px; height: 16px; background: rgba(197,160,89,0.2); }
 
 /* ══════════════════════════════════════════════════════════════
    DNA INTRO SECTION
@@ -526,13 +548,49 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   text-align: center; margin-top: 2rem; padding-top: 2rem;
   border-top: 1px solid rgba(255,255,255,0.06);
 }
-.pricing-footer p { font-size: 0.82rem; color: rgba(255,255,255,0.3); }
-.pdf-link {
-  display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;
-  font-family: var(--font-head); font-size: 0.66rem; letter-spacing: 2px; color: var(--muted);
-  transition: color 0.2s;
+.pricing-footer p { font-size: 0.82rem; color: rgba(255,255,255,0.35); }
+
+/* ── Weitere Preise (expandable) ───────────────────────────── */
+.mehr-preise-wrap { margin-top: 2rem; }
+.mehr-preise-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin: 0 auto;
+  font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; color: var(--muted);
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px; padding: 0.65rem 1.5rem; transition: all 0.3s; cursor: pointer;
 }
-.pdf-link:hover { color: var(--gold); }
+.mehr-preise-btn:hover { border-color: var(--gold); color: var(--gold); }
+.mehr-preise-btn i { transition: transform 0.3s; }
+.mehr-preise-btn[aria-expanded="true"] i { transform: rotate(180deg); }
+.mehr-preise-panel {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s var(--ease-expo);
+}
+.mehr-preise-panel.open { max-height: 800px; }
+.mehr-preise-table-wrap {
+  margin-top: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; overflow-x: auto;
+}
+.mehr-preise-table {
+  width: 100%; border-collapse: collapse; font-size: 0.83rem;
+  min-width: 540px;
+}
+.mehr-preise-table thead tr {
+  background: rgba(197,160,89,0.1); border-bottom: 1px solid var(--border);
+}
+.mehr-preise-table th {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2px;
+  color: var(--gold); padding: 0.8rem 1rem; text-align: left; white-space: nowrap;
+}
+.mehr-preise-table td {
+  padding: 0.75rem 1rem; color: rgba(255,255,255,0.65);
+  border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle;
+}
+.mehr-preise-table tbody tr:last-child td { border-bottom: none; }
+.mehr-preise-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+.mehr-preise-table td strong { color: var(--white); font-weight: 600; }
+.mehr-preise-table td .price-em { color: var(--gold); font-family: var(--font-head); font-weight: 600; }
+.mehr-preise-table td a { color: var(--gold); text-decoration: none; font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 1.5px; }
+.mehr-preise-table td a:hover { text-decoration: underline; }
 
 /* ══════════════════════════════════════════════════════════════
    BOOKING SECTION
@@ -808,6 +866,19 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
   #quote { background-attachment: scroll; }
   #community { background-attachment: scroll; }
+}
+
+/* ── Mobile logo sizing ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .logo-img { width: 110px; }
+  .trust-strip-divider { display: none; }
+  .trust-strip-inner  { gap: 1rem; }
+  .trust-strip-item   { font-size: 0.58rem; }
+}
+
+@media (max-width: 480px) {
+  .trust-strip-inner { flex-direction: column; gap: 0.6rem; }
+  .trust-strip-item  { justify-content: center; }
 }
 
 /* ── 375px fine-tuning ──────────────────────────────────────── */

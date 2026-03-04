@@ -24,29 +24,58 @@ function initPreloader() {
   });
 }
 
-/* ── Header scroll ─────────────────────────────────────────── */
+/* ── Header scroll + active nav ────────────────────────────── */
 function initHeader() {
   const header = document.getElementById('header');
   if (!header) return;
-  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+
+  // Scrolled background
+  const onScroll = () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+    updateActiveNav();
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+}
+
+function updateActiveNav() {
+  const sections = ['dna', 'services', 'team', 'pricing', 'faq'];
+  const navLinks = document.querySelectorAll('.nav-links .nav-link');
+  const navMap = { dna: 0, services: 1, team: 2, pricing: 3, faq: 4 };
+
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 120 && rect.bottom > 120) current = id;
+    }
+  });
+
+  navLinks.forEach((link, i) => {
+    const idx = navMap[current];
+    link.classList.toggle('active', i === idx);
+  });
 }
 
 /* ── Logo image with fallback ──────────────────────────────── */
 function initLogoImage() {
   document.querySelectorAll('.logo-img').forEach(img => {
-    img.addEventListener('load',  () => {
-      img.classList.add('loaded');
+    function onLoaded() {
+      img.classList.remove('hidden');
       const sib = img.nextElementSibling;
-      if (sib && sib.classList.contains('logo-text')) sib.style.display = 'none';
-    });
-    img.addEventListener('error', () => { img.style.display = 'none'; });
-    // Trigger load check if already cached
-    if (img.complete && img.naturalWidth) {
-      img.classList.add('loaded');
+      if (sib && sib.classList.contains('logo-text')) sib.classList.remove('visible');
+    }
+    function onFailed() {
+      img.classList.add('hidden');
       const sib = img.nextElementSibling;
-      if (sib && sib.classList.contains('logo-text')) sib.style.display = 'none';
+      if (sib && sib.classList.contains('logo-text')) sib.classList.add('visible');
+    }
+    img.addEventListener('load',  onLoaded);
+    img.addEventListener('error', onFailed);
+    if (img.complete) {
+      if (img.naturalWidth > 0) onLoaded();
+      else onFailed();
     }
   });
 }
@@ -258,6 +287,16 @@ function waitForBsport(attempt) {
 // Close on backdrop / Escape
 document.addEventListener('click', e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ── Weitere Preise toggle ─────────────────────────────────── */
+function toggleMehrPreise() {
+  const btn   = document.getElementById('mehr-preise-btn');
+  const panel = document.getElementById('mehr-preise-panel');
+  if (!btn || !panel) return;
+  const open = panel.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(open));
+  btn.querySelector('span').textContent = open ? 'Weniger anzeigen' : 'Weitere Preise anzeigen';
+}
 
 /* ── Scroll reveal ─────────────────────────────────────────── */
 function runReveal() {
