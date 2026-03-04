@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>BOMAYE GYM MUNICH | Boxen ab 11,90€/Woche | Pineapple Park</title>
   <meta name="description" content="Boxen in München ab 11,90€/Woche. Kids, Jugend &amp; Erwachsene. Kostenloses Probetraining. BOMAYE GYM im Pineapple Park — It's not a gym, it's our passion." />
-  <meta name="keywords" content="Boxen München, Boxgym München, Fitness Boxing, Personal Training, Kickboxen, Kampfsport, Pineapple Park, Bomaye Gym" />
-  <meta name="author" content="Bomaye Gym Munich" />
-  <meta name="theme-color" content="#080808" />
   <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="BOMAYE GYM MUNICH — It's not a gym, it's our passion." />
@@ -17,12 +15,6 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/" />
   <meta property="og:locale" content="de_DE" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Bomaye Gym Munich — Boxen im Pineapple Park | Opening April 2026" />
-  <meta name="twitter:description" content="Boxen in München ab 11,90€/Woche. Jetzt Early-Bird Mitglied werden." />
-  <meta name="twitter:image" content="https://www.bomayegym.com/assets/images/community.webp" />
 
   <link rel="canonical" href="https://www.bomayegym.com/" />
 
@@ -44,7 +36,7 @@
     "description": "It's not a gym, it's our passion. High End Boxing in München.",
     "url": "https://www.bomayegym.com",
     "email": "info@bomayegym.com",
-    "telephone": "+4917629322443",
+    "telephone": "+4917621932243",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
@@ -52,12 +44,12 @@
       "postalCode": "80639",
       "addressCountry": "DE"
     },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.143, "longitude": 11.545 },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1408, "longitude": 11.5358 },
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "22:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "09:00", "closes": "16:00" }
     ],
-    "priceRange": "€"
+    "priceRange": "€€"
   }
   </script>
 </head>
@@ -71,17 +63,18 @@
 <div id="preloader" aria-hidden="true">
   <div class="loader-logo">BOMAYE</div>
   <div class="loader-line" id="loader-line"></div>
-  <div class="loader-sub">MUNICH · PINEAPPLE PARK · 2026</div>
+  <div class="loader-sub">MUNICH · PINEAPPLE PARK</div>
 </div>
 
 <!-- ═══════ HEADER ═══════ -->
 <header id="header" role="banner">
   <div class="nav-inner">
-    <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM — Startseite">
+    <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM Startseite">
+      <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="logo-img" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
-    <button class="back-btn" type="button" onclick="nav('home')" aria-label="Zurück" style="display:none;">
+    <button class="back-btn" type="button" onclick="nav('home')" aria-label="Zurück">
       <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
     </button>
 
@@ -91,18 +84,18 @@
       <button class="nav-link" onclick="nav('home','team')" type="button">TEAM</button>
       <button class="nav-link" onclick="nav('home','pricing')" type="button">PREISE</button>
       <button class="nav-link" onclick="nav('home','faq')" type="button">FAQ</button>
-      <button class="btn btn--gold btn--sm" onclick="openBooking('Nav')" type="button">MITGLIED WERDEN</button>
+      <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
 
-    <button class="burger" onclick="toggleMenu()" aria-label="Menü öffnen" aria-expanded="false" id="burger-btn" type="button">
+    <button class="burger" onclick="toggleMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
       <i class="fa-solid fa-bars"></i>
     </button>
   </div>
 </header>
 
 <!-- ═══════ MOBILE NAV ═══════ -->
-<div id="mobile-nav" role="navigation" aria-label="Mobile Navigation" aria-hidden="true">
-  <button class="mob-close" onclick="toggleMenu()" aria-label="Menü schließen" type="button">
+<div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
+  <button class="mob-close" onclick="toggleMenu()" type="button" aria-label="Menü schließen">
     <i class="fa-solid fa-xmark"></i>
   </button>
   <button class="nav-link" onclick="mobileNav('home')" type="button">HOME</button>
@@ -110,11 +103,13 @@
   <button class="nav-link" onclick="mobileNav('home','team')" type="button">TEAM</button>
   <button class="nav-link" onclick="mobileNav('home','pricing')" type="button">PREISE</button>
   <button class="nav-link" onclick="mobileNav('home','faq')" type="button">FAQ</button>
-  <button class="btn btn--gold" onclick="toggleMenu(); openBooking('Mobile')" type="button" style="margin-top:1rem;">PROBETRAINING</button>
+  <button class="btn btn--gold" onclick="toggleMenu(); openBooking()" type="button" style="margin-top:1.25rem; padding:0.9rem 2.5rem;">
+    PROBETRAINING
+  </button>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
-<a href="https://wa.me/4917629322443?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20Probetraining."
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20Probetraining."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="fa-brands fa-whatsapp"></i>
 </a>
@@ -137,14 +132,14 @@
 ══════════════════════════════════════════════════════════ -->
 <div id="view-home" class="view active">
 
-  <!-- HERO -->
+  <!-- ── HERO ── -->
   <section id="hero" aria-label="Hero">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
       <div class="hero-eyebrow">
         <i class="fa-solid fa-circle-dot"></i>
-        <span>THE SPIRIT OF 1974 &nbsp;·&nbsp; MUNICH 2026</span>
+        <span>THE SPIRIT OF 1974 &nbsp;·&nbsp; MUNICH</span>
         <i class="fa-solid fa-circle-dot"></i>
       </div>
       <h1 class="hero-h1">
@@ -152,7 +147,7 @@
         <span class="shimmer">IT'S PASSION.</span>
       </h1>
       <div class="hero-ctas">
-        <button class="btn btn--gold" onclick="openBooking('Hero')" type="button">
+        <button class="btn btn--gold" onclick="openBooking()" type="button">
           <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
         </button>
         <button class="btn btn--outline-light" onclick="nav('home','pricing')" type="button">
@@ -166,8 +161,8 @@
         </div>
         <div class="trust-divider" aria-hidden="true"></div>
         <div class="hero-trust-item">
-          <i class="fa-solid fa-calendar"></i>
-          <span>OPENING APRIL 2026</span>
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>OPENING SOON</span>
         </div>
         <div class="trust-divider" aria-hidden="true"></div>
         <div class="hero-trust-item">
@@ -182,30 +177,32 @@
     </div>
   </section>
 
-  <!-- VIDEO / INTRO -->
-  <section id="video-section">
+  <!-- ── INTRO ── -->
+  <section id="intro">
     <div class="container">
-      <div class="video-inner">
-        <div class="video-text reveal">
+      <div class="intro-inner">
+        <div class="intro-text reveal">
           <span class="tag tag--dark">THE EXPERIENCE</span>
           <h2 style="margin-top:1.2rem;">BOXEN IN MUNICH.<br><span class="gold">AUF HÖCHSTEM NIVEAU.</span></h2>
           <p>Bomaye Gym Munich im Pineapple Park vereint professionelles Boxtraining mit echter Community. Von Kids ab 6 Jahren bis zum Wettkämpfer — in einem der modernsten Boxgyms in München.</p>
-          <button class="btn btn--gold" onclick="openBooking('Intro')" type="button">JETZT MITGLIED WERDEN</button>
+          <p>Professionelles Coaching, top Ausrüstung, und eine Gemeinschaft, die dich jeden Tag pusht.</p>
+          <button class="btn btn--gold" onclick="openBooking()" type="button">
+            <i class="fa-solid fa-calendar-plus"></i> KOSTENLOSES PROBETRAINING
+          </button>
         </div>
-        <div class="video-frame reveal delay-2">
-          <div class="video-placeholder">
-            <img src="assets/images/community.webp" alt="Bomaye Gym Training" class="video-placeholder-img" loading="lazy" />
-            <button class="play-btn" type="button" aria-label="Video abspielen">
-              <i class="fa-solid fa-play"></i>
-            </button>
-            <span class="video-placeholder-label">GYM TOUR ANSEHEN</span>
-          </div>
+        <div class="intro-brand reveal delay-2">
+          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="intro-brand-logo"
+               onerror="this.style.display='none'; document.getElementById('intro-wordmark').style.display='block';" />
+          <div class="intro-brand-wordmark" id="intro-wordmark" style="display:none;">BOMAYE</div>
+          <div class="intro-brand-sub">GYM MUNICH</div>
+          <div class="intro-brand-divider"></div>
+          <div class="intro-brand-tagline">IT'S NOT A GYM, IT'S OUR PASSION</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- QUOTE -->
+  <!-- ── QUOTE ── -->
   <div id="quote" role="blockquote">
     <div class="container reveal">
       <p class="quote-text">"DON'T COUNT THE DAYS,<br><span class="gold">MAKE THE DAYS COUNT."</span></p>
@@ -213,19 +210,19 @@
     </div>
   </div>
 
-  <!-- DNA -->
+  <!-- ── DNA ── -->
   <section id="dna" class="sec--smoke">
     <div class="container">
       <div class="dna-inner">
         <div class="dna-text reveal">
           <span class="tag tag--light">PHILOSOPHY</span>
-          <h2>"ALI, BOMA YE!"</h2>
+          <h2 style="margin-top:1.2rem;">"ALI, BOMA YE!"</h2>
           <p>Kinshasa, 1974. Der "Rumble in the Jungle". Als 60.000 Menschen "Bomaye" riefen, war es kein Aufruf zur Gewalt — es war der ultimative Ausdruck von Unterstützung und Gemeinschaft.</p>
-          <p><strong>BOMAYE GYM MUNICH</strong> ist kein Ort für Einzelkämpfer. "Bomaye" bedeutet: Wir stehen in deiner Ecke. Wenn du zweifelst, geben wir dir Kraft. Wenn du fällst, helfen wir dir auf.</p>
+          <p><strong style="color:var(--white);">BOMAYE GYM MUNICH</strong> ist kein Ort für Einzelkämpfer. "Bomaye" bedeutet: Wir stehen in deiner Ecke. Wenn du zweifelst, geben wir dir Kraft. Wenn du fällst, helfen wir dir auf.</p>
           <p>Professionelles Boxen, das für alle zugänglich ist — von der Führungskraft zum Teenager, von der Anfängerin zur Wettkämpferin. <em>It's not a gym, it's our passion.</em></p>
           <div class="dna-stats">
             <div>
-              <div class="stat-num">250</div>
+              <div class="stat-num">150</div>
               <div class="stat-lbl">Early-Bird Plätze</div>
             </div>
             <div>
@@ -238,20 +235,19 @@
             </div>
           </div>
         </div>
-        <div class="dna-image reveal delay-3">
-          <div style="background: linear-gradient(135deg, #1a1408 0%, #0a0a0a 100%); border: 1px solid rgba(197,160,89,0.2); border-radius: 12px; padding: 4rem 3rem; text-align:center;">
-            <div style="font-family:var(--font-display); font-size:5rem; color:var(--gold); line-height:1; margin-bottom:1rem;">BOMAYE</div>
-            <div style="font-family:var(--font-head); font-size:0.65rem; letter-spacing:4px; color:rgba(255,255,255,0.4);">GYM MUNICH</div>
-            <div style="margin-top:2rem; width:60px; height:1px; background:var(--gold); margin-left:auto; margin-right:auto; opacity:0.4;"></div>
-            <div style="margin-top:2rem; font-family:var(--font-head); font-size:0.6rem; letter-spacing:3px; color:rgba(197,160,89,0.6);">EST. 2026 · PINEAPPLE PARK</div>
-          </div>
-          <div class="dna-image-tag">MUNICH 2026</div>
+        <div class="dna-visual reveal delay-3">
+          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym" class="dna-visual-logo"
+               onerror="this.style.display='none'; document.getElementById('dna-wordmark').style.display='block';" />
+          <div class="dna-visual-wordmark" id="dna-wordmark" style="display:none;">BOMAYE</div>
+          <div class="dna-visual-sub">GYM MUNICH</div>
+          <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.35);"></div>
+          <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.45);">EST. 2026 · PINEAPPLE PARK</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COMMUNITY PARALLAX -->
+  <!-- ── COMMUNITY ── -->
   <div id="community" role="presentation">
     <div class="container">
       <h2 class="shimmer reveal">COMMUNITY FIRST.</h2>
@@ -259,48 +255,48 @@
     </div>
   </div>
 
-  <!-- SERVICES -->
+  <!-- ── SERVICES ── -->
   <section id="services" class="sec--dark">
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--dark">TRAINING</span>
-        <h2>CHOOSE YOUR <span class="gold">FIGHT.</span></h2>
+        <h2 style="margin-top:1rem;">CHOOSE YOUR <span class="gold">FIGHT.</span></h2>
       </div>
       <div class="services-grid">
         <div class="service-card reveal delay-1" onclick="nav('detail-exec')" role="button" tabindex="0" aria-label="Executive Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-exec.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">07:00 AM</span>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">07:00 AM</span>
             <h3>EXECUTIVE</h3>
             <p>Boxen für Führungskräfte. Performance before office.</p>
           </div>
         </div>
-        <div class="service-card reveal delay-2" onclick="nav('detail-women')" role="button" tabindex="0" aria-label="Women Only">
+        <div class="service-card reveal delay-2" onclick="nav('detail-women')" role="button" tabindex="0" aria-label="Women's Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-women.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">EMPOWERMENT</span>
-            <h3>WOMEN ONLY</h3>
-            <p>Dein Safe Space. Deine Stärke. No boys allowed.</p>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">EMPOWERMENT</span>
+            <h3>WOMEN'S BOXING</h3>
+            <p>Dein Safe Space. Deine Stärke.</p>
           </div>
         </div>
-        <div class="service-card reveal delay-3" onclick="nav('detail-corporate')" role="button" tabindex="0" aria-label="Corporate">
+        <div class="service-card reveal delay-3" onclick="nav('detail-corporate')" role="button" tabindex="0" aria-label="Corporate Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-corp.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">TEAMBUILDING</span>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">TEAMBUILDING</span>
             <h3>CORPORATE</h3>
             <p>Teams, die zusammen schwitzen, wachsen zusammen.</p>
           </div>
         </div>
-        <div class="service-card reveal" onclick="nav('detail-youth')" role="button" tabindex="0" aria-label="Youth">
+        <div class="service-card reveal" onclick="nav('detail-youth')" role="button" tabindex="0" aria-label="Youth Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-youth.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">U18</span>
-            <h3>YOUTH</h3>
-            <p>Disziplin, Respekt und Charakter für die nächste Generation.</p>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">U18</span>
+            <h3>YOUTH BOXING</h3>
+            <p>Disziplin, Respekt und Charakter.</p>
           </div>
         </div>
         <div class="service-card reveal delay-1" onclick="nav('detail-kickbox')" role="button" tabindex="0" aria-label="Kickboxing">
@@ -308,46 +304,46 @@
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
             <h3>KICKBOXING</h3>
-            <p>Dynamik, Kicks und volle Power. Weltmeister-Niveau.</p>
+            <p>Dynamik, Kicks und volle Power.</p>
           </div>
         </div>
         <div class="service-card reveal delay-2" onclick="nav('detail-pt')" role="button" tabindex="0" aria-label="Personal Training">
           <div class="service-card-bg" style="background-image:url('assets/images/service-pt.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">1:1</span>
-            <h3>PERSONAL</h3>
-            <p>100% Fokus auf dich. Die effizienteste Art zu trainieren.</p>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">1:1</span>
+            <h3>PERSONAL TRAINING</h3>
+            <p>100% Fokus auf dich.</p>
           </div>
         </div>
         <div class="service-card reveal delay-3" onclick="nav('detail-olympic')" role="button" tabindex="0" aria-label="Olympic Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-olympic.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">VEREIN</span>
-            <h3>OLYMPIC</h3>
-            <p>Wettkampf auf höchstem Niveau. Die hohe Kunst des Boxens.</p>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">VEREIN</span>
+            <h3>OLYMPIC BOXING</h3>
+            <p>Wettkampf auf höchstem Niveau.</p>
           </div>
         </div>
-        <div class="service-card reveal" onclick="nav('detail-mindset')" role="button" tabindex="0" aria-label="Mind & Body">
+        <div class="service-card reveal" onclick="nav('detail-mindset')" role="button" tabindex="0" aria-label="Mind and Body">
           <div class="service-card-bg" style="background-image:url('assets/images/service-mind.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           <div class="service-card-body">
-            <span class="tag tag--gold" style="font-size:0.58rem;padding:3px 9px;margin-bottom:6px;">MENTAL</span>
+            <span class="tag tag--gold" style="font-size:0.55rem;padding:2px 8px;">MENTAL</span>
             <h3>MIND &amp; BODY</h3>
-            <p>Victory is a state of mind. Mental Coaching für Champions.</p>
+            <p>Victory is a state of mind.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COACHES -->
+  <!-- ── TEAM ── -->
   <section id="team" class="sec--white">
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--light">LEADERSHIP</span>
-        <h2>MEET THE <span class="gold">CHAMPIONS.</span></h2>
+        <h2 style="margin-top:1rem;">MEET THE <span class="gold">CHAMPIONS.</span></h2>
       </div>
       <div class="team-grid">
         <div class="coach-card reveal delay-1">
@@ -363,8 +359,8 @@
             <h3>RASCHAD PEKPASSI</h3>
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
-            <p>Über 20 Jahre Erfahrung als Wettkämpfer und Landestrainer. Raschad analysiert jeden Bewegungsablauf mit wissenschaftlicher Präzision und formt Athleten von Grund auf neu — unabhängig vom Ausgangsniveau.</p>
-            <button onclick="openBooking('PT Raschad')" class="btn btn--outline-dark btn--sm" type="button">RASCHAD BUCHEN</button>
+            <p>Über 20 Jahre Erfahrung als Wettkämpfer und Landestrainer. Raschad analysiert jeden Bewegungsablauf mit wissenschaftlicher Präzision und formt Athleten von Grund auf neu.</p>
+            <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">RASCHAD BUCHEN</button>
           </div>
         </div>
         <div class="coach-card reveal delay-2">
@@ -380,36 +376,40 @@
             <h3>ALFONSO FUSCO</h3>
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
-            <p>Kickbox-Weltmeister und Spezialist für Taktik, Ring-Intelligenz und mentale Stärke. Alfonso lehrt dich, den Kampf im Kopf zu gewinnen — bevor du den Ring betrittst. Seine Methodik ist einzigartig in München.</p>
-            <button onclick="openBooking('PT Alfonso')" class="btn btn--outline-dark btn--sm" type="button">ALFONSO BUCHEN</button>
+            <p>Kickbox-Weltmeister und Spezialist für Taktik, Ring-Intelligenz und mentale Stärke. Alfonso lehrt dich, den Kampf im Kopf zu gewinnen — bevor du den Ring betrittst.</p>
+            <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">ALFONSO BUCHEN</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EARLY BIRD -->
+  <!-- ── EARLY BIRD ── -->
   <section id="early-bird">
     <div class="container">
       <div class="early-bird-inner reveal">
         <div>
+          <div class="spots-badge">
+            <span class="spots-dot"></span>
+            <span id="spots-badge-text">Early Bird — noch 150 Plätze</span>
+          </div>
           <span class="tag tag--dark">⚡ EARLY BIRD — LIMITIERT</span>
-          <h2 style="margin:1.5rem 0;">NUR 250 PLÄTZE.<br><span class="gold">PREIS STEIGT DANACH.</span></h2>
-          <p style="margin-bottom:1.5rem;">Die Türen von Bomaye Gym Munich öffnen sich im <strong style="color:var(--white);">April 2026</strong>. Wer jetzt Mitglied wird, sichert sich den Early-Bird-Preis — <strong style="color:var(--gold);">dauerhaft und garantiert</strong>.</p>
+          <h2 style="margin:1.25rem 0;">NUR 150 PLÄTZE.<br><span class="gold">PREIS STEIGT DANACH.</span></h2>
+          <p style="margin-bottom:1.5rem;">Die Türen von Bomaye Gym Munich öffnen sich bald. Wer jetzt Mitglied wird, sichert sich den Early-Bird-Preis — <strong style="color:var(--gold);">dauerhaft und garantiert.</strong></p>
           <div class="eb-checklist">
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Lifetime Preisgarantie — dein Preis bleibt für immer</span></div>
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Anmeldung über Bsport — sicher &amp; einfach</span></div>
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Du trainierst erst ab Opening — zahlst ab dann</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Kids ab 11,90€ · Jugend ab 12,90€ · Erwachsene ab 15,90€ / Woche</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>100€ Aufnahmegebühr einmalig · Keine versteckten Kosten</span></div>
           </div>
-          <button onclick="openBooking('Early Bird')" class="btn btn--gold" type="button">
+          <button id="eb-cta-btn" onclick="openBooking()" class="btn btn--gold" type="button">
             <i class="fa-solid fa-bolt"></i> EARLY-BIRD PLATZ SICHERN
           </button>
         </div>
         <div class="eb-card">
-          <div class="eb-card-label">EARLY-BIRD COUNTDOWN</div>
-          <div class="eb-card-number">250</div>
-          <div class="eb-card-sublabel">LIMITIERTE PLÄTZE TOTAL</div>
+          <div class="eb-card-label">NOCH VERFÜGBAR</div>
+          <div class="eb-card-number" id="eb-remaining">150</div>
+          <div class="eb-card-sublabel" id="eb-total-label">VON 150 PLÄTZEN NOCH VERFÜGBAR</div>
           <div class="eb-prices">
             <div class="eb-price-item">
               <div class="eb-price-age">KIDS</div>
@@ -433,230 +433,59 @@
     </div>
   </section>
 
-  <!-- PRICING -->
+  <!-- ── PRICING ── -->
   <section id="pricing" class="sec--ink2">
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--dark">MITGLIEDSCHAFT</span>
-        <h2>WÄHLE DEINEN <span class="gold">PLAN.</span></h2>
-        <p style="color:var(--muted);margin-top:0.75rem;font-size:0.82rem;font-family:var(--font-head);letter-spacing:1.5px;">WÖCHENTLICHER PREIS · KEINE AUFNAHMEGEBÜHR · PROBETRAINING KOSTENLOS</p>
+        <h2 style="margin-top:1rem;">WÄHLE DEINEN <span class="gold">PLAN.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;font-size:0.8rem;font-family:var(--font-head);letter-spacing:1.5px;">
+          WÖCHENTLICHER PREIS · KOSTENLOSES PROBETRAINING
+        </p>
       </div>
 
-      <div class="pricing-tabs reveal" role="tablist">
-        <button class="ptab active" onclick="switchPricingTab('kids',this)" role="tab" aria-selected="true" type="button">
-          <i class="fa-solid fa-child"></i> Kids (6–9)
-        </button>
-        <button class="ptab" onclick="switchPricingTab('jugend',this)" role="tab" aria-selected="false" type="button">
-          <i class="fa-solid fa-person-running"></i> Jugend (10–17)
-        </button>
-        <button class="ptab" onclick="switchPricingTab('adults',this)" role="tab" aria-selected="false" type="button">
-          <i class="fa-solid fa-dumbbell"></i> Erwachsene (18+)
-        </button>
+      <!-- Duration toggle -->
+      <div class="duration-toggle reveal" role="tablist">
+        <button class="dtab" data-duration="1M" role="tab" type="button">1 MONAT</button>
+        <button class="dtab" data-duration="3M" role="tab" type="button">3 MONATE</button>
+        <button class="dtab" data-duration="6M" role="tab" type="button">6 MONATE</button>
+        <button class="dtab active" data-duration="12M" role="tab" type="button">12 MONATE ⭐</button>
       </div>
 
-      <!-- KIDS -->
-      <div class="price-panel active" id="panel-kids" role="tabpanel">
-        <div class="price-card">
-          <div class="price-label">1 MONAT</div>
-          <div class="price-duration-name">Monatlich flexibel</div>
-          <div class="price-weekly">16,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 73€ / Monat · monatlich kündbar</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Kids-Kurse inklusive</li>
-            <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
-            <li><i class="fa-solid fa-check"></i> Leihausrüstung verfügbar</li>
-          </ul>
-          <button onclick="openBooking('Kids 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">3 MONATE</div>
-          <div class="price-duration-name">3 Monate Laufzeit</div>
-          <div class="price-weekly">14,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 64€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Kids-Kurse inklusive</li>
-            <li><i class="fa-solid fa-check"></i> 3 Monate Laufzeit</li>
-            <li><i class="fa-solid fa-check"></i> Leihausrüstung verfügbar</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 36€</span></div>
-          <button onclick="openBooking('Kids 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">6 MONATE</div>
-          <div class="price-duration-name">6 Monate Laufzeit</div>
-          <div class="price-weekly">12,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 56€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Kids-Kurse inklusive</li>
-            <li><i class="fa-solid fa-check"></i> 6 Monate Laufzeit</li>
-            <li><i class="fa-solid fa-check"></i> Community Events</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 104€</span></div>
-          <button onclick="openBooking('Kids 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card best">
-          <div class="best-badge">⭐ BESTES ANGEBOT</div>
-          <div class="savings-badge">-30%</div>
-          <div class="price-label">12 MONATE</div>
-          <div class="price-duration-name">Jahres-Mitgliedschaft</div>
-          <div class="price-weekly">11,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 52€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> <strong>Lifetime Preisgarantie</strong></li>
-            <li><i class="fa-solid fa-check"></i> Alle Kids-Kurse inklusive</li>
-            <li><i class="fa-solid fa-check"></i> Priorität bei Buchungen</li>
-            <li><i class="fa-solid fa-check"></i> Welcome Package</li>
-            <li><i class="fa-solid fa-check"></i> Community Events gratis</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 261€</span></div>
-          <button onclick="openBooking('Kids 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
-        </div>
+      <!-- Enrollment notice -->
+      <div class="enrollment-notice reveal">
+        <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Keine weiteren versteckten Kosten
       </div>
 
-      <!-- JUGEND -->
-      <div class="price-panel" id="panel-jugend" role="tabpanel">
-        <div class="price-card">
-          <div class="price-label">1 MONAT</div>
-          <div class="price-duration-name">Monatlich flexibel</div>
-          <div class="price-weekly">18,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 82€ / Monat · monatlich kündbar</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Jugend-Kurse</li>
-            <li><i class="fa-solid fa-check"></i> Auch für Studenten</li>
-            <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
-          </ul>
-          <button onclick="openBooking('Jugend 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">3 MONATE</div>
-          <div class="price-duration-name">3 Monate Laufzeit</div>
-          <div class="price-weekly">16,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 73€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Jugend-Kurse</li>
-            <li><i class="fa-solid fa-check"></i> Auch für Studenten</li>
-            <li><i class="fa-solid fa-check"></i> 3 Monate Laufzeit</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 52€</span></div>
-          <button onclick="openBooking('Jugend 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">6 MONATE</div>
-          <div class="price-duration-name">6 Monate Laufzeit</div>
-          <div class="price-weekly">13,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 60€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Alle Jugend-Kurse</li>
-            <li><i class="fa-solid fa-check"></i> Mentoring inklusive</li>
-            <li><i class="fa-solid fa-check"></i> Community Events</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 130€</span></div>
-          <button onclick="openBooking('Jugend 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card best">
-          <div class="best-badge">⭐ BESTES ANGEBOT</div>
-          <div class="savings-badge">-32%</div>
-          <div class="price-label">12 MONATE</div>
-          <div class="price-duration-name">Jahres-Mitgliedschaft</div>
-          <div class="price-weekly">12,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 56€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> <strong>Lifetime Preisgarantie</strong></li>
-            <li><i class="fa-solid fa-check"></i> Alle Jugend-Kurse</li>
-            <li><i class="fa-solid fa-check"></i> Mentoring by Raschad</li>
-            <li><i class="fa-solid fa-check"></i> Priorität bei Events</li>
-            <li><i class="fa-solid fa-check"></i> Welcome Package</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 312€</span></div>
-          <button onclick="openBooking('Jugend 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
-        </div>
+      <!-- Programs grid — rendered by JS from config.js -->
+      <div class="programs-grid" id="programs-grid">
+        <!-- populated by main.js -->
       </div>
 
-      <!-- ADULTS -->
-      <div class="price-panel" id="panel-adults" role="tabpanel">
-        <div class="price-card">
-          <div class="price-label">1 MONAT</div>
-          <div class="price-duration-name">Monatlich flexibel</div>
-          <div class="price-weekly">20,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 91€ / Monat · monatlich kündbar</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Unlimited Classes</li>
-            <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
-            <li><i class="fa-solid fa-check"></i> Alle Programme</li>
-          </ul>
-          <button onclick="openBooking('Adult 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">3 MONATE</div>
-          <div class="price-duration-name">3 Monate Laufzeit</div>
-          <div class="price-weekly">18,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 82€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Unlimited Classes</li>
-            <li><i class="fa-solid fa-check"></i> Alle Programme</li>
-            <li><i class="fa-solid fa-check"></i> 3 Monate Laufzeit</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 52€</span></div>
-          <button onclick="openBooking('Adult 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card">
-          <div class="price-label">6 MONATE</div>
-          <div class="price-duration-name">6 Monate Laufzeit</div>
-          <div class="price-weekly">16,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 73€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> Unlimited Classes</li>
-            <li><i class="fa-solid fa-check"></i> Women Only Zugang</li>
-            <li><i class="fa-solid fa-check"></i> Community Events</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 104€</span></div>
-          <button onclick="openBooking('Adult 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
-        </div>
-        <div class="price-card best">
-          <div class="best-badge">⭐ BESTES ANGEBOT</div>
-          <div class="savings-badge">-24%</div>
-          <div class="price-label">12 MONATE</div>
-          <div class="price-duration-name">Jahres-Mitgliedschaft</div>
-          <div class="price-weekly">15,90€ <span class="price-weekly-unit">/ Woche</span></div>
-          <div class="price-monthly-calc">≈ 69€ / Monat</div>
-          <ul class="price-features">
-            <li><i class="fa-solid fa-check"></i> <strong>Lifetime Preisgarantie</strong></li>
-            <li><i class="fa-solid fa-check"></i> Unlimited Classes</li>
-            <li><i class="fa-solid fa-check"></i> Alle 8 Programme</li>
-            <li><i class="fa-solid fa-check"></i> Women Only inklusive</li>
-            <li><i class="fa-solid fa-check"></i> Welcome Package</li>
-          </ul>
-          <div class="savings-row"><span>DU SPARST</span><span>≈ 261€</span></div>
-          <button onclick="openBooking('Adult 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT MITGLIED WERDEN</button>
-        </div>
-      </div>
-
-      <div class="pdf-download-wrap reveal">
-        <p style="color:var(--muted);font-size:0.82rem;margin-bottom:1rem;">Alle Preise als Wochenpreise (52 Wochen/Jahr). Keine Aufnahmegebühr. Probetraining kostenlos.</p>
-        <a href="Preisliste Bomaye Gym.pdf" target="_blank" rel="noopener" class="btn btn--outline-light btn--sm">
-          <i class="fa-solid fa-file-pdf"></i> VOLLSTÄNDIGE PREISLISTE (PDF)
+      <div class="pricing-footer reveal">
+        <p>Alle Preise sind Wochenpreise (52 Wochen/Jahr). Preise zzgl. 100€ einmaliger Aufnahmegebühr.</p>
+        <a href="Preisliste Bomaye Gym.pdf" target="_blank" rel="noopener" class="pdf-link">
+          <i class="fa-solid fa-file-pdf"></i> VOLLSTÄNDIGE PREISLISTE ALS PDF
         </a>
       </div>
     </div>
   </section>
 
-  <!-- BOOKING -->
+  <!-- ── BOOKING ── -->
   <section id="booking" class="sec--dark">
     <div class="container">
       <div class="booking-head reveal">
         <span class="tag tag--dark">BUCHUNG</span>
         <h2 style="margin-top:1rem;">JETZT <span class="gold">BUCHEN.</span></h2>
         <p>Wähle deinen Kurs im Kalender und sichere dir deinen Spot.</p>
-      </div>
-      <div style="text-align:center;margin-top:2rem;">
-        <button onclick="openBooking('Booking Section')" class="btn btn--gold" type="button">
+        <button onclick="openBooking()" class="btn btn--gold" type="button" style="margin-top:1.75rem;">
           <i class="fa-solid fa-calendar-check"></i> KURSKALENDER ÖFFNEN
         </button>
       </div>
     </div>
   </section>
 
-  <!-- LOCATION -->
+  <!-- ── LOCATION ── -->
   <section id="location" style="padding:0;">
     <div class="location-wrap">
       <div class="location-info">
@@ -684,12 +513,17 @@
           <i class="fa-solid fa-train-subway"></i>
           <div class="location-detail-text">
             <strong>Anreise</strong>
-            <span>S-Bahn Donnersbergerbrücke (5 Min.)<br>Parkplätze im Pineapple Park Areal</span>
+            <span>S-Bahn Hirschgarten (5 Min.)<br>Parkplätze im Pineapple Park Areal</span>
           </div>
         </div>
-        <div style="margin-top:2rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
-          <a href="tel:+4917629322443" class="btn btn--outline-light btn--sm"><i class="fa-solid fa-phone"></i> ANRUFEN</a>
-          <a href="https://wa.me/4917629322443" target="_blank" rel="noopener" class="btn btn--gold btn--sm"><i class="fa-brands fa-whatsapp"></i> WHATSAPP</a>
+        <div class="location-btns">
+          <a href="tel:+4917621932243" class="btn btn--outline-light btn--sm">
+            <i class="fa-solid fa-phone"></i> ANRUFEN
+          </a>
+          <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!"
+             target="_blank" rel="noopener" class="btn btn--gold btn--sm">
+            <i class="fa-brands fa-whatsapp"></i> WHATSAPP
+          </a>
         </div>
       </div>
       <div class="map-wrapper">
@@ -698,7 +532,7 @@
           <button onclick="loadMap()" class="btn btn--gold" type="button">KARTE LADEN</button>
         </div>
         <iframe id="map-frame"
-          title="Bomaye Gym Munich — Pineapple Park"
+          title="Bomaye Gym Munich — Wilhelm-Hale-Straße 44, Pineapple Park"
           src=""
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
@@ -708,19 +542,25 @@
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- ── FAQ ── -->
   <section id="faq" class="sec--smoke">
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--light">FAQ</span>
-        <h2>HÄUFIGE <span class="gold">FRAGEN.</span></h2>
+        <h2 style="margin-top:1rem;">HÄUFIGE <span class="gold">FRAGEN.</span></h2>
       </div>
       <div class="faq-list">
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Brauche ich Vorerfahrung? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner">Nein — überhaupt nicht. Bei Bomaye holen wir dich genau dort ab, wo du stehst. Anfänger sind nicht nur willkommen, sie sind unsere Spezialität. Deine erste Stunde ist kostenlos.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">Nein — überhaupt nicht. Bei Bomaye holen wir dich genau dort ab, wo du stehst. Anfänger sind willkommen. Deine erste Stunde ist kostenlos und unverbindlich.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Unsere Preise werden als Wochenpreise angegeben. Youth Boxing startet ab 11,90€/Woche, Erwachsene Kurse ab 15,90€/Woche — jeweils bei 12 Monaten Laufzeit. Hinzu kommt eine einmalige Aufnahmegebühr von 100€. Das Probetraining ist immer kostenlos.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
@@ -730,58 +570,54 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Wie sind die Preise strukturiert? <i class="fa-solid fa-plus faq-icon"></i>
+            Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner">Unsere Preise werden als Wochenpreise angegeben. Kids starten ab 11,90€/Woche, Jugend ab 12,90€/Woche und Erwachsene ab 15,90€/Woche — jeweils bei 12 Monaten Laufzeit. Das Probetraining ist immer kostenlos.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie und zahlt erst ab Opening.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Gibt es Parkplätze? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner">Ja. Im Pineapple Park Areal gibt es Parkmöglichkeiten. Außerdem ist das Gym optimal mit dem ÖPNV erreichbar — S-Bahn Donnersbergerbrücke, nur 5 Minuten zu Fuß.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">Ja. Im Pineapple Park Areal gibt es Parkmöglichkeiten. Das Gym ist auch optimal mit dem ÖPNV erreichbar — S-Bahn Hirschgarten, nur 5 Minuten zu Fuß.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Was ist das Probetraining? <i class="fa-solid fa-plus faq-icon"></i>
+            Gibt es spezielle Programme für Frauen? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner">Das Probetraining ist absolut kostenlos und unverbindlich. Du nimmst an einer regulären Trainingsstunde teil, bekommst Leihausrüstung und lernst das Team kennen. Danach entscheidest du.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Ist Boxen auch für Frauen geeignet? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Absolut. Unser Women Only Programm bietet dir einen exklusiven Rahmen: nur Frauen, speziell zugeschnittenes Training, volle Energie. Eines der effektivsten Ganzkörper-Workouts überhaupt.</div></div>
+          <div class="faq-a"><div class="faq-a-inner">Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Kein Vorwissen nötig.</div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ── FOOTER ── -->
   <footer>
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="logo-text">BOMAYE</span>
-          <p>It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
+          <img src="assets/images/bomaye-logo.png" alt="Bomaye Gym Munich" class="logo-img"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <span class="logo-text" style="display:none;">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">
             <a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/4917629322443" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>TRAINING</h4>
           <ul class="footer-links">
-            <li><button onclick="nav('detail-exec')" type="button">Executive Boxing</button></li>
-            <li><button onclick="nav('detail-women')" type="button">Women Only</button></li>
-            <li><button onclick="nav('detail-youth')" type="button">Youth U18</button></li>
-            <li><button onclick="nav('detail-kickbox')" type="button">Kickboxing</button></li>
-            <li><button onclick="nav('detail-pt')" type="button">Personal Training</button></li>
             <li><button onclick="nav('detail-olympic')" type="button">Olympic Boxing</button></li>
+            <li><button onclick="nav('detail-kickbox')" type="button">Kickboxing</button></li>
+            <li><button onclick="nav('detail-women')" type="button">Women's Boxing</button></li>
+            <li><button onclick="nav('detail-youth')" type="button">Youth Boxing</button></li>
+            <li><button onclick="nav('detail-pt')" type="button">Personal Training</button></li>
+            <li><button onclick="nav('detail-corporate')" type="button">Corporate Boxing</button></li>
+            <li><button onclick="nav('detail-exec')" type="button">Executive Boxing</button></li>
             <li><button onclick="nav('detail-mindset')" type="button">Mind &amp; Body</button></li>
-            <li><button onclick="nav('detail-corporate')" type="button">Corporate</button></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -797,24 +633,26 @@
         <div class="footer-col">
           <h4>KONTAKT</h4>
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917629322443">0176 2932 2443</a></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
           <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener">@bomayegym</a></div>
         </div>
       </div>
+
       <div class="footer-contactbar">
-        <a href="tel:+4917629322443">0176 2932 2443</a>
+        <a href="tel:+4917621932243">0176 2193 2243</a>
         <span class="dot">•</span>
         <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
         <span class="dot">•</span>
         <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
       </div>
+
       <div class="footer-bottom">
         <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
         <div class="footer-legal">
-          <button type="button">IMPRESSUM</button>
-          <button type="button">DATENSCHUTZ</button>
-          <button type="button">AGB</button>
+          <a href="impressum.html">IMPRESSUM</a>
+          <a href="datenschutz.html">DATENSCHUTZ</a>
+          <a href="agb.html">AGB</a>
         </div>
       </div>
     </div>
@@ -823,7 +661,7 @@
 </div><!-- /view-home -->
 
 <!-- ══════════════════════════════════════════════════════════
-     DETAIL VIEWS — PROGRAMMES
+     DETAIL VIEWS
 ══════════════════════════════════════════════════════════ -->
 
 <!-- Executive Boxing -->
@@ -852,31 +690,30 @@
       <div class="target-tags">
         <span class="target-tag">Führungskräfte</span>
         <span class="target-tag">Selbstständige</span>
-        <span class="target-tag">Leistungsträger</span>
         <span class="target-tag">Alle Levels</span>
       </div>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Executive Boxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
         <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
   </div>
 </div>
 
-<!-- Women Only -->
+<!-- Women's Boxing -->
 <div id="view-detail-women" class="view">
   <div class="detail-hero-wrap">
     <div class="detail-hero-bg" style="background-image:url('assets/images/service-women.webp');"></div>
     <div class="detail-hero-overlay"></div>
     <div class="container detail-hero-content">
       <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">EMPOWERMENT</span>
-      <h1 style="color:#fff;">WOMEN<br>ONLY</h1>
+      <h1 style="color:#fff;">WOMEN'S<br>BOXING</h1>
     </div>
   </div>
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">NO BOYS ALLOWED.</p>
-      <p class="detail-desc">Boxen ist längst kein reiner Männersport mehr. Unser Women Only Programm ist ein exklusiver Safe Space — und gleichzeitig das härteste, ehrlichste Training, das du je geliebt hast.</p>
+      <p class="detail-desc">Boxen ist längst kein reiner Männersport mehr. Unser Women's Boxing Programm ist ein exklusiver Safe Space — und gleichzeitig das härteste, ehrlichste Training, das du je geliebt hast.</p>
       <p class="detail-desc">Kein Mitleid. Kein Mansplaining. Nur du, deine Kraft und eine Community, die dich täglich pusht.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Exklusiv für Frauen</li>
@@ -884,7 +721,6 @@
         <li><i class="fa-solid fa-check-circle"></i> Anfänger bis Fortgeschrittene</li>
         <li><i class="fa-solid fa-check-circle"></i> Body &amp; Mind — ganzheitlicher Ansatz</li>
         <li><i class="fa-solid fa-check-circle"></i> Starke Community &amp; Events</li>
-        <li><i class="fa-solid fa-check-circle"></i> Flexible Trainingszeiten</li>
       </ul>
       <div class="target-tags">
         <span class="target-tag">Anfängerinnen</span>
@@ -892,8 +728,8 @@
         <span class="target-tag">Mütter</span>
         <span class="target-tag">Berufstätige</span>
       </div>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Women Only')" class="btn btn--gold" type="button">KOSTENLOSES PROBETRAINING</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">KOSTENLOSES PROBETRAINING</button>
         <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
@@ -913,75 +749,74 @@
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">100% FOKUS AUF DICH.</p>
-      <p class="detail-desc">Im 1:1 Personal Training hast du die volle Aufmerksamkeit von Raschad oder Alfonso — zwei der besten Box- und Kickbox-Coaches in München.</p>
-      <p class="detail-desc">Ob technische Perfektion, Wettkampfvorbereitung oder persönliche Fitness — wir entwickeln einen Plan, der zu dir passt.</p>
+      <p class="detail-desc">Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training hast du die volle Aufmerksamkeit von Raschad oder Alfonso.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Individuelle Trainingsplanung</li>
         <li><i class="fa-solid fa-check-circle"></i> Detaillierte Technikanalyse</li>
         <li><i class="fa-solid fa-check-circle"></i> Flexible Terminbuchung</li>
         <li><i class="fa-solid fa-check-circle"></i> Ernährungs- &amp; Lifestyle-Beratung</li>
         <li><i class="fa-solid fa-check-circle"></i> Fortschrittsmonitoring</li>
-        <li><i class="fa-solid fa-check-circle"></i> Video-Analyse auf Anfrage</li>
       </ul>
       <div class="target-tags">
         <span class="target-tag">Alle Levels</span>
         <span class="target-tag">Wettkämpfer</span>
         <span class="target-tag">Schnelle Ergebnisse</span>
       </div>
-      <button onclick="openBooking('Personal Training')" class="btn btn--gold" type="button">TERMIN VEREINBAREN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">TERMIN VEREINBAREN</button>
+      </div>
     </div></div>
   </div>
 </div>
 
-<!-- Youth -->
+<!-- Youth Boxing -->
 <div id="view-detail-youth" class="view">
   <div class="detail-hero-wrap">
     <div class="detail-hero-bg" style="background-image:url('assets/images/service-youth.webp');"></div>
     <div class="detail-hero-overlay"></div>
     <div class="container detail-hero-content">
       <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">U18</span>
-      <h1 style="color:#fff;">YOUTH<br>SQUAD</h1>
+      <h1 style="color:#fff;">YOUTH<br>BOXING</h1>
     </div>
   </div>
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">WERTE &amp; DISZIPLIN.</p>
-      <p class="detail-desc">Wir bilden nicht nur Kämpfer aus — wir bilden Charaktere. Das Bomaye Youth Squad ist ein Programm, das Jugendliche zu selbstbewussten, disziplinierten und respektvollen Menschen formt.</p>
+      <p class="detail-desc">Wir bilden nicht nur Kämpfer aus — wir bilden Charaktere. Das Bomaye Youth Squad formt Jugendliche zu selbstbewussten, disziplinierten und respektvollen Menschen.</p>
       <ul class="detail-features">
-        <li><i class="fa-solid fa-check-circle"></i> Speziell für Jugendliche (10–17 Jahre)</li>
+        <li><i class="fa-solid fa-check-circle"></i> Kids ab 6 Jahren, Jugend bis 17</li>
         <li><i class="fa-solid fa-check-circle"></i> Erfahrene Jugend-Coaches</li>
         <li><i class="fa-solid fa-check-circle"></i> Persönliches Mentoring inklusive</li>
         <li><i class="fa-solid fa-check-circle"></i> Sichere und strukturierte Umgebung</li>
         <li><i class="fa-solid fa-check-circle"></i> Möglichkeit zum Vereinssport</li>
-        <li><i class="fa-solid fa-check-circle"></i> Youth-Tarif: ab 12,90€ / Woche</li>
       </ul>
       <div class="target-tags">
-        <span class="target-tag">10–17 Jahre</span>
+        <span class="target-tag">Ab 6 Jahre</span>
+        <span class="target-tag">Bis 17 Jahre</span>
         <span class="target-tag">Anfänger</span>
-        <span class="target-tag">Fortgeschrittene</span>
       </div>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Youth')" class="btn btn--gold" type="button">ANMELDEN — AB 12,90€ / WOCHE</button>
-        <button onclick="nav('home')" class="btn btn--outline-dark" type="button">FRAGEN? KONTAKT</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">JETZT ANMELDEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
   </div>
 </div>
 
-<!-- Corporate -->
+<!-- Corporate Boxing -->
 <div id="view-detail-corporate" class="view">
   <div class="detail-hero-wrap">
     <div class="detail-hero-bg" style="background-image:url('assets/images/service-corp.webp');"></div>
     <div class="detail-hero-overlay"></div>
     <div class="container detail-hero-content">
       <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">TEAMBUILDING</span>
-      <h1 style="color:#fff;">CORPORATE</h1>
+      <h1 style="color:#fff;">CORPORATE<br>BOXING</h1>
     </div>
   </div>
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">TEAMBUILDING DURCH SCHWEISS.</p>
-      <p class="detail-desc">Teams, die zusammen schwitzen, wachsen zusammen. Unser Corporate Boxing Event ist ein einzigartiges Teambuilding-Erlebnis, das Vertrauen, Kommunikation und Zusammenhalt auf eine Art aufbaut, die kein Seminar schafft.</p>
+      <p class="detail-desc">Teams, die zusammen schwitzen, wachsen zusammen. Unser Corporate Boxing Event ist ein einzigartiges Teambuilding-Erlebnis, das Vertrauen, Kommunikation und Zusammenhalt aufbaut.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Individuelle Event-Planung</li>
         <li><i class="fa-solid fa-check-circle"></i> Gruppen von 5 bis 50 Personen</li>
@@ -995,7 +830,9 @@
         <span class="target-tag">Teams</span>
         <span class="target-tag">Events</span>
       </div>
-      <button onclick="openBooking('Corporate')" class="btn btn--gold" type="button">ANFRAGE SENDEN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">ANFRAGE SENDEN</button>
+      </div>
     </div></div>
   </div>
 </div>
@@ -1012,7 +849,7 @@
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">DYNAMIK, KICKS, VOLLE POWER.</p>
-      <p class="detail-desc">Kickboxen auf Weltmeister-Niveau. Alfonso Fusco — Kickbox-Weltmeister und Landestrainer — vermittelt dir Technik, Explosivität und Ring-Intelligenz, die dich auf ein neues Level bringt.</p>
+      <p class="detail-desc">Kickboxen auf Weltmeister-Niveau. Alfonso Fusco — Kickbox-Weltmeister und Landestrainer — vermittelt Technik, Explosivität und Ring-Intelligenz.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Weltmeister-Coach Alfonso Fusco</li>
         <li><i class="fa-solid fa-check-circle"></i> Technik- &amp; Konditionstraining</li>
@@ -1025,7 +862,10 @@
         <span class="target-tag">Wettkämpfer</span>
         <span class="target-tag">Fitness</span>
       </div>
-      <button onclick="openBooking('Kickboxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
     </div></div>
   </div>
 </div>
@@ -1043,7 +883,7 @@
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">WETTKAMPF AUF HÖCHSTEM NIVEAU.</p>
-      <p class="detail-desc">Die hohe Kunst des Boxens. Olympisches Boxen folgt den klassischen Regeln des Amateurboxens — Fokus auf saubere Technik, Taktik und Punkten statt KO.</p>
+      <p class="detail-desc">Die hohe Kunst des Boxens. Olympisches Boxen folgt den klassischen Regeln des Amateurboxens — Fokus auf saubere Technik, Taktik und Punkten.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Vereinsboxen (lizenzierter Verein)</li>
         <li><i class="fa-solid fa-check-circle"></i> Wettkampftraining &amp; Turniere</li>
@@ -1056,7 +896,10 @@
         <span class="target-tag">Verein</span>
         <span class="target-tag">Fortgeschrittene</span>
       </div>
-      <button onclick="openBooking('Olympic Boxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
     </div></div>
   </div>
 </div>
@@ -1074,7 +917,7 @@
   <div class="detail-body">
     <div class="container"><div class="detail-body-inner">
       <p class="detail-tagline">VICTORY IS A STATE OF MIND.</p>
-      <p class="detail-desc">Mental Coaching für Champions. Der Kampf beginnt im Kopf. Unser Mind &amp; Body Programm verbindet physisches Boxtraining mit mentalem Coaching — für Athleten, die das nächste Level erreichen wollen.</p>
+      <p class="detail-desc">Mental Coaching für Champions. Der Kampf beginnt im Kopf. Unser Mind &amp; Body Programm verbindet physisches Boxtraining mit mentalem Coaching.</p>
       <ul class="detail-features">
         <li><i class="fa-solid fa-check-circle"></i> Mental Coaching &amp; Visualisierung</li>
         <li><i class="fa-solid fa-check-circle"></i> Stressabbau &amp; Resilienz</li>
@@ -1087,12 +930,15 @@
         <span class="target-tag">Mental Health</span>
         <span class="target-tag">Ganzheitlich</span>
       </div>
-      <button onclick="openBooking('Mind Body')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <div class="detail-ctas">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      </div>
     </div></div>
   </div>
 </div>
 
-<!-- JS -->
+<!-- Scripts: config first, then main -->
+<script src="assets/js/config.js"></script>
 <script src="assets/js/main.js" defer></script>
 </body>
 </html>
