@@ -1,125 +1,122 @@
 /**
  * ============================================================
  *  BOMAYE GYM — FAQ Content File
- *  Edit this file to add, remove or reorder FAQ items.
+ *  Edit this file to add, remove, or reorder FAQ items.
  *
- *  HOW TO EDIT (no developer needed):
+ *  HOW TO EDIT (no developer knowledge needed):
  *
- *  ▸ Each CATEGORY looks like this:
- *      {
- *        category: "Training",     ← label shown as a pill
- *        id:       "training",     ← unique identifier (no spaces)
- *        items: [
- *          {
- *            q: "Your question here?",
- *            a: "Your answer here."
- *          },
- *          ...more items...
- *        ]
- *      }
+ *  Each CATEGORY block looks like:
+ *    {
+ *      category: "Label shown as pill",
+ *      id: "unique-id-no-spaces",
+ *      items: [
+ *        { q: "Question?", a: "Answer." },
+ *        { q: "Another question?", a: "Another answer." }
+ *      ]
+ *    }
  *
- *  ▸ To ADD a question: copy a { q: "...", a: "..." } block
+ *  ▸ ADD a question  → copy a { q: "...", a: "..." } block
  *    and paste it inside the correct category's items array.
- *    Make sure you put a comma after each block (except the last one).
+ *    Put a comma after each block except the last one.
  *
- *  ▸ To DELETE a question: remove the entire { q: "...", a: "..." }
- *    block including the surrounding curly braces.
+ *  ▸ DELETE a question → remove the entire { q: "...", a: "..." }
+ *    block (and the comma before it if it was the last one).
  *
- *  ▸ To REORDER: cut a block and paste it in the new position.
+ *  ▸ REORDER → cut a block and paste it in the new position.
  *
- *  ▸ To ADD a new category: copy an entire category block
- *    { category: "...", id: "...", items: [...] } and paste it
- *    at the end of the array (before the final closing bracket).
+ *  ▸ ADD a new category → copy an entire category block and
+ *    paste it at the end of the array (before the final ]);).
  *
- *  ▸ Answers can include line breaks: use \n for a new paragraph
- *    (the page renders this automatically).
- *
- *  IMPORTANT: Keep valid syntax — commas between items and blocks.
+ *  IMPORTANT: Keep valid syntax — commas between items/blocks.
  * ============================================================
  */
 
 const BOMAYE_FAQ = [
 
-  /* ── TRAINING ─────────────────────────────────────────── */
+  /* ── STANDORT & ANFAHRT ─────────────────────────────────── */
   {
-    category: "Training",
+    category: "Standort & Anfahrt",
+    id: "standort",
+    items: [
+      {
+        q: "Wo ist Bomaye Gym Munich und wie finde ich euch?",
+        a: "Bomaye Gym Munich liegt im Pineapple Park – einer der spannendsten Locations Münchens. Die genaue Adresse und eine Routenplanung per Google Maps findest du direkt auf unserer Website. Wir sind mit dem ÖPNV (S-Bahn Hirschgarten, ca. 5 Minuten zu Fuß) und dem Auto gut erreichbar – Parkplätze im Areal sind vorhanden."
+      }
+    ]
+  },
+
+  /* ── BUCHUNG & MITGLIEDSCHAFT ───────────────────────────── */
+  {
+    category: "Buchung & Mitgliedschaft",
+    id: "buchung",
+    items: [
+      {
+        q: "Wie buche ich ein Probetraining oder meine erste Session?",
+        a: "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle eine freie Zeit, trag dich ein – fertig. Das Probetraining ist kostenlos und unverbindlich, kein Vertrag, kein Druck. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
+      },
+      {
+        q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
+        a: "Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten. Je länger die Laufzeit, desto günstiger der Wochenpreis. Unsere Early-Bird-Mitglieder sichern sich einen dauerhaft garantierten Sonderpreis – dieser bleibt für immer, auch wenn die regulären Preise später steigen."
+      },
+      {
+        q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
+        a: "Tageskarten und klassische Blockkarten bieten wir aktuell nicht als Standardprodukt an. Schau auf unserer Website vorbei oder frag direkt bei uns an – wir informieren dich über aktuelle Optionen ohne lange Bindung."
+      },
+      {
+        q: "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",
+        a: "Ja. Eine Pause ist in begründeten Ausnahmefällen möglich – zum Beispiel bei einer nachgewiesenen Verletzung oder einem vorübergehenden Umzug. Melde dich einfach bei unserem Team, wir finden gemeinsam eine faire Lösung."
+      }
+    ]
+  },
+
+  /* ── TRAINING & ANGEBOTE ────────────────────────────────── */
+  {
+    category: "Training & Angebote",
     id: "training",
     items: [
       {
-        q: "Brauche ich Vorerfahrung für das Boxtraining?",
-        a: "Nein — überhaupt nicht. Bei Bomaye holen wir jeden genau dort ab, wo er steht. Deine erste Stunde ist kostenlos und unverbindlich. Ob du noch nie einen Handschuh angezogen hast oder bereits Erfahrung mitbringst — du bist herzlich willkommen."
+        q: "Welche Trainingsangebote gibt es bei Bomaye (Boxen, Kickboxen, Strength & Conditioning)?",
+        a: "Bomaye Gym Munich bietet Olympic Boxing, Kickboxen, Women's Boxing, Youth Boxing (Kids 6–9 und Jugend 10–17), Executive Boxing, Personal Training, Corporate Boxing und Mind & Body. Ob du Anfänger oder Wettkämpfer bist – für jedes Ziel und jeden Level ist das passende Programm dabei."
       },
       {
-        q: "Was muss ich zum ersten Training mitbringen?",
-        a: "Sportkleidung, saubere Hallenschuhe und ein Handtuch. Für das Probetraining leihen wir dir Boxhandschuhe kostenlos. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz) und Bandagen."
+        q: "Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?",
+        a: "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein kostenloses Probetraining ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern."
       },
       {
-        q: "Wie lange dauert eine Trainingseinheit?",
-        a: "Eine Standard-Einheit dauert 60 Minuten inklusive Aufwärmen und Cool-down. Personal Training und spezielle Kurse können abweichen — das besprichst du direkt mit deinem Coach."
-      },
-      {
-        q: "Für welches Alter sind die Programme geeignet?",
-        a: "Wir haben Programme für alle Altersgruppen: Kids Boxing (6–9 Jahre), Youth Boxing (10–17 Jahre) und Erwachsene (18+). Jede Gruppe trainiert separat in einem auf sie zugeschnittenen Umfeld."
-      },
-      {
-        q: "Gibt es spezielle Programme für Frauen?",
-        a: "Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Coaches und eine starke Community. Kein Vorwissen nötig."
+        q: "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
+        a: "Bring Sportkleidung, saubere Hallenschuhe und ein Handtuch mit. Für das Probetraining leihen wir dir Boxhandschuhe kostenlos. Wer regelmäßig trainiert, sollte eigene Handschuhe (10–14 Oz) und Bandagen mitbringen."
       }
     ]
   },
 
-  /* ── MITGLIEDSCHAFT ───────────────────────────────────── */
+  /* ── AUSSTATTUNG & SERVICES ─────────────────────────────── */
   {
-    category: "Mitgliedschaft",
-    id: "membership",
+    category: "Ausstattung & Services",
+    id: "ausstattung",
     items: [
       {
-        q: "Welche Mitgliedschaftsmodelle gibt es?",
-        a: "Wir bieten Laufzeiten von 1, 3, 6 und 12 Monaten an. Je länger die Laufzeit, desto günstiger der Wochenpreis. Unsere Early-Bird-Mitglieder sichern sich zudem einen dauerhaft garantierten Preis — auch wenn die Preise nach Eröffnung steigen."
+        q: "Gibt es Umkleiden und Duschen?",
+        a: "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website."
       },
       {
-        q: "Was ist die Early-Bird-Mitgliedschaft?",
-        a: "Die ersten 150 Mitglieder erhalten einen Sonderpreis, der für die gesamte Vertragslaufzeit garantiert gilt. Du zahlst erst ab Opening, sicherst dir deinen Platz aber jetzt. Dieser Preis steigt nie — egal wie viele Preiserhöhungen danach kommen."
+        q: "Wie sieht es mit Getränken aus?",
+        a: "Wasser steht zur Verfügung. Wir empfehlen dir, deine eigene Trinkflasche mitzubringen – gut hydriert trainiert es sich einfach besser."
       },
       {
-        q: "Was ist die einmalige Aufnahmegebühr?",
-        a: "Einmalig fällt eine Aufnahmegebühr von 100€ an. Diese deckt Ersteinrichtung und Mitgliedsverwaltung ab. Es gibt keine weiteren versteckten Kosten."
-      },
-      {
-        q: "Gibt es Rabatte für aktive Wettkämpfer?",
-        a: "Ja. Aktive Wettkämpfer im Vereinssport können unter bestimmten Voraussetzungen von einem ermäßigten Beitrag profitieren. Voraussetzung ist aktive Vereinsmitgliedschaft und regelmäßige Wettkampfteilnahme. Sprich uns direkt an — wir finden gemeinsam eine faire Lösung."
+        q: "Kann ich mit Bargeld bezahlen?",
+        a: "In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter."
       }
     ]
   },
 
-  /* ── STUDIO & STANDORT ────────────────────────────────── */
+  /* ── KONTAKT & SUPPORT ──────────────────────────────────── */
   {
-    category: "Studio & Standort",
-    id: "location",
+    category: "Kontakt & Support",
+    id: "kontakt",
     items: [
       {
-        q: "Wo befindet sich das Bomaye Gym?",
-        a: "Wir sind im Pineapple Park in München: Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park, 80639 München. Optimal erreichbar mit der S-Bahn (Hirschgarten, 5 Minuten zu Fuß) und mit dem Auto (Parkplätze im Pineapple Park Areal vorhanden)."
-      },
-      {
-        q: "Wie sind die Öffnungszeiten?",
-        a: "Montag bis Freitag: 07:00 – 22:00 Uhr. Samstag: 09:00 – 16:00 Uhr. Sonntag: geschlossen. Zu Feiertagen können die Zeiten abweichen — wir informieren rechtzeitig über unsere Social-Media-Kanäle."
-      }
-    ]
-  },
-
-  /* ── BUCHUNG & PROBETRAINING ──────────────────────────── */
-  {
-    category: "Buchung & Probetraining",
-    id: "booking",
-    items: [
-      {
-        q: "Wie buche ich ein kostenloses Probetraining?",
-        a: "Über den Button „Kostenloses Probetraining" auf unserer Website oder direkt via WhatsApp unter 0176 2193 2243. Das Probetraining ist kostenlos, ohne Vertrag und ohne jeglichen Druck — du entscheidest danach in Ruhe."
-      },
-      {
-        q: "Wann öffnet Bomaye Gym?",
-        a: "Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime-Garantie und zahlt erst ab Opening. Aktuelle Infos auf Instagram: @bomayegym."
+        q: "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
+        a: "Am schnellsten per WhatsApp unter 0176 2193 2243 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an info@bomayegym.com oder auf Instagram unter @bomayegym. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
       }
     ]
   }

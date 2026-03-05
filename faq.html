@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <title>FAQ — BOMAYE GYM MUNICH | Häufige Fragen</title>
-  <meta name="description" content="Alle häufigen Fragen zu Bomaye Gym Munich: Training, Mitgliedschaft, Preise, Standort und mehr. Klare Antworten — kein Blabla." />
+  <title>FAQ | Bomaye Gym Munich</title>
+  <meta name="description" content="Antworten zu Mitgliedschaft, Training, Buchung, Ausstattung und Anfahrt – Bomaye Gym Munich." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#080808" />
 
@@ -436,7 +436,9 @@
 </main><!-- /faqp-main -->
 
 <!-- ═══════ SCRIPTS ═══════ -->
-<script src="assets/js/faq-data.js"></script>
+<!-- JSON-LD FAQ Schema — generated from same data as accordion -->
+<script type="application/ld+json" id="faq-jsonld"></script>
+<script src="/assets/js/faq-data.js"></script>
 <script>
 /* ── Header scroll styling (same as main site) ─── */
 (function () {
@@ -509,6 +511,30 @@ function _waitBsport(attempt) {
 }
 document.addEventListener('click',   e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown',  e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ════════════════════════════════════════════════
+   FAQ JSON-LD SCHEMA — injected after data loads
+════════════════════════════════════════════════ */
+(function buildJsonLd() {
+  if (typeof BOMAYE_FAQ === 'undefined') return;
+  var qas = [];
+  BOMAYE_FAQ.forEach(function (section) {
+    section.items.forEach(function (item) {
+      qas.push({
+        '@type': 'Question',
+        'name': item.q,
+        'acceptedAnswer': { '@type': 'Answer', 'text': item.a }
+      });
+    });
+  });
+  var schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': qas
+  };
+  var el = document.getElementById('faq-jsonld');
+  if (el) el.textContent = JSON.stringify(schema);
+})();
 
 /* ════════════════════════════════════════════════
    FAQ ACCORDION — rendered from faq-data.js
