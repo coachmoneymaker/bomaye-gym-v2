@@ -5,17 +5,17 @@
 
 /* ── Variables ─────────────────────────────────────────────── */
 :root {
-  --ink:        #080808;
-  --ink2:       #0f0f0f;
-  --smoke:      #141414;
-  --smoke2:     #1a1a1a;
+  --ink:        #0c0c0c;
+  --ink2:       #111111;
+  --smoke:      #181818;
+  --smoke2:     #1f1f1f;
   --white:      #ffffff;
   --off-white:  #f0ede8;
   --gold:       #c5a059;
   --gold-dark:  #a07c3a;
   --gold-light: #d4b472;
-  --muted:      rgba(255,255,255,0.45);
-  --border:     rgba(197,160,89,0.18);
+  --muted:      rgba(255,255,255,0.58);
+  --border:     rgba(197,160,89,0.22);
 
   --font-display: 'Bebas Neue', 'Oswald', sans-serif;
   --font-head:    'Oswald', sans-serif;
@@ -277,8 +277,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 
 /* ── Differentiator Block ──────────────────────────────────── */
 .diff-block {
-  background: var(--smoke); border-top: 1px solid rgba(255,255,255,0.04);
-  border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2.75rem 0;
+  background: var(--smoke2); border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06); padding: 2.75rem 0;
 }
 .diff-inner {
   display: flex; align-items: center; justify-content: center;
@@ -596,7 +596,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   text-align: center; margin-top: 2rem; padding-top: 2rem;
   border-top: 1px solid rgba(255,255,255,0.06);
 }
-.pricing-footer p { font-size: 0.82rem; color: rgba(255,255,255,0.35); }
+.pricing-footer p { font-size: 0.82rem; color: rgba(255,255,255,0.52); }
 
 /* ── Weitere Preise (expandable) ───────────────────────────── */
 .mehr-preise-wrap { margin-top: 2rem; }
@@ -1142,8 +1142,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 /* Subtitle readability over background image */
 .hero-subtitle {
-  text-shadow: 0 1px 12px rgba(0,0,0,0.9), 0 0 28px rgba(0,0,0,0.6);
-  color: rgba(255,255,255,0.88);
+  text-shadow: 0 1px 14px rgba(0,0,0,0.95), 0 0 32px rgba(0,0,0,0.7);
+  color: rgba(255,255,255,0.92);
 }
 
 /* ══════════════════════════════════════════════════════════════
