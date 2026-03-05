@@ -969,7 +969,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 480px (Mobile)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  :root { --nav-h: 60px; }
+  :root { --nav-h: 120px; }
   section { padding: 3.5rem 0; }
   .container { padding: 0 1.25rem; }
 
@@ -1128,17 +1128,46 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 
 /* ══════════════════════════════════════════════════════════════
+   MOBILE NAV — CENTERED LOGO
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root { --nav-h: 120px; }
+
+  .nav-inner {
+    justify-content: center;
+    position: relative;
+  }
+
+  .logo-img { width: auto; height: 90px; }
+
+  .burger {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .back-btn.visible {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
    HERO — MOBILE VERTICAL POSITIONING + SUBTITLE READABILITY
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   #hero { align-items: flex-start; }
   .hero-content {
-    padding-top: calc(var(--nav-h) + 2rem);
-    padding-bottom: 5rem;
+    padding-top: calc(var(--nav-h) + 1rem);
+    padding-bottom: 2rem;
   }
+  .hero-h1 { margin-bottom: 1.25rem; }
 }
 @media (max-width: 480px) {
-  .hero-content { padding-top: calc(var(--nav-h) + 1.5rem); }
+  .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 2rem; }
 }
 /* Subtitle readability over background image */
 .hero-subtitle {
