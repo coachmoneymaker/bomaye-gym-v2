@@ -106,28 +106,32 @@ function nav(viewId, sectionId) {
   setTimeout(runReveal, 120);
 }
 
-/* ── Pricing section — duration toggle ─────────────────────── */
+/* ── Pricing section — age category toggle ──────────────────── */
 function initPricingSection() {
   if (typeof BOMAYE === 'undefined') return;
-  renderPricingCards('12M');
-  document.querySelectorAll('.dtab').forEach(tab => {
+  renderPricingCards('erwachsene');
+  document.querySelectorAll('.atab').forEach(tab => {
     tab.addEventListener('click', function () {
-      document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-      renderPricingCards(this.dataset.duration);
+      renderPricingCards(this.dataset.age);
       setTimeout(initSliderDots, 60);
     });
   });
 }
 
-function renderPricingCards(duration) {
+function renderPricingCards(ageGroup) {
   if (typeof BOMAYE === 'undefined') return;
   const grid = document.getElementById('programs-grid');
   if (!grid) return;
 
   let html = '';
-  BOMAYE.pricing.programs.forEach(prog => {
-    const price = prog.prices[duration];
+  const filtered = BOMAYE.pricing.programs.filter(p =>
+    !p.ageGroups || p.ageGroups.includes(ageGroup)
+  );
+
+  filtered.forEach(prog => {
+    const price = prog.prices['12M'];
     html += `
       <div class="prog-card reveal">
         <div class="prog-icon"><i class="fa-solid ${prog.icon}" aria-hidden="true"></i></div>
@@ -142,32 +146,34 @@ function renderPricingCards(duration) {
       </div>`;
   });
 
-  const pt = BOMAYE.pricing.personal;
-  html += `
-    <div class="prog-card special reveal">
-      <div class="prog-icon"><i class="fa-solid ${pt.icon}" aria-hidden="true"></i></div>
-      <div class="prog-name">${pt.name}</div>
-      <span class="tag tag--dark prog-tag">${pt.tag}</span>
-      <div class="prog-price">
-        <span class="prog-price-label">${pt.priceLabel}</span>
-        <span class="prog-price-unit">${pt.priceUnit}</span>
-      </div>
-      <p class="prog-note">${pt.note}</p>
-      <button onclick="openBooking('Personal Training')" class="btn btn--gold btn--sm btn--full prog-cta" type="button">TERMIN BUCHEN</button>
-    </div>`;
+  if (ageGroup === 'erwachsene') {
+    const pt = BOMAYE.pricing.personal;
+    html += `
+      <div class="prog-card special reveal">
+        <div class="prog-icon"><i class="fa-solid ${pt.icon}" aria-hidden="true"></i></div>
+        <div class="prog-name">${pt.name}</div>
+        <span class="tag tag--dark prog-tag">${pt.tag}</span>
+        <div class="prog-price">
+          <span class="prog-price-label">${pt.priceLabel}</span>
+          <span class="prog-price-unit">${pt.priceUnit}</span>
+        </div>
+        <p class="prog-note">${pt.note}</p>
+        <button onclick="openBooking('Personal Training')" class="btn btn--gold btn--sm btn--full prog-cta" type="button">TERMIN BUCHEN</button>
+      </div>`;
 
-  const corp = BOMAYE.pricing.corporate;
-  html += `
-    <div class="prog-card special reveal">
-      <div class="prog-icon"><i class="fa-solid ${corp.icon}" aria-hidden="true"></i></div>
-      <div class="prog-name">${corp.name}</div>
-      <span class="tag tag--dark prog-tag">${corp.tag}</span>
-      <div class="prog-price">
-        <span class="prog-price-label">${corp.priceLabel}</span>
-      </div>
-      <p class="prog-note">${corp.note}</p>
-      <button onclick="openBooking('Corporate Boxing')" class="btn btn--outline-light btn--sm btn--full prog-cta" type="button">ANFRAGE SENDEN</button>
-    </div>`;
+    const corp = BOMAYE.pricing.corporate;
+    html += `
+      <div class="prog-card special reveal">
+        <div class="prog-icon"><i class="fa-solid ${corp.icon}" aria-hidden="true"></i></div>
+        <div class="prog-name">${corp.name}</div>
+        <span class="tag tag--dark prog-tag">${corp.tag}</span>
+        <div class="prog-price">
+          <span class="prog-price-label">${corp.priceLabel}</span>
+        </div>
+        <p class="prog-note">${corp.note}</p>
+        <button onclick="openBooking('Corporate Boxing')" class="btn btn--outline-light btn--sm btn--full prog-cta" type="button">ANFRAGE SENDEN</button>
+      </div>`;
+  }
 
   grid.innerHTML = html;
   runReveal();
@@ -186,6 +192,10 @@ async function initEarlyBirdFOMO() {
   const total = BOMAYE.earlyBird.total;
   const taken = total - spotsLeft;
   const pct   = Math.max(0, Math.min(100, Math.round((taken / total) * 100)));
+
+  // Hero mini counter
+  const heroNum = document.getElementById('hero-eb-num');
+  if (heroNum) heroNum.textContent = spotsLeft;
 
   // Badge text
   const badgeEl = document.getElementById('spots-badge-text');

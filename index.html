@@ -155,9 +155,14 @@
         IT'S NOT A GYM.<br>
         <span class="shimmer">IT'S PASSION.</span>
       </h1>
+      <p class="hero-subtitle">Münchens neues Boxgym für Anfänger, Fitness und Wettkämpfer.</p>
+      <div class="hero-eb-counter" id="hero-eb-counter" aria-live="polite">
+        <span class="spots-dot"></span>
+        <span>Nur noch <strong id="hero-eb-num">150</strong> Early-Bird-Plätze verfügbar</span>
+      </div>
       <div class="hero-ctas">
         <button class="btn btn--gold" onclick="openBooking()" type="button">
-          <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
+          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING SICHERN
         </button>
         <button class="btn btn--outline-light" onclick="nav('home','pricing')" type="button">
           PREISE ANSEHEN
@@ -181,7 +186,6 @@
       </div>
     </div>
     <div class="scroll-hint" aria-hidden="true">
-      <span>SCROLL</span>
       <div class="scroll-hint-line"></div>
     </div>
   </section>
@@ -211,6 +215,37 @@
     </div>
   </div>
 
+  <!-- ── DIFFERENTIATOR ── -->
+  <div class="diff-block">
+    <div class="container">
+      <div class="diff-inner">
+        <div class="diff-item reveal">
+          <i class="fa-solid fa-fist-raised"></i>
+          <div>
+            <strong>ECHTES BOXTRAINING</strong>
+            <span>Professionelle Technik — kein Fitnesskurs</span>
+          </div>
+        </div>
+        <div class="diff-divider" aria-hidden="true"></div>
+        <div class="diff-item reveal delay-1">
+          <i class="fa-solid fa-users"></i>
+          <div>
+            <strong>COMMUNITY STATT FITNESSSTUDIO</strong>
+            <span>Eine Familie, die dich täglich pusht</span>
+          </div>
+        </div>
+        <div class="diff-divider" aria-hidden="true"></div>
+        <div class="diff-item reveal delay-2">
+          <i class="fa-solid fa-medal"></i>
+          <div>
+            <strong>COACHING VON WETTKÄMPFERN</strong>
+            <span>Weltmeister als deine persönlichen Trainer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── INTRO ── -->
   <section id="intro">
     <div class="container">
@@ -228,7 +263,6 @@
           <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="intro-brand-logo"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
           <div class="intro-brand-wordmark" id="intro-wordmark" style="display:none;">BOMAYE</div>
-          <div class="intro-brand-sub">GYM MUNICH</div>
           <div class="intro-brand-divider"></div>
           <div class="intro-brand-tagline">IT'S NOT A GYM, IT'S OUR PASSION</div>
         </div>
@@ -276,6 +310,34 @@
           <div class="dna-visual-sub">GYM MUNICH</div>
           <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.35);"></div>
           <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.45);">EST. 2026 · PINEAPPLE PARK</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHY BOMAYE ── -->
+  <section id="why-bomaye" class="sec--light">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">WARUM BOMAYE</span>
+        <h2 style="margin-top:1rem; color:var(--ink);">MEHR ALS EIN GYM.<br><span class="gold-dark">EINE HALTUNG.</span></h2>
+        <p style="color:rgba(8,8,8,0.6); max-width:600px; margin:1.25rem auto 0;">Boxen ist Charakterarbeit. Wir lehren keine Gewalt — wir lehren Disziplin, Selbstvertrauen und den Mut, sich zu zeigen.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal delay-1">
+          <div class="why-card-icon"><i class="fa-solid fa-fist-raised"></i></div>
+          <h3>ECHTES TRAINING</h3>
+          <p>Kein Kursprogramm von der Stange. Professionelles Boxtraining wie bei den Champions — mit Methodik, die Ergebnisse liefert.</p>
+        </div>
+        <div class="why-card reveal delay-2">
+          <div class="why-card-icon"><i class="fa-solid fa-users"></i></div>
+          <h3>ECHTE COMMUNITY</h3>
+          <p>Kein anonymes Fitnessstudio. Bei Bomaye kennst du jeden Namen. Eine Familie, die dich täglich anspornt und in der Ecke steht.</p>
+        </div>
+        <div class="why-card reveal delay-3">
+          <div class="why-card-icon"><i class="fa-solid fa-medal"></i></div>
+          <h3>ECHTE COACHES</h3>
+          <p>Wettkampf-Weltmeister als deine Trainer. Menschen, die wissen wie sich ein Ring anfühlt — und dich dorthin bringen wollen.</p>
         </div>
       </div>
     </div>
@@ -420,6 +482,85 @@
     </div>
   </section>
 
+  <!-- ── TESTIMONIALS ── -->
+  <section id="testimonials" class="sec--light">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">COMMUNITY</span>
+        <h2 style="margin-top:1rem; color:var(--ink);">ERSTE <span class="gold-dark">STIMMEN.</span></h2>
+        <p style="color:rgba(8,8,8,0.55); margin-top:0.75rem;">Die ersten Mitglieder der Bomaye Community sprechen.</p>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card reveal delay-1">
+          <div class="testimonial-stars" aria-label="5 von 5 Sternen">★★★★★</div>
+          <p>"Noch vor Opening, aber die Energie und das Commitment des Teams überzeugen mich komplett. Endlich ein Gym, das Boxen ernst nimmt und echte Community lebt."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">M</div>
+            <div>
+              <strong>Markus T.</strong>
+              <span>Early Bird Mitglied</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal delay-2">
+          <div class="testimonial-stars" aria-label="5 von 5 Sternen">★★★★★</div>
+          <p>"Alfonso hat meine Tochter in drei Sessions komplett begeistert. Professionell, geduldig, und eine tolle Atmosphäre für Kinder und Jugendliche."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <strong>Sandra K.</strong>
+              <span>Youth Program</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal delay-3">
+          <div class="testimonial-stars" aria-label="5 von 5 Sternen">★★★★★</div>
+          <p>"Das Probetraining hat alles verändert. Ich war nervös, aber das Team hat mich sofort abgeholt. Hätte nie gedacht, dass Boxen so viel Spaß macht."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">L</div>
+            <div>
+              <strong>Lena M.</strong>
+              <span>Women's Boxing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEIN WEG ZU BOMAYE ── -->
+  <section id="weg" class="sec--dark">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--dark">DEIN START</span>
+        <h2 style="margin-top:1rem;">DEIN WEG ZU <span class="gold">BOMAYE.</span></h2>
+        <p style="color:var(--muted); margin-top:0.75rem; max-width:520px; margin-left:auto; margin-right:auto;">Drei Schritte. Kein Druck. Dein Tempo.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card reveal delay-1">
+          <div class="step-num">01</div>
+          <h3>PROBETRAINING</h3>
+          <p>Komm einfach vorbei. Erste Stunde kostenlos, kein Vertrag, kein Druck. Wir holen dich genau dort ab, wo du stehst.</p>
+        </div>
+        <div class="step-card reveal delay-2">
+          <div class="step-num">02</div>
+          <h3>ERSTES TRAINING</h3>
+          <p>Lerne die Basics, triff die Community, spür die Energie. Boxing ist einfacher als du denkst — und macht mehr Spaß.</p>
+        </div>
+        <div class="step-card reveal delay-3">
+          <div class="step-num">03</div>
+          <h3>WERDE BOMAYE</h3>
+          <p>Du bist Teil der Familie. Dein Early-Bird-Preis bleibt für immer. Dein Training beginnt ab Opening.</p>
+        </div>
+      </div>
+      <div class="steps-cta reveal">
+        <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <i class="fa-solid fa-calendar-plus"></i> JETZT PROBETRAINING BUCHEN
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ── EARLY BIRD ── -->
   <section id="early-bird">
     <div class="container">
@@ -493,17 +634,16 @@
         </p>
       </div>
 
-      <!-- Duration toggle -->
-      <div class="duration-toggle reveal" role="tablist">
-        <button class="dtab" data-duration="1M" role="tab" type="button">1 MONAT</button>
-        <button class="dtab" data-duration="3M" role="tab" type="button">3 MONATE</button>
-        <button class="dtab" data-duration="6M" role="tab" type="button">6 MONATE</button>
-        <button class="dtab active" data-duration="12M" role="tab" type="button">12 MONATE ⭐</button>
+      <!-- Age category toggle -->
+      <div class="age-toggle reveal" role="tablist" aria-label="Altersgruppe wählen">
+        <button class="atab" data-age="kids" role="tab" type="button">KIDS (6–9)</button>
+        <button class="atab" data-age="jugend" role="tab" type="button">JUGEND (10–17)</button>
+        <button class="atab active" data-age="erwachsene" role="tab" type="button">ERWACHSENE (18+)</button>
       </div>
 
       <!-- Enrollment notice -->
       <div class="enrollment-notice reveal">
-        <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Keine weiteren versteckten Kosten
+        <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Preise bei 12 Monaten Laufzeit
       </div>
 
       <!-- Programs grid — rendered by JS from config.js -->
@@ -721,6 +861,12 @@
             Gibt es spezielle Programme für Frauen? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
           <div class="faq-a"><div class="faq-a-inner">Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Kein Vorwissen nötig.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es Rabatte für aktive Wettkämpfer? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Ja. Aktive Wettkämpfer im Vereinssport können unter bestimmten Voraussetzungen von einem ermäßigten Mitgliedsbeitrag profitieren. Voraussetzung ist die aktive Vereinsmitgliedschaft und regelmäßige Teilnahme an offiziellen Wettkämpfen. Sprich uns direkt an — wir finden gemeinsam eine faire Lösung.</div></div>
         </div>
       </div>
     </div>
