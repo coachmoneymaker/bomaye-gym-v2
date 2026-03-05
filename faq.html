@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>FAQ — BOMAYE GYM MUNICH | Häufige Fragen</title>
+  <meta name="description" content="Alle häufigen Fragen zu Bomaye Gym Munich: Training, Mitgliedschaft, Preise, Standort und mehr. Klare Antworten — kein Blabla." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="FAQ — BOMAYE GYM MUNICH" />
+  <meta property="og:description" content="Alle häufigen Fragen zu Training, Mitgliedschaft und Standort." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/faq" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/faq" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       FAQ PAGE — Ivory Premium Light Theme
+       Scoped to .faqp-* to avoid conflicts with main styles
+    ═══════════════════════════════════════════════════════ */
+
+    /* Override dark body background for this page */
+    body { background: #F3EDE1; }
+
+    /* ── Page wrapper ──────────────────────────────── */
+    .faqp-main {
+      padding-top: var(--nav-h);
+      background: #F3EDE1;
+      min-height: 100vh;
+    }
+
+    /* ── Hero section ──────────────────────────────── */
+    .faqp-hero {
+      padding: clamp(48px, 8vw, 96px) 0 clamp(32px, 5vw, 56px);
+      text-align: center;
+      background: #F3EDE1;
+      border-bottom: 1px solid rgba(12,12,12,0.08);
+    }
+    .faqp-hero-tag {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.6rem; letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #a07c3a;
+      background: rgba(160,124,58,0.1);
+      border: 1px solid rgba(160,124,58,0.28);
+      padding: 4px 14px; border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .faqp-hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 9vw, 6.5rem);
+      line-height: 0.95;
+      color: #0c0c0c;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .faqp-hero-gold { color: #a07c3a; }
+    .faqp-hero-sub {
+      font-family: var(--font-body);
+      font-size: clamp(0.88rem, 2vw, 1rem);
+      color: rgba(12,12,12,0.52);
+      max-width: 460px; margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* ── FAQ content area ──────────────────────────── */
+    .faqp-content { padding: clamp(40px, 6vw, 72px) 0; }
+    .faqp-container { max-width: 800px; }
+
+    /* ── One category group ────────────────────────── */
+    .faqp-section { margin-bottom: clamp(28px, 4vw, 44px); }
+    .faqp-section:last-child { margin-bottom: 0; }
+
+    /* Category pill */
+    .faqp-category { margin-bottom: 0.75rem; }
+    .faqp-category-pill {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #a07c3a;
+      background: rgba(160,124,58,0.08);
+      border: 1px solid rgba(160,124,58,0.28);
+      padding: 4px 13px; border-radius: 999px;
+    }
+
+    /* Card list */
+    .faqp-list { display: flex; flex-direction: column; gap: 7px; }
+
+    /* Single accordion item */
+    .faqp-item {
+      background: #ffffff;
+      border: 1px solid rgba(12,12,12,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .faqp-item[data-open="true"] {
+      border-color: rgba(160,124,58,0.25);
+      box-shadow: 0 4px 22px rgba(0,0,0,0.07);
+    }
+
+    /* Question button row */
+    .faqp-item-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 1.2rem 1.4rem;
+      text-align: left;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+    .faqp-item-btn:focus-visible {
+      outline: 2px solid #a07c3a;
+      outline-offset: -2px;
+      border-radius: 12px;
+    }
+    .faqp-question {
+      font-family: var(--font-head);
+      font-size: clamp(0.88rem, 2.5vw, 1rem);
+      letter-spacing: 0.4px;
+      color: #0c0c0c;
+      line-height: 1.45;
+      flex: 1;
+      transition: color 0.2s;
+    }
+    .faqp-item[data-open="true"] .faqp-question { color: #a07c3a; }
+
+    /* +/– circular icon */
+    .faqp-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      border-radius: 50%;
+      border: 1.5px solid rgba(12,12,12,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: rgba(12,12,12,0.45);
+      transition: all 0.25s;
+    }
+    .faqp-item[data-open="true"] .faqp-icon {
+      border-color: #a07c3a;
+      color: #a07c3a;
+      background: rgba(160,124,58,0.08);
+    }
+    .faqp-icon-plus  { display: block; }
+    .faqp-icon-minus { display: none; }
+    .faqp-item[data-open="true"] .faqp-icon-plus  { display: none; }
+    .faqp-item[data-open="true"] .faqp-icon-minus { display: block; }
+
+    /* Answer panel — slide animation */
+    .faqp-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .faqp-answer {
+      padding: 0 1.4rem 1.3rem;
+      border-top: 1px solid rgba(12,12,12,0.07);
+      padding-top: 0.95rem;
+    }
+    .faqp-answer p {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(12,12,12,0.6);
+      line-height: 1.82;
+      margin: 0;
+    }
+
+    /* ── CTA section ───────────────────────────────── */
+    .faqp-cta {
+      background: #0b0b0b;
+      padding: clamp(48px, 7vw, 96px) 0;
+      text-align: center;
+    }
+    .faqp-cta-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.6rem; letter-spacing: 4px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .faqp-cta-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .faqp-cta-h2 span { color: #c5a059; }
+    .faqp-cta-sub {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 2.5rem;
+    }
+    .faqp-cta-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn--faqp-outline {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      font-family: var(--font-head); font-size: 0.76rem;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 0.85rem 2rem; border-radius: 999px;
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.22);
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn--faqp-outline:hover {
+      border-color: #c5a059;
+      color: #c5a059;
+    }
+
+    /* ── Adapted header for FAQ page ───────────────── */
+    /* Nav links as anchors keep same visual style */
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+    .nav-link-active { color: var(--gold) !important; }
+
+    /* ── Mobile adjustments ────────────────────────── */
+    @media (max-width: 768px) {
+      .faqp-item-btn  { padding: 1rem 1.1rem; }
+      .faqp-answer    { padding: 0 1.1rem 1.1rem; padding-top: 0.85rem; }
+      .faqp-question  { font-size: 0.88rem; }
+      .faqp-cta-btns  { flex-direction: column; align-items: center; }
+      .faqp-cta-btns .btn,
+      .faqp-cta-btns .btn--faqp-outline { width: 100%; max-width: 320px; }
+    }
+    @media (max-width: 480px) {
+      .faqp-hero-h1   { font-size: clamp(2.4rem, 11vw, 3.5rem); }
+      .faqp-item      { border-radius: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER (adapted for standalone page) ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" id="faq-logo-img" />
+      <span class="logo-text" id="faq-logo-text">BOMAYE</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">DNA</a>
+      <a class="nav-link" href="/">KURSE</a>
+      <a class="nav-link" href="/">TEAM</a>
+      <a class="nav-link" href="/">PREISE</a>
+      <a class="nav-link nav-link-active" href="/faq" aria-current="page">FAQ</a>
+      <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
+    </nav>
+
+    <button class="burger" onclick="toggleFaqMenu()" aria-label="Menü" aria-expanded="false" id="faq-burger-btn" type="button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="faq-mobile-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);">
+  <button class="mob-close" onclick="toggleFaqMenu()" type="button" aria-label="Menü schließen" style="position:absolute;top:1.5rem;right:1.5rem;font-size:1.5rem;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">TEAM</a>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">PREISE</a>
+  <a class="nav-link" href="/faq" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">FAQ</a>
+  <button class="btn btn--gold" onclick="toggleFaqMenu(); openBooking();" type="button" style="margin-top:1.25rem;padding:0.9rem 2.5rem;">
+    PROBETRAINING
+  </button>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FAQ PAGE MAIN
+═══════════════════════════════════════════════════════ -->
+<main class="faqp-main" id="faqp-main">
+
+  <!-- ── Hero ── -->
+  <section class="faqp-hero" aria-label="FAQ Übersicht">
+    <div class="container">
+      <div class="faqp-hero-tag">SUPPORT</div>
+      <h1 class="faqp-hero-h1">ALLE FRAGEN.<br><span class="faqp-hero-gold">KLARE ANTWORTEN.</span></h1>
+      <p class="faqp-hero-sub">Alles über Bomaye Gym Munich — kompakt und ehrlich.</p>
+    </div>
+  </section>
+
+  <!-- ── FAQ Accordion (rendered from faq-data.js) ── -->
+  <section class="faqp-content" aria-label="Häufige Fragen">
+    <div class="container faqp-container">
+      <div id="faqp-accordion" class="faqp-accordion">
+        <!-- Populated by the script below -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bottom CTA ── -->
+  <section class="faqp-cta" aria-label="Kontakt">
+    <div class="container">
+      <p class="faqp-cta-eyebrow">NOCH FRAGEN?</p>
+      <h2 class="faqp-cta-h2">WIR SIND FÜR<br><span>DICH DA.</span></h2>
+      <p class="faqp-cta-sub">Meld dich einfach — wir antworten schnell.</p>
+      <div class="faqp-cta-btns">
+        <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+           target="_blank" rel="noopener" class="btn btn--gold">
+          <i class="fa-brands fa-whatsapp"></i> PER WHATSAPP FRAGEN
+        </a>
+        <a href="mailto:info@bomayegym.com" class="btn--faqp-outline">
+          <i class="fa-regular fa-envelope"></i> PER E-MAIL
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><a href="/">Olympic Boxing</a></li>
+            <li><a href="/">Kickboxing</a></li>
+            <li><a href="/">Women's Boxing</a></li>
+            <li><a href="/">Youth Boxing</a></li>
+            <li><a href="/">Personal Training</a></li>
+            <li><a href="/">Corporate Boxing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/">Unsere DNA</a></li>
+            <li><a href="/">Team</a></li>
+            <li><a href="/">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener">@bomayegym</a></div>
+        </div>
+      </div>
+
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <span class="dot">•</span>
+        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="impressum.html">IMPRESSUM</a>
+          <a href="datenschutz.html">DATENSCHUTZ</a>
+          <a href="agb.html">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main><!-- /faqp-main -->
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script src="assets/js/faq-data.js"></script>
+<script>
+/* ── Header scroll styling (same as main site) ─── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ── Logo image fallback ─────────────────────── */
+(function () {
+  const img  = document.getElementById('faq-logo-img');
+  const text = document.getElementById('faq-logo-text');
+  if (!img) return;
+  function onLoad()  { img.classList.remove('hidden'); }
+  function onError() { img.classList.add('hidden'); if (text) text.classList.add('visible'); }
+  img.addEventListener('load',  onLoad);
+  img.addEventListener('error', onError);
+  if (img.complete) { img.naturalWidth > 0 ? onLoad() : onError(); }
+})();
+
+/* ── Mobile nav toggle ───────────────────────── */
+function toggleFaqMenu() {
+  const nav = document.getElementById('faq-mobile-nav');
+  const btn = document.getElementById('faq-burger-btn');
+  if (!nav) return;
+  const isOpen = nav.style.transform === 'translateX(0%)' || nav.style.transform === 'translateX(0px)' || nav.style.transform === 'translateX(0)';
+  nav.style.transform = isOpen ? 'translateX(100%)' : 'translateX(0)';
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+  if (btn) btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+/* ── Booking modal (standalone — no main.js needed) ── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id  = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',   e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown',  e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ════════════════════════════════════════════════
+   FAQ ACCORDION — rendered from faq-data.js
+════════════════════════════════════════════════ */
+(function buildFaq() {
+  const root = document.getElementById('faqp-accordion');
+  if (!root || typeof BOMAYE_FAQ === 'undefined') return;
+
+  let html = '';
+
+  BOMAYE_FAQ.forEach(function (section) {
+    html += '<div class="faqp-section">';
+    html += '<div class="faqp-category">';
+    html += '<span class="faqp-category-pill">' + escHtml(section.category) + '</span>';
+    html += '</div>';
+    html += '<div class="faqp-list" role="list">';
+
+    section.items.forEach(function (item, idx) {
+      var panelId = 'faqp-' + section.id + '-' + idx;
+      var btnId   = 'faqpbtn-' + section.id + '-' + idx;
+      // Replace \n in answer with paragraph breaks
+      var answerHtml = escHtml(item.a)
+        .split('\\n')
+        .map(function (p) { return p.trim(); })
+        .filter(Boolean)
+        .map(function (p) { return '<p>' + p + '</p>'; })
+        .join('');
+      if (!answerHtml) answerHtml = '<p>' + escHtml(item.a) + '</p>';
+
+      html += '<div class="faqp-item" role="listitem" data-open="false">';
+      html += '<button class="faqp-item-btn" id="' + btnId + '"'
+            + ' aria-expanded="false" aria-controls="' + panelId + '"'
+            + ' type="button">';
+      html += '<span class="faqp-question">' + escHtml(item.q) + '</span>';
+      html += '<span class="faqp-icon" aria-hidden="true">'
+            + '<i class="fa-solid fa-plus  faqp-icon-plus"></i>'
+            + '<i class="fa-solid fa-minus faqp-icon-minus"></i>'
+            + '</span>';
+      html += '</button>';
+      html += '<div class="faqp-panel" id="' + panelId + '"'
+            + ' role="region" aria-labelledby="' + btnId + '">';
+      html += '<div class="faqp-answer">' + answerHtml + '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    html += '</div></div>'; // .faqp-list + .faqp-section
+  });
+
+  root.innerHTML = html;
+
+  /* Attach click listeners */
+  root.querySelectorAll('.faqp-item-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item    = btn.closest('.faqp-item');
+      var panel   = document.getElementById(btn.getAttribute('aria-controls'));
+      var isOpen  = btn.getAttribute('aria-expanded') === 'true';
+
+      /* Close all */
+      root.querySelectorAll('.faqp-item').forEach(function (el) {
+        el.setAttribute('data-open', 'false');
+      });
+      root.querySelectorAll('.faqp-item-btn').forEach(function (b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+      root.querySelectorAll('.faqp-panel').forEach(function (p) {
+        p.style.maxHeight = null;
+      });
+
+      /* Open clicked one if it was closed */
+      if (!isOpen) {
+        item.setAttribute('data-open', 'true');
+        btn.setAttribute('aria-expanded', 'true');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+})();
+
+/* ── HTML escape helper ───────────────────────── */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>
