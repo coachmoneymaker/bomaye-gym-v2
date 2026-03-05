@@ -27,6 +27,9 @@
   --radius:    6px;
   --radius-lg: 12px;
   --nav-h:     72px;
+
+  --anthracite: #161616;
+  --ink-deep:   #0b0b0b;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -73,8 +76,8 @@ ul { list-style: none; }
 .sec--ink2  { background: var(--smoke2); }
 .sec--light { background: #F5F5F5; }
 .sec--light-2 { background: #EFEFEF; }
-section { padding: 5rem 0; }
-.sec-header { text-align: center; margin-bottom: 3.5rem; }
+section { padding: clamp(60px, 8vw, 120px) 0; }
+.sec-header { text-align: center; margin-bottom: clamp(24px, 4vw, 56px); }
 
 /* ── Typography ────────────────────────────────────────────── */
 h1, h2, h3, h4 { font-family: var(--font-display); text-transform: uppercase; line-height: 1.05; letter-spacing: 0.02em; }
@@ -277,8 +280,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 
 /* ── Differentiator Block ──────────────────────────────────── */
 .diff-block {
-  background: var(--smoke2); border-top: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.06); padding: 2.75rem 0;
+  background: var(--anthracite); border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05); padding: 2.75rem 0;
 }
 .diff-inner {
   display: flex; align-items: center; justify-content: center;
@@ -369,7 +372,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
    QUOTE
 ══════════════════════════════════════════════════════════════ */
 #quote {
-  padding: 5rem 0;
+  padding: clamp(60px, 8vw, 120px) 0;
   background-image: url('../images/quote-bg.webp');
   background-size: cover; background-position: center; background-attachment: fixed;
   position: relative;
@@ -458,7 +461,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* ══════════════════════════════════════════════════════════════
    TEAM
 ══════════════════════════════════════════════════════════════ */
-#team { background: #111; }
+#team { background: var(--ink-deep); }
 .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .coach-card {
   display: grid; grid-template-columns: 240px 1fr; gap: 0;
@@ -932,7 +935,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   :root { --nav-h: 64px; }
-  section { padding: 4rem 0; }
+  section { padding: clamp(40px, 5vw, 80px) 0; }
 
   .nav-links { display: none; }
   .burger    { display: flex; }
@@ -970,7 +973,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
   :root { --nav-h: 120px; }
-  section { padding: 3.5rem 0; }
+  section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
@@ -1349,3 +1352,166 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* Stable image containers — prevent CLS */
 .coach-photo img  { background: var(--smoke); }
 .intro-brand-logo { background: transparent; }
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM LAYOUT — SECTION RHYTHM & CONTRAST
+   Hero (#0b0b0b) → Diff/Features (anthracite) → …
+   Meet the Champions (deep black) → Pricing (off-white #f7f7f7)
+   → Testimonials (anthracite) → Footer (deep black)
+══════════════════════════════════════════════════════════════ */
+
+/* ── Hero — deep black ───────────────────────────────── */
+#hero { background: var(--ink-deep); }
+
+/* ── Pricing Section → Off-White Premium ───────────── */
+#pricing { background: #f7f7f7 !important; }
+
+/* Section header text on light bg */
+#pricing .sec-header .tag {
+  background: rgba(8,8,8,0.07);
+  color: rgba(8,8,8,0.65);
+  border-color: rgba(8,8,8,0.12);
+}
+#pricing .sec-header h2 { color: var(--ink) !important; }
+#pricing .sec-header .gold { color: var(--gold-dark) !important; }
+#pricing .sec-header p { color: rgba(8,8,8,0.5) !important; }
+
+/* Age toggle tabs on light bg */
+#pricing .atab {
+  color: rgba(8,8,8,0.55);
+  background: rgba(8,8,8,0.05);
+  border-color: rgba(8,8,8,0.1);
+}
+#pricing .atab:hover,
+#pricing .atab.active {
+  background: rgba(160,124,58,0.1);
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+}
+
+/* Enrollment notice on light bg */
+#pricing .enrollment-notice {
+  background: rgba(160,124,58,0.07);
+  border-color: rgba(160,124,58,0.18);
+  color: rgba(8,8,8,0.5);
+}
+#pricing .enrollment-notice strong { color: var(--gold-dark); }
+
+/* Membership card on light bg */
+#pricing .membership-card {
+  background: #ffffff;
+  border-color: rgba(197,160,89,0.22);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+}
+#pricing .dtab-inner {
+  color: rgba(8,8,8,0.5);
+  background: rgba(8,8,8,0.05);
+  border-color: rgba(8,8,8,0.1);
+}
+#pricing .dtab-inner:hover,
+#pricing .dtab-inner.active {
+  background: rgba(160,124,58,0.1);
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+}
+#pricing .mp-amount { color: var(--gold-dark); }
+#pricing .mp-unit   { color: rgba(8,8,8,0.45); }
+#pricing .mp-savings {
+  background: rgba(160,124,58,0.1);
+  border-color: rgba(160,124,58,0.22);
+  color: var(--gold-dark);
+}
+#pricing .mp-savings-empty { height: 1.5rem; }
+#pricing .membership-benefits li { color: rgba(8,8,8,0.72); }
+#pricing .membership-benefits li i { color: var(--gold-dark); }
+#pricing .membership-enrollment {
+  background: rgba(8,8,8,0.04);
+  color: rgba(8,8,8,0.55);
+}
+#pricing .membership-enrollment i { color: var(--gold-dark); }
+
+/* Addon cards on light bg */
+#pricing .addon-card {
+  background: #ffffff;
+  border-color: rgba(8,8,8,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+#pricing .addon-icon  { color: var(--gold-dark); }
+#pricing .addon-name  { color: var(--ink); }
+#pricing .addon-price { color: var(--gold-dark); }
+#pricing .addon-price span { color: rgba(8,8,8,0.4); }
+#pricing .addon-card > p { color: rgba(8,8,8,0.55); }
+
+/* Outline button fix on light bg */
+#pricing .btn--outline-light {
+  color: var(--ink);
+  border-color: rgba(8,8,8,0.2);
+}
+#pricing .btn--outline-light:hover {
+  background: rgba(8,8,8,0.06);
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+}
+
+/* Mehr-Preise nav button on light bg */
+#pricing .mehr-preise-btn {
+  color: rgba(8,8,8,0.5);
+  background: rgba(8,8,8,0.04);
+  border-color: rgba(8,8,8,0.1);
+}
+#pricing .mehr-preise-btn:hover { border-color: var(--gold-dark); color: var(--gold-dark); }
+
+/* Pricing footer on light bg */
+#pricing .pricing-footer { border-top-color: rgba(8,8,8,0.08); }
+#pricing .pricing-footer p { color: rgba(8,8,8,0.4); }
+
+/* ── Testimonials Section → Dark Anthracite ─────────── */
+#testimonials { background: var(--anthracite) !important; }
+
+#testimonials .tag--light-inv {
+  background: rgba(197,160,89,0.1);
+  color: var(--gold);
+  border-color: rgba(197,160,89,0.2);
+}
+#testimonials .sec-header h2 { color: var(--white) !important; }
+#testimonials .sec-header .gold-dark { color: var(--gold) !important; }
+#testimonials .sec-header p { color: rgba(255,255,255,0.5) !important; }
+
+#testimonials .testimonial-card {
+  background: var(--smoke2);
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: none;
+}
+#testimonials .testimonial-stars { color: var(--gold); }
+#testimonials .testimonial-card > p { color: rgba(255,255,255,0.65); }
+#testimonials .testimonial-author { border-top-color: rgba(255,255,255,0.08); }
+#testimonials .testimonial-author strong { color: var(--white); }
+#testimonials .testimonial-author span  { color: rgba(255,255,255,0.4); }
+#testimonials .testimonial-avatar { background: var(--gold); color: var(--ink); }
+
+/* Slider dots — override the light-bg dark dots set earlier */
+#testimonials .slider-dot        { background: rgba(255,255,255,0.2); }
+#testimonials .slider-dot.active { background: var(--gold); }
+
+/* ── Subtle section separators for visual rhythm ────── */
+#intro     { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#dna       { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#services  { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#team      { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#weg       { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#early-bird{ border-bottom: 1px solid var(--border); }
+
+/* ── Slightly brighter body text in dark sections ────── */
+#intro p, #dna p, #services p, #weg p, #early-bird p,
+#faq .faq-a-inner { color: rgba(255,255,255,0.72); }
+
+/* ── Mobile: compact diff-block already set above;
+   ensure pricing sec-header adjusts on small screens ── */
+@media (max-width: 580px) {
+  #pricing .membership-card { padding: 1.5rem 1rem; }
+  #pricing .mp-amount { font-size: 2.5rem; }
+}
+
+/* ── Why-bomaye card hover shadow stays crisp on light bg */
+#why-bomaye .why-card { box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
+#why-bomaye .why-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
