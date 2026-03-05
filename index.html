@@ -490,7 +490,7 @@
         <h2 style="margin-top:1rem; color:var(--ink);">ERSTE <span class="gold-dark">STIMMEN.</span></h2>
         <p style="color:rgba(8,8,8,0.55); margin-top:0.75rem;">Die ersten Mitglieder der Bomaye Community sprechen.</p>
       </div>
-      <div class="testimonial-grid">
+      <div class="testimonial-grid" id="testimonials-slider">
         <div class="testimonial-card reveal delay-1">
           <div class="testimonial-stars" aria-label="5 von 5 Sternen">★★★★★</div>
           <p>"Noch vor Opening, aber die Energie und das Commitment des Teams überzeugen mich komplett. Endlich ein Gym, das Boxen ernst nimmt und echte Community lebt."</p>
@@ -525,6 +525,8 @@
           </div>
         </div>
       </div>
+      <!-- Slider dots (mobile only, populated by JS) -->
+      <div id="testimonials-dots" class="slider-dots" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -646,103 +648,21 @@
         <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Preise bei 12 Monaten Laufzeit
       </div>
 
-      <!-- Programs grid — rendered by JS from config.js -->
-      <div class="programs-grid" id="programs-grid">
+      <!-- Pricing display — rendered by JS from config.js -->
+      <div id="pricing-display">
         <!-- populated by main.js -->
       </div>
-      <!-- Slider dots (mobile only, populated by JS) -->
-      <div id="pricing-dots" class="slider-dots" aria-hidden="true"></div>
 
       <div class="pricing-footer reveal">
         <p>Alle Preise sind Wochenpreise (52 Wochen/Jahr). Preise zzgl. 100€ einmaliger Aufnahmegebühr.</p>
       </div>
 
-      <!-- Weitere Preise expandable -->
-      <div class="mehr-preise-wrap reveal">
-        <button
-          id="mehr-preise-btn"
-          class="mehr-preise-btn"
-          type="button"
-          onclick="toggleMehrPreise()"
-          aria-expanded="false"
-          aria-controls="mehr-preise-panel"
-        >
-          <span>Weitere Preise anzeigen</span>
-          <i class="fa-solid fa-chevron-down"></i>
+      <!-- Weitere Preise → separate view -->
+      <div class="mehr-preise-nav reveal">
+        <button class="mehr-preise-btn" type="button" onclick="navToMehrPreise()">
+          <span>Alle Preise &amp; Optionen ansehen</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </button>
-        <div id="mehr-preise-panel" class="mehr-preise-panel" role="region" aria-label="Weitere Preise">
-          <div class="mehr-preise-table-wrap">
-            <table class="mehr-preise-table" aria-label="Preisübersicht">
-              <thead>
-                <tr>
-                  <th scope="col">MITGLIEDSCHAFT</th>
-                  <th scope="col">PREIS</th>
-                  <th scope="col">LAUFZEIT</th>
-                  <th scope="col">INKLUSIVE</th>
-                  <th scope="col">AKTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Early Bird</strong></td>
-                  <td><span class="price-em">ab 11,90€</span> / Woche</td>
-                  <td>12 Monate</td>
-                  <td>Alle Kurse · Lifetime Preissperre</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking('Early Bird')">Sichern</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Youth U18</strong></td>
-                  <td><span class="price-em">ab 12,90€</span> / Woche</td>
-                  <td>12 Monate</td>
-                  <td>Youth Boxing · Mentoring</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking('Youth Boxing')">Anmelden</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Regular</strong></td>
-                  <td><span class="price-em">15,90€</span> / Woche</td>
-                  <td>12 Monate</td>
-                  <td>1 Kurs nach Wahl</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
-                </tr>
-                <tr>
-                  <td><strong>3-Month</strong></td>
-                  <td><span class="price-em">18,90€</span> / Woche</td>
-                  <td>3 Monate</td>
-                  <td>1 Kurs nach Wahl</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Flex</strong></td>
-                  <td><span class="price-em">20,90€</span> / Woche</td>
-                  <td>Monatlich kündbar</td>
-                  <td>1 Kurs nach Wahl</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Day Pass</strong></td>
-                  <td><span class="price-em">15€</span> / Tag</td>
-                  <td>Einmalig</td>
-                  <td>Alle Kurse des Tages</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Personal Training</strong></td>
-                  <td><span class="price-em">ab 90€</span> / Session</td>
-                  <td>Flexibel</td>
-                  <td>1:1 mit Coach · Individuell</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
-                </tr>
-                <tr>
-                  <td><strong>Corporate Event</strong></td>
-                  <td><span class="price-em">Auf Anfrage</span></td>
-                  <td>Flexibel</td>
-                  <td>Team ab 5 Personen · Catering optional</td>
-                  <td><a href="#" onclick="event.preventDefault(); openBooking('Corporate Boxing')">Anfragen</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -1215,6 +1135,117 @@
         <button onclick="openBooking()" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
       </div>
     </div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     WEITERE PREISE VIEW
+══════════════════════════════════════════════════════════ -->
+<div id="view-mehr-preise" class="view">
+  <div class="mehr-preise-page">
+    <div class="container">
+      <button class="legal-back" onclick="navFromMehrPreise()" type="button">
+        <i class="fa-solid fa-arrow-left"></i> ZURÜCK ZU DEN PREISEN
+      </button>
+      <span class="tag tag--dark">PREISÜBERSICHT</span>
+      <h1 style="margin:1rem 0 0.5rem;">ALLE <span class="gold">PREISE.</span></h1>
+      <p style="margin-bottom:2.5rem;color:var(--muted);">Wochenpreise (52 Wochen/Jahr) · Aufnahmegebühr 100€ einmalig</p>
+
+      <div class="mehr-preise-table-wrap">
+        <table class="mehr-preise-table" aria-label="Vollständige Preisübersicht">
+          <thead>
+            <tr>
+              <th scope="col">MITGLIEDSCHAFT</th>
+              <th scope="col">PREIS</th>
+              <th scope="col">LAUFZEIT</th>
+              <th scope="col">INKLUSIVE</th>
+              <th scope="col">AKTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Kids Early Bird</strong></td>
+              <td><span class="price-em">ab 11,90€</span> / Woche</td>
+              <td>12 Monate</td>
+              <td>Alle Kurse · Lifetime Preissperre</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Sichern</a></td>
+            </tr>
+            <tr>
+              <td><strong>Kids Regular</strong></td>
+              <td><span class="price-em">ab 12,90€</span> / Woche</td>
+              <td>6 Monate</td>
+              <td>Kids Boxing · Mentoring</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+            </tr>
+            <tr>
+              <td><strong>Jugend Early Bird</strong></td>
+              <td><span class="price-em">ab 12,90€</span> / Woche</td>
+              <td>12 Monate</td>
+              <td>Alle Kurse · Lifetime Preissperre</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Sichern</a></td>
+            </tr>
+            <tr>
+              <td><strong>Jugend Regular</strong></td>
+              <td><span class="price-em">ab 13,90€</span> / Woche</td>
+              <td>6 Monate</td>
+              <td>Youth Boxing · Mentoring</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+            </tr>
+            <tr>
+              <td><strong>Erwachsene Early Bird</strong></td>
+              <td><span class="price-em">15,90€</span> / Woche</td>
+              <td>12 Monate</td>
+              <td>Alle Kurse · Lifetime Preissperre</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Sichern</a></td>
+            </tr>
+            <tr>
+              <td><strong>Erwachsene Regular</strong></td>
+              <td><span class="price-em">18,90€</span> / Woche</td>
+              <td>3 Monate</td>
+              <td>1 Kurs nach Wahl</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+            </tr>
+            <tr>
+              <td><strong>Flex</strong></td>
+              <td><span class="price-em">20,90€</span> / Woche</td>
+              <td>Monatlich kündbar</td>
+              <td>1 Kurs nach Wahl</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Anmelden</a></td>
+            </tr>
+            <tr>
+              <td><strong>Day Pass</strong></td>
+              <td><span class="price-em">15€</span> / Tag</td>
+              <td>Einmalig</td>
+              <td>Alle Kurse des Tages</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Personal Training</strong></td>
+              <td><span class="price-em">ab 90€</span> / Session</td>
+              <td>Flexibel</td>
+              <td>1:1 mit Coach · Individuell</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+            </tr>
+            <tr>
+              <td><strong>Corporate Event</strong></td>
+              <td><span class="price-em">Auf Anfrage</span></td>
+              <td>Flexibel</td>
+              <td>Team ab 5 Personen · Catering optional</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Corporate Boxing')">Anfragen</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="text-align:center; margin-top:3rem;">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">
+          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
+        </button>
+        <button onclick="navFromMehrPreise()" class="btn btn--outline-light" type="button" style="margin-left:1rem;">
+          <i class="fa-solid fa-arrow-left"></i> ZURÜCK
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

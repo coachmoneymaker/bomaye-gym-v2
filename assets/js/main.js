@@ -87,7 +87,7 @@ function mobileNav(view, section) {
 }
 
 /* ── SPA view routing ──────────────────────────────────────── */
-function nav(viewId, sectionId) {
+function nav(viewId, sectionId, restoreY) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + viewId);
   if (target) target.classList.add('active');
@@ -95,7 +95,11 @@ function nav(viewId, sectionId) {
   const backBtn = document.querySelector('.back-btn');
   if (backBtn) backBtn.classList.toggle('visible', viewId !== 'home');
 
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  if (restoreY !== undefined) {
+    window.scrollTo({ top: restoreY, behavior: 'instant' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 
   if (sectionId) {
     setTimeout(() => {
@@ -106,76 +110,121 @@ function nav(viewId, sectionId) {
   setTimeout(runReveal, 120);
 }
 
-/* ── Pricing section — age category toggle ──────────────────── */
+/* ── Weitere Preise navigation ─────────────────────────────── */
+function navToMehrPreise() {
+  window._returnScrollY = window.scrollY;
+  nav('mehr-preise');
+}
+
+function navFromMehrPreise() {
+  nav('home', null, window._returnScrollY || 0);
+}
+
+/* ── Pricing section — age + duration selectors ─────────────── */
 function initPricingSection() {
   if (typeof BOMAYE === 'undefined') return;
-  renderPricingCards('erwachsene');
+  renderPricingDisplay('erwachsene', '12M');
   document.querySelectorAll('.atab').forEach(tab => {
     tab.addEventListener('click', function () {
       document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-      renderPricingCards(this.dataset.age);
-      setTimeout(initSliderDots, 60);
+      renderPricingDisplay(this.dataset.age, '12M');
     });
   });
 }
 
-function renderPricingCards(ageGroup) {
-  if (typeof BOMAYE === 'undefined') return;
-  const grid = document.getElementById('programs-grid');
-  if (!grid) return;
-
-  let html = '';
-  const filtered = BOMAYE.pricing.programs.filter(p =>
-    !p.ageGroups || p.ageGroups.includes(ageGroup)
+function getPrimaryProgram(ageGroup) {
+  // Prefer a program exclusively for this age group
+  return BOMAYE.pricing.programs.find(p =>
+    p.ageGroups && p.ageGroups.length === 1 && p.ageGroups[0] === ageGroup
+  ) || BOMAYE.pricing.programs.find(p =>
+    p.ageGroups && p.ageGroups.includes(ageGroup)
   );
+}
 
-  filtered.forEach(prog => {
-    const price = prog.prices['12M'];
-    html += `
-      <div class="prog-card reveal">
-        <div class="prog-icon"><i class="fa-solid ${prog.icon}" aria-hidden="true"></i></div>
-        <div class="prog-name">${prog.name}</div>
-        ${prog.tag ? `<span class="tag tag--dark prog-tag">${prog.tag}</span>` : ''}
-        <div class="prog-price">
-          <span class="prog-price-amount">${price.toFixed(2).replace('.', ',')}€</span>
-          <span class="prog-price-unit">/ Woche</span>
+function renderPricingDisplay(ageGroup, duration) {
+  if (typeof BOMAYE === 'undefined') return;
+  const display = document.getElementById('pricing-display');
+  if (!display) return;
+
+  const prog = getPrimaryProgram(ageGroup);
+  if (!prog) return;
+
+  const price   = prog.prices[duration];
+  const savings = duration === '1M' ? 0 : Math.round((prog.prices['1M'] - price) * 52);
+
+  const durs = [
+    { key: '1M',  label: '1 Monat' },
+    { key: '3M',  label: '3 Monate' },
+    { key: '6M',  label: '6 Monate' },
+    { key: '12M', label: '12 Monate ⭐' },
+  ];
+  const tabsHtml = durs.map(d =>
+    `<button class="dtab-inner${d.key === duration ? ' active' : ''}" data-dur="${d.key}" type="button">${d.label}</button>`
+  ).join('');
+
+  const benefits = [
+    'Alle Kurse inklusive',
+    'Community Events &amp; Sparring',
+    'Zugang Mo–Fr 07–22 Uhr, Sa 09–16 Uhr',
+    'Professionelles Coaching',
+    'Kostenloses Probetraining',
+  ];
+  const benefitsHtml = benefits.map(b =>
+    `<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>${b}</span></li>`
+  ).join('');
+
+  let html = `
+    <div class="membership-card reveal">
+      <div class="membership-duration-tabs">${tabsHtml}</div>
+      <div class="membership-price-display">
+        <div class="membership-price-main">
+          <span class="mp-amount">${price.toFixed(2).replace('.', ',')}€</span>
+          <span class="mp-unit">/ Woche</span>
         </div>
-        ${prog.note ? `<p class="prog-note">${prog.note}</p>` : ''}
-        <button onclick="openBooking('${prog.name}')" class="btn btn--outline-light btn--sm btn--full prog-cta" type="button">ANMELDEN</button>
-      </div>`;
-  });
+        ${savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€/Jahr vs. monatlich</div>` : '<div class="mp-savings-empty"></div>'}
+      </div>
+      <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
+      <div class="membership-enrollment">
+        <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+        <span>+ 100€ Aufnahmegebühr einmalig</span>
+      </div>
+      <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
+        <i class="fa-solid fa-fist-raised"></i> JETZT ANMELDEN
+      </button>
+    </div>`;
 
   if (ageGroup === 'erwachsene') {
-    const pt = BOMAYE.pricing.personal;
-    html += `
-      <div class="prog-card special reveal">
-        <div class="prog-icon"><i class="fa-solid ${pt.icon}" aria-hidden="true"></i></div>
-        <div class="prog-name">${pt.name}</div>
-        <span class="tag tag--dark prog-tag">${pt.tag}</span>
-        <div class="prog-price">
-          <span class="prog-price-label">${pt.priceLabel}</span>
-          <span class="prog-price-unit">${pt.priceUnit}</span>
-        </div>
-        <p class="prog-note">${pt.note}</p>
-        <button onclick="openBooking('Personal Training')" class="btn btn--gold btn--sm btn--full prog-cta" type="button">TERMIN BUCHEN</button>
-      </div>`;
-
+    const pt   = BOMAYE.pricing.personal;
     const corp = BOMAYE.pricing.corporate;
     html += `
-      <div class="prog-card special reveal">
-        <div class="prog-icon"><i class="fa-solid ${corp.icon}" aria-hidden="true"></i></div>
-        <div class="prog-name">${corp.name}</div>
-        <span class="tag tag--dark prog-tag">${corp.tag}</span>
-        <div class="prog-price">
-          <span class="prog-price-label">${corp.priceLabel}</span>
+      <div class="membership-addon-grid">
+        <div class="addon-card">
+          <div class="addon-icon"><i class="fa-solid ${pt.icon}" aria-hidden="true"></i></div>
+          <div class="addon-name">${pt.name}</div>
+          <div class="addon-price">${pt.priceLabel} <span>${pt.priceUnit}</span></div>
+          <p>${pt.note}</p>
+          <button onclick="openBooking('Personal Training')" class="btn btn--gold btn--sm btn--full" type="button">TERMIN BUCHEN</button>
         </div>
-        <p class="prog-note">${corp.note}</p>
-        <button onclick="openBooking('Corporate Boxing')" class="btn btn--outline-light btn--sm btn--full prog-cta" type="button">ANFRAGE SENDEN</button>
+        <div class="addon-card">
+          <div class="addon-icon"><i class="fa-solid ${corp.icon}" aria-hidden="true"></i></div>
+          <div class="addon-name">${corp.name}</div>
+          <div class="addon-price">${corp.priceLabel}</div>
+          <p>${corp.note}</p>
+          <button onclick="openBooking('Corporate Boxing')" class="btn btn--outline-light btn--sm btn--full" type="button">ANFRAGE SENDEN</button>
+        </div>
       </div>`;
   }
 
-  grid.innerHTML = html;
+  display.innerHTML = html;
+
+  // Bind duration tab clicks
+  display.querySelectorAll('.dtab-inner').forEach(tab => {
+    tab.addEventListener('click', function () {
+      renderPricingDisplay(ageGroup, this.dataset.dur);
+    });
+  });
+
   runReveal();
 }
 
@@ -243,10 +292,10 @@ function animateCounter(el, from, to, duration) {
   })(performance.now());
 }
 
-/* ── Slider dots (services + pricing) ─────────────────────── */
+/* ── Slider dots (services + testimonials) ──────────────────── */
 function initSliderDots() {
-  setupSliderDots('services-slider', 'services-dots');
-  setupSliderDots('programs-grid',   'pricing-dots');
+  setupSliderDots('services-slider',     'services-dots');
+  setupSliderDots('testimonials-slider', 'testimonials-dots');
 }
 
 function setupSliderDots(sliderId, dotsId) {
@@ -360,15 +409,7 @@ function waitForBsport(attempt) {
 document.addEventListener('click', e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
 
-/* ── Weitere Preise toggle ─────────────────────────────────── */
-function toggleMehrPreise() {
-  const btn   = document.getElementById('mehr-preise-btn');
-  const panel = document.getElementById('mehr-preise-panel');
-  if (!btn || !panel) return;
-  const open = panel.classList.toggle('open');
-  btn.setAttribute('aria-expanded', String(open));
-  btn.querySelector('span').textContent = open ? 'Weniger anzeigen' : 'Weitere Preise anzeigen';
-}
+/* ── Weitere Preise (removed — now navigates to separate view) ─ */
 
 /* ── Scroll reveal ─────────────────────────────────────────── */
 function runReveal() {
@@ -392,6 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(initSliderDots, 200);
+    resizeTimer = setTimeout(() => { initSliderDots(); runReveal(); }, 200);
   });
 });
