@@ -1180,7 +1180,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   .diff-block { padding: 1.5rem 0; }
-  .diff-item  { padding: 0.6rem 0; }
+  .diff-item  { padding: 0.6rem 0; flex: none; width: 100%; }
 }
 
 /* ══════════════════════════════════════════════════════════════
