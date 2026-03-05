@@ -113,3 +113,27 @@ const BOMAYE = {
   },
 
 };
+
+/* ─────────────────────────────────────────────────────────────
+   DATA SOURCE ABSTRACTION — Early Bird Spots
+   ─────────────────────────────────────────────────────────────
+   MODE A (automatic): fetches from /data/earlybird.json
+   MODE B (manual fallback): reads BOMAYE.earlyBird.remaining
+
+   To plug in B-Sport or any API later, replace the fetch URL
+   or the entire try-block with your endpoint.
+   The rest of the site reads ONLY from getEarlyBirdSpotsLeft().
+───────────────────────────────────────────────────────────── */
+async function getEarlyBirdSpotsLeft() {
+  // MODE A — dynamic JSON (update /data/earlybird.json on your server)
+  try {
+    const res = await fetch('/data/earlybird.json', { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.spots_left === 'number') return data.spots_left;
+    }
+  } catch (_) { /* fall through */ }
+
+  // MODE B — manual fallback: change BOMAYE.earlyBird.remaining in this file
+  return BOMAYE.earlyBird.remaining;
+}

@@ -18,11 +18,20 @@
 
   <link rel="canonical" href="https://www.bomayegym.com/" />
 
-  <!-- Fonts -->
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/community.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts: preconnect + async (swap avoids FOIT) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome: async to unblock render -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -287,7 +296,7 @@
         <span class="tag tag--dark">TRAINING</span>
         <h2 style="margin-top:1rem;">CHOOSE YOUR <span class="gold">FIGHT.</span></h2>
       </div>
-      <div class="services-grid">
+      <div class="services-grid" id="services-slider">
         <div class="service-card reveal delay-1" onclick="nav('detail-exec')" role="button" tabindex="0" aria-label="Executive Boxing">
           <div class="service-card-bg" style="background-image:url('assets/images/service-exec.webp');"></div>
           <div class="service-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
@@ -360,6 +369,8 @@
           </div>
         </div>
       </div>
+      <!-- Slider dots (mobile only, populated by JS) -->
+      <div id="services-dots" class="slider-dots" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -435,6 +446,19 @@
           <div class="eb-card-label">NOCH VERFÜGBAR</div>
           <div class="eb-card-number" id="eb-remaining">150</div>
           <div class="eb-card-sublabel" id="eb-total-label">VON 150 PLÄTZEN NOCH VERFÜGBAR</div>
+
+          <!-- Progress bar -->
+          <div class="eb-progress" aria-label="Auslastungsanzeige">
+            <div class="eb-progress-bar">
+              <div class="eb-progress-fill" id="eb-progress-fill" style="width:0%"></div>
+            </div>
+            <div class="eb-progress-meta">
+              <span>0 BELEGT</span>
+              <span id="eb-progress-pct">0% BELEGT</span>
+              <span>150 GESAMT</span>
+            </div>
+          </div>
+
           <div class="eb-prices">
             <div class="eb-price-item">
               <div class="eb-price-age">KIDS</div>
@@ -486,6 +510,8 @@
       <div class="programs-grid" id="programs-grid">
         <!-- populated by main.js -->
       </div>
+      <!-- Slider dots (mobile only, populated by JS) -->
+      <div id="pricing-dots" class="slider-dots" aria-hidden="true"></div>
 
       <div class="pricing-footer reveal">
         <p>Alle Preise sind Wochenpreise (52 Wochen/Jahr). Preise zzgl. 100€ einmaliger Aufnahmegebühr.</p>
@@ -1046,8 +1072,8 @@
   </div>
 </div>
 
-<!-- Scripts: config first, then main -->
+<!-- Scripts: config must load synchronously before main.js -->
 <script src="assets/js/config.js"></script>
-<script src="assets/js/main.js" defer></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
