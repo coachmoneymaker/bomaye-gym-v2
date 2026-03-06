@@ -111,10 +111,10 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 0.76rem; letter-spacing: 2.5px; text-transform: uppercase;
   padding: 0.85rem 2rem; border-radius: 999px; border: 1px solid transparent;
-  transition: all 0.3s var(--ease-out); white-space: nowrap; text-decoration: none;
+  transition: all 0.25s var(--ease-out); white-space: nowrap; text-decoration: none;
 }
 .btn--gold         { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-.btn--gold:hover   { background: var(--gold-light); border-color: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(197,160,89,0.3); }
+.btn--gold:hover   { background: var(--gold-light); border-color: var(--gold-light); transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 28px rgba(197,160,89,0.45); }
 .btn--outline-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.35); }
 .btn--outline-light:hover { background: rgba(255,255,255,0.08); border-color: var(--white); }
 .btn--outline-dark  { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.2); }
