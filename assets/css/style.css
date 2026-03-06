@@ -219,7 +219,12 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,8,0.5) 0%, rgba(8,8,8,0.3) 50%, rgba(8,8,8,0.88) 100%);
+  background: linear-gradient(180deg,
+    rgba(8,8,8,0.55) 0%,
+    rgba(8,8,8,0.25) 45%,
+    rgba(8,8,8,0.80) 78%,
+    rgba(8,8,8,1.00) 100%
+  );
 }
 .hero-content {
   position: relative; z-index: 1;
@@ -1577,4 +1582,81 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   border: 1px solid rgba(197,160,89,0.15) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION TRANSITIONS — gradient fades & gold dividers
+══════════════════════════════════════════════════════════════ */
+
+/* Shared pseudo-element base for section edge fades */
+#intro::before, #dna::before,
+#services::before, #team::before,
+#testimonials::before, #weg::before,
+#early-bird::before, #faq::before,
+#booking::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.45), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+#intro, #dna, #services, #team,
+#testimonials, #weg, #early-bird,
+#faq, #booking {
+  position: relative;
+}
+
+/* Gold divider lines — between major section groups */
+
+/* After hero diff-block → before intro */
+.diff-block::after,
+#dna::after,
+#team::after,
+#early-bird::after,
+#faq::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, 80%);
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(197,160,89,0.38),
+    transparent
+  );
+  pointer-events: none;
+}
+.diff-block { position: relative; }
+
+/* Bottom fade-out on image-backed sections so they melt into next */
+#quote::after,
+#community::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, rgba(8,8,8,0.92));
+  pointer-events: none;
+}
+
+/* Hero section itself gets a stronger bottom fade via the overlay —
+   already handled above. Extra pixel-perfect seal: */
+#hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, #080808);
+  pointer-events: none;
+}
+
+/* Keep section content above pseudo-elements */
+#intro > *, #dna > *, #services > *, #team > *,
+#testimonials > *, #weg > *, #early-bird > *,
+#faq > *, #booking > * {
+  position: relative;
+  z-index: 1;
 }
