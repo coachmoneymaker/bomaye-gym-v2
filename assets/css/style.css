@@ -36,7 +36,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--ink);
+  background: linear-gradient(160deg, #120f08 0%, #080808 48%, #090c10 100%);
+  background-attachment: fixed;
   color: var(--white);
   font-family: var(--font-body);
   font-size: 16px;
@@ -1515,3 +1516,65 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Why-bomaye card hover shadow stays crisp on light bg */
 #why-bomaye .why-card { box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
 #why-bomaye .why-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+
+/* ══════════════════════════════════════════════════════════════
+   GLASS SECTIONS — premium layered aesthetic
+   Applied to alternating sections; solid sections kept for
+   contrast rhythm: dna / team / testimonials / early-bird stay
+   opaque to anchor the visual weight.
+══════════════════════════════════════════════════════════════ */
+
+/* intro — first content section after hero */
+#intro {
+  background: rgba(8,6,4,0.52) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* services — large card grid benefits from glass depth */
+#services {
+  background: rgba(0,0,0,0.40) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* booking — CTA block above footer */
+#booking {
+  background: rgba(8,6,4,0.50) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(197,160,89,0.10);
+}
+
+/* faq — lighter smoke section gets glass so it lifts off the page */
+#faq {
+  background: rgba(12,10,6,0.50) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(197,160,89,0.08);
+  border-bottom: 1px solid rgba(197,160,89,0.08);
+}
+
+/* Glass cards within solid sections for layered depth */
+.coach-card {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.step-card {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.early-bird-inner {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(197,160,89,0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
