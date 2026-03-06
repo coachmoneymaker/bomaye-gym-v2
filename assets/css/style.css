@@ -126,11 +126,11 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 #header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   height: var(--nav-h);
-  transition: background 0.4s, backdrop-filter 0.4s, border-bottom 0.4s;
+  transition: background 0.3s, backdrop-filter 0.3s, border-bottom 0.3s;
   border-bottom: 1px solid transparent;
 }
 #header.scrolled {
-  background: rgba(8,8,8,0.96);
+  background: rgba(0,0,0,0.65);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border-bottom-color: var(--border);
 }
