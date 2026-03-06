@@ -1585,10 +1585,98 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 
 /* ══════════════════════════════════════════════════════════════
+   DISCIPLINES SECTION
+══════════════════════════════════════════════════════════════ */
+#disciplines { background: var(--ink2); }
+.disciplines-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem;
+}
+.discipline-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 2.5rem 2rem;
+  text-align: center; position: relative; overflow: hidden;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+}
+.discipline-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.discipline-card:hover { border-color: var(--border); transform: translateY(-4px); }
+.discipline-card:hover::before { opacity: 1; }
+.discipline-icon {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.55rem; color: var(--gold);
+  transition: background 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+}
+.discipline-card:hover .discipline-icon {
+  background: rgba(197,160,89,0.2);
+  box-shadow: 0 0 32px rgba(197,160,89,0.18);
+}
+.discipline-card h3 { font-size: 1.05rem; color: var(--white); }
+.discipline-card p  { font-size: 0.88rem; color: var(--muted); line-height: 1.8; flex: 1; }
+@media (max-width: 900px) {
+  .disciplines-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .discipline-card  { padding: 2rem 1.5rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOOGLE RATING BADGE
+══════════════════════════════════════════════════════════════ */
+.google-rating {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  background: rgba(8,8,8,0.06); border: 1px solid rgba(8,8,8,0.1);
+  border-radius: 999px; padding: 0.55rem 1.4rem;
+  margin: 1rem auto 0; flex-wrap: wrap; justify-content: center;
+}
+.google-rating-stars { color: #f4b400; font-size: 1.05rem; letter-spacing: 2px; }
+.google-rating-score {
+  font-family: var(--font-display); font-size: 1.4rem; color: var(--ink);
+  line-height: 1;
+}
+.google-rating-label {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2px;
+  color: rgba(8,8,8,0.5); text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOOKING SECTION — trust list + CTA
+══════════════════════════════════════════════════════════════ */
+.booking-trust {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1.5rem; flex-wrap: wrap; margin: 1.5rem 0 0;
+}
+.booking-trust-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.55);
+}
+.booking-trust-item i { color: var(--gold); }
+.booking-cta-btn {
+  margin-top: 2rem !important;
+  font-size: 0.88rem !important;
+  padding: 1rem 2.5rem !important;
+  box-shadow: 0 8px 32px rgba(197,160,89,0.25);
+}
+.booking-cta-btn:hover {
+  box-shadow: 0 12px 40px rgba(197,160,89,0.45) !important;
+}
+@media (max-width: 600px) {
+  .booking-trust { flex-direction: column; gap: 0.75rem; }
+  .booking-cta-btn { width: 100%; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    SECTION TRANSITIONS — gradient fades & gold dividers
 ══════════════════════════════════════════════════════════════ */
 
 /* Shared pseudo-element base for section edge fades */
+#disciplines::before,
 #intro::before, #dna::before,
 #services::before, #team::before,
 #testimonials::before, #weg::before,
@@ -1602,6 +1690,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   pointer-events: none;
   z-index: 0;
 }
+#disciplines,
 #intro, #dna, #services, #team,
 #testimonials, #weg, #early-bird,
 #faq, #booking {
@@ -1654,6 +1743,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 
 /* Keep section content above pseudo-elements */
+#disciplines > *,
 #intro > *, #dna > *, #services > *, #team > *,
 #testimonials > *, #weg > *, #early-bird > *,
 #faq > *, #booking > * {
