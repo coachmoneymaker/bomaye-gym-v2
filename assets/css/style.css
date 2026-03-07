@@ -758,21 +758,27 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     min-height: 500px;
   }
   .schedule-widget-inner { min-height: 500px; }
-  /* Touch-friendly filter controls — raise tap targets to 44px and add
-     finger-friendly padding. Chips/pills are custom elements not covered
-     by the global button rule, so targeted separately here. */
-  #bsport-widget-172485 .cleanslate [class*="filter"],
-  #bsport-widget-172485 .cleanslate [class*="Filter"] {
-    min-height: 44px !important;
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-    padding-left: 0.875rem !important;
-    padding-right: 0.875rem !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 0.375rem !important;
+  /* ── Bsport widget: mobile safety layer ──────────────────────────────────
+     Prevents overflow, element escape, and meta icon overlap.
+     Does not redesign; only stabilises the existing layout on mobile.     */
+
+  /* 1. Widget root + all wrappers: stay inside viewport */
+  #bsport-widget-172485,
+  #bsport-widget-172485 .cleanslate,
+  #bsport-widget-172485 [class*="wrap"],
+  #bsport-widget-172485 [class*="Wrap"],
+  #bsport-widget-172485 [class*="container"],
+  #bsport-widget-172485 [class*="Container"],
+  #bsport-widget-172485 [class*="inner"],
+  #bsport-widget-172485 [class*="Inner"],
+  #bsport-widget-172485 [class*="list"],
+  #bsport-widget-172485 [class*="List"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
-  /* Booking cards: full width, readable font */
+
+  /* 2. Cards / slots / items: full width, no overflow */
   #bsport-widget-172485 [class*="card"],
   #bsport-widget-172485 [class*="Card"],
   #bsport-widget-172485 [class*="slot"],
@@ -781,8 +787,25 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   #bsport-widget-172485 [class*="Item"] {
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
-  /* Class card: fix absolutely-positioned meta icons overlapping on mobile. */
+
+  /* 3. Card inner rows: stable flex, no overflow */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  /* 4. Meta icon groups: force back into normal flow, single horizontal row */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
@@ -790,12 +813,22 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
+
+  /* 5. Filters / controls: tap-friendly, no viewport break */
+  #bsport-widget-172485 .cleanslate [class*="filter"],
+  #bsport-widget-172485 .cleanslate [class*="Filter"] {
+    min-height: 44px !important;
+    padding: 0.5rem 0.875rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.375rem !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
