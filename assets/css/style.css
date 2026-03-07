@@ -597,20 +597,27 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SCHEDULE SECTION — Bsport planning widget embed
+   SCHEDULE SECTION — light premium background
 ══════════════════════════════════════════════════════════════ */
-#schedule { background: var(--ink2); }
+#schedule {
+  background: #FAF7F2;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
 .schedule-widget-wrap {
   margin-top: 2.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   overflow: hidden;
-  background: var(--smoke);
-  border: 1px solid rgba(255,255,255,0.06);
-  min-height: 500px; /* prevents layout shift while widget loads */
+  background: #FFFFFF;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.07), 0 1px 8px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+  min-height: 640px;
 }
 .schedule-widget-inner {
   width: 100%;
-  min-height: 500px;
+  min-height: 640px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .schedule-cta {
   text-align: center;
@@ -619,11 +626,27 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .schedule-cta-note {
   font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 1.5px;
-  color: var(--muted); margin: 0;
+  color: #888; margin: 0;
 }
 @media (max-width: 768px) {
-  .schedule-widget-wrap { border-radius: var(--radius); min-height: 420px; }
-  .schedule-widget-inner { min-height: 420px; }
+  #schedule { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .schedule-widget-wrap {
+    border-radius: 12px;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    min-height: 540px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  .schedule-widget-inner { min-height: 540px; }
+}
+@media (max-width: 480px) {
+  .schedule-widget-wrap {
+    border-radius: 0;
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    min-height: 500px;
+  }
+  .schedule-widget-inner { min-height: 500px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
