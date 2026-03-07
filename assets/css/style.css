@@ -765,6 +765,25 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     width: 100% !important;
     max-width: 100% !important;
   }
+  /* Class card meta row — Bsport injects the right-column group/gender
+     elements into __left__extra on mobile; without a proper flex context
+     they stack on top of adjacent content. */
+  #bsport-widget-172485 .bs-offer-list-item__content__offer__left__extra {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.25rem 0.625rem !important;
+    position: static !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+  #bsport-widget-172485 .bs-offer-list-item__content__offer__right__top__group,
+  #bsport-widget-172485 .bs-offer-list-item__content__offer__right__top__gender {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
