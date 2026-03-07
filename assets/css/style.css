@@ -597,13 +597,39 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SCHEDULE SECTION — light premium background
+   SCHEDULE SECTION — light premium background + mobile fixes
 ══════════════════════════════════════════════════════════════ */
 #schedule {
   background: #FAF7F2;
   padding-top: 5rem;
   padding-bottom: 5rem;
+  overflow-x: hidden; /* prevent section-level bleed */
 }
+
+/* ── Back button (injected by JS when detail view opens) ── */
+.schedule-back-btn {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--ink);
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  min-height: 44px;
+  transition: background 0.15s;
+}
+.schedule-back-btn:hover { background: #f5f5f5; }
+.schedule-back-btn--visible { display: inline-flex; }
+
+/* ── Widget card wrapper ── */
 .schedule-widget-wrap {
   margin-top: 2.5rem;
   border-radius: 20px;
@@ -612,13 +638,64 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   box-shadow: 0 4px 40px rgba(0,0,0,0.07), 0 1px 8px rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.06);
   min-height: 640px;
+  /* Prevent the Bsport widget from ever blowing out the card */
+  max-width: 100%;
 }
+
+/* ── Widget inner container ── */
 .schedule-widget-inner {
   width: 100%;
   min-height: 640px;
-  overflow-x: auto;
+  overflow-x: hidden; /* no horizontal scroll on the container itself */
   -webkit-overflow-scrolling: touch;
 }
+
+/* ── Override Bsport widget internals for overflow safety ──
+   Applies to every descendant so fixed-width inner elements
+   are clamped to the card width.                           ── */
+#bsport-widget-172485 {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+#bsport-widget-172485 * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+/* Filter rows – force wrap so Search/Aktivität/Niveau/etc don't overflow */
+#bsport-widget-172485 [class*="filter"],
+#bsport-widget-172485 [class*="Filter"],
+#bsport-widget-172485 [class*="filters"],
+#bsport-widget-172485 [class*="Filters"],
+#bsport-widget-172485 [class*="toolbar"],
+#bsport-widget-172485 [class*="Toolbar"],
+#bsport-widget-172485 [class*="search-bar"],
+#bsport-widget-172485 [class*="SearchBar"],
+#bsport-widget-172485 [class*="header-row"],
+#bsport-widget-172485 [class*="HeaderRow"] {
+  flex-wrap: wrap !important;
+}
+/* Touch-friendly minimum tap targets */
+#bsport-widget-172485 button,
+#bsport-widget-172485 [role="button"],
+#bsport-widget-172485 select,
+#bsport-widget-172485 input[type="text"],
+#bsport-widget-172485 input[type="search"] {
+  min-height: 40px;
+}
+/* Boost close/back buttons inside widget so they stay tappable */
+#bsport-widget-172485 [class*="close"],
+#bsport-widget-172485 [class*="Close"],
+#bsport-widget-172485 [class*="back"],
+#bsport-widget-172485 [class*="Back"],
+#bsport-widget-172485 [class*="return"],
+#bsport-widget-172485 [class*="Return"] {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+/* ── CTA below widget ── */
 .schedule-cta {
   text-align: center;
   margin-top: 2.5rem;
@@ -628,17 +705,36 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 1.5px;
   color: #888; margin: 0;
 }
+
+/* ── Mobile: tablet (≤768px) ── */
 @media (max-width: 768px) {
   #schedule { padding-top: 3.5rem; padding-bottom: 3.5rem; }
   .schedule-widget-wrap {
     border-radius: 12px;
+    /* Escape container padding so widget is full-bleed */
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     min-height: 540px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
   }
   .schedule-widget-inner { min-height: 540px; }
+  /* Filters: each item takes at least half the row */
+  #bsport-widget-172485 [class*="filter"] > *,
+  #bsport-widget-172485 [class*="Filter"] > * {
+    flex: 1 1 calc(50% - 8px) !important;
+    min-width: 130px !important;
+  }
+  /* Ensure date nav row doesn't overflow */
+  #bsport-widget-172485 [class*="date"],
+  #bsport-widget-172485 [class*="Date"],
+  #bsport-widget-172485 [class*="nav"],
+  #bsport-widget-172485 [class*="Nav"] {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
 }
+
+/* ── Mobile: phone (≤480px) ── */
 @media (max-width: 480px) {
   .schedule-widget-wrap {
     border-radius: 0;
@@ -647,6 +743,21 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     min-height: 500px;
   }
   .schedule-widget-inner { min-height: 500px; }
+  /* Each filter takes full row on small phones */
+  #bsport-widget-172485 [class*="filter"] > *,
+  #bsport-widget-172485 [class*="Filter"] > * {
+    flex: 1 1 100% !important;
+  }
+  /* Booking cards: full width, readable font */
+  #bsport-widget-172485 [class*="card"],
+  #bsport-widget-172485 [class*="Card"],
+  #bsport-widget-172485 [class*="slot"],
+  #bsport-widget-172485 [class*="Slot"],
+  #bsport-widget-172485 [class*="item"],
+  #bsport-widget-172485 [class*="Item"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════

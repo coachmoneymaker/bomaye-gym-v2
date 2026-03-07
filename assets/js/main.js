@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
   initEarlyBirdFOMO(); // async — does not block rendering
   initAutoCarousels();
   initQuoteMobileReveal();
-  // Bsport schedule widget is now mounted by inline script at bottom of page
+  // Bsport schedule widget is mounted by inline script at bottom of page.
+  // Back-button for Bsport detail view initialised after widget has had time to render.
+  setTimeout(initScheduleBackBtn, 2500);
 });
 
 /* ── Android / WebP image fallback ──────────────────────────
@@ -648,6 +650,87 @@ function initQuoteMobileReveal() {
   }, { threshold: 0.25 });
 
   io.observe(quote);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCHEDULE BACK BUTTON
+   Watches the Bsport calendar widget for navigation into a
+   detail/booking view and surfaces a "← Zurück" button so
+   mobile users can always return to the calendar in one tap.
+══════════════════════════════════════════════════════════════ */
+function initScheduleBackBtn() {
+  const wrapEl   = document.getElementById('schedule-section-wrap');
+  const widgetEl = document.getElementById('bsport-widget-172485');
+  if (!wrapEl || !widgetEl) return;
+
+  /* Create the button and inject it just before the widget card */
+  const btn = document.createElement('button');
+  btn.type      = 'button';
+  btn.id        = 'schedule-back-btn';
+  btn.className = 'schedule-back-btn';
+  btn.setAttribute('aria-label', 'Zurück zum Stundenplan');
+  btn.innerHTML = '<i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>&nbsp; ZURÜCK ZUM STUNDENPLAN';
+  wrapEl.insertBefore(btn, wrapEl.firstChild);
+
+  /* Baseline element count — set once the widget has rendered */
+  let baselineCount = widgetEl.querySelectorAll('*').length;
+  let debounceId    = null;
+
+  /* Ordered list of selectors to try when clicking the widget's own back control */
+  const BACK_SELECTORS = [
+    'button[class*="back"]',   'button[class*="Back"]',
+    'button[class*="return"]', 'button[class*="Return"]',
+    'button[class*="close"]',  'button[class*="Close"]',
+    '[class*="back-btn"]',     '[class*="backBtn"]',
+    '[class*="close-btn"]',    '[class*="closeBtn"]',
+    '[aria-label*="back"]',    '[aria-label*="retour"]',
+    '[aria-label*="close"]',   '[aria-label*="fermer"]',
+    '[class*="chevron-left"]', '[class*="ChevronLeft"]',
+    '[class*="arrow-left"]',   '[class*="ArrowLeft"]',
+  ];
+
+  btn.addEventListener('click', () => {
+    let handled = false;
+    for (const sel of BACK_SELECTORS) {
+      const target = widgetEl.querySelector(sel);
+      if (target) { target.click(); handled = true; break; }
+    }
+    /* Fallback: if we couldn't find the widget's own control, hide our button
+       so the user knows the tap registered, then re-check state after a moment */
+    if (!handled) {
+      btn.classList.remove('schedule-back-btn--visible');
+    }
+  });
+
+  /* Determine whether the widget is showing a "deep" view vs the calendar root */
+  function evaluateState() {
+    /* Signal 1: recognised detail/booking view element present */
+    const detailEl = widgetEl.querySelector(
+      '[class*="detail"],[class*="Detail"],' +
+      '[class*="event-view"],[class*="EventView"],' +
+      '[class*="booking-panel"],[class*="BookingPanel"],' +
+      '[class*="session-view"],[class*="SessionView"],' +
+      '[class*="activity-detail"],[class*="ActivityDetail"],' +
+      '[role="dialog"],[aria-modal="true"]'
+    );
+    /* Signal 2: DOM significantly grew from baseline (view change) */
+    const currentCount = widgetEl.querySelectorAll('*').length;
+    const grew = baselineCount > 0 && currentCount > baselineCount * 1.6;
+    const show = !!(detailEl || grew);
+    btn.classList.toggle('schedule-back-btn--visible', show);
+    /* Update baseline if DOM shrank back (user returned to calendar via widget UI) */
+    if (!show && currentCount < baselineCount) baselineCount = currentCount;
+  }
+
+  /* MutationObserver — debounced so rapid DOM updates don't thrash */
+  const observer = new MutationObserver(() => {
+    clearTimeout(debounceId);
+    debounceId = setTimeout(evaluateState, 180);
+  });
+  observer.observe(widgetEl, { childList: true, subtree: true, attributes: true, attributeFilter: ['class','aria-hidden','style'] });
+
+  /* Update baseline once (called after the 2.5 s delay from DOMContentLoaded) */
+  baselineCount = widgetEl.querySelectorAll('*').length;
 }
 
 /* ══════════════════════════════════════════════════════════════
