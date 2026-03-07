@@ -92,6 +92,7 @@
       <button class="nav-link" onclick="nav('home','services')" type="button">KURSE</button>
       <button class="nav-link" onclick="nav('home','team')" type="button">TEAM</button>
       <button class="nav-link" onclick="nav('home','pricing')" type="button">PREISE</button>
+      <button class="nav-link" onclick="nav('home','schedule')" type="button">STUNDENPLAN</button>
       <a class="nav-link" href="/faq">FAQ</a>
       <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
@@ -111,6 +112,7 @@
   <button class="nav-link" onclick="mobileNav('home','services')" type="button">KURSE</button>
   <button class="nav-link" onclick="mobileNav('home','team')" type="button">TEAM</button>
   <button class="nav-link" onclick="mobileNav('home','pricing')" type="button">PREISE</button>
+  <button class="nav-link" onclick="mobileNav('home','schedule')" type="button">STUNDENPLAN</button>
   <a class="nav-link" href="/faq" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">FAQ</a>
   <button class="btn btn--gold" onclick="toggleMenu(); openBooking()" type="button" style="margin-top:1.25rem; padding:0.9rem 2.5rem;">
     PROBETRAINING
@@ -512,6 +514,30 @@
     </div>
   </section>
 
+  <!-- ── STUNDENPLAN ── -->
+  <section id="schedule" class="sec--ink2">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--dark">STUNDENPLAN</span>
+        <h2 style="margin-top:1rem;">DEIN <span class="gold">TRAINING.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Alle Kurse und Zeiten auf einen Blick. Buche direkt deinen Platz.</p>
+      </div>
+      <!-- Bsport schedule widget — auto-mounts when section enters viewport -->
+      <div class="schedule-widget-wrap reveal" id="schedule-section-wrap">
+        <div id="bsport-schedule-5473" class="schedule-widget-inner"></div>
+        <noscript>
+          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+        </noscript>
+      </div>
+      <div class="schedule-cta reveal">
+        <button onclick="openBooking()" class="btn btn--gold" type="button">
+          <i class="fa-solid fa-calendar-plus"></i> PROBETRAINING BUCHEN
+        </button>
+        <p class="schedule-cta-note">Kostenlos · Kein Vertrag · Direkt in Bsport</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ── EARLY BIRD ── -->
   <section id="early-bird">
     <div class="container">
@@ -596,6 +622,15 @@
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
             <p>Über 20 Jahre Erfahrung als Wettkämpfer und Landestrainer. Raschad analysiert jeden Bewegungsablauf mit wissenschaftlicher Präzision und formt Athleten von Grund auf neu.</p>
+            <!-- Social links — update hrefs with coach's personal handles -->
+            <div class="coach-socials">
+              <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf Instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+            </div>
             <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">RASCHAD BUCHEN</button>
           </div>
         </div>
@@ -613,6 +648,15 @@
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
             <p>Kickbox-Weltmeister und Spezialist für Taktik, Ring-Intelligenz und mentale Stärke. Alfonso lehrt dich, den Kampf im Kopf zu gewinnen — bevor du den Ring betrittst.</p>
+            <!-- Social links — update hrefs with coach's personal handles -->
+            <div class="coach-socials">
+              <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf Instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+            </div>
             <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">ALFONSO BUCHEN</button>
           </div>
         </div>

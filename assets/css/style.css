@@ -468,44 +468,58 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
    SERVICES GRID
 ══════════════════════════════════════════════════════════════ */
 #services { background: var(--ink2); }
-/* ── Services: universal horizontal carousel (desktop + mobile) ── */
+
+/* Desktop: original 4×2 grid — all programs visible at once */
 .services-grid {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  gap: 3px;
-  background: transparent;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 320px);
+  gap: 2px;
+  background: rgba(255,255,255,0.03);
   border-radius: var(--radius-lg);
-  scrollbar-width: none;
-  /* Padding-right creates the "peek" effect showing partial next card */
-  padding-right: 2px;
+  overflow: hidden;
 }
-.services-grid::-webkit-scrollbar { display: none; }
+/* Tablet: 2×4 grid */
+@media (max-width: 1100px) {
+  .services-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 280px); }
+}
+/* Mobile: horizontal carousel — shows multiple programs exist */
+@media (max-width: 768px) {
+  .services-grid {
+    display: flex !important;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding: 0 1.25rem 1rem;
+    background: transparent;
+    border-radius: 0;
+    grid-template-rows: unset;
+    scrollbar-width: none;
+  }
+  .services-grid::-webkit-scrollbar { display: none; }
+}
 .service-card {
-  /* Desktop: show ~3.5 cards — partial 4th hints at more content */
-  flex: 0 0 calc(100% / 3.4);
-  height: 420px;
-  scroll-snap-align: start;
-  border-radius: var(--radius-lg);
   position: relative; overflow: hidden; cursor: pointer; background: #0d0d0d;
-  transition: box-shadow 0.35s var(--ease-out);
-}
-@media (max-width: 1280px) {
-  .service-card { flex: 0 0 calc(100% / 2.8); height: 380px; }
-}
-@media (max-width: 1024px) {
-  .service-card { flex: 0 0 calc(100% / 2.2); height: 340px; }
+  transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
 }
 @media (max-width: 768px) {
-  .service-card { flex: 0 0 78vw; max-width: 320px; height: 300px; }
+  .service-card {
+    flex: 0 0 78vw;
+    max-width: 300px;
+    min-width: 220px;
+    height: 280px;
+    scroll-snap-align: start;
+    border-radius: var(--radius-lg);
+    transform: none !important;
+  }
 }
 @media (max-width: 480px) {
-  .service-card { flex: 0 0 83vw; height: 270px; }
+  .service-card { flex: 0 0 83vw; height: 258px; }
 }
-/* Remove desktop translateY hover — causes layout shift in flex carousel */
-.service-card:hover { transform: none; }
 .service-card:hover {
   box-shadow: 0 0 0 1px rgba(197,160,89,0.30), 0 12px 40px rgba(0,0,0,0.55);
   transform: translateY(-3px);
@@ -563,6 +577,54 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .coach-title     { font-family: var(--font-head); font-size: 0.63rem; letter-spacing: 2px; color: var(--gold); }
 .coach-info h4   { font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); margin-top: -0.15rem; }
 .coach-info p    { font-size: 0.88rem; }
+
+/* ── Coach social links ─────────────────────────────────────── */
+.coach-socials {
+  display: flex; align-items: center; gap: 0.45rem; margin: 0.2rem 0 0.1rem;
+}
+.coach-social-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.38); font-size: 0.72rem;
+  text-decoration: none; flex-shrink: 0;
+  transition: background 0.25s var(--ease-out), border-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+}
+.coach-social-link:hover, .coach-social-link:focus-visible {
+  background: rgba(197,160,89,0.14);
+  border-color: rgba(197,160,89,0.45);
+  color: var(--gold);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCHEDULE SECTION — Bsport planning widget embed
+══════════════════════════════════════════════════════════════ */
+#schedule { background: var(--ink2); }
+.schedule-widget-wrap {
+  margin-top: 2.5rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--smoke);
+  border: 1px solid rgba(255,255,255,0.06);
+  min-height: 500px; /* prevents layout shift while widget loads */
+}
+.schedule-widget-inner {
+  width: 100%;
+  min-height: 500px;
+}
+.schedule-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+}
+.schedule-cta-note {
+  font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 1.5px;
+  color: var(--muted); margin: 0;
+}
+@media (max-width: 768px) {
+  .schedule-widget-wrap { border-radius: var(--radius); min-height: 420px; }
+  .schedule-widget-inner { min-height: 420px; }
+}
 
 /* ══════════════════════════════════════════════════════════════
    EARLY BIRD
@@ -1037,7 +1099,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 1100px
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  /* services-grid is now always flex — no grid override needed */
+  /* services-grid 1100px handled in base section above */
   .programs-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid   { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
   .team-grid     { grid-template-columns: 1fr; }
@@ -1285,16 +1347,19 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ══════════════════════════════════════════════════════════════
    TEAM — HORIZONTAL SCROLL SLIDER ON MOBILE
+   scroll-snap-type: x proximity → soft, premium settling
+   scroll-behavior: smooth → buttery native scroll
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .team-grid {
     display: flex !important;
     flex-direction: row;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     gap: 12px;
-    padding: 0 1.25rem 1rem;
+    padding: 0 1.25rem 1.25rem;
     grid-template-columns: unset;
     scrollbar-width: none;
   }

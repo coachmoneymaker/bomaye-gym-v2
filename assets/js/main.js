@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initEarlyBirdFOMO(); // async — does not block rendering
   initAutoCarousels();
   initQuoteMobileReveal();
+  initScheduleWidget(); // Bsport planning widget — lazy loads on scroll
 });
 
 /* ── Android / WebP image fallback ──────────────────────────
@@ -166,6 +167,53 @@ function navToMehrPreise() {
 
 function navFromMehrPreise() {
   nav('home', null, window._returnScrollY || 0);
+}
+
+/* ── Stundenplan — Bsport planning widget ────────────────────
+   Lazy-mounts via IntersectionObserver so it doesn't block
+   the initial page load. Uses same companyId as booking widget.
+──────────────────────────────────────────────────────────── */
+let _scheduleMounted = false;
+
+function initScheduleWidget() {
+  const section = document.getElementById('schedule');
+  if (!section) return;
+
+  const io = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting || _scheduleMounted) return;
+    _scheduleMounted = true;
+    io.disconnect();
+    mountSchedule();
+  }, { threshold: 0.1 });
+
+  io.observe(section);
+}
+
+function mountSchedule() {
+  // Load the Bsport CDN script (shared with booking widget)
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  waitForBsportSchedule(1);
+}
+
+function waitForBsportSchedule(attempt) {
+  if (attempt > 60) return; // give up after ~9 s
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => waitForBsportSchedule(attempt + 1), 150);
+
+  BsportWidget.mount({
+    parentElement: 'bsport-schedule-5473',
+    companyId: 5473,
+    franchiseId: null,
+    dialogMode: 1,
+    widgetType: 'planning', // schedule/timetable view
+    showFab: false,
+    fullScreenPopup: false,
+  });
 }
 
 /* ── Pricing section — age + duration selectors ─────────────── */
@@ -520,8 +568,8 @@ function initTeamSliderDots() {
 function initAutoCarousels() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
-  // Services is always a flex carousel → start on all screen sizes
-  autoSlider('services-slider',     4800, Infinity);
+  // Services: carousel only on mobile (desktop shows full 4×2 grid)
+  autoSlider('services-slider',     5000, 768);
   // Team: horizontal slider only ≤900px
   autoSlider('team-slider',         5200, 900);
   // Testimonials: horizontal slider only ≤1024px
