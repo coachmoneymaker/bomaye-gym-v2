@@ -569,11 +569,11 @@ function initAutoCarousels() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
   // Services: slow premium advance — 9 s interval, 1100 ms eased transition
-  autoSlider('services-slider',     9000, 768, 1100);
-  // Team: horizontal slider only ≤900px
-  autoSlider('team-slider',         5200, 900);
-  // Testimonials: horizontal slider only ≤1024px
-  autoSlider('testimonials-slider', 5800, 1024);
+  autoSlider('services-slider',     9000, 768,  1100);
+  // Team: slow premium advance — 9 s interval, 1000 ms ease (only 2 coaches, so be gentle)
+  autoSlider('team-slider',         9000, 900,  1000);
+  // Testimonials: slow premium advance — 8 s interval, 1000 ms ease
+  autoSlider('testimonials-slider', 8000, 1024, 1000);
 }
 
 /* premiumScrollTo(el, targetLeft, duration)

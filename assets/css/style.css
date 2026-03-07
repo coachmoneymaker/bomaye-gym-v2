@@ -560,7 +560,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .coach-card:hover { border-color: var(--border); }
 .coach-photo { position: relative; min-height: 300px; }
-.coach-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.coach-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 .coach-creds {
   position: absolute; bottom: 0; left: 0; right: 0;
   display: flex; flex-direction: column; gap: 3px; padding: 0.85rem;
@@ -1192,6 +1192,24 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   .trust-strip-item  { justify-content: center; }
 }
 
+/* ── Android / mobile: disable backdrop-filter to avoid rendering bugs ─── */
+/* backdrop-filter is GPU-intensive and causes white-flash / blank rendering
+   on older Android Chrome (Galaxy S20 and below). Safe to disable on mobile. */
+@media (max-width: 900px) {
+  #services, #intro, #booking, #faq {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--ink2) !important;
+  }
+  #intro  { background: var(--smoke) !important; }
+  #faq    { background: var(--smoke) !important; }
+  #booking{ background: var(--ink2)  !important; }
+  .coach-card, .step-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 /* ── 375px fine-tuning ──────────────────────────────────────── */
 @media (max-width: 375px) {
   .hero-h1 { font-size: 2.8rem; }
@@ -1365,13 +1383,14 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   }
   .team-grid::-webkit-scrollbar { display: none; }
   .coach-card {
-    flex: 0 0 82vw;
-    max-width: 380px;
+    flex: 0 0 85vw;
+    max-width: 400px;
     min-width: 280px;
     scroll-snap-align: start;
     grid-template-columns: 1fr;
   }
-  .coach-photo { height: 240px; min-height: auto; }
+  /* Show upper body clearly — enough height for shoulders + face */
+  .coach-photo { height: 300px; min-height: auto; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1685,6 +1704,15 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #testimonials .slider-dot        { background: rgba(255,255,255,0.2); }
 #testimonials .slider-dot.active { background: var(--gold); }
 
+/* Google Bewertung badge — force readable on the dark anthracite section */
+#testimonials .google-rating {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.14);
+}
+#testimonials .google-rating-stars { color: #f4b400; }
+#testimonials .google-rating-score { color: var(--white); }
+#testimonials .google-rating-label { color: rgba(255,255,255,0.55); }
+
 /* ── Subtle section separators for visual rhythm ────── */
 #intro     { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #dna       { border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -1763,12 +1791,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
-.early-bird-inner {
-  background: rgba(255,255,255,0.03) !important;
-  border: 1px solid rgba(197,160,89,0.15) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
+/* early-bird-inner: no glass box — content flows open into the section */
 
 /* ══════════════════════════════════════════════════════════════
    DISCIPLINES SECTION
@@ -1821,9 +1844,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(180deg,
-    rgba(8,8,8,0.55) 0%,
-    rgba(8,8,8,0.68) 45%,
-    rgba(8,8,8,0.90) 100%
+    rgba(8,8,8,0.28) 0%,
+    rgba(8,8,8,0.55) 45%,
+    rgba(8,8,8,0.88) 100%
   );
   border-radius: inherit;
   z-index: 0;
@@ -1831,8 +1854,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 .discipline-card--img:hover::after {
   background: linear-gradient(180deg,
-    rgba(8,8,8,0.38) 0%,
-    rgba(8,8,8,0.55) 45%,
+    rgba(8,8,8,0.18) 0%,
+    rgba(8,8,8,0.45) 45%,
     rgba(8,8,8,0.82) 100%
   );
 }
@@ -1901,13 +1924,14 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    SECTION TRANSITIONS — gradient fades & gold dividers
 ══════════════════════════════════════════════════════════════ */
 
-/* Shared pseudo-element base for section edge fades */
+/* Shared pseudo-element base for section edge fades.
+   #early-bird is excluded — it has its own ::before (ambient gold glow)
+   and already has position:relative in its own rule. */
 #disciplines::before,
 #intro::before, #dna::before,
 #services::before, #bomaye-standard::before, #team::before,
 #testimonials::before, #weg::before,
-#early-bird::before, #faq::before,
-#booking::before {
+#faq::before, #booking::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -1918,7 +1942,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 #disciplines,
 #intro, #dna, #services, #bomaye-standard, #team,
-#testimonials, #weg, #early-bird,
+#testimonials, #weg,
 #faq, #booking {
   position: relative;
 }
