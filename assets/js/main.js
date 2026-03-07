@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initPreloader();
   initHeader();
   initLogoImage();
+  initImageFallbacks(); // Android/WebP safety net — runs immediately
   initPricingSection();
   initSliderDots();
   initTeamSliderDots();
@@ -16,6 +17,39 @@ document.addEventListener('DOMContentLoaded', function () {
   initAutoCarousels();
   initQuoteMobileReveal();
 });
+
+/* ── Android / WebP image fallback ──────────────────────────
+   Catches images that fail to load (e.g. older Android WebView)
+   and gracefully hides the broken img / falls back to bg-color.
+   Also ensures CSS background-image elements with inline styles
+   are checked for load success.
+──────────────────────────────────────────────────────────── */
+function initImageFallbacks() {
+  // 1. <img> tag onerror: hide broken image, keep layout stable
+  document.querySelectorAll('img[src]').forEach(img => {
+    if (!img.getAttribute('onerror')) {
+      img.addEventListener('error', function () {
+        this.style.opacity = '0';
+        this.closest('.coach-photo') && (this.closest('.coach-photo').style.background = 'var(--smoke)');
+      }, { once: true });
+    }
+  });
+
+  // 2. CSS background-image elements: verify each src loads
+  //    Covers service cards, discipline cards (inline style)
+  document.querySelectorAll('[style*="background-image"]').forEach(el => {
+    const match = el.style.backgroundImage.match(/url\(['"]?([^'")\s]+)['"]?\)/);
+    if (!match) return;
+    const src = match[1];
+    const probe = new Image();
+    probe.onerror = () => {
+      // Strip failed bg, reveal fallback bg-color
+      el.style.backgroundImage = '';
+      el.style.background = 'rgba(255,255,255,0.04)';
+    };
+    probe.src = src;
+  });
+}
 
 /* ── Preloader ─────────────────────────────────────────────── */
 function initPreloader() {
@@ -486,24 +520,34 @@ function initTeamSliderDots() {
 function initAutoCarousels() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
-  autoSlider('services-slider',    4500); // Choose Your Fight carousel
-  autoSlider('team-slider',        5200); // smoother, less rushed
-  autoSlider('testimonials-slider', 5800); // slow premium cadence
+  // Services is always a flex carousel → start on all screen sizes
+  autoSlider('services-slider',     4800, Infinity);
+  // Team: horizontal slider only ≤900px
+  autoSlider('team-slider',         5200, 900);
+  // Testimonials: horizontal slider only ≤1024px
+  autoSlider('testimonials-slider', 5800, 1024);
 }
 
-function autoSlider(sliderId, intervalMs) {
+/* autoSlider(id, intervalMs, maxWidth)
+   maxWidth — auto-start only when viewport ≤ maxWidth.
+   Use Infinity to always start (services carousel on all sizes).
+   advance() skips silently when the container is not scrollable.  */
+function autoSlider(sliderId, intervalMs, maxWidth) {
   const slider = document.getElementById(sliderId);
   if (!slider) return;
+  if (maxWidth === undefined) maxWidth = 1024;
 
   let timer = null;
   let paused = false;
 
   function advance() {
     if (paused) return;
-    const items  = Array.from(slider.children);
+    // Skip if container has no scrollable overflow (e.g. desktop grid)
+    if (slider.scrollWidth <= slider.clientWidth + 2) return;
+
+    const items = Array.from(slider.children);
     if (items.length < 2) return;
 
-    // Find currently visible item
     const sl = slider.scrollLeft;
     let closest = 0, minD = Infinity;
     items.forEach((item, i) => {
@@ -519,25 +563,22 @@ function autoSlider(sliderId, intervalMs) {
   function start() { timer = setInterval(advance, intervalMs); }
   function stop()  { clearInterval(timer); }
 
-  // Pause on hover (desktop) or touch start (mobile)
+  // Pause on hover (desktop) or touch (mobile) — always attach listeners
   slider.addEventListener('mouseenter', () => { paused = true;  stop(); });
-  slider.addEventListener('mouseleave', () => { paused = false; start(); });
-  slider.addEventListener('touchstart', () => { paused = true;  stop(); },   { passive: true });
-  slider.addEventListener('touchend',   () => {
-    // Resume after a short delay so manual swipe finishes first
-    setTimeout(() => { paused = false; start(); }, 2500);
+  slider.addEventListener('mouseleave', () => { paused = false; if (window.innerWidth <= maxWidth) start(); });
+  slider.addEventListener('touchstart',  () => { paused = true;  stop(); }, { passive: true });
+  slider.addEventListener('touchend',    () => {
+    setTimeout(() => { paused = false; if (window.innerWidth <= maxWidth) start(); }, 2500);
   }, { passive: true });
 
-  // Auto-slide on mobile/tablet (≤ 1024px)
-  if (window.innerWidth <= 1024) start();
+  if (window.innerWidth <= maxWidth) start();
 
-  // Re-evaluate on resize (debounced)
   let resizeDebounce;
   window.addEventListener('resize', () => {
     clearTimeout(resizeDebounce);
     resizeDebounce = setTimeout(() => {
       stop();
-      if (window.innerWidth <= 1024) { paused = false; start(); }
+      if (window.innerWidth <= maxWidth) { paused = false; start(); }
     }, 200);
   });
 }

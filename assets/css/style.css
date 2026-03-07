@@ -468,15 +468,44 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
    SERVICES GRID
 ══════════════════════════════════════════════════════════════ */
 #services { background: var(--ink2); }
+/* ── Services: universal horizontal carousel (desktop + mobile) ── */
 .services-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 320px); gap: 2px;
-  background: rgba(255,255,255,0.03); border-radius: var(--radius-lg); overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 3px;
+  background: transparent;
+  border-radius: var(--radius-lg);
+  scrollbar-width: none;
+  /* Padding-right creates the "peek" effect showing partial next card */
+  padding-right: 2px;
 }
+.services-grid::-webkit-scrollbar { display: none; }
 .service-card {
+  /* Desktop: show ~3.5 cards — partial 4th hints at more content */
+  flex: 0 0 calc(100% / 3.4);
+  height: 420px;
+  scroll-snap-align: start;
+  border-radius: var(--radius-lg);
   position: relative; overflow: hidden; cursor: pointer; background: #0d0d0d;
-  transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  transition: box-shadow 0.35s var(--ease-out);
 }
+@media (max-width: 1280px) {
+  .service-card { flex: 0 0 calc(100% / 2.8); height: 380px; }
+}
+@media (max-width: 1024px) {
+  .service-card { flex: 0 0 calc(100% / 2.2); height: 340px; }
+}
+@media (max-width: 768px) {
+  .service-card { flex: 0 0 78vw; max-width: 320px; height: 300px; }
+}
+@media (max-width: 480px) {
+  .service-card { flex: 0 0 83vw; height: 270px; }
+}
+/* Remove desktop translateY hover — causes layout shift in flex carousel */
+.service-card:hover { transform: none; }
 .service-card:hover {
   box-shadow: 0 0 0 1px rgba(197,160,89,0.30), 0 12px 40px rgba(0,0,0,0.55);
   transform: translateY(-3px);
@@ -539,16 +568,20 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
    EARLY BIRD
 ══════════════════════════════════════════════════════════════ */
 #early-bird {
-  background: linear-gradient(160deg, #0d0b08 0%, var(--ink) 40%, #0d0b08 100%);
+  background: linear-gradient(165deg, #0a0906 0%, #0f0d0a 35%, var(--ink) 60%, #0a0906 100%);
   border-top: none;
+  border-bottom: none;
   position: relative;
+  overflow: hidden;
 }
+/* Ambient gold glow — sits behind content, creates depth without a box */
 #early-bird::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(197,160,89,0.06) 0%, transparent 70%);
+    radial-gradient(ellipse 80% 60% at 72% 50%, rgba(197,160,89,0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(197,160,89,0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 .early-bird-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
@@ -556,21 +589,34 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .eb-checklist { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
 .eb-check { display: flex; align-items: flex-start; gap: 12px; color: rgba(255,255,255,0.75); font-size: 0.92rem; }
 .eb-check i { color: var(--gold); width: 18px; flex-shrink: 0; margin-top: 3px; }
+/* eb-card: no hard box — just ambient separation via subtle top-line */
 .eb-card {
-  background: linear-gradient(140deg, rgba(30,26,20,0.6), rgba(15,12,8,0.8));
-  border: 1px solid rgba(197,160,89,0.20); border-radius: var(--radius-lg);
-  padding: 2.5rem; text-align: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.35);
-  transition: border-color 0.35s, box-shadow 0.35s;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(197,160,89,0.18);
+  border-radius: 0;
+  padding: 2.5rem 0;
+  text-align: center;
+  position: relative;
 }
-.eb-card:hover {
-  border-color: rgba(197,160,89,0.40);
-  box-shadow: 0 8px 48px rgba(0,0,0,0.45), 0 0 32px rgba(197,160,89,0.08);
+/* Gold glow halo behind the big number */
+.eb-card::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(197,160,89,0.12) 0%, transparent 70%);
+  pointer-events: none;
 }
+.eb-card:hover { border-top-color: rgba(197,160,89,0.40); }
 .eb-card-label { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 3px; color: var(--muted); margin-bottom: 0.75rem; }
-.eb-card-number { font-family: var(--font-display); font-size: 5rem; color: var(--gold); line-height: 1; }
+.eb-card-number {
+  font-family: var(--font-display); font-size: 5rem; color: var(--gold); line-height: 1;
+  text-shadow: 0 0 80px rgba(197,160,89,0.30), 0 0 30px rgba(197,160,89,0.18);
+  position: relative; z-index: 1;
+}
 .eb-card-sublabel { font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); margin-bottom: 2rem; }
 .eb-prices {
   display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
@@ -991,7 +1037,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 1100px
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .services-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 280px); }
+  /* services-grid is now always flex — no grid override needed */
   .programs-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid   { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
   .team-grid     { grid-template-columns: 1fr; }
@@ -1121,35 +1167,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* prog-tag: small inline sizing */
 .prog-tag { font-size: 0.58rem !important; padding: 3px 10px !important; width: fit-content; }
 
-/* ── Services slider (tablet + mobile) ──────────────────────── */
-@media (max-width: 1024px) {
-  .services-grid {
-    display: flex !important;
-    flex-direction: row;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    gap: 12px;
-    padding: 0 1.25rem 1.25rem;
-    background: transparent;
-    border-radius: 0;
-    scrollbar-width: none;
-  }
-  .services-grid::-webkit-scrollbar { display: none; }
-  .service-card {
-    flex: 0 0 72vw;
-    max-width: 320px;
-    min-width: 220px;
-    height: 300px !important;
-    scroll-snap-align: start;
-    border-radius: var(--radius-lg);
-    transform: none !important; /* prevent lift on mobile */
-  }
-}
-@media (max-width: 480px) {
-  .service-card { flex: 0 0 80vw; height: 260px !important; }
-}
+/* Services grid is now always flex — breakpoint sizes handled in the base section */
 
 /* ── Pricing slider (mobile) ───────────────────────────────── */
 @media (max-width: 768px) {
@@ -1187,7 +1205,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .slider-dot.active {
   background: var(--gold); transform: scale(1.3);
 }
-@media (min-width: 1025px) { .slider-dots { display: none; } }
+/* Dots always show — carousel is universal now */
+/* Hide dots only on very large screens if desired; currently kept visible */
 
 /* ══════════════════════════════════════════════════════════════
    PRICING SECTION — mobile toggle overflow
@@ -1292,31 +1311,35 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ══════════════════════════════════════════════════════════════
    TESTIMONIALS — HORIZONTAL SCROLL SLIDER ON TABLET + MOBILE
+   scroll-snap-type: x proximity → softer, non-jerky settling
+   will-change: transform → GPU layer for buttery motion
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .testimonial-grid {
     display: flex !important;
     flex-direction: row;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;  /* softer than mandatory */
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     gap: 16px;
-    padding: 0 1.25rem 1.25rem;
+    padding: 0 1.25rem 1.5rem;
     grid-template-columns: unset;
     scrollbar-width: none;
   }
   .testimonial-grid::-webkit-scrollbar { display: none; }
   .testimonial-card {
-    flex: 0 0 80vw;
-    max-width: 400px;
+    flex: 0 0 82vw;
+    max-width: 420px;
     min-width: 280px;
-    scroll-snap-align: start;
+    scroll-snap-align: center;   /* center snap feels less abrupt */
+    will-change: transform;       /* GPU acceleration for smooth motion */
+    scroll-snap-stop: normal;
   }
 }
-/* Testimonials dots — dark dot for light bg */
-#testimonials .slider-dot { background: rgba(8,8,8,0.18); }
-#testimonials .slider-dot.active { background: var(--gold-dark); }
+/* Testimonials dots — white dots on dark section */
+#testimonials .slider-dot        { background: rgba(255,255,255,0.22); }
+#testimonials .slider-dot.active { background: var(--gold); }
 
 /* ══════════════════════════════════════════════════════════════
    PRICING — MEMBERSHIP CARD (NEW LAYOUT)
@@ -1603,7 +1626,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #services  { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #team      { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #weg       { border-bottom: 1px solid rgba(255,255,255,0.04); }
-#early-bird{ border-bottom: 1px solid var(--border); }
+#early-bird{ border-bottom: none; } /* section flows without hard line */
 
 /* ── Slightly brighter body text in dark sections ────── */
 #intro p, #dna p, #services p, #weg p, #early-bird p,
@@ -1723,9 +1746,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .discipline-card p  { font-size: 0.88rem; color: rgba(255,255,255,0.72); line-height: 1.8; flex: 1; position: relative; z-index: 1; }
 .discipline-card .btn { position: relative; z-index: 1; }
 .discipline-card .discipline-icon { position: relative; z-index: 1; }
-/* Image-backed variant */
+/* Image-backed variant — background-image set via inline style (direct, not CSS var) */
 .discipline-card--img {
-  background-image: var(--disc-bg);
   background-size: cover;
   background-position: center;
   border-color: rgba(255,255,255,0.12) !important;
@@ -1734,20 +1756,30 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(180deg,
-    rgba(8,8,8,0.62) 0%,
-    rgba(8,8,8,0.72) 50%,
-    rgba(8,8,8,0.88) 100%
+    rgba(8,8,8,0.55) 0%,
+    rgba(8,8,8,0.68) 45%,
+    rgba(8,8,8,0.90) 100%
   );
   border-radius: inherit;
   z-index: 0;
-  transition: background 0.35s;
+  transition: background 0.45s var(--ease-expo);
 }
 .discipline-card--img:hover::after {
   background: linear-gradient(180deg,
-    rgba(8,8,8,0.50) 0%,
-    rgba(8,8,8,0.65) 50%,
+    rgba(8,8,8,0.38) 0%,
+    rgba(8,8,8,0.55) 45%,
     rgba(8,8,8,0.82) 100%
   );
+}
+/* Photo-only cards (Boxing, Kickboxing) — no icon, taller for full impact */
+.discipline-card--photo {
+  padding: 2.25rem 2rem;
+  justify-content: flex-end;
+  min-height: 280px;
+}
+.discipline-card--photo h3 { font-size: 1.25rem; margin-bottom: 0.2rem; }
+@media (min-width: 901px) {
+  .discipline-card--photo { min-height: 320px; }
 }
 @media (max-width: 900px) {
   .disciplines-grid { grid-template-columns: 1fr; gap: 1.25rem; }
@@ -1896,21 +1928,19 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ══════════════════════════════════════════════════════════════
    COACH CARDS — MOBILE IMAGE FRAMING
-   Show upper body consistently on all mobile sizes
+   Use !important to beat the team-slider height (240px) set earlier.
+   object-position: 50% 0% (= top) ensures head + upper body visible.
 ══════════════════════════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  /* team slider: smooth horizontal scroll */
-  #team-slider {
-    scroll-behavior: smooth;
-  }
-}
+#team-slider { scroll-behavior: smooth; }
 @media (max-width: 900px) {
-  .coach-photo { height: 320px; }
-  .coach-photo img { object-fit: cover; object-position: center 8%; }
+  .coach-photo          { height: 340px !important; min-height: 340px !important; }
+  .coach-photo img      { object-fit: cover; object-position: 50% 0% !important; }
 }
-@media (max-width: 480px) {
-  .coach-photo { height: 290px; }
-  .coach-photo img { object-position: center 6%; }
+@media (max-width: 600px) {
+  .coach-photo          { height: 300px !important; min-height: 300px !important; }
+}
+@media (max-width: 380px) {
+  .coach-photo          { height: 270px !important; min-height: 270px !important; }
 }
 
 /* ══════════════════════════════════════════════════════════════
