@@ -508,8 +508,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 @media (max-width: 768px) {
   .service-card {
-    flex: 0 0 78vw;
-    max-width: 300px;
+    flex: 0 0 85vw;
+    max-width: 380px;
     min-width: 220px;
     height: 280px;
     scroll-snap-align: start;
@@ -518,7 +518,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   }
 }
 @media (max-width: 480px) {
-  .service-card { flex: 0 0 83vw; height: 258px; }
+  .service-card { flex: 0 0 88vw; height: 258px; }
 }
 .service-card:hover {
   box-shadow: 0 0 0 1px rgba(197,160,89,0.30), 0 12px 40px rgba(0,0,0,0.55);

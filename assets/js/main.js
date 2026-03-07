@@ -568,19 +568,39 @@ function initTeamSliderDots() {
 function initAutoCarousels() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
-  // Services: carousel only on mobile (desktop shows full 4×2 grid)
-  autoSlider('services-slider',     5000, 768);
+  // Services: slow premium advance — 9 s interval, 1100 ms eased transition
+  autoSlider('services-slider',     9000, 768, 1100);
   // Team: horizontal slider only ≤900px
   autoSlider('team-slider',         5200, 900);
   // Testimonials: horizontal slider only ≤1024px
   autoSlider('testimonials-slider', 5800, 1024);
 }
 
-/* autoSlider(id, intervalMs, maxWidth)
+/* premiumScrollTo(el, targetLeft, duration)
+   Eased RAF scroll — gives full control over speed & feel.
+   Stores the RAF id on el._premiumRaf so callers can cancel it. */
+function premiumScrollTo(el, targetLeft, duration) {
+  if (el._premiumRaf) cancelAnimationFrame(el._premiumRaf);
+  const start  = el.scrollLeft;
+  const change = targetLeft - start;
+  const t0     = performance.now();
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function step(now) {
+    const progress = Math.min((now - t0) / duration, 1);
+    el.scrollLeft = start + change * easeInOutCubic(progress);
+    if (progress < 1) { el._premiumRaf = requestAnimationFrame(step); }
+    else              { el._premiumRaf = null; }
+  }
+  el._premiumRaf = requestAnimationFrame(step);
+}
+
+/* autoSlider(id, intervalMs, maxWidth, scrollDuration)
    maxWidth — auto-start only when viewport ≤ maxWidth.
-   Use Infinity to always start (services carousel on all sizes).
+   scrollDuration — ms for custom eased animation; omit for native smooth.
    advance() skips silently when the container is not scrollable.  */
-function autoSlider(sliderId, intervalMs, maxWidth) {
+function autoSlider(sliderId, intervalMs, maxWidth, scrollDuration) {
   const slider = document.getElementById(sliderId);
   if (!slider) return;
   if (maxWidth === undefined) maxWidth = 1024;
@@ -605,7 +625,13 @@ function autoSlider(sliderId, intervalMs, maxWidth) {
 
     const next = (closest + 1) % items.length;
     const target = items[next];
-    if (target) slider.scrollTo({ left: target.offsetLeft - slider.offsetLeft, behavior: 'smooth' });
+    if (!target) return;
+    const left = target.offsetLeft - slider.offsetLeft;
+    if (scrollDuration) {
+      premiumScrollTo(slider, left, scrollDuration);
+    } else {
+      slider.scrollTo({ left, behavior: 'smooth' });
+    }
   }
 
   function start() { timer = setInterval(advance, intervalMs); }
@@ -614,7 +640,11 @@ function autoSlider(sliderId, intervalMs, maxWidth) {
   // Pause on hover (desktop) or touch (mobile) — always attach listeners
   slider.addEventListener('mouseenter', () => { paused = true;  stop(); });
   slider.addEventListener('mouseleave', () => { paused = false; if (window.innerWidth <= maxWidth) start(); });
-  slider.addEventListener('touchstart',  () => { paused = true;  stop(); }, { passive: true });
+  slider.addEventListener('touchstart',  () => {
+    paused = true;
+    stop();
+    if (slider._premiumRaf) cancelAnimationFrame(slider._premiumRaf);
+  }, { passive: true });
   slider.addEventListener('touchend',    () => {
     setTimeout(() => { paused = false; if (window.innerWidth <= maxWidth) start(); }, 2500);
   }, { passive: true });
