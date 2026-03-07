@@ -91,6 +91,12 @@ function mobileNav(view, section) {
 
 /* ── SPA view routing ──────────────────────────────────────── */
 function nav(viewId, sectionId, restoreY) {
+  // Auto-save scroll position whenever leaving the home view for a detail
+  const homeView = document.getElementById('view-home');
+  if (homeView && homeView.classList.contains('active') && viewId !== 'home') {
+    window._scrollYBeforeDetail = window.scrollY;
+  }
+
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + viewId);
   if (target) target.classList.add('active');
@@ -111,6 +117,11 @@ function nav(viewId, sectionId, restoreY) {
     }, 80);
   }
   setTimeout(runReveal, 120);
+}
+
+/* ── Back navigation — returns to the exact scroll position ── */
+function navBack() {
+  nav('home', null, window._scrollYBeforeDetail || 0);
 }
 
 /* ── Weitere Preise navigation ─────────────────────────────── */
@@ -475,8 +486,9 @@ function initTeamSliderDots() {
 function initAutoCarousels() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
-  autoSlider('team-slider',        3800);
-  autoSlider('testimonials-slider', 4200);
+  autoSlider('services-slider',    4500); // Choose Your Fight carousel
+  autoSlider('team-slider',        5200); // smoother, less rushed
+  autoSlider('testimonials-slider', 5800); // slow premium cadence
 }
 
 function autoSlider(sliderId, intervalMs) {
@@ -516,8 +528,8 @@ function autoSlider(sliderId, intervalMs) {
     setTimeout(() => { paused = false; start(); }, 2500);
   }, { passive: true });
 
-  // Only auto-slide on mobile/tablet (≤ 900px)
-  if (window.innerWidth <= 900) start();
+  // Auto-slide on mobile/tablet (≤ 1024px)
+  if (window.innerWidth <= 1024) start();
 
   // Re-evaluate on resize (debounced)
   let resizeDebounce;
@@ -525,7 +537,7 @@ function autoSlider(sliderId, intervalMs) {
     clearTimeout(resizeDebounce);
     resizeDebounce = setTimeout(() => {
       stop();
-      if (window.innerWidth <= 900) { paused = false; start(); }
+      if (window.innerWidth <= 1024) { paused = false; start(); }
     }, 200);
   });
 }

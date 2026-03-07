@@ -83,7 +83,7 @@
       <span class="logo-text">BOMAYE</span>
     </a>
 
-    <button class="back-btn" type="button" onclick="nav('home')" aria-label="Zurück">
+    <button class="back-btn" type="button" onclick="navBack()" aria-label="Zurück">
       <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
     </button>
 
@@ -230,19 +230,19 @@
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Drei Disziplinen. Ein Ziel: dich besser zu machen.</p>
       </div>
       <div class="disciplines-grid">
-        <div class="discipline-card reveal delay-1">
+        <div class="discipline-card discipline-card--img reveal delay-1" style="--disc-bg:url('assets/images/service-exec.webp')">
           <div class="discipline-icon"><i class="fa-solid fa-fist-raised"></i></div>
           <h3>BOXING</h3>
           <p>Technik, Sparring und echtes Boxtraining für alle Levels — von Anfänger bis Wettkämpfer.</p>
           <button class="btn btn--outline-light btn--sm" onclick="nav('home','services')" type="button">STUNDENPLAN ANSEHEN</button>
         </div>
-        <div class="discipline-card reveal delay-2">
+        <div class="discipline-card discipline-card--img reveal delay-2" style="--disc-bg:url('assets/images/service-kick.webp')">
           <div class="discipline-icon"><i class="fa-solid fa-fire"></i></div>
           <h3>KICKBOXING</h3>
           <p>Technik, Fitness und Ausdauertraining — gecoacht von einem echten Kickbox-Weltmeister.</p>
           <button class="btn btn--outline-light btn--sm" onclick="nav('home','services')" type="button">STUNDENPLAN ANSEHEN</button>
         </div>
-        <div class="discipline-card reveal delay-3">
+        <div class="discipline-card discipline-card--img reveal delay-3" style="--disc-bg:url('assets/images/service-pt.webp')">
           <div class="discipline-icon"><i class="fa-solid fa-dumbbell"></i></div>
           <h3>STRENGTH &amp; CONDITIONING</h3>
           <p>Kraft, Athletik und Explosivität — gezielt entwickelt für Kämpfer auf jedem Level.</p>
@@ -448,25 +448,25 @@
   <section id="bomaye-standard" class="sec--smoke">
     <div class="container">
       <div class="sec-header reveal">
-        <span class="tag tag--dark">THE BOMAYE STANDARD</span>
-        <h2 style="margin-top:1rem;">REAL BOXING.<br>REAL COACHES.<br><span class="gold">REAL COMMUNITY.</span></h2>
-        <p class="standard-subtext">Bomaye Gym is not a typical fitness studio. Here you train in an environment built on technique, discipline and real coaching quality — from your first session to competitive boxing.</p>
+        <span class="tag tag--dark">DER BOMAYE STANDARD</span>
+        <h2 style="margin-top:1rem;">ECHTES BOXEN.<br>ECHTE TRAINER.<br><span class="gold">ECHTE COMMUNITY.</span></h2>
+        <p class="standard-subtext">Bomaye Gym ist kein typisches Fitnessstudio. Du trainierst in einer Umgebung, die auf Technik, Disziplin und echter Coaching-Qualität aufgebaut ist — von deiner ersten Session bis zum Wettkampf.</p>
       </div>
       <div class="standard-grid">
         <div class="standard-card reveal">
           <div class="standard-icon"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
-          <h3>PROFESSIONAL COACHING</h3>
-          <p>Experience from competitive boxing and high-level training. Every session includes real technical feedback and structured coaching.</p>
+          <h3>PROFESSIONELLES COACHING</h3>
+          <p>Erfahrung aus dem Wettkampfboxen und Leistungssport. Jede Einheit beinhaltet echtes technisches Feedback und strukturiertes Coaching.</p>
         </div>
         <div class="standard-card reveal delay-1">
           <div class="standard-icon"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
-          <h3>STRUCTURED TRAINING</h3>
-          <p>Every session follows a clear system designed to build technique, strength and performance.</p>
+          <h3>STRUKTURIERTES TRAINING</h3>
+          <p>Jede Session folgt einem klaren System, das Technik, Kraft und Leistung gezielt aufbaut — von Anfänger bis Wettkämpfer.</p>
         </div>
         <div class="standard-card reveal delay-2">
           <div class="standard-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
-          <h3>REAL COMMUNITY</h3>
-          <p>Bomaye is not anonymous gym training. You become part of a community that supports each other and grows together.</p>
+          <h3>ECHTE COMMUNITY</h3>
+          <p>Bomaye ist kein anonymes Gym. Du wirst Teil einer Gemeinschaft, die sich gegenseitig pusht, unterstützt und gemeinsam wächst.</p>
         </div>
       </div>
     </div>
