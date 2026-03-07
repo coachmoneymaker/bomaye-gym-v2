@@ -1708,7 +1708,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* Shared pseudo-element base for section edge fades */
 #disciplines::before,
 #intro::before, #dna::before,
-#services::before, #team::before,
+#services::before, #bomaye-standard::before, #team::before,
 #testimonials::before, #weg::before,
 #early-bird::before, #faq::before,
 #booking::before {
@@ -1721,7 +1721,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   z-index: 0;
 }
 #disciplines,
-#intro, #dna, #services, #team,
+#intro, #dna, #services, #bomaye-standard, #team,
 #testimonials, #weg, #early-bird,
 #faq, #booking {
   position: relative;
@@ -1977,6 +1977,72 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 @media (max-width: 480px) {
   #social-proof-toast { max-width: 240px; left: 1rem; bottom: 1.25rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOMAYE STANDARD — AUTHORITY SECTION
+══════════════════════════════════════════════════════════════ */
+.standard-subtext {
+  max-width: 680px; margin: 1.25rem auto 0;
+  color: var(--muted); font-size: 0.95rem; line-height: 1.85; text-align: center;
+}
+.standard-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem;
+  margin-top: 3.5rem;
+}
+.standard-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 2.5rem 2rem;
+  text-align: center; position: relative; overflow: hidden;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+}
+.standard-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.standard-card:hover { border-color: rgba(197,160,89,0.35); transform: translateY(-4px); }
+.standard-card:hover::before { opacity: 1; }
+.standard-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: var(--gold);
+  transition: background 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+}
+.standard-card:hover .standard-icon {
+  background: rgba(197,160,89,0.2);
+  box-shadow: 0 0 28px rgba(197,160,89,0.18);
+}
+.standard-card h3 { font-size: 0.95rem; color: var(--white); margin: 0; }
+.standard-card p  { font-size: 0.88rem; color: var(--muted); line-height: 1.8; margin: 0; }
+/* Gold divider below authority section → before pricing */
+#bomaye-standard::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 88%);
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(197,160,89,0.22) 15%,
+    rgba(197,160,89,0.70) 40%,
+    rgba(214,178,108,0.90) 50%,
+    rgba(197,160,89,0.70) 60%,
+    rgba(197,160,89,0.22) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 14px rgba(197,160,89,0.35);
+  pointer-events: none;
+  z-index: 2;
+}
+@media (max-width: 900px) {
+  .standard-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .standard-card  { padding: 2rem 1.5rem; }
 }
 
 /* ══════════════════════════════════════════════════════════════
