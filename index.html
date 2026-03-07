@@ -521,9 +521,9 @@
         <h2 style="margin-top:1rem;">DEIN <span class="gold">TRAINING.</span></h2>
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Alle Kurse und Zeiten auf einen Blick. Buche direkt deinen Platz.</p>
       </div>
-      <!-- Bsport schedule widget — auto-mounts when section enters viewport -->
+      <!-- Bsport calendar widget — mounted by inline script at bottom of page -->
       <div class="schedule-widget-wrap reveal" id="schedule-section-wrap">
-        <div id="bsport-schedule-5473" class="schedule-widget-inner"></div>
+        <div id="bsport-widget-172485" class="schedule-widget-inner"></div>
         <noscript>
           <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
         </noscript>
@@ -1350,5 +1350,42 @@
 <!-- Scripts: config must load synchronously before main.js -->
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>
+
+<!-- ══════════════════════════════════════════════════════════
+     BSPORT WIDGET — exact embed code from Bsport
+     Script 1: CDN loader (guards against double-load)
+     Script 2: MountBsportWidget helper with retry logic
+     Script 3: Mount the schedule/calendar widget
+     Script 4: (main.js) Mounts a second instance in the
+               booking modal on first openBooking() call
+══════════════════════════════════════════════════════════ -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+<script id="bsport-widget-mount">
+    function MountBsportWidget(config, repeat=1) {
+        if (repeat > 50) { return }
+        if (!window.BsportWidget) {
+            return setTimeout(() => {
+                MountBsportWidget(config,repeat+1)
+            }, 100 * repeat || 1)
+        }
+        BsportWidget.mount(config)
+    }
+</script>
+<script>
+    /* Schedule section — mounts on page load */
+    MountBsportWidget({
+        "parentElement": "bsport-widget-172485",
+        "companyId": 5473,
+        "franchiseId": null,
+        "dialogMode": 1,
+        "widgetType": "calendar",
+        "showFab": false,
+        "fullScreenPopup": false,
+        "styles": undefined,
+        "config": {
+            "calendar": {}
+        }
+    })
+</script>
 </body>
 </html>

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initEarlyBirdFOMO(); // async — does not block rendering
   initAutoCarousels();
   initQuoteMobileReveal();
-  initScheduleWidget(); // Bsport planning widget — lazy loads on scroll
+  // Bsport schedule widget is now mounted by inline script at bottom of page
 });
 
 /* ── Android / WebP image fallback ──────────────────────────
@@ -169,52 +169,11 @@ function navFromMehrPreise() {
   nav('home', null, window._returnScrollY || 0);
 }
 
-/* ── Stundenplan — Bsport planning widget ────────────────────
-   Lazy-mounts via IntersectionObserver so it doesn't block
-   the initial page load. Uses same companyId as booking widget.
+/* ── Stundenplan ─────────────────────────────────────────────
+   The Bsport calendar widget is mounted by the inline script
+   block at the bottom of index.html (bsport-widget-172485).
+   No JS mount logic needed here.
 ──────────────────────────────────────────────────────────── */
-let _scheduleMounted = false;
-
-function initScheduleWidget() {
-  const section = document.getElementById('schedule');
-  if (!section) return;
-
-  const io = new IntersectionObserver(entries => {
-    if (!entries[0].isIntersecting || _scheduleMounted) return;
-    _scheduleMounted = true;
-    io.disconnect();
-    mountSchedule();
-  }, { threshold: 0.1 });
-
-  io.observe(section);
-}
-
-function mountSchedule() {
-  // Load the Bsport CDN script (shared with booking widget)
-  if (!document.getElementById('bsport-cdn')) {
-    const s = document.createElement('script');
-    s.id = 'bsport-cdn';
-    s.src = 'https://cdn.bsport.io/scripts/widget.js';
-    document.head.appendChild(s);
-  }
-  waitForBsportSchedule(1);
-}
-
-function waitForBsportSchedule(attempt) {
-  if (attempt > 60) return; // give up after ~9 s
-  if (typeof window.BsportWidget === 'undefined')
-    return setTimeout(() => waitForBsportSchedule(attempt + 1), 150);
-
-  BsportWidget.mount({
-    parentElement: 'bsport-schedule-5473',
-    companyId: 5473,
-    franchiseId: null,
-    dialogMode: 1,
-    widgetType: 'planning', // schedule/timetable view
-    showFab: false,
-    fullScreenPopup: false,
-  });
-}
 
 /* ── Pricing section — age + duration selectors ─────────────── */
 function initPricingSection() {
@@ -464,15 +423,44 @@ function loadMap() {
   if (gate) gate.classList.add('hidden');
 }
 
-/* ── Booking modal ─────────────────────────────────────────── */
-let bsportMounted = false;
+/* ── Booking modal ─────────────────────────────────────────────
+   Opens the modal overlay and lazy-mounts the Bsport calendar
+   widget into it on first call. Uses MountBsportWidget (defined
+   by the inline script block at the bottom of index.html) — same
+   helper and same config as the schedule-section widget, but
+   targeting a different container (bsport-widget-464090) so both
+   instances can coexist independently.
+
+   EARLY BIRD / MITGLIED WERDEN CTAs:
+   All buttons that call openBooking() lead here. When a final
+   Bsport membership-signup URL is available, replace the
+   MountBsportWidget call below with a direct link/redirect —
+   no other page structure changes needed.
+──────────────────────────────────────────────────────────── */
+let _bsportModalMounted = false;
 
 function openBooking() {
   const modal = document.getElementById('booking-modal');
   if (!modal) return;
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-  if (!bsportMounted) { mountBsport(); bsportMounted = true; }
+
+  if (!_bsportModalMounted) {
+    _bsportModalMounted = true;
+    // MountBsportWidget is defined by the inline Bsport script block
+    if (typeof MountBsportWidget === 'function') {
+      MountBsportWidget({
+        parentElement: 'bsport-widget-464090',
+        companyId: 5473,
+        franchiseId: null,
+        dialogMode: 1,
+        widgetType: 'calendar',
+        showFab: false,
+        fullScreenPopup: false,
+        config: { calendar: {} },
+      });
+    }
+  }
 }
 
 function closeBooking() {
@@ -480,28 +468,6 @@ function closeBooking() {
   if (!modal) return;
   modal.classList.remove('open');
   document.body.style.overflow = '';
-}
-
-function mountBsport() {
-  if (!document.getElementById('bsport-cdn')) {
-    const s = document.createElement('script');
-    s.id = 'bsport-cdn';
-    s.src = 'https://cdn.bsport.io/scripts/widget.js';
-    document.head.appendChild(s);
-  }
-  waitForBsport(1);
-}
-
-function waitForBsport(attempt) {
-  if (attempt > 50) return;
-  if (typeof window.BsportWidget === 'undefined')
-    return setTimeout(() => waitForBsport(attempt + 1), 150);
-  BsportWidget.mount({
-    parentElement: 'bsport-widget-464090',
-    companyId: 5473, franchiseId: null,
-    dialogMode: 1, widgetType: 'calendar',
-    showFab: false, fullScreenPopup: false,
-  });
 }
 
 document.addEventListener('click', e => { if (e.target.id === 'booking-modal') closeBooking(); });
