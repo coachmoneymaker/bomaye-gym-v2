@@ -782,21 +782,41 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     width: 100% !important;
     max-width: 100% !important;
   }
-  /* Class card meta row — Bsport forces __left to flex-direction:column via
-     [id*=bsport-widget] .cleanslate (attribute + class = specificity 0,2,0).
-     We use #id + .cleanslate (ID + class = 1,1,0) to win the cascade and
-     restore __left__extra to a horizontal row with icons pinned right.
-     Only active at ≤480px; desktop is untouched. */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left__extra {
+  /* Class card meta row — fix overlapping capacity/gender/extra icons.
+     The root cause: .bs-offer-list-item__content__offer (the meta row
+     container) was never given a flex row context, so its __left text
+     block and __right icon group collapsed on top of each other.
+     Fix the full three-level hierarchy; desktop is untouched. */
+
+  /* 1. Meta row container — horizontal, text left / icons right */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.5rem !important;
     flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
     width: 100% !important;
+  }
+  /* 2. Left text block (location + coach) — stacked vertically, takes remaining space */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left__extra {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;        /* allow text to truncate, not push icons */
     position: static !important;
   }
+  /* 3. Icon group (capacity, gender, extra) — horizontal row, pinned right, no shrink */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    flex-shrink: 0 !important;
+  }
+  /* 4. Individual icon items — pulled back into flow, no absolute positioning */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
     position: static !important;
