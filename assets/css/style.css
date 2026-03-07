@@ -214,8 +214,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .hero-bg {
   position: absolute; inset: 0;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1208 40%, #0d0d0d 100%);
-  background-image: url('../images/community.webp');
-  background-size: cover; background-position: center 30%;
+  background-image: url('../images/service-mind.webp');
+  background-size: cover; background-position: center 20%;
 }
 .hero-overlay {
   position: absolute; inset: 0;
@@ -232,9 +232,17 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   max-width: 900px; width: 100%;
 }
 .hero-eyebrow {
-  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
   font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 4px; color: var(--gold);
   margin-bottom: 1.75rem;
+  /* Gold badge frame */
+  background: rgba(10,8,4,0.68);
+  border: 1px solid rgba(197,160,89,0.55);
+  border-radius: 999px;
+  padding: 0.6rem 1.6rem;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 0 20px rgba(197,160,89,0.10), inset 0 0 12px rgba(197,160,89,0.04);
   animation: fadeUpHero 1s var(--ease-expo) 0.3s both;
 }
 .hero-h1 {
@@ -249,12 +257,17 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .hero-eb-counter {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background: rgba(197,160,89,0.12); border: 1px solid rgba(197,160,89,0.3);
-  border-radius: 999px; padding: 0.45rem 1.1rem; margin-bottom: 1.75rem;
-  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 2px; color: rgba(255,255,255,0.7);
+  background: rgba(10,8,4,0.78);
+  border: 1px solid rgba(197,160,89,0.58);
+  border-radius: 999px; padding: 0.5rem 1.3rem; margin-bottom: 1.75rem;
+  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 2px;
+  color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 16px rgba(197,160,89,0.14), 0 0 0 1px rgba(197,160,89,0.08);
   animation: fadeUpHero 1s var(--ease-expo) 0.7s both;
 }
-.hero-eb-counter strong { color: var(--gold); }
+.hero-eb-counter strong { color: var(--gold-light); }
 .hero-ctas {
   display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;
   margin-bottom: 3rem;
@@ -1749,4 +1762,80 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #faq > *, #booking > * {
   position: relative;
   z-index: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DIFF BLOCK — MOBILE CENTER ALIGNMENT
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .diff-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem 1.5rem;
+  }
+  .diff-item div { align-items: center; }
+  .diff-item i   { margin-top: 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COACH CARDS — MOBILE IMAGE FRAMING
+   Show more upper body, consistent framing for both trainers
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .coach-photo { height: 300px; }
+  .coach-photo img { object-position: center 12%; }
+}
+@media (max-width: 480px) {
+  .coach-photo { height: 280px; }
+  .coach-photo img { object-position: center 10%; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOOGLE RATING — SCORE COLOR FIX
+══════════════════════════════════════════════════════════════ */
+.google-rating-score { color: var(--gold-dark) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   PRICING TABS — MOBILE GRID (no horizontal scroll)
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .age-toggle {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    overflow: visible !important;
+    flex-wrap: unset;
+    gap: 0.35rem;
+    padding-bottom: 0;
+  }
+  .atab {
+    font-size: 0.56rem !important;
+    padding: 0.6rem 0.25rem !important;
+    letter-spacing: 0.5px !important;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUOTE SECTION — MOBILE SCROLL REVEAL ANIMATION
+   Desktop uses background-attachment:fixed (parallax).
+   Mobile uses an IntersectionObserver-driven class 'in-view'
+   that triggers a premium fade + subtle scale reveal.
+══════════════════════════════════════════════════════════════ */
+#quote .container { transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo); }
+
+@media (max-width: 768px) {
+  #quote .container {
+    opacity: 0;
+    transform: scale(0.97) translateY(16px);
+  }
+  #quote.quote-visible .container {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  /* Add a subtle gold glow line that appears below the quote */
+  #quote.quote-visible::after {
+    opacity: 0.7;
+  }
 }

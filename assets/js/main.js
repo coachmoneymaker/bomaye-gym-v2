@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
   initLogoImage();
   initPricingSection();
   initSliderDots();
+  initTeamSliderDots();
   runReveal();
   initEarlyBirdFOMO(); // async — does not block rendering
+  initAutoCarousels();
+  initQuoteMobileReveal();
 });
 
 /* ── Preloader ─────────────────────────────────────────────── */
@@ -433,6 +436,93 @@ document.addEventListener('DOMContentLoaded', () => {
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { initSliderDots(); runReveal(); }, 200);
+    resizeTimer = setTimeout(() => { initSliderDots(); initTeamSliderDots(); runReveal(); }, 200);
   });
 });
+
+/* ── Team slider dots (mobile only) ────────────────────────── */
+function initTeamSliderDots() {
+  setupSliderDots('team-slider', 'team-dots');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AUTO-CAROUSELS
+   Calm automatic sliding for team cards and testimonials.
+   Pauses on hover/touch. Respects prefers-reduced-motion.
+══════════════════════════════════════════════════════════════ */
+function initAutoCarousels() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+  autoSlider('team-slider',        3800);
+  autoSlider('testimonials-slider', 4200);
+}
+
+function autoSlider(sliderId, intervalMs) {
+  const slider = document.getElementById(sliderId);
+  if (!slider) return;
+
+  let timer = null;
+  let paused = false;
+
+  function advance() {
+    if (paused) return;
+    const items  = Array.from(slider.children);
+    if (items.length < 2) return;
+
+    // Find currently visible item
+    const sl = slider.scrollLeft;
+    let closest = 0, minD = Infinity;
+    items.forEach((item, i) => {
+      const d = Math.abs(item.offsetLeft - slider.offsetLeft - sl);
+      if (d < minD) { minD = d; closest = i; }
+    });
+
+    const next = (closest + 1) % items.length;
+    const target = items[next];
+    if (target) slider.scrollTo({ left: target.offsetLeft - slider.offsetLeft, behavior: 'smooth' });
+  }
+
+  function start() { timer = setInterval(advance, intervalMs); }
+  function stop()  { clearInterval(timer); }
+
+  // Pause on hover (desktop) or touch start (mobile)
+  slider.addEventListener('mouseenter', () => { paused = true;  stop(); });
+  slider.addEventListener('mouseleave', () => { paused = false; start(); });
+  slider.addEventListener('touchstart', () => { paused = true;  stop(); },   { passive: true });
+  slider.addEventListener('touchend',   () => {
+    // Resume after a short delay so manual swipe finishes first
+    setTimeout(() => { paused = false; start(); }, 2500);
+  }, { passive: true });
+
+  // Only auto-slide on mobile/tablet (≤ 900px)
+  if (window.innerWidth <= 900) start();
+
+  // Re-evaluate on resize
+  window.addEventListener('resize', () => {
+    stop();
+    if (window.innerWidth <= 900) { paused = false; start(); }
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUOTE SECTION — MOBILE SCROLL REVEAL
+   On mobile (no hover/parallax), triggers a premium
+   fade + scale animation via IntersectionObserver when
+   the section scrolls into view.
+══════════════════════════════════════════════════════════════ */
+function initQuoteMobileReveal() {
+  if (window.innerWidth > 768) return; // desktop uses fixed parallax
+  const quote = document.getElementById('quote');
+  if (!quote) return;
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        quote.classList.add('quote-visible');
+        io.unobserve(quote);
+      }
+    });
+  }, { threshold: 0.25 });
+
+  io.observe(quote);
+}
