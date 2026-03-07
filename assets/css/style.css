@@ -79,6 +79,7 @@ ul { list-style: none; }
 .sec--light-2 { background: #EFEFEF; }
 section { padding: clamp(60px, 8vw, 120px) 0; }
 .sec-header { text-align: center; margin-bottom: clamp(24px, 4vw, 56px); }
+.sec-header > p { max-width: 640px; margin-left: auto; margin-right: auto; }
 
 /* ── Typography ────────────────────────────────────────────── */
 h1, h2, h3, h4 { font-family: var(--font-display); text-transform: uppercase; line-height: 1.05; letter-spacing: 0.02em; }
@@ -235,11 +236,11 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .hero-overlay {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%),
+    radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%),
     linear-gradient(180deg,
-      rgba(8,8,8,0.70) 0%,
-      rgba(8,8,8,0.35) 42%,
-      rgba(8,8,8,0.82) 78%,
+      rgba(8,8,8,0.72) 0%,
+      rgba(8,8,8,0.52) 42%,
+      rgba(8,8,8,0.88) 78%,
       rgba(8,8,8,1.00) 100%
     );
 }
@@ -371,7 +372,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
 }
 .intro-text h2 { margin: 1.2rem 0 1.5rem; }
-.intro-text p  { margin-bottom: 1.5rem; }
+.intro-text p  { margin-bottom: 1.5rem; max-width: 58ch; }
 .intro-brand {
   background: linear-gradient(140deg, #1e1a14, #0a0a0a);
   border: 1px solid rgba(197,160,89,0.2); border-radius: var(--radius-lg);
@@ -413,7 +414,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   background-size: cover; background-position: center; background-attachment: fixed;
   position: relative;
 }
-#quote::before { content: ''; position: absolute; inset: 0; background: rgba(8,8,8,0.82); }
+#quote::before { content: ''; position: absolute; inset: 0; background: rgba(8,8,8,0.86); }
 #quote .container { position: relative; text-align: center; }
 .quote-text {
   font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.6rem);
@@ -458,7 +459,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   background-size: cover; background-position: center; background-attachment: fixed;
   text-align: center; position: relative;
 }
-#community::before { content: ''; position: absolute; inset: 0; background: rgba(8,8,8,0.72); }
+#community::before { content: ''; position: absolute; inset: 0; background: rgba(8,8,8,0.78); }
 #community .container { position: relative; z-index: 1; }
 #community h2 { font-size: clamp(2.5rem, 6vw, 5rem); }
 #community p  { font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 5px; color: var(--muted); margin-top: 1rem; }
@@ -472,12 +473,19 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   grid-template-rows: repeat(2, 320px); gap: 2px;
   background: rgba(255,255,255,0.03); border-radius: var(--radius-lg); overflow: hidden;
 }
-.service-card { position: relative; overflow: hidden; cursor: pointer; background: #0d0d0d; }
+.service-card {
+  position: relative; overflow: hidden; cursor: pointer; background: #0d0d0d;
+  transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+.service-card:hover {
+  box-shadow: 0 0 0 1px rgba(197,160,89,0.30), 0 12px 40px rgba(0,0,0,0.55);
+  transform: translateY(-3px);
+}
 .service-card-bg {
   position: absolute; inset: 0; background-size: cover; background-position: center;
-  transition: transform 0.7s var(--ease-expo); filter: brightness(0.38);
+  transition: transform 0.7s var(--ease-expo), filter 0.4s; filter: brightness(0.38);
 }
-.service-card:hover .service-card-bg { transform: scale(1.08); filter: brightness(0.28); }
+.service-card:hover .service-card-bg { transform: scale(1.06); filter: brightness(0.32); }
 .service-card-arrow {
   position: absolute; top: 1rem; right: 1rem; z-index: 1;
   width: 34px; height: 34px;
@@ -485,7 +493,10 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 0.75rem; color: var(--gold); transition: all 0.3s;
 }
-.service-card:hover .service-card-arrow { background: var(--gold); color: var(--ink); transform: rotate(45deg); }
+.service-card:hover .service-card-arrow {
+  background: var(--gold); color: var(--ink); transform: rotate(45deg);
+  box-shadow: 0 0 16px rgba(197,160,89,0.50);
+}
 .service-card-body {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 1;
   padding: 1.25rem;
@@ -1634,7 +1645,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
   opacity: 0; transition: opacity 0.3s;
 }
-.discipline-card:hover { border-color: var(--border); transform: translateY(-4px); }
+.discipline-card:hover {
+  border-color: rgba(197,160,89,0.40); transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(197,160,89,0.15);
+}
 .discipline-card:hover::before { opacity: 1; }
 .discipline-icon {
   width: 68px; height: 68px; border-radius: 50%;
