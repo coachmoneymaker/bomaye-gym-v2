@@ -550,3 +550,39 @@ function initQuoteMobileReveal() {
 
   io.observe(quote);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   FLOATING SOCIAL PROOF NOTIFICATIONS
+══════════════════════════════════════════════════════════════ */
+(function initSocialProof() {
+  const messages = [
+    { name: 'Ahmed aus München',  msg: 'hat gerade ein Probetraining gebucht' },
+    { name: 'Lisa',               msg: 'ist dem Bomaye Gym beigetreten' },
+    { name: 'Neues Mitglied',     msg: 'hat sich der Fighter Community angeschlossen' },
+    { name: 'Marco aus München',  msg: 'hat sein Probetraining gesichert' },
+    { name: 'Sarah',              msg: 'hat heute mit Boxing angefangen' },
+    { name: 'Kevin aus Schwabing',msg: 'hat gerade ein Early-Bird-Abo gebucht' },
+  ];
+
+  const toast  = document.getElementById('social-proof-toast');
+  const elName = document.getElementById('sp-name');
+  const elMsg  = document.getElementById('sp-msg');
+  if (!toast || !elName || !elMsg) return;
+
+  let idx = 0;
+
+  function show() {
+    const item = messages[idx % messages.length];
+    idx++;
+    elName.textContent = item.name;
+    elMsg.textContent  = item.msg;
+    toast.classList.add('sp-visible');
+    setTimeout(() => toast.classList.remove('sp-visible'), 4500);
+  }
+
+  // First appearance after 8s, then every 12–15s
+  setTimeout(() => {
+    show();
+    setInterval(show, 13000);
+  }, 8000);
+}());
