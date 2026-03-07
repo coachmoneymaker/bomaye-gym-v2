@@ -442,7 +442,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── Team slider dots (mobile only) ────────────────────────── */
 function initTeamSliderDots() {
-  setupSliderDots('team-slider', 'team-dots');
+  // Team slider is horizontal at ≤900px, so show dots up to that width
+  const slider = document.getElementById('team-slider');
+  const dotsEl = document.getElementById('team-dots');
+  if (!slider || !dotsEl) return;
+  if (window.innerWidth > 900) { dotsEl.innerHTML = ''; return; }
+  const items = Array.from(slider.children);
+  if (items.length < 2) { dotsEl.innerHTML = ''; return; }
+  dotsEl.innerHTML = items.map((_, i) =>
+    `<button class="dot${i===0?' active':''}" data-idx="${i}" aria-label="Trainer ${i+1}"></button>`
+  ).join('');
+  const dots = dotsEl.querySelectorAll('.dot');
+  const onScroll = () => {
+    const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  };
+  slider.removeEventListener('scroll', slider._teamDotScroll || null);
+  slider._teamDotScroll = onScroll;
+  slider.addEventListener('scroll', onScroll, { passive: true });
+  dots.forEach(btn => btn.addEventListener('click', () => {
+    slider.scrollTo({ left: parseInt(btn.dataset.idx) * slider.offsetWidth, behavior: 'smooth' });
+  }));
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -497,10 +517,14 @@ function autoSlider(sliderId, intervalMs) {
   // Only auto-slide on mobile/tablet (≤ 900px)
   if (window.innerWidth <= 900) start();
 
-  // Re-evaluate on resize
+  // Re-evaluate on resize (debounced)
+  let resizeDebounce;
   window.addEventListener('resize', () => {
-    stop();
-    if (window.innerWidth <= 900) { paused = false; start(); }
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(() => {
+      stop();
+      if (window.innerWidth <= 900) { paused = false; start(); }
+    }, 200);
   });
 }
 
