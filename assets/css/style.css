@@ -782,16 +782,20 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     width: 100% !important;
     max-width: 100% !important;
   }
-  /* Class card: restore Bsport's default structure; only prevent the meta
-     row from overflowing or overlapping on narrow screens. */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
-    flex-wrap: wrap !important;
-    min-width: 0 !important;
-  }
+  /* Class card: fix absolutely-positioned meta icons overlapping on mobile. */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
-    min-width: 0 !important;
-    flex-shrink: 1 !important;
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
   }
 }
 
