@@ -177,8 +177,10 @@ function renderPricingDisplay(ageGroup, duration) {
     `<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>${b}</span></li>`
   ).join('');
 
+  const isFeatured = duration === '12M';
   let html = `
-    <div class="membership-card reveal">
+    <div class="membership-card reveal${isFeatured ? ' membership-card--featured' : ''}">
+      ${isFeatured ? '<div class="membership-featured-badge">BELIEBTESTE WAHL</div>' : ''}
       <div class="membership-duration-tabs">${tabsHtml}</div>
       <div class="membership-price-display">
         <div class="membership-price-main">
@@ -193,7 +195,7 @@ function renderPricingDisplay(ageGroup, duration) {
         <span>+ 100€ Aufnahmegebühr einmalig</span>
       </div>
       <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
-        <i class="fa-solid fa-fist-raised"></i> JETZT ANMELDEN
+        <i class="fa-solid fa-fist-raised"></i> PROBETRAINING IN 30 SEK. SICHERN
       </button>
     </div>`;
 
@@ -585,4 +587,29 @@ function initQuoteMobileReveal() {
     show();
     setInterval(show, 13000);
   }, 8000);
+}());
+
+/* ══════════════════════════════════════════════════════════════
+   HERO PARALLAX — subtle background drift (3–5% of scroll)
+══════════════════════════════════════════════════════════════ */
+(function initHeroParallax() {
+  const heroBg = document.querySelector('#hero .hero-bg');
+  if (!heroBg) return;
+
+  // Respect prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      // Base position is 30% (matches CSS); drift 4% of scroll speed
+      heroBg.style.backgroundPositionY = `calc(30% + ${(y * 0.04).toFixed(1)}px)`;
+      ticking = false;
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 }());

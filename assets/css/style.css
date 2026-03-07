@@ -1927,9 +1927,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   z-index: 2;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   FLOATING SOCIAL PROOF NOTIFICATION
-══════════════════════════════════════════════════════════════ */
+/* ── Social proof notification (added by UI pass) ──────────── */
 #social-proof-toast {
   position: fixed;
   bottom: 1.75rem;
@@ -1979,4 +1977,37 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 @media (max-width: 480px) {
   #social-proof-toast { max-width: 240px; left: 1rem; bottom: 1.25rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM MEMBERSHIP CARD — 12M FEATURED HIGHLIGHT
+══════════════════════════════════════════════════════════════ */
+.membership-card--featured {
+  position: relative;
+  border-color: rgba(197,160,89,0.65) !important;
+  box-shadow:
+    0 0 0 1px rgba(197,160,89,0.30),
+    0 0 28px rgba(197,160,89,0.18),
+    0 6px 40px rgba(0,0,0,0.12) !important;
+}
+.membership-featured-badge {
+  position: absolute;
+  top: -13px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 52%, var(--gold) 100%);
+  color: var(--ink);
+  font-family: var(--font-head);
+  font-size: 0.58rem; letter-spacing: 2px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(197,160,89,0.45);
+  pointer-events: none;
+}
+/* Light-bg override (inside #pricing) */
+#pricing .membership-card--featured {
+  border-color: rgba(160,124,58,0.75) !important;
+  box-shadow:
+    0 0 0 1px rgba(160,124,58,0.28),
+    0 0 32px rgba(160,124,58,0.18),
+    0 6px 40px rgba(0,0,0,0.09) !important;
 }
