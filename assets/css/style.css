@@ -782,64 +782,16 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     width: 100% !important;
     max-width: 100% !important;
   }
-  /* ── Class card: clean mobile rebuild ──
-     Lay the whole card out as a single flex column so every zone
-     (title/time → icons → level tag → location/coach) stacks in
-     source order with no overlapping positioned children.          */
-
-  /* 1. Card container — single column, full width, no row conflicts */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    width: 100% !important;
-    position: static !important;
-    gap: 0.375rem !important;
-  }
-  /* 2. Right column — column so icons sit above the level tag */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    width: 100% !important;
-    position: static !important;
-    gap: 0.25rem !important;
-  }
-  /* 3. Icon row — all icons (capacity, male, female, extra) in one horizontal line */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    position: static !important;
-  }
-  /* 4. Each icon cluster (capacity group, gender group) — inline horizontal */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    gap: 0.25rem !important;
-    position: static !important;
-    flex-shrink: 0 !important;
-  }
-  /* 5. "Alle Niveaus" tag — block element below the icon row */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__bottom {
-    display: block !important;
-    position: static !important;
-    width: auto !important;
-  }
-  /* 6. Left text block (location + coach) — stacked, full width */
+  /* Class card: let Bsport's own layout render as-is; only clamp overflow
+     so nothing escapes the card boundary on narrow viewports. */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left,
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left__extra {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    position: static !important;
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left__extra,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__bottom {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
