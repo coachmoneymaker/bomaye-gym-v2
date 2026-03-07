@@ -816,13 +816,30 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     gap: 0.5rem !important;
     flex-shrink: 0 !important;
   }
-  /* 4. Individual icon items — pulled back into flow, no absolute positioning */
+  /* 4. Right column — flex column so __right__top (icons) sits above __right__bottom (tag) */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    flex-shrink: 0 !important;
+    gap: 0.375rem !important;
+  }
+  /* 5. Each icon item is itself a row: capacity (icon+number), gender (male+female icons) */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
     position: static !important;
     display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
+    gap: 0.25rem !important;
     flex-shrink: 0 !important;
+  }
+  /* 6. "Alle Niveaus" / level tag — pulled back into column flow below icons */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__bottom {
+    position: static !important;
+    display: inline-flex !important;
+    align-self: flex-end !important;
   }
 }
 
