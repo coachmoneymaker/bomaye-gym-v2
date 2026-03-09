@@ -1409,6 +1409,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   }
   #intro  { background: var(--smoke) !important; }
   #faq    { background: var(--smoke) !important; }
+  #faq.sec--faq-white { background: #f9f7f4 !important; } /* light variant keeps light bg on mobile */
   #booking{ background: var(--ink2)  !important; }
   .coach-card, .step-card {
     backdrop-filter: none !important;
@@ -2825,6 +2826,26 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   color: var(--gold);
 }
 
+/* ── FAQ white variant: override ALL inherited dark-section rules ──────────
+   #faq.sec--faq-white has specificity (1,1,0) — beats plain #faq (1,0,0)
+   even when the dark rules carry !important.
+   ───────────────────────────────────────────────────────────────────────── */
+#faq.sec--faq-white {
+  background: #f9f7f4 !important;          /* warm off-white */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-top:    1px solid rgba(0,0,0,0.07) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.07) !important;
+}
+/* Remove the dark gradient overlay injected by the dark-section ::before rule */
+#faq.sec--faq-white::before {
+  content: none !important;
+}
+/* Ensure answer text is readable on the light background */
+#faq.sec--faq-white .faq-a-inner {
+  color: rgba(8,8,8,0.70) !important;
+}
+
 /* ── Schedule CTA: stack on mobile ── */
 @media (max-width: 600px) {
   .schedule-cta {
@@ -2848,6 +2869,16 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── FAQ CTA spacing ── */
 .faq-cta {
   margin-top: 2.5rem;
+}
+
+/* ── FAQ white section: dark-ink outline button ── */
+#faq.sec--faq-white .btn--outline-dark {
+  color: var(--ink) !important;
+  border-color: rgba(8,8,8,0.25) !important;
+}
+#faq.sec--faq-white .btn--outline-dark:hover {
+  color: var(--gold-dark) !important;
+  border-color: var(--gold-dark) !important;
 }
 
 /* ── Why cards: hover polish (already exist, ensure lift) ── */
