@@ -165,20 +165,25 @@
           <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
         </button>
       </div>
-      <div class="hero-trust" aria-label="Trust-Signale">
-        <div class="hero-trust-item">
-          <i class="fa-solid fa-star"></i>
-          <span>4.9 BEWERTUNG</span>
+      <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">LANDESTRAINER</span>
+          <span class="hero-cred-sub">Bayerischer Box-Verband</span>
         </div>
-        <div class="trust-divider" aria-hidden="true"></div>
-        <div class="hero-trust-item">
-          <i class="fa-solid fa-fist-raised"></i>
-          <span>ECHTES BOXTRAINING</span>
+        <div class="hero-cred-sep" aria-hidden="true"></div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">DBV A-TRAINER LIZENZ</span>
+          <span class="hero-cred-sub">Deutscher Box-Verband</span>
         </div>
-        <div class="trust-divider" aria-hidden="true"></div>
-        <div class="hero-trust-item">
-          <i class="fa-solid fa-users"></i>
-          <span>COMMUNITY STATT FITNESSSTUDIO</span>
+        <div class="hero-cred-sep" aria-hidden="true"></div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">20+ JAHRE ERFAHRUNG</span>
+          <span class="hero-cred-sub">Wettkampf &amp; Leistungssport</span>
+        </div>
+        <div class="hero-cred-sep" aria-hidden="true"></div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">COMMUNITY FIRST</span>
+          <span class="hero-cred-sub">Echte Boxkultur seit 1974</span>
         </div>
       </div>
     </div>
@@ -217,6 +222,33 @@
             <strong>COACHING VON CHAMPIONS</strong>
             <span>Lerne von echten Kämpfern und Weltmeistern.</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROOF STRIP ── -->
+  <div class="proof-strip" aria-label="Qualifikationen &amp; Nachweise">
+    <div class="container">
+      <div class="proof-strip-inner">
+        <div class="proof-item">
+          <span class="proof-title">LANDESTRAINER</span>
+          <span class="proof-body">Bayerischer Box-Verband (BABV)</span>
+        </div>
+        <div class="proof-sep" aria-hidden="true"></div>
+        <div class="proof-item">
+          <span class="proof-title">DBV A-TRAINER LIZENZ</span>
+          <span class="proof-body">Offiziell zertifizierter Trainer</span>
+        </div>
+        <div class="proof-sep" aria-hidden="true"></div>
+        <div class="proof-item">
+          <span class="proof-title">LEISTUNGSSPORT</span>
+          <span class="proof-body">Nachwuchs- &amp; Wettkampfathleten</span>
+        </div>
+        <div class="proof-sep" aria-hidden="true"></div>
+        <div class="proof-item">
+          <span class="proof-title">ALLE LEVELS</span>
+          <span class="proof-body">Anfänger bis Wettkämpfer</span>
         </div>
       </div>
     </div>
@@ -623,7 +655,7 @@
       <div class="team-grid" id="team-slider">
         <div class="coach-card reveal delay-1">
           <div class="coach-photo">
-            <img src="/assets/images/coach-raschad.webp" alt="Raschad Pekpassi — Head Coach &amp; Founder" loading="eager" decoding="async" />
+            <img src="/assets/images/coach-raschad.webp" alt="Raschad Pekpassi — Head Coach &amp; Founder" loading="lazy" decoding="async" />
             <div class="coach-creds">
               <span class="coach-cred">LANDESTRAINER</span>
               <span class="coach-cred">20+ JAHRE</span>
@@ -649,7 +681,7 @@
         </div>
         <div class="coach-card reveal delay-2">
           <div class="coach-photo">
-            <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Head Coach &amp; Founder" loading="eager" decoding="async" />
+            <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Head Coach &amp; Founder" loading="lazy" decoding="async" />
             <div class="coach-creds">
               <span class="coach-cred">WM-TITEL</span>
               <span class="coach-cred">KICKBOXEN</span>
@@ -1457,20 +1489,40 @@
     }
 </script>
 <script>
-    /* Schedule section — mounts on page load */
-    MountBsportWidget({
-        "parentElement": "bsport-widget-172485",
-        "companyId": 5473,
-        "franchiseId": null,
-        "dialogMode": 1,
-        "widgetType": "calendar",
-        "showFab": false,
-        "fullScreenPopup": false,
-        "styles": undefined,
-        "config": {
-            "calendar": {}
+    /* Schedule calendar — lazy-mounted when section scrolls into view.
+       Prevents the heavy Bsport bundle from blocking first-paint on mobile. */
+    (function () {
+        var mounted = false;
+        var target  = document.getElementById('bsport-widget-172485');
+        if (!target) return;
+
+        function mount() {
+            if (mounted) return;
+            mounted = true;
+            MountBsportWidget({
+                "parentElement": "bsport-widget-172485",
+                "companyId": 5473,
+                "franchiseId": null,
+                "dialogMode": 1,
+                "widgetType": "calendar",
+                "showFab": false,
+                "fullScreenPopup": false,
+                "styles": undefined,
+                "config": { "calendar": {} }
+            });
         }
-    })
+
+        /* Mount when the schedule section enters the viewport */
+        if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) { mount(); io.disconnect(); }
+            }, { rootMargin: '400px' });
+            io.observe(target);
+        } else {
+            /* Fallback: mount after 2 s on older browsers */
+            setTimeout(mount, 2000);
+        }
+    }());
 </script>
 </body>
 </html>

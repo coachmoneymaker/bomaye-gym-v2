@@ -3042,3 +3042,255 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ── Mobile cleanup: remove orphan references ── */
 #free-trial, #membership-widget { display: none !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO CREDENTIALS STRIP
+   Premium trainer proof — no icons, clean typographic badges
+══════════════════════════════════════════════════════════════ */
+.hero-credentials {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: 2.25rem;
+  animation: fadeUpHero 1s var(--ease-expo) 1s both;
+}
+
+.hero-cred-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.65rem 1.4rem;
+  text-align: center;
+}
+
+.hero-cred-label {
+  font-family: var(--font-head);
+  font-size: 0.58rem;
+  letter-spacing: 2.5px;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.hero-cred-sub {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+.hero-cred-sep {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.12);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-credentials {
+    gap: 0;
+    margin-top: 1.75rem;
+  }
+  .hero-cred-sep { display: none; }
+  .hero-cred-item {
+    padding: 0.5rem 1rem;
+    flex: 0 0 50%;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero-cred-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.06); }
+  .hero-cred-item:nth-last-child(-n+2) { border-bottom: none; }
+}
+
+@media (max-width: 400px) {
+  .hero-cred-label { font-size: 0.54rem; letter-spacing: 1.8px; }
+  .hero-cred-sub   { font-size: 0.68rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROOF STRIP
+   Minimal Apple-style qualifier row between diff-block and disciplines
+══════════════════════════════════════════════════════════════ */
+.proof-strip {
+  background: #0f0f0f;
+  border-top: 1px solid rgba(197,160,89,0.1);
+  border-bottom: 1px solid rgba(197,160,89,0.1);
+  padding: 2.5rem 0;
+}
+
+.proof-strip-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.proof-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 2.25rem;
+  text-align: center;
+  flex: 1 1 200px;
+  max-width: 280px;
+}
+
+.proof-title {
+  font-family: var(--font-head);
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.proof-body {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+
+.proof-sep {
+  width: 1px;
+  background: rgba(255,255,255,0.07);
+  align-self: stretch;
+  min-height: 40px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .proof-strip { padding: 2rem 0; }
+  .proof-sep   { display: none; }
+  .proof-item  {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .proof-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.05); }
+  /* Last row: no bottom border */
+  .proof-item:nth-last-child(-n+2) { border-bottom: none; }
+}
+@media (max-width: 400px) {
+  .proof-item  { flex: 0 0 100%; max-width: 100%; }
+  .proof-item:nth-child(odd) { border-right: none; }
+  .proof-item:nth-last-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .proof-item:last-child { border-bottom: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM MICRO-INTERACTIONS
+   Refined button press, service card lift, discipline hover
+══════════════════════════════════════════════════════════════ */
+
+/* Gold button: stronger active/press feedback */
+.btn--gold:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 0 12px rgba(197,160,89,0.25), 0 2px 8px rgba(0,0,0,0.4);
+  transition-duration: 0.08s;
+}
+
+/* Outline buttons */
+.btn--outline-light:hover,
+.btn--outline-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* Service cards: stronger depth on hover */
+.service-card {
+  transition: transform 0.32s var(--ease-expo), box-shadow 0.32s ease !important;
+}
+.service-card:hover {
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.55) !important;
+}
+
+/* Why-cards on light background: richer shadow */
+.why-card {
+  transition: transform 0.28s var(--ease-expo), box-shadow 0.28s ease, border-color 0.28s ease !important;
+}
+.why-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.13) !important;
+  border-color: rgba(197,160,89,0.25) !important;
+}
+
+/* Coach cards: subtle lift */
+.coach-card {
+  transition: box-shadow 0.3s ease, transform 0.3s var(--ease-expo);
+}
+.coach-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+}
+
+/* Standard cards: lift on white bg */
+.standard-card--light {
+  transition: transform 0.28s var(--ease-expo), box-shadow 0.28s ease, border-color 0.28s ease !important;
+}
+.standard-card--light:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.09) !important;
+  border-color: rgba(197,160,89,0.28) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMMUNITY SECTION — stronger presence + tagline upgrade
+══════════════════════════════════════════════════════════════ */
+#community {
+  padding: 8rem 0;
+}
+#community::before {
+  background: rgba(8,8,8,0.72);
+}
+#community h2 {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  letter-spacing: 3px;
+}
+#community p {
+  letter-spacing: 6px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 1.25rem;
+}
+/* Gold accent line under heading */
+#community .container::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin: 1.5rem auto 0;
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PERFORMANCE: reduce layout shifts on lazy sections
+══════════════════════════════════════════════════════════════ */
+.coach-photo img {
+  /* Reserve space while lazy loading */
+  min-height: 260px;
+  background: var(--smoke);
+}
+
+/* Bsport widget placeholder shimmer while loading */
+.schedule-widget-inner:empty {
+  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s infinite;
+  border-radius: 12px;
+  min-height: 600px;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .schedule-widget-inner:empty { animation: none; background: #1a1a1a; }
+}
