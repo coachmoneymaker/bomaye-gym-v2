@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Stundenplan | BOMAYE GYM MUNICH</title>
+  <meta name="description" content="Alle Kurse und Zeiten auf einen Blick. Buche jetzt deinen Platz im BOMAYE GYM MUNICH — Boxen, Kickboxen & mehr." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/stundenplan" />
+
+  <!-- Preload -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ── Stundenplan page overrides ── */
+    body { background: #0c0c0c; }
+    .sp-page-hero {
+      background: var(--ink);
+      padding: 7rem 0 3rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(197,160,89,0.15);
+    }
+    .sp-page-hero .tag { margin-bottom: 1rem; display: inline-block; }
+    .sp-page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: #fff;
+      letter-spacing: 3px;
+      margin: 0.5rem 0;
+    }
+    .sp-page-hero p {
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      margin-top: 0.75rem;
+    }
+    .sp-widget-section {
+      background: #fff;
+      padding: 3rem 0 4rem;
+    }
+    .sp-widget-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .sp-widget-inner {
+      min-height: 600px;
+      width: 100%;
+    }
+    .sp-cta-bar {
+      background: var(--ink);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-top: 1px solid rgba(197,160,89,0.12);
+    }
+    .sp-cta-bar h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 1.25rem;
+    }
+    .sp-cta-bar .btn { margin: 0.4rem; }
+    @media (max-width: 600px) {
+      .sp-page-hero { padding: 6rem 1rem 2.5rem; }
+      .sp-cta-bar .btn { width: 100%; justify-content: center; margin: 0.35rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" decoding="async" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/#disciplines">KURSE</a>
+      <a class="nav-link nav-link--active" href="/stundenplan">STUNDENPLAN</a>
+      <a class="nav-link" href="/#team">COACHES</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/" onclick="setTimeout(()=>{ if(window.openBooking) openBooking(); }, 300)">MITGLIED WERDEN</a>
+    </nav>
+
+    <button class="burger" onclick="toggleMobileMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
+  <button class="mob-close" onclick="toggleMobileMenu()" type="button" aria-label="Menü schließen">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">HOME</a>
+  <a class="nav-link" href="/#disciplines" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">KURSE</a>
+  <a class="nav-link" href="/stundenplan" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:var(--gold);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">STUNDENPLAN</a>
+  <a class="nav-link" href="/#team" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">COACHES</a>
+  <a class="nav-link" href="/faq" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">FAQ</a>
+  <a class="btn btn--gold" href="/" style="margin-top:1.25rem; padding:0.9rem 2.5rem; text-decoration:none; display:block; text-align:center; border-radius:6px;">MITGLIED WERDEN</a>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20Probetraining."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ PAGE HERO ═══════ -->
+<div class="sp-page-hero">
+  <div class="container">
+    <span class="tag tag--gold">STUNDENPLAN</span>
+    <h1>DEIN <span class="shimmer">TRAINING.</span></h1>
+    <p>Alle Kurse und Zeiten auf einen Blick — buche direkt deinen Platz.</p>
+  </div>
+</div>
+
+<!-- ═══════ BSPORT CALENDAR ═══════ -->
+<div class="sp-widget-section">
+  <div class="sp-widget-wrap">
+    <div id="bsport-widget-stundenplan" class="sp-widget-inner"></div>
+    <noscript>
+      <p style="text-align:center;color:#555;padding:3rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+    </noscript>
+  </div>
+</div>
+
+<!-- ═══════ CTA BAR ═══════ -->
+<div class="sp-cta-bar">
+  <h2>BEREIT FÜR DEIN ERSTES <span class="gold">TRAINING?</span></h2>
+  <div>
+    <a href="/" class="btn btn--gold" onclick="setTimeout(()=>{ if(window.openBooking) openBooking(); }, 300)">
+      <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
+    </a>
+    <a href="/" class="btn btn--outline-light" style="text-decoration:none;">
+      <i class="fa-solid fa-arrow-left"></i> ZURÜCK ZUR STARTSEITE
+    </a>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+        <span class="logo-text">BOMAYE</span>
+        <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
+        <p class="brand-line">Pineapple Park · 80639 München</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>KURSE</h4>
+        <ul class="footer-links">
+          <li><a href="/">Boxing</a></li>
+          <li><a href="/">Kickboxing</a></li>
+          <li><a href="/">Women's Boxing</a></li>
+          <li><a href="/">Youth Boxing</a></li>
+          <li><a href="/">Personal Training</a></li>
+          <li><a href="/">Corporate Boxing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>GYM</h4>
+        <ul class="footer-links">
+          <li><a href="/">Startseite</a></li>
+          <li><a href="/stundenplan">Stundenplan</a></li>
+          <li><a href="/faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>KONTAKT</h4>
+        <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+        <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
+        <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener">@bomayegym</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+      <div class="footer-legal">
+        <a href="impressum.html">IMPRESSUM</a>
+        <a href="datenschutz.html">DATENSCHUTZ</a>
+        <a href="agb.html">AGB</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleMobileMenu() {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.getElementById('burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (btn) btn.setAttribute('aria-expanded', String(open));
+}
+// Header scroll state
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+}());
+// Logo image fallback
+(function () {
+  document.querySelectorAll('.logo-img').forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) img.style.display = 'none';
+    img.addEventListener('error', function () { this.style.display = 'none'; });
+  });
+}());
+</script>
+
+<!-- Bsport CDN -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+<script id="bsport-widget-mount">
+function MountBsportWidget(config, repeat) {
+  repeat = repeat || 1;
+  if (repeat > 50) return;
+  if (!window.BsportWidget) {
+    return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+  }
+  BsportWidget.mount(config);
+}
+</script>
+<script>
+MountBsportWidget({
+  "parentElement": "bsport-widget-stundenplan",
+  "companyId": 5473,
+  "franchiseId": null,
+  "dialogMode": 1,
+  "widgetType": "calendar",
+  "showFab": false,
+  "fullScreenPopup": false,
+  "styles": undefined,
+  "config": { "calendar": {} }
+});
+</script>
+
+</body>
+</html>

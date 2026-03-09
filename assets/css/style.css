@@ -2710,3 +2710,151 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     padding: 1rem 0.75rem;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   TARGETED IMPROVEMENTS — v2 polish
+══════════════════════════════════════════════════════════════ */
+
+/* ── Hero: single centered CTA ── */
+.hero-ctas--single {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn--hero-primary {
+  font-size: 1rem;
+  padding: 1rem 2.5rem;
+  letter-spacing: 2px;
+  min-width: 280px;
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .btn--hero-primary {
+    width: 100%;
+    min-width: unset;
+    padding: 1.1rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* ── Diff-block: hover depth & card effect ── */
+.diff-block {
+  transition: box-shadow 0.3s ease;
+}
+.diff-item {
+  padding: 1.25rem 1rem;
+  border-radius: 12px;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+.diff-item:hover {
+  background: rgba(197,160,89,0.07);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+}
+
+/* ── Discipline cards: hover lift ── */
+.discipline-card--photo {
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.discipline-card--photo:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.38);
+}
+
+/* ── Quote: shimmer-style animation matching hero ── */
+#quote .quote-text {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1.15;
+  letter-spacing: 2px;
+  color: #fff;
+  text-align: center;
+}
+#quote .quote-text .gold {
+  background: linear-gradient(90deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-light) 70%, var(--gold-dark) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-move 3s linear infinite;
+}
+
+/* ── Bomaye Standard: white section ── */
+.sec--standard-white {
+  background: #ffffff;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+.standard-card--light {
+  background: #f8f6f2;
+  border: 1px solid rgba(197,160,89,0.15);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.standard-card--light:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+.standard-icon--light {
+  background: rgba(197,160,89,0.12);
+  color: var(--gold);
+}
+
+/* ── FAQ: white section ── */
+.sec--faq-white {
+  background: #ffffff;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+.faq-list--light .faq-item {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.faq-q--light {
+  color: var(--ink) !important;
+  background: transparent;
+}
+.faq-q--light:hover {
+  color: var(--gold-dark) !important;
+}
+.faq-q--light[aria-expanded="true"] {
+  color: var(--gold-dark) !important;
+}
+.faq-q--light .faq-icon {
+  color: var(--gold);
+}
+
+/* ── Schedule CTA: stack on mobile ── */
+@media (max-width: 600px) {
+  .schedule-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .schedule-cta .btn {
+    margin-left: 0 !important;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Disciplines CTA button spacing ── */
+.disciplines-cta {
+  margin-top: 2.5rem;
+}
+
+/* ── FAQ CTA spacing ── */
+.faq-cta {
+  margin-top: 2.5rem;
+}
+
+/* ── Why cards: hover polish (already exist, ensure lift) ── */
+.why-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.why-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}

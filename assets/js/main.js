@@ -78,9 +78,10 @@ function initHeader() {
 }
 
 function updateActiveNav() {
-  const sections = ['dna', 'services', 'team', 'pricing', 'faq'];
+  const sections = ['disciplines', 'schedule', 'team', 'faq'];
   const navLinks = document.querySelectorAll('.nav-links .nav-link');
-  const navMap   = { dna: 0, services: 1, team: 2, pricing: 3, faq: 4 };
+  // nav order: HOME(0), KURSE(1), STUNDENPLAN(2), COACHES(3), FAQ(4)
+  const navMap   = { disciplines: 1, schedule: 2, team: 3, faq: 4 };
   let current = '';
   sections.forEach(id => {
     const el = document.getElementById(id);
@@ -150,7 +151,7 @@ function nav(viewId, sectionId, restoreY) {
   if (sectionId) {
     setTimeout(() => {
       const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
     }, 80);
   }
   setTimeout(runReveal, 120);

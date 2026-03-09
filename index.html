@@ -88,11 +88,10 @@
     </button>
 
     <nav class="nav-links" aria-label="Hauptnavigation">
-      <button class="nav-link" onclick="nav('home','dna')" type="button">DNA</button>
-      <button class="nav-link" onclick="nav('home','services')" type="button">KURSE</button>
-      <button class="nav-link" onclick="nav('home','team')" type="button">TEAM</button>
-      <button class="nav-link" onclick="nav('home','pricing')" type="button">PREISE</button>
+      <button class="nav-link" onclick="nav('home')" type="button">HOME</button>
+      <button class="nav-link" onclick="nav('home','disciplines')" type="button">KURSE</button>
       <button class="nav-link" onclick="nav('home','schedule')" type="button">STUNDENPLAN</button>
+      <button class="nav-link" onclick="nav('home','team')" type="button">COACHES</button>
       <a class="nav-link" href="/faq">FAQ</a>
       <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
@@ -109,13 +108,12 @@
     <i class="fa-solid fa-xmark"></i>
   </button>
   <button class="nav-link" onclick="mobileNav('home')" type="button">HOME</button>
-  <button class="nav-link" onclick="mobileNav('home','services')" type="button">KURSE</button>
-  <button class="nav-link" onclick="mobileNav('home','team')" type="button">TEAM</button>
-  <button class="nav-link" onclick="mobileNav('home','pricing')" type="button">PREISE</button>
+  <button class="nav-link" onclick="mobileNav('home','disciplines')" type="button">KURSE</button>
   <button class="nav-link" onclick="mobileNav('home','schedule')" type="button">STUNDENPLAN</button>
+  <button class="nav-link" onclick="mobileNav('home','team')" type="button">COACHES</button>
   <a class="nav-link" href="/faq" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">FAQ</a>
   <button class="btn btn--gold" onclick="toggleMenu(); openBooking()" type="button" style="margin-top:1.25rem; padding:0.9rem 2.5rem;">
-    PROBETRAINING
+    MITGLIED WERDEN
   </button>
 </div>
 
@@ -162,12 +160,9 @@
         <span class="spots-dot"></span>
         <span>Nur noch <strong id="hero-eb-num">150</strong> Early-Bird-Plätze verfügbar</span>
       </div>
-      <div class="hero-ctas">
-        <button class="btn btn--gold" onclick="openBooking()" type="button">
-          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING SICHERN
-        </button>
-        <button class="btn btn--outline-light" onclick="nav('home','services')" type="button">
-          <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
+      <div class="hero-ctas hero-ctas--single">
+        <button class="btn btn--gold btn--hero-primary" onclick="openBooking()" type="button">
+          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
         </button>
       </div>
       <div class="hero-trust" aria-label="Trust-Signale">
@@ -232,21 +227,26 @@
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Drei Disziplinen. Ein Ziel: dich besser zu machen.</p>
       </div>
       <div class="disciplines-grid">
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-1" style="background-image:url('/assets/images/service-exec.webp')">
+        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-1" style="background-image:url('/assets/images/service-exec.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Boxing — zum Stundenplan">
           <h3>BOXING</h3>
           <p>Technik, Sparring und echtes Boxtraining für alle Levels — von Anfänger bis Wettkämpfer.</p>
-          <button class="btn btn--outline-light btn--sm" onclick="nav('home','services')" type="button">STUNDENPLAN ANSEHEN</button>
+          <button class="btn btn--outline-light btn--sm" onclick="event.stopPropagation(); nav('home','schedule')" type="button">STUNDENPLAN ANSEHEN</button>
         </div>
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-2" style="background-image:url('/assets/images/service-kick.webp')">
+        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-2" style="background-image:url('/assets/images/service-kick.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Kickboxing — zum Stundenplan">
           <h3>KICKBOXING</h3>
           <p>Technik, Fitness und Ausdauertraining — gecoacht von einem echten Kickbox-Weltmeister.</p>
-          <button class="btn btn--outline-light btn--sm" onclick="nav('home','services')" type="button">STUNDENPLAN ANSEHEN</button>
+          <button class="btn btn--outline-light btn--sm" onclick="event.stopPropagation(); nav('home','schedule')" type="button">STUNDENPLAN ANSEHEN</button>
         </div>
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-3" style="background-image:url('/assets/images/service-pt.webp')">
+        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-3" style="background-image:url('/assets/images/service-pt.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Strength — zum Stundenplan">
           <h3>STRENGTH &amp; CONDITIONING</h3>
           <p>Kraft, Athletik und Explosivität — gezielt entwickelt für Kämpfer auf jedem Level.</p>
-          <button class="btn btn--outline-light btn--sm" onclick="nav('home','services')" type="button">STUNDENPLAN ANSEHEN</button>
+          <button class="btn btn--outline-light btn--sm" onclick="event.stopPropagation(); nav('home','schedule')" type="button">STUNDENPLAN ANSEHEN</button>
         </div>
+      </div>
+      <div class="disciplines-cta reveal" style="text-align:center;margin-top:2.5rem;">
+        <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
+          <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
+        </button>
       </div>
     </div>
   </section>
@@ -444,28 +444,28 @@
   </section>
 
   <!-- ── BOMAYE STANDARD (AUTHORITY) ── -->
-  <section id="bomaye-standard" class="sec--smoke">
+  <section id="bomaye-standard" class="sec--standard-white">
     <div class="container">
       <div class="sec-header reveal">
-        <span class="tag tag--dark">DER BOMAYE STANDARD</span>
-        <h2 style="margin-top:1rem;">ECHTES BOXEN.<br>ECHTE TRAINER.<br><span class="gold">ECHTE COMMUNITY.</span></h2>
-        <p class="standard-subtext">Bomaye Gym ist kein typisches Fitnessstudio. Du trainierst in einer Umgebung, die auf Technik, Disziplin und echter Coaching-Qualität aufgebaut ist — von deiner ersten Session bis zum Wettkampf.</p>
+        <span class="tag tag--light-inv">THE BOMAYE STANDARD</span>
+        <h2 style="margin-top:1rem;color:var(--ink);">REAL BOXING.<br>REAL COACHES.<br><span class="gold-dark">REAL COMMUNITY.</span></h2>
+        <p class="standard-subtext" style="color:rgba(8,8,8,0.6);">Bomaye Gym is not a typical fitness studio. You train in an environment built on technique, discipline and genuine coaching quality — from your first session to competition.</p>
       </div>
       <div class="standard-grid">
-        <div class="standard-card reveal">
-          <div class="standard-icon"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
-          <h3>PROFESSIONELLES COACHING</h3>
-          <p>Erfahrung aus dem Wettkampfboxen und Leistungssport. Jede Einheit beinhaltet echtes technisches Feedback und strukturiertes Coaching.</p>
+        <div class="standard-card standard-card--light reveal">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">PROFESSIONAL COACHING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Experience from competitive boxing and elite sport. Every session includes real technical feedback and structured coaching.</p>
         </div>
-        <div class="standard-card reveal delay-1">
-          <div class="standard-icon"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
-          <h3>STRUKTURIERTES TRAINING</h3>
-          <p>Jede Session folgt einem klaren System, das Technik, Kraft und Leistung gezielt aufbaut — von Anfänger bis Wettkämpfer.</p>
+        <div class="standard-card standard-card--light reveal delay-1">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">STRUCTURED TRAINING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Every session follows a clear system that builds technique, strength and performance — from beginner to competitor.</p>
         </div>
-        <div class="standard-card reveal delay-2">
-          <div class="standard-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
-          <h3>ECHTE COMMUNITY</h3>
-          <p>Bomaye ist kein anonymes Gym. Du wirst Teil einer Gemeinschaft, die sich gegenseitig pusht, unterstützt und gemeinsam wächst.</p>
+        <div class="standard-card standard-card--light reveal delay-2">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">REAL COMMUNITY</h3>
+          <p style="color:rgba(8,8,8,0.65);">Bomaye is not an anonymous gym. You become part of a community that pushes, supports and grows together every day.</p>
         </div>
       </div>
     </div>
@@ -552,7 +552,10 @@
         </noscript>
       </div>
       <div class="schedule-cta reveal">
-        <button onclick="openBooking()" class="btn btn--gold" type="button">
+        <a href="/stundenplan" class="btn btn--gold" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;">
+          <i class="fa-solid fa-calendar-days"></i> ALLE TERMINE ANSEHEN
+        </a>
+        <button onclick="openBooking()" class="btn btn--outline-dark" type="button" style="margin-left:0.75rem;">
           <i class="fa-solid fa-calendar-plus"></i> PROBETRAINING BUCHEN
         </button>
         <p class="schedule-cta-note">Kostenlos · Kein Vertrag · Direkt in Bsport</p>
@@ -560,22 +563,6 @@
     </div>
   </section>
 
-  <!-- ── BOOK YOUR FREE TRIAL ── -->
-  <section id="free-trial" class="sec--light-alt">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--gold">PROBETRAINING</span>
-        <h2 style="margin-top:1rem;color:#1a1a1a;">BOOK YOUR <span class="gold">FREE TRIAL.</span></h2>
-        <p style="color:#5a5a5a;margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Pick a class, reserve your spot — no commitment, no experience needed.</p>
-      </div>
-      <div class="bw-widget-wrap reveal">
-        <div id="bsport-widget-trial" class="bw-widget-inner"></div>
-        <noscript>
-          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um das Buchungsformular zu laden.</p>
-        </noscript>
-      </div>
-    </div>
-  </section>
 
   <!-- ── EARLY BIRD ── -->
   <section id="early-bird">
@@ -738,60 +725,6 @@
     </div>
   </section>
 
-  <!-- ── FAQ ── -->
-  <section id="faq" class="sec--smoke">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--light">FAQ</span>
-        <h2 style="margin-top:1rem;">HÄUFIGE <span class="gold">FRAGEN.</span></h2>
-      </div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Brauche ich Vorerfahrung? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Nein — überhaupt nicht. Bei Bomaye holen wir dich genau dort ab, wo du stehst. Anfänger sind willkommen. Deine erste Stunde ist kostenlos und unverbindlich.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Unsere Preise werden als Wochenpreise angegeben. Youth Boxing startet ab 11,90€/Woche, Erwachsene Kurse ab 15,90€/Woche — jeweils bei 12 Monaten Laufzeit. Hinzu kommt eine einmalige Aufnahmegebühr von 100€. Das Probetraining ist immer kostenlos.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Was muss ich mitbringen? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Für das Probetraining leihen wir dir Boxhandschuhe kostenlos. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz).</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie und zahlt erst ab Opening.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Gibt es Parkplätze? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Ja. Im Pineapple Park Areal gibt es Parkmöglichkeiten. Das Gym ist auch optimal mit dem ÖPNV erreichbar — S-Bahn Hirschgarten, nur 5 Minuten zu Fuß.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Gibt es spezielle Programme für Frauen? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Kein Vorwissen nötig.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q" onclick="toggleFaq(this)" type="button" aria-expanded="false">
-            Gibt es Rabatte für aktive Wettkämpfer? <i class="fa-solid fa-plus faq-icon"></i>
-          </button>
-          <div class="faq-a"><div class="faq-a-inner">Ja. Aktive Wettkämpfer im Vereinssport können unter bestimmten Voraussetzungen von einem ermäßigten Mitgliedsbeitrag profitieren. Voraussetzung ist die aktive Vereinsmitgliedschaft und regelmäßige Teilnahme an offiziellen Wettkämpfen. Sprich uns direkt an — wir finden gemeinsam eine faire Lösung.</div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── TESTIMONIALS ── -->
   <section id="testimonials" class="sec--light">
     <div class="container">
@@ -860,6 +793,65 @@
         <button onclick="openBooking()" class="btn btn--gold booking-cta-btn" type="button">
           <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING SICHERN
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="sec--faq-white">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">FAQ</span>
+        <h2 style="margin-top:1rem;color:var(--ink);">HÄUFIGE <span class="gold-dark">FRAGEN.</span></h2>
+      </div>
+      <div class="faq-list faq-list--light">
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Brauche ich Vorerfahrung? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Nein — überhaupt nicht. Bei Bomaye holen wir dich genau dort ab, wo du stehst. Anfänger sind willkommen. Deine erste Stunde ist kostenlos und unverbindlich.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Unsere Preise werden als Wochenpreise angegeben. Youth Boxing startet ab 11,90€/Woche, Erwachsene Kurse ab 15,90€/Woche — jeweils bei 12 Monaten Laufzeit. Hinzu kommt eine einmalige Aufnahmegebühr von 100€. Das Probetraining ist immer kostenlos.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was muss ich mitbringen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Für das Probetraining leihen wir dir Boxhandschuhe kostenlos. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz).</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie und zahlt erst ab Opening.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es Parkplätze? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Im Pineapple Park Areal gibt es Parkmöglichkeiten. Das Gym ist auch optimal mit dem ÖPNV erreichbar — S-Bahn Hirschgarten, nur 5 Minuten zu Fuß.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es spezielle Programme für Frauen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Kein Vorwissen nötig.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es Rabatte für aktive Wettkämpfer? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Aktive Wettkämpfer im Vereinssport können unter bestimmten Voraussetzungen von einem ermäßigten Mitgliedsbeitrag profitieren. Sprich uns direkt an — wir finden gemeinsam eine faire Lösung.</div></div>
+        </div>
+      </div>
+      <div class="faq-cta reveal" style="text-align:center;margin-top:2.5rem;">
+        <a href="/faq" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-circle-question"></i> ALLE FAQ ANSEHEN
+        </a>
       </div>
     </div>
   </section>
@@ -1378,14 +1370,6 @@
   </div>
 </div>
 
-<!-- Floating social proof notification -->
-<div id="social-proof-toast" aria-live="polite" aria-atomic="true">
-  <div class="sp-icon"><i class="fa-solid fa-fist-raised"></i></div>
-  <div class="sp-text">
-    <strong id="sp-name">Ahmed aus München</strong>
-    <span id="sp-msg">hat gerade ein Probetraining gebucht</span>
-  </div>
-</div>
 
 <!-- Scripts: config must load synchronously before main.js -->
 <script src="assets/js/config.js"></script>
@@ -1490,18 +1474,6 @@
     })
 </script>
 <script>
-    /* "Book Your Free Trial" calendar widget */
-    MountBsportWidget({
-        "parentElement": "bsport-widget-trial",
-        "companyId": 5473,
-        "franchiseId": null,
-        "dialogMode": 1,
-        "widgetType": "calendar",
-        "showFab": false,
-        "fullScreenPopup": false,
-        "styles": undefined,
-        "config": { "calendar": {} }
-    });
     /* "Choose Your Membership" subscription widget */
     MountBsportWidget({
         "parentElement": "bsport-widget-subscription",
