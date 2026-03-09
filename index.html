@@ -513,6 +513,23 @@
     </div>
   </section>
 
+  <!-- ── CHOOSE YOUR MEMBERSHIP ── -->
+  <section id="membership-widget" class="sec--light-alt">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--gold">MITGLIEDSCHAFT</span>
+        <h2 style="margin-top:1rem;color:#1a1a1a;">CHOOSE YOUR <span class="gold">MEMBERSHIP.</span></h2>
+        <p style="color:#5a5a5a;margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Select your plan and sign up directly — secure, simple, no hidden fees.</p>
+      </div>
+      <div class="bw-widget-wrap reveal">
+        <div id="bsport-widget-subscription" class="bw-widget-inner"></div>
+        <noscript>
+          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um die Mitgliedschaften zu laden.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
   <!-- ── STUNDENPLAN ── -->
   <section id="schedule">
     <div class="container">
@@ -539,6 +556,23 @@
           <i class="fa-solid fa-calendar-plus"></i> PROBETRAINING BUCHEN
         </button>
         <p class="schedule-cta-note">Kostenlos · Kein Vertrag · Direkt in Bsport</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BOOK YOUR FREE TRIAL ── -->
+  <section id="free-trial" class="sec--light-alt">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--gold">PROBETRAINING</span>
+        <h2 style="margin-top:1rem;color:#1a1a1a;">BOOK YOUR <span class="gold">FREE TRIAL.</span></h2>
+        <p style="color:#5a5a5a;margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Pick a class, reserve your spot — no commitment, no experience needed.</p>
+      </div>
+      <div class="bw-widget-wrap reveal">
+        <div id="bsport-widget-trial" class="bw-widget-inner"></div>
+        <noscript>
+          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um das Buchungsformular zu laden.</p>
+        </noscript>
       </div>
     </div>
   </section>
@@ -1454,6 +1488,32 @@
             "calendar": {}
         }
     })
+</script>
+<script>
+    /* "Book Your Free Trial" calendar widget */
+    MountBsportWidget({
+        "parentElement": "bsport-widget-trial",
+        "companyId": 5473,
+        "franchiseId": null,
+        "dialogMode": 1,
+        "widgetType": "calendar",
+        "showFab": false,
+        "fullScreenPopup": false,
+        "styles": undefined,
+        "config": { "calendar": {} }
+    });
+    /* "Choose Your Membership" subscription widget */
+    MountBsportWidget({
+        "parentElement": "bsport-widget-subscription",
+        "companyId": 5473,
+        "franchiseId": null,
+        "dialogMode": 1,
+        "widgetType": "subscription",
+        "showFab": false,
+        "fullScreenPopup": false,
+        "styles": undefined,
+        "config": {}
+    });
 </script>
 </body>
 </html>

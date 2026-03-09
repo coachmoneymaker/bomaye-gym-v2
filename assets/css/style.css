@@ -2516,3 +2516,197 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     0 0 32px rgba(160,124,58,0.18),
     0 6px 40px rgba(0,0,0,0.09) !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   INLINE BSPORT WIDGET SECTIONS
+   "Book Your Free Trial"  (#free-trial)
+   "Choose Your Membership" (#membership-widget)
+   White background · Gold accents · Rounded cards · No dark overlay
+══════════════════════════════════════════════════════════════ */
+
+/* Shared section background — matches existing .sec--light-alt pattern */
+#free-trial,
+#membership-widget {
+  background: #fff;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Widget card wrapper: white surface, gold border, rounded */
+.bw-widget-wrap {
+  margin-top: 2.5rem;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+  border: 1px solid rgba(197,160,89,0.22);
+  min-height: 520px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Widget inner — stretch to fill the card */
+.bw-widget-inner {
+  width: 100%;
+  min-height: 480px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  contain: layout;
+}
+
+/* ── Override Bsport internals: force white background, no dark overlay ── */
+
+/* Widget roots */
+#bsport-widget-trial,
+#bsport-widget-subscription {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+#bsport-widget-trial *,
+#bsport-widget-subscription * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Suppress any full-screen / darkened backdrop the widget renders */
+#bsport-widget-trial [class*="overlay"],
+#bsport-widget-trial [class*="Overlay"],
+#bsport-widget-trial [class*="backdrop"],
+#bsport-widget-trial [class*="Backdrop"],
+#bsport-widget-trial [class*="modal-bg"],
+#bsport-widget-subscription [class*="overlay"],
+#bsport-widget-subscription [class*="Overlay"],
+#bsport-widget-subscription [class*="backdrop"],
+#bsport-widget-subscription [class*="Backdrop"],
+#bsport-widget-subscription [class*="modal-bg"] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  position: static !important;
+}
+
+/* Force white background on all widget panels */
+#bsport-widget-trial .cleanslate,
+#bsport-widget-trial [class*="panel"],
+#bsport-widget-trial [class*="Panel"],
+#bsport-widget-trial [class*="container"],
+#bsport-widget-trial [class*="Container"],
+#bsport-widget-trial [class*="wrap"],
+#bsport-widget-trial [class*="Wrap"],
+#bsport-widget-subscription .cleanslate,
+#bsport-widget-subscription [class*="panel"],
+#bsport-widget-subscription [class*="Panel"],
+#bsport-widget-subscription [class*="container"],
+#bsport-widget-subscription [class*="Container"],
+#bsport-widget-subscription [class*="wrap"],
+#bsport-widget-subscription [class*="Wrap"] {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+/* Rounded cards */
+#bsport-widget-trial [class*="card"],
+#bsport-widget-trial [class*="Card"],
+#bsport-widget-trial [class*="item"],
+#bsport-widget-trial [class*="Item"],
+#bsport-widget-trial [class*="slot"],
+#bsport-widget-trial [class*="Slot"],
+#bsport-widget-subscription [class*="card"],
+#bsport-widget-subscription [class*="Card"],
+#bsport-widget-subscription [class*="item"],
+#bsport-widget-subscription [class*="Item"],
+#bsport-widget-subscription [class*="offer"],
+#bsport-widget-subscription [class*="Offer"] {
+  border-radius: 12px !important;
+  background: #fff !important;
+  border: 1px solid rgba(197,160,89,0.2) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Gold accent: primary action buttons */
+#bsport-widget-trial [class*="btn-primary"],
+#bsport-widget-trial [class*="BtnPrimary"],
+#bsport-widget-trial [class*="button-primary"],
+#bsport-widget-trial [class*="cta"],
+#bsport-widget-subscription [class*="btn-primary"],
+#bsport-widget-subscription [class*="BtnPrimary"],
+#bsport-widget-subscription [class*="button-primary"],
+#bsport-widget-subscription [class*="cta"] {
+  background-color: var(--gold) !important;
+  color: #0c0c0c !important;
+  border-color: var(--gold) !important;
+  border-radius: 6px !important;
+}
+#bsport-widget-trial [class*="btn-primary"]:hover,
+#bsport-widget-subscription [class*="btn-primary"]:hover {
+  background-color: var(--gold-dark) !important;
+  border-color: var(--gold-dark) !important;
+}
+
+/* Gold accent: selected/active states, highlights */
+#bsport-widget-trial [class*="selected"],
+#bsport-widget-trial [class*="Selected"],
+#bsport-widget-trial [class*="active"],
+#bsport-widget-trial [class*="Active"],
+#bsport-widget-subscription [class*="selected"],
+#bsport-widget-subscription [class*="Selected"],
+#bsport-widget-subscription [class*="active"],
+#bsport-widget-subscription [class*="Active"] {
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+}
+
+/* Keep heading text dark on white background */
+#bsport-widget-trial h1,
+#bsport-widget-trial h2,
+#bsport-widget-trial h3,
+#bsport-widget-trial h4,
+#bsport-widget-subscription h1,
+#bsport-widget-subscription h2,
+#bsport-widget-subscription h3,
+#bsport-widget-subscription h4 {
+  color: #1a1a1a !important;
+}
+
+/* Filter/toolbar rows — horizontal scroll, tap-friendly */
+#bsport-widget-trial [class*="filter"],
+#bsport-widget-trial [class*="Filter"],
+#bsport-widget-subscription [class*="filter"],
+#bsport-widget-subscription [class*="Filter"] {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  min-height: 44px !important;
+}
+#bsport-widget-trial [class*="filter"]::-webkit-scrollbar,
+#bsport-widget-subscription [class*="filter"]::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  #free-trial,
+  #membership-widget { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+
+  .bw-widget-wrap {
+    border-radius: 12px;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    border-radius: 0;
+    padding: 1.25rem 1rem;
+  }
+  .bw-widget-inner { min-height: 400px; }
+}
+@media (max-width: 480px) {
+  .bw-widget-wrap {
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding: 1rem 0.75rem;
+  }
+}
