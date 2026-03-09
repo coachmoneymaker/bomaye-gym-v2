@@ -249,8 +249,8 @@ function renderPricingDisplay(ageGroup, duration) {
         <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
         <span>+ 100€ Aufnahmegebühr einmalig</span>
       </div>
-      <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
-        <i class="fa-solid fa-fist-raised"></i> PROBETRAINING IN 30 SEK. SICHERN
+      <button onclick="navToMehrPreise()" class="btn btn--gold btn--full" type="button">
+        <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
       </button>
     </div>`;
 
