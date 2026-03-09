@@ -645,11 +645,55 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .map-gate.hidden { display: none; }
 #map-frame { width: 100%; height: 100%; border: none; min-height: 400px; }
 
-/* ── Booking ───────────────────────────────────────────────── */
-#booking { background: var(--ink2); }
-.booking-head { text-align: center; margin-bottom: 3rem; }
-.booking-head h2 { margin-bottom: 0.75rem; }
-.booking-head p { font-size: 1rem; }
+/* ── Bsport Inline Sections ────────────────────────────────── */
+#free-trial { background: var(--ink2); }
+#membership { background: var(--smoke); }
+
+.bsport-section-header { text-align: center; margin-bottom: 3.5rem; }
+.bsport-section-header h2 { margin: 1rem 0 1.25rem; }
+.bsport-section-header p  { font-size: 0.95rem; max-width: 580px; margin: 0 auto; }
+
+/* Decorative rule above each Bsport section */
+#free-trial,
+#membership {
+  border-top: 1px solid var(--border);
+}
+
+/* Widget frame — gives the embedded widget a premium, contained feel */
+.bsport-widget-frame {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 520px;
+  background: var(--smoke2);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+}
+
+/* Ensure widget divs fill their container */
+#bsport-widget-226833,
+#bsport-widget-727621 {
+  min-height: 520px;
+}
+
+/* Loading placeholder shown while Bsport JS initialises */
+.bsport-widget-frame::before {
+  content: 'LÄDT…';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 0.62rem;
+  letter-spacing: 4px;
+  color: rgba(197,160,89,0.35);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hide the placeholder once Bsport injects content */
+.bsport-widget-frame:not(:empty)::before { display: none; }
 
 /* ── FAQ ───────────────────────────────────────────────────── */
 #faq { background: var(--smoke); }
@@ -747,33 +791,6 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 5
   border: 1px solid rgba(255,255,255,0.1); padding: 5px 14px; border-radius: 999px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BOOKING MODAL OVERLAY
-══════════════════════════════════════════════════════════════ */
-#booking-modal {
-  position: fixed; inset: 0; z-index: 2000;
-  background: rgba(8,8,8,0.97);
-  backdrop-filter: blur(16px);
-  display: flex; flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 0.5s var(--ease-expo);
-}
-#booking-modal.open { transform: translateY(0); }
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.modal-header-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--gold); }
-.modal-close {
-  width: 44px; height: 44px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; color: var(--muted); transition: all 0.3s;
-}
-.modal-close:hover { border-color: var(--gold); color: var(--gold); }
-.modal-body { flex: 1; overflow-y: auto; padding: 2rem; }
 
 /* ══════════════════════════════════════════════════════════════
    SCROLL REVEAL
@@ -803,6 +820,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 5
   .price-panel.active { grid-template-columns: repeat(2, 1fr); }
   .nav-links { display: none; }
   .burger { display: flex; }
+  .bsport-widget-frame { min-height: 420px; border-radius: var(--radius); }
+  #bsport-widget-226833, #bsport-widget-727621 { min-height: 420px; }
 }
 @media (max-width: 700px) {
   .services-grid { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 240px); }
@@ -821,4 +840,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 5
   .hero-trust { flex-direction: column; gap: 0.75rem; }
   .trust-divider { display: none; }
   .dna-stats { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .bsport-widget-frame { min-height: 360px; border-radius: var(--radius); }
+  #bsport-widget-226833, #bsport-widget-727621 { min-height: 360px; }
+  .bsport-section-header { margin-bottom: 2rem; }
 }

@@ -91,7 +91,7 @@
       <button class="nav-link" onclick="nav('home','team')" type="button">TEAM</button>
       <button class="nav-link" onclick="nav('home','pricing')" type="button">PREISE</button>
       <button class="nav-link" onclick="nav('home','faq')" type="button">FAQ</button>
-      <button class="btn btn--gold btn--sm" onclick="openBooking('Nav')" type="button">MITGLIED WERDEN</button>
+      <button class="btn btn--gold btn--sm" onclick="nav('home','membership')" type="button">MITGLIED WERDEN</button>
     </nav>
 
     <button class="burger" onclick="toggleMenu()" aria-label="Menü öffnen" aria-expanded="false" id="burger-btn" type="button">
@@ -110,7 +110,7 @@
   <button class="nav-link" onclick="mobileNav('home','team')" type="button">TEAM</button>
   <button class="nav-link" onclick="mobileNav('home','pricing')" type="button">PREISE</button>
   <button class="nav-link" onclick="mobileNav('home','faq')" type="button">FAQ</button>
-  <button class="btn btn--gold" onclick="toggleMenu(); openBooking('Mobile')" type="button" style="margin-top:1rem;">PROBETRAINING</button>
+  <button class="btn btn--gold" onclick="mobileNav('home','free-trial')" type="button" style="margin-top:1rem;">PROBETRAINING</button>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
@@ -119,18 +119,6 @@
   <i class="fa-brands fa-whatsapp"></i>
 </a>
 
-<!-- ═══════ BOOKING MODAL ═══════ -->
-<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
-  <div class="modal-header">
-    <span class="modal-header-title">JETZT BUCHEN</span>
-    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div id="bsport-widget-464090"></div>
-  </div>
-</div>
 
 <!-- ══════════════════════════════════════════════════════════
      HOME VIEW
@@ -152,7 +140,7 @@
         <span class="shimmer">IT'S PASSION.</span>
       </h1>
       <div class="hero-ctas">
-        <button class="btn btn--gold" onclick="openBooking('Hero')" type="button">
+        <button class="btn btn--gold" onclick="nav('home','membership')" type="button">
           <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
         </button>
         <button class="btn btn--outline-light" onclick="nav('home','pricing')" type="button">
@@ -190,7 +178,7 @@
           <span class="tag tag--dark">THE EXPERIENCE</span>
           <h2 style="margin-top:1.2rem;">BOXEN IN MUNICH.<br><span class="gold">AUF HÖCHSTEM NIVEAU.</span></h2>
           <p>Bomaye Gym Munich im Pineapple Park vereint professionelles Boxtraining mit echter Community. Von Kids ab 6 Jahren bis zum Wettkämpfer — in einem der modernsten Boxgyms in München.</p>
-          <button class="btn btn--gold" onclick="openBooking('Intro')" type="button">JETZT MITGLIED WERDEN</button>
+          <button class="btn btn--gold" onclick="nav('home','membership')" type="button">JETZT MITGLIED WERDEN</button>
         </div>
         <div class="video-frame reveal delay-2">
           <div class="video-placeholder">
@@ -364,7 +352,7 @@
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
             <p>Über 20 Jahre Erfahrung als Wettkämpfer und Landestrainer. Raschad analysiert jeden Bewegungsablauf mit wissenschaftlicher Präzision und formt Athleten von Grund auf neu — unabhängig vom Ausgangsniveau.</p>
-            <button onclick="openBooking('PT Raschad')" class="btn btn--outline-dark btn--sm" type="button">RASCHAD BUCHEN</button>
+            <button onclick="nav('home','free-trial')" class="btn btn--outline-dark btn--sm" type="button">RASCHAD BUCHEN</button>
           </div>
         </div>
         <div class="coach-card reveal delay-2">
@@ -381,7 +369,7 @@
             <p class="coach-title">Landestrainer (BABV)</p>
             <h4>HEAD COACH &amp; FOUNDER</h4>
             <p>Kickbox-Weltmeister und Spezialist für Taktik, Ring-Intelligenz und mentale Stärke. Alfonso lehrt dich, den Kampf im Kopf zu gewinnen — bevor du den Ring betrittst. Seine Methodik ist einzigartig in München.</p>
-            <button onclick="openBooking('PT Alfonso')" class="btn btn--outline-dark btn--sm" type="button">ALFONSO BUCHEN</button>
+            <button onclick="nav('home','free-trial')" class="btn btn--outline-dark btn--sm" type="button">ALFONSO BUCHEN</button>
           </div>
         </div>
       </div>
@@ -402,7 +390,7 @@
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Du trainierst erst ab Opening — zahlst ab dann</span></div>
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Kids ab 11,90€ · Jugend ab 12,90€ · Erwachsene ab 15,90€ / Woche</span></div>
           </div>
-          <button onclick="openBooking('Early Bird')" class="btn btn--gold" type="button">
+          <button onclick="nav('home','membership')" class="btn btn--gold" type="button">
             <i class="fa-solid fa-bolt"></i> EARLY-BIRD PLATZ SICHERN
           </button>
         </div>
@@ -466,7 +454,7 @@
             <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
             <li><i class="fa-solid fa-check"></i> Leihausrüstung verfügbar</li>
           </ul>
-          <button onclick="openBooking('Kids 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">3 MONATE</div>
@@ -479,7 +467,7 @@
             <li><i class="fa-solid fa-check"></i> Leihausrüstung verfügbar</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 36€</span></div>
-          <button onclick="openBooking('Kids 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">6 MONATE</div>
@@ -492,7 +480,7 @@
             <li><i class="fa-solid fa-check"></i> Community Events</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 104€</span></div>
-          <button onclick="openBooking('Kids 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card best">
           <div class="best-badge">⭐ BESTES ANGEBOT</div>
@@ -509,7 +497,7 @@
             <li><i class="fa-solid fa-check"></i> Community Events gratis</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 261€</span></div>
-          <button onclick="openBooking('Kids 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
         </div>
       </div>
 
@@ -525,7 +513,7 @@
             <li><i class="fa-solid fa-check"></i> Auch für Studenten</li>
             <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
           </ul>
-          <button onclick="openBooking('Jugend 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">3 MONATE</div>
@@ -538,7 +526,7 @@
             <li><i class="fa-solid fa-check"></i> 3 Monate Laufzeit</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 52€</span></div>
-          <button onclick="openBooking('Jugend 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">6 MONATE</div>
@@ -551,7 +539,7 @@
             <li><i class="fa-solid fa-check"></i> Community Events</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 130€</span></div>
-          <button onclick="openBooking('Jugend 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card best">
           <div class="best-badge">⭐ BESTES ANGEBOT</div>
@@ -568,7 +556,7 @@
             <li><i class="fa-solid fa-check"></i> Welcome Package</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 312€</span></div>
-          <button onclick="openBooking('Jugend 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--gold btn--full btn--sm" type="button">JETZT ANMELDEN</button>
         </div>
       </div>
 
@@ -584,7 +572,7 @@
             <li><i class="fa-solid fa-check"></i> Monatlich kündbar</li>
             <li><i class="fa-solid fa-check"></i> Alle Programme</li>
           </ul>
-          <button onclick="openBooking('Adult 1M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">3 MONATE</div>
@@ -597,7 +585,7 @@
             <li><i class="fa-solid fa-check"></i> 3 Monate Laufzeit</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 52€</span></div>
-          <button onclick="openBooking('Adult 3M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card">
           <div class="price-label">6 MONATE</div>
@@ -610,7 +598,7 @@
             <li><i class="fa-solid fa-check"></i> Community Events</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 104€</span></div>
-          <button onclick="openBooking('Adult 6M')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--outline-light btn--full btn--sm" type="button">ANMELDEN</button>
         </div>
         <div class="price-card best">
           <div class="best-badge">⭐ BESTES ANGEBOT</div>
@@ -627,7 +615,7 @@
             <li><i class="fa-solid fa-check"></i> Welcome Package</li>
           </ul>
           <div class="savings-row"><span>DU SPARST</span><span>≈ 261€</span></div>
-          <button onclick="openBooking('Adult 12M')" class="btn btn--gold btn--full btn--sm" type="button">JETZT MITGLIED WERDEN</button>
+          <button onclick="nav('home','membership')" class="btn btn--gold btn--full btn--sm" type="button">JETZT MITGLIED WERDEN</button>
         </div>
       </div>
 
@@ -640,18 +628,30 @@
     </div>
   </section>
 
-  <!-- BOOKING -->
-  <section id="booking" class="sec--dark">
+  <!-- FREE TRIAL BOOKING -->
+  <section id="free-trial" class="sec--dark">
     <div class="container">
-      <div class="booking-head reveal">
-        <span class="tag tag--dark">BUCHUNG</span>
-        <h2 style="margin-top:1rem;">JETZT <span class="gold">BUCHEN.</span></h2>
-        <p>Wähle deinen Kurs im Kalender und sichere dir deinen Spot.</p>
+      <div class="bsport-section-header reveal">
+        <span class="tag tag--dark">PROBETRAINING</span>
+        <h2 style="margin-top:1rem;">BOOK YOUR <span class="gold">FREE TRIAL.</span></h2>
+        <p>Choose your session and experience real training at Bomaye Gym Munich.</p>
       </div>
-      <div style="text-align:center;margin-top:2rem;">
-        <button onclick="openBooking('Booking Section')" class="btn btn--gold" type="button">
-          <i class="fa-solid fa-calendar-check"></i> KURSKALENDER ÖFFNEN
-        </button>
+      <div class="bsport-widget-frame reveal">
+        <div id="bsport-widget-226833"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP SIGNUP -->
+  <section id="membership" class="sec--smoke">
+    <div class="container">
+      <div class="bsport-section-header reveal">
+        <span class="tag tag--light">MITGLIEDSCHAFT</span>
+        <h2 style="margin-top:1rem;">CHOOSE YOUR <span class="gold">MEMBERSHIP.</span></h2>
+        <p>Select the membership that fits your goals and level.</p>
+      </div>
+      <div class="bsport-widget-frame reveal">
+        <div id="bsport-widget-727621"></div>
       </div>
     </div>
   </section>
@@ -856,7 +856,7 @@
         <span class="target-tag">Alle Levels</span>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Executive Boxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+        <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
         <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
@@ -893,7 +893,7 @@
         <span class="target-tag">Berufstätige</span>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Women Only')" class="btn btn--gold" type="button">KOSTENLOSES PROBETRAINING</button>
+        <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">KOSTENLOSES PROBETRAINING</button>
         <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
@@ -928,7 +928,7 @@
         <span class="target-tag">Wettkämpfer</span>
         <span class="target-tag">Schnelle Ergebnisse</span>
       </div>
-      <button onclick="openBooking('Personal Training')" class="btn btn--gold" type="button">TERMIN VEREINBAREN</button>
+      <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">TERMIN VEREINBAREN</button>
     </div></div>
   </div>
 </div>
@@ -961,7 +961,7 @@
         <span class="target-tag">Fortgeschrittene</span>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button onclick="openBooking('Youth')" class="btn btn--gold" type="button">ANMELDEN — AB 12,90€ / WOCHE</button>
+        <button onclick="nav('home','membership')" class="btn btn--gold" type="button">ANMELDEN — AB 12,90€ / WOCHE</button>
         <button onclick="nav('home')" class="btn btn--outline-dark" type="button">FRAGEN? KONTAKT</button>
       </div>
     </div></div>
@@ -995,7 +995,7 @@
         <span class="target-tag">Teams</span>
         <span class="target-tag">Events</span>
       </div>
-      <button onclick="openBooking('Corporate')" class="btn btn--gold" type="button">ANFRAGE SENDEN</button>
+      <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">ANFRAGE SENDEN</button>
     </div></div>
   </div>
 </div>
@@ -1025,7 +1025,7 @@
         <span class="target-tag">Wettkämpfer</span>
         <span class="target-tag">Fitness</span>
       </div>
-      <button onclick="openBooking('Kickboxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
     </div></div>
   </div>
 </div>
@@ -1056,7 +1056,7 @@
         <span class="target-tag">Verein</span>
         <span class="target-tag">Fortgeschrittene</span>
       </div>
-      <button onclick="openBooking('Olympic Boxing')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
     </div></div>
   </div>
 </div>
@@ -1087,7 +1087,7 @@
         <span class="target-tag">Mental Health</span>
         <span class="target-tag">Ganzheitlich</span>
       </div>
-      <button onclick="openBooking('Mind Body')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
+      <button onclick="nav('home','free-trial')" class="btn btn--gold" type="button">PROBETRAINING ANFRAGEN</button>
     </div></div>
   </div>
 </div>
