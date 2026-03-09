@@ -3103,14 +3103,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .hero-cred-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.06); }
+  /* Items in the last row of the 2-col grid get no bottom border */
   .hero-cred-item:nth-last-child(-n+2) { border-bottom: none; }
-  /* 5th item spans full width on mobile */
-  .hero-cred-item:last-child {
-    flex: 0 0 100%;
-    border-right: none;
-    border-bottom: none;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
+  /* 5th item: stays 50% width (left col of row 3), no stray right border */
+  .hero-cred-item:last-child { border-right: none; }
 }
 
 @media (max-width: 400px) {
@@ -3579,11 +3575,8 @@ body {
   .discipline-card h3 { font-size: 1.35rem; }
   .discipline-card p  { font-size: 0.88rem; }
 
-  /* Hero credentials: 2-column grid on tight screens */
-  .hero-credentials {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 0.75rem 1rem;
-  }
+  /* Hero credentials: tighter padding on very small screens */
+  .hero-cred-item { padding: 0.45rem 0.75rem; }
   .hero-cred-sep { display: none !important; }
 
   /* FAQ items: better padding */
