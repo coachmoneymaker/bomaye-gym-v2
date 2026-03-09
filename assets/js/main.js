@@ -637,7 +637,6 @@ function autoSlider(sliderId, intervalMs, maxWidth, scrollDuration) {
    the section scrolls into view.
 ══════════════════════════════════════════════════════════════ */
 function initQuoteMobileReveal() {
-  if (window.innerWidth > 768) return; // desktop uses fixed parallax
   const quote = document.getElementById('quote');
   if (!quote) return;
 

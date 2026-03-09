@@ -3418,19 +3418,16 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QUOTE SECTION — hero-scale dramatic treatment
+   QUOTE SECTION — premium hero-matched text treatment
 ══════════════════════════════════════════════════════════════ */
 #quote { position: relative; overflow: hidden; }
-/* Stronger background overlay for max contrast */
-#quote::before {
-  background: rgba(8,8,8,0.88) !important;
-}
-/* Large decorative quote mark */
+#quote::before { background: rgba(8,8,8,0.88) !important; }
+
+/* Decorative oversized opening mark */
 #quote .container::before {
   content: '\201C';
   position: absolute;
-  top: -2.5rem;
-  left: 50%;
+  top: -2.5rem; left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-display);
   font-size: clamp(8rem, 20vw, 16rem);
@@ -3441,15 +3438,48 @@ body {
   letter-spacing: -0.05em;
 }
 #quote .container { position: relative; z-index: 1; }
-/* Bigger, hero-scale quote text */
+
+/* Hero-scale text */
 #quote .quote-text {
   font-size: clamp(2.2rem, 6.5vw, 4.5rem) !important;
   letter-spacing: 0.04em !important;
-  line-height: 1.1 !important;
+  line-height: 1.15 !important;
   max-width: 900px;
   margin: 0 auto;
 }
-/* Source line: bolder attribution */
+
+/* Per-line initial hidden state */
+.quote-l1,
+.quote-l2 {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
+}
+
+/* Staggered reveal triggered by quote-visible (all devices) */
+#quote.quote-visible .quote-l1 {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s;
+}
+#quote.quote-visible .quote-l2 {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.28s;
+}
+
+/* Shimmer override for quote-l2 — brighter, wider sweep than default */
+#quote .quote-l2.shimmer {
+  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 35%, #e8c97a 55%, var(--gold) 70%, var(--gold-dark) 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Source attribution */
 .quote-source {
   margin-top: 2.5rem !important;
   font-size: 0.8rem;
@@ -3457,10 +3487,17 @@ body {
   color: rgba(255,255,255,0.4);
   text-transform: uppercase;
 }
-/* Gold shimmer on .gold span — intensified */
-#quote .quote-text .gold {
-  background-size: 300% auto !important;
-  animation: shimmer-move 3s linear infinite !important;
+
+/* Mobile: keep subtle scale reveal, let per-line opacity handle fade */
+@media (max-width: 768px) {
+  #quote .container {
+    opacity: 1 !important;
+    transform: scale(0.97);
+    transition: transform 0.9s var(--ease-expo) !important;
+  }
+  #quote.quote-visible .container {
+    transform: scale(1);
+  }
 }
 @media (max-width: 600px) {
   #quote .quote-text { font-size: clamp(1.75rem, 8vw, 2.8rem) !important; }
