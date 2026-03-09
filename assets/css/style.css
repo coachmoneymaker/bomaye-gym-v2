@@ -3104,6 +3104,13 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   }
   .hero-cred-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.06); }
   .hero-cred-item:nth-last-child(-n+2) { border-bottom: none; }
+  /* 5th item spans full width on mobile */
+  .hero-cred-item:last-child {
+    flex: 0 0 100%;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
 }
 
 @media (max-width: 400px) {
