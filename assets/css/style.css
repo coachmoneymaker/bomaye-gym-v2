@@ -3294,3 +3294,258 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 @media (prefers-reduced-motion: reduce) {
   .schedule-widget-inner:empty { animation: none; background: #1a1a1a; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   LONG-SCROLL BUG FIX — overflow / stacking context conflicts
+══════════════════════════════════════════════════════════════ */
+/* Remove fixed bg from body — static gradient avoids compositing bugs */
+body {
+  background-attachment: scroll !important;
+}
+/* Contain paint in each section so transforms don't bleed */
+#why-bomaye, #faq, #bomaye-standard, #disciplines, .diff-block, #schedule {
+  contain: layout style;
+}
+/* Remove excessive will-change that can exhaust GPU layers */
+.testimonial-item {
+  will-change: auto !important;
+}
+/* Ensure detail views don't contribute stacking context when hidden */
+.view:not(.active) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WHY BOMAYE — premium depth / 3D card feel
+══════════════════════════════════════════════════════════════ */
+#why-bomaye {
+  background: linear-gradient(180deg, #f5f3ef 0%, #faf9f7 50%, #f0ede8 100%);
+  position: relative;
+}
+/* Subtle diagonal texture overlay */
+#why-bomaye::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(197,160,89,0.025) 0px,
+    rgba(197,160,89,0.025) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+#why-bomaye .container { position: relative; z-index: 1; }
+
+/* Why-cards: premium 3D depth */
+.why-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(197,160,89,0.12) !important;
+  border-radius: 18px !important;
+  padding: 2.75rem 2.25rem !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9),
+    0 4px 12px rgba(0,0,0,0.06),
+    0 12px 32px rgba(0,0,0,0.05) !important;
+  position: relative;
+  overflow: hidden;
+}
+/* Gold top edge accent */
+.why-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 2rem; right: 2rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(197,160,89,0.55), transparent);
+  border-radius: 0 0 4px 4px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.why-card:hover::before { opacity: 1; }
+/* Deeper hover shadow */
+.why-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9),
+    0 8px 24px rgba(0,0,0,0.09),
+    0 24px 56px rgba(0,0,0,0.1) !important;
+  border-color: rgba(197,160,89,0.28) !important;
+}
+/* Larger, more dramatic icon */
+.why-card-icon {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, rgba(197,160,89,0.18) 0%, rgba(197,160,89,0.08) 100%) !important;
+  border: 1px solid rgba(197,160,89,0.35) !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 1.75rem !important;
+  box-shadow: 0 4px 16px rgba(197,160,89,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.why-card:hover .why-card-icon {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 6px 24px rgba(197,160,89,0.25);
+}
+.why-card h3 {
+  font-size: 1.05rem !important;
+  letter-spacing: 1.5px;
+  color: var(--ink) !important;
+  margin-bottom: 1rem !important;
+}
+.why-card p {
+  font-size: 0.92rem !important;
+  color: rgba(8,8,8,0.62) !important;
+  line-height: 1.85 !important;
+}
+@media (max-width: 900px) {
+  .why-card { padding: 2rem 1.75rem !important; }
+  .why-card-icon { width: 56px !important; height: 56px !important; }
+}
+@media (max-width: 480px) {
+  .why-card { padding: 1.75rem 1.5rem !important; border-radius: 14px !important; }
+  .why-card-icon { width: 50px !important; height: 50px !important; margin-bottom: 1.25rem !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUOTE SECTION — hero-scale dramatic treatment
+══════════════════════════════════════════════════════════════ */
+#quote { position: relative; overflow: hidden; }
+/* Stronger background overlay for max contrast */
+#quote::before {
+  background: rgba(8,8,8,0.88) !important;
+}
+/* Large decorative quote mark */
+#quote .container::before {
+  content: '\201C';
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 20vw, 16rem);
+  line-height: 1;
+  color: rgba(197,160,89,0.06);
+  pointer-events: none;
+  z-index: 0;
+  letter-spacing: -0.05em;
+}
+#quote .container { position: relative; z-index: 1; }
+/* Bigger, hero-scale quote text */
+#quote .quote-text {
+  font-size: clamp(2.2rem, 6.5vw, 4.5rem) !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.1 !important;
+  max-width: 900px;
+  margin: 0 auto;
+}
+/* Source line: bolder attribution */
+.quote-source {
+  margin-top: 2.5rem !important;
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+}
+/* Gold shimmer on .gold span — intensified */
+#quote .quote-text .gold {
+  background-size: 300% auto !important;
+  animation: shimmer-move 3s linear infinite !important;
+}
+@media (max-width: 600px) {
+  #quote .quote-text { font-size: clamp(1.75rem, 8vw, 2.8rem) !important; }
+  #quote .container::before { font-size: 8rem; top: -1.5rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONTRAST FIXES — ensure readability across all sections
+══════════════════════════════════════════════════════════════ */
+/* Disciplines: card text is readable on dark photo background */
+.discipline-card h3 {
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+}
+.discipline-card p {
+  color: rgba(255,255,255,0.88) !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+/* FAQ white section — guarantee dark text */
+.sec--faq-white h2,
+.sec--faq-white .faq-q--light,
+.sec--faq-white .faq-a-inner {
+  color: var(--ink) !important;
+}
+.sec--faq-white .faq-a-inner {
+  color: rgba(8,8,8,0.7) !important;
+}
+/* Bomaye Standard light section — all text clearly readable */
+.sec--standard-white .standard-card--light h3,
+.sec--standard-white .standard-card--light p {
+  color: var(--ink) !important;
+}
+.sec--standard-white .standard-card--light p {
+  color: rgba(8,8,8,0.65) !important;
+}
+/* Services section heading on dark background */
+#services .sec-header h2 {
+  color: #ffffff !important;
+}
+/* Proof strip on dark background */
+.proof-strip .proof-title { color: #ffffff !important; }
+.proof-strip .proof-body  { color: rgba(255,255,255,0.55) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE FINISHING PASS
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Disciplines grid: ensure cards are full-width and legible */
+  .disciplines-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  .discipline-card { min-height: 260px; }
+
+  /* Why-bomaye: single column with better spacing */
+  .why-grid { grid-template-columns: 1fr !important; gap: 1rem; }
+
+  /* Quote: enough padding for mobile */
+  #quote { padding: 5rem 0; }
+  #quote .container { padding: 0 1.25rem; }
+
+  /* CTA bars: full-width stacked */
+  .sp-cta-bar .btn,
+  .booking-cta .btn,
+  .disciplines-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Proof strip: single column on small screens */
+  .proof-strip-inner {
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .proof-sep { display: none; }
+}
+@media (max-width: 480px) {
+  /* Discipline card text: slightly larger for readability */
+  .discipline-card h3 { font-size: 1.35rem; }
+  .discipline-card p  { font-size: 0.88rem; }
+
+  /* Hero credentials: 2-column grid on tight screens */
+  .hero-credentials {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem 1rem;
+  }
+  .hero-cred-sep { display: none !important; }
+
+  /* FAQ items: better padding */
+  .faq-q--light { padding: 1rem 0; font-size: 0.9rem; }
+  .faq-a-inner  { font-size: 0.88rem; }
+
+  /* Standard cards: no horizontal overflow */
+  .standard-grid { grid-template-columns: 1fr !important; }
+}
