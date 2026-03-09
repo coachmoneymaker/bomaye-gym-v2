@@ -191,27 +191,31 @@
   <div class="diff-block">
     <div class="container">
       <div class="diff-inner">
-        <div class="diff-item reveal">
-          <i class="fa-solid fa-fist-raised"></i>
-          <div>
+        <div class="diff-card reveal">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-fist-raised"></i>
+          </div>
+          <div class="diff-card-body">
             <strong>ECHTES BOXTRAINING</strong>
-            <span>Für Fitness, Technik und Wettkampf</span>
+            <span>Für Fitness, Technik und Wettkampf — kein Kurs von der Stange.</span>
           </div>
         </div>
-        <div class="diff-divider" aria-hidden="true"></div>
-        <div class="diff-item reveal delay-1">
-          <i class="fa-solid fa-users"></i>
-          <div>
-            <strong>COMMUNITY STATT FITNESSSTUDIO</strong>
-            <span>Trainiere mit Gleichgesinnten</span>
+        <div class="diff-card reveal delay-1">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>COMMUNITY FIRST</strong>
+            <span>Trainiere mit Gleichgesinnten, die dich täglich pushen.</span>
           </div>
         </div>
-        <div class="diff-divider" aria-hidden="true"></div>
-        <div class="diff-item reveal delay-2">
-          <i class="fa-solid fa-medal"></i>
-          <div>
-            <strong>COACHING VON ERFAHRENEN TRAINERN</strong>
-            <span>Lerne von echten Kämpfern</span>
+        <div class="diff-card reveal delay-2">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>COACHING VON CHAMPIONS</strong>
+            <span>Lerne von echten Kämpfern und Weltmeistern.</span>
           </div>
         </div>
       </div>
@@ -449,23 +453,23 @@
       <div class="sec-header reveal">
         <span class="tag tag--light-inv">THE BOMAYE STANDARD</span>
         <h2 style="margin-top:1rem;color:var(--ink);">REAL BOXING.<br>REAL COACHES.<br><span class="gold-dark">REAL COMMUNITY.</span></h2>
-        <p class="standard-subtext" style="color:rgba(8,8,8,0.6);">Bomaye Gym is not a typical fitness studio. You train in an environment built on technique, discipline and genuine coaching quality — from your first session to competition.</p>
+        <p class="standard-subtext" style="color:rgba(8,8,8,0.6);">Bomaye Gym ist kein typisches Fitnessstudio. Du trainierst in einer Umgebung, die auf Technik, Disziplin und echter Coaching-Qualität aufgebaut ist — von deiner ersten Session bis zum Wettkampf.</p>
       </div>
       <div class="standard-grid">
         <div class="standard-card standard-card--light reveal">
           <div class="standard-icon standard-icon--light"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">PROFESSIONAL COACHING</h3>
-          <p style="color:rgba(8,8,8,0.65);">Experience from competitive boxing and elite sport. Every session includes real technical feedback and structured coaching.</p>
+          <h3 style="color:var(--ink);">PROFESSIONELLES COACHING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Erfahrung aus dem Wettkampfboxen und Leistungssport. Jede Einheit beinhaltet echtes technisches Feedback und strukturiertes Coaching.</p>
         </div>
         <div class="standard-card standard-card--light reveal delay-1">
           <div class="standard-icon standard-icon--light"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">STRUCTURED TRAINING</h3>
-          <p style="color:rgba(8,8,8,0.65);">Every session follows a clear system that builds technique, strength and performance — from beginner to competitor.</p>
+          <h3 style="color:var(--ink);">STRUKTURIERTES TRAINING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Jede Session folgt einem klaren System, das Technik, Kraft und Leistung gezielt aufbaut — von Anfänger bis Wettkämpfer.</p>
         </div>
         <div class="standard-card standard-card--light reveal delay-2">
           <div class="standard-icon standard-icon--light"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">REAL COMMUNITY</h3>
-          <p style="color:rgba(8,8,8,0.65);">Bomaye is not an anonymous gym. You become part of a community that pushes, supports and grows together every day.</p>
+          <h3 style="color:var(--ink);">ECHTE COMMUNITY</h3>
+          <p style="color:rgba(8,8,8,0.65);">Bomaye ist kein anonymes Gym. Du wirst Teil einer Gemeinschaft, die sich gegenseitig pusht, unterstützt und gemeinsam wächst.</p>
         </div>
       </div>
     </div>
@@ -509,23 +513,6 @@
           <span>Alle Preise &amp; Optionen ansehen</span>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CHOOSE YOUR MEMBERSHIP ── -->
-  <section id="membership-widget" class="sec--light-alt">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--gold">MITGLIEDSCHAFT</span>
-        <h2 style="margin-top:1rem;color:#1a1a1a;">CHOOSE YOUR <span class="gold">MEMBERSHIP.</span></h2>
-        <p style="color:#5a5a5a;margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Select your plan and sign up directly — secure, simple, no hidden fees.</p>
-      </div>
-      <div class="bw-widget-wrap reveal">
-        <div id="bsport-widget-subscription" class="bw-widget-inner"></div>
-        <noscript>
-          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um die Mitgliedschaften zu laden.</p>
-        </noscript>
       </div>
     </div>
   </section>
@@ -702,19 +689,31 @@
       </div>
       <div class="steps-grid">
         <div class="step-card reveal delay-1">
-          <div class="step-num">01</div>
+          <div class="step-header">
+            <div class="step-num-badge">01</div>
+            <div class="step-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          </div>
           <h3>PROBETRAINING</h3>
           <p>Komm einfach vorbei. Erste Stunde kostenlos, kein Vertrag, kein Druck. Wir holen dich genau dort ab, wo du stehst.</p>
+          <div class="step-cta-hint">Kostenlos &amp; unverbindlich</div>
         </div>
         <div class="step-card reveal delay-2">
-          <div class="step-num">02</div>
+          <div class="step-header">
+            <div class="step-num-badge">02</div>
+            <div class="step-icon"><i class="fa-solid fa-dumbbell"></i></div>
+          </div>
           <h3>ERSTES TRAINING</h3>
           <p>Lerne die Basics, triff die Community, spür die Energie. Boxing ist einfacher als du denkst — und macht mehr Spaß.</p>
+          <div class="step-cta-hint">Alle Level willkommen</div>
         </div>
         <div class="step-card reveal delay-3">
-          <div class="step-num">03</div>
+          <div class="step-header">
+            <div class="step-num-badge">03</div>
+            <div class="step-icon"><i class="fa-solid fa-trophy"></i></div>
+          </div>
           <h3>WERDE BOMAYE</h3>
           <p>Du bist Teil der Familie. Dein Early-Bird-Preis bleibt für immer. Dein Training beginnt ab Opening.</p>
+          <div class="step-cta-hint">Lifetime Preisgarantie</div>
         </div>
       </div>
       <div class="steps-cta reveal">
@@ -1472,20 +1471,6 @@
             "calendar": {}
         }
     })
-</script>
-<script>
-    /* "Choose Your Membership" subscription widget */
-    MountBsportWidget({
-        "parentElement": "bsport-widget-subscription",
-        "companyId": 5473,
-        "franchiseId": null,
-        "dialogMode": 1,
-        "widgetType": "subscription",
-        "showFab": false,
-        "fullScreenPopup": false,
-        "styles": undefined,
-        "config": {}
-    });
 </script>
 </body>
 </html>
