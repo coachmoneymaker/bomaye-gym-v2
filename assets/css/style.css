@@ -135,9 +135,9 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   box-shadow: 0 0 36px rgba(197,160,89,0.60), 0 8px 28px rgba(197,160,89,0.30);
 }
 .btn--outline-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.35); }
-.btn--outline-light:hover { background: rgba(255,255,255,0.08); border-color: var(--white); }
-.btn--outline-dark  { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.2); }
-.btn--outline-dark:hover  { border-color: var(--gold); color: var(--gold); }
+.btn--outline-light:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.85); color: var(--white); }
+.btn--outline-dark  { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.25); }
+.btn--outline-dark:hover  { background: rgba(197,160,89,0.08); border-color: var(--gold); color: var(--gold); }
 .btn--sm   { font-size: 0.66rem; padding: 0.6rem 1.2rem; letter-spacing: 2px; }
 .btn--full { width: 100%; }
 
@@ -554,7 +554,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* ══════════════════════════════════════════════════════════════
    TEAM
 ══════════════════════════════════════════════════════════════ */
-#team { background: var(--ink-deep); }
+#team { background: #f9f7f4; }
 .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .coach-card {
   display: grid; grid-template-columns: 240px 1fr; gap: 0;
@@ -667,6 +667,21 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   max-width: 100% !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+/* Flush: remove any internal left inset Bsport may inject into its root */
+#bsport-widget-172485 > *,
+#bsport-widget-172485 .cleanslate > * {
+  margin-left: 0 !important;
+}
+#bsport-widget-172485 .cleanslate [class*="container"],
+#bsport-widget-172485 .cleanslate [class*="Container"],
+#bsport-widget-172485 .cleanslate [class*="wrapper"],
+#bsport-widget-172485 .cleanslate [class*="Wrapper"] {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  width: 100% !important;
 }
 #bsport-widget-172485 * {
   max-width: 100%;
@@ -1322,7 +1337,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4.5rem 0 2rem; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 3.5rem; }
 .footer-brand .logo-text    { display: block; margin-bottom: 0.75rem; font-size: 1.8rem; }
-.footer-brand .logo-img     { height: 44px; width: auto; margin-bottom: 0.75rem; }
+.footer-brand .logo-img     { height: 72px; width: auto; margin-bottom: 1rem; }
 .footer-brand p             { font-size: 0.86rem; color: var(--muted); margin-bottom: 0.4rem; }
 .brand-line { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 2px; }
 .footer-socials { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
@@ -1515,11 +1530,11 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 480px (Mobile)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  :root { --nav-h: 64px; } /* was 120px — caused giant header gap on phones */
+  :root { --nav-h: 80px; }
   section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
-  /* Logo: 64px nav-h on phones — 54px keeps it prominent but contained */
-  .logo-img { height: 54px !important; width: auto; }
+  /* 80px nav-h on phones — logo at 68px gives clear premium presence */
+  .logo-img { height: 68px !important; width: auto; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
   .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 3rem; }
@@ -2100,7 +2115,11 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #intro     { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #dna       { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #services  { border-bottom: 1px solid rgba(255,255,255,0.04); }
-#team      { border-bottom: 1px solid rgba(255,255,255,0.04); }
+#team      { border-bottom: 1px solid rgba(0,0,0,0.06); }
+/* Team on cream — suppress dark top-gradient, darken section-header text */
+#team::before { background: transparent !important; }
+#team .sec-header h2 { color: var(--ink); }
+#team .sec-header h2 .gold { color: var(--gold-dark); }
 #weg       { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #early-bird{ border-bottom: none; } /* section flows without hard line */
 
@@ -2135,9 +2154,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
 }
 
-/* services — large card grid benefits from glass depth */
+/* services — softer charcoal glass, less harsh than pure black */
 #services {
-  background: rgba(0,0,0,0.40) !important;
+  background: rgba(22,17,12,0.55) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid rgba(255,255,255,0.05);
@@ -3409,10 +3428,13 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 
 /* Outline buttons */
-.btn--outline-light:hover,
-.btn--outline-dark:hover {
+.btn--outline-light:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.btn--outline-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(197,160,89,0.18), 0 6px 20px rgba(0,0,0,0.2);
 }
 
 /* Service cards: stronger depth on hover */
