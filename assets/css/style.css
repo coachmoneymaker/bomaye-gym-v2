@@ -5,10 +5,10 @@
 
 /* ── Variables ─────────────────────────────────────────────── */
 :root {
-  --ink:        #0c0c0c;
-  --ink2:       #111111;
-  --smoke:      #181818;
-  --smoke2:     #1f1f1f;
+  --ink:        #141414;
+  --ink2:       #1a1a1a;
+  --smoke:      #212121;
+  --smoke2:     #282828;
   --white:      #ffffff;
   --off-white:  #f0ede8;
   --gold:       #c5a059;
@@ -28,15 +28,15 @@
   --radius-lg: 12px;
   --nav-h:     72px;
 
-  --anthracite: #161616;
-  --ink-deep:   #0b0b0b;
+  --anthracite: #1d1d1d;
+  --ink-deep:   #131313;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: linear-gradient(160deg, #120f08 0%, #080808 48%, #090c10 100%);
+  background: linear-gradient(160deg, #1a160d 0%, #111111 48%, #12141a 100%);
   background-attachment: fixed;
   color: var(--white);
   font-family: var(--font-body);
@@ -80,10 +80,10 @@ section[id],
 }
 .sec--dark  { background: var(--ink2); }
 .sec--smoke { background: var(--smoke); }
-.sec--white { background: #111; }
+.sec--white { background: #1a1a1a; }
 .sec--ink2  { background: var(--smoke2); }
-.sec--light { background: #F5F5F5; }
-.sec--light-2 { background: #EFEFEF; }
+.sec--light { background: #f9f7f4; }
+.sec--light-2 { background: #f4f1ed; }
 section { padding: clamp(60px, 8vw, 120px) 0; }
 .sec-header { text-align: center; margin-bottom: clamp(24px, 4vw, 56px); }
 .sec-header > p { max-width: 640px; margin-left: auto; margin-right: auto; }
@@ -206,16 +206,6 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .mob-close:hover { color: var(--gold); }
 
-/* ── WhatsApp float ────────────────────────────────────────── */
-.wa-float {
-  position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 500;
-  width: 52px; height: 52px; background: #25d366; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.45rem; color: #fff;
-  box-shadow: 0 4px 20px rgba(37,211,102,0.35);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-}
-.wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
 
 /* ── Views ─────────────────────────────────────────────────── */
 .view { display: none; }
@@ -653,11 +643,9 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* ── Widget card wrapper ── */
 .schedule-widget-wrap {
   margin-top: 2rem;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  background: #FFFFFF;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.06), 0 1px 6px rgba(0,0,0,0.03);
-  border: 1px solid rgba(0,0,0,0.06);
+  background: transparent;
   min-height: 420px;
   max-width: 100%;
 }
@@ -868,11 +856,10 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 @media (max-width: 768px) {
   #schedule { padding-top: 3rem; padding-bottom: 3rem; }
   .schedule-widget-wrap {
-    border-radius: 12px;
+    border-radius: 0;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     min-height: 380px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
   }
   .schedule-widget-inner { min-height: 380px; }
   /* Date nav row: wrap neatly, don't overflow */
@@ -1531,8 +1518,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   :root { --nav-h: 64px; } /* was 120px — caused giant header gap on phones */
   section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
-  /* Logo was 90px (set at ≤768px) but nav-h is now 64px — clamp it to fit */
-  .logo-img { height: 40px !important; width: auto; }
+  /* Logo: 64px nav-h on phones — 54px keeps it prominent but contained */
+  .logo-img { height: 54px !important; width: auto; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
   .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 3rem; }
