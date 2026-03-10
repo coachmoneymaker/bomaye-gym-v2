@@ -71,6 +71,13 @@ ul { list-style: none; }
 
 /* ── Layout ────────────────────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* Fixed header offset: sections linked via anchor / scrollIntoView
+   get enough top margin so they aren't hidden under the nav bar  */
+section[id],
+.diff-block[id] {
+  scroll-margin-top: var(--nav-h);
+}
 .sec--dark  { background: var(--ink2); }
 .sec--smoke { background: var(--smoke); }
 .sec--white { background: #111; }
@@ -660,7 +667,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   min-height: 420px;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  contain: layout;
+  /* contain: layout removed — it traps Bsport's position:fixed dialogs */
 }
 
 /* ── Override Bsport widget internals for overflow safety ──
@@ -1512,7 +1519,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 480px (Mobile)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  :root { --nav-h: 120px; }
+  :root { --nav-h: 64px; } /* was 120px — caused giant header gap on phones */
   section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
 
@@ -1540,8 +1547,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
   .footer-legal { flex-wrap: wrap; justify-content: center; gap: 1rem; }
 
-  #quote { background-attachment: scroll; }
-  #community { background-attachment: scroll; }
+  /* #quote and #community background-attachment:scroll moved to ≤900px block above */
 }
 
 /* ── Mobile logo sizing ─────────────────────────────────────── */
@@ -1550,6 +1556,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   .trust-strip-divider { display: none; }
   .trust-strip-inner  { gap: 1rem; }
   .trust-strip-item   { font-size: 0.58rem; }
+
+  /* Disable fixed backgrounds on touch devices — iOS Safari never supported
+     background-attachment:fixed on non-viewport elements; causes blur/jank */
+  #quote, #community { background-attachment: scroll; }
 }
 
 @media (max-width: 480px) {
@@ -1574,6 +1584,15 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+/* ── Wide-screen (iMac / 4K) — expand nav + containers ─────── */
+/* At 1440 CSS px the standard 1200px max-width leaves the logo
+   visually far from the left edge. Step up gracefully.          */
+@media (min-width: 1600px) {
+  .nav-inner  { max-width: 1440px; }
+  .container  { max-width: 1440px; }
+  .logo-img   { width: 180px; }
 }
 
 /* ── 375px fine-tuning ──────────────────────────────────────── */
@@ -3490,8 +3509,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 body {
   background-attachment: scroll !important;
 }
-/* Contain paint in each section so transforms don't bleed */
-#why-bomaye, #faq, #bomaye-standard, #disciplines, .diff-block, #schedule {
+/* Contain paint in each section so transforms don't bleed.
+   #schedule intentionally excluded: contain:layout traps Bsport's
+   position:fixed booking dialogs inside the section, clipping them. */
+#why-bomaye, #faq, #bomaye-standard, #disciplines, .diff-block {
   contain: layout style;
 }
 /* Remove excessive will-change that can exhaust GPU layers */
