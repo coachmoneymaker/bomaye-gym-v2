@@ -105,7 +105,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   background-clip: text;
   animation: shimmer 3s linear infinite;
 }
-@keyframes shimmer { to { background-position: 200% center; } }
+@keyframes shimmer      { to { background-position: 200% center; } }
+@keyframes shimmer-move { to { background-position: 200% center; } }
 
 /* ── Tags ──────────────────────────────────────────────────── */
 .tag { display: inline-block; font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; padding: 4px 13px; border-radius: 999px; }
@@ -1530,6 +1531,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   :root { --nav-h: 64px; } /* was 120px — caused giant header gap on phones */
   section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
+  /* Logo was 90px (set at ≤768px) but nav-h is now 64px — clamp it to fit */
+  .logo-img { height: 40px !important; width: auto; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
   .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 3rem; }
@@ -3319,6 +3322,13 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   .hero-cred-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.06); }
   .hero-cred-item:nth-last-child(-n+2) { border-bottom: none; }
   .hero-cred-item:last-child { border-right: none; }
+  /* 5 items: last item alone in row — stretch it to full width so it doesn't sit off-centre */
+  .hero-cred-item:nth-child(5):last-child {
+    flex: 0 0 100%;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
 }
 
 @media (max-width: 400px) {
@@ -3494,20 +3504,21 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   background: var(--smoke);
 }
 
-/* Bsport widget placeholder shimmer while loading */
+/* Bsport widget placeholder shimmer while loading
+   Uses light colours to match the #FAF7F2 schedule-section background */
 .schedule-widget-inner:empty {
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(90deg, #ede9e3 25%, #e3dfd9 50%, #ede9e3 75%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.6s infinite;
   border-radius: 12px;
-  min-height: 600px;
+  min-height: 420px;
 }
 @keyframes skeleton-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .schedule-widget-inner:empty { animation: none; background: #1a1a1a; }
+  .schedule-widget-inner:empty { animation: none; background: #ede9e3; }
 }
 
 /* ══════════════════════════════════════════════════════════════
