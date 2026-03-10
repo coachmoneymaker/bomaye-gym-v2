@@ -60,8 +60,215 @@
       padding: 0 1.5rem;
     }
     .sp-widget-inner {
-      min-height: 600px;
+      min-height: 420px;
       width: 100%;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Override Bsport calendar widget internals ── */
+    #bsport-widget-stundenplan {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      box-sizing: border-box !important;
+    }
+    #bsport-widget-stundenplan * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    /* Filter / toolbar rows: scrollable, no overflow */
+    #bsport-widget-stundenplan [class*="filter"],
+    #bsport-widget-stundenplan [class*="Filter"],
+    #bsport-widget-stundenplan [class*="toolbar"],
+    #bsport-widget-stundenplan [class*="Toolbar"] {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      scrollbar-width: none !important;
+    }
+    #bsport-widget-stundenplan [class*="filter"]::-webkit-scrollbar,
+    #bsport-widget-stundenplan [class*="toolbar"]::-webkit-scrollbar { display: none; }
+    /* Touch-friendly tap targets */
+    #bsport-widget-stundenplan button,
+    #bsport-widget-stundenplan [role="button"],
+    #bsport-widget-stundenplan select,
+    #bsport-widget-stundenplan input[type="text"],
+    #bsport-widget-stundenplan input[type="search"] { min-height: 40px; }
+    #bsport-widget-stundenplan [class*="close"],
+    #bsport-widget-stundenplan [class*="Close"],
+    #bsport-widget-stundenplan [class*="back"],
+    #bsport-widget-stundenplan [class*="Back"] {
+      min-width: 44px !important;
+      min-height: 44px !important;
+    }
+    /* Full-width: eliminate right-side void */
+    #bsport-widget-stundenplan .cleanslate,
+    #bsport-widget-stundenplan .cleanslate > * {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+    #bsport-widget-stundenplan .cleanslate [class*="app"],
+    #bsport-widget-stundenplan .cleanslate [class*="App"],
+    #bsport-widget-stundenplan .cleanslate [class*="page"],
+    #bsport-widget-stundenplan .cleanslate [class*="Page"],
+    #bsport-widget-stundenplan .cleanslate [class*="view"],
+    #bsport-widget-stundenplan .cleanslate [class*="View"],
+    #bsport-widget-stundenplan .cleanslate [class*="layout"],
+    #bsport-widget-stundenplan .cleanslate [class*="Layout"],
+    #bsport-widget-stundenplan .cleanslate [class*="content"],
+    #bsport-widget-stundenplan .cleanslate [class*="Content"] {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+    /* Compact course cards */
+    #bsport-widget-stundenplan .cleanslate [class*="list"],
+    #bsport-widget-stundenplan .cleanslate [class*="List"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item,
+    #bsport-widget-stundenplan .cleanslate [class*="offer-list-item"],
+    #bsport-widget-stundenplan .cleanslate [class*="OfferListItem"] {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100% !important;
+    }
+    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
+      padding: 0.65rem 1rem !important;
+      min-height: 0 !important;
+      gap: 0.5rem !important;
+      align-items: center !important;
+    }
+    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__left  { gap: 0.2rem !important; min-width: 0 !important; }
+    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right { gap: 0.35rem !important; flex-shrink: 0 !important; }
+    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top { gap: 0.3rem !important; }
+    /* Class title */
+    #bsport-widget-stundenplan .cleanslate [class*="offer-name"],
+    #bsport-widget-stundenplan .cleanslate [class*="activity-name"],
+    #bsport-widget-stundenplan .cleanslate [class*="session-name"] {
+      font-size: 0.875rem !important;
+      line-height: 1.25 !important;
+      font-weight: 600 !important;
+    }
+    /* Time / duration */
+    #bsport-widget-stundenplan .cleanslate [class*="time"],
+    #bsport-widget-stundenplan .cleanslate [class*="Time"],
+    #bsport-widget-stundenplan .cleanslate [class*="duration"],
+    #bsport-widget-stundenplan .cleanslate [class*="Duration"] {
+      font-size: 0.8rem !important;
+      line-height: 1.2 !important;
+    }
+    /* Meta row */
+    #bsport-widget-stundenplan .cleanslate [class*="meta"],
+    #bsport-widget-stundenplan .cleanslate [class*="coach"],
+    #bsport-widget-stundenplan .cleanslate [class*="location"],
+    #bsport-widget-stundenplan .cleanslate [class*="spots"],
+    #bsport-widget-stundenplan .cleanslate [class*="capacity"],
+    #bsport-widget-stundenplan .cleanslate [class*="instructor"] {
+      font-size: 0.75rem !important;
+      line-height: 1.3 !important;
+    }
+    /* Separators */
+    #bsport-widget-stundenplan .cleanslate [class*="separator"],
+    #bsport-widget-stundenplan .cleanslate [class*="divider"] { margin: 0 !important; opacity: 0.45 !important; }
+    /* Day-group headings */
+    #bsport-widget-stundenplan .cleanslate [class*="date-header"],
+    #bsport-widget-stundenplan .cleanslate [class*="day-header"],
+    #bsport-widget-stundenplan .cleanslate [class*="day-label"] {
+      padding: 0.5rem 1rem !important;
+      font-size: 0.72rem !important;
+      letter-spacing: 1.5px !important;
+    }
+
+    /* ── Tablet (≤768px) ── */
+    @media (max-width: 768px) {
+      .sp-widget-section { padding: 2rem 0 3rem; }
+      .sp-widget-wrap { padding: 0 0; }
+      .sp-widget-inner { min-height: 380px; }
+      #bsport-widget-stundenplan [class*="date"],
+      #bsport-widget-stundenplan [class*="Date"],
+      #bsport-widget-stundenplan [class*="nav"],
+      #bsport-widget-stundenplan [class*="Nav"] {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+      }
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
+        padding: 0.55rem 0.875rem !important;
+      }
+    }
+
+    /* ── Phone (≤480px) ── */
+    @media (max-width: 480px) {
+      .sp-widget-inner { min-height: 340px; }
+      #bsport-widget-stundenplan,
+      #bsport-widget-stundenplan .cleanslate,
+      #bsport-widget-stundenplan [class*="wrap"],
+      #bsport-widget-stundenplan [class*="container"],
+      #bsport-widget-stundenplan [class*="inner"],
+      #bsport-widget-stundenplan [class*="list"] {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+      }
+      #bsport-widget-stundenplan [class*="card"],
+      #bsport-widget-stundenplan [class*="slot"],
+      #bsport-widget-stundenplan [class*="item"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
+        padding: 0.5rem 0.75rem !important;
+        gap: 0.4rem !important;
+      }
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer,
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__left,
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top,
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top__group,
+      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
+        position: static !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+      #bsport-widget-stundenplan .cleanslate [class*="offer-name"],
+      #bsport-widget-stundenplan .cleanslate [class*="activity-name"] { font-size: 0.82rem !important; }
+      #bsport-widget-stundenplan .cleanslate [class*="time"],
+      #bsport-widget-stundenplan .cleanslate [class*="Time"]           { font-size: 0.76rem !important; }
+      #bsport-widget-stundenplan .cleanslate [class*="meta"],
+      #bsport-widget-stundenplan .cleanslate [class*="coach"],
+      #bsport-widget-stundenplan .cleanslate [class*="location"],
+      #bsport-widget-stundenplan .cleanslate [class*="spots"]          { font-size: 0.7rem !important; }
+      #bsport-widget-stundenplan .cleanslate [class*="filter"],
+      #bsport-widget-stundenplan .cleanslate [class*="Filter"] {
+        min-height: 44px !important;
+        padding: 0.5rem 0.875rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.375rem !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
     }
     .sp-cta-bar {
       background: var(--ink);
