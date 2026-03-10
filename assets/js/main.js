@@ -3,6 +3,29 @@
    Depends on: config.js (loaded before this file)
    ============================================================ */
 
+/* ── Body scroll lock (iOS-compatible) ─────────────────────────
+   Plain overflow:hidden does NOT prevent background scroll on iOS
+   Safari. The position:fixed + negative-top technique does.
+   Both openBooking() and toggleMenu() use these helpers.
+──────────────────────────────────────────────────────────── */
+let _scrollLockY = 0;
+
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top      = `-${_scrollLockY}px`;
+  document.body.style.width    = '100%';
+}
+
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top      = '';
+  document.body.style.width    = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
 /* ── Init on DOM ready ─────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
   initPreloader();
@@ -118,7 +141,7 @@ function toggleMenu() {
   const btn = document.getElementById('burger-btn');
   if (!nav) return;
   const open = nav.classList.toggle('open');
-  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
   if (btn) btn.setAttribute('aria-expanded', String(open));
 }
 
@@ -444,9 +467,9 @@ let _bsportModalMounted = false;
 
 function openBooking() {
   const modal = document.getElementById('booking-modal');
-  if (!modal) return;
+  if (!modal || modal.classList.contains('open')) return;
   modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockBodyScroll();
 
   if (!_bsportModalMounted) {
     _bsportModalMounted = true;
@@ -468,13 +491,24 @@ function openBooking() {
 
 function closeBooking() {
   const modal = document.getElementById('booking-modal');
-  if (!modal) return;
+  if (!modal || !modal.classList.contains('open')) return; /* guard: only unlock if we locked */
   modal.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockBodyScroll();
 }
 
-document.addEventListener('click', e => { if (e.target.id === 'booking-modal') closeBooking(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+/* Click backdrop (modal element itself, not its children) */
+document.addEventListener('click', e => {
+  if (e.target.id === 'booking-modal') closeBooking();
+});
+
+/* ESC closes booking modal OR mobile nav, whichever is open */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const modal     = document.getElementById('booking-modal');
+  const mobileNav = document.getElementById('mobile-nav');
+  if (modal     && modal.classList.contains('open'))     { closeBooking(); return; }
+  if (mobileNav && mobileNav.classList.contains('open')) { toggleMenu();   return; }
+});
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
 
