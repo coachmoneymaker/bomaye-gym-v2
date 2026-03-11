@@ -642,37 +642,37 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 }
 .schedule-back-btn:hover  { background: #f5f0e8; box-shadow: 0 3px 14px rgba(0,0,0,0.13); }
 .schedule-back-btn:active { background: #eee; }
-/* Only reveal on mobile (≤768px) */
-@media (max-width: 768px) {
-  .schedule-back-btn--visible { display: inline-flex; }
-}
+/* Only reveal on mobile (≤768px) — back btn always shown when JS adds --visible */
+.schedule-back-btn--visible { display: inline-flex; }
 
 /* ── Widget card wrapper ── */
+/* HOTFIX: overflow:hidden removed — it clips Bsport's booking detail panel,
+   trapping users in a broken state; outer #schedule section retains overflow-x:hidden */
 .schedule-widget-wrap {
   margin-top: 2rem;
   border-radius: 0;
-  overflow: hidden;
   background: transparent;
   min-height: 420px;
   max-width: 100%;
+  position: relative;
 }
 
 /* ── Widget inner container ── */
 .schedule-widget-inner {
   width: 100%;
   min-height: 420px;
-  overflow-x: hidden;
+  /* overflow-x:hidden removed — same reason as contain:layout above */
   -webkit-overflow-scrolling: touch;
-  /* contain: layout removed — it traps Bsport's position:fixed dialogs */
 }
 
 /* ── Override Bsport widget internals for overflow safety ──
    Applies to every descendant so fixed-width inner elements
    are clamped to the card width.                           ── */
+/* HOTFIX: overflow-x:hidden removed from root — it trapped Bsport's booking
+   detail panel, causing the scroll-lock / page-lock on desktop */
 #bsport-widget-172485 {
   width: 100% !important;
   max-width: 100% !important;
-  overflow-x: hidden !important;
   box-sizing: border-box !important;
   padding-left: 0 !important;
   margin-left: 0 !important;
@@ -698,6 +698,63 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   max-width: 100%;
   box-sizing: border-box;
 }
+
+/* ── CTA / Booking button: no text truncation ───────────────────────────
+   "Buchen" was clipped to "Buch" by overflow:hidden on parent containers.
+   All buttons inside the widget must never clip their label text.         */
+#bsport-widget-172485 .cleanslate button,
+#bsport-widget-172485 .cleanslate [role="button"],
+#bsport-widget-172485 .cleanslate [class*="btn"],
+#bsport-widget-172485 .cleanslate [class*="Btn"],
+#bsport-widget-172485 .cleanslate [class*="cta"],
+#bsport-widget-172485 .cleanslate [class*="Cta"] {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  min-width: max-content !important;
+}
+
+/* ── Detail / booking view: correct display ────────────────────────────
+   After removing overflow:hidden, ensure the detail panel renders cleanly.
+   The cover/header image must not crop awkwardly.                        */
+#bsport-widget-172485 .cleanslate [class*="detail"],
+#bsport-widget-172485 .cleanslate [class*="Detail"],
+#bsport-widget-172485 .cleanslate [class*="session-view"],
+#bsport-widget-172485 .cleanslate [class*="SessionView"],
+#bsport-widget-172485 .cleanslate [class*="activity-view"],
+#bsport-widget-172485 .cleanslate [class*="ActivityView"],
+#bsport-widget-172485 .cleanslate [class*="booking-view"],
+#bsport-widget-172485 .cleanslate [class*="BookingView"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+/* Cover / hero image inside the detail view */
+#bsport-widget-172485 .cleanslate [class*="cover"],
+#bsport-widget-172485 .cleanslate [class*="Cover"],
+#bsport-widget-172485 .cleanslate [class*="header-image"],
+#bsport-widget-172485 .cleanslate [class*="HeaderImage"],
+#bsport-widget-172485 .cleanslate [class*="banner"],
+#bsport-widget-172485 .cleanslate [class*="Banner"] {
+  width: 100% !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  line-height: 0;
+}
+#bsport-widget-172485 .cleanslate [class*="cover"] img,
+#bsport-widget-172485 .cleanslate [class*="Cover"] img,
+#bsport-widget-172485 .cleanslate [class*="header-image"] img,
+#bsport-widget-172485 .cleanslate [class*="HeaderImage"] img,
+#bsport-widget-172485 .cleanslate [class*="banner"] img,
+#bsport-widget-172485 .cleanslate [class*="Banner"] img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 240px !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block !important;
+}
+
 /* Filter rows – keep horizontal; allow scroll rather than stacking */
 #bsport-widget-172485 [class*="filter"],
 #bsport-widget-172485 [class*="Filter"],
@@ -957,8 +1014,9 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
      Prevents overflow, element escape, and meta icon overlap.
      Does not redesign; only stabilises the existing layout on mobile.     */
 
-  /* 1. Widget root + all wrappers: stay inside viewport */
-  #bsport-widget-172485,
+  /* 1. Inner wrappers/lists: stay inside viewport.
+        HOTFIX: root #bsport-widget-172485 removed from this selector —
+        overflow-x:hidden on the root traps the booking detail panel on mobile */
   #bsport-widget-172485 .cleanslate,
   #bsport-widget-172485 [class*="wrap"],
   #bsport-widget-172485 [class*="Wrap"],
