@@ -646,202 +646,90 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 .schedule-back-btn--visible { display: inline-flex; }
 
 /* ── Widget card wrapper ── */
-/* HOTFIX: overflow:hidden removed — it clips Bsport's booking detail panel,
-   trapping users in a broken state; outer #schedule section retains overflow-x:hidden */
 .schedule-widget-wrap {
   margin-top: 2rem;
   border-radius: 0;
   background: transparent;
   min-height: 420px;
   max-width: 100%;
+  /* position:relative makes this the containing block for Bsport's absolute
+     children — they stay inside this wrapper, not floating to #schedule */
   position: relative;
 }
 
 /* ── Widget inner container ── */
+/* No overflow — any overflow:hidden here traps the inline booking detail panel */
 .schedule-widget-inner {
   width: 100%;
   min-height: 420px;
-  /* overflow-x:hidden removed — same reason as contain:layout above */
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── Override Bsport widget internals for overflow safety ──
-   Applies to every descendant so fixed-width inner elements
-   are clamped to the card width.                           ── */
-/* HOTFIX: overflow-x:hidden removed from root — it trapped Bsport's booking
-   detail panel, causing the scroll-lock / page-lock on desktop */
+/* ── Loading placeholder: shimmer animation while Bsport JS initialises ─────
+   :empty matches when the widget container has no child nodes yet.
+   Disappears automatically once Bsport injects its React root.               */
+.schedule-widget-inner:empty {
+  background: linear-gradient(
+    90deg,
+    #ede8e0 0%, #e4dfd6 35%, #ede8e0 65%, #e4dfd6 100%
+  );
+  background-size: 300% 100%;
+  animation: bsport-shimmer 1.8s ease-in-out infinite;
+  border-radius: 4px;
+}
+@keyframes bsport-shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BSPORT WIDGET — STRUCTURAL CSS
+   Strategy:
+   - Widget root: sizing only, zero overflow restrictions
+   - .cleanslate: fill to 100%, no padding offset
+   - Card layout: explicit named-class rules only
+     NO wildcards that touch Bsport's flex children
+     (wildcards like [class*="content"] match __left/__right
+      and forced width:100% on both, collapsing the side-by-side
+      desktop layout — that class of rule is removed entirely)
+   - Detail view: overflow:visible + scroll-margin for fixed nav
+   - Mobile: scoped breakpoints, no root-level overflow trap
+══════════════════════════════════════════════════════════════ */
+
+/* ── Widget root: sizing only. No overflow — it traps the detail panel ── */
 #bsport-widget-172485 {
+  display: block !important;
   width: 100% !important;
   max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
+  scroll-margin-top: var(--nav-h); /* clear fixed nav on Bsport auto-scroll */
 }
-/* Flush: remove any internal left inset Bsport may inject at its root level only */
-#bsport-widget-172485 > * {
-  margin-left: 0 !important;
-}
-/* Only target the outermost Bsport containers — do NOT use schedule/calendar/
-   offer-list wildcards as they also match card-internal elements and break
-   icon/count/label layout within individual cards */
-#bsport-widget-172485 .cleanslate [class*="container"],
-#bsport-widget-172485 .cleanslate [class*="Container"],
-#bsport-widget-172485 .cleanslate [class*="wrapper"],
-#bsport-widget-172485 .cleanslate [class*="Wrapper"],
-#bsport-widget-172485 .cleanslate [class*="root"],
-#bsport-widget-172485 .cleanslate [class*="Root"] {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  width: 100% !important;
-}
-#bsport-widget-172485 * {
-  max-width: 100%;
+/* Universal box-model correction — does NOT force widths */
+#bsport-widget-172485 *,
+#bsport-widget-172485 *::before,
+#bsport-widget-172485 *::after {
   box-sizing: border-box;
 }
 
-/* ── CTA / Booking button: no text truncation ───────────────────────────
-   "Buchen" was clipped to "Buch" by overflow:hidden on parent containers.
-   All buttons inside the widget must never clip their label text.         */
-#bsport-widget-172485 .cleanslate button,
-#bsport-widget-172485 .cleanslate [role="button"],
-#bsport-widget-172485 .cleanslate [class*="btn"],
-#bsport-widget-172485 .cleanslate [class*="Btn"],
-#bsport-widget-172485 .cleanslate [class*="cta"],
-#bsport-widget-172485 .cleanslate [class*="Cta"] {
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  min-width: max-content !important;
-}
-
-/* ── Detail / booking view: correct display ────────────────────────────
-   After removing overflow:hidden, ensure the detail panel renders cleanly.
-   The cover/header image must not crop awkwardly.                        */
-#bsport-widget-172485 .cleanslate [class*="detail"],
-#bsport-widget-172485 .cleanslate [class*="Detail"],
-#bsport-widget-172485 .cleanslate [class*="session-view"],
-#bsport-widget-172485 .cleanslate [class*="SessionView"],
-#bsport-widget-172485 .cleanslate [class*="activity-view"],
-#bsport-widget-172485 .cleanslate [class*="ActivityView"],
-#bsport-widget-172485 .cleanslate [class*="booking-view"],
-#bsport-widget-172485 .cleanslate [class*="BookingView"] {
-  width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
-}
-/* Cover / hero image inside the detail view */
-#bsport-widget-172485 .cleanslate [class*="cover"],
-#bsport-widget-172485 .cleanslate [class*="Cover"],
-#bsport-widget-172485 .cleanslate [class*="header-image"],
-#bsport-widget-172485 .cleanslate [class*="HeaderImage"],
-#bsport-widget-172485 .cleanslate [class*="banner"],
-#bsport-widget-172485 .cleanslate [class*="Banner"] {
-  width: 100% !important;
-  overflow: hidden !important;
-  border-radius: 0 !important;
-  line-height: 0;
-}
-#bsport-widget-172485 .cleanslate [class*="cover"] img,
-#bsport-widget-172485 .cleanslate [class*="Cover"] img,
-#bsport-widget-172485 .cleanslate [class*="header-image"] img,
-#bsport-widget-172485 .cleanslate [class*="HeaderImage"] img,
-#bsport-widget-172485 .cleanslate [class*="banner"] img,
-#bsport-widget-172485 .cleanslate [class*="Banner"] img {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 240px !important;
-  object-fit: cover !important;
-  object-position: center top !important;
+/* ── Cleanslate root: fill the widget, flush to left edge ── */
+#bsport-widget-172485 .cleanslate {
   display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
-/* ── Widget scroll-margin: account for fixed nav when Bsport auto-scrolls ──
-   When the detail view opens, Bsport may call scrollIntoView() on the widget.
-   scroll-margin-top ensures the fixed header (72px desktop) is not covered.   */
-#schedule-section-wrap,
-#bsport-widget-172485 {
-  scroll-margin-top: var(--nav-h);
-}
-
-/* ── Bsport internal sticky elements: offset below our fixed nav ────────────
-   Bsport's filter/date bar sometimes uses position:sticky. Without a top offset
-   it would stick directly behind our nav (z-index 1000). Push it below.       */
+/* ── Bsport internal sticky bar: offset below our fixed nav (72px desktop) ── */
 #bsport-widget-172485 .cleanslate [class*="sticky"],
 #bsport-widget-172485 .cleanslate [class*="Sticky"] {
   top: var(--nav-h) !important;
 }
 
-/* ── Detail view: broader image/hero selectors ───────────────────────────────
-   Bsport may name the activity hero image with class patterns not captured
-   above ("cover","banner"). Adding more naming patterns here.                 */
-#bsport-widget-172485 .cleanslate [class*="activity"][class*="image"],
-#bsport-widget-172485 .cleanslate [class*="Activity"][class*="image"],
-#bsport-widget-172485 .cleanslate [class*="offer"][class*="image"],
-#bsport-widget-172485 .cleanslate [class*="Offer"][class*="Image"],
-#bsport-widget-172485 .cleanslate [class*="class-image"],
-#bsport-widget-172485 .cleanslate [class*="ClassImage"],
-#bsport-widget-172485 .cleanslate [class*="hero-image"],
-#bsport-widget-172485 .cleanslate [class*="HeroImage"],
-#bsport-widget-172485 .cleanslate [class*="slot-image"],
-#bsport-widget-172485 .cleanslate [class*="SlotImage"] {
-  width: 100% !important;
-  overflow: hidden !important;
-  border-radius: 0 !important;
-  line-height: 0;
-}
-#bsport-widget-172485 .cleanslate [class*="activity"][class*="image"] img,
-#bsport-widget-172485 .cleanslate [class*="Activity"][class*="image"] img,
-#bsport-widget-172485 .cleanslate [class*="offer"][class*="image"] img,
-#bsport-widget-172485 .cleanslate [class*="Offer"][class*="Image"] img,
-#bsport-widget-172485 .cleanslate [class*="class-image"] img,
-#bsport-widget-172485 .cleanslate [class*="ClassImage"] img,
-#bsport-widget-172485 .cleanslate [class*="hero-image"] img,
-#bsport-widget-172485 .cleanslate [class*="HeroImage"] img,
-#bsport-widget-172485 .cleanslate [class*="slot-image"] img,
-#bsport-widget-172485 .cleanslate [class*="SlotImage"] img {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 240px !important;
-  object-fit: cover !important;
-  object-position: center top !important;
-  display: block !important;
-}
-/* Detail view top: ensure the panel starts below the fixed nav when it renders */
-#bsport-widget-172485 .cleanslate [class*="detail"],
-#bsport-widget-172485 .cleanslate [class*="Detail"],
-#bsport-widget-172485 .cleanslate [class*="session-view"],
-#bsport-widget-172485 .cleanslate [class*="SessionView"],
-#bsport-widget-172485 .cleanslate [class*="activity-detail"],
-#bsport-widget-172485 .cleanslate [class*="ActivityDetail"],
-#bsport-widget-172485 .cleanslate [class*="booking-panel"],
-#bsport-widget-172485 .cleanslate [class*="BookingPanel"] {
-  scroll-margin-top: var(--nav-h);
-}
-
-/* Filter rows – keep horizontal; allow scroll rather than stacking */
-#bsport-widget-172485 [class*="filter"],
-#bsport-widget-172485 [class*="Filter"],
-#bsport-widget-172485 [class*="filters"],
-#bsport-widget-172485 [class*="Filters"],
-#bsport-widget-172485 [class*="toolbar"],
-#bsport-widget-172485 [class*="Toolbar"],
-#bsport-widget-172485 [class*="search-bar"],
-#bsport-widget-172485 [class*="SearchBar"],
-#bsport-widget-172485 [class*="header-row"],
-#bsport-widget-172485 [class*="HeaderRow"] {
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  /* hide scrollbar track but keep scrollability */
-  scrollbar-width: none !important;
-}
-#bsport-widget-172485 [class*="filter"]::-webkit-scrollbar,
-#bsport-widget-172485 [class*="Filter"]::-webkit-scrollbar,
-#bsport-widget-172485 [class*="toolbar"]::-webkit-scrollbar,
-#bsport-widget-172485 [class*="Toolbar"]::-webkit-scrollbar {
-  display: none;
-}
-/* Touch-friendly minimum tap targets */
+/* ── Touch-friendly tap targets ── */
 #bsport-widget-172485 button,
 #bsport-widget-172485 [role="button"],
 #bsport-widget-172485 select,
@@ -849,7 +737,6 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 #bsport-widget-172485 input[type="search"] {
   min-height: 40px;
 }
-/* Boost close/back buttons inside widget so they stay tappable */
 #bsport-widget-172485 [class*="close"],
 #bsport-widget-172485 [class*="Close"],
 #bsport-widget-172485 [class*="back"],
@@ -860,130 +747,135 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   min-height: 44px !important;
 }
 
-/* ── Full-width: eliminate right-side void ──────────────────
-   Bsport's cleanslate root and its page/view/layout children
-   can carry an internal max-width. Force them to fill the card.
-────────────────────────────────────────────────────────────── */
-#bsport-widget-172485 .cleanslate,
-#bsport-widget-172485 .cleanslate > * {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
+/* ── Filter / date nav bar: horizontal scroll, hidden scrollbar ── */
+#bsport-widget-172485 .cleanslate [class*="filter"],
+#bsport-widget-172485 .cleanslate [class*="Filter"],
+#bsport-widget-172485 .cleanslate [class*="filters"],
+#bsport-widget-172485 .cleanslate [class*="toolbar"],
+#bsport-widget-172485 .cleanslate [class*="Toolbar"],
+#bsport-widget-172485 .cleanslate [class*="search-bar"],
+#bsport-widget-172485 .cleanslate [class*="header-row"] {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
 }
-#bsport-widget-172485 .cleanslate [class*="app"],
-#bsport-widget-172485 .cleanslate [class*="App"],
-#bsport-widget-172485 .cleanslate [class*="page"],
-#bsport-widget-172485 .cleanslate [class*="Page"],
-#bsport-widget-172485 .cleanslate [class*="view"],
-#bsport-widget-172485 .cleanslate [class*="View"],
-#bsport-widget-172485 .cleanslate [class*="layout"],
-#bsport-widget-172485 .cleanslate [class*="Layout"],
-#bsport-widget-172485 .cleanslate [class*="content"],
-#bsport-widget-172485 .cleanslate [class*="Content"] {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
+#bsport-widget-172485 .cleanslate [class*="filter"]::-webkit-scrollbar,
+#bsport-widget-172485 .cleanslate [class*="toolbar"]::-webkit-scrollbar {
+  display: none;
 }
 
-/* ── Compact course cards ─────────────────────────────────────
-   Targets known Bsport class names + generic wildcard patterns.
-   Reduces card height, internal padding, and font sizes
-   without breaking booking flow or readability.
-────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   CARD LIST LAYOUT
+   Only named Bsport class names — no wildcards that match
+   Bsport's internal flex children (left/right columns).
+   Each card is:  .bs-offer-list-item
+                    └─ ..__content
+                         └─ ..__offer (flex row)
+                              ├─ ..__left  (grows)
+                              └─ ..__right (fits content)
+══════════════════════════════════════════════════════════════ */
 
-/* List + list items: full width, tighter vertical rhythm */
-#bsport-widget-172485 .cleanslate [class*="list"],
-#bsport-widget-172485 .cleanslate [class*="List"] {
+/* Card wrapper: reset spacing */
+#bsport-widget-172485 .cleanslate .bs-offer-list-item {
+  display: block !important;
   width: 100% !important;
-  max-width: 100% !important;
-}
-#bsport-widget-172485 .cleanslate .bs-offer-list-item,
-#bsport-widget-172485 .cleanslate [class*="offer-list-item"],
-#bsport-widget-172485 .cleanslate [class*="OfferListItem"] {
   padding: 0 !important;
   margin: 0 !important;
+  box-sizing: border-box !important;
+}
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content {
+  display: block !important;
   width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-/* Card inner offer row — desktop: full breathing room, natural Bsport layout */
+/* ── Card flex row ── */
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
+  align-items: center !important;
+  width: 100% !important;
   padding: 1rem 1.5rem !important;
   gap: 1rem !important;
-  align-items: center !important;
-  /* overflow:visible so right-column BUCHEN button is never clipped by parent */
-  overflow: visible !important;
+  box-sizing: border-box !important;
+  overflow: visible !important; /* never clip right-column BUCHEN button */
 }
-/* CRITICAL FIX: [class*="content"] wildcard at line ~819 applies width:100%
-   to ALL elements containing "content" — including __left and __right.
-   Both flex columns forced to 100% destroys the side-by-side desktop layout.
-   Override here (same specificity, later in source = wins). */
+
+/* Left column: title, time, trainer, location — grows to fill */
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
-  flex: 1 1 0% !important;     /* grow to fill available space */
-  width: auto !important;      /* cancel width:100% from [class*="content"] */
-  max-width: none !important;  /* cancel max-width:100% from [class*="content"] */
-  min-width: 0 !important;     /* allow text truncation when layout is tight */
-  gap: 0.4rem !important;
-  overflow: hidden !important; /* clip long class names at the left column edge */
+  flex: 1 1 0% !important;   /* grows; flex-basis 0 = share space fairly */
+  min-width: 0 !important;   /* allows text-overflow truncation */
+  width: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.3rem !important;
+  overflow: hidden !important; /* clip overlong text at column boundary */
 }
+
+/* Right column: level badge + BUCHEN button — fixed to content width */
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-  flex: 0 0 auto !important;          /* fixed size — don't grow or shrink */
-  width: auto !important;             /* cancel width:100% from [class*="content"] */
-  max-width: none !important;         /* cancel max-width:100% from [class*="content"] */
-  min-width: fit-content !important;  /* right col always as wide as BUCHEN button */
-  gap: 0.5rem !important;
-  overflow: visible !important;       /* BUCHEN label must never be clipped */
+  flex: 0 0 auto !important;        /* never grows or shrinks */
+  min-width: max-content !important; /* always as wide as widest child */
+  width: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 0.4rem !important;
+  overflow: visible !important;     /* BUCHEN must never be clipped */
 }
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
-  gap: 0.4rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
   overflow: visible !important;
 }
 
-/* Class title: slightly smaller, tight line-height */
-#bsport-widget-172485 .cleanslate [class*="offer-name"],
-#bsport-widget-172485 .cleanslate [class*="OfferName"],
-#bsport-widget-172485 .cleanslate [class*="class-name"],
-#bsport-widget-172485 .cleanslate [class*="ClassName"],
-#bsport-widget-172485 .cleanslate [class*="activity-name"],
-#bsport-widget-172485 .cleanslate [class*="ActivityName"],
-#bsport-widget-172485 .cleanslate [class*="session-name"],
-#bsport-widget-172485 .cleanslate [class*="SessionName"] {
-  font-size: 0.875rem !important;
-  line-height: 1.25 !important;
-  font-weight: 600 !important;
+/* ── BUCHEN button: explicit no-clip ── */
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right button,
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right a,
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right [role="button"] {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  min-width: max-content !important;
+  width: auto !important;
 }
 
-/* Time + duration: compact */
-#bsport-widget-172485 .cleanslate [class*="time"],
-#bsport-widget-172485 .cleanslate [class*="Time"],
-#bsport-widget-172485 .cleanslate [class*="duration"],
-#bsport-widget-172485 .cleanslate [class*="Duration"] {
+/* ── Card text sizing: scoped to the left column only ──────────────────────
+   Scoping prevents these small sizes from leaking into the detail view,
+   where titles and metadata should render at their natural/Bsport-set sizes. */
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="name"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Name"] {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+}
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="time"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Time"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="duration"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Duration"] {
   font-size: 0.8rem !important;
   line-height: 1.2 !important;
 }
-
-/* Meta info row (coach / location / spots): compact */
-#bsport-widget-172485 .cleanslate [class*="meta"],
-#bsport-widget-172485 .cleanslate [class*="Meta"],
-#bsport-widget-172485 .cleanslate [class*="coach"],
-#bsport-widget-172485 .cleanslate [class*="Coach"],
-#bsport-widget-172485 .cleanslate [class*="location"],
-#bsport-widget-172485 .cleanslate [class*="Location"],
-#bsport-widget-172485 .cleanslate [class*="spots"],
-#bsport-widget-172485 .cleanslate [class*="Spots"],
-#bsport-widget-172485 .cleanslate [class*="capacity"],
-#bsport-widget-172485 .cleanslate [class*="Capacity"],
-#bsport-widget-172485 .cleanslate [class*="instructor"],
-#bsport-widget-172485 .cleanslate [class*="Instructor"] {
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="meta"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Meta"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="coach"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Coach"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="location"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Location"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="instructor"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="spots"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Spots"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="capacity"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Capacity"] {
   font-size: 0.75rem !important;
   line-height: 1.3 !important;
 }
 
-/* Hairline separator between cards */
+/* ── Hairline separators between cards ── */
 #bsport-widget-172485 .cleanslate [class*="separator"],
 #bsport-widget-172485 .cleanslate [class*="Separator"],
 #bsport-widget-172485 .cleanslate [class*="divider"],
@@ -992,7 +884,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   opacity: 0.45 !important;
 }
 
-/* Date-group headings: compact */
+/* ── Day / date group headings ── */
 #bsport-widget-172485 .cleanslate [class*="date-header"],
 #bsport-widget-172485 .cleanslate [class*="DateHeader"],
 #bsport-widget-172485 .cleanslate [class*="day-header"],
@@ -1002,6 +894,66 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   padding: 0.5rem 1rem !important;
   font-size: 0.72rem !important;
   letter-spacing: 1.5px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOOKING DETAIL VIEW
+   dialogMode:1 + fullScreenPopup:false = inline panel expansion.
+   The widget grows vertically. Must never be overflow-clipped.
+   scroll-margin-top clears the 72px fixed nav on auto-scroll.
+══════════════════════════════════════════════════════════════ */
+
+#bsport-widget-172485 .cleanslate [class*="detail"],
+#bsport-widget-172485 .cleanslate [class*="Detail"],
+#bsport-widget-172485 .cleanslate [class*="session-view"],
+#bsport-widget-172485 .cleanslate [class*="SessionView"],
+#bsport-widget-172485 .cleanslate [class*="activity-detail"],
+#bsport-widget-172485 .cleanslate [class*="ActivityDetail"],
+#bsport-widget-172485 .cleanslate [class*="booking-panel"],
+#bsport-widget-172485 .cleanslate [class*="BookingPanel"],
+#bsport-widget-172485 .cleanslate [class*="booking-view"],
+#bsport-widget-172485 .cleanslate [class*="BookingView"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  scroll-margin-top: var(--nav-h);
+}
+
+/* Detail view hero / cover image ── */
+#bsport-widget-172485 .cleanslate [class*="cover"],
+#bsport-widget-172485 .cleanslate [class*="Cover"],
+#bsport-widget-172485 .cleanslate [class*="banner"],
+#bsport-widget-172485 .cleanslate [class*="Banner"],
+#bsport-widget-172485 .cleanslate [class*="header-image"],
+#bsport-widget-172485 .cleanslate [class*="HeaderImage"],
+#bsport-widget-172485 .cleanslate [class*="class-image"],
+#bsport-widget-172485 .cleanslate [class*="ClassImage"],
+#bsport-widget-172485 .cleanslate [class*="hero-image"],
+#bsport-widget-172485 .cleanslate [class*="HeroImage"],
+#bsport-widget-172485 .cleanslate [class*="slot-image"],
+#bsport-widget-172485 .cleanslate [class*="activity"][class*="image"],
+#bsport-widget-172485 .cleanslate [class*="offer"][class*="image"] {
+  width: 100% !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  line-height: 0;
+}
+#bsport-widget-172485 .cleanslate [class*="cover"] img,
+#bsport-widget-172485 .cleanslate [class*="Cover"] img,
+#bsport-widget-172485 .cleanslate [class*="banner"] img,
+#bsport-widget-172485 .cleanslate [class*="Banner"] img,
+#bsport-widget-172485 .cleanslate [class*="header-image"] img,
+#bsport-widget-172485 .cleanslate [class*="class-image"] img,
+#bsport-widget-172485 .cleanslate [class*="hero-image"] img,
+#bsport-widget-172485 .cleanslate [class*="slot-image"] img,
+#bsport-widget-172485 .cleanslate [class*="activity"][class*="image"] img,
+#bsport-widget-172485 .cleanslate [class*="offer"][class*="image"] img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 240px !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block !important;
 }
 
 /* ── CTA below widget ── */
@@ -1015,35 +967,28 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   color: #888; margin: 0;
 }
 
-/* ── Tablet compact: cards tighten at ≤900px ── */
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+══════════════════════════════════════════════════════════════ */
+
+/* ── Tablet compact: ≤900px — side-by-side columns, tighter padding ── */
 @media (max-width: 900px) {
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
     padding: 0.75rem 1rem !important;
     gap: 0.6rem !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    overflow: visible !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
-    flex: 1 1 0% !important;
-    width: auto !important;
-    max-width: none !important;
-    gap: 0.3rem !important;
+    gap: 0.25rem !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    max-width: none !important;
-    min-width: fit-content !important;
-    gap: 0.4rem !important;
-    overflow: visible !important;
+    gap: 0.35rem !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
-    gap: 0.35rem !important;
+    gap: 0.3rem !important;
   }
 }
 
-/* ── Mobile: tablet (≤768px) ── */
+/* ── Tablet: ≤768px ── */
 @media (max-width: 768px) {
   #schedule { padding-top: 3rem; padding-bottom: 3rem; }
   .schedule-widget-wrap {
@@ -1053,37 +998,21 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     min-height: 380px;
   }
   .schedule-widget-inner { min-height: 380px; }
-  /* Date nav row: wrap neatly, don't overflow */
-  #bsport-widget-172485 [class*="date"],
-  #bsport-widget-172485 [class*="Date"],
-  #bsport-widget-172485 [class*="nav"],
-  #bsport-widget-172485 [class*="Nav"] {
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-  /* Even tighter cards on tablet — still side-by-side columns */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
     padding: 0.6rem 1rem !important;
     gap: 0.5rem !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    overflow: visible !important;
   }
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
-    flex: 1 1 0% !important;
-    width: auto !important;
-    max-width: none !important;
-  }
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    max-width: none !important;
-    min-width: fit-content !important;
-    overflow: visible !important;
+  /* Date navigation: wrap on narrow viewports */
+  #bsport-widget-172485 .cleanslate [class*="date"],
+  #bsport-widget-172485 .cleanslate [class*="Date"],
+  #bsport-widget-172485 .cleanslate [class*="nav"],
+  #bsport-widget-172485 .cleanslate [class*="Nav"] {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
   }
 }
 
-/* ── Mobile: phone (≤480px) ── */
+/* ── Phone: ≤480px — stacked card layout ── */
 @media (max-width: 480px) {
   .schedule-widget-wrap {
     border-radius: 0;
@@ -1092,92 +1021,59 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     min-height: 340px;
   }
   .schedule-widget-inner { min-height: 340px; }
-  /* Maximum compactness: phone cards */
+
+  /* Stack columns: left (title/meta) on top, right (button) below */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
-    padding: 0.5rem 0.75rem !important;
+    flex-wrap: wrap !important;
+    padding: 0.6rem 0.75rem !important;
     gap: 0.4rem !important;
-  }
-  #bsport-widget-172485 .cleanslate [class*="offer-name"],
-  #bsport-widget-172485 .cleanslate [class*="OfferName"],
-  #bsport-widget-172485 .cleanslate [class*="activity-name"],
-  #bsport-widget-172485 .cleanslate [class*="ActivityName"] {
-    font-size: 0.82rem !important;
-  }
-  #bsport-widget-172485 .cleanslate [class*="time"],
-  #bsport-widget-172485 .cleanslate [class*="Time"] {
-    font-size: 0.76rem !important;
-  }
-  #bsport-widget-172485 .cleanslate [class*="meta"],
-  #bsport-widget-172485 .cleanslate [class*="Meta"],
-  #bsport-widget-172485 .cleanslate [class*="coach"],
-  #bsport-widget-172485 .cleanslate [class*="Coach"],
-  #bsport-widget-172485 .cleanslate [class*="location"],
-  #bsport-widget-172485 .cleanslate [class*="Location"],
-  #bsport-widget-172485 .cleanslate [class*="spots"],
-  #bsport-widget-172485 .cleanslate [class*="Spots"] {
-    font-size: 0.7rem !important;
-  }
-  /* ── Bsport widget: mobile safety layer ──────────────────────────────────
-     Prevents overflow, element escape, and meta icon overlap.
-     Does not redesign; only stabilises the existing layout on mobile.     */
-
-  /* 1. Inner wrappers/lists: stay inside viewport.
-        HOTFIX: root #bsport-widget-172485 removed from this selector —
-        overflow-x:hidden on the root traps the booking detail panel on mobile */
-  #bsport-widget-172485 .cleanslate,
-  #bsport-widget-172485 [class*="wrap"],
-  #bsport-widget-172485 [class*="Wrap"],
-  #bsport-widget-172485 [class*="container"],
-  #bsport-widget-172485 [class*="Container"],
-  #bsport-widget-172485 [class*="inner"],
-  #bsport-widget-172485 [class*="Inner"],
-  #bsport-widget-172485 [class*="list"],
-  #bsport-widget-172485 [class*="List"] {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
-  }
-
-  /* 2. Cards / slots / items: full width, no overflow */
-  #bsport-widget-172485 [class*="card"],
-  #bsport-widget-172485 [class*="Card"],
-  #bsport-widget-172485 [class*="slot"],
-  #bsport-widget-172485 [class*="Slot"],
-  #bsport-widget-172485 [class*="item"],
-  #bsport-widget-172485 [class*="Item"] {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-
-  /* 3. Card inner rows: phone stacks left/right columns vertically */
-  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
-    flex-wrap: wrap !important;   /* allow columns to wrap to their own rows */
     overflow: visible !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
-    flex: 1 1 100% !important;    /* left col: full row */
+    flex: 1 1 100% !important;
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-    flex: 1 1 100% !important;    /* right col: full row below left */
+    flex: 1 1 100% !important;
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: row !important;  /* button + badges side-by-side on phone */
+    flex-direction: row !important;
     align-items: center !important;
+    justify-content: flex-start !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
     overflow: visible !important;
+    min-width: 0 !important;
   }
 
-  /* 4. Meta icon groups: force back into normal flow, single horizontal row */
+  /* Phone compact text */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="name"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Name"] {
+    font-size: 0.82rem !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="time"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Time"] {
+    font-size: 0.76rem !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="meta"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="coach"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="location"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="spots"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="capacity"] {
+    font-size: 0.7rem !important;
+  }
+
+  /* Phone viewport safety: prevent horizontal scroll.
+     Root widget excluded — overflow on root traps the detail panel. */
+  #bsport-widget-172485 .cleanslate,
+  #bsport-widget-172485 .cleanslate [class*="wrap"],
+  #bsport-widget-172485 .cleanslate [class*="container"],
+  #bsport-widget-172485 .cleanslate [class*="inner"],
+  #bsport-widget-172485 .cleanslate [class*="offer-list"]:not([class*="item"]) {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Phone meta icon row */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__group,
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
@@ -1186,12 +1082,11 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
     flex-direction: row !important;
     align-items: center !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
+    gap: 6px !important;
     min-width: 0 !important;
-    max-width: 100% !important;
   }
 
-  /* 5. Filters / controls: tap-friendly, no viewport break */
+  /* Phone filters: tap-friendly */
   #bsport-widget-172485 .cleanslate [class*="filter"],
   #bsport-widget-172485 .cleanslate [class*="Filter"] {
     min-height: 44px !important;
