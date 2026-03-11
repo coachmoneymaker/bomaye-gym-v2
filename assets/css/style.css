@@ -787,23 +787,22 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   width: 100% !important;
 }
 
-/* Card inner offer row: compact padding and height */
+/* Card inner offer row — desktop: full breathing room, natural Bsport layout */
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
-  padding: 0.65rem 1rem !important;
-  min-height: 0 !important;
-  gap: 0.5rem !important;
+  padding: 1rem 1.5rem !important;
+  gap: 1rem !important;
   align-items: center !important;
 }
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
-  gap: 0.2rem !important;
+  gap: 0.4rem !important;
   min-width: 0 !important;
 }
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
-  gap: 0.35rem !important;
+  gap: 0.5rem !important;
   flex-shrink: 0 !important;
 }
 #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
-  gap: 0.3rem !important;
+  gap: 0.4rem !important;
 }
 
 /* Class title: slightly smaller, tight line-height */
@@ -878,6 +877,23 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   color: #888; margin: 0;
 }
 
+/* ── Tablet compact: cards tighten at ≤900px ── */
+@media (max-width: 900px) {
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
+    padding: 0.75rem 1rem !important;
+    gap: 0.6rem !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
+    gap: 0.3rem !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
+    gap: 0.4rem !important;
+  }
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top {
+    gap: 0.35rem !important;
+  }
+}
+
 /* ── Mobile: tablet (≤768px) ── */
 @media (max-width: 768px) {
   #schedule { padding-top: 3rem; padding-bottom: 3rem; }
@@ -898,7 +914,8 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   }
   /* Even tighter cards on tablet */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
-    padding: 0.55rem 0.875rem !important;
+    padding: 0.6rem 1rem !important;
+    gap: 0.5rem !important;
   }
 }
 
@@ -1347,10 +1364,18 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 ══════════════════════════════════════════════════════════════ */
 footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4.5rem 0 2rem; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 3.5rem; }
-.footer-brand               { display: flex; flex-direction: column; align-items: flex-start; }
-.footer-brand .logo-img     { height: 72px; width: auto; margin-bottom: 0.5rem; display: block; }
-.footer-brand .logo-text    { display: block; margin-bottom: 1rem; font-size: 1.8rem; line-height: 1; }
-.footer-brand p             { font-size: 0.86rem; color: var(--muted); margin-bottom: 0.4rem; }
+/* Footer brand column — centered brand mark:
+   logo emblem and BOMAYE wordmark are center-aligned as a single
+   intentional brand unit; all content in the column centers under it */
+.footer-brand               { display: flex; flex-direction: column; align-items: center; }
+.footer-logo-link           { display: inline-block; line-height: 0; }
+.footer-brand .logo-img     { height: 72px; width: auto; display: block; }
+.footer-brand .logo-text    { display: block; text-align: center; margin-top: 0.5rem;
+                               margin-bottom: 1rem; font-size: 1.8rem; line-height: 1;
+                               letter-spacing: 0.12em; }
+.footer-brand p             { font-size: 0.86rem; color: var(--muted);
+                               margin-bottom: 0.4rem; text-align: center; }
+.footer-brand .footer-socials { justify-content: center; }
 .brand-line { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 2px; }
 .footer-socials { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
 .social-icon {
