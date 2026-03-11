@@ -677,21 +677,17 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
-/* Flush: remove any internal left inset Bsport may inject into its root */
-#bsport-widget-172485 > *,
-#bsport-widget-172485 .cleanslate > * {
+/* Flush: remove any internal left inset Bsport may inject at its root level only */
+#bsport-widget-172485 > * {
   margin-left: 0 !important;
 }
+/* Only target the outermost Bsport containers — do NOT use schedule/calendar/
+   offer-list wildcards as they also match card-internal elements and break
+   icon/count/label layout within individual cards */
 #bsport-widget-172485 .cleanslate [class*="container"],
 #bsport-widget-172485 .cleanslate [class*="Container"],
 #bsport-widget-172485 .cleanslate [class*="wrapper"],
 #bsport-widget-172485 .cleanslate [class*="Wrapper"],
-#bsport-widget-172485 .cleanslate [class*="schedule"],
-#bsport-widget-172485 .cleanslate [class*="Schedule"],
-#bsport-widget-172485 .cleanslate [class*="calendar"],
-#bsport-widget-172485 .cleanslate [class*="Calendar"],
-#bsport-widget-172485 .cleanslate [class*="offer-list"],
-#bsport-widget-172485 .cleanslate [class*="OfferList"],
 #bsport-widget-172485 .cleanslate [class*="root"],
 #bsport-widget-172485 .cleanslate [class*="Root"] {
   padding-left: 0 !important;
@@ -1351,8 +1347,9 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 ══════════════════════════════════════════════════════════════ */
 footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4.5rem 0 2rem; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 3.5rem; }
-.footer-brand .logo-text    { display: block; margin-bottom: 0.75rem; font-size: 1.8rem; }
-.footer-brand .logo-img     { height: 72px; width: auto; margin-bottom: 1rem; }
+.footer-brand               { display: flex; flex-direction: column; align-items: flex-start; }
+.footer-brand .logo-img     { height: 72px; width: auto; margin-bottom: 0.5rem; display: block; }
+.footer-brand .logo-text    { display: block; margin-bottom: 1rem; font-size: 1.8rem; line-height: 1; }
 .footer-brand p             { font-size: 0.86rem; color: var(--muted); margin-bottom: 0.4rem; }
 .brand-line { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 2px; }
 .footer-socials { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
@@ -2136,6 +2133,14 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #team::before { background: transparent !important; }
 #team .sec-header h2 { color: var(--ink); }
 #team .sec-header h2 .gold { color: var(--gold-dark); }
+/* Force coach cards to use a solid dark background so white/gold text
+   remains fully readable against the cream section canvas */
+#team .coach-card {
+  background: var(--smoke) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
 #weg       { border-bottom: 1px solid rgba(255,255,255,0.04); }
 #early-bird{ border-bottom: none; } /* section flows without hard line */
 
@@ -2451,17 +2456,17 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 
 /* ══════════════════════════════════════════════════════════════
-   GOOGLE RATING — DARK SECTION VISIBILITY FIX
+   GOOGLE RATING — CREAM SECTION (testimonials is now #f9f7f4)
 ══════════════════════════════════════════════════════════════ */
 #testimonials .google-rating {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.12);
 }
 #testimonials .google-rating-score {
-  color: var(--gold) !important;
+  color: var(--ink) !important;
 }
 #testimonials .google-rating-label {
-  color: rgba(255,255,255,0.65) !important;
+  color: rgba(20,20,20,0.7) !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
