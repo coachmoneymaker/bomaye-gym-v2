@@ -521,11 +521,13 @@
       </div>
       <!-- Bsport calendar widget — mounted by inline script at bottom of page -->
       <!-- Back button injected here by initScheduleBackBtn() in main.js -->
-      <div class="schedule-widget-wrap reveal" id="schedule-section-wrap">
-        <div id="bsport-widget-172485" class="schedule-widget-inner"></div>
-        <noscript>
-          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
-        </noscript>
+      <div class="schedule-frame reveal" id="schedule-section-wrap">
+        <div class="schedule-frame__widget">
+          <div id="bsport-widget-172485"></div>
+          <noscript>
+            <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+          </noscript>
+        </div>
       </div>
       <div class="schedule-cta reveal">
         <a href="/stundenplan" class="btn btn--gold" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;">
@@ -1376,68 +1378,6 @@
      Script 4: (main.js) Mounts a second instance in the
                booking modal on first openBooking() call
 ══════════════════════════════════════════════════════════ -->
-<script id="schedule-back-btn-logic">
-/* ── Schedule back button — detects when Bsport enters a detail/booking
-   view and surfaces a visible "ZURÜCK" button for mobile users.
-   Does not touch any Bsport API or config.                          ── */
-(function () {
-  var btn    = document.getElementById('schedule-back-btn');
-  var widget = document.getElementById('bsport-widget-172485');
-  if (!btn || !widget) return;
-
-  /* Selectors that indicate a detail / booking panel is active */
-  var DETAIL_QUERY = [
-    '[class*="detail"]',
-    '[class*="Detail"]',
-    '[class*="booking"]',
-    '[class*="Booking"]',
-    '[class*="session"]',
-    '[class*="Session"]',
-    '[class*="activity"]',
-    '[class*="Activity"]',
-    '[class*="slot-info"]',
-    '[class*="SlotInfo"]',
-    '[class*="course-"]',
-    '[class*="Course"]'
-  ].join(',');
-
-  /* Selectors for the widget's own close / back controls */
-  var CLOSE_QUERY = [
-    '[class*="close"]',
-    '[class*="Close"]',
-    '[class*="back"]',
-    '[class*="Back"]',
-    '[class*="return"]',
-    '[class*="Return"]',
-    '[aria-label*="close" i]',
-    '[aria-label*="back" i]',
-    '[aria-label*="zurück" i]'
-  ].join(',');
-
-  function isDetailView() {
-    return !!widget.querySelector(DETAIL_QUERY);
-  }
-
-  function syncBtn() {
-    if (isDetailView()) {
-      btn.classList.add('schedule-back-btn--visible');
-    } else {
-      btn.classList.remove('schedule-back-btn--visible');
-    }
-  }
-
-  var observer = new MutationObserver(syncBtn);
-  observer.observe(widget, { childList: true, subtree: true });
-
-  btn.addEventListener('click', function () {
-    /* Try to click the widget's own close/back element first */
-    var inner = widget.querySelector(CLOSE_QUERY);
-    if (inner) { inner.click(); return; }
-    /* Fallback: hide the detail by clicking outside (blur active element) */
-    if (document.activeElement) document.activeElement.blur();
-  });
-})();
-</script>
 <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 <script id="bsport-widget-mount">
     function MountBsportWidget(config, repeat=1) {

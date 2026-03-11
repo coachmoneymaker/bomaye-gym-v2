@@ -645,30 +645,32 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* Only reveal on mobile (≤768px) — back btn always shown when JS adds --visible */
 .schedule-back-btn--visible { display: inline-flex; }
 
-/* ── Widget card wrapper ── */
-.schedule-widget-wrap {
+/* ── Widget frame: outer wrapper ─────────────────────────────────────────────
+   isolation:isolate  → new stacking context; Bsport z-index values stay inside
+   position:relative  → containing block for Bsport's absolute children
+   No overflow set    → any overflow:hidden ancestor traps the inline detail panel
+   scroll-margin-top  → programmatic scrollIntoView() clears fixed nav            */
+.schedule-frame {
   margin-top: 2rem;
-  border-radius: 0;
-  background: transparent;
-  min-height: 420px;
-  max-width: 100%;
-  /* position:relative makes this the containing block for Bsport's absolute
-     children — they stay inside this wrapper, not floating to #schedule */
   position: relative;
+  isolation: isolate;
+  min-height: 420px;
+  scroll-margin-top: var(--nav-h);
 }
 
-/* ── Widget inner container ── */
-/* No overflow — any overflow:hidden here traps the inline booking detail panel */
-.schedule-widget-inner {
+/* ── Widget frame: inner layer (holds mount point + noscript fallback) ── */
+.schedule-frame__widget {
+  position: relative;
   width: 100%;
   min-height: 420px;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* ── Loading placeholder: shimmer animation while Bsport JS initialises ─────
-   :empty matches when the widget container has no child nodes yet.
-   Disappears automatically once Bsport injects its React root.               */
-.schedule-widget-inner:empty {
+/* ── Loading shimmer on the Bsport mount point ───────────────────────────────
+   :empty matches before BsportWidget injects its React root.
+   Disappears automatically once content is injected.                          */
+#bsport-widget-172485:empty {
+  display: block;
+  min-height: 420px;
   background: linear-gradient(
     90deg,
     #ede8e0 0%, #e4dfd6 35%, #ede8e0 65%, #e4dfd6 100%
@@ -991,13 +993,14 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 /* ── Tablet: ≤768px ── */
 @media (max-width: 768px) {
   #schedule { padding-top: 3rem; padding-bottom: 3rem; }
-  .schedule-widget-wrap {
+  .schedule-frame {
     border-radius: 0;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     min-height: 380px;
   }
-  .schedule-widget-inner { min-height: 380px; }
+  .schedule-frame__widget { min-height: 380px; }
+  #bsport-widget-172485:empty { min-height: 380px; }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
     padding: 0.6rem 1rem !important;
     gap: 0.5rem !important;
@@ -1014,13 +1017,14 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; }
 
 /* ── Phone: ≤480px — stacked card layout ── */
 @media (max-width: 480px) {
-  .schedule-widget-wrap {
+  .schedule-frame {
     border-radius: 0;
     margin-left: -1.25rem;
     margin-right: -1.25rem;
     min-height: 340px;
   }
-  .schedule-widget-inner { min-height: 340px; }
+  .schedule-frame__widget { min-height: 340px; }
+  #bsport-widget-172485:empty { min-height: 340px; }
 
   /* Stack columns: left (title/meta) on top, right (button) below */
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
@@ -3631,21 +3635,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   background: var(--smoke);
 }
 
-/* Bsport widget placeholder shimmer while loading
-   Uses light colours to match the #FAF7F2 schedule-section background */
-.schedule-widget-inner:empty {
-  background: linear-gradient(90deg, #ede9e3 25%, #e3dfd9 50%, #ede9e3 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.6s infinite;
-  border-radius: 12px;
-  min-height: 420px;
-}
-@keyframes skeleton-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 @media (prefers-reduced-motion: reduce) {
-  .schedule-widget-inner:empty { animation: none; background: #ede9e3; }
+  #bsport-widget-172485:empty { animation: none; background: #ede9e3; }
 }
 
 /* ══════════════════════════════════════════════════════════════
