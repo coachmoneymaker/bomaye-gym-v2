@@ -2346,8 +2346,12 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   height: calc(100vh - var(--nav-h));
   height: calc(100svh - var(--nav-h)); /* iOS safe viewport */
   overflow: hidden;
-  /* transform-origin center: scale-back shrinks panel uniformly */
-  transform-origin: center center;
+  /* Anchor scale at the top edge (the sticky pin point) so the panel
+     only shrinks downward — no top-edge gap against the nav bar.   */
+  transform-origin: top center;
+  /* Prevent sub-pixel flicker during JS-driven transform changes. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 /* Layering: each successive panel appears on top */
 .disc-panel:nth-child(1) { z-index: 1; }
@@ -2355,6 +2359,14 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .disc-panel:nth-child(3) { z-index: 3; }
 /* Inter-panel margin = dwell time per panel before next one rises */
 .disc-panel:not(:last-child) { margin-bottom: 25vh; }
+/* Promote panels that receive JS scale/opacity transforms to their own
+   compositor layer so scroll repaints are skipped.                  */
+.disc-panel:not(:last-child) { will-change: transform, opacity; }
+/* Depth shadow: visible at the top edge of each incoming panel,
+   creating a physical "card lifting over" separation.               */
+.disc-panel:nth-child(n+2) {
+  box-shadow: 0 -24px 64px rgba(0,0,0,0.55), 0 -1px 0 rgba(255,255,255,0.04);
+}
 
 /* ── Background image layer ── */
 .disc-panel__bg {
@@ -2363,17 +2375,21 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   background-size: cover;
   background-position: center 30%;
 }
-/* Diagonal gradient overlay — lighter at top-right for texture */
+/* Two-layer overlay:
+   Bottom-to-top gradient  → strong at text zone, fades for image impact at top.
+   Flat left-edge darkener  → ensures kicker/title have consistent dark bg. */
 .disc-panel__bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    150deg,
-    rgba(8,8,8,0.78) 0%,
-    rgba(8,8,8,0.42) 55%,
-    rgba(8,8,8,0.68) 100%
-  );
+  background:
+    linear-gradient(90deg, rgba(8,8,8,0.45) 0%, rgba(8,8,8,0.00) 55%),
+    linear-gradient(to top,
+      rgba(8,8,8,0.96) 0%,
+      rgba(8,8,8,0.72) 25%,
+      rgba(8,8,8,0.30) 60%,
+      rgba(8,8,8,0.22) 100%
+    );
 }
 
 /* ── Content layer — bottom-left aligned, cinematic ── */

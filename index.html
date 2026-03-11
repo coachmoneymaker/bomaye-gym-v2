@@ -1459,10 +1459,14 @@
     }());
 </script>
 
-<!-- ── Disc-stack: subtle scale-back on the exiting panel ──────────────
-     As panel N+1 rises from below and covers panel N, panel N scales
-     from 1.0 → 0.97 and fades slightly (1.0 → 0.90), giving depth.
-     Runs only on desktop (≥481px). Passive, rAF-gated, no scroll-jacking.
+<!-- ── Disc-stack: depth effect on exiting panel ──────────────────────
+     As panel N+1 rises and covers panel N, panel N scales 1.0→0.985
+     and fades 1.0→0.92, creating a subtle depth/recession feel.
+     · transform-origin: top center (CSS) keeps the sticky top edge fixed
+     · scale 0.985: ~11px gap at edges on 1440px; ink bg fills it invisibly
+     · desktop only (≤480px returns early — mobile uses relative layout)
+     · passive rAF-gated scroll listener — zero scroll-jacking
+     · resize listener resets stale inline transforms on viewport change
 ──────────────────────────────────────────────────────────────────────── -->
 <script>
 (function () {
@@ -1474,26 +1478,29 @@
 
   var raf = null;
 
+  function clearAll() {
+    panels.forEach(function (p) { p.style.transform = ''; p.style.opacity = ''; });
+  }
+
   function update() {
     raf = null;
     var navH = parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
     ) || 72;
     var viewH = window.innerHeight;
-    var panelH = viewH - navH; /* visible panel height */
+    var panelH = viewH - navH; /* sticky panel height */
 
     panels.forEach(function (panel, i) {
       if (i === panels.length - 1) return; /* last panel never scales back */
-      var next = panels[i + 1];
-      var nextTop = next.getBoundingClientRect().top;
+      var nextTop = panels[i + 1].getBoundingClientRect().top;
 
-      /* progress: 0 when next panel top == viewport bottom (entry starts)
-                   1 when next panel top == navH (fully covers this panel)  */
+      /* progress: 0 = next panel just entered viewport bottom
+                   1 = next panel has fully covered this panel (top at navH) */
       var progress = Math.max(0, Math.min(1, (viewH - nextTop) / panelH));
 
       if (progress > 0) {
-        var sc = 1 - progress * 0.03;   /* 1.0 → 0.97 */
-        var op = 1 - progress * 0.10;   /* 1.0 → 0.90 */
+        var sc = 1 - progress * 0.015; /* 1.000 → 0.985 — barely visible edge, depth felt via opacity */
+        var op = 1 - progress * 0.08;  /* 1.000 → 0.920 */
         panel.style.transform = 'scale(' + sc.toFixed(4) + ')';
         panel.style.opacity   = op.toFixed(4);
       } else {
@@ -1507,7 +1514,13 @@
     if (!raf) raf = requestAnimationFrame(update);
   }, { passive: true });
 
-  /* Initial call in case page loads mid-section */
+  /* On resize, clear stale inline transforms and recalculate. */
+  window.addEventListener('resize', function () {
+    clearAll();
+    if (!raf) raf = requestAnimationFrame(update);
+  }, { passive: true });
+
+  /* Initial pass in case the page loads scrolled into the section. */
   requestAnimationFrame(update);
 }());
 </script>
