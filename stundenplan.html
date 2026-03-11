@@ -28,11 +28,6 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
-    /* ═══════════════════════════════════════════════════════════
-       STUNDENPLAN PAGE — PREMIUM CALENDAR DESIGN
-       Bomaye Gym · Brand: gold #C5A059 · ink #080808
-    ═══════════════════════════════════════════════════════════ */
-
     /* ── Page shell ── */
     body { background: #0c0c0c; }
 
@@ -58,389 +53,6 @@
       margin-top: 0.75rem;
     }
 
-    /* ── Calendar section wrapper ── */
-    .sp-widget-section {
-      background: #F7F5F2;
-      padding: 2.5rem 0 4rem;
-      border-top: 3px solid #C5A059;
-    }
-    .sp-widget-wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* Widget card surface */
-    .sp-widget-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.07);
-    }
-    .sp-widget-inner {
-      min-height: 420px;
-      width: 100%;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* ── OVERFLOW / WIDTH SAFETY ── */
-    #bsport-widget-stundenplan {
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow-x: hidden !important;
-      box-sizing: border-box !important;
-    }
-    #bsport-widget-stundenplan * { max-width: 100%; box-sizing: border-box; }
-
-    /* Full-width: cleanslate root + page/view/layout children */
-    #bsport-widget-stundenplan .cleanslate,
-    #bsport-widget-stundenplan .cleanslate > * {
-      width: 100% !important; max-width: 100% !important;
-      min-width: 0 !important; box-sizing: border-box !important;
-    }
-    #bsport-widget-stundenplan .cleanslate [class*="app"],
-    #bsport-widget-stundenplan .cleanslate [class*="App"],
-    #bsport-widget-stundenplan .cleanslate [class*="page"],
-    #bsport-widget-stundenplan .cleanslate [class*="Page"],
-    #bsport-widget-stundenplan .cleanslate [class*="view"],
-    #bsport-widget-stundenplan .cleanslate [class*="View"],
-    #bsport-widget-stundenplan .cleanslate [class*="layout"],
-    #bsport-widget-stundenplan .cleanslate [class*="Layout"],
-    #bsport-widget-stundenplan .cleanslate [class*="content"],
-    #bsport-widget-stundenplan .cleanslate [class*="Content"] {
-      width: 100% !important; max-width: 100% !important;
-      min-width: 0 !important; box-sizing: border-box !important;
-    }
-
-    /* ── WEEK NAVIGATION ── */
-    /* Outer nav bar */
-    #bsport-widget-stundenplan .cleanslate [class*="calendar-header"],
-    #bsport-widget-stundenplan .cleanslate [class*="CalendarHeader"],
-    #bsport-widget-stundenplan .cleanslate [class*="week-nav"],
-    #bsport-widget-stundenplan .cleanslate [class*="WeekNav"],
-    #bsport-widget-stundenplan .cleanslate [class*="date-nav"],
-    #bsport-widget-stundenplan .cleanslate [class*="DateNav"] {
-      background: #fff !important;
-      border-bottom: 1px solid rgba(0,0,0,0.07) !important;
-      padding: 0 !important;
-    }
-    /* Day cells in nav */
-    #bsport-widget-stundenplan .cleanslate [class*="day-cell"],
-    #bsport-widget-stundenplan .cleanslate [class*="DayCell"],
-    #bsport-widget-stundenplan .cleanslate [class*="week-day"],
-    #bsport-widget-stundenplan .cleanslate [class*="WeekDay"] {
-      padding: 0.6rem 0.5rem !important;
-      min-width: 0 !important;
-      font-family: 'Oswald', sans-serif !important;
-      font-size: 0.7rem !important;
-      letter-spacing: 1.5px !important;
-      text-transform: uppercase !important;
-      color: #555 !important;
-      transition: color 0.15s !important;
-    }
-    /* Active / selected day */
-    #bsport-widget-stundenplan .cleanslate [class*="day-cell"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="day-cell"][class*="selected"],
-    #bsport-widget-stundenplan .cleanslate [class*="day-cell"][class*="current"],
-    #bsport-widget-stundenplan .cleanslate [class*="DayCell"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="week-day"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="week-day"][class*="selected"] {
-      color: #C5A059 !important;
-      border-bottom: 2px solid #C5A059 !important;
-      font-weight: 700 !important;
-    }
-    /* Prev / next week arrows */
-    #bsport-widget-stundenplan .cleanslate [class*="prev"],
-    #bsport-widget-stundenplan .cleanslate [class*="Prev"],
-    #bsport-widget-stundenplan .cleanslate [class*="next"],
-    #bsport-widget-stundenplan .cleanslate [class*="Next"] {
-      color: #C5A059 !important;
-      min-width: 40px !important; min-height: 40px !important;
-      display: inline-flex !important;
-      align-items: center !important; justify-content: center !important;
-    }
-    /* Filter / toolbar rows */
-    #bsport-widget-stundenplan [class*="filter"],
-    #bsport-widget-stundenplan [class*="Filter"],
-    #bsport-widget-stundenplan [class*="toolbar"],
-    #bsport-widget-stundenplan [class*="Toolbar"] {
-      flex-wrap: nowrap !important;
-      overflow-x: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-      scrollbar-width: none !important;
-      gap: 0.4rem !important;
-      padding: 0.75rem 1rem !important;
-      background: #FAFAF8 !important;
-      border-bottom: 1px solid rgba(0,0,0,0.06) !important;
-    }
-    #bsport-widget-stundenplan [class*="filter"]::-webkit-scrollbar,
-    #bsport-widget-stundenplan [class*="toolbar"]::-webkit-scrollbar { display: none; }
-    /* Filter pill buttons */
-    #bsport-widget-stundenplan .cleanslate [class*="filter-btn"],
-    #bsport-widget-stundenplan .cleanslate [class*="FilterBtn"],
-    #bsport-widget-stundenplan .cleanslate [class*="filter-tag"],
-    #bsport-widget-stundenplan .cleanslate [class*="FilterTag"] {
-      border-radius: 20px !important;
-      border: 1px solid rgba(197,160,89,0.35) !important;
-      font-family: 'Oswald', sans-serif !important;
-      font-size: 0.65rem !important;
-      letter-spacing: 1.5px !important;
-      text-transform: uppercase !important;
-      padding: 0.35rem 0.8rem !important;
-      background: #fff !important;
-      color: #333 !important;
-      transition: background 0.15s, color 0.15s, border-color 0.15s !important;
-    }
-    #bsport-widget-stundenplan .cleanslate [class*="filter-btn"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="FilterBtn"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="filter-tag"][class*="active"],
-    #bsport-widget-stundenplan .cleanslate [class*="FilterTag"][class*="active"] {
-      background: #C5A059 !important;
-      color: #fff !important;
-      border-color: #C5A059 !important;
-    }
-
-    /* ── DAY-GROUP HEADINGS ── */
-    #bsport-widget-stundenplan .cleanslate [class*="date-header"],
-    #bsport-widget-stundenplan .cleanslate [class*="DateHeader"],
-    #bsport-widget-stundenplan .cleanslate [class*="day-header"],
-    #bsport-widget-stundenplan .cleanslate [class*="DayHeader"],
-    #bsport-widget-stundenplan .cleanslate [class*="day-label"],
-    #bsport-widget-stundenplan .cleanslate [class*="DayLabel"] {
-      padding: 0.55rem 1.25rem !important;
-      font-family: 'Oswald', sans-serif !important;
-      font-size: 0.65rem !important;
-      letter-spacing: 2px !important;
-      text-transform: uppercase !important;
-      color: #888 !important;
-      background: #FAFAF8 !important;
-      border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-      border-top: 1px solid rgba(0,0,0,0.05) !important;
-    }
-
-    /* ── LIST / CARD CONTAINERS ── */
-    #bsport-widget-stundenplan .cleanslate [class*="list"],
-    #bsport-widget-stundenplan .cleanslate [class*="List"] {
-      width: 100% !important; max-width: 100% !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item,
-    #bsport-widget-stundenplan .cleanslate [class*="offer-list-item"],
-    #bsport-widget-stundenplan .cleanslate [class*="OfferListItem"] {
-      padding: 0 !important; margin: 0 !important; width: 100% !important;
-      position: relative !important;
-      transition: background 0.18s !important;
-    }
-    /* Hover/tap: gold left accent + lift */
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item:hover,
-    #bsport-widget-stundenplan .cleanslate [class*="offer-list-item"]:hover {
-      background: #FFFBF4 !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item::before,
-    #bsport-widget-stundenplan .cleanslate [class*="offer-list-item"]::before {
-      content: '' !important;
-      position: absolute !important;
-      left: 0 !important; top: 0 !important; bottom: 0 !important;
-      width: 3px !important;
-      background: transparent !important;
-      transition: background 0.18s !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item:hover::before,
-    #bsport-widget-stundenplan .cleanslate [class*="offer-list-item"]:hover::before {
-      background: #C5A059 !important;
-    }
-    /* Level-based left accent colors (set by JS via data-bmy-level) */
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item[data-bmy-level="anfaenger"]::before  { background: #C5A059 !important; }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item[data-bmy-level="fortgeschritten"]::before { background: #7A5200 !important; }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item[data-bmy-level="wettkampf"]::before  { background: #080808 !important; }
-
-    /* ── CARD INNER LAYOUT ── */
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
-      padding: 0.75rem 1.25rem 0.75rem 1.5rem !important;
-      min-height: 0 !important;
-      gap: 0.75rem !important;
-      align-items: flex-start !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__left {
-      gap: 0.25rem !important;
-      min-width: 0 !important;
-      flex: 1 !important;
-      display: flex !important;
-      flex-direction: column !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right {
-      gap: 0.4rem !important;
-      flex-shrink: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-end !important;
-    }
-    #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top {
-      gap: 0.3rem !important;
-      display: flex !important;
-      flex-wrap: wrap !important;
-      justify-content: flex-end !important;
-    }
-
-    /* ── TYPOGRAPHY HIERARCHY ── */
-    /* 1. Class name — largest, bold, Oswald */
-    #bsport-widget-stundenplan .cleanslate [class*="offer-name"],
-    #bsport-widget-stundenplan .cleanslate [class*="OfferName"],
-    #bsport-widget-stundenplan .cleanslate [class*="activity-name"],
-    #bsport-widget-stundenplan .cleanslate [class*="ActivityName"],
-    #bsport-widget-stundenplan .cleanslate [class*="session-name"],
-    #bsport-widget-stundenplan .cleanslate [class*="SessionName"] {
-      font-family: 'Oswald', sans-serif !important;
-      font-size: 0.92rem !important;
-      line-height: 1.2 !important;
-      font-weight: 600 !important;
-      letter-spacing: 0.5px !important;
-      color: #111 !important;
-      text-transform: uppercase !important;
-    }
-    /* 2. Time / duration — medium weight */
-    #bsport-widget-stundenplan .cleanslate [class*="time"],
-    #bsport-widget-stundenplan .cleanslate [class*="Time"],
-    #bsport-widget-stundenplan .cleanslate [class*="duration"],
-    #bsport-widget-stundenplan .cleanslate [class*="Duration"] {
-      font-size: 0.8rem !important;
-      font-weight: 500 !important;
-      line-height: 1.3 !important;
-      color: #444 !important;
-    }
-    /* 3. Meta — coach / location: smallest */
-    #bsport-widget-stundenplan .cleanslate [class*="meta"],
-    #bsport-widget-stundenplan .cleanslate [class*="Meta"],
-    #bsport-widget-stundenplan .cleanslate [class*="coach"],
-    #bsport-widget-stundenplan .cleanslate [class*="Coach"],
-    #bsport-widget-stundenplan .cleanslate [class*="location"],
-    #bsport-widget-stundenplan .cleanslate [class*="Location"],
-    #bsport-widget-stundenplan .cleanslate [class*="instructor"],
-    #bsport-widget-stundenplan .cleanslate [class*="Instructor"] {
-      font-size: 0.72rem !important;
-      color: #888 !important;
-      line-height: 1.4 !important;
-    }
-    /* 4. Spots / availability — default style */
-    #bsport-widget-stundenplan .cleanslate [class*="spots"],
-    #bsport-widget-stundenplan .cleanslate [class*="Spots"],
-    #bsport-widget-stundenplan .cleanslate [class*="capacity"],
-    #bsport-widget-stundenplan .cleanslate [class*="Capacity"],
-    #bsport-widget-stundenplan .cleanslate [class*="available"],
-    #bsport-widget-stundenplan .cleanslate [class*="Available"] {
-      font-size: 0.72rem !important;
-      color: #555 !important;
-    }
-
-    /* ── BOOK BUTTON inside widget ── */
-    #bsport-widget-stundenplan .cleanslate [class*="book-btn"],
-    #bsport-widget-stundenplan .cleanslate [class*="BookBtn"],
-    #bsport-widget-stundenplan .cleanslate [class*="booking-btn"],
-    #bsport-widget-stundenplan .cleanslate [class*="BookingBtn"],
-    #bsport-widget-stundenplan .cleanslate [class*="reserve"],
-    #bsport-widget-stundenplan .cleanslate [class*="Reserve"] {
-      background: #C5A059 !important;
-      color: #fff !important;
-      border: none !important;
-      border-radius: 6px !important;
-      font-family: 'Oswald', sans-serif !important;
-      font-size: 0.65rem !important;
-      letter-spacing: 1.5px !important;
-      text-transform: uppercase !important;
-      padding: 0.45rem 0.9rem !important;
-      cursor: pointer !important;
-      transition: background 0.15s !important;
-    }
-    #bsport-widget-stundenplan .cleanslate [class*="book-btn"]:hover,
-    #bsport-widget-stundenplan .cleanslate [class*="BookBtn"]:hover {
-      background: #B8903E !important;
-    }
-
-    /* ── SEPARATORS ── */
-    #bsport-widget-stundenplan .cleanslate [class*="separator"],
-    #bsport-widget-stundenplan .cleanslate [class*="Separator"],
-    #bsport-widget-stundenplan .cleanslate [class*="divider"],
-    #bsport-widget-stundenplan .cleanslate [class*="Divider"] {
-      margin: 0 !important; opacity: 0.4 !important;
-    }
-
-    /* ── LEVEL BADGES (injected by JS) ── */
-    .bmy-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.18rem 0.55rem;
-      border-radius: 4px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      font-weight: 500;
-      line-height: 1;
-      margin-top: 0.25rem;
-      flex-shrink: 0;
-    }
-    .bmy-badge--anfaenger {
-      background: rgba(197,160,89,0.15);
-      color: #7A5200;
-      border: 1px solid rgba(197,160,89,0.45);
-    }
-    .bmy-badge--fortgeschritten {
-      background: #7A5200;
-      color: #F5DFA0;
-      border: 1px solid #7A5200;
-    }
-    .bmy-badge--wettkampf {
-      background: #080808;
-      color: #C5A059;
-      border: 1px solid #C5A059;
-    }
-    .bmy-badge--allgemein {
-      background: rgba(0,0,0,0.05);
-      color: #555;
-      border: 1px solid rgba(0,0,0,0.12);
-    }
-
-    /* ── AVAILABILITY HIGHLIGHT (added by JS) ── */
-    .bmy-spots {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.7rem;
-      font-weight: 500;
-      margin-top: 0.2rem;
-    }
-    .bmy-spots--ok   { color: #555; }
-    .bmy-spots--low  { color: #C5401A; font-weight: 600; }
-    .bmy-spots--low::before {
-      content: '!';
-      display: inline-flex;
-      width: 14px; height: 14px;
-      background: #C5401A;
-      color: #fff;
-      border-radius: 50%;
-      font-size: 0.6rem;
-      font-weight: 700;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    /* ── TOUCH TARGETS ── */
-    #bsport-widget-stundenplan button,
-    #bsport-widget-stundenplan [role="button"],
-    #bsport-widget-stundenplan select,
-    #bsport-widget-stundenplan input[type="text"],
-    #bsport-widget-stundenplan input[type="search"] { min-height: 40px; }
-    #bsport-widget-stundenplan [class*="close"],
-    #bsport-widget-stundenplan [class*="Close"],
-    #bsport-widget-stundenplan [class*="back"],
-    #bsport-widget-stundenplan [class*="Back"],
-    #bsport-widget-stundenplan [class*="return"],
-    #bsport-widget-stundenplan [class*="Return"] {
-      min-width: 44px !important; min-height: 44px !important;
-    }
-
     /* ── CTA BAR ── */
     .sp-cta-bar {
       background: var(--ink);
@@ -457,84 +69,10 @@
     }
     .sp-cta-bar .btn { margin: 0.4rem; }
 
-    /* ── TABLET (≤768px) ── */
-    @media (max-width: 768px) {
-      .sp-widget-section { padding: 0 0 3rem; border-top-width: 2px; }
-      .sp-widget-wrap    { padding: 0; }
-      .sp-widget-card    { border-radius: 0; border-left: none; border-right: none; }
-      .sp-widget-inner   { min-height: 380px; }
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
-        padding: 0.65rem 1rem 0.65rem 1.25rem !important;
-      }
-      #bsport-widget-stundenplan [class*="date"],
-      #bsport-widget-stundenplan [class*="Date"],
-      #bsport-widget-stundenplan [class*="nav"],
-      #bsport-widget-stundenplan [class*="Nav"] {
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-      }
-    }
-
     /* ── PHONE (≤480px) ── */
     @media (max-width: 480px) {
       .sp-page-hero { padding: 6rem 1rem 2.5rem; }
       .sp-cta-bar .btn { width: 100%; justify-content: center; margin: 0.35rem 0; }
-      .sp-widget-inner { min-height: 340px; }
-
-      #bsport-widget-stundenplan,
-      #bsport-widget-stundenplan .cleanslate,
-      #bsport-widget-stundenplan [class*="wrap"],
-      #bsport-widget-stundenplan [class*="container"],
-      #bsport-widget-stundenplan [class*="inner"],
-      #bsport-widget-stundenplan [class*="list"] {
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        overflow-x: hidden !important;
-      }
-      #bsport-widget-stundenplan [class*="card"],
-      #bsport-widget-stundenplan [class*="slot"],
-      #bsport-widget-stundenplan [class*="item"] {
-        width: 100% !important; max-width: 100% !important;
-        box-sizing: border-box !important; overflow: hidden !important;
-      }
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer {
-        padding: 0.6rem 0.875rem 0.6rem 1.125rem !important;
-        gap: 0.5rem !important;
-        align-items: flex-start !important;
-      }
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer,
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__left,
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right {
-        max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important;
-      }
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right {
-        display: flex !important; flex-direction: column !important; gap: 6px !important;
-      }
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top,
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top__group,
-      #bsport-widget-stundenplan .cleanslate .bs-offer-list-item__content__offer__right__top__gender {
-        position: static !important; display: flex !important;
-        flex-direction: row !important; align-items: center !important;
-        flex-wrap: wrap !important; gap: 6px !important;
-        min-width: 0 !important; max-width: 100% !important;
-      }
-      #bsport-widget-stundenplan .cleanslate [class*="offer-name"],
-      #bsport-widget-stundenplan .cleanslate [class*="activity-name"] {
-        font-size: 0.84rem !important;
-      }
-      #bsport-widget-stundenplan .cleanslate [class*="time"],
-      #bsport-widget-stundenplan .cleanslate [class*="Time"]   { font-size: 0.76rem !important; }
-      #bsport-widget-stundenplan .cleanslate [class*="meta"],
-      #bsport-widget-stundenplan .cleanslate [class*="coach"],
-      #bsport-widget-stundenplan .cleanslate [class*="location"],
-      #bsport-widget-stundenplan .cleanslate [class*="spots"]  { font-size: 0.68rem !important; }
-      #bsport-widget-stundenplan .cleanslate [class*="filter"],
-      #bsport-widget-stundenplan .cleanslate [class*="Filter"] {
-        min-height: 44px !important; padding: 0.5rem 0.875rem !important;
-        display: inline-flex !important; align-items: center !important;
-        gap: 0.375rem !important; max-width: 100% !important; box-sizing: border-box !important;
-      }
-      .bmy-badge { font-size: 0.57rem !important; padding: 0.15rem 0.45rem !important; }
     }
   </style>
 </head>
@@ -580,11 +118,6 @@
   <a class="btn btn--gold" href="/" style="margin-top:1.25rem; padding:0.9rem 2.5rem; text-decoration:none; display:block; text-align:center; border-radius:6px;">MITGLIED WERDEN</a>
 </div>
 
-<!-- ═══════ WHATSAPP FLOAT ═══════ -->
-<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20Probetraining."
-   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
-  <i class="fa-brands fa-whatsapp"></i>
-</a>
 
 <!-- ═══════ PAGE HERO ═══════ -->
 <div class="sp-page-hero">
@@ -596,16 +129,18 @@
 </div>
 
 <!-- ═══════ BSPORT CALENDAR ═══════ -->
-<div class="sp-widget-section">
-  <div class="sp-widget-wrap">
-    <div class="sp-widget-card">
-      <div id="bsport-widget-stundenplan" class="sp-widget-inner"></div>
-      <noscript>
-        <p style="text-align:center;color:#555;padding:3rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
-      </noscript>
+<section id="schedule">
+  <div class="container">
+    <div class="schedule-frame reveal" id="schedule-section-wrap">
+      <div class="schedule-frame__widget">
+        <div id="bsport-widget-172485"></div>
+        <noscript>
+          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+        </noscript>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- ═══════ CTA BAR ═══════ -->
 <div class="sp-cta-bar">
@@ -703,155 +238,41 @@ function toggleMobileMenu() {
 <!-- Bsport CDN -->
 <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 <script id="bsport-widget-mount">
-function MountBsportWidget(config, repeat) {
-  repeat = repeat || 1;
-  if (repeat > 50) return;
+function MountBsportWidget(config, repeat=1) {
+  if (repeat > 50) { return }
   if (!window.BsportWidget) {
-    return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+    return setTimeout(() => { MountBsportWidget(config,repeat+1) }, 100 * repeat || 1)
   }
-  BsportWidget.mount(config);
+  BsportWidget.mount(config)
 }
 </script>
 <script>
-MountBsportWidget({
-  "parentElement": "bsport-widget-stundenplan",
-  "companyId": 5473,
-  "franchiseId": null,
-  "dialogMode": 1,
-  "widgetType": "calendar",
-  "showFab": false,
-  "fullScreenPopup": false,
-  "styles": undefined,
-  "config": { "calendar": {} }
-});
-</script>
-
-<!-- ═══════ PREMIUM CALENDAR ENHANCEMENT ═══════
-     MutationObserver: injects level badges and availability
-     highlights into Bsport cards after they render.
-     Does NOT touch booking logic.
-════════════════════════════════════════════════ -->
-<script>
 (function () {
-  'use strict';
-
-  /* Level keyword maps (DE + EN) */
-  var LEVELS = [
-    {
-      key: 'wettkampf',
-      label: 'Wettkampf',
-      cls: 'bmy-badge--wettkampf',
-      keywords: ['wettkampf', 'competition', 'fight', 'sparring', 'profi']
-    },
-    {
-      key: 'fortgeschritten',
-      label: 'Fortgeschritten',
-      cls: 'bmy-badge--fortgeschritten',
-      keywords: ['fortgeschritten', 'advanced', 'intermediate', 'level 2', 'level2']
-    },
-    {
-      key: 'anfaenger',
-      label: 'Anfänger',
-      cls: 'bmy-badge--anfaenger',
-      keywords: ['anfänger', 'anfaenger', 'beginner', 'einsteiger', 'grundlagen', 'level 1', 'level1']
-    }
-  ];
-
-  /* Low-availability threshold */
-  var LOW_SPOTS = 5;
-
-  function detectLevel(text) {
-    var t = text.toLowerCase();
-    for (var i = 0; i < LEVELS.length; i++) {
-      var lvl = LEVELS[i];
-      for (var j = 0; j < lvl.keywords.length; j++) {
-        if (t.indexOf(lvl.keywords[j]) !== -1) return lvl;
-      }
-    }
-    return null;
-  }
-
-  function injectBadge(nameEl, level) {
-    /* avoid double injection */
-    if (nameEl.querySelector('.bmy-badge')) return;
-    var badge = document.createElement('span');
-    badge.className = 'bmy-badge ' + level.cls;
-    badge.textContent = level.label;
-    nameEl.appendChild(badge);
-  }
-
-  function styleAvailability(card) {
-    /* find any element that contains a digit followed by "Plätze" or "spots" */
-    var walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, null, false);
-    var node;
-    while ((node = walker.nextNode())) {
-      var txt = node.nodeValue;
-      var m = txt.match(/(\d+)\s*(Plätze|plätze|spots?|available|verfügbar)/i);
-      if (m && !node.parentNode.classList.contains('bmy-spots')) {
-        var count = parseInt(m[1], 10);
-        var wrap = document.createElement('span');
-        wrap.className = 'bmy-spots ' + (count <= LOW_SPOTS ? 'bmy-spots--low' : 'bmy-spots--ok');
-        wrap.textContent = count <= LOW_SPOTS
-          ? 'Nur noch ' + count + ' Plätze'
-          : count + ' Plätze verfügbar';
-        node.parentNode.replaceChild(wrap, node);
-        break;
-      }
-    }
-  }
-
-  function processCard(card) {
-    if (card.dataset.bmyProcessed) return;
-    card.dataset.bmyProcessed = '1';
-
-    /* find the offer-name element */
-    var nameEl = card.querySelector('[class*="offer-name"],[class*="activity-name"],[class*="session-name"]');
-    if (nameEl) {
-      var level = detectLevel(nameEl.textContent || '');
-      if (level) {
-        injectBadge(nameEl, level);
-        card.dataset.bmyLevel = level.key;
-      } else {
-        card.dataset.bmyLevel = 'allgemein';
-      }
-    }
-
-    styleAvailability(card);
-  }
-
-  function processAll(root) {
-    var cards = root.querySelectorAll(
-      '.bs-offer-list-item, [class*="offer-list-item"], [class*="OfferListItem"]'
-    );
-    for (var i = 0; i < cards.length; i++) processCard(cards[i]);
-  }
-
-  /* Start observing once DOM is ready */
-  function init() {
-    var widget = document.getElementById('bsport-widget-stundenplan');
-    if (!widget) return;
-
-    /* Process anything already rendered */
-    processAll(widget);
-
-    /* Watch for Bsport rendering new cards */
-    var obs = new MutationObserver(function (mutations) {
-      for (var i = 0; i < mutations.length; i++) {
-        var added = mutations[i].addedNodes;
-        for (var j = 0; j < added.length; j++) {
-          if (added[j].nodeType === 1) processAll(added[j]);
-        }
-        /* Also re-scan the full widget in case of in-place updates */
-        processAll(widget);
-      }
+  var mounted = false;
+  var target  = document.getElementById('bsport-widget-172485');
+  if (!target) return;
+  function mount() {
+    if (mounted) return;
+    mounted = true;
+    MountBsportWidget({
+      "parentElement": "bsport-widget-172485",
+      "companyId": 5473,
+      "franchiseId": null,
+      "dialogMode": 1,
+      "widgetType": "calendar",
+      "showFab": false,
+      "fullScreenPopup": false,
+      "styles": undefined,
+      "config": { "calendar": {} }
     });
-    obs.observe(widget, { childList: true, subtree: true });
   }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { mount(); io.disconnect(); }
+    }, { rootMargin: '400px' });
+    io.observe(target);
   } else {
-    init();
+    setTimeout(mount, 2000);
   }
 }());
 </script>
