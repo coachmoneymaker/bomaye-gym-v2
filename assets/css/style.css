@@ -2318,84 +2318,140 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* early-bird-inner: no glass box — content flows open into the section */
 
 /* ══════════════════════════════════════════════════════════════
-   DISCIPLINES SECTION
+   DISCIPLINES SECTION — Stacked Sticky Scroll
+   Pattern: position:sticky panels stacked with z-index.
+   Each panel physically rises from below as user scrolls,
+   covering the previous one. JS adds a subtle scale-back effect
+   on the exiting panel for depth. No scroll-jacking.
 ══════════════════════════════════════════════════════════════ */
-#disciplines { background: var(--ink2); }
-.disciplines-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem;
+#disciplines {
+  background: var(--ink);
+  /* Section top padding from the global `section` rule is preserved.
+     Bottom padding is handled by .disciplines-cta.                */
+  padding-bottom: 0;
 }
-.discipline-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-lg); padding: 2.5rem 2rem;
-  text-align: center; position: relative; overflow: hidden;
-  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
-  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+
+/* ── Stack container: establishes stacking context for panels ── */
+.disc-stack {
+  position: relative;
+  /* Total height is the sum of panel heights + inter-panel margins.
+     This is determined by the panels' natural flow height.         */
 }
-.discipline-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0; transition: opacity 0.3s;
+
+/* ── Individual sticky panel ── */
+.disc-panel {
+  position: sticky;
+  top: var(--nav-h);
+  /* Full-bleed height: viewport minus nav bar */
+  height: calc(100vh - var(--nav-h));
+  height: calc(100svh - var(--nav-h)); /* iOS safe viewport */
+  overflow: hidden;
+  /* transform-origin center: scale-back shrinks panel uniformly */
+  transform-origin: center center;
 }
-.discipline-card:hover {
-  border-color: rgba(197,160,89,0.40); transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(197,160,89,0.15);
-}
-.discipline-card:hover::before { opacity: 1; }
-.discipline-icon {
-  width: 68px; height: 68px; border-radius: 50%;
-  background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.55rem; color: var(--gold);
-  transition: background 0.3s, box-shadow 0.3s;
-  flex-shrink: 0;
-}
-.discipline-card:hover .discipline-icon {
-  background: rgba(197,160,89,0.2);
-  box-shadow: 0 0 32px rgba(197,160,89,0.18);
-}
-.discipline-card h3 { font-size: 1.05rem; color: var(--white); position: relative; z-index: 1; }
-.discipline-card p  { font-size: 0.88rem; color: rgba(255,255,255,0.72); line-height: 1.8; flex: 1; position: relative; z-index: 1; }
-.discipline-card .btn { position: relative; z-index: 1; }
-.discipline-card .discipline-icon { position: relative; z-index: 1; }
-/* Image-backed variant — background-image set via inline style (direct, not CSS var) */
-.discipline-card--img {
+/* Layering: each successive panel appears on top */
+.disc-panel:nth-child(1) { z-index: 1; }
+.disc-panel:nth-child(2) { z-index: 2; }
+.disc-panel:nth-child(3) { z-index: 3; }
+/* Inter-panel margin = dwell time per panel before next one rises */
+.disc-panel:not(:last-child) { margin-bottom: 25vh; }
+
+/* ── Background image layer ── */
+.disc-panel__bg {
+  position: absolute;
+  inset: 0;
   background-size: cover;
-  background-position: center;
-  border-color: rgba(255,255,255,0.12) !important;
+  background-position: center 30%;
 }
-.discipline-card--img::after {
+/* Diagonal gradient overlay — lighter at top-right for texture */
+.disc-panel__bg::after {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    rgba(8,8,8,0.28) 0%,
-    rgba(8,8,8,0.55) 45%,
-    rgba(8,8,8,0.88) 100%
-  );
-  border-radius: inherit;
-  z-index: 0;
-  transition: background 0.45s var(--ease-expo);
-}
-.discipline-card--img:hover::after {
-  background: linear-gradient(180deg,
-    rgba(8,8,8,0.18) 0%,
-    rgba(8,8,8,0.45) 45%,
-    rgba(8,8,8,0.82) 100%
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    150deg,
+    rgba(8,8,8,0.78) 0%,
+    rgba(8,8,8,0.42) 55%,
+    rgba(8,8,8,0.68) 100%
   );
 }
-/* Photo-only cards (Boxing, Kickboxing) — no icon, taller for full impact */
-.discipline-card--photo {
-  padding: 2.25rem 2rem;
+
+/* ── Content layer — bottom-left aligned, cinematic ── */
+.disc-panel__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-end;
-  min-height: 280px;
+  padding: 2rem clamp(1.5rem, 6vw, 5rem) clamp(2.5rem, 5vh, 4.5rem);
+  z-index: 1; /* above bg + overlay */
 }
-.discipline-card--photo h3 { font-size: 1.25rem; margin-bottom: 0.2rem; }
-@media (min-width: 901px) {
-  .discipline-card--photo { min-height: 320px; }
+
+/* ── Panel counter / kicker ── */
+.disc-panel__kicker {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+  opacity: 0.9;
 }
-@media (max-width: 900px) {
-  .disciplines-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-  .discipline-card  { padding: 2rem 1.5rem; }
+
+/* ── Discipline title ── */
+.disc-panel__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7.5vw, 6rem);
+  color: #fff;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.85rem;
+  text-shadow: 0 4px 32px rgba(0,0,0,0.45);
+}
+/* Gold accent bar beneath title */
+.disc-panel__title::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--gold);
+  margin-top: 0.9rem;
+}
+
+/* ── Description ── */
+.disc-panel__desc {
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  color: rgba(255,255,255,0.80);
+  line-height: 1.7;
+  max-width: 440px;
+  margin-bottom: 1.75rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+}
+
+/* ── CTA ── */
+.disciplines-cta { padding: 3rem 0; }
+
+/* ── Tablet ── */
+@media (max-width: 768px) {
+  .disc-panel { margin-bottom: 20vh; }
+  .disc-panel__content { padding-bottom: clamp(2rem, 4vh, 3rem); }
+}
+
+/* ── Phone: disable sticky, show as full-height sequential panels ──
+   Reason: iOS momentum scroll + address-bar resize can cause
+   trapped-scroll or height jank with sticky full-screen panels.    */
+@media (max-width: 480px) {
+  .disc-panel {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 85svh;
+    min-height: 85vh; /* fallback */
+    margin-bottom: 0 !important;
+  }
+  .disc-panel__title { font-size: clamp(2.4rem, 11vw, 3rem); }
+  .disc-panel__desc  { font-size: 0.92rem; }
+  .disc-panel__content { padding: 2rem 1.5rem 2.5rem; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -3648,8 +3704,10 @@ body {
 }
 /* Contain paint in each section so transforms don't bleed.
    #schedule intentionally excluded: contain:layout traps Bsport's
-   position:fixed booking dialogs inside the section, clipping them. */
-#why-bomaye, #faq, #bomaye-standard, #disciplines, .diff-block {
+   position:fixed booking dialogs inside the section, clipping them.
+   #disciplines intentionally excluded: contain:layout can interfere
+   with position:sticky children in some browser implementations.   */
+#why-bomaye, #faq, #bomaye-standard, .diff-block {
   contain: layout style;
 }
 /* Remove excessive will-change that can exhaust GPU layers */

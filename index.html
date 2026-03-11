@@ -223,29 +223,61 @@
     </div>
   </div>
 
-  <!-- ── TRAINING DISCIPLINES ── -->
-  <section id="disciplines" class="sec--dark">
+  <!-- ── TRAINING DISCIPLINES — stacked sticky scroll ── -->
+  <section id="disciplines">
+    <!-- Section intro -->
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--dark">KURSE</span>
         <h2 style="margin-top:1rem;">TRAINIERE WIE EIN <span class="gold">KÄMPFER.</span></h2>
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Drei Disziplinen. Ein Ziel: dich besser zu machen.</p>
       </div>
-      <div class="disciplines-grid">
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-1" style="background-image:url('/assets/images/service-exec.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Boxing — zum Stundenplan">
-          <h3>BOXING</h3>
-          <p>Technik, Sparring und echtes Boxtraining für alle Levels — von Anfänger bis Wettkämpfer.</p>
-        </div>
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-2" style="background-image:url('/assets/images/service-kick.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Kickboxing — zum Stundenplan">
-          <h3>KICKBOXING</h3>
-          <p>Technik, Fitness und Ausdauertraining — gecoacht von einem echten Kickbox-Weltmeister.</p>
-        </div>
-        <div class="discipline-card discipline-card--img discipline-card--photo reveal delay-3" style="background-image:url('/assets/images/service-pt.webp')" onclick="nav('home','schedule')" role="button" tabindex="0" aria-label="Strength — zum Stundenplan">
-          <h3>STRENGTH &amp; CONDITIONING</h3>
-          <p>Kraft, Athletik und Explosivität — gezielt entwickelt für Kämpfer auf jedem Level.</p>
+    </div>
+
+    <!-- Stacked sticky panels -->
+    <div class="disc-stack" id="disc-stack">
+
+      <div class="disc-panel">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">01 / 03</span>
+          <h3 class="disc-panel__title">BOXING</h3>
+          <p class="disc-panel__desc">Technik, Sparring und echtes Boxtraining für alle Levels — von Anfänger bis Wettkämpfer.</p>
+          <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
+            <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN
+          </button>
         </div>
       </div>
-      <div class="disciplines-cta reveal" style="text-align:center;margin-top:2.5rem;">
+
+      <div class="disc-panel">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">02 / 03</span>
+          <h3 class="disc-panel__title">KICKBOXING</h3>
+          <p class="disc-panel__desc">Technik, Fitness und Ausdauertraining — gecoacht von einem echten Kickbox-Weltmeister.</p>
+          <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
+            <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN
+          </button>
+        </div>
+      </div>
+
+      <div class="disc-panel">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">03 / 03</span>
+          <h3 class="disc-panel__title">STRENGTH &amp; CONDITIONING</h3>
+          <p class="disc-panel__desc">Kraft, Athletik und Explosivität — gezielt entwickelt für Kämpfer auf jedem Level.</p>
+          <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
+            <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Post-stack CTA -->
+    <div class="container">
+      <div class="disciplines-cta reveal" style="text-align:center;">
         <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
           <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
         </button>
@@ -1425,6 +1457,59 @@
             setTimeout(mount, 2000);
         }
     }());
+</script>
+
+<!-- ── Disc-stack: subtle scale-back on the exiting panel ──────────────
+     As panel N+1 rises from below and covers panel N, panel N scales
+     from 1.0 → 0.97 and fades slightly (1.0 → 0.90), giving depth.
+     Runs only on desktop (≥481px). Passive, rAF-gated, no scroll-jacking.
+──────────────────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+  if (window.matchMedia('(max-width: 480px)').matches) return;
+
+  var panels = document.querySelectorAll('.disc-panel');
+  if (panels.length < 2) return;
+
+  var raf = null;
+
+  function update() {
+    raf = null;
+    var navH = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
+    ) || 72;
+    var viewH = window.innerHeight;
+    var panelH = viewH - navH; /* visible panel height */
+
+    panels.forEach(function (panel, i) {
+      if (i === panels.length - 1) return; /* last panel never scales back */
+      var next = panels[i + 1];
+      var nextTop = next.getBoundingClientRect().top;
+
+      /* progress: 0 when next panel top == viewport bottom (entry starts)
+                   1 when next panel top == navH (fully covers this panel)  */
+      var progress = Math.max(0, Math.min(1, (viewH - nextTop) / panelH));
+
+      if (progress > 0) {
+        var sc = 1 - progress * 0.03;   /* 1.0 → 0.97 */
+        var op = 1 - progress * 0.10;   /* 1.0 → 0.90 */
+        panel.style.transform = 'scale(' + sc.toFixed(4) + ')';
+        panel.style.opacity   = op.toFixed(4);
+      } else {
+        panel.style.transform = '';
+        panel.style.opacity   = '';
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!raf) raf = requestAnimationFrame(update);
+  }, { passive: true });
+
+  /* Initial call in case page loads mid-section */
+  requestAnimationFrame(update);
+}());
 </script>
 </body>
 </html>
