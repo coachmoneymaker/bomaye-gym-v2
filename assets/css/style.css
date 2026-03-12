@@ -4185,6 +4185,61 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).
   height: auto !important;
 }
 
+/* CSS class-based visibility: Bsport may toggle a compact-mode class that
+   triggers display:none via their own injected stylesheet — not detectable
+   by [style*] attribute selectors. These rules restore specific metadata
+   field types, scoped strictly to the left column so Bsport's booking
+   detail panel and filter bar are not affected.
+   display:flex preserves the icon + text row layout used by each field row. */
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="facility"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Facility"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="location"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Location"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="venue"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Venue"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="teacher"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Teacher"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="coach"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Coach"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="instructor"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Instructor"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="trainer"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Trainer"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="level"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Level"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="difficulty"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Difficulty"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="spot"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Spot"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="capacity"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Capacity"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="participant"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Participant"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="duration"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Duration"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: none !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+}
+
+/* Level / spots / capacity also appear in right column's top area */
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="level"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="Level"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="spot"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="Spot"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="capacity"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="Capacity"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="participant"],
+#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right__top [class*="Participant"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: none !important;
+}
+
 /* Mobile responsive layout: same info, adapted for narrow column */
 @media (max-width: 768px) {
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {

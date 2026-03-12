@@ -293,9 +293,25 @@ function MountBsportWidget(config, repeat=1) {
 
   function fixCards() {
     widget.querySelectorAll('.bs-offer-list-item__content__offer__left').forEach(function (col) {
+      /* Unclip the column itself */
       if (col.style.overflow === 'hidden') col.style.overflow = '';
       if (col.style.maxHeight)            col.style.maxHeight = '';
       if (col.style.height && col.style.height !== 'auto') col.style.height = '';
+
+      /* Check COMPUTED display on each direct child — catches CSS class-based
+         hiding (e.g. Bsport compact-mode class) that style attribute inspection
+         cannot detect. Sets display:flex to preserve icon+text row layout.    */
+      Array.from(col.children).forEach(function (el) {
+        var cs = window.getComputedStyle(el);
+        if (cs.display === 'none') {
+          el.style.display = 'flex';
+          el.style.alignItems = 'center';
+        }
+        if (cs.visibility === 'hidden') el.style.visibility = 'visible';
+        if (cs.opacity    === '0')      el.style.opacity    = '1';
+      });
+
+      /* Also clear inline overrides from all descendants */
       col.querySelectorAll('*').forEach(function (el) {
         if (el.style.display    === 'none')   el.style.display    = '';
         if (el.style.overflow   === 'hidden') el.style.overflow   = '';
