@@ -294,7 +294,7 @@ function renderPricingDisplay(ageGroup, duration) {
         </ul>
         <p style="margin:0.75rem 0 0;font-size:0.78rem;color:rgba(255,255,255,0.45);">Die Aufnahmegebühr wird einmalig bei Vertragsstart fällig und beinhaltet dein komplettes Starter Kit im Bomaye-Design.</p>
       </div>
-      <button onclick="navToMehrPreise()" class="btn btn--gold btn--full" type="button">
+      <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
         <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
       </button>
     </div>`;

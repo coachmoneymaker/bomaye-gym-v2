@@ -3,209 +3,354 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <title>Kurse | BOMAYE GYM MUNICH — Boxing, Kickboxing & Strength</title>
-  <meta name="description" content="Entdecke die Kurse bei Bomaye Gym Munich: Olympic Boxing, Kickboxing und Strength & Conditioning. Professionelles Training für alle Level — Anfänger bis Wettkämpfer." />
+  <title>Kurse | BOMAYE GYM MUNICH — Boxing, Kickboxing, Youth & Mental</title>
+  <meta name="description" content="Alle Kurse bei Bomaye Gym Munich: Boxing, Kickboxing, Youth Boxing, Olympisches Boxen und Mental Coaching. Professionelles Training für alle Level in München." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#080808" />
-
-  <!-- Open Graph -->
   <meta property="og:title" content="Kurse — BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Olympic Boxing, Kickboxing und Strength & Conditioning. Training für alle Level." />
+  <meta property="og:description" content="Boxing, Kickboxing, Youth Boxing, Olympisches Boxen, Mental Coaching. Training für alle Level." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/kurse" />
   <meta property="og:locale" content="de_DE" />
-
   <link rel="canonical" href="https://www.bomayegym.com/kurse" />
 
-  <!-- Preload -->
   <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
-
-  <!-- Font Awesome -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
-
-  <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
-    /* ── Page hero ── */
-    .kursep-hero {
+    /* ══════════════════════════════════════════════════
+       KURSE PAGE — PAGE HERO
+    ══════════════════════════════════════════════════ */
+    .kp-hero {
       background: var(--ink);
-      padding: clamp(100px, 14vw, 160px) 0 clamp(48px, 7vw, 80px);
+      padding: clamp(100px,14vw,160px) 0 clamp(48px,7vw,80px);
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .kursep-hero::before {
+    .kp-hero::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.08) 0%, transparent 70%);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.09) 0%, transparent 70%);
       pointer-events: none;
     }
-    .kursep-hero-tag {
+    .kp-hero-tag {
       font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 4px;
-      color: var(--gold);
+      font-size: 0.58rem; letter-spacing: 4px; color: var(--gold);
       margin-bottom: 1.25rem;
     }
-    .kursep-hero-h1 {
+    .kp-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.4rem, 7vw, 5rem);
-      color: #fff;
-      text-transform: uppercase;
-      line-height: 1;
+      font-size: clamp(2.4rem,7vw,5rem);
+      color: #fff; text-transform: uppercase; line-height: 1;
       margin-bottom: 0.75rem;
     }
-    .kursep-hero-h1 span { color: var(--gold); }
-    .kursep-hero-sub {
+    .kp-hero h1 span { color: var(--gold); }
+    .kp-hero-sub {
       font-family: var(--font-body);
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.45);
-      max-width: 520px;
-      margin: 0 auto;
+      font-size: 0.92rem; color: rgba(255,255,255,0.45);
+      max-width: 520px; margin: 0 auto;
     }
 
-    /* ── Course sections ── */
-    .kurs-section {
-      padding: clamp(64px, 10vw, 120px) 0;
+    /* ══════════════════════════════════════════════════
+       COURSE GRID SECTION
+    ══════════════════════════════════════════════════ */
+    .courses-section {
+      background: var(--ink2, #0c0c0c);
+      padding: clamp(48px,8vw,96px) 0 0;
     }
-    .kurs-section--dark { background: var(--ink2, #0d0d0d); }
-    .kurs-section--light { background: #f9f7f4; }
-    .kurs-section--smoke { background: var(--smoke, #141414); }
+    .courses-section-header {
+      text-align: center;
+      padding-bottom: clamp(32px,5vw,56px);
+    }
 
-    .kurs-inner {
+    /* ── Desktop grid ── */
+    .courses-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2.5rem, 5vw, 6rem);
-      align-items: center;
-    }
-    .kurs-inner.reverse { direction: rtl; }
-    .kurs-inner.reverse > * { direction: ltr; }
-
-    .kurs-photo {
-      position: relative;
-      border-radius: 4px;
+      grid-template-columns: repeat(5,1fr);
+      gap: 1px;
+      background: rgba(197,160,89,0.1);
+      border: 1px solid rgba(197,160,89,0.1);
+      border-radius: 8px;
       overflow: hidden;
     }
-    .kurs-photo img {
-      width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
-      display: block;
+
+    /* ── Course card ── */
+    .course-card {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      min-height: 320px;
+      background: #0a0a0a;
+      transition: flex 0.4s var(--ease-expo);
     }
-    .kurs-photo-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(8,8,8,0.6) 0%, transparent 50%);
+    .course-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.6s var(--ease-expo), opacity 0.4s ease;
+      opacity: 0.65;
     }
-    .kurs-photo-badge {
-      position: absolute;
-      bottom: 1.25rem;
-      left: 1.25rem;
+    .course-card:hover .course-card__bg,
+    .course-card.active .course-card__bg { opacity: 0.8; transform: scale(1.04); }
+
+    .course-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.4) 50%, rgba(8,8,8,0.1) 100%);
+    }
+    .course-card.active .course-card__overlay {
+      background: linear-gradient(to top, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.55) 60%, rgba(8,8,8,0.1) 100%);
+    }
+
+    .course-card__body {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem 1.25rem;
+      z-index: 2;
+    }
+    .course-card__num {
       font-family: var(--font-head);
-      font-size: 0.5rem;
-      letter-spacing: 3px;
-      color: var(--gold);
-      background: rgba(8,8,8,0.8);
-      backdrop-filter: blur(8px);
-      padding: 0.35rem 0.75rem;
-      border-radius: 2px;
+      font-size: 0.5rem; letter-spacing: 3px;
+      color: rgba(197,160,89,0.6);
+      margin-bottom: 0.5rem;
     }
+    .course-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem,2vw,1.7rem);
+      color: #fff; text-transform: uppercase; line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .course-card__short {
+      font-family: var(--font-body);
+      font-size: 0.78rem; color: rgba(255,255,255,0.55);
+      line-height: 1.5; display: none;
+    }
+    .course-card.active .course-card__short { display: block; }
 
-    /* Text column — dark sections */
-    .kurs-text--dark .kurs-tag { color: var(--gold); }
-    .kurs-text--dark h2 { color: #fff; }
-    .kurs-text--dark p { color: rgba(255,255,255,0.65); }
-    .kurs-text--dark .kurs-feat strong { color: rgba(255,255,255,0.9); }
-    .kurs-text--dark .kurs-feat span { color: rgba(255,255,255,0.5); }
+    /* Gold accent bar at bottom of active card */
+    .course-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s var(--ease-expo);
+    }
+    .course-card.active::after { transform: scaleX(1); }
 
-    /* Text column — light sections */
-    .kurs-text--light .kurs-tag { color: #b8922e; }
-    .kurs-text--light h2 { color: #080808; }
-    .kurs-text--light p { color: rgba(8,8,8,0.68); }
-    .kurs-text--light .kurs-feat strong { color: #080808; }
-    .kurs-text--light .kurs-feat span { color: rgba(8,8,8,0.5); }
+    /* Active indicator arrow */
+    .course-card__arrow {
+      position: absolute; bottom: 1rem; right: 1rem;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(0.7);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 3;
+      color: var(--ink);
+      font-size: 0.65rem;
+    }
+    .course-card.active .course-card__arrow { opacity: 1; transform: scale(1); }
 
-    .kurs-tag {
+    /* ── Detail panel ── */
+    .course-detail {
+      display: none;
+      background: #0a0a0a;
+      border-top: 1px solid rgba(197,160,89,0.15);
+      padding: clamp(40px,6vw,72px) 0;
+    }
+    .course-detail.visible { display: block; }
+    .course-detail__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem,5vw,5rem);
+      align-items: center;
+    }
+    .course-detail__img {
+      position: relative; border-radius: 6px; overflow: hidden;
+    }
+    .course-detail__img img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+    }
+    .course-detail__img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.5), transparent 60%);
+    }
+    .course-detail__text { color: #fff; }
+    .course-detail__tag {
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 1rem;
+      font-size: 0.58rem; letter-spacing: 4px; color: var(--gold);
+      display: block; margin-bottom: 1rem;
     }
-    .kurs-number {
+    .course-detail__title {
       font-family: var(--font-display);
-      font-size: clamp(4rem, 8vw, 7rem);
-      line-height: 1;
-      opacity: 0.06;
-      position: absolute;
-      top: -0.2em;
-      left: -0.05em;
-      pointer-events: none;
-      user-select: none;
-    }
-    .kurs-title-wrap { position: relative; }
-    .kurs-title-wrap h2 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      text-transform: uppercase;
-      line-height: 1.05;
+      font-size: clamp(1.8rem,4vw,3rem);
+      color: #fff; text-transform: uppercase; line-height: 1.05;
       margin-bottom: 1.25rem;
     }
-
-    .kurs-desc {
-      font-size: 1rem;
-      line-height: 1.75;
-      margin-bottom: 1.75rem;
+    .course-detail__desc {
+      font-family: var(--font-body);
+      font-size: 0.95rem; color: rgba(255,255,255,0.65);
+      line-height: 1.75; margin-bottom: 1.5rem;
     }
-
-    .kurs-feats {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+    .course-detail__feats {
+      display: flex; flex-direction: column; gap: 0.65rem;
       margin-bottom: 2rem;
     }
-    .kurs-feat {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
+    .course-detail__feat {
+      display: flex; align-items: flex-start; gap: 0.6rem;
     }
-    .kurs-feat i {
-      color: var(--gold);
-      margin-top: 0.15em;
-      flex-shrink: 0;
-    }
-    .kurs-feat-text { display: flex; flex-direction: column; }
-    .kurs-feat strong { font-size: 0.88rem; font-weight: 600; }
-    .kurs-feat span { font-size: 0.8rem; }
+    .course-detail__feat i { color: var(--gold); margin-top: 0.18em; flex-shrink: 0; }
+    .course-detail__feat-body { display: flex; flex-direction: column; }
+    .course-detail__feat-body strong { font-size: 0.85rem; color: rgba(255,255,255,0.9); }
+    .course-detail__feat-body span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
 
-    /* Nav link active */
-    .nav-link-active { color: var(--gold) !important; }
-    #header .nav-link[href] { display: inline-flex; align-items: center; }
+    /* ══════════════════════════════════════════════════
+       MOBILE CAROUSEL
+    ══════════════════════════════════════════════════ */
+    .courses-carousel-wrap { display: none; }
+
+    .courses-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding: 0 max(1rem, calc((100vw - 340px) / 2));
+      padding-bottom: 0;
+    }
+    .courses-carousel::-webkit-scrollbar { display: none; }
+
+    .carousel-card {
+      flex: 0 0 300px;
+      scroll-snap-align: center;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      min-height: 420px;
+      background: #0a0a0a;
+      transition: transform 0.25s ease;
+    }
+    .carousel-card:active { transform: scale(0.98); }
+    .carousel-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0.7;
+    }
+    .carousel-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.3) 60%, transparent 100%);
+    }
+    .carousel-card__body {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem;
+      z-index: 2;
+    }
+    .carousel-card__num {
+      font-family: var(--font-head);
+      font-size: 0.5rem; letter-spacing: 3px; color: rgba(197,160,89,0.65);
+      margin-bottom: 0.4rem;
+    }
+    .carousel-card__title {
+      font-family: var(--font-display);
+      font-size: 1.7rem; color: #fff; text-transform: uppercase;
+      margin-bottom: 0.4rem; line-height: 1;
+    }
+    .carousel-card__short {
+      font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .carousel-card__cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 2px; color: var(--gold);
+    }
+
+    /* Mobile dots */
+    .carousel-dots {
+      display: flex; justify-content: center; gap: 0.5rem;
+      padding: 1.5rem 0 0;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.2s, width 0.2s;
+      cursor: pointer; border: none; padding: 0;
+    }
+    .carousel-dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+
+    /* Mobile course detail (below carousel) */
+    .mobile-course-detail {
+      display: none;
+      background: #111;
+      border-top: 1px solid rgba(197,160,89,0.15);
+      padding: 2rem 1.25rem;
+      margin-top: 1.5rem;
+      border-radius: 8px;
+    }
+    .mobile-course-detail.visible { display: block; }
+    .mobile-course-detail__tag {
+      font-family: var(--font-head);
+      font-size: 0.55rem; letter-spacing: 3px; color: var(--gold);
+      display: block; margin-bottom: 0.75rem;
+    }
+    .mobile-course-detail__title {
+      font-family: var(--font-display);
+      font-size: 1.8rem; color: #fff; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .mobile-course-detail__desc {
+      font-size: 0.9rem; color: rgba(255,255,255,0.62);
+      line-height: 1.7; margin-bottom: 1.25rem;
+    }
+    .mobile-course-detail__feats {
+      display: flex; flex-direction: column; gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .mobile-course-detail__feat {
+      display: flex; align-items: flex-start; gap: 0.55rem;
+    }
+    .mobile-course-detail__feat i { color: var(--gold); margin-top: 0.18em; flex-shrink: 0; }
+    .mobile-course-detail__feat-body strong { font-size: 0.83rem; color: rgba(255,255,255,0.9); display: block; }
+    .mobile-course-detail__feat-body span { font-size: 0.76rem; color: rgba(255,255,255,0.45); }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .courses-grid { grid-template-columns: repeat(3,1fr); }
+      .courses-grid .course-card:nth-child(4),
+      .courses-grid .course-card:nth-child(5) {
+        /* last 2 cards span in 3-col layout naturally */
+      }
+    }
 
     @media (max-width: 768px) {
-      .kurs-inner {
-        grid-template-columns: 1fr;
-        direction: ltr !important;
-      }
-      .kurs-inner.reverse > * { direction: ltr; }
+      .courses-grid { display: none; }
+      .course-detail { display: none !important; } /* hide desktop detail on mobile */
+      .courses-carousel-wrap { display: block; }
+
+      .course-detail__inner { grid-template-columns: 1fr; }
     }
+
+    /* Nav */
+    .nav-link-active { color: var(--gold) !important; }
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
   </style>
 </head>
 
 <body>
-
-<!-- Noise texture -->
 <div class="noise" aria-hidden="true"></div>
 
 <!-- ═══════ HEADER ═══════ -->
@@ -215,11 +360,9 @@
       <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
-
     <a href="/" class="back-btn visible" aria-label="Zurück zur Startseite">
       <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
     </a>
-
     <nav class="nav-links" aria-label="Hauptnavigation">
       <a class="nav-link" href="/">HOME</a>
       <a class="nav-link nav-link-active" href="/kurse" aria-current="page">KURSE</a>
@@ -228,7 +371,6 @@
       <a class="nav-link" href="/about">ÜBER UNS</a>
       <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
-
     <button class="burger" onclick="toggleKurseMenu()" aria-label="Menü" aria-expanded="false" id="kurse-burger-btn" type="button">
       <i class="fa-solid fa-bars"></i>
     </button>
@@ -238,17 +380,13 @@
 <!-- ═══════ MOBILE NAV ═══════ -->
 <div id="kurse-mobile-nav" role="navigation" aria-label="Mobile Navigation"
      style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);">
-  <button class="mob-close" onclick="toggleKurseMenu()" type="button" aria-label="Menü schließen" style="position:absolute;top:1.5rem;right:1.5rem;font-size:1.5rem;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;">
-    <i class="fa-solid fa-xmark"></i>
-  </button>
-  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
-  <a class="nav-link" href="/kurse" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">KURSE</a>
-  <a class="nav-link" href="/#schedule" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">STUNDENPLAN</a>
-  <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">COACHES</a>
-  <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">ÜBER UNS</a>
-  <button class="btn btn--gold" onclick="toggleKurseMenu(); openBooking();" type="button" style="margin-top:1.25rem;padding:0.9rem 2.5rem;">
-    PROBETRAINING
-  </button>
+  <button onclick="toggleKurseMenu()" type="button" aria-label="Menü schließen" style="position:absolute;top:1.5rem;right:1.5rem;font-size:1.5rem;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+  <a href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
+  <a href="/kurse" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">KURSE</a>
+  <a href="/#schedule" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">STUNDENPLAN</a>
+  <a href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">COACHES</a>
+  <a href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">ÜBER UNS</a>
+  <button class="btn btn--gold" onclick="toggleKurseMenu();openBooking();" type="button" style="margin-top:1.25rem;padding:0.9rem 2.5rem;">PROBETRAINING</button>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
@@ -274,172 +412,225 @@
 <main>
 
   <!-- ── Hero ── -->
-  <section class="kursep-hero" aria-label="Unsere Kurse">
+  <section class="kp-hero" aria-label="Unsere Kurse">
     <div class="container">
-      <div class="kursep-hero-tag">KURSE & TRAINING</div>
-      <h1 class="kursep-hero-h1">TRAINIERE WIE EIN<br><span>KÄMPFER.</span></h1>
-      <p class="kursep-hero-sub">Drei Disziplinen. Ein Ziel: dich besser zu machen. Für alle Level — von Anfänger bis Wettkämpfer.</p>
+      <div class="kp-hero-tag">KURSE &amp; TRAINING</div>
+      <h1>TRAINIERE WIE EIN<br><span>KÄMPFER.</span></h1>
+      <p class="kp-hero-sub">Fünf Programme. Ein Gym. Für alle Level — von Anfänger bis Wettkämpfer.</p>
     </div>
   </section>
 
-  <!-- ── Boxing ── -->
-  <section class="kurs-section kurs-section--dark" id="boxing" aria-label="Boxing">
+  <!-- ── Courses (Desktop Grid + Mobile Carousel) ── -->
+  <section class="courses-section">
     <div class="container">
-      <div class="kurs-inner">
-        <div class="kurs-photo reveal">
-          <img src="/assets/images/service-exec.webp" alt="Olympic Boxing Training bei Bomaye Gym Munich" loading="eager" decoding="async" />
-          <div class="kurs-photo-overlay" aria-hidden="true"></div>
-          <span class="kurs-photo-badge">01 / 03 &nbsp;·&nbsp; BOXING</span>
-        </div>
-        <div class="kurs-text--dark reveal delay-1">
-          <span class="kurs-tag">OLYMPISCHES BOXEN</span>
-          <div class="kurs-title-wrap">
-            <h2>BOXING.<br><span class="gold">ECHTE TECHNIK.</span></h2>
-          </div>
-          <p class="kurs-desc">
-            Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.
-          </p>
-          <p class="kurs-desc">
-            Unter der Leitung von Raschad Pekpassi — Landestrainer des Bayerischen Amateurbox-Verbands und aktiver Wettkämpfer mit über 20 Jahren Erfahrung — lernst du saubere Technik, Ausdauer und den Rhythmus des Rings von Grund auf.
-          </p>
-          <div class="kurs-feats">
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Alle Level willkommen</strong>
-                <span>Anfänger, Fortgeschrittene und Wettkämpfer im selben Umfeld</span>
-              </div>
-            </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Technisches Einzel-Feedback</strong>
-                <span>Kein anonymes Gruppentraining — jede Stunde mit klarem Coaching</span>
-              </div>
-            </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Sparring & Wettkampfvorbereitung</strong>
-                <span>Optional für Fortgeschrittene — sicher, kontrolliert, mit Erfahrung begleitet</span>
-              </div>
-            </div>
-          </div>
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
-            <i class="fa-solid fa-fist-raised"></i> KOSTENLOS TESTEN
-          </button>
-        </div>
+      <div class="courses-section-header reveal">
+        <span class="tag tag--dark">UNSERE KURSE</span>
+        <h2 style="margin-top:1rem;">WÄHLE DEIN <span class="gold">PROGRAMM.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Klicke auf einen Kurs für Details und Zeiten.</p>
       </div>
-    </div>
-  </section>
 
-  <!-- ── Kickboxing ── -->
-  <section class="kurs-section kurs-section--light" id="kickboxing" aria-label="Kickboxing">
-    <div class="container">
-      <div class="kurs-inner reverse">
-        <div class="kurs-photo reveal delay-1">
-          <img src="/assets/images/service-kick.webp" alt="Kickboxing Training bei Bomaye Gym Munich" loading="lazy" decoding="async" />
-          <div class="kurs-photo-overlay" aria-hidden="true"></div>
-          <span class="kurs-photo-badge">02 / 03 &nbsp;·&nbsp; KICKBOXING</span>
-        </div>
-        <div class="kurs-text--light reveal">
-          <span class="kurs-tag">KICKBOXING</span>
-          <div class="kurs-title-wrap">
-            <h2>KICKBOXING.<br><span class="gold-dark">DYNAMIK & POWER.</span></h2>
-          </div>
-          <p class="kurs-desc">
-            Kickboxing verbindet Boxen mit Beintechnik zu einem der vollständigsten Kampfsport-Systeme. Du trainierst Koordination, Schnelligkeit und explosive Kraft — und das alles mit Spaßgarantie.
-          </p>
-          <p class="kurs-desc">
-            Alfonso Fusco — Kickbox-Weltmeister und Spezialist für Ring-Intelligenz und Taktik — coacht dich mit dem Know-how eines echten Champions. Er lehrt dich nicht nur Technik, sondern wie man einen Kampf im Kopf gewinnt.
-          </p>
-          <div class="kurs-feats">
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Vollkontakt-Technik & Footwork</strong>
-                <span>Präzise Tritte, Kombinationen und Stellungsspiel</span>
-              </div>
-            </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Weltmeister als Coach</strong>
-                <span>Direkte Linie zum Wissen eines internationalen Wettkämpfers</span>
-              </div>
-            </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Fitness & Wettkampf</strong>
-                <span>Ideal für alle, die Boxen durch Beinarbeit erweitern wollen</span>
-              </div>
-            </div>
-          </div>
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
-            <i class="fa-solid fa-fist-raised"></i> KOSTENLOS TESTEN
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
+      <!-- ── DESKTOP CARD GRID ── -->
+      <div class="courses-grid" role="tablist" aria-label="Kursauswahl">
 
-  <!-- ── Strength & Conditioning ── -->
-  <section class="kurs-section kurs-section--smoke" id="strength" aria-label="Strength and Conditioning">
-    <div class="container">
-      <div class="kurs-inner">
-        <div class="kurs-photo reveal">
-          <img src="/assets/images/service-pt.webp" alt="Strength and Conditioning Training bei Bomaye Gym Munich" loading="lazy" decoding="async" />
-          <div class="kurs-photo-overlay" aria-hidden="true"></div>
-          <span class="kurs-photo-badge">03 / 03 &nbsp;·&nbsp; STRENGTH</span>
+        <div class="course-card active" data-course="boxing" role="tab" aria-selected="true" tabindex="0"
+             onclick="openCourse('boxing')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('boxing')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">01 / 05</span>
+            <h3 class="course-card__title">BOXING</h3>
+            <p class="course-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
         </div>
-        <div class="kurs-text--dark reveal delay-1">
-          <span class="kurs-tag">STRENGTH & CONDITIONING</span>
-          <div class="kurs-title-wrap">
-            <h2>KRAFT.<br><span class="gold">ATHLETIK. LEISTUNG.</span></h2>
+
+        <div class="course-card" data-course="kickboxing" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('kickboxing')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('kickboxing')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">02 / 05</span>
+            <h3 class="course-card__title">KICKBOXING</h3>
+            <p class="course-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
           </div>
-          <p class="kurs-desc">
-            Bomaye-typisches Strength & Conditioning ist kein gewöhnliches Krafttraining. Es ist athletikbasiertes Leistungstraining, das direkt auf die Anforderungen des Kampfsports ausgerichtet ist: Explosivität, Schnellkraft, Ausdauer und Körperkontrolle.
-          </p>
-          <p class="kurs-desc">
-            Egal ob du als Boxer:in deine Power steigern willst, als Freizeitsportler:in leistungsfähiger werden möchtest oder schlicht fitter und stärker werden willst — dieses Programm ist strukturiert, messbar und effektiv.
-          </p>
-          <div class="kurs-feats">
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Kampfsport-spezifische Athletik</strong>
-                <span>Explosive Kraft, Schnelligkeit und funktionelle Beweglichkeit</span>
-              </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="youth" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('youth')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('youth')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">03 / 05</span>
+            <h3 class="course-card__title">YOUTH BOXING</h3>
+            <p class="course-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="olympic" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('olympic')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('olympic')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">04 / 05</span>
+            <h3 class="course-card__title">OLYMPISCHES BOXEN</h3>
+            <p class="course-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="mental" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('mental')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('mental')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">05 / 05</span>
+            <h3 class="course-card__title">MENTAL COACHING</h3>
+            <p class="course-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+      </div><!-- /courses-grid -->
+
+      <!-- ── DESKTOP DETAIL PANEL ── -->
+      <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
+        <div class="container">
+          <div class="course-detail__inner">
+            <div class="course-detail__img">
+              <img id="detail-img" src="/assets/images/service-exec.webp" alt="Boxing Training" loading="lazy" decoding="async" />
+              <div class="course-detail__img-overlay"></div>
             </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Strukturiertes Progressionssystem</strong>
-                <span>Dein Fortschritt ist messbar — von Session zu Session</span>
+            <div class="course-detail__text">
+              <span class="course-detail__tag" id="detail-tag">BOXING</span>
+              <h2 class="course-detail__title" id="detail-title">BOXING.<br><span class="gold">ECHTE TECHNIK.</span></h2>
+              <p class="course-detail__desc" id="detail-desc">
+                Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.
+              </p>
+              <div class="course-detail__feats" id="detail-feats">
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Alle Level willkommen</strong>
+                    <span>Anfänger, Fortgeschrittene und Wettkämpfer im selben Umfeld</span>
+                  </div>
+                </div>
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Technisches Einzel-Feedback</strong>
+                    <span>Kein anonymes Gruppentraining — jede Stunde mit klarem Coaching</span>
+                  </div>
+                </div>
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Sparring &amp; Wettkampf optional</strong>
+                    <span>Sicher, kontrolliert, mit Erfahrung begleitet</span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="kurs-feat">
-              <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-              <div class="kurs-feat-text">
-                <strong>Für alle Fitnesslevel</strong>
-                <span>Perfekte Ergänzung zu Boxen und Kickboxing — oder solo nutzbar</span>
-              </div>
+              <a href="/#schedule" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+                <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
+              </a>
             </div>
           </div>
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
-            <i class="fa-solid fa-fist-raised"></i> KOSTENLOS TESTEN
-          </button>
         </div>
       </div>
-    </div>
+
+    </div><!-- /container -->
+
+    <!-- ── MOBILE CAROUSEL ── -->
+    <div class="courses-carousel-wrap">
+      <div class="courses-carousel" id="courses-carousel" aria-label="Kurs-Karussell">
+
+        <div class="carousel-card" data-course="boxing" onclick="openMobileCourse('boxing',0)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">01 / 05</span>
+            <h3 class="carousel-card__title">BOXING</h3>
+            <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="kickboxing" onclick="openMobileCourse('kickboxing',1)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">02 / 05</span>
+            <h3 class="carousel-card__title">KICKBOXING</h3>
+            <p class="carousel-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="youth" onclick="openMobileCourse('youth',2)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">03 / 05</span>
+            <h3 class="carousel-card__title">YOUTH BOXING</h3>
+            <p class="carousel-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="olympic" onclick="openMobileCourse('olympic',3)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">04 / 05</span>
+            <h3 class="carousel-card__title">OLYMPISCHES BOXEN</h3>
+            <p class="carousel-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="mental" onclick="openMobileCourse('mental',4)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">05 / 05</span>
+            <h3 class="carousel-card__title">MENTAL COACHING</h3>
+            <p class="carousel-card__short">Mentale Stärke, Fokus und Ring-Intelligenz.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+      </div><!-- /courses-carousel -->
+
+      <!-- Dots -->
+      <div class="carousel-dots" id="carousel-dots" aria-hidden="true">
+        <button class="carousel-dot active" onclick="scrollCarouselTo(0)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(1)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(2)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(3)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(4)"></button>
+      </div>
+
+      <!-- Mobile detail panel -->
+      <div id="mobile-course-detail" class="mobile-course-detail container">
+        <span class="mobile-course-detail__tag" id="mob-detail-tag">BOXING</span>
+        <h3 class="mobile-course-detail__title" id="mob-detail-title">BOXING</h3>
+        <p class="mobile-course-detail__desc" id="mob-detail-desc"></p>
+        <div class="mobile-course-detail__feats" id="mob-detail-feats"></div>
+        <a href="/#schedule" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;width:100%;justify-content:center;">
+          <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
+        </a>
+      </div>
+
+    </div><!-- /courses-carousel-wrap -->
+
   </section>
 
   <!-- ── CTA ── -->
-  <section class="sec--dark" style="padding:clamp(48px,7vw,96px) 0;text-align:center;">
+  <section style="background:var(--ink);padding:clamp(48px,7vw,80px) 0;text-align:center;">
     <div class="container">
-      <span class="tag tag--dark">DEIN NÄCHSTER SCHRITT</span>
-      <h2 style="margin:1.25rem 0;">ERSTE STUNDE<br><span class="gold">KOSTENLOS.</span></h2>
+      <span class="tag tag--dark">ERSTE STUNDE KOSTENLOS</span>
+      <h2 style="margin:1.25rem 0;">BEREIT ZU <span class="gold">STARTEN?</span></h2>
       <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Kein Vertrag. Kein Druck. Einfach kommen und mitmachen.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <button class="btn btn--gold" onclick="openBooking()" type="button">
@@ -471,9 +662,11 @@
         <div class="footer-col">
           <h4>KURSE</h4>
           <ul class="footer-links">
-            <li><a href="/kurse#boxing">Olympic Boxing</a></li>
+            <li><a href="/kurse#boxing">Boxing</a></li>
             <li><a href="/kurse#kickboxing">Kickboxing</a></li>
-            <li><a href="/kurse#strength">Strength &amp; Conditioning</a></li>
+            <li><a href="/kurse#youth">Youth Boxing</a></li>
+            <li><a href="/kurse#olympic">Olympisches Boxen</a></li>
+            <li><a href="/kurse#mental">Mental Coaching</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -495,10 +688,8 @@
         </div>
       </div>
       <div class="footer-contactbar">
-        <a href="tel:+4917621932243">0176 2193 2243</a>
-        <span class="dot">•</span>
-        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
-        <span class="dot">•</span>
+        <a href="tel:+4917621932243">0176 2193 2243</a><span class="dot">•</span>
+        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a><span class="dot">•</span>
         <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
       </div>
       <div class="footer-bottom">
@@ -516,7 +707,183 @@
 
 <!-- ═══════ SCRIPTS ═══════ -->
 <script>
-/* ── Header scroll styling ── */
+/* ─── Course data ──────────────────────────────────────────── */
+const COURSES = {
+  boxing: {
+    tag: 'BOXING',
+    title: 'BOXING.<br><span class="gold">ECHTE TECHNIK.</span>',
+    titleMob: 'BOXING',
+    img: '/assets/images/service-exec.webp',
+    imgAlt: 'Boxing Training Bomaye Gym',
+    desc: 'Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.',
+    feats: [
+      { strong: 'Alle Level willkommen', span: 'Anfänger, Fortgeschrittene und Wettkämpfer' },
+      { strong: 'Technisches Einzel-Feedback', span: 'Kein anonymes Gruppentraining' },
+      { strong: 'Sparring & Wettkampf optional', span: 'Sicher, kontrolliert, mit Erfahrung begleitet' },
+    ]
+  },
+  kickboxing: {
+    tag: 'KICKBOXING',
+    title: 'KICKBOXING.<br><span class="gold">DYNAMIK & POWER.</span>',
+    titleMob: 'KICKBOXING',
+    img: '/assets/images/service-kick.webp',
+    imgAlt: 'Kickboxing Training Bomaye Gym',
+    desc: 'Kickboxing verbindet Boxen mit Beintechnik zu einem der vollständigsten Kampfsport-Systeme. Du trainierst Koordination, Schnelligkeit und explosive Kraft — gecoacht von Alfonso Fusco, Kickbox-Weltmeister und Spezialist für Ring-Intelligenz.',
+    feats: [
+      { strong: 'Vollkontakt-Technik & Footwork', span: 'Präzise Tritte, Kombinationen, Stellungsspiel' },
+      { strong: 'Weltmeister als Coach', span: 'Direkte Linie zu einem internationalen Champion' },
+      { strong: 'Fitness & Wettkampf', span: 'Für Freizeit-Sportler und Wettkämpfer gleichermaßen' },
+    ]
+  },
+  youth: {
+    tag: 'YOUTH BOXING',
+    title: 'YOUTH BOXING.<br><span class="gold">CHARAKTER & SPORT.</span>',
+    titleMob: 'YOUTH BOXING',
+    img: '/assets/images/service-youth.webp',
+    imgAlt: 'Youth Boxing Bomaye Gym',
+    desc: 'Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt — es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.',
+    feats: [
+      { strong: 'Ab 6 Jahren', span: 'Altersgerechtes Training für Kids, Jugend und Teens' },
+      { strong: 'Disziplin & Charakter', span: 'Werte, die weit über den Boxring hinausgehen' },
+      { strong: 'Sicheres Umfeld', span: 'Professionell betreut, kein Vollkontakt für Anfänger' },
+    ]
+  },
+  olympic: {
+    tag: 'OLYMPISCHES BOXEN',
+    title: 'OLYMPISCHES BOXEN.<br><span class="gold">WETTKAMPF. NIVEAU.</span>',
+    titleMob: 'OLYMPISCHES BOXEN',
+    img: '/assets/images/service-olympic.webp',
+    imgAlt: 'Olympisches Boxen Bomaye Gym',
+    desc: 'Olympisches Boxen nach AIBA-Regeln — das Original. Unser wettkampforientiertes Programm bereitet Athleten gezielt auf Meisterschaften, Turniere und Ausscheidungskämpfe vor. Raschad Pekpassi als Landestrainer des BABV führt dich durch diesen Weg.',
+    feats: [
+      { strong: 'AIBA-konforme Technik', span: 'Training nach olympischen Wettkampfregeln' },
+      { strong: 'Wettkampfvorbereitung', span: 'Sparring, Taktik und mentale Vorbereitung' },
+      { strong: 'Landestrainer-Coaching', span: 'Direkt unter Raschad Pekpassi, BABV Landestrainer' },
+    ]
+  },
+  mental: {
+    tag: 'MENTAL COACHING',
+    title: 'MENTAL COACHING.<br><span class="gold">KOPF. FOKUS. RING.</span>',
+    titleMob: 'MENTAL COACHING',
+    img: '/assets/images/service-mind-v2.webp',
+    imgAlt: 'Mental Coaching Bomaye Gym',
+    desc: 'Der Kampf wird im Kopf gewonnen — bevor er im Ring beginnt. Unser Mental Coaching-Programm schärft Konzentration, Ring-Intelligenz und mentale Widerstandsfähigkeit. Von Alfonso Fusco entwickelt: der Ansatz, der Weltmeister formt.',
+    feats: [
+      { strong: 'Ring-Intelligenz', span: 'Taktisches Denken und Lesen des Gegners' },
+      { strong: 'Stressresistenz', span: 'Mentale Techniken aus dem Profi-Kampfsport' },
+      { strong: 'Fokus & Zielsetzung', span: 'Methoden, die auch außerhalb des Rings wirken' },
+    ]
+  }
+};
+
+/* ─── Desktop: open course detail ─────────────────────────── */
+function openCourse(id) {
+  const data = COURSES[id];
+  if (!data) return;
+
+  /* Update cards */
+  document.querySelectorAll('.course-card').forEach(c => {
+    const isActive = c.dataset.course === id;
+    c.classList.toggle('active', isActive);
+    c.setAttribute('aria-selected', String(isActive));
+  });
+
+  /* Update detail */
+  document.getElementById('detail-tag').textContent     = data.tag;
+  document.getElementById('detail-title').innerHTML     = data.title;
+  document.getElementById('detail-desc').textContent    = data.desc;
+  document.getElementById('detail-img').src             = data.img;
+  document.getElementById('detail-img').alt             = data.imgAlt;
+
+  const featsEl = document.getElementById('detail-feats');
+  featsEl.innerHTML = data.feats.map(f => `
+    <div class="course-detail__feat">
+      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <div class="course-detail__feat-body">
+        <strong>${f.strong}</strong>
+        <span>${f.span}</span>
+      </div>
+    </div>`).join('');
+
+  const panel = document.getElementById('course-detail');
+  panel.classList.add('visible');
+}
+
+/* ─── Mobile: open course detail ──────────────────────────── */
+function openMobileCourse(id, idx) {
+  const data = COURSES[id];
+  if (!data) return;
+
+  document.querySelectorAll('.carousel-card').forEach((c, i) => {
+    c.style.opacity = i === idx ? '1' : '0.8';
+  });
+
+  document.getElementById('mob-detail-tag').textContent  = data.tag;
+  document.getElementById('mob-detail-title').textContent = data.titleMob;
+  document.getElementById('mob-detail-desc').textContent  = data.desc;
+
+  const featsEl = document.getElementById('mob-detail-feats');
+  featsEl.innerHTML = data.feats.map(f => `
+    <div class="mobile-course-detail__feat">
+      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <div class="mobile-course-detail__feat-body">
+        <strong>${f.strong}</strong>
+        <span>${f.span}</span>
+      </div>
+    </div>`).join('');
+
+  const panel = document.getElementById('mobile-course-detail');
+  panel.classList.add('visible');
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+
+/* ─── Carousel dot + scroll sync ──────────────────────────── */
+function scrollCarouselTo(idx) {
+  const carousel = document.getElementById('courses-carousel');
+  const cards    = carousel.querySelectorAll('.carousel-card');
+  if (!cards[idx]) return;
+  carousel.scrollTo({ left: cards[idx].offsetLeft - carousel.offsetLeft - (carousel.offsetWidth - cards[idx].offsetWidth) / 2, behavior: 'smooth' });
+  updateDots(idx);
+}
+
+function updateDots(active) {
+  document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === active));
+}
+
+/* Sync dots with scroll */
+(function () {
+  const carousel = document.getElementById('courses-carousel');
+  if (!carousel) return;
+  let _t;
+  carousel.addEventListener('scroll', () => {
+    clearTimeout(_t);
+    _t = setTimeout(() => {
+      const cards = carousel.querySelectorAll('.carousel-card');
+      let closest = 0, minDist = Infinity;
+      const cMid = carousel.scrollLeft + carousel.offsetWidth / 2;
+      cards.forEach((c, i) => {
+        const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cMid);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      updateDots(closest);
+    }, 80);
+  }, { passive: true });
+})();
+
+/* ─── Open first course by default on desktop ─────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.innerWidth > 768) openCourse('boxing');
+});
+
+/* ─── URL hash: jump to specific course ───────────────────── */
+(function () {
+  const hash = location.hash.replace('#', '');
+  if (COURSES[hash]) {
+    document.addEventListener('DOMContentLoaded', () => openCourse(hash));
+  }
+})();
+
+/* ─── Header scroll styling ───────────────────────────────── */
 (function () {
   const header = document.getElementById('header');
   if (!header) return;
@@ -525,18 +892,18 @@
   onScroll();
 })();
 
-/* ── Mobile nav toggle ── */
+/* ─── Mobile nav toggle ────────────────────────────────────── */
 function toggleKurseMenu() {
   const nav = document.getElementById('kurse-mobile-nav');
   const btn = document.getElementById('kurse-burger-btn');
   if (!nav) return;
-  const isOpen = nav.style.transform === 'translateX(0%)' || nav.style.transform === 'translateX(0px)' || nav.style.transform === 'translateX(0)';
+  const isOpen = nav.style.transform === 'translateX(0%)' || nav.style.transform === 'translateX(0)';
   nav.style.transform = isOpen ? 'translateX(100%)' : 'translateX(0)';
   document.body.style.overflow = isOpen ? '' : 'hidden';
   if (btn) btn.setAttribute('aria-expanded', String(!isOpen));
 }
 
-/* ── Booking modal ── */
+/* ─── Booking modal ────────────────────────────────────────── */
 let _bsportMounted = false;
 function openBooking() {
   const modal = document.getElementById('booking-modal');
@@ -554,7 +921,7 @@ function closeBooking() {
 function _mountBsport() {
   if (!document.getElementById('bsport-cdn')) {
     const s = document.createElement('script');
-    s.id  = 'bsport-cdn';
+    s.id = 'bsport-cdn';
     s.src = 'https://cdn.bsport.io/scripts/widget.js';
     document.head.appendChild(s);
   }
@@ -574,7 +941,7 @@ function _waitBsport(attempt) {
 document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
 
-/* ── Scroll reveal ── */
+/* ─── Scroll reveal ────────────────────────────────────────── */
 (function () {
   const els = document.querySelectorAll('.reveal');
   if (!els.length) return;

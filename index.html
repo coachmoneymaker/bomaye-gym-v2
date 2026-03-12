@@ -207,6 +207,16 @@
             </a>
           </div>
         </div>
+        <!-- Right column: logo brand visual — desktop only -->
+        <div class="dna-visual reveal delay-2" aria-hidden="true">
+          <img src="/assets/images/bomaye-logo.png" alt="" class="dna-visual-logo"
+               loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+          <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
+          <div class="dna-visual-sub">GYM MUNICH</div>
+          <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.4);"></div>
+          <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.5);">EST. 2026 · PINEAPPLE PARK</div>
+        </div>
       </div>
     </div>
   </section>
@@ -292,9 +302,9 @@
     <!-- Post-stack CTA -->
     <div class="container">
       <div class="disciplines-cta reveal" style="text-align:center;">
-        <button class="btn btn--gold" onclick="nav('home','schedule')" type="button">
-          <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
-        </button>
+        <a href="/kurse" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-dumbbell"></i> ALLE KURSE
+        </a>
       </div>
     </div>
   </section>
