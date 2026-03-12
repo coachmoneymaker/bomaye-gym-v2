@@ -2334,7 +2334,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 #disciplines {
   background: var(--ink);
-  padding-bottom: 0;
+  padding-bottom: 3rem;
 }
 
 /* ── Stack container: side padding creates card floating margins ── */
@@ -2346,9 +2346,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Individual card ── */
 .disc-panel {
   position: sticky;
-  /* Premium card height — immersive editorial, 65vh sweet spot */
-  height: 65svh;
-  height: 65vh; /* svh fallback */
+  /* Premium card height — compact editorial, 50vh sweet spot */
+  height: 50svh;
+  height: 50vh; /* svh fallback */
   overflow: hidden;
   border-radius: 18px;              /* card shape */
   box-shadow: 0 16px 56px rgba(0,0,0,0.60); /* ambient card lift shadow */
@@ -2366,7 +2366,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .disc-panel:nth-child(3) { top: calc(var(--nav-h) + var(--disc-peek) * 2);        z-index: 3; }
 
 /* Dwell margin: scroll distance before the next card begins rising */
-.disc-panel:not(:last-child) { margin-bottom: 22vh; }
+.disc-panel:not(:last-child) { margin-bottom: 14vh; }
 
 /* Compositor layer promotion for JS-driven scale/opacity */
 .disc-panel:not(:last-child) { will-change: transform, opacity; }
@@ -2454,10 +2454,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Tablet (481px – 768px): slightly shorter cards, same sticky logic ── */
 @media (max-width: 768px) {
   .disc-panel {
-    height: 62svh;
-    height: 62vh;
+    height: 56svh;
+    height: 56vh;
     /* Reduce dwell slightly on narrower screens */
-    margin-bottom: 18vh;
+    margin-bottom: 12vh;
   }
   .disc-panel__content { padding-bottom: clamp(1.5rem, 3vh, 2.5rem); }
 }
@@ -2473,8 +2473,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     position: relative;
     top: auto;
     height: auto;
-    min-height: 60svh;
-    min-height: 60vh;
+    min-height: 52svh;
+    min-height: 52vh;
     border-radius: 14px;
     /* Replace dwell margin with a tight card gap */
     margin-bottom: 1rem !important;
