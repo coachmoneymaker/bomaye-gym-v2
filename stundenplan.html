@@ -278,57 +278,39 @@ function MountBsportWidget(config, repeat=1) {
 </script>
 
 <script>
-/* ── Bsport metadata: remove inline display:none set by React widget ──
-   Bsport applies style="display:none" to metadata rows (Einrichtung,
-   Lehrkraft, Niveau, Teilnehmer) at narrow viewport widths via JS.
-   Inline styles cannot be overridden by CSS !important rules.
-   This observer removes those inline overrides after each React render.
+/* BSport schedule fix — removes inline display:none from widget metadata.
+   MutationObserver fires whenever the widget re-renders (day change, filter).
+   Debounce (150ms) prevents CPU saturation from rapid React mutations.
+   Observing document.body catches all React re-renders that add card nodes.
+   childList-only: our style changes are attribute mutations, not childList —
+   the observer never re-fires from its own fix (no infinite loop).          */
+document.addEventListener("DOMContentLoaded", function () {
 
-   Safe from infinite loops: MutationObserver watches childList only
-   (node additions/removals). Our style property changes do NOT trigger
-   childList mutations, so the observer never re-fires from our fix. */
-(function () {
-  var widget = document.getElementById('bsport-widget-172485');
-  if (!widget) return;
+  function fixSchedule() {
+    var widget = document.querySelector('[id^="bsport-widget"]');
+    if (!widget) return;
 
-  function fixCards() {
-    widget.querySelectorAll('.bs-offer-list-item__content__offer__left').forEach(function (col) {
-      /* Unclip the column itself */
-      if (col.style.overflow === 'hidden') col.style.overflow = '';
-      if (col.style.maxHeight)            col.style.maxHeight = '';
-      if (col.style.height && col.style.height !== 'auto') col.style.height = '';
-
-      /* Check COMPUTED display on each direct child — catches CSS class-based
-         hiding (e.g. Bsport compact-mode class) that style attribute inspection
-         cannot detect. Sets display:flex to preserve icon+text row layout.    */
-      Array.from(col.children).forEach(function (el) {
-        var cs = window.getComputedStyle(el);
-        if (cs.display === 'none') {
-          el.style.display = 'flex';
-          el.style.alignItems = 'center';
-        }
-        if (cs.visibility === 'hidden') el.style.visibility = 'visible';
-        if (cs.opacity    === '0')      el.style.opacity    = '1';
-      });
-
-      /* Also clear inline overrides from all descendants */
-      col.querySelectorAll('*').forEach(function (el) {
-        if (el.style.display    === 'none')   el.style.display    = '';
-        if (el.style.overflow   === 'hidden') el.style.overflow   = '';
-        if (el.style.maxHeight)               el.style.maxHeight  = '';
-        if (el.style.visibility === 'hidden') el.style.visibility = '';
-        if (el.style.opacity    === '0')      el.style.opacity    = '';
-      });
+    widget.querySelectorAll('*').forEach(function (el) {
+      if (el.style && el.style.display === "none") {
+        el.style.display = "";
+      }
     });
   }
 
-  var timer;
-  var obs = new MutationObserver(function () {
-    clearTimeout(timer);
-    timer = setTimeout(fixCards, 200);
+  fixSchedule();
+
+  var _timer;
+  var observer = new MutationObserver(function () {
+    clearTimeout(_timer);
+    _timer = setTimeout(fixSchedule, 150);
   });
-  obs.observe(widget, { childList: true, subtree: true });
-}());
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+});
 </script>
 
 </body>

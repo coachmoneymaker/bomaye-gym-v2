@@ -1017,6 +1017,67 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
     flex-wrap: wrap !important;
     justify-content: center !important;
   }
+
+  /* ── Mobile card field order: Activity → Time → Participants → Facility → Coach → Level ──
+     The __left column is already flex-direction:column, so `order` controls vertical sequence.
+     All metadata is visible (display:none removed by fixSchedule JS); these rules ensure
+     the correct reading order on narrow screens. Desktop unaffected (outside this breakpoint). */
+
+  /* 1. Activity / Class Name */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="name"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Name"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="title"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Title"] {
+    order: 1 !important;
+  }
+
+  /* 2. Time / Duration */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="time"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Time"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="duration"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Duration"] {
+    order: 2 !important;
+  }
+
+  /* 3. Participants / Capacity / Spots */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="spot"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Spot"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="capacity"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Capacity"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="participant"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Participant"] {
+    order: 3 !important;
+  }
+
+  /* 4. Facility / Location / Venue */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="facility"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Facility"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="location"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Location"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="venue"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Venue"] {
+    order: 4 !important;
+  }
+
+  /* 5. Coach / Instructor / Trainer / Teacher */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="teacher"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Teacher"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="coach"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Coach"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="instructor"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Instructor"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="trainer"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Trainer"] {
+    order: 5 !important;
+  }
+
+  /* 6. Level / Niveau / Difficulty */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="level"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Level"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="difficulty"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Difficulty"] {
+    order: 6 !important;
+  }
 }
 
 /* ── Phone: ≤480px — stacked card layout ── */
