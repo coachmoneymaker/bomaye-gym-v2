@@ -2440,7 +2440,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   color: rgba(255,255,255,0.80);
   line-height: 1.7;
   max-width: 440px;
-  margin-bottom: 1.75rem;
+  margin-bottom: 0; /* no button below — padding-bottom on content handles gap */
   text-shadow: 0 1px 8px rgba(0,0,0,0.35);
 }
 
@@ -2449,7 +2449,13 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ── Tablet ── */
 @media (max-width: 768px) {
-  .disc-panel { margin-bottom: 20vh; }
+  .disc-panel {
+    margin-bottom: 18vh;
+    /* Compact the sticky panel height on tablet — still immersive but
+       not overwhelming on portrait iPad or landscape phone.          */
+    height: calc(80svh - var(--nav-h));
+    height: calc(80vh  - var(--nav-h)); /* svh fallback */
+  }
   .disc-panel__content { padding-bottom: clamp(2rem, 4vh, 3rem); }
 }
 
@@ -2461,8 +2467,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     position: relative;
     top: auto;
     height: auto;
-    min-height: 85svh;
-    min-height: 85vh; /* fallback */
+    /* Reduced from 85svh — panels were nearly full-screen on modern phones.
+       65svh keeps them tall enough to feel cinematic without being oppressive. */
+    min-height: 65svh;
+    min-height: 65vh; /* fallback */
     margin-bottom: 0 !important;
   }
   .disc-panel__title { font-size: clamp(2.4rem, 11vw, 3rem); }
