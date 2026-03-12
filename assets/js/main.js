@@ -52,12 +52,21 @@ document.addEventListener('DOMContentLoaded', function () {
 ──────────────────────────────────────────────────────────── */
 function initImageFallbacks() {
   // 1. <img> tag onerror: hide broken image, keep layout stable
+  //    Also trigger .loaded class for lazy-load fade-in animation
   document.querySelectorAll('img[src]').forEach(img => {
     if (!img.getAttribute('onerror')) {
       img.addEventListener('error', function () {
         this.style.opacity = '0';
         this.closest('.coach-photo') && (this.closest('.coach-photo').style.background = 'var(--smoke)');
       }, { once: true });
+    }
+    // Fade-in on load for lazy images
+    if (img.getAttribute('loading') === 'lazy') {
+      if (img.complete) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function () { this.classList.add('loaded'); }, { once: true });
+      }
     }
   });
 
