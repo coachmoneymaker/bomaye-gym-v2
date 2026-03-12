@@ -74,6 +74,13 @@
       margin: 0 auto;
     }
 
+    /* Quote — standalone page: make visible immediately (SPA scroll observer absent) */
+    #quote .quote-l1,
+    #quote .quote-l2 {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
     /* Nav active state */
     .nav-link-active { color: var(--gold) !important; }
 
@@ -101,7 +108,7 @@
 
     <nav class="nav-links" aria-label="Hauptnavigation">
       <a class="nav-link" href="/">HOME</a>
-      <a class="nav-link" href="/#disciplines">KURSE</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
       <a class="nav-link" href="/#schedule">STUNDENPLAN</a>
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link nav-link-active" href="/about" aria-current="page">ÜBER UNS</a>
@@ -121,7 +128,7 @@
     <i class="fa-solid fa-xmark"></i>
   </button>
   <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
-  <a class="nav-link" href="/#disciplines" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
+  <a class="nav-link" href="/kurse" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
   <a class="nav-link" href="/#schedule" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">STUNDENPLAN</a>
   <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">COACHES</a>
   <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">ÜBER UNS</a>

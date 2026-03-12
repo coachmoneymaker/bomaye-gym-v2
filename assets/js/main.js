@@ -280,9 +280,19 @@ function renderPricingDisplay(ageGroup, duration) {
         ${savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€/Jahr vs. monatlich</div>` : '<div class="mp-savings-empty"></div>'}
       </div>
       <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
-      <div class="membership-enrollment">
-        <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+      <div class="membership-enrollment" onclick="toggleEnrollmentInfo(this)" style="cursor:pointer;" title="Klicken für Details">
+        <i class="fa-solid fa-circle-plus enrollment-toggle-icon" aria-hidden="true"></i>
         <span>+ 100€ Aufnahmegebühr einmalig</span>
+      </div>
+      <div class="enrollment-info-panel" style="display:none;background:rgba(197,160,89,0.07);border:1px solid rgba(197,160,89,0.2);border-radius:6px;padding:1rem 1.1rem;margin-top:0.5rem;font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.6;">
+        <p style="margin:0 0 0.65rem;font-family:var(--font-head);font-size:0.6rem;letter-spacing:3px;color:var(--gold);">IM STARTER KIT ENTHALTEN</p>
+        <ul style="margin:0;padding:0 0 0 1rem;list-style:disc;">
+          <li>Bomaye Boxhandschuhe</li>
+          <li>Bandagen (Hand Wraps)</li>
+          <li>Springseil</li>
+          <li>Bomaye T-Shirt</li>
+        </ul>
+        <p style="margin:0.75rem 0 0;font-size:0.78rem;color:rgba(255,255,255,0.45);">Die Aufnahmegebühr wird einmalig bei Vertragsstart fällig und beinhaltet dein komplettes Starter Kit im Bomaye-Design.</p>
       </div>
       <button onclick="navToMehrPreise()" class="btn btn--gold btn--full" type="button">
         <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
@@ -431,6 +441,20 @@ function setupSliderDots(sliderId, dotsId) {
       ticking = false;
     });
   }, { passive: true });
+}
+
+/* ── Enrollment info panel toggle ──────────────────────────── */
+function toggleEnrollmentInfo(row) {
+  var panel = row.nextElementSibling;
+  if (!panel || !panel.classList.contains('enrollment-info-panel')) return;
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  var icon = row.querySelector('.enrollment-toggle-icon');
+  if (icon) {
+    icon.className = isOpen
+      ? 'fa-solid fa-circle-plus enrollment-toggle-icon'
+      : 'fa-solid fa-circle-minus enrollment-toggle-icon';
+  }
 }
 
 /* ── FAQ ───────────────────────────────────────────────────── */

@@ -78,7 +78,10 @@
     .nav-link-active { color: var(--gold) !important; }
 
     /* ── Coaches full page layout ── */
-    .coaches-page-section { padding: clamp(48px, 8vw, 96px) 0; }
+    .coaches-page-section {
+      padding: clamp(48px, 8vw, 96px) 0;
+      background: #f9f7f4;  /* light background so dark text is readable */
+    }
 
     /* Full coach card with bio */
     .coach-card-full {
@@ -87,7 +90,7 @@
       gap: clamp(2rem, 5vw, 5rem);
       align-items: center;
       padding: clamp(48px, 7vw, 80px) 0;
-      border-bottom: 1px solid rgba(197,160,89,0.15);
+      border-bottom: 1px solid rgba(8,8,8,0.1);
     }
     .coach-card-full:last-child { border-bottom: none; }
     .coach-card-full.reverse { direction: rtl; }
@@ -127,27 +130,27 @@
     .coach-full-info h3 {
       font-family: var(--font-display);
       font-size: clamp(2rem, 4vw, 3rem);
-      color: var(--ink);
+      color: #080808;
       margin-bottom: 0.25rem;
     }
     .coach-full-title {
       font-family: var(--font-head);
       font-size: 0.65rem;
       letter-spacing: 3px;
-      color: var(--gold);
+      color: #b8922e;
       margin-bottom: 0.5rem;
     }
     .coach-full-role {
       font-family: var(--font-head);
       font-size: 0.72rem;
       letter-spacing: 2px;
-      color: rgba(8,8,8,0.5);
+      color: rgba(8,8,8,0.55);
       margin-bottom: 1.5rem;
     }
     .coach-full-bio {
       font-family: var(--font-body);
       font-size: 1rem;
-      color: rgba(8,8,8,0.7);
+      color: #2a2a2a;
       line-height: 1.7;
       margin-bottom: 1.75rem;
     }
@@ -188,7 +191,7 @@
 
     <nav class="nav-links" aria-label="Hauptnavigation">
       <a class="nav-link" href="/">HOME</a>
-      <a class="nav-link" href="/#disciplines">KURSE</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
       <a class="nav-link" href="/#schedule">STUNDENPLAN</a>
       <a class="nav-link nav-link-active" href="/coaches" aria-current="page">COACHES</a>
       <a class="nav-link" href="/about">ÜBER UNS</a>
@@ -208,7 +211,7 @@
     <i class="fa-solid fa-xmark"></i>
   </button>
   <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
-  <a class="nav-link" href="/#disciplines" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
+  <a class="nav-link" href="/kurse" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
   <a class="nav-link" href="/#schedule" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">STUNDENPLAN</a>
   <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">COACHES</a>
   <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">ÜBER UNS</a>
@@ -249,7 +252,7 @@
   </section>
 
   <!-- ── Coach Cards ── -->
-  <section class="coaches-page-section sec--white">
+  <section class="coaches-page-section">
     <div class="container">
 
       <!-- Raschad -->

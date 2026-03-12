@@ -89,7 +89,7 @@
 
     <nav class="nav-links" aria-label="Hauptnavigation">
       <button class="nav-link" onclick="nav('home')" type="button">HOME</button>
-      <button class="nav-link" onclick="nav('home','disciplines')" type="button">KURSE</button>
+      <a class="nav-link" href="/kurse">KURSE</a>
       <button class="nav-link" onclick="nav('home','schedule')" type="button">STUNDENPLAN</button>
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ÜBER UNS</a>
@@ -109,7 +109,7 @@
     <i class="fa-solid fa-xmark"></i>
   </button>
   <button class="nav-link" onclick="mobileNav('home')" type="button">HOME</button>
-  <button class="nav-link" onclick="mobileNav('home','disciplines')" type="button">KURSE</button>
+  <a class="nav-link" href="/kurse" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">KURSE</a>
   <button class="nav-link" onclick="mobileNav('home','schedule')" type="button">STUNDENPLAN</button>
   <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">COACHES</a>
   <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">ÜBER UNS</a>
@@ -158,8 +158,8 @@
         <span>Nur noch <strong id="hero-eb-num">150</strong> Early-Bird-Plätze verfügbar</span>
       </a>
       <div class="hero-ctas">
-        <button class="btn btn--gold btn--hero-primary" onclick="openBooking()" type="button">
-          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
+        <button class="btn btn--gold btn--hero-primary" onclick="nav('home','pricing')" type="button">
+          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
         </button>
         <a href="#schedule" onclick="event.preventDefault();nav('home','schedule');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
           <i class="fa-solid fa-calendar-days"></i> STUNDENPLAN ANSEHEN
@@ -190,6 +190,24 @@
     </div>
     <div class="scroll-hint" aria-hidden="true">
       <div class="scroll-hint-line"></div>
+    </div>
+  </section>
+
+  <!-- ── DNA / PHILOSOPHY TEASER ── -->
+  <section id="dna" class="sec--smoke">
+    <div class="container">
+      <div class="dna-inner">
+        <div class="dna-text reveal">
+          <span class="tag tag--light">PHILOSOPHY</span>
+          <h2 style="margin-top:1.2rem;">"ALI, BOMA YE!"</h2>
+          <p>Kinshasa, 1974. Als 60.000 Menschen "Bomaye" riefen, war es der ultimative Ausdruck von Gemeinschaft und Unterstützung. <strong style="color:var(--white);">BOMAYE GYM MUNICH</strong> — wir stehen in deiner Ecke. <em>It's not a gym, it's our passion.</em></p>
+          <div style="margin-top:2rem;">
+            <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+              MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -388,25 +406,6 @@
     </div>
   </section>
 
-  <!-- ── BOOKING ── -->
-  <section id="booking" class="sec--dark">
-    <div class="container">
-      <div class="booking-head reveal">
-        <span class="tag tag--dark">PROBETRAINING</span>
-        <h2 style="margin-top:1rem;">BEREIT FÜR DEIN <span class="gold">ERSTES TRAINING?</span></h2>
-        <p>Sichere dir jetzt dein kostenloses Probetraining im Bomaye Gym München.</p>
-        <div class="booking-trust reveal delay-1">
-          <div class="booking-trust-item"><i class="fa-solid fa-check-circle"></i><span>100% kostenlos &amp; unverbindlich</span></div>
-          <div class="booking-trust-item"><i class="fa-solid fa-check-circle"></i><span>Keine Vorerfahrung nötig</span></div>
-          <div class="booking-trust-item"><i class="fa-solid fa-check-circle"></i><span>Handschuhe werden gestellt</span></div>
-        </div>
-        <button onclick="openBooking()" class="btn btn--gold booking-cta-btn" type="button">
-          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING SICHERN
-        </button>
-      </div>
-    </div>
-  </section>
-
   <!-- ── STUNDENPLAN ── -->
   <section id="schedule">
     <div class="container">
@@ -430,6 +429,44 @@
           <i class="fa-solid fa-calendar-days"></i> ALLE TERMINE ANSEHEN
         </a>
         <p class="schedule-cta-note">Kostenlos · Kein Vertrag · Direkt in Bsport</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section id="pricing" class="sec--ink2">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--dark">MITGLIEDSCHAFT</span>
+        <h2 style="margin-top:1rem;">WÄHLE DEINEN <span class="gold">PLAN.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;font-size:0.8rem;font-family:var(--font-head);letter-spacing:1.5px;">
+          WÖCHENTLICHER PREIS · KOSTENLOSES PROBETRAINING
+        </p>
+      </div>
+
+      <!-- Age category toggle -->
+      <div class="age-toggle reveal" role="tablist" aria-label="Altersgruppe wählen">
+        <button class="atab" data-age="kids" role="tab" type="button">KIDS (6–9)</button>
+        <button class="atab" data-age="jugend" role="tab" type="button">JUGEND (10–17)</button>
+        <button class="atab active" data-age="erwachsene" role="tab" type="button">ERWACHSENE (18+)</button>
+      </div>
+
+      <!-- Enrollment notice -->
+      <div class="enrollment-notice reveal">
+        <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Preise bei 12 Monaten Laufzeit
+      </div>
+
+      <!-- Pricing display — rendered by JS from config.js -->
+      <div id="pricing-display">
+        <!-- populated by main.js -->
+      </div>
+
+      <!-- Weitere Preise → separate view -->
+      <div class="mehr-preise-nav reveal">
+        <button class="mehr-preise-btn" type="button" onclick="navToMehrPreise()">
+          <span>Alle Preise &amp; Optionen ansehen</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
     </div>
   </section>
@@ -484,142 +521,6 @@
       </div>
       <!-- Slider dots (mobile only, populated by JS) -->
       <div id="testimonials-dots" class="slider-dots" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <!-- ── PRICING ── -->
-  <section id="pricing" class="sec--ink2">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--dark">MITGLIEDSCHAFT</span>
-        <h2 style="margin-top:1rem;">WÄHLE DEINEN <span class="gold">PLAN.</span></h2>
-        <p style="color:var(--muted);margin-top:0.75rem;font-size:0.8rem;font-family:var(--font-head);letter-spacing:1.5px;">
-          WÖCHENTLICHER PREIS · KOSTENLOSES PROBETRAINING
-        </p>
-      </div>
-
-      <!-- Age category toggle -->
-      <div class="age-toggle reveal" role="tablist" aria-label="Altersgruppe wählen">
-        <button class="atab" data-age="kids" role="tab" type="button">KIDS (6–9)</button>
-        <button class="atab" data-age="jugend" role="tab" type="button">JUGEND (10–17)</button>
-        <button class="atab active" data-age="erwachsene" role="tab" type="button">ERWACHSENE (18+)</button>
-      </div>
-
-      <!-- Enrollment notice -->
-      <div class="enrollment-notice reveal">
-        <strong>100€ Aufnahmegebühr</strong> (einmalig) · Kostenloses Probetraining · Preise bei 12 Monaten Laufzeit
-      </div>
-
-      <!-- Pricing display — rendered by JS from config.js -->
-      <div id="pricing-display">
-        <!-- populated by main.js -->
-      </div>
-
-      <!-- Weitere Preise → separate view -->
-      <div class="mehr-preise-nav reveal">
-        <button class="mehr-preise-btn" type="button" onclick="navToMehrPreise()">
-          <span>Alle Preise &amp; Optionen ansehen</span>
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TEAM (COMPACT) ── -->
-  <section id="team" class="sec--white">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--light">COACHES</span>
-        <h2 style="margin-top:1rem;">DEINE <span class="gold">TRAINER.</span></h2>
-        <p style="color:rgba(8,8,8,0.6); max-width:520px; margin:0.75rem auto 0;">Trainiert von einem Landestrainer und einem Kickbox-Weltmeister.</p>
-      </div>
-      <div class="team-grid" id="team-slider">
-        <div class="coach-card reveal delay-1">
-          <div class="coach-photo">
-            <img src="/assets/images/coach-raschad.webp" alt="Raschad Pekpassi — Head Coach &amp; Founder" loading="lazy" decoding="async" />
-            <div class="coach-creds">
-              <span class="coach-cred">LANDESTRAINER</span>
-              <span class="coach-cred">20+ JAHRE</span>
-              <span class="coach-cred">FOUNDER</span>
-            </div>
-          </div>
-          <div class="coach-info">
-            <h3>RASCHAD PEKPASSI</h3>
-            <p class="coach-title">Landestrainer (BABV) · Head Coach &amp; Founder</p>
-            <div class="coach-socials">
-              <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf Instagram">
-                <i class="fa-brands fa-instagram"></i>
-              </a>
-              <a href="https://www.tiktok.com/@bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf TikTok">
-                <i class="fa-brands fa-tiktok"></i>
-              </a>
-            </div>
-            <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">PROBETRAINING BUCHEN</button>
-          </div>
-        </div>
-        <div class="coach-card reveal delay-2">
-          <div class="coach-photo">
-            <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Head Coach &amp; Founder" loading="lazy" decoding="async" />
-            <div class="coach-creds">
-              <span class="coach-cred">WM-TITEL</span>
-              <span class="coach-cred">KICKBOXEN</span>
-              <span class="coach-cred">FOUNDER</span>
-            </div>
-          </div>
-          <div class="coach-info">
-            <h3>ALFONSO FUSCO</h3>
-            <p class="coach-title">Weltmeister Kickboxen · Head Coach &amp; Founder</p>
-            <div class="coach-socials">
-              <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf Instagram">
-                <i class="fa-brands fa-instagram"></i>
-              </a>
-              <a href="https://www.tiktok.com/@bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf TikTok">
-                <i class="fa-brands fa-tiktok"></i>
-              </a>
-            </div>
-            <button onclick="openBooking()" class="btn btn--outline-dark btn--sm" type="button">PROBETRAINING BUCHEN</button>
-          </div>
-        </div>
-      </div>
-      <!-- Team slider dots (mobile only) -->
-      <div id="team-dots" class="slider-dots" aria-hidden="true"></div>
-      <div style="text-align:center;margin-top:2.5rem;">
-        <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-users"></i> ALLE COACHES ANSEHEN
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── DNA / PHILOSOPHY TEASER ── -->
-  <section id="dna" class="sec--smoke">
-    <div class="container">
-      <div class="dna-inner">
-        <div class="dna-text reveal">
-          <span class="tag tag--light">PHILOSOPHY</span>
-          <h2 style="margin-top:1.2rem;">"ALI, BOMA YE!"</h2>
-          <p>Kinshasa, 1974. Als 60.000 Menschen "Bomaye" riefen, war es der ultimative Ausdruck von Gemeinschaft und Unterstützung. <strong style="color:var(--white);">BOMAYE GYM MUNICH</strong> — wir stehen in deiner Ecke. <em>It's not a gym, it's our passion.</em></p>
-          <div class="dna-stats">
-            <div>
-              <div class="stat-num">150</div>
-              <div class="stat-lbl">Early-Bird Plätze</div>
-            </div>
-            <div>
-              <div class="stat-num">8</div>
-              <div class="stat-lbl">Programme</div>
-            </div>
-            <div>
-              <div class="stat-num">20+</div>
-              <div class="stat-lbl">Jahre Erfahrung</div>
-            </div>
-          </div>
-          <div style="margin-top:2rem;">
-            <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-              MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
