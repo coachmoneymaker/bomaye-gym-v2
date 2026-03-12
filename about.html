@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Über uns | BOMAYE GYM MUNICH — DNA, Philosophie & Story</title>
+  <meta name="description" content="Die Geschichte hinter Bomaye Gym Munich. Unsere DNA, Philosophie und das Warum hinter dem Gym im Pineapple Park — It's not a gym, it's our passion." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Über uns — BOMAYE GYM MUNICH" />
+  <meta property="og:description" content="Die Geschichte hinter Bomaye Gym Munich. DNA, Philosophie und Werte." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/about" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/about" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ── Page hero ──────────────────────────────── */
+    .aboutp-hero {
+      background: var(--ink);
+      padding: clamp(100px, 14vw, 160px) 0 clamp(48px, 7vw, 80px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .aboutp-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .aboutp-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .aboutp-hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .aboutp-hero-h1 span { color: var(--gold); }
+    .aboutp-hero-sub {
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.45);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Nav active state */
+    .nav-link-active { color: var(--gold) !important; }
+
+    /* ── Inline page nav links ──────────────────── */
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+  </style>
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" id="about-logo-img" decoding="async" />
+      <span class="logo-text" id="about-logo-text">BOMAYE</span>
+    </a>
+
+    <a href="/" class="back-btn visible" aria-label="Zurück zur Startseite">
+      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/#disciplines">KURSE</a>
+      <a class="nav-link" href="/#schedule">STUNDENPLAN</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link nav-link-active" href="/about" aria-current="page">ÜBER UNS</a>
+      <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
+    </nav>
+
+    <button class="burger" onclick="toggleAboutMenu()" aria-label="Menü" aria-expanded="false" id="about-burger-btn" type="button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="about-mobile-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);">
+  <button class="mob-close" onclick="toggleAboutMenu()" type="button" aria-label="Menü schließen" style="position:absolute;top:1.5rem;right:1.5rem;font-size:1.5rem;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  <a class="nav-link" href="/" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">HOME</a>
+  <a class="nav-link" href="/#disciplines" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">KURSE</a>
+  <a class="nav-link" href="/#schedule" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">STUNDENPLAN</a>
+  <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;">COACHES</a>
+  <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:#c5a059;padding:0.85rem 2rem;text-decoration:none;" aria-current="page">ÜBER UNS</a>
+  <button class="btn btn--gold" onclick="toggleAboutMenu(); openBooking();" type="button" style="margin-top:1.25rem;padding:0.9rem 2.5rem;">
+    PROBETRAINING
+  </button>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+  <!-- ── Hero ── -->
+  <section class="aboutp-hero" aria-label="Über uns">
+    <div class="container">
+      <div class="aboutp-hero-tag">ÜBER UNS</div>
+      <h1 class="aboutp-hero-h1">ALI, BOMA YE!<br><span>UNSERE GESCHICHTE.</span></h1>
+      <p class="aboutp-hero-sub">Die Philosophie und DNA hinter Bomaye Gym Munich — it's not a gym, it's our passion.</p>
+    </div>
+  </section>
+
+  <!-- ── Intro / Brand Identity ── -->
+  <section id="intro">
+    <div class="container">
+      <div class="intro-inner">
+        <div class="intro-text reveal">
+          <span class="tag tag--dark">THE EXPERIENCE</span>
+          <h2 style="margin-top:1.2rem;">BOXEN IN MUNICH.<br><span class="gold">AUF HÖCHSTEM NIVEAU.</span></h2>
+          <p>Bomaye Gym Munich im Pineapple Park vereint professionelles Boxtraining mit echter Community. Von Kids ab 6 Jahren bis zum Wettkämpfer — in einem der modernsten Boxgyms in München.</p>
+          <p>Professionelles Coaching, top Ausrüstung, und eine Gemeinschaft, die dich jeden Tag pusht.</p>
+          <button class="btn btn--gold" onclick="openBooking()" type="button">
+            <i class="fa-solid fa-calendar-plus"></i> KOSTENLOSES PROBETRAINING
+          </button>
+        </div>
+        <div class="intro-brand reveal delay-2">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="intro-brand-logo"
+               loading="lazy" decoding="async"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <div class="intro-brand-wordmark" style="display:none;">BOMAYE</div>
+          <div class="intro-brand-divider"></div>
+          <div class="intro-brand-tagline">IT'S NOT A GYM, IT'S OUR PASSION</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Quote ── -->
+  <div id="quote" role="blockquote">
+    <div class="container">
+      <p class="quote-text"><span class="quote-l1">"DON'T COUNT THE DAYS,</span><br><span class="quote-l2 shimmer">MAKE THE DAYS COUNT."</span></p>
+      <p class="quote-source">— MUHAMMAD ALI · KINSHASA, 1974</p>
+    </div>
+  </div>
+
+  <!-- ── DNA / Philosophie ── -->
+  <section id="dna" class="sec--smoke">
+    <div class="container">
+      <div class="dna-inner">
+        <div class="dna-text reveal">
+          <span class="tag tag--light">PHILOSOPHY</span>
+          <h2 style="margin-top:1.2rem;">"ALI, BOMA YE!"</h2>
+          <p>Kinshasa, 1974. Der "Rumble in the Jungle". Als 60.000 Menschen "Bomaye" riefen, war es kein Aufruf zur Gewalt — es war der ultimative Ausdruck von Unterstützung und Gemeinschaft.</p>
+          <p><strong style="color:var(--white);">BOMAYE GYM MUNICH</strong> ist kein Ort für Einzelkämpfer. "Bomaye" bedeutet: Wir stehen in deiner Ecke. Wenn du zweifelst, geben wir dir Kraft. Wenn du fällst, helfen wir dir auf.</p>
+          <p>Professionelles Boxen, das für alle zugänglich ist — von der Führungskraft zum Teenager, von der Anfängerin zur Wettkämpferin. <em>It's not a gym, it's our passion.</em></p>
+          <div class="dna-stats">
+            <div>
+              <div class="stat-num">150</div>
+              <div class="stat-lbl">Early-Bird Plätze</div>
+            </div>
+            <div>
+              <div class="stat-num">8</div>
+              <div class="stat-lbl">Programme</div>
+            </div>
+            <div>
+              <div class="stat-num">20+</div>
+              <div class="stat-lbl">Jahre Erfahrung</div>
+            </div>
+          </div>
+        </div>
+        <div class="dna-visual reveal delay-3">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="dna-visual-logo"
+               loading="lazy" decoding="async"
+               onerror="this.style.display:'none'; this.nextElementSibling.style.display='block';" />
+          <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
+          <div class="dna-visual-sub">GYM MUNICH</div>
+          <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.35);"></div>
+          <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.45);">EST. 2026 · PINEAPPLE PARK</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Warum Bomaye ── -->
+  <section id="why-bomaye" class="sec--light">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">WARUM BOMAYE</span>
+        <h2 style="margin-top:1rem; color:var(--ink);">MEHR ALS EIN <span class="gold-dark">FITNESSSTUDIO.</span></h2>
+        <p style="color:rgba(8,8,8,0.6); max-width:600px; margin:1.25rem auto 0;">Boxen ist Charakterarbeit. Wir lehren keine Gewalt — wir lehren Disziplin, Selbstvertrauen und echten Kampfgeist.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal delay-1">
+          <div class="why-card-icon"><i class="fa-solid fa-fist-raised"></i></div>
+          <h3>ECHTES BOXTRAINING</h3>
+          <p>Für Fitness, Technik und Wettkampf. Kein Kursprogramm von der Stange — professionelles Training, das wirklich funktioniert.</p>
+        </div>
+        <div class="why-card reveal delay-2">
+          <div class="why-card-icon"><i class="fa-solid fa-users"></i></div>
+          <h3>COMMUNITY STATT FITNESSSTUDIO</h3>
+          <p>Trainiere mit Gleichgesinnten, die dich täglich pushen. Bei Bomaye kennst du jeden Namen — wir sind eine Familie.</p>
+        </div>
+        <div class="why-card reveal delay-3">
+          <div class="why-card-icon"><i class="fa-solid fa-medal"></i></div>
+          <h3>COACHING VON WETTKÄMPFERN</h3>
+          <p>Lerne von echten Kämpfern. Weltmeister als deine persönlichen Trainer — Menschen, die wissen wie sich ein Ring anfühlt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The Bomaye Standard ── -->
+  <section id="bomaye-standard" class="sec--standard-white">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">THE BOMAYE STANDARD</span>
+        <h2 style="margin-top:1rem;color:var(--ink);">REAL BOXING.<br>REAL COACHES.<br><span class="gold-dark">REAL COMMUNITY.</span></h2>
+        <p class="standard-subtext" style="color:rgba(8,8,8,0.6);">Bomaye Gym ist kein typisches Fitnessstudio. Du trainierst in einer Umgebung, die auf Technik, Disziplin und echter Coaching-Qualität aufgebaut ist — von deiner ersten Session bis zum Wettkampf.</p>
+      </div>
+      <div class="standard-grid">
+        <div class="standard-card standard-card--light reveal">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">PROFESSIONELLES COACHING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Erfahrung aus dem Wettkampfboxen und Leistungssport. Jede Einheit beinhaltet echtes technisches Feedback und strukturiertes Coaching.</p>
+        </div>
+        <div class="standard-card standard-card--light reveal delay-1">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">STRUKTURIERTES TRAINING</h3>
+          <p style="color:rgba(8,8,8,0.65);">Jede Session folgt einem klaren System, das Technik, Kraft und Leistung gezielt aufbaut — von Anfänger bis Wettkämpfer.</p>
+        </div>
+        <div class="standard-card standard-card--light reveal delay-2">
+          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+          <h3 style="color:var(--ink);">ECHTE COMMUNITY</h3>
+          <p style="color:rgba(8,8,8,0.65);">Bomaye ist kein anonymes Gym. Du wirst Teil einer Gemeinschaft, die sich gegenseitig pusht, unterstützt und gemeinsam wächst.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Community ── -->
+  <div id="community" role="presentation">
+    <div class="container">
+      <h2 class="shimmer reveal">COMMUNITY FIRST.</h2>
+      <p class="reveal delay-2">EVENTS · SPARRING · ZUSAMMENHALT</p>
+    </div>
+  </div>
+
+  <!-- ── Bottom CTA ── -->
+  <section class="sec--dark" style="padding:clamp(48px,7vw,96px) 0;text-align:center;">
+    <div class="container">
+      <span class="tag tag--dark">DEIN NÄCHSTER SCHRITT</span>
+      <h2 style="margin:1.25rem 0;">BEREIT FÜR DAS<br><span class="gold">ECHTE BOXING?</span></h2>
+      <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Erste Stunde kostenlos. Kein Vertrag. Kein Druck.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
+        </button>
+        <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-users"></i> UNSERE COACHES
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><a href="/">Olympic Boxing</a></li>
+            <li><a href="/">Kickboxing</a></li>
+            <li><a href="/">Women's Boxing</a></li>
+            <li><a href="/">Youth Boxing</a></li>
+            <li><a href="/">Personal Training</a></li>
+            <li><a href="/">Corporate Boxing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Coaches</a></li>
+            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener">@bomayegym</a></div>
+        </div>
+      </div>
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <span class="dot">•</span>
+        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="impressum.html">IMPRESSUM</a>
+          <a href="datenschutz.html">DATENSCHUTZ</a>
+          <a href="agb.html">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+/* ── Header scroll styling ─── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ── Mobile nav toggle ── */
+function toggleAboutMenu() {
+  const nav = document.getElementById('about-mobile-nav');
+  const btn = document.getElementById('about-burger-btn');
+  if (!nav) return;
+  const isOpen = nav.style.transform === 'translateX(0%)' || nav.style.transform === 'translateX(0px)' || nav.style.transform === 'translateX(0)';
+  nav.style.transform = isOpen ? 'translateX(100%)' : 'translateX(0)';
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+  if (btn) btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+/* ── Booking modal ── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id  = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>

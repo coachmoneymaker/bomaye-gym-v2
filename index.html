@@ -91,7 +91,8 @@
       <button class="nav-link" onclick="nav('home')" type="button">HOME</button>
       <button class="nav-link" onclick="nav('home','disciplines')" type="button">KURSE</button>
       <button class="nav-link" onclick="nav('home','schedule')" type="button">STUNDENPLAN</button>
-      <button class="nav-link" onclick="nav('home','team')" type="button">COACHES</button>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ÜBER UNS</a>
       <a class="nav-link" href="/faq">FAQ</a>
       <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
@@ -110,7 +111,8 @@
   <button class="nav-link" onclick="mobileNav('home')" type="button">HOME</button>
   <button class="nav-link" onclick="mobileNav('home','disciplines')" type="button">KURSE</button>
   <button class="nav-link" onclick="mobileNav('home','schedule')" type="button">STUNDENPLAN</button>
-  <button class="nav-link" onclick="mobileNav('home','team')" type="button">COACHES</button>
+  <a class="nav-link" href="/coaches" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">COACHES</a>
+  <a class="nav-link" href="/about" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">ÜBER UNS</a>
   <a class="nav-link" href="/faq" style="font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:3px;color:rgba(255,255,255,0.65);padding:0.85rem 2rem;text-decoration:none;display:block;text-align:center;">FAQ</a>
   <button class="btn btn--gold" onclick="toggleMenu(); openBooking()" type="button" style="margin-top:1.25rem; padding:0.9rem 2.5rem;">
     MITGLIED WERDEN
@@ -581,6 +583,11 @@
       </div>
       <!-- Team slider dots (mobile only) -->
       <div id="team-dots" class="slider-dots" aria-hidden="true"></div>
+      <div style="text-align:center;margin-top:2.5rem;">
+        <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-users"></i> ALLE COACHES ANSEHEN
+        </a>
+      </div>
     </div>
   </section>
 
@@ -605,6 +612,11 @@
               <div class="stat-num">20+</div>
               <div class="stat-lbl">Jahre Erfahrung</div>
             </div>
+          </div>
+          <div style="margin-top:2rem;">
+            <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+              MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
+            </a>
           </div>
         </div>
       </div>
