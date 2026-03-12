@@ -280,7 +280,7 @@ function renderPricingDisplay(ageGroup, duration) {
         ${savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€/Jahr vs. monatlich</div>` : '<div class="mp-savings-empty"></div>'}
       </div>
       <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
-      <div class="membership-enrollment" onclick="toggleEnrollmentInfo(this)" style="cursor:pointer;" title="Klicken für Details">
+      <div class="membership-enrollment" onclick="toggleEnrollmentInfo(this)" style="cursor:pointer;color:#4a4a4a;font-weight:600;" title="Klicken für Details">
         <i class="fa-solid fa-circle-plus enrollment-toggle-icon" aria-hidden="true"></i>
         <span>+ 100€ Aufnahmegebühr einmalig</span>
       </div>
