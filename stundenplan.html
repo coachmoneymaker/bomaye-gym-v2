@@ -277,5 +277,43 @@ function MountBsportWidget(config, repeat=1) {
 }());
 </script>
 
+<script>
+/* ── Bsport metadata: remove inline display:none set by React widget ──
+   Bsport applies style="display:none" to metadata rows (Einrichtung,
+   Lehrkraft, Niveau, Teilnehmer) at narrow viewport widths via JS.
+   Inline styles cannot be overridden by CSS !important rules.
+   This observer removes those inline overrides after each React render.
+
+   Safe from infinite loops: MutationObserver watches childList only
+   (node additions/removals). Our style property changes do NOT trigger
+   childList mutations, so the observer never re-fires from our fix. */
+(function () {
+  var widget = document.getElementById('bsport-widget-172485');
+  if (!widget) return;
+
+  function fixCards() {
+    widget.querySelectorAll('.bs-offer-list-item__content__offer__left').forEach(function (col) {
+      if (col.style.overflow === 'hidden') col.style.overflow = '';
+      if (col.style.maxHeight)            col.style.maxHeight = '';
+      if (col.style.height && col.style.height !== 'auto') col.style.height = '';
+      col.querySelectorAll('*').forEach(function (el) {
+        if (el.style.display    === 'none')   el.style.display    = '';
+        if (el.style.overflow   === 'hidden') el.style.overflow   = '';
+        if (el.style.maxHeight)               el.style.maxHeight  = '';
+        if (el.style.visibility === 'hidden') el.style.visibility = '';
+        if (el.style.opacity    === '0')      el.style.opacity    = '';
+      });
+    });
+  }
+
+  var timer;
+  var obs = new MutationObserver(function () {
+    clearTimeout(timer);
+    timer = setTimeout(fixCards, 200);
+  });
+  obs.observe(widget, { childList: true, subtree: true });
+}());
+</script>
+
 </body>
 </html>

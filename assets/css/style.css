@@ -1040,7 +1040,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
     flex: 1 1 100% !important;
     width: 100% !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right {
     flex: 1 1 100% !important;
