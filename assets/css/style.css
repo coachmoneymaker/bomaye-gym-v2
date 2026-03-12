@@ -2073,8 +2073,11 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ══════════════════════════════════════════════════════════════
    LAYOUT STABILITY — overflow & CLS fixes
 ══════════════════════════════════════════════════════════════ */
-/* Prevent horizontal overflow from sliders affecting page width */
-.view { overflow-x: hidden; min-height: 100vh; }
+/* Prevent horizontal overflow from sliders affecting page width.
+   NOTE: overflow-x:hidden removed from .view — it created a scroll container
+   that broke position:sticky on disc-panels. body{overflow-x:hidden} handles
+   horizontal overflow protection at the viewport level instead. */
+.view { min-height: 100vh; }
 /* Stable image containers — prevent CLS */
 .coach-photo img  { background: var(--smoke); }
 .intro-brand-logo { background: transparent; }
@@ -2346,9 +2349,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Individual card ── */
 .disc-panel {
   position: sticky;
-  /* Premium card height — compact editorial, 50vh sweet spot */
-  height: 50svh;
-  height: 50vh; /* svh fallback */
+  /* Premium card height — compact editorial, 44vh sweet spot */
+  height: 44svh;
+  height: 44vh; /* svh fallback */
   overflow: hidden;
   border-radius: 18px;              /* card shape */
   box-shadow: 0 16px 56px rgba(0,0,0,0.60); /* ambient card lift shadow */
@@ -2454,8 +2457,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Tablet (481px – 768px): slightly shorter cards, same sticky logic ── */
 @media (max-width: 768px) {
   .disc-panel {
-    height: 56svh;
-    height: 56vh;
+    height: 46svh;
+    height: 46vh;
     /* Reduce dwell slightly on narrower screens */
     margin-bottom: 12vh;
   }
@@ -2473,8 +2476,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     position: relative;
     top: auto;
     height: auto;
-    min-height: 52svh;
-    min-height: 52vh;
+    min-height: 46svh;
+    min-height: 46vh;
     border-radius: 14px;
     /* Replace dwell margin with a tight card gap */
     margin-bottom: 1rem !important;
