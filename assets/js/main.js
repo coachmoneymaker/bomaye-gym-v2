@@ -60,8 +60,11 @@ function initImageFallbacks() {
         this.closest('.coach-photo') && (this.closest('.coach-photo').style.background = 'var(--smoke)');
       }, { once: true });
     }
-    // Fade-in on load for lazy images
-    if (img.getAttribute('loading') === 'lazy') {
+    // Fade-in on load for lazy content images (logos excluded to prevent invisible-until-JS)
+    if (img.getAttribute('loading') === 'lazy' &&
+        !img.classList.contains('logo-img') &&
+        !img.classList.contains('intro-brand-logo') &&
+        !img.classList.contains('dna-visual-logo')) {
       if (img.complete) {
         img.classList.add('loaded');
       } else {

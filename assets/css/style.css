@@ -4027,18 +4027,14 @@ body {
    Final refinement pass — spacing, motion, visual hierarchy
 ══════════════════════════════════════════════════════════════ */
 
-/* ── Staggered reveal delays: tighter 200ms steps (was 300ms) ── */
-.reveal.delay-1 { transition-delay: 0.14s; }
-.reveal.delay-2 { transition-delay: 0.28s; }
-.reveal.delay-3 { transition-delay: 0.42s; }
-
 /* ── Lazy-loaded images: fade in on load ── */
-img[loading="lazy"] {
+/* Scoped to content images only — logos (.logo-img, .intro-brand-logo,
+   .dna-visual-logo) are excluded to prevent invisible-until-JS bugs.  */
+img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo) {
   opacity: 0;
   transition: opacity 0.5s var(--ease-expo);
 }
-img[loading="lazy"].loaded,
-img[loading="lazy"][data-loaded] {
+img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).loaded {
   opacity: 1;
 }
 
@@ -4057,12 +4053,8 @@ img[loading="lazy"][data-loaded] {
   }
 }
 
-/* ── Horizontal padding: 8-10vw on wide desktop ── */
+/* ── Disc-stack horizontal padding: floating card margins scale with viewport ── */
 @media (min-width: 1100px) {
-  .container {
-    padding-left: clamp(24px, 4vw, 56px);
-    padding-right: clamp(24px, 4vw, 56px);
-  }
   .disc-stack {
     padding-left: clamp(1rem, 3vw, 2.5rem);
     padding-right: clamp(1rem, 3vw, 2.5rem);
@@ -4072,6 +4064,9 @@ img[loading="lazy"][data-loaded] {
 /* ── Mobile horizontal padding: enforce 24px minimum ── */
 @media (max-width: 480px) {
   .container { padding-left: 24px; padding-right: 24px; }
+  /* Button font-size safety: prevent overflow on narrow screens */
+  .btn { font-size: 0.875rem; letter-spacing: 2px; }
+  .btn--sm { font-size: 0.78rem; letter-spacing: 1.5px; }
 }
 
 /* ── Button hover: lift + glow for all btn variants ── */
