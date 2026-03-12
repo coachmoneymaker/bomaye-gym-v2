@@ -30,6 +30,10 @@
 
   --anthracite: #1d1d1d;
   --ink-deep:   #131313;
+
+  /* Disc-stack card offset: how much of the previous card peeks above
+     the incoming one, creating the staggered card-deck fan effect.    */
+  --disc-peek: 52px;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -2318,55 +2322,54 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* early-bird-inner: no glass box — content flows open into the section */
 
 /* ══════════════════════════════════════════════════════════════
-   DISCIPLINES SECTION — Stacked Sticky Scroll
-   Pattern: position:sticky panels stacked with z-index.
-   Each panel physically rises from below as user scrolls,
-   covering the previous one. JS adds a subtle scale-back effect
-   on the exiting panel for depth. No scroll-jacking.
+   DISCIPLINES SECTION — Basement-style Stacked Card Scroll
+   Pattern: floating rounded cards with staggered sticky offsets.
+   ─ Each card sticks at: navH + (index × --disc-peek)
+   ─ This creates a card-deck fan: as Card N+1 rises, Card N's
+     top strip (--disc-peek px) remains visible above it.
+   ─ Cards are compact (~62svh) — immersive, not full-screen.
+   ─ Side margins on .disc-stack let the dark background show,
+     reinforcing the "floating card" shape with rounded corners.
+   No scroll-jacking. Purely CSS-driven depth.
 ══════════════════════════════════════════════════════════════ */
 #disciplines {
   background: var(--ink);
-  /* Section top padding from the global `section` rule is preserved.
-     Bottom padding is handled by .disciplines-cta.                */
   padding-bottom: 0;
 }
 
-/* ── Stack container: establishes stacking context for panels ── */
+/* ── Stack container: side padding creates card floating margins ── */
 .disc-stack {
   position: relative;
-  /* Total height is the sum of panel heights + inter-panel margins.
-     This is determined by the panels' natural flow height.         */
+  padding: 0 1rem; /* left/right margins so cards float off the edge */
 }
 
-/* ── Individual sticky panel ── */
+/* ── Individual card ── */
 .disc-panel {
   position: sticky;
-  top: var(--nav-h);
-  /* Full-bleed height: viewport minus nav bar */
-  height: calc(100vh - var(--nav-h));
-  height: calc(100svh - var(--nav-h)); /* iOS safe viewport */
+  /* Compact card height — premium and immersive but not full-screen */
+  height: 62svh;
+  height: 62vh; /* svh fallback */
   overflow: hidden;
-  /* Anchor scale at the top edge (the sticky pin point) so the panel
-     only shrinks downward — no top-edge gap against the nav bar.   */
+  border-radius: 16px;              /* card shape */
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55); /* ambient card lift shadow */
   transform-origin: top center;
-  /* Prevent sub-pixel flicker during JS-driven transform changes. */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-/* Layering: each successive panel appears on top */
-.disc-panel:nth-child(1) { z-index: 1; }
-.disc-panel:nth-child(2) { z-index: 2; }
-.disc-panel:nth-child(3) { z-index: 3; }
-/* Inter-panel margin = dwell time per panel before next one rises */
-.disc-panel:not(:last-child) { margin-bottom: 25vh; }
-/* Promote panels that receive JS scale/opacity transforms to their own
-   compositor layer so scroll repaints are skipped.                  */
+
+/* Staggered sticky tops — the card-deck fan effect:
+   Card 1 sticks at navH.
+   Card 2 sticks at navH + peekH, so Card 1's top peekH strip is visible.
+   Card 3 sticks at navH + 2×peekH, so Card 2's top strip is visible.  */
+.disc-panel:nth-child(1) { top: var(--nav-h);                                      z-index: 1; }
+.disc-panel:nth-child(2) { top: calc(var(--nav-h) + var(--disc-peek));             z-index: 2; }
+.disc-panel:nth-child(3) { top: calc(var(--nav-h) + var(--disc-peek) * 2);        z-index: 3; }
+
+/* Dwell margin: scroll distance before the next card begins rising */
+.disc-panel:not(:last-child) { margin-bottom: 16vh; }
+
+/* Compositor layer promotion for JS-driven scale/opacity */
 .disc-panel:not(:last-child) { will-change: transform, opacity; }
-/* Depth shadow: visible at the top edge of each incoming panel,
-   creating a physical "card lifting over" separation.               */
-.disc-panel:nth-child(n+2) {
-  box-shadow: 0 -24px 64px rgba(0,0,0,0.55), 0 -1px 0 rgba(255,255,255,0.04);
-}
 
 /* ── Background image layer ── */
 .disc-panel__bg {
@@ -2375,20 +2378,20 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   background-size: cover;
   background-position: center 30%;
 }
-/* Two-layer overlay:
-   Bottom-to-top gradient  → strong at text zone, fades for image impact at top.
-   Flat left-edge darkener  → ensures kicker/title have consistent dark bg. */
+/* Gradient overlay:
+   Bottom-to-top — strong at text zone, fades toward top for image impact.
+   Left-edge darkener — consistent dark backdrop for kicker/title. */
 .disc-panel__bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(8,8,8,0.45) 0%, rgba(8,8,8,0.00) 55%),
+    linear-gradient(90deg, rgba(8,8,8,0.50) 0%, rgba(8,8,8,0.00) 55%),
     linear-gradient(to top,
-      rgba(8,8,8,0.96) 0%,
-      rgba(8,8,8,0.72) 25%,
-      rgba(8,8,8,0.30) 60%,
-      rgba(8,8,8,0.22) 100%
+      rgba(8,8,8,0.97) 0%,
+      rgba(8,8,8,0.75) 25%,
+      rgba(8,8,8,0.32) 58%,
+      rgba(8,8,8,0.18) 100%
     );
 }
 
@@ -2399,83 +2402,86 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 2rem clamp(1.5rem, 6vw, 5rem) clamp(2.5rem, 5vh, 4.5rem);
-  z-index: 1; /* above bg + overlay */
+  padding: 1.5rem clamp(1.25rem, 4.5vw, 3rem) clamp(1.75rem, 3.5vh, 3rem);
+  z-index: 1;
 }
 
 /* ── Panel counter / kicker ── */
 .disc-panel__kicker {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   letter-spacing: 4px;
   color: var(--gold);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
   opacity: 0.9;
 }
 
-/* ── Discipline title ── */
+/* ── Discipline title — compact editorial scale ── */
 .disc-panel__title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7.5vw, 6rem);
+  /* Reduced from clamp(3rem,7.5vw,6rem) — proportionate for compact card */
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   color: #fff;
   line-height: 0.92;
   letter-spacing: 0.02em;
-  margin: 0 0 0.85rem;
-  text-shadow: 0 4px 32px rgba(0,0,0,0.45);
+  margin: 0 0 0.75rem;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.50);
 }
 /* Gold accent bar beneath title */
 .disc-panel__title::after {
   content: '';
   display: block;
-  width: 2.5rem;
+  width: 2rem;
   height: 2px;
   background: var(--gold);
-  margin-top: 0.9rem;
+  margin-top: 0.75rem;
 }
 
 /* ── Description ── */
 .disc-panel__desc {
-  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  font-size: clamp(0.85rem, 1.2vw, 0.975rem);
   color: rgba(255,255,255,0.80);
-  line-height: 1.7;
-  max-width: 440px;
-  margin-bottom: 0; /* no button below — padding-bottom on content handles gap */
-  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+  line-height: 1.65;
+  max-width: 400px;
+  margin-bottom: 0;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.40);
 }
 
-/* ── CTA ── */
-.disciplines-cta { padding: 3rem 0; }
+/* ── Post-stack CTA ── */
+.disciplines-cta { padding: 2.5rem 0; }
 
-/* ── Tablet ── */
+/* ── Tablet (481px – 768px): slightly shorter cards, same sticky logic ── */
 @media (max-width: 768px) {
   .disc-panel {
-    margin-bottom: 18vh;
-    /* Compact the sticky panel height on tablet — still immersive but
-       not overwhelming on portrait iPad or landscape phone.          */
-    height: calc(80svh - var(--nav-h));
-    height: calc(80vh  - var(--nav-h)); /* svh fallback */
+    height: 60svh;
+    height: 60vh;
+    /* Reduce dwell slightly on narrower screens */
+    margin-bottom: 14vh;
   }
-  .disc-panel__content { padding-bottom: clamp(2rem, 4vh, 3rem); }
+  .disc-panel__content { padding-bottom: clamp(1.5rem, 3vh, 2.5rem); }
 }
 
-/* ── Phone: disable sticky, show as full-height sequential panels ──
-   Reason: iOS momentum scroll + address-bar resize can cause
-   trapped-scroll or height jank with sticky full-screen panels.    */
+/* ── Phone (≤480px): disable sticky — sequential tall cards ──
+   Reason: iOS momentum scroll with sticky full-height cards causes
+   address-bar resize jank and scroll trapping. Cards shown as
+   vertical list with border-radius and 1rem gap between them.       */
 @media (max-width: 480px) {
+  :root { --disc-peek: 0px; } /* no sticky offset on mobile */
+  .disc-stack { padding: 0 0.875rem; }
   .disc-panel {
     position: relative;
     top: auto;
     height: auto;
-    /* Reduced from 85svh — panels were nearly full-screen on modern phones.
-       65svh keeps them tall enough to feel cinematic without being oppressive. */
-    min-height: 65svh;
-    min-height: 65vh; /* fallback */
-    margin-bottom: 0 !important;
+    min-height: 58svh;
+    min-height: 58vh;
+    border-radius: 12px;
+    /* Replace dwell margin with a tight card gap */
+    margin-bottom: 1rem !important;
   }
-  .disc-panel__title { font-size: clamp(2.4rem, 11vw, 3rem); }
-  .disc-panel__desc  { font-size: 0.92rem; }
-  .disc-panel__content { padding: 2rem 1.5rem 2.5rem; }
+  .disc-panel__title { font-size: clamp(2.2rem, 10.5vw, 2.8rem); }
+  .disc-panel__desc  { font-size: 0.9rem; }
+  .disc-panel__content { padding: 1.5rem 1.25rem 2rem; }
 }
 
 /* ══════════════════════════════════════════════════════════════

@@ -1450,14 +1450,18 @@
     }());
 </script>
 
-<!-- ── Disc-stack: depth effect on exiting panel ──────────────────────
-     As panel N+1 rises and covers panel N, panel N scales 1.0→0.985
-     and fades 1.0→0.92, creating a subtle depth/recession feel.
-     · transform-origin: top center (CSS) keeps the sticky top edge fixed
-     · scale 0.985: ~11px gap at edges on 1440px; ink bg fills it invisibly
-     · desktop only (≤480px returns early — mobile uses relative layout)
+<!-- ── Disc-stack: subtle scale-back on exiting card ─────────────────
+     As card N+1 rises and covers card N, card N scales 1.0→0.985 and
+     fades 1.0→0.92, reinforcing the card-deck depth feel.
+
+     Key change from previous version: sticky offsets are now staggered
+     (navH, navH+peekH, navH+2×peekH). Progress must be calculated
+     relative to where each incoming card is "fully covering" — its own
+     sticky top position — not a flat navH for all panels.
+
+     · desktop/tablet only (≤480px exits early — mobile = relative cards)
      · passive rAF-gated scroll listener — zero scroll-jacking
-     · resize listener resets stale inline transforms on viewport change
+     · resize resets stale inline transforms
 ──────────────────────────────────────────────────────────────────────── -->
 <script>
 (function () {
@@ -1475,22 +1479,27 @@
 
   function update() {
     raf = null;
-    var navH = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
-    ) || 72;
+    var cs   = getComputedStyle(document.documentElement);
+    var navH = parseFloat(cs.getPropertyValue('--nav-h'))   || 72;
+    var peek = parseFloat(cs.getPropertyValue('--disc-peek')) || 52;
     var viewH = window.innerHeight;
-    var panelH = viewH - navH; /* sticky panel height */
 
     panels.forEach(function (panel, i) {
-      if (i === panels.length - 1) return; /* last panel never scales back */
+      if (i === panels.length - 1) return; /* last card never scales back */
+
       var nextTop = panels[i + 1].getBoundingClientRect().top;
 
-      /* progress: 0 = next panel just entered viewport bottom
-                   1 = next panel has fully covered this panel (top at navH) */
-      var progress = Math.max(0, Math.min(1, (viewH - nextTop) / panelH));
+      /* Where the next card is "fully covering" this card: its own sticky top.
+         Travel distance = viewport bottom → that sticky position.            */
+      var coverAt   = navH + (i + 1) * peek;   /* next card's sticky top px   */
+      var travelDist = viewH - coverAt;         /* full travel distance         */
+
+      /* progress: 0 = next card just entered viewport bottom
+                   1 = next card has reached its sticky position (fully over)  */
+      var progress = Math.max(0, Math.min(1, (viewH - nextTop) / travelDist));
 
       if (progress > 0) {
-        var sc = 1 - progress * 0.015; /* 1.000 → 0.985 — barely visible edge, depth felt via opacity */
+        var sc = 1 - progress * 0.015; /* 1.000 → 0.985 */
         var op = 1 - progress * 0.08;  /* 1.000 → 0.920 */
         panel.style.transform = 'scale(' + sc.toFixed(4) + ')';
         panel.style.opacity   = op.toFixed(4);
@@ -1505,13 +1514,11 @@
     if (!raf) raf = requestAnimationFrame(update);
   }, { passive: true });
 
-  /* On resize, clear stale inline transforms and recalculate. */
   window.addEventListener('resize', function () {
     clearAll();
     if (!raf) raf = requestAnimationFrame(update);
   }, { passive: true });
 
-  /* Initial pass in case the page loads scrolled into the section. */
   requestAnimationFrame(update);
 }());
 </script>
