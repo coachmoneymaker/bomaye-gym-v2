@@ -4140,3 +4140,128 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).
     transition: none !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE REFINEMENT PASS
+   Scope: ≤480px (phone) only unless noted.
+   No changes to desktop layout, header, footer, booking logic.
+══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Bsport widget: show all metadata on mobile ── */
+@media (max-width: 480px) {
+  /* Left column: overflow:hidden was clipping Niveau / Lehrkraft /
+     Einrichtung rows. Switch to visible + explicit column flex so every
+     metadata field renders as its own line.                             */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+  /* Allow all direct child elements to wrap and show fully */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left > * {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: break-word !important;
+  }
+  /* Level / Niveau */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="level"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Level"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="difficulty"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Difficulty"] {
+    display: block !important;
+    font-size: 0.7rem !important;
+    color: rgba(255,255,255,0.55) !important;
+    white-space: normal !important;
+  }
+  /* Einrichtung / Facility */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="facility"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Facility"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="venue"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Venue"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="room"],
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left [class*="Room"] {
+    display: block !important;
+    font-size: 0.7rem !important;
+    color: rgba(255,255,255,0.55) !important;
+    white-space: normal !important;
+  }
+}
+
+/* ── 2. Disc-panels: restore sticky on mobile ── */
+@media (max-width: 480px) {
+  /* Override the previous "disable sticky on mobile" block.
+     --disc-peek: 36px = tighter than desktop 52px for narrow viewports.
+     The nth-child top values (which use --disc-peek) already have higher
+     specificity than .disc-panel, so top values apply correctly.       */
+  :root { --disc-peek: 36px; }
+
+  .disc-panel {
+    position: sticky !important;  /* restore — was set to relative */
+    height: 44svh !important;
+    height: 44vh !important;
+    min-height: unset !important; /* remove min-height from previous pass */
+    margin-bottom: 10vh !important; /* dwell between cards */
+  }
+  /* Last card: small bottom gap, no dwell */
+  .disc-panel:last-child { margin-bottom: 2rem !important; }
+
+  /* Extra top padding so CTA clears the last sticky card on exit */
+  .disciplines-cta { padding-top: 3rem !important; }
+}
+
+/* ── 3. Bomaye Standard: mobile sticky card stack ── */
+@media (max-width: 480px) {
+  /* contain:layout on #bomaye-standard creates an isolated scroll-container
+     boundary that breaks position:sticky for children. Remove on mobile. */
+  #bomaye-standard { contain: none !important; }
+
+  #bomaye-standard .standard-grid {
+    display: block !important;
+    position: relative;
+  }
+
+  /* Each card sticks with 44px peek above the next */
+  #bomaye-standard .standard-card--light {
+    position: sticky !important;
+    border-radius: 14px !important;
+    margin-bottom: 10vh !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10) !important;
+  }
+  #bomaye-standard .standard-card--light:last-child { margin-bottom: 0 !important; }
+  #bomaye-standard .standard-card--light:nth-child(1) { top: var(--nav-h);                   z-index: 1; }
+  #bomaye-standard .standard-card--light:nth-child(2) { top: calc(var(--nav-h) + 44px);      z-index: 2; }
+  #bomaye-standard .standard-card--light:nth-child(3) { top: calc(var(--nav-h) + 88px);      z-index: 3; }
+}
+
+/* ── 4. Dein Weg / Step-cards: mobile sticky card stack ── */
+@media (max-width: 480px) {
+  #weg .steps-grid {
+    display: block !important;
+    position: relative !important;
+  }
+  /* Solid background required: default rgba(255,255,255,0.025) is
+     nearly transparent so card 2 would not cover card 1 visually.   */
+  #weg .step-card {
+    position: sticky !important;
+    background: #1e1e1e !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    border-radius: 14px !important;
+    margin-bottom: 10vh !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.40) !important;
+  }
+  #weg .step-card:last-child { margin-bottom: 0 !important; }
+  #weg .step-card:nth-child(1) { top: var(--nav-h);                   z-index: 1; }
+  #weg .step-card:nth-child(2) { top: calc(var(--nav-h) + 44px);      z-index: 2; }
+  #weg .step-card:nth-child(3) { top: calc(var(--nav-h) + 88px);      z-index: 3; }
+
+  /* Steps CTA: breathing room after the sticky stack exits */
+  .steps-cta { padding-top: 2rem !important; margin-top: 0 !important; }
+}
+
+/* ── 5. Booking section: clean entry after sticky storytelling flow ── */
+@media (max-width: 480px) {
+  #booking { padding-top: clamp(3rem, 8vw, 4rem) !important; }
+}
