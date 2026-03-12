@@ -4265,3 +4265,143 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).
 @media (max-width: 480px) {
   #booking { padding-top: clamp(3rem, 8vw, 4rem) !important; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   PASS 4 — FINAL MOBILE FIX
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 6. Bsport calendar: force ALL metadata fields visible on mobile ── */
+@media (max-width: 480px) {
+  /* Let the offer row grow vertically so content isn't clipped */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content,
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+  /* Left column: stack all children vertically */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.2rem !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  /* Every direct child of the left column: force visible */
+  #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__left > * {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    clip: auto !important;
+    clip-path: none !important;
+  }
+  /* Meta rows: Niveau, Lehrkraft, Einrichtung, Teilnehmer — broad keyword match */
+  #bsport-widget-172485 .cleanslate [class*="level"],
+  #bsport-widget-172485 .cleanslate [class*="Level"],
+  #bsport-widget-172485 .cleanslate [class*="difficulty"],
+  #bsport-widget-172485 .cleanslate [class*="Difficulty"],
+  #bsport-widget-172485 .cleanslate [class*="teacher"],
+  #bsport-widget-172485 .cleanslate [class*="Teacher"],
+  #bsport-widget-172485 .cleanslate [class*="coach"],
+  #bsport-widget-172485 .cleanslate [class*="Coach"],
+  #bsport-widget-172485 .cleanslate [class*="instructor"],
+  #bsport-widget-172485 .cleanslate [class*="Instructor"],
+  #bsport-widget-172485 .cleanslate [class*="facility"],
+  #bsport-widget-172485 .cleanslate [class*="Facility"],
+  #bsport-widget-172485 .cleanslate [class*="venue"],
+  #bsport-widget-172485 .cleanslate [class*="Venue"],
+  #bsport-widget-172485 .cleanslate [class*="room"],
+  #bsport-widget-172485 .cleanslate [class*="Room"],
+  #bsport-widget-172485 .cleanslate [class*="spot"],
+  #bsport-widget-172485 .cleanslate [class*="Spot"],
+  #bsport-widget-172485 .cleanslate [class*="capacity"],
+  #bsport-widget-172485 .cleanslate [class*="Capacity"],
+  #bsport-widget-172485 .cleanslate [class*="participant"],
+  #bsport-widget-172485 .cleanslate [class*="Participant"],
+  #bsport-widget-172485 .cleanslate [class*="duration"],
+  #bsport-widget-172485 .cleanslate [class*="Duration"],
+  #bsport-widget-172485 .cleanslate [class*="subtitle"],
+  #bsport-widget-172485 .cleanslate [class*="Subtitle"],
+  #bsport-widget-172485 .cleanslate [class*="meta"],
+  #bsport-widget-172485 .cleanslate [class*="Meta"],
+  #bsport-widget-172485 .cleanslate [class*="info"],
+  #bsport-widget-172485 .cleanslate [class*="Info"],
+  #bsport-widget-172485 .cleanslate [class*="detail"],
+  #bsport-widget-172485 .cleanslate [class*="Detail"],
+  #bsport-widget-172485 .cleanslate [class*="tag"],
+  #bsport-widget-172485 .cleanslate [class*="Tag"],
+  #bsport-widget-172485 .cleanslate [class*="label"],
+  #bsport-widget-172485 .cleanslate [class*="Label"],
+  #bsport-widget-172485 .cleanslate [class*="badge"],
+  #bsport-widget-172485 .cleanslate [class*="Badge"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    white-space: normal !important;
+    font-size: 0.7rem !important;
+    color: rgba(255,255,255,0.6) !important;
+    overflow: visible !important;
+  }
+}
+
+/* ── 7. Group A — diff-block: mobile sticky card stack ── */
+@media (max-width: 480px) {
+  /* contain:layout style creates an isolated layout boundary that breaks
+     position:sticky for children. Remove on mobile. */
+  .diff-block { contain: none !important; }
+
+  .diff-inner {
+    display: block !important;
+    position: relative;
+  }
+
+  /* Solid background: default rgba(255,255,255,0.03) is nearly transparent —
+     replace with anthracite so card 2 visually covers card 1.             */
+  .diff-card {
+    position: sticky !important;
+    background: #222222 !important;
+    border-radius: 14px !important;
+    margin-bottom: 10vh !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.50) !important;
+    will-change: transform;
+  }
+  .diff-card:last-child { margin-bottom: 0 !important; }
+  .diff-card:nth-child(1) { top: var(--nav-h);                   z-index: 1; }
+  .diff-card:nth-child(2) { top: calc(var(--nav-h) + 44px);      z-index: 2; }
+  .diff-card:nth-child(3) { top: calc(var(--nav-h) + 88px);      z-index: 3; }
+}
+
+/* ── 8. Group B — #why-bomaye: mobile sticky card stack ── */
+@media (max-width: 480px) {
+  /* Same contain isolation issue — remove on mobile */
+  #why-bomaye { contain: none !important; }
+
+  .why-grid {
+    display: block !important;
+    position: relative;
+  }
+
+  /* why-card already has solid #ffffff background — good for stacking
+     on the #f9f7f4 section background without any color change.       */
+  .why-card {
+    position: sticky !important;
+    margin-bottom: 10vh !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+    will-change: transform;
+  }
+  .why-card:last-child { margin-bottom: 0 !important; }
+  .why-card:nth-child(1) { top: var(--nav-h);                   z-index: 1; }
+  .why-card:nth-child(2) { top: calc(var(--nav-h) + 44px);      z-index: 2; }
+  .why-card:nth-child(3) { top: calc(var(--nav-h) + 88px);      z-index: 3; }
+}
