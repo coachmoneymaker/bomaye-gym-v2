@@ -9,6 +9,7 @@
    Both openBooking() and toggleMenu() use these helpers.
 ──────────────────────────────────────────────────────────── */
 let _scrollLockY = 0;
+let _navFromPopstate = false;
 
 function lockBodyScroll() {
   _scrollLockY = window.scrollY;
@@ -28,6 +29,9 @@ function unlockBodyScroll() {
 
 /* ── Init on DOM ready ─────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
+  // Seed the initial browser history entry so popstate can identify the home state
+  history.replaceState({ view: 'home', sectionId: null, scrollBeforeDetail: 0 }, '');
+
   initPreloader();
   initHeader();
   initLogoImage();
@@ -173,6 +177,15 @@ function nav(viewId, sectionId, restoreY) {
     window._scrollYBeforeDetail = window.scrollY;
   }
 
+  // Push browser history entry so the back button works.
+  // Skipped when this call originates from the popstate handler itself.
+  if (!_navFromPopstate) {
+    history.pushState(
+      { view: viewId, sectionId: sectionId || null, scrollBeforeDetail: window._scrollYBeforeDetail || 0 },
+      ''
+    );
+  }
+
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + viewId);
   if (target) target.classList.add('active');
@@ -194,6 +207,24 @@ function nav(viewId, sectionId, restoreY) {
   }
   setTimeout(runReveal, 120);
 }
+
+/* ── Browser back/forward button support ─────────────────── */
+window.addEventListener('popstate', function (e) {
+  const state = e.state;
+  _navFromPopstate = true;
+  if (!state || state.view === 'home') {
+    // Returning to home — restore scroll position saved when we left it
+    nav('home', null, window._scrollYBeforeDetail || 0);
+  } else {
+    // Going to a detail/pricing view (e.g. via forward button)
+    // Restore the scroll-save-point so a subsequent back still works
+    if (state.scrollBeforeDetail !== undefined) {
+      window._scrollYBeforeDetail = state.scrollBeforeDetail;
+    }
+    nav(state.view, state.sectionId || null, undefined);
+  }
+  _navFromPopstate = false;
+});
 
 /* ── Back navigation — returns to the exact scroll position ── */
 function navBack() {
