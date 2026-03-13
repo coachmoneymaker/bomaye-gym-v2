@@ -30,7 +30,7 @@
     ══════════════════════════════════════════════════ */
     .kp-hero {
       background: var(--ink);
-      padding: clamp(100px,14vw,160px) 0 clamp(48px,7vw,80px);
+      padding: clamp(130px,16vw,200px) 0 clamp(48px,7vw,80px);
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -74,7 +74,7 @@
     /* ── Desktop grid ── */
     .courses-grid {
       display: grid;
-      grid-template-columns: repeat(5,1fr);
+      grid-template-columns: repeat(4,1fr);
       gap: 1px;
       background: rgba(197,160,89,0.1);
       border: 1px solid rgba(197,160,89,0.1);
@@ -329,11 +329,7 @@
        RESPONSIVE BREAKPOINTS
     ══════════════════════════════════════════════════ */
     @media (max-width: 1024px) {
-      .courses-grid { grid-template-columns: repeat(3,1fr); }
-      .courses-grid .course-card:nth-child(4),
-      .courses-grid .course-card:nth-child(5) {
-        /* last 2 cards span in 3-col layout naturally */
-      }
+      .courses-grid { grid-template-columns: repeat(4,1fr); }
     }
 
     @media (max-width: 768px) {
@@ -439,7 +435,7 @@
           <div class="course-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
           <div class="course-card__overlay"></div>
           <div class="course-card__body">
-            <span class="course-card__num">01 / 05</span>
+            <span class="course-card__num">01 / 08</span>
             <h3 class="course-card__title">BOXING</h3>
             <p class="course-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
           </div>
@@ -451,7 +447,7 @@
           <div class="course-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
           <div class="course-card__overlay"></div>
           <div class="course-card__body">
-            <span class="course-card__num">02 / 05</span>
+            <span class="course-card__num">02 / 08</span>
             <h3 class="course-card__title">KICKBOXING</h3>
             <p class="course-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
           </div>
@@ -463,7 +459,7 @@
           <div class="course-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
           <div class="course-card__overlay"></div>
           <div class="course-card__body">
-            <span class="course-card__num">03 / 05</span>
+            <span class="course-card__num">03 / 08</span>
             <h3 class="course-card__title">YOUTH BOXING</h3>
             <p class="course-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
           </div>
@@ -475,7 +471,7 @@
           <div class="course-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
           <div class="course-card__overlay"></div>
           <div class="course-card__body">
-            <span class="course-card__num">04 / 05</span>
+            <span class="course-card__num">04 / 08</span>
             <h3 class="course-card__title">OLYMPISCHES BOXEN</h3>
             <p class="course-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
           </div>
@@ -487,9 +483,45 @@
           <div class="course-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
           <div class="course-card__overlay"></div>
           <div class="course-card__body">
-            <span class="course-card__num">05 / 05</span>
+            <span class="course-card__num">05 / 08</span>
             <h3 class="course-card__title">MENTAL COACHING</h3>
             <p class="course-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="firmenfitness" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('firmenfitness')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('firmenfitness')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">06 / 08</span>
+            <h3 class="course-card__title">FIRMENFITNESS</h3>
+            <p class="course-card__short">Gemeinsames Training für Teams — Leistung, Teamgeist, Gesundheit.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="executive" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('executive')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('executive')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">07 / 08</span>
+            <h3 class="course-card__title">EXECUTIVE TRAINING</h3>
+            <p class="course-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+          </div>
+          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+
+        <div class="course-card" data-course="morning" role="tab" aria-selected="false" tabindex="0"
+             onclick="openCourse('morning')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('morning')">
+          <div class="course-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="course-card__overlay"></div>
+          <div class="course-card__body">
+            <span class="course-card__num">08 / 08</span>
+            <h3 class="course-card__title">MORNING TRAINING</h3>
+            <p class="course-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
           </div>
           <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
         </div>
@@ -551,7 +583,7 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">01 / 05</span>
+            <span class="carousel-card__num">01 / 08</span>
             <h3 class="carousel-card__title">BOXING</h3>
             <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
@@ -562,7 +594,7 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">02 / 05</span>
+            <span class="carousel-card__num">02 / 08</span>
             <h3 class="carousel-card__title">KICKBOXING</h3>
             <p class="carousel-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
@@ -573,7 +605,7 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">03 / 05</span>
+            <span class="carousel-card__num">03 / 08</span>
             <h3 class="carousel-card__title">YOUTH BOXING</h3>
             <p class="carousel-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
@@ -584,7 +616,7 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">04 / 05</span>
+            <span class="carousel-card__num">04 / 08</span>
             <h3 class="carousel-card__title">OLYMPISCHES BOXEN</h3>
             <p class="carousel-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
@@ -595,9 +627,42 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">05 / 05</span>
+            <span class="carousel-card__num">05 / 08</span>
             <h3 class="carousel-card__title">MENTAL COACHING</h3>
             <p class="carousel-card__short">Mentale Stärke, Fokus und Ring-Intelligenz.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="firmenfitness" onclick="openMobileCourse('firmenfitness',5)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">06 / 08</span>
+            <h3 class="carousel-card__title">FIRMENFITNESS</h3>
+            <p class="carousel-card__short">Gemeinsames Training für Teams — Leistung, Teamgeist, Gesundheit.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="executive" onclick="openMobileCourse('executive',6)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">07 / 08</span>
+            <h3 class="carousel-card__title">EXECUTIVE TRAINING</h3>
+            <p class="carousel-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="morning" onclick="openMobileCourse('morning',7)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">08 / 08</span>
+            <h3 class="carousel-card__title">MORNING TRAINING</h3>
+            <p class="carousel-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
@@ -611,6 +676,9 @@
         <button class="carousel-dot" onclick="scrollCarouselTo(2)"></button>
         <button class="carousel-dot" onclick="scrollCarouselTo(3)"></button>
         <button class="carousel-dot" onclick="scrollCarouselTo(4)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(5)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(6)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(7)"></button>
       </div>
 
       <!-- Mobile detail panel -->
@@ -774,6 +842,45 @@ const COURSES = {
       { strong: 'Ring-Intelligenz', span: 'Taktisches Denken und Lesen des Gegners' },
       { strong: 'Stressresistenz', span: 'Mentale Techniken aus dem Profi-Kampfsport' },
       { strong: 'Fokus & Zielsetzung', span: 'Methoden, die auch außerhalb des Rings wirken' },
+    ]
+  },
+  firmenfitness: {
+    tag: 'FIRMENFITNESS',
+    title: 'FIRMENFITNESS.<br><span class="gold">TEAM. POWER. GESUNDHEIT.</span>',
+    titleMob: 'FIRMENFITNESS',
+    img: '/assets/images/service-corp.webp',
+    imgAlt: 'Firmenfitness Bomaye Gym',
+    desc: 'Stärke dein Team im Boxring. Unser Firmenfitness-Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding — für Unternehmen, die in die Gesundheit und den Zusammenhalt ihrer Mitarbeiter investieren.',
+    feats: [
+      { strong: 'Maßgeschneiderte Einheiten', span: 'Für Gruppen jeder Fitness-Level und Größe' },
+      { strong: 'Teambuilding durch Sport', span: 'Gemeinsam schwitzen, gemeinsam wachsen' },
+      { strong: 'Flexible Buchung', span: 'Regelmäßige Einheiten oder Einzelevents möglich' },
+    ]
+  },
+  executive: {
+    tag: 'EXECUTIVE TRAINING',
+    title: 'EXECUTIVE TRAINING.<br><span class="gold">FOKUS. STÄRKE. FÜHRUNG.</span>',
+    titleMob: 'EXECUTIVE TRAINING',
+    img: '/assets/images/service-pt.webp',
+    imgAlt: 'Executive Training Bomaye Gym',
+    desc: 'Exklusives 1-on-1 Training für Führungspersönlichkeiten und anspruchsvolle Athleten. Maximale Intensität, absolute Diskretion — individuell auf deine Ziele und deinen Zeitplan abgestimmt. Mit Raschad oder Alfonso persönlich.',
+    feats: [
+      { strong: 'Vollständig personalisiert', span: 'Trainingsplan und Ziele nach deinen Vorgaben' },
+      { strong: 'Exklusive Coaching-Zeit', span: '100% Fokus deines Trainers auf dich' },
+      { strong: 'Flexible Terminplanung', span: 'Buchbar nach Verfügbarkeit, auch früh morgens' },
+    ]
+  },
+  morning: {
+    tag: 'MORNING TRAINING',
+    title: 'MORNING TRAINING.<br><span class="gold">FRÜH. FOKUSSIERT. STARK.</span>',
+    titleMob: 'MORNING TRAINING',
+    img: '/assets/images/service-women.webp',
+    imgAlt: 'Morning Training Early Session Bomaye Gym',
+    desc: 'Early Session um 07:00 Uhr — für alle, die den Tag mit voller Energie beginnen wollen. Unser Morning Training gibt dir Struktur, Schweiß und Fokus, bevor der Rest der Welt aufwacht.',
+    feats: [
+      { strong: 'Start um 07:00 Uhr', span: 'Ideal für Berufstätige und Frühaufsteher' },
+      { strong: 'Alle Level willkommen', span: 'Motivierendes Gruppentraining in kleiner Runde' },
+      { strong: 'Energie für den ganzen Tag', span: 'Cardio, Technik und mentaler Reset am Morgen' },
     ]
   }
 };
