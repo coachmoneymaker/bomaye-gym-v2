@@ -154,7 +154,10 @@ function toggleMenu() {
   if (!nav) return;
   const open = nav.classList.toggle('open');
   if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
-  if (btn) btn.setAttribute('aria-expanded', String(open));
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
 }
 
 function mobileNav(view, section) {

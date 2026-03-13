@@ -4732,3 +4732,197 @@ section { padding: var(--sv) 0; }
   background: transparent !important;
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM NAV & UI POLISH
+   Parts:
+     1 · Fullscreen overlay (fade in/out)
+     2 · Burger 3-line morph animation
+     3 · Menu entrance stagger
+     4 · Premium overlay typography
+     5 · Image hover effects (desktop only)
+     6 · Section spacing (120 / 90 / 70 px)
+     7 · Scroll reveal enhancement
+══════════════════════════════════════════════════════════════ */
+
+/* ─── Parts 1 & 2: Burger icon — CSS 3-line morph ───────────── */
+/* Reset the FA-icon based burger, replace with flex container   */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1001;
+}
+
+/* Hide the legacy FA icon if still present */
+.burger > i { display: none !important; }
+
+/* The three lines */
+.burger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform 0.3s var(--ease-expo), opacity 0.25s ease;
+}
+
+/* Morph to × when menu is open */
+.burger.open .burger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open .burger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.burger.open .burger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Show burger at ≤ 900 px (already set in base, repeated here for clarity) */
+@media (max-width: 900px) { .burger { display: flex; } }
+
+
+/* ─── Part 1: Fullscreen overlay — smooth fade ──────────────── */
+/* Overrides the slide-from-right translateX approach            */
+.mobile-overlay-nav {
+  /* Layout already set: position:fixed; inset:0; z-index:999; flex+center */
+  transform: none !important;          /* cancel translateX slide          */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Hiding: opacity fades first, then visibility snaps hidden  */
+  transition: opacity 0.35s var(--ease-expo), visibility 0s 0.35s;
+}
+.mobile-overlay-nav.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  /* Showing: visibility snaps visible immediately, opacity fades in */
+  transition: opacity 0.35s var(--ease-expo), visibility 0s 0s;
+}
+
+/* index.html uses #mobile-nav without the shared class — target directly */
+#mobile-nav {
+  transform: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-expo), visibility 0s 0.35s;
+}
+#mobile-nav.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.35s var(--ease-expo), visibility 0s 0s;
+}
+
+
+/* ─── Parts 3 & 4: Stagger entrance + premium typography ─────── */
+/* .mn-item is added to every link/button inside the overlay nav */
+.mn-item {
+  font-family: var(--font-display) !important;
+  font-size: clamp(1.9rem, 5.5vw, 2.6rem) !important;
+  letter-spacing: 6px !important;
+  color: rgba(255,255,255,0.78) !important;
+  padding: 0.45rem 1.5rem !important;
+  line-height: 1.15 !important;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  /* Entrance: each item starts hidden + offset                  */
+  opacity: 0;
+  transform: translateY(20px);
+  /* Stagger via --mn-i custom property set inline in HTML       */
+  transition:
+    opacity    0.5s var(--ease-expo) calc(var(--mn-i, 0) * 80ms),
+    transform  0.5s var(--ease-expo) calc(var(--mn-i, 0) * 80ms),
+    color      0.2s !important;
+}
+
+/* When nav is open, items animate in */
+.mobile-overlay-nav.open .mn-item,
+#mobile-nav.open .mn-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover: gold + subtle nudge */
+.mn-item:hover { color: var(--gold) !important; }
+
+/* Gold CTA button inside overlay */
+.mn-cta {
+  margin-top: 1.75rem !important;
+  padding: 0.9rem 2.8rem !important;
+}
+
+
+/* ─── Part 5: Premium image hover effects (desktop / mouse) ──── */
+@media (hover: hover) and (pointer: fine) {
+  /* Ensure containers clip the scale overflow */
+  .service-card,
+  .coach-photo,
+  [class*="kp-img"],
+  [class*="disc-slide"] { overflow: hidden; }
+
+  /* Apply transition to images inside those containers */
+  .service-card img,
+  .coach-photo img,
+  [class*="kp-img"] img,
+  [class*="disc-slide"] img {
+    transition: transform 0.4s ease, filter 0.4s ease !important;
+  }
+
+  /* Scale + darken on hover */
+  .service-card:hover img,
+  .coach-card:hover .coach-photo img,
+  [class*="kp-img"]:hover img,
+  [class*="disc-slide"]:hover img {
+    transform: scale(1.02) !important;
+    filter: brightness(0.95) !important;
+  }
+}
+
+
+/* ─── Part 6: Section vertical spacing ──────────────────────── */
+/* Update --sv / --sv-m / --sv-s to match spec targets           */
+:root {
+  --sv:   120px;   /* desktop  */
+  --sv-m:  90px;   /* tablet   */
+  --sv-s:  70px;   /* mobile   */
+}
+
+
+/* ─── Part 7: Scroll reveal ─────────────────────────────────── */
+/* Tighten to match spec: 500ms, translateY 20px → 0            */
+.reveal {
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  transition:
+    opacity   500ms var(--ease-expo),
+    transform 500ms var(--ease-expo) !important;
+}
+.reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+
+/* ─── Reduced motion: honour user preference ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .burger-line                          { transition: none !important; }
+  .mobile-overlay-nav,
+  #mobile-nav                           { transition: none !important; }
+  .mn-item                              { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .mobile-overlay-nav.open .mn-item,
+  #mobile-nav.open .mn-item            { opacity: 1 !important; transform: none !important; }
+  .service-card img,
+  .coach-photo img                      { transition: none !important; }
+}
