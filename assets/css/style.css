@@ -2152,7 +2152,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   color: var(--ink);
 }
 .mehr-preise-page p { color: rgba(8,8,8,0.55); }
-.mehr-preise-page .legal-back { color: rgba(8,8,8,0.45); }
+.mehr-preise-page .legal-back { color: rgba(8,8,8,0.8); font-size: 0.78rem; margin-bottom: 2.5rem; }
 .mehr-preise-page .legal-back:hover { color: var(--gold-dark); }
 .mehr-preise-page .tag--dark {
   background: rgba(8,8,8,0.07);
