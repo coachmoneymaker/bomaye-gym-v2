@@ -109,7 +109,7 @@ function initHeader() {
   const header = document.getElementById('header');
   if (!header) return;
   const onScroll = () => {
-    header.classList.toggle('scrolled', window.scrollY > 20);
+    header.classList.toggle('scrolled', window.scrollY > 10);
     updateActiveNav();
   };
   window.addEventListener('scroll', onScroll, { passive: true });
