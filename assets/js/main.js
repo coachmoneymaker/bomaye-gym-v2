@@ -354,7 +354,7 @@ function renderPricingDisplay(ageGroup, duration) {
           <div class="addon-name">${corp.name}</div>
           <div class="addon-price">${corp.priceLabel}</div>
           <p>${corp.note}</p>
-          <button onclick="openBooking('Corporate Boxing')" class="btn btn--outline-light btn--sm btn--full" type="button">ANFRAGE SENDEN</button>
+          <a href="mailto:info@bomayegym.com" class="btn btn--outline-light btn--sm btn--full" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">ANFRAGE SENDEN</a>
         </div>
       </div>`;
   }
