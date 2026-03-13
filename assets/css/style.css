@@ -4466,3 +4466,269 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).
   .why-card:nth-child(2) { top: calc(var(--nav-h) + 44px);      z-index: 2; }
   .why-card:nth-child(3) { top: calc(var(--nav-h) + 88px);      z-index: 3; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM REFINEMENTS — SPACING · HIERARCHY · INTERACTIONS · SEPARATION
+   Four targeted passes — no structural or font changes.
+   All animations respect prefers-reduced-motion.
+══════════════════════════════════════════════════════════════ */
+
+/* ══ 1. UNIFIED SECTION SPACING ══════════════════════════════
+   Generous vertical rhythm — clamp-driven so it scales
+   fluidly from mobile to wide desktop.
+   --sv / --sv-m / --sv-s are the single source of truth.    */
+
+:root {
+  --sv:   clamp(72px, 8vw, 112px);  /* desktop  */
+  --sv-m: clamp(56px, 7vw,  88px);  /* tablet   */
+  --sv-s: clamp(44px, 6vw,  64px);  /* mobile   */
+}
+
+/* Base rhythm upgrade */
+section { padding: var(--sv) 0; }
+
+@media (max-width: 900px) {
+  section { padding: var(--sv-m) 0; }
+}
+@media (max-width: 480px) {
+  section { padding: var(--sv-s) 0; }
+}
+
+/* Harmonise fixed-5rem overrides so all sections share the same scale */
+#schedule,
+.sec--faq-white,
+.sec--standard-white {
+  padding-top:    var(--sv)   !important;
+  padding-bottom: var(--sv)   !important;
+}
+#quote {
+  padding-top:    var(--sv)   !important;
+  padding-bottom: var(--sv)   !important;
+}
+
+@media (max-width: 900px) {
+  #schedule,
+  .sec--faq-white,
+  .sec--standard-white {
+    padding-top:    var(--sv-m) !important;
+    padding-bottom: var(--sv-m) !important;
+  }
+  #quote {
+    padding-top:    var(--sv-m) !important;
+    padding-bottom: var(--sv-m) !important;
+  }
+}
+@media (max-width: 480px) {
+  #schedule,
+  .sec--faq-white,
+  .sec--standard-white {
+    padding-top:    var(--sv-s) !important;
+    padding-bottom: var(--sv-s) !important;
+  }
+  #quote {
+    padding-top:    var(--sv-s) !important;
+    padding-bottom: var(--sv-s) !important;
+  }
+}
+
+/* Diff-block stays compact — it is a connector strip, not a full section */
+.diff-block { padding: clamp(36px, 4vw, 60px) 0; }
+@media (max-width: 768px) { .diff-block { padding: 1.5rem 0; } }
+
+/* Section header: slightly more breathing room before grid content */
+.sec-header { margin-bottom: clamp(28px, 3.5vw, 52px); }
+
+
+/* ══ 2. CONSISTENT BUTTON HIERARCHY ══════════════════════════
+   Gold filled  = primary CTA — elevated, glowing, impossible to miss.
+   Outline      = secondary CTA — quiet, clearly supportive.            */
+
+/* Primary: stronger ambient glow at rest — unmistakable lead action */
+.btn--gold {
+  box-shadow:
+    0 0 22px rgba(197,160,89,0.34),
+    0 3px 12px rgba(0,0,0,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+}
+.btn--gold:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    0 0 46px rgba(197,160,89,0.70),
+    0 10px 30px rgba(197,160,89,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+/* Secondary: reduced visual weight — clearly subordinate */
+.btn--outline-light { opacity: 0.84; }
+.btn--outline-light:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.16);
+}
+.btn--outline-dark { opacity: 0.80; }
+.btn--outline-dark:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(197,160,89,0.12), 0 4px 14px rgba(0,0,0,0.14);
+}
+
+/* Gold button on light bg (#pricing): use gold-dark tones */
+#pricing .btn--gold {
+  box-shadow:
+    0 0 18px rgba(160,124,58,0.30),
+    0 3px 12px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+}
+#pricing .btn--gold:hover {
+  box-shadow:
+    0 0 38px rgba(160,124,58,0.58),
+    0 8px 28px rgba(160,124,58,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+/* Location white-bg: restore full-opacity on outline so it reads clearly */
+#location .btn--outline-dark,
+#location .btn--outline-light {
+  opacity: 1 !important;
+  color: var(--ink) !important;
+  border-color: rgba(8,8,8,0.22) !important;
+}
+#location .btn--outline-dark:hover,
+#location .btn--outline-light:hover {
+  border-color: var(--gold-dark) !important;
+  color: var(--gold-dark) !important;
+  box-shadow: 0 4px 14px rgba(160,124,58,0.14) !important;
+}
+
+/* Mobile / touch: remove opacity dimming — buttons must feel fully interactive */
+@media (max-width: 900px) {
+  .btn--outline-light,
+  .btn--outline-dark { opacity: 1; }
+}
+
+
+/* ══ 3. SUBTLE MICRO-INTERACTIONS ═════════════════════════════
+   All effects are gentle and fast. No distracting motion.     */
+
+/* Coach photo: soft image zoom on card hover — image stays crisp */
+.coach-photo { overflow: hidden; }
+.coach-photo img {
+  transition: transform 0.65s var(--ease-expo);
+}
+.coach-card:hover .coach-photo img {
+  transform: scale(1.05);
+}
+
+/* Testimonial cards: light lift */
+.testimonial-card {
+  transition:
+    transform    0.30s var(--ease-out),
+    box-shadow   0.30s ease,
+    border-color 0.30s ease;
+}
+.testimonial-card:hover {
+  transform:    translateY(-4px);
+  box-shadow:   0 12px 40px rgba(0,0,0,0.10);
+  border-color: rgba(0,0,0,0.10) !important;
+}
+
+/* Membership card: soft gold glow on hover */
+.membership-card {
+  transition: border-color 0.30s ease, box-shadow 0.30s ease;
+}
+.membership-card:hover {
+  border-color: rgba(197,160,89,0.44) !important;
+  box-shadow:
+    0 8px 36px rgba(0,0,0,0.10),
+    0 0 0 1px rgba(197,160,89,0.18) !important;
+}
+
+/* Addon cards: subtle lift */
+.addon-card {
+  transition:
+    transform    0.28s var(--ease-out),
+    box-shadow   0.28s ease,
+    border-color 0.28s ease;
+}
+.addon-card:hover {
+  transform:    translateY(-3px);
+  box-shadow:   0 10px 32px rgba(0,0,0,0.09);
+  border-color: rgba(197,160,89,0.22) !important;
+}
+
+/* Pricing prog-cards: box-shadow enhancement on hover */
+.prog-card:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.14) !important;
+}
+
+/* Nav links: smooth gold underline on desktop nav bar only (not mobile overlay) */
+.nav-links .nav-link {
+  position: relative;
+}
+.nav-links .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%; right: 50%;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0;
+  transition: left 0.25s var(--ease-out), right 0.25s var(--ease-out), opacity 0.25s;
+}
+.nav-links .nav-link:hover::after,
+.nav-links .nav-link.active::after {
+  left: 0.8rem; right: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Honour prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .coach-photo img,
+  .testimonial-card,
+  .membership-card,
+  .addon-card        { transition: none !important; }
+  .coach-card:hover .coach-photo img { transform: none !important; }
+  .nav-links .nav-link::after { transition: none !important; }
+}
+
+/* Disable card hover transforms on touch (no hover state) */
+@media (max-width: 900px) {
+  .testimonial-card:hover { transform: none; }
+  .addon-card:hover       { transform: none; }
+  .membership-card:hover  { border-color: rgba(197,160,89,0.20) !important; }
+}
+
+
+/* ══ 4. VISUAL SECTION SEPARATION ════════════════════════════
+   Thin, elegant cues so users feel each section boundary
+   without harsh breaks or colour clashes.                    */
+
+/* Testimonials (cream #f9f7f4) → FAQ (cream): gold hairline divider */
+#testimonials {
+  border-bottom: 1px solid rgba(197,160,89,0.20);
+}
+
+/* FAQ white: slightly warmer cream than testimonials — subtle differentiation */
+#faq.sec--faq-white {
+  background: #f4f0eb !important;
+}
+
+/* Ensure FAQ text contrast is maintained on the warmer background */
+#faq.sec--faq-white .faq-a-inner {
+  color: rgba(8,8,8,0.68) !important;
+}
+
+/* Schedule section: soft top border when coming out of a dark section */
+#schedule {
+  border-top: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+/* Booking section (dark) starts cleanly after cream sections */
+#booking {
+  border-top: 1px solid rgba(197,160,89,0.10);
+}
+
+/* Ensure light-section ::before dark gradient does not bleed onto cream */
+#testimonials::before {
+  background: transparent !important;
+}
+
