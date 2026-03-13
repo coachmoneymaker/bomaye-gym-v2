@@ -40,7 +40,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: linear-gradient(160deg, #1a160d 0%, #111111 48%, #12141a 100%);
+  background: linear-gradient(160deg, #141414 0%, #111111 48%, #12141a 100%);
   background-attachment: fixed;
   color: var(--white);
   font-family: var(--font-body);
@@ -53,6 +53,9 @@ img { display: block; max-width: 100%; height: auto; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
+
+/* ── WhatsApp float: disabled ──────────────────────────────── */
+.wa-float { display: none !important; }
 
 /* ── Noise overlay ─────────────────────────────────────────── */
 .noise {
