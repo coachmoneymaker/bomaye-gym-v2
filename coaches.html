@@ -160,12 +160,40 @@
       margin-bottom: 1.5rem;
     }
 
+    /* ── Trust badges ── */
+    .coach-trust-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .coach-trust-badge {
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      background: rgba(197,160,89,0.1);
+      border: 1px solid rgba(197,160,89,0.35);
+      padding: 0.35rem 0.75rem;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+    .coach-trust-badge .badge-emoji {
+      font-style: normal;
+      font-size: 0.8rem;
+    }
+
     @media (max-width: 768px) {
       .coach-card-full {
         grid-template-columns: 1fr;
         direction: ltr !important;
       }
       .coach-card-full.reverse > * { direction: ltr; }
+      .coach-trust-badges { gap: 0.4rem; }
+      .coach-trust-badge { font-size: 0.58rem; padding: 0.3rem 0.6rem; }
     }
 
     #header .nav-link[href] { display: inline-flex; align-items: center; }
@@ -267,10 +295,13 @@
         </div>
         <div class="coach-full-info">
           <h3>RASCHAD PEKPASSI</h3>
-          <p class="coach-full-title">LANDESTRAINER (BABV)</p>
-          <h4 class="coach-full-role">HEAD COACH &amp; FOUNDER</h4>
-          <p class="coach-full-bio">Über 20 Jahre Erfahrung als Wettkämpfer und Landestrainer. Raschad analysiert jeden Bewegungsablauf mit wissenschaftlicher Präzision und formt Athleten von Grund auf neu.</p>
-          <p class="coach-full-bio">Als Landestrainer des Bayerischen Amateurbox-Verbands (BABV) hat Raschad Hunderte von Sportlern auf dem Weg zum Wettkampf begleitet — vom kompletten Anfänger bis zur Meisterschaft. Seine Philosophie: Technik schlägt Kraft. Immer.</p>
+          <p class="coach-full-title">HEAD COACH</p>
+          <div class="coach-trust-badges">
+            <span class="coach-trust-badge"><em class="badge-emoji">🥊</em> Landestrainer BABV</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🏆</em> Deutscher Meister Coach</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🔥</em> Performance Boxing Coach</span>
+          </div>
+          <p class="coach-full-bio">Raschad Pekpassi gehört zu den erfahrensten Boxtrainern in München.<br>Als Landestrainer des Bayerischen Boxverbandes verbindet er olympisches Boxtraining mit modernem Performance-Coaching.</p>
           <div class="coach-full-socials">
             <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf Instagram">
               <i class="fa-brands fa-instagram"></i>
@@ -280,7 +311,7 @@
             </a>
           </div>
           <button onclick="openBooking()" class="btn btn--gold" type="button">
-            <i class="fa-solid fa-calendar-plus"></i> RASCHAD BUCHEN
+            <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
           </button>
         </div>
       </div>
@@ -298,9 +329,12 @@
         <div class="coach-full-info">
           <h3>ALFONSO FUSCO</h3>
           <p class="coach-full-title">LANDESTRAINER (BABV)</p>
-          <h4 class="coach-full-role">HEAD COACH &amp; FOUNDER</h4>
-          <p class="coach-full-bio">Kickbox-Weltmeister und Spezialist für Taktik, Ring-Intelligenz und mentale Stärke. Alfonso lehrt dich, den Kampf im Kopf zu gewinnen — bevor du den Ring betrittst.</p>
-          <p class="coach-full-bio">Seine internationale Wettkampferfahrung und das tiefe Verständnis für Bewegung und Timing machen ihn zu einem der gefragtesten Coaches im Raum München. Bei Alfonso lernst du nicht nur Technik — du lernst zu denken wie ein Kämpfer.</p>
+          <div class="coach-trust-badges">
+            <span class="coach-trust-badge"><em class="badge-emoji">🥊</em> Landestrainer BABV</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🏆</em> WM Titel</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🥋</em> Kickboxen &amp; Boxing Coach</span>
+          </div>
+          <p class="coach-full-bio">Alfonso Fusco ist ein erfahrener Kampfsporttrainer mit internationalem Hintergrund.<br>Seine Trainingsphilosophie verbindet Kickboxen, Boxen und Athletiktraining für alle Leistungsstufen.</p>
           <div class="coach-full-socials">
             <a href="https://www.instagram.com/bomayegym/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf Instagram">
               <i class="fa-brands fa-instagram"></i>
@@ -310,7 +344,7 @@
             </a>
           </div>
           <button onclick="openBooking()" class="btn btn--gold" type="button">
-            <i class="fa-solid fa-calendar-plus"></i> ALFONSO BUCHEN
+            <i class="fa-solid fa-calendar-plus"></i> TRAINING BEI ALFONSO BUCHEN
           </button>
         </div>
       </div>
