@@ -2072,6 +2072,22 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 1.5px; color: var(--gold);
 }
 .mp-savings-empty { height: 1.5rem; } /* keeps layout stable when no savings badge */
+.mp-regular-price-row {
+  display: flex; align-items: baseline; gap: 0.3rem; justify-content: center; margin-bottom: 0.25rem;
+}
+.mp-regular-price {
+  font-family: var(--font-display); font-size: 1.4rem; color: var(--muted);
+  text-decoration: line-through; opacity: 0.6; line-height: 1;
+}
+.mp-regular-unit {
+  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 1.5px; color: var(--muted); opacity: 0.6;
+}
+.mp-early-bird-label {
+  font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2px;
+  color: var(--gold); background: rgba(197,160,89,0.12); border: 1px solid rgba(197,160,89,0.3);
+  border-radius: 999px; padding: 0.2rem 0.6rem; margin-left: 0.35rem; white-space: nowrap;
+  align-self: center;
+}
 .membership-benefits {
   list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.75rem;
 }
@@ -2240,6 +2256,11 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 }
 #pricing .mp-amount { color: var(--gold-dark); }
 #pricing .mp-unit   { color: rgba(8,8,8,0.45); }
+#pricing .mp-regular-price { color: rgba(8,8,8,0.55); }
+#pricing .mp-regular-unit  { color: rgba(8,8,8,0.45); }
+#pricing .mp-early-bird-label {
+  color: var(--gold-dark); background: rgba(160,124,58,0.1); border-color: rgba(160,124,58,0.25);
+}
 #pricing .mp-savings {
   background: rgba(160,124,58,0.1);
   border-color: rgba(160,124,58,0.22);
