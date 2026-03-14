@@ -345,6 +345,11 @@ function renderPricingDisplay(ageGroup, duration) {
       <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
         <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
       </button>
+    </div>
+    <div class="family-benefit-trigger reveal">
+      <span class="fbt-label">FAMILY BENEFIT</span>
+      <p class="fbt-desc">Ab 3 Familienmitgliedern trainiert jede weitere Person kostenfrei.</p>
+      <button class="fbt-cta" type="button" onclick="openFamilyModal()">MEHR ERFAHREN</button>
     </div>`;
 
   if (ageGroup === 'erwachsene') {
