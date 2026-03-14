@@ -1101,13 +1101,30 @@ document.addEventListener('DOMContentLoaded', () => {
   onScroll();
 })();
 
+/* ─── iOS-compatible scroll lock ─────────────────────────── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
 /* ─── Mobile nav toggle ────────────────────────────────────── */
 function toggleKurseMenu() {
   const nav = document.getElementById('kurse-mobile-nav');
   const btn = document.getElementById('kurse-burger-btn');
   if (!nav) return;
   const open = nav.classList.toggle('open');
-  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
   if (btn) {
     btn.setAttribute('aria-expanded', String(open));
     btn.classList.toggle('open', open);
@@ -1120,14 +1137,14 @@ function openBooking() {
   const modal = document.getElementById('booking-modal');
   if (!modal) return;
   modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockBodyScroll();
   if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
 }
 function closeBooking() {
   const modal = document.getElementById('booking-modal');
-  if (!modal) return;
+  if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockBodyScroll();
 }
 function _mountBsport() {
   if (!document.getElementById('bsport-cdn')) {

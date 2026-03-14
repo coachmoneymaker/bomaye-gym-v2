@@ -282,10 +282,11 @@
     </a>
 
     <nav class="nav-links" aria-label="Hauptnavigation">
-      <a class="nav-link" href="/">DNA</a>
-      <a class="nav-link" href="/">KURSE</a>
-      <a class="nav-link" href="/">TEAM</a>
-      <a class="nav-link" href="/">PREISE</a>
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/#schedule">STUNDENPLAN</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ÜBER UNS</a>
       <a class="nav-link nav-link-active" href="/faq" aria-current="page">FAQ</a>
       <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
     </nav>
@@ -391,22 +392,22 @@
         <div class="footer-col">
           <h4>TRAINING</h4>
           <ul class="footer-links">
-            <li><a href="/">Olympic Boxing</a></li>
-            <li><a href="/">Kickboxing</a></li>
-            <li><a href="/">Women's Boxing</a></li>
-            <li><a href="/">Youth Boxing</a></li>
-            <li><a href="/">Personal Training</a></li>
-            <li><a href="/">Corporate Boxing</a></li>
+            <li><a href="/kurse">Olympic Boxing</a></li>
+            <li><a href="/kurse">Kickboxing</a></li>
+            <li><a href="/kurse">Women's Boxing</a></li>
+            <li><a href="/kurse">Youth Boxing</a></li>
+            <li><a href="/kurse">Personal Training</a></li>
+            <li><a href="/kurse">Corporate Boxing</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>GYM</h4>
           <ul class="footer-links">
-            <li><a href="/">Unsere DNA</a></li>
-            <li><a href="/">Team</a></li>
-            <li><a href="/">Preise</a></li>
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Team</a></li>
+            <li><a href="/#pricing">Preise</a></li>
             <li><a href="/faq">FAQ</a></li>
-            <li><a href="/">Standort</a></li>
+            <li><a href="/#location">Standort</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -467,13 +468,30 @@
   if (img.complete) { img.naturalWidth > 0 ? onLoad() : onError(); }
 })();
 
+/* ── iOS-compatible scroll lock ── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
 /* ── Mobile nav toggle ───────────────────────── */
 function toggleFaqMenu() {
   const nav = document.getElementById('faq-mobile-nav');
   const btn = document.getElementById('faq-burger-btn');
   if (!nav) return;
   const open = nav.classList.toggle('open');
-  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
   if (btn) {
     btn.setAttribute('aria-expanded', String(open));
     btn.classList.toggle('open', open);
@@ -486,14 +504,14 @@ function openBooking() {
   const modal = document.getElementById('booking-modal');
   if (!modal) return;
   modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockBodyScroll();
   if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
 }
 function closeBooking() {
   const modal = document.getElementById('booking-modal');
-  if (!modal) return;
+  if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockBodyScroll();
 }
 function _mountBsport() {
   if (!document.getElementById('bsport-cdn')) {
