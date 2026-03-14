@@ -192,22 +192,14 @@
     }
     .course-detail.visible { display: block; }
     .course-detail__inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2.5rem,5vw,5rem);
-      align-items: center;
+      display: flex;
+      justify-content: center;
     }
-    .course-detail__img {
-      position: relative; border-radius: 6px; overflow: hidden;
+    .course-detail__text {
+      color: #fff;
+      max-width: 720px;
+      width: 100%;
     }
-    .course-detail__img img {
-      width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
-    }
-    .course-detail__img-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(8,8,8,0.5), transparent 60%);
-    }
-    .course-detail__text { color: #fff; }
     .course-detail__tag {
       font-family: var(--font-head);
       font-size: 0.58rem; letter-spacing: 4px; color: var(--gold);
@@ -597,10 +589,6 @@
     <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
       <div class="container">
           <div class="course-detail__inner">
-            <div class="course-detail__img">
-              <img id="detail-img" src="/assets/images/service-exec.webp" alt="Boxing Training" loading="lazy" decoding="async" />
-              <div class="course-detail__img-overlay"></div>
-            </div>
             <div class="course-detail__text">
               <span class="course-detail__tag" id="detail-tag">BOXING</span>
               <h2 class="course-detail__title" id="detail-title">BOXING.<br><span class="gold">ECHTE TECHNIK.</span></h2>
