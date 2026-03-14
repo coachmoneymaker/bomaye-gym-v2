@@ -416,6 +416,42 @@
     /* Nav */
     .nav-link-active { color: var(--gold) !important; }
     #header .nav-link[href] { display: inline-flex; align-items: center; }
+
+    /* ══════════════════════════════════════════════════
+       PREMIUM UX ENHANCEMENTS
+    ══════════════════════════════════════════════════ */
+
+    /* Feature 2: Hardware-accelerate CTA buttons */
+    .btn--gold { will-change: transform; }
+
+    /* Feature 3: Detail content entrance animations */
+    @keyframes cdFadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cdCtaGlow {
+      0%   { box-shadow: 0 0 18px rgba(197,160,89,0.28), 0 2px 10px rgba(0,0,0,0.35); }
+      50%  { box-shadow: 0 0 44px rgba(197,160,89,0.72), 0 8px 28px rgba(197,160,89,0.32); }
+      100% { box-shadow: 0 0 18px rgba(197,160,89,0.28), 0 2px 10px rgba(0,0,0,0.35); }
+    }
+    .cd-entering .course-detail__title {
+      animation: cdFadeUp 200ms ease backwards;
+    }
+    .cd-entering .course-detail__desc {
+      animation: cdFadeUp 200ms ease 20ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(1) {
+      animation: cdFadeUp 190ms ease 30ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(2) {
+      animation: cdFadeUp 190ms ease 55ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(3) {
+      animation: cdFadeUp 190ms ease 80ms backwards;
+    }
+    .cd-entering #detail-cta-btn {
+      animation: cdCtaGlow 500ms ease 90ms backwards;
+    }
   </style>
 </head>
 
@@ -1680,6 +1716,73 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
   els.forEach(el => io.observe(el));
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM UX ENHANCEMENTS
+══════════════════════════════════════════════════════════════ */
+
+/* ─── Feature 1: Atmospheric bg update during carousel drift ── */
+(function () {
+  var track = document.getElementById('dsk-track');
+  if (!track) return;
+  var lastBgId = null, bgTimer = null;
+  function tryUpdateBg() {
+    var active = track.querySelector('.dsk-card.dsk-active[data-course]');
+    if (!active) return;
+    var id = active.dataset.course;
+    if (id === lastBgId) return;
+    lastBgId = id;
+    if (COURSES[id]) setDetailBg(COURSES[id].img);
+  }
+  new MutationObserver(function () {
+    clearTimeout(bgTimer);
+    bgTimer = setTimeout(tryUpdateBg, 120);
+  }).observe(track, { subtree: true, attributes: true, attributeFilter: ['class'] });
+})();
+
+/* ─── Feature 2: Magnetic premium CTA micro-interaction ───── */
+(function () {
+  var noHover = window.matchMedia('(hover: none)').matches;
+  function addMagnetic(el) {
+    if (!el || noHover) return;
+    var LIFT = -2, SCALE = 1.04, MX = 5, MY = 3;
+    var over = false;
+    el.addEventListener('mouseenter', function () { over = true; });
+    el.addEventListener('mousemove', function (e) {
+      var r  = el.getBoundingClientRect();
+      var dx = ((e.clientX - r.left - r.width  * 0.5) / (r.width  * 0.5)) * MX;
+      var dy = ((e.clientY - r.top  - r.height * 0.5) / (r.height * 0.5)) * MY;
+      el.style.transition = 'transform 130ms ease, box-shadow 130ms ease';
+      el.style.transform  = 'translateY(' + LIFT + 'px) scale(' + SCALE + ') translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px)';
+    });
+    el.addEventListener('mouseleave', function () {
+      over = false;
+      el.style.transition = '';
+      el.style.transform  = '';
+    });
+    el.addEventListener('mousedown', function () {
+      el.style.transition = 'transform 60ms ease';
+      el.style.transform  = 'translateY(1px) scale(0.97)';
+    });
+    el.addEventListener('mouseup', function () {
+      if (!over) return;
+      el.style.transition = 'transform 180ms cubic-bezier(0.22,0.8,0.32,1)';
+      el.style.transform  = 'translateY(' + LIFT + 'px) scale(' + SCALE + ')';
+    });
+  }
+  document.querySelectorAll('.btn--gold').forEach(addMagnetic);
+})();
+
+/* ─── Feature 3: Micro content animation on course change ─── */
+(function () {
+  var _orig = openCourse;
+  openCourse = function (id) {
+    var panel = document.getElementById('course-detail');
+    if (panel) panel.classList.remove('cd-entering');
+    _orig(id);
+    if (panel) { void panel.offsetHeight; panel.classList.add('cd-entering'); }
+  };
 })();
 </script>
 
