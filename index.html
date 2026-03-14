@@ -132,6 +132,76 @@
   </div>
 </div>
 
+<!-- ═══════ FAMILY MEMBERSHIP MODAL ═══════ -->
+<div id="family-modal" role="dialog" aria-label="Family Membership" aria-modal="true">
+  <div class="family-modal-card">
+    <button class="family-modal-close" onclick="closeFamilyModal()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="family-modal-header">
+      <span class="family-label">COMMUNITY BENEFIT</span>
+      <h2 class="family-headline">FAMILY MEMBERSHIP</h2>
+      <p class="family-sub">Train together. Grow together.</p>
+    </div>
+
+    <div class="family-modal-body">
+      <p class="family-desc">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
+      <ul class="family-bullets">
+        <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
+        <li><i class="fa-solid fa-check"></i> Geschwister</li>
+        <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
+      </ul>
+    </div>
+
+    <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)">
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="fif-name">Name</label>
+          <input type="text" id="fif-name" name="name" required placeholder="Dein Name">
+        </div>
+        <div class="fif-field">
+          <label for="fif-email">E-Mail</label>
+          <input type="email" id="fif-email" name="email" required placeholder="deine@email.de">
+        </div>
+      </div>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="fif-phone">Telefon</label>
+          <input type="tel" id="fif-phone" name="phone" placeholder="0176 000 000">
+        </div>
+        <div class="fif-field">
+          <label for="fif-count">Anzahl Familienmitglieder</label>
+          <select id="fif-count" name="count">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5+">5+</option>
+          </select>
+        </div>
+      </div>
+      <div class="fif-field fif-field--radio">
+        <label>Gleicher Haushalt?</label>
+        <div class="fif-radio-group">
+          <label class="fif-radio-label">
+            <input type="radio" name="household" value="Ja" required> Ja
+          </label>
+          <label class="fif-radio-label">
+            <input type="radio" name="household" value="Nein"> Nein
+          </label>
+        </div>
+      </div>
+      <div class="fif-field">
+        <label for="fif-message">Nachricht (optional)</label>
+        <textarea id="fif-message" name="message" rows="3" placeholder="Weitere Informationen..."></textarea>
+      </div>
+      <button type="submit" class="btn btn--gold btn--full">
+        <i class="fa-solid fa-paper-plane"></i> FAMILIENPLATZ ANFRAGEN
+      </button>
+    </form>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════
      HOME VIEW
 ══════════════════════════════════════════════════════════ -->
@@ -503,18 +573,11 @@
         </div>
       </div>
 
-      <!-- ── Family Membership ── -->
-      <div class="family-membership-card reveal">
-        <span class="family-label">COMMUNITY BENEFIT</span>
-        <h3 class="family-headline">FAMILY MEMBERSHIP</h3>
-        <p class="family-sub">Train together. Grow together.</p>
-        <p class="family-desc">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenlos.</p>
-        <ul class="family-bullets">
-          <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
-          <li><i class="fa-solid fa-check"></i> Geschwister</li>
-          <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
-        </ul>
-        <a href="#contact" class="btn btn--gold">FAMILIENPLATZ ANFRAGEN</a>
+      <!-- ── Family Benefit Trigger ── -->
+      <div class="family-benefit-trigger reveal">
+        <span class="fbt-label">FAMILY BENEFIT</span>
+        <p class="fbt-desc">Ab 3 Familienmitgliedern trainiert jede weitere Person kostenfrei.</p>
+        <button class="fbt-cta" type="button" onclick="openFamilyModal()">Mehr erfahren</button>
       </div>
 
     </div>

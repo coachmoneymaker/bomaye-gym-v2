@@ -583,16 +583,58 @@ function closeBooking() {
 /* Click backdrop (modal element itself, not its children) */
 document.addEventListener('click', e => {
   if (e.target.id === 'booking-modal') closeBooking();
+  if (e.target.id === 'family-modal')  closeFamilyModal();
 });
 
-/* ESC closes booking modal OR mobile nav, whichever is open */
+/* ESC closes booking modal OR family modal OR mobile nav, whichever is open */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const modal     = document.getElementById('booking-modal');
-  const mobileNav = document.getElementById('mobile-nav');
-  if (modal     && modal.classList.contains('open'))     { closeBooking(); return; }
-  if (mobileNav && mobileNav.classList.contains('open')) { toggleMenu();   return; }
+  const bookingModal = document.getElementById('booking-modal');
+  const familyModal  = document.getElementById('family-modal');
+  const mobileNav    = document.getElementById('mobile-nav');
+  if (bookingModal && bookingModal.classList.contains('open')) { closeBooking();      return; }
+  if (familyModal  && familyModal.classList.contains('open'))  { closeFamilyModal(); return; }
+  if (mobileNav    && mobileNav.classList.contains('open'))    { toggleMenu();       return; }
 });
+
+/* ── Family Membership Modal ──────────────────────────────── */
+function openFamilyModal() {
+  const modal = document.getElementById('family-modal');
+  if (!modal || modal.classList.contains('open')) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+}
+
+function closeFamilyModal() {
+  const modal = document.getElementById('family-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+}
+
+function submitFamilyInquiry(e) {
+  e.preventDefault();
+  const form      = e.target;
+  const name      = form.querySelector('[name="name"]').value.trim();
+  const email     = form.querySelector('[name="email"]').value.trim();
+  const phone     = form.querySelector('[name="phone"]').value.trim();
+  const count     = form.querySelector('[name="count"]').value;
+  const household = (form.querySelector('[name="household"]:checked') || {}).value || '';
+  const message   = form.querySelector('[name="message"]').value.trim();
+
+  const lines = [
+    `Name: ${name}`,
+    `E-Mail: ${email}`,
+    `Telefon: ${phone || '–'}`,
+    `Anzahl Familienmitglieder: ${count}`,
+    `Gleicher Haushalt: ${household}`,
+  ];
+  if (message) lines.push(`Nachricht: ${message}`);
+
+  const subject = encodeURIComponent('Neue Family Membership Anfrage');
+  const body    = encodeURIComponent(lines.join('\n'));
+  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+}
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
 
