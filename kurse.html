@@ -189,8 +189,35 @@
       background: #0a0a0a;
       border-top: 1px solid rgba(197,160,89,0.15);
       padding: clamp(40px,6vw,72px) 0;
+      position: relative;
+      overflow: hidden;
     }
     .course-detail.visible { display: block; }
+
+    /* ── Atmospheric background layers ── */
+    .course-detail__bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(22px);
+      transform: scale(1.12); /* prevent blur edge bleed */
+      opacity: 0;
+      transition: opacity 500ms ease;
+      will-change: opacity;
+      z-index: 0;
+    }
+    .course-detail__bg-layer.is-active { opacity: 1; }
+    .course-detail__dark-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.88);
+      z-index: 1;
+    }
+    .course-detail > .container {
+      position: relative;
+      z-index: 2;
+    }
     .course-detail__inner {
       display: flex;
       justify-content: center;
@@ -587,6 +614,9 @@
 
     <!-- ── DESKTOP DETAIL PANEL ── -->
     <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
+      <div class="course-detail__bg-layer" id="detail-bg-a"></div>
+      <div class="course-detail__bg-layer" id="detail-bg-b"></div>
+      <div class="course-detail__dark-overlay"></div>
       <div class="container">
           <div class="course-detail__inner">
             <div class="course-detail__text">
@@ -988,6 +1018,20 @@ const COURSES = {
   }
 };
 
+/* ─── Atmospheric background crossfade ────────────────────── */
+let _detailBgActive = 'a';
+function setDetailBg(imgUrl) {
+  const a = document.getElementById('detail-bg-a');
+  const b = document.getElementById('detail-bg-b');
+  if (!a || !b) return;
+  const next = _detailBgActive === 'a' ? b : a;
+  const curr = _detailBgActive === 'a' ? a : b;
+  next.style.backgroundImage = 'url(' + imgUrl + ')';
+  next.classList.add('is-active');
+  curr.classList.remove('is-active');
+  _detailBgActive = _detailBgActive === 'a' ? 'b' : 'a';
+}
+
 /* ─── Desktop: open course detail ─────────────────────────── */
 function openCourse(id) {
   const data = COURSES[id];
@@ -995,6 +1039,9 @@ function openCourse(id) {
 
   /* Tell carousel engine to snap to this course */
   if (window.__deskCarouselSnap) window.__deskCarouselSnap(id);
+
+  /* Update atmospheric background */
+  setDetailBg(data.img);
 
   /* Update detail */
   document.getElementById('detail-tag').textContent     = data.tag;
@@ -1028,6 +1075,9 @@ function openCourse(id) {
   const panel = document.getElementById('course-detail');
   panel.classList.add('visible');
 }
+
+/* Initialize atmospheric background with the default course */
+setDetailBg(COURSES.boxing.img);
 
 /* ─── Mobile: open course detail ──────────────────────────── */
 function openMobileCourse(id, idx) {
