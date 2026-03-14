@@ -72,105 +72,116 @@
     }
 
     /* ══════════════════════════════════════════════════
-       DESKTOP MARQUEE — 2 rows × 5 cards
-       Seamless CSS animation · hover-pause · click-to-detail
+       DESKTOP PREMIUM CAROUSEL — single focused card
+       RAF engine · hover-pause · click-to-detail
     ══════════════════════════════════════════════════ */
-    .desk-marquee {
+    .desk-carousel {
       display: block;
       overflow: hidden;
+      position: relative;
       padding-bottom: clamp(24px,4vw,40px);
     }
-    .dmt-row {
-      overflow: hidden;
-      margin-bottom: 10px;
+    /* Soft edge fades */
+    .desk-carousel::before,
+    .desk-carousel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: clamp(24px,4vw,40px);
+      width: clamp(80px, 12vw, 200px);
+      z-index: 3;
+      pointer-events: none;
     }
-    .dmt-row:last-child { margin-bottom: 0; }
-    .dmt-track {
+    .desk-carousel::before {
+      left: 0;
+      background: linear-gradient(to right, #0c0c0c 0%, transparent 100%);
+    }
+    .desk-carousel::after {
+      right: 0;
+      background: linear-gradient(to left, #0c0c0c 0%, transparent 100%);
+    }
+    .dsk-track {
       display: flex;
       will-change: transform;
-      animation: dmt-marquee 52s linear infinite;
+      user-select: none;
+      -webkit-user-select: none;
     }
-    @keyframes dmt-marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .desk-marquee:hover .dmt-track {
-      animation-play-state: paused;
-    }
-    .dmt-set {
-      display: flex;
-      gap: 10px;
-      padding-right: 10px; /* trailing space = gap → seamless loop */
-      flex-shrink: 0;
-    }
-    /* ── Desktop marquee card ── */
-    .dmc-card {
+    /* ── Desktop carousel card ── */
+    .dsk-card {
       flex: 0 0 auto;
-      width: clamp(182px, calc(19vw - 8px), 248px);
+      width: clamp(260px, 26vw, 400px);
       aspect-ratio: 3/4;
-      max-height: 340px;
-      min-height: 240px;
+      max-height: 480px;
+      min-height: 300px;
       position: relative;
       overflow: hidden;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       background: #0a0a0a;
-      transition: transform 0.42s var(--ease-expo), box-shadow 0.42s ease;
+      transition: transform 0.6s cubic-bezier(0.22, 0.8, 0.32, 1),
+                  box-shadow 0.6s ease,
+                  opacity  0.6s ease;
+      opacity: 0.42;
+      transform: scale(0.87);
     }
-    .desk-marquee:hover .dmc-card:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 22px 52px rgba(0,0,0,0.65);
-      z-index: 2;
+    .dsk-card.dsk-adjacent {
+      opacity: 0.68;
+      transform: scale(0.93);
     }
-    .dmc-card__bg {
+    .dsk-card.dsk-active {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 28px 72px rgba(0,0,0,0.70);
+    }
+    .dsk-card__bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      opacity: 0.62;
-      transition: opacity 0.5s ease, transform 0.6s var(--ease-expo);
+      opacity: 0.65;
+      transition: opacity 0.5s ease, transform 0.65s cubic-bezier(0.22, 0.8, 0.32, 1);
     }
-    .dmc-card:hover .dmc-card__bg   { opacity: 0.86; transform: scale(1.05); }
-    .dmc-card.dmc-active .dmc-card__bg { opacity: 0.82; }
-    .dmc-card__overlay {
+    .dsk-card.dsk-active .dsk-card__bg { opacity: 0.86; }
+    .dsk-card:hover .dsk-card__bg       { opacity: 0.92; transform: scale(1.04); }
+    .dsk-card__overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.30) 55%, transparent 100%);
+      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.28) 55%, transparent 100%);
     }
-    .dmc-card__body {
+    .dsk-card__body {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 1.2rem 1rem;
+      padding: 1.5rem 1.25rem;
       z-index: 2;
     }
-    .dmc-card__num {
+    .dsk-card__num {
       font-family: var(--font-head);
       font-size: 0.47rem; letter-spacing: 3px;
       color: rgba(197,160,89,0.52);
       margin-bottom: 0.35rem;
     }
-    .dmc-card__title {
+    .dsk-card__title {
       font-family: var(--font-display);
-      font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+      font-size: clamp(0.95rem, 1.35vw, 1.45rem);
       color: #fff; text-transform: uppercase; line-height: 1.05;
       margin-bottom: 0.3rem;
     }
-    .dmc-card__short {
+    .dsk-card__short {
       font-family: var(--font-body);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: rgba(255,255,255,0);
       line-height: 1.45;
       transition: color 0.3s ease;
     }
-    .dmc-card:hover .dmc-card__short,
-    .dmc-card.dmc-active .dmc-card__short { color: rgba(255,255,255,0.48); }
+    .dsk-card.dsk-active .dsk-card__short,
+    .dsk-card:hover .dsk-card__short { color: rgba(255,255,255,0.50); }
     /* Gold accent bar */
-    .dmc-card::after {
+    .dsk-card::after {
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
       height: 2px;
       background: var(--gold);
       transform: scaleX(0); transform-origin: left;
-      transition: transform 0.35s var(--ease-expo);
+      transition: transform 0.4s cubic-bezier(0.22, 0.8, 0.32, 1);
     }
-    .dmc-card.dmc-active::after { transform: scaleX(1); }
+    .dsk-card.dsk-active::after { transform: scaleX(1); }
 
     /* ── Detail panel ── */
     .course-detail {
@@ -337,13 +348,10 @@
        RESPONSIVE BREAKPOINTS
     ══════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      .desk-marquee   { display: none !important; }
+      .desk-carousel  { display: none !important; }
       .course-detail  { display: none !important; }
       .courses-carousel-wrap { display: block; }
       .course-detail__inner  { grid-template-columns: 1fr; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .dmt-track { animation: none !important; }
     }
 
     /* Nav */
@@ -434,214 +442,112 @@
       </div>
     </div>
 
-    <!-- ── DESKTOP MARQUEE — 2 rows × 5 cards ── -->
-    <div class="desk-marquee" id="desk-marquee" aria-label="Kursauswahl">
+    <!-- ── DESKTOP PREMIUM CAROUSEL ── -->
+    <div class="desk-carousel" id="desk-carousel" aria-label="Kursauswahl">
+      <div class="dsk-track" id="dsk-track">
 
-      <!-- Row 1: Boxing · Kickboxing · Youth Boxing · Olympisches Boxen · Women's Boxing -->
-      <div class="dmt-row">
-        <div class="dmt-track">
-          <!-- Set A -->
-          <div class="dmt-set">
-            <div class="dmc-card" data-course="boxing">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">01 / 10</span>
-                <h3 class="dmc-card__title">BOXING</h3>
-                <p class="dmc-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="kickboxing">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">02 / 10</span>
-                <h3 class="dmc-card__title">KICKBOXING</h3>
-                <p class="dmc-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="youth">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">03 / 10</span>
-                <h3 class="dmc-card__title">YOUTH BOXING</h3>
-                <p class="dmc-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="olympic">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">04 / 10</span>
-                <h3 class="dmc-card__title">OLYMPISCHES BOXEN</h3>
-                <p class="dmc-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="women">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">09 / 10</span>
-                <h3 class="dmc-card__title">WOMEN'S BOXING</h3>
-                <p class="dmc-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-              </div>
-            </div>
-          </div><!-- /dmt-set A -->
-          <!-- Set B (seamless clone) -->
-          <div class="dmt-set" aria-hidden="true">
-            <div class="dmc-card" data-course="boxing">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">01 / 10</span>
-                <h3 class="dmc-card__title">BOXING</h3>
-                <p class="dmc-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="kickboxing">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">02 / 10</span>
-                <h3 class="dmc-card__title">KICKBOXING</h3>
-                <p class="dmc-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="youth">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">03 / 10</span>
-                <h3 class="dmc-card__title">YOUTH BOXING</h3>
-                <p class="dmc-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="olympic">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">04 / 10</span>
-                <h3 class="dmc-card__title">OLYMPISCHES BOXEN</h3>
-                <p class="dmc-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="women">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">09 / 10</span>
-                <h3 class="dmc-card__title">WOMEN'S BOXING</h3>
-                <p class="dmc-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-              </div>
-            </div>
-          </div><!-- /dmt-set B -->
+        <div class="dsk-card" data-course="boxing">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">01 / 10</span>
+            <h3 class="dsk-card__title">BOXING</h3>
+            <p class="dsk-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+          </div>
         </div>
-      </div><!-- /dmt-row 1 -->
 
-      <!-- Row 2: Mental Coaching · Corporate Boxing · Executive Training · Morning Training · Strength & Conditioning -->
-      <div class="dmt-row">
-        <div class="dmt-track">
-          <!-- Set A -->
-          <div class="dmt-set">
-            <div class="dmc-card" data-course="mental">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">05 / 10</span>
-                <h3 class="dmc-card__title">MENTAL COACHING</h3>
-                <p class="dmc-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="firmenfitness">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">06 / 10</span>
-                <h3 class="dmc-card__title">CORPORATE BOXING</h3>
-                <p class="dmc-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="executive">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">07 / 10</span>
-                <h3 class="dmc-card__title">EXECUTIVE TRAINING</h3>
-                <p class="dmc-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="morning">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">08 / 10</span>
-                <h3 class="dmc-card__title">MORNING TRAINING</h3>
-                <p class="dmc-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="strength">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">10 / 10</span>
-                <h3 class="dmc-card__title">STRENGTH & CONDITIONING</h3>
-                <p class="dmc-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
-              </div>
-            </div>
-          </div><!-- /dmt-set A -->
-          <!-- Set B (seamless clone) -->
-          <div class="dmt-set" aria-hidden="true">
-            <div class="dmc-card" data-course="mental">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">05 / 10</span>
-                <h3 class="dmc-card__title">MENTAL COACHING</h3>
-                <p class="dmc-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="firmenfitness">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">06 / 10</span>
-                <h3 class="dmc-card__title">CORPORATE BOXING</h3>
-                <p class="dmc-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="executive">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">07 / 10</span>
-                <h3 class="dmc-card__title">EXECUTIVE TRAINING</h3>
-                <p class="dmc-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="morning">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">08 / 10</span>
-                <h3 class="dmc-card__title">MORNING TRAINING</h3>
-                <p class="dmc-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
-              </div>
-            </div>
-            <div class="dmc-card" data-course="strength">
-              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-              <div class="dmc-card__overlay"></div>
-              <div class="dmc-card__body">
-                <span class="dmc-card__num">10 / 10</span>
-                <h3 class="dmc-card__title">STRENGTH & CONDITIONING</h3>
-                <p class="dmc-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
-              </div>
-            </div>
-          </div><!-- /dmt-set B -->
+        <div class="dsk-card" data-course="kickboxing">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">02 / 10</span>
+            <h3 class="dsk-card__title">KICKBOXING</h3>
+            <p class="dsk-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+          </div>
         </div>
-      </div><!-- /dmt-row 2 -->
 
-    </div><!-- /desk-marquee -->
+        <div class="dsk-card" data-course="youth">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">03 / 10</span>
+            <h3 class="dsk-card__title">YOUTH BOXING</h3>
+            <p class="dsk-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="olympic">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">04 / 10</span>
+            <h3 class="dsk-card__title">OLYMPISCHES BOXEN</h3>
+            <p class="dsk-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="mental">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">05 / 10</span>
+            <h3 class="dsk-card__title">MENTAL COACHING</h3>
+            <p class="dsk-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="firmenfitness">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">06 / 10</span>
+            <h3 class="dsk-card__title">CORPORATE BOXING</h3>
+            <p class="dsk-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="executive">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">07 / 10</span>
+            <h3 class="dsk-card__title">EXECUTIVE TRAINING</h3>
+            <p class="dsk-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="morning">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">08 / 10</span>
+            <h3 class="dsk-card__title">MORNING TRAINING</h3>
+            <p class="dsk-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="women">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">09 / 10</span>
+            <h3 class="dsk-card__title">WOMEN'S BOXING</h3>
+            <p class="dsk-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="strength">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">10 / 10</span>
+            <h3 class="dsk-card__title">STRENGTH &amp; CONDITIONING</h3>
+            <p class="dsk-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
+          </div>
+        </div>
+
+      </div><!-- /dsk-track -->
+    </div><!-- /desk-carousel -->
 
     <!-- ── DESKTOP DETAIL PANEL ── -->
     <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
@@ -1055,10 +961,8 @@ function openCourse(id) {
   const data = COURSES[id];
   if (!data) return;
 
-  /* Update desktop marquee cards (all sets including clones) */
-  document.querySelectorAll('.dmc-card').forEach(c => {
-    c.classList.toggle('dmc-active', c.dataset.course === id);
-  });
+  /* Tell carousel engine to snap to this course */
+  if (window.__deskCarouselSnap) window.__deskCarouselSnap(id);
 
   /* Update detail */
   document.getElementById('detail-tag').textContent     = data.tag;
@@ -1134,17 +1038,184 @@ function openMobileCourse(id, idx) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DESKTOP MARQUEE — click delegation
-   CSS animation handles all motion; JS only handles clicks.
+   DESKTOP PREMIUM CAROUSEL ENGINE v1
+   — requestAnimationFrame continuous drift (no CSS animation)
+   — One dominant card centered, neighbors scaled/faded
+   — Hover to pause, resume on leave
+   — Click card → snap + open detail
+   — Seamless infinite loop via head + tail clones
+   — prefers-reduced-motion: no drift, manual-only
 ══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
-  var marquee = document.getElementById('desk-marquee');
-  if (!marquee) return;
-  marquee.addEventListener('click', function (e) {
-    var card = e.target.closest('.dmc-card[data-course]');
-    if (card) openCourse(card.dataset.course);
+
+  var wrap = document.getElementById('desk-carousel');
+  if (!wrap) return;
+  if (window.innerWidth <= 768) return;
+
+  var trackEl = document.getElementById('dsk-track');
+
+  /* ── Config ─────────────────────────────────────────────── */
+  var GAP       = 20;
+  var REAL_N    = 10;
+  var CLONE_N   = 3;
+  var DRIFT_PPS = 36;   /* px/sec — calm, premium drift */
+  var SNAP_MS   = 620;
+  var SNAP_EASE = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
+  var reduced   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Card dimensions from rendered DOM ──────────────────── */
+  var CARD_W, CARD_STEP;
+  function updateSizes() {
+    var s = trackEl.querySelector('.dsk-card');
+    CARD_W    = s ? s.offsetWidth : Math.min(Math.round(window.innerWidth * 0.26), 400);
+    CARD_STEP = CARD_W + GAP;
+  }
+
+  /* ── Build cloned track for seamless loop ───────────────── */
+  var realCards = Array.from(trackEl.querySelectorAll('.dsk-card'));
+  trackEl.innerHTML = '';
+  trackEl.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
+
+  /* Prepend last CLONE_N */
+  for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
+    var cl = realCards[i].cloneNode(true);
+    cl.setAttribute('aria-hidden', 'true');
+    trackEl.appendChild(cl);
+  }
+  /* Real cards */
+  realCards.forEach(function (c) { trackEl.appendChild(c); });
+  /* Append first CLONE_N */
+  for (var j = 0; j < CLONE_N; j++) {
+    var cl2 = realCards[j].cloneNode(true);
+    cl2.setAttribute('aria-hidden', 'true');
+    trackEl.appendChild(cl2);
+  }
+
+  /* ── State ──────────────────────────────────────────────── */
+  var pos      = 0;
+  var curReal  = 0;
+  var raf      = null;
+  var paused   = false;
+  var lastTime = null;
+  var snapping = false;
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  /* translateX that centers real card [realIdx] */
+  function posForCard(realIdx) {
+    updateSizes();
+    var k = CLONE_N + realIdx;
+    return (wrap.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
+  }
+
+  /* track-position k of card nearest to viewport centre */
+  function nearestK() {
+    updateSizes();
+    var vc = wrap.offsetWidth / 2 - pos;
+    return Math.round((vc - CARD_W / 2) / CARD_STEP);
+  }
+
+  /* real card index (0–9) from track position k */
+  function kToReal(k) {
+    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
+  }
+
+  /* silent position jump for seamless loop */
+  function checkLoop() {
+    var cycle = REAL_N * CARD_STEP;
+    var k = nearestK();
+    if (k >= CLONE_N + REAL_N) { pos += cycle; }
+    else if (k < CLONE_N)      { pos -= cycle; }
+  }
+
+  /* ── Card visual hierarchy ───────────────────────────────── */
+  function updateCardVisuals() {
+    var k    = nearestK();
+    var all  = trackEl.querySelectorAll('.dsk-card');
+    all.forEach(function (card, i) {
+      var dist = Math.abs(i - k);
+      card.classList.toggle('dsk-active',   dist === 0);
+      card.classList.toggle('dsk-adjacent', dist === 1);
+    });
+  }
+
+  /* ── Snap to a real card with optional animation ─────────── */
+  function snapTo(realIdx, animate) {
+    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
+    var target = posForCard(curReal);
+    pos = target;
+    if (animate && !reduced) {
+      trackEl.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
+      snapping = true;
+      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
+    } else {
+      trackEl.style.transition = 'none';
+    }
+    trackEl.style.transform = 'translateX(' + pos + 'px)';
+    updateCardVisuals();
+  }
+
+  /* ── RAF drift tick ──────────────────────────────────────── */
+  function tick(ts) {
+    if (!paused && !snapping && !reduced) {
+      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
+      pos -= DRIFT_PPS * dt;
+      checkLoop();
+      trackEl.style.transition = 'none';
+      trackEl.style.transform  = 'translateX(' + pos + 'px)';
+      updateCardVisuals();
+    }
+    lastTime = ts;
+    raf = requestAnimationFrame(tick);
+  }
+
+  /* ── Hover: pause on enter, resume on leave ─────────────── */
+  wrap.addEventListener('mouseenter', function () {
+    paused   = true;
+    lastTime = null;
   });
+  wrap.addEventListener('mouseleave', function () {
+    paused   = false;
+    lastTime = null;
+  });
+
+  /* ── Click: snap to clicked card + open detail ───────────── */
+  wrap.addEventListener('click', function (e) {
+    var card = e.target.closest('.dsk-card[data-course]');
+    if (!card) return;
+    var courseId = card.dataset.course;
+    var idx = realCards.findIndex(function (c) { return c.dataset.course === courseId; });
+    if (idx >= 0) {
+      paused = true;
+      snapTo(idx, true);
+      /* brief pause then resume drift */
+      setTimeout(function () { paused = false; lastTime = null; }, 2200);
+    }
+    openCourse(courseId);
+  });
+
+  /* ── External API: openCourse triggers carousel snap ─────── */
+  window.__deskCarouselSnap = function (courseId) {
+    var idx = realCards.findIndex(function (c) { return c.dataset.course === courseId; });
+    if (idx >= 0) snapTo(idx, true);
+  };
+
+  /* ── Resize ──────────────────────────────────────────────── */
+  var rTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(rTimer);
+    rTimer = setTimeout(function () {
+      if (window.innerWidth <= 768) return;
+      updateSizes();
+      snapTo(curReal, false);
+    }, 150);
+  }, { passive: true });
+
+  /* ── Init ────────────────────────────────────────────────── */
+  updateSizes();
+  snapTo(0, false);
+  if (!reduced) raf = requestAnimationFrame(tick);
+
 })();
 
 /* ══════════════════════════════════════════════════════════════
