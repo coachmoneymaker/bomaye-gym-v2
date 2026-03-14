@@ -221,7 +221,9 @@
     .courses-carousel {
       display: flex;
       overflow-x: auto;
-      scroll-snap-type: x mandatory;
+      /* proximity: lets our JS control the final snap position cleanly
+         without fighting the browser's mandatory-snap physics */
+      scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       gap: 1rem;
@@ -233,15 +235,19 @@
     .carousel-card {
       flex: 0 0 300px;
       scroll-snap-align: center;
+      scroll-snap-stop: always;
       border-radius: 8px;
       overflow: hidden;
       cursor: pointer;
       position: relative;
       min-height: 420px;
       background: #0a0a0a;
-      transition: transform 0.25s ease;
+      /* GPU-composited transform + smooth opacity fade on active state */
+      will-change: transform;
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .carousel-card:active { transform: scale(0.98); }
+    .carousel-card:active { transform: scale(0.97); }
     .carousel-card__bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
@@ -285,10 +291,13 @@
     .carousel-dot {
       width: 6px; height: 6px; border-radius: 50%;
       background: rgba(255,255,255,0.25);
-      transition: background 0.2s, width 0.2s;
+      /* Slower, more elegant pill-expand transition */
+      transition: background 0.4s ease,
+                  width     0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  border-radius 0.4s ease;
       cursor: pointer; border: none; padding: 0;
     }
-    .carousel-dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+    .carousel-dot.active { background: var(--gold); width: 20px; border-radius: 3px; }
 
     /* Mobile course detail (below carousel) */
     .mobile-course-detail {
@@ -1046,38 +1055,148 @@ function openMobileCourse(id, idx) {
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
 }
 
-/* ─── Carousel dot + scroll sync ──────────────────────────── */
-function scrollCarouselTo(idx) {
-  const carousel = document.getElementById('courses-carousel');
-  const cards    = carousel.querySelectorAll('.carousel-card');
-  if (!cards[idx]) return;
-  carousel.scrollTo({ left: cards[idx].offsetLeft - carousel.offsetLeft - (carousel.offsetWidth - cards[idx].offsetWidth) / 2, behavior: 'smooth' });
-  updateDots(idx);
-}
-
-function updateDots(active) {
-  document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === active));
-}
-
-/* Sync dots with scroll */
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM COURSE CAROUSEL ENGINE
+   — RAF-based eased scroll (no native smooth, full control)
+   — Slow, elegant autoplay (8 s interval, 950 ms ease)
+   — Pause on touch / hover; resume after 2.5 s idle
+   — Respects prefers-reduced-motion
+══════════════════════════════════════════════════════════════ */
 (function () {
   const carousel = document.getElementById('courses-carousel');
   if (!carousel) return;
-  let _t;
+
+  const AUTOPLAY_INTERVAL = 8000;   // ms between advances
+  const SCROLL_DURATION   = 950;    // ms for the eased transition
+  const RESUME_DELAY      = 2500;   // ms after interaction before autoplay resumes
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let autoTimer      = null;
+  let paused         = false;
+  let resumeTimeout  = null;
+
+  /* ── Cubic easing — slow start, slow end (premium feel) ── */
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* ── RAF-driven scroll: full control, no browser 'smooth' ── */
+  function premiumScrollTo(targetLeft) {
+    if (carousel._raf) cancelAnimationFrame(carousel._raf);
+    const start  = carousel.scrollLeft;
+    const change = targetLeft - start;
+    if (Math.abs(change) < 1) return;
+    const t0 = performance.now();
+    function step(now) {
+      const progress = Math.min((now - t0) / SCROLL_DURATION, 1);
+      carousel.scrollLeft = start + change * easeInOutCubic(progress);
+      if (progress < 1) { carousel._raf = requestAnimationFrame(step); }
+      else              { carousel._raf = null; }
+    }
+    carousel._raf = requestAnimationFrame(step);
+  }
+
+  /* ── Find the card closest to viewport centre ── */
+  function closestIdx() {
+    const cards = carousel.querySelectorAll('.carousel-card');
+    const cMid  = carousel.scrollLeft + carousel.offsetWidth / 2;
+    let closest = 0, minDist = Infinity;
+    cards.forEach((c, i) => {
+      const dist = Math.abs((c.offsetLeft - carousel.offsetLeft) + c.offsetWidth / 2 - cMid);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    return closest;
+  }
+
+  /* ── Centre a card by index ── */
+  function scrollToCard(idx) {
+    const cards = carousel.querySelectorAll('.carousel-card');
+    if (!cards[idx]) return;
+    const left = (cards[idx].offsetLeft - carousel.offsetLeft)
+               - (carousel.offsetWidth - cards[idx].offsetWidth) / 2;
+    premiumScrollTo(Math.max(0, left));
+  }
+
+  /* ── Dot state ── */
+  function updateDots(active) {
+    document.querySelectorAll('.carousel-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === active));
+  }
+
+  /* ── Sync dots while user scrolls (debounced, 50 ms) ── */
+  let dotTimer;
   carousel.addEventListener('scroll', () => {
-    clearTimeout(_t);
-    _t = setTimeout(() => {
-      const cards = carousel.querySelectorAll('.carousel-card');
-      let closest = 0, minDist = Infinity;
-      const cMid = carousel.scrollLeft + carousel.offsetWidth / 2;
-      cards.forEach((c, i) => {
-        const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cMid);
-        if (dist < minDist) { minDist = dist; closest = i; }
-      });
-      updateDots(closest);
-    }, 80);
+    clearTimeout(dotTimer);
+    dotTimer = setTimeout(() => updateDots(closestIdx()), 50);
   }, { passive: true });
+
+  /* ── Autoplay advance ── */
+  function advance() {
+    if (paused) return;
+    if (carousel.scrollWidth <= carousel.clientWidth + 2) return;
+    const cards = carousel.querySelectorAll('.carousel-card');
+    const next  = (closestIdx() + 1) % cards.length;
+    scrollToCard(next);
+    updateDots(next);
+  }
+
+  function startAuto() {
+    if (reduced) return;
+    clearInterval(autoTimer);
+    autoTimer = setInterval(advance, AUTOPLAY_INTERVAL);
+  }
+  function stopAuto() {
+    clearInterval(autoTimer);
+    autoTimer = null;
+  }
+  function pauseAuto(cancelRaf) {
+    paused = true;
+    stopAuto();
+    clearTimeout(resumeTimeout);
+    if (cancelRaf && carousel._raf) {
+      cancelAnimationFrame(carousel._raf);
+      carousel._raf = null;
+    }
+  }
+  function scheduleResume() {
+    clearTimeout(resumeTimeout);
+    resumeTimeout = setTimeout(() => { paused = false; startAuto(); }, RESUME_DELAY);
+  }
+
+  /* ── Touch: pause immediately, resume after finger up + delay ── */
+  carousel.addEventListener('touchstart', () => pauseAuto(true), { passive: true });
+  carousel.addEventListener('touchend',   scheduleResume,         { passive: true });
+  carousel.addEventListener('touchcancel', scheduleResume,        { passive: true });
+
+  /* ── Mouse hover: pause, resume shortly after leave ── */
+  carousel.addEventListener('mouseenter', () => pauseAuto(false));
+  carousel.addEventListener('mouseleave', scheduleResume);
+
+  /* ── Start autoplay ── */
+  startAuto();
+
+  /* ── Restart on resize ── */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { stopAuto(); paused = false; startAuto(); }, 250);
+  });
+
+  /* ── Expose scroll API (for dot buttons & openMobileCourse) ── */
+  window.scrollCarouselTo = function (idx) {
+    pauseAuto(true);
+    scrollToCard(idx);
+    updateDots(idx);
+    scheduleResume();
+  };
+  window.updateDots = updateDots;
 })();
+
+/* ── Dot update helper (legacy compatibility) ── */
+function updateDots(active) {
+  document.querySelectorAll('.carousel-dot').forEach((d, i) =>
+    d.classList.toggle('active', i === active));
+}
 
 /* ─── Open first course by default on desktop ─────────────── */
 document.addEventListener('DOMContentLoaded', () => {
