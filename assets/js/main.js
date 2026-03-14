@@ -98,9 +98,19 @@ function initPreloader() {
   const pre  = document.getElementById('preloader');
   const line = document.getElementById('loader-line');
   if (!pre) return;
+
+  // Show intro only once per browser session
+  if (sessionStorage.getItem('introShown')) {
+    pre.classList.add('hidden');
+    return;
+  }
+
   if (line) setTimeout(() => { line.style.width = '220px'; }, 50);
   window.addEventListener('load', () => {
-    setTimeout(() => { pre.classList.add('hidden'); }, 400);
+    setTimeout(() => {
+      pre.classList.add('hidden');
+      sessionStorage.setItem('introShown', 'true');
+    }, 400);
   });
 }
 
