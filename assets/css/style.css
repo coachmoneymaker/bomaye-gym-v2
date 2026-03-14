@@ -2310,6 +2310,120 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 #pricing .pricing-footer { border-top-color: rgba(8,8,8,0.08); }
 #pricing .pricing-footer p { color: rgba(8,8,8,0.4); }
 
+/* ── Pricing Trust Bar ──────────────────────────────────── */
+.pricing-trust-bar {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 3.5rem 0 3rem;
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid rgba(160,124,58,0.18);
+  border-bottom: 1px solid rgba(160,124,58,0.18);
+}
+.trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  max-width: 260px;
+  flex: 1 1 200px;
+}
+.trust-check {
+  color: var(--gold-dark);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+.trust-item strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.73rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.trust-item p {
+  font-size: 0.82rem;
+  color: rgba(8,8,8,0.52);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Family Membership Card ─────────────────────────────── */
+.family-membership-card {
+  background: #f7f6f2;
+  border: 1px solid rgba(160,124,58,0.28);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 28px rgba(0,0,0,0.06), 0 1px 6px rgba(160,124,58,0.08);
+  max-width: 580px;
+  margin: 0 auto 4.5rem;
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+}
+.family-label {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.67rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  background: rgba(160,124,58,0.1);
+  border: 1px solid rgba(160,124,58,0.22);
+  border-radius: 999px;
+  padding: 0.3rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.family-headline {
+  font-family: var(--font-head);
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.55rem;
+}
+.family-sub {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(8,8,8,0.38);
+  margin: 0 0 1.75rem;
+}
+.family-desc {
+  font-size: 0.9rem;
+  color: rgba(8,8,8,0.58);
+  line-height: 1.75;
+  max-width: 420px;
+  margin: 0 auto 1.75rem;
+}
+.family-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  align-items: center;
+}
+.family-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-head);
+  font-size: 0.73rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(8,8,8,0.62);
+}
+.family-bullets li i { color: var(--gold-dark); font-size: 0.72rem; }
+
+@media (max-width: 640px) {
+  .pricing-trust-bar { gap: 1.75rem; padding: 2rem 1rem; }
+  .trust-item { max-width: 100%; flex: 1 1 100%; }
+  .family-membership-card { padding: 2.5rem 1.5rem; }
+}
+
 /* ── Testimonials Section → Cream (unified with FAQ / Team) ─────────── */
 #testimonials { background: #f9f7f4 !important; }
 #testimonials::before { background: transparent !important; }
