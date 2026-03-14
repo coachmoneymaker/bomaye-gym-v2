@@ -71,71 +71,98 @@
       padding-bottom: clamp(32px,5vw,56px);
     }
 
-    /* ── Desktop grid ── */
-    .courses-grid {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 1px;
-      background: rgba(197,160,89,0.1);
-      border: 1px solid rgba(197,160,89,0.1);
-      border-radius: 8px;
+    /* ══════════════════════════════════════════════════
+       DESKTOP MARQUEE — 2 rows × 5 cards
+       Seamless CSS animation · hover-pause · click-to-detail
+    ══════════════════════════════════════════════════ */
+    .desk-marquee {
+      display: block;
       overflow: hidden;
+      padding-bottom: clamp(24px,4vw,40px);
     }
-
-    /* ── Course card ── */
-    .course-card {
-      position: relative;
-      cursor: pointer;
+    .dmt-row {
       overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .dmt-row:last-child { margin-bottom: 0; }
+    .dmt-track {
+      display: flex;
+      will-change: transform;
+      animation: dmt-marquee 52s linear infinite;
+    }
+    @keyframes dmt-marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .desk-marquee:hover .dmt-track {
+      animation-play-state: paused;
+    }
+    .dmt-set {
+      display: flex;
+      gap: 10px;
+      padding-right: 10px; /* trailing space = gap → seamless loop */
+      flex-shrink: 0;
+    }
+    /* ── Desktop marquee card ── */
+    .dmc-card {
+      flex: 0 0 auto;
+      width: clamp(182px, calc(19vw - 8px), 248px);
       aspect-ratio: 3/4;
-      min-height: 320px;
+      max-height: 340px;
+      min-height: 240px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 5px;
+      cursor: pointer;
       background: #0a0a0a;
-      transition: flex 0.4s var(--ease-expo);
+      transition: transform 0.42s var(--ease-expo), box-shadow 0.42s ease;
     }
-    .course-card__bg {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      transition: transform 0.6s var(--ease-expo), opacity 0.4s ease;
-      opacity: 0.65;
-    }
-    .course-card:hover .course-card__bg,
-    .course-card.active .course-card__bg { opacity: 0.8; transform: scale(1.04); }
-
-    .course-card__overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.4) 50%, rgba(8,8,8,0.1) 100%);
-    }
-    .course-card.active .course-card__overlay {
-      background: linear-gradient(to top, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.55) 60%, rgba(8,8,8,0.1) 100%);
-    }
-
-    .course-card__body {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 1.5rem 1.25rem;
+    .desk-marquee:hover .dmc-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 22px 52px rgba(0,0,0,0.65);
       z-index: 2;
     }
-    .course-card__num {
+    .dmc-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0.62;
+      transition: opacity 0.5s ease, transform 0.6s var(--ease-expo);
+    }
+    .dmc-card:hover .dmc-card__bg   { opacity: 0.86; transform: scale(1.05); }
+    .dmc-card.dmc-active .dmc-card__bg { opacity: 0.82; }
+    .dmc-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.30) 55%, transparent 100%);
+    }
+    .dmc-card__body {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.2rem 1rem;
+      z-index: 2;
+    }
+    .dmc-card__num {
       font-family: var(--font-head);
-      font-size: 0.5rem; letter-spacing: 3px;
-      color: rgba(197,160,89,0.6);
-      margin-bottom: 0.5rem;
+      font-size: 0.47rem; letter-spacing: 3px;
+      color: rgba(197,160,89,0.52);
+      margin-bottom: 0.35rem;
     }
-    .course-card__title {
+    .dmc-card__title {
       font-family: var(--font-display);
-      font-size: clamp(1.2rem,2vw,1.7rem);
-      color: #fff; text-transform: uppercase; line-height: 1.1;
-      margin-bottom: 0.5rem;
+      font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+      color: #fff; text-transform: uppercase; line-height: 1.05;
+      margin-bottom: 0.3rem;
     }
-    .course-card__short {
+    .dmc-card__short {
       font-family: var(--font-body);
-      font-size: 0.78rem; color: rgba(255,255,255,0.55);
-      line-height: 1.5; display: none;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0);
+      line-height: 1.45;
+      transition: color 0.3s ease;
     }
-    .course-card.active .course-card__short { display: block; }
-
-    /* Gold accent bar at bottom of active card */
-    .course-card::after {
+    .dmc-card:hover .dmc-card__short,
+    .dmc-card.dmc-active .dmc-card__short { color: rgba(255,255,255,0.48); }
+    /* Gold accent bar */
+    .dmc-card::after {
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
       height: 2px;
@@ -143,22 +170,7 @@
       transform: scaleX(0); transform-origin: left;
       transition: transform 0.35s var(--ease-expo);
     }
-    .course-card.active::after { transform: scaleX(1); }
-
-    /* Active indicator arrow */
-    .course-card__arrow {
-      position: absolute; bottom: 1rem; right: 1rem;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: var(--gold);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transform: scale(0.7);
-      transition: opacity 0.3s, transform 0.3s;
-      z-index: 3;
-      color: var(--ink);
-      font-size: 0.65rem;
-    }
-    .course-card.active .course-card__arrow { opacity: 1; transform: scale(1); }
+    .dmc-card.dmc-active::after { transform: scaleX(1); }
 
     /* ── Detail panel ── */
     .course-detail {
@@ -214,7 +226,7 @@
     .course-detail__feat-body span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
 
     /* ══════════════════════════════════════════════════
-       MOBILE CAROUSEL
+       MOBILE CAROUSEL — single-card focused, continuous RAF
     ══════════════════════════════════════════════════ */
     .courses-carousel-wrap { display: none; }
 
@@ -222,27 +234,20 @@
       position: relative;
       overflow: hidden;
       display: block;
-      /* touch-action set here so the browser handles vertical pan natively;
-         JS handles horizontal drag via touchmove with passive:false */
       touch-action: pan-y pinch-zoom;
-      cursor: grab;
     }
-    .courses-carousel.is-dragging { cursor: grabbing; }
 
     .carousel-card {
-      flex: 0 0 300px;
+      flex: 0 0 auto;
+      width: min(78vw, 300px);
       border-radius: 8px;
       overflow: hidden;
       cursor: pointer;
       position: relative;
       min-height: 420px;
       background: #0a0a0a;
-      /* GPU-composited transform + smooth opacity fade on active state */
       will-change: transform;
-      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  opacity  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .carousel-card:active { transform: scale(0.97); }
     .carousel-card__bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
@@ -286,7 +291,6 @@
     .carousel-dot {
       width: 6px; height: 6px; border-radius: 50%;
       background: rgba(255,255,255,0.25);
-      /* Slower, more elegant pill-expand transition */
       transition: background 0.4s ease,
                   width     0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                   border-radius 0.4s ease;
@@ -332,16 +336,14 @@
     /* ══════════════════════════════════════════════════
        RESPONSIVE BREAKPOINTS
     ══════════════════════════════════════════════════ */
-    @media (max-width: 1024px) {
-      .courses-grid { grid-template-columns: repeat(4,1fr); }
-    }
-
     @media (max-width: 768px) {
-      .courses-grid { display: none; }
-      .course-detail { display: none !important; } /* hide desktop detail on mobile */
+      .desk-marquee   { display: none !important; }
+      .course-detail  { display: none !important; }
       .courses-carousel-wrap { display: block; }
-
-      .course-detail__inner { grid-template-columns: 1fr; }
+      .course-detail__inner  { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dmt-track { animation: none !important; }
     }
 
     /* Nav */
@@ -422,7 +424,7 @@
     </div>
   </section>
 
-  <!-- ── Courses (Desktop Grid + Mobile Carousel) ── -->
+  <!-- ── Courses (Desktop Marquee + Mobile Carousel) ── -->
   <section class="courses-section">
     <div class="container">
       <div class="courses-section-header reveal">
@@ -430,135 +432,220 @@
         <h2 style="margin-top:1rem;">WÄHLE DEIN <span class="gold">PROGRAMM.</span></h2>
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Klicke auf einen Kurs für Details und Zeiten.</p>
       </div>
+    </div>
 
-      <!-- ── DESKTOP CARD GRID ── -->
-      <div class="courses-grid" role="tablist" aria-label="Kursauswahl">
+    <!-- ── DESKTOP MARQUEE — 2 rows × 5 cards ── -->
+    <div class="desk-marquee" id="desk-marquee" aria-label="Kursauswahl">
 
-        <div class="course-card active" data-course="boxing" role="tab" aria-selected="true" tabindex="0"
-             onclick="openCourse('boxing')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('boxing')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">01 / 10</span>
-            <h3 class="course-card__title">BOXING</h3>
-            <p class="course-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+      <!-- Row 1: Boxing · Kickboxing · Youth Boxing · Olympisches Boxen · Women's Boxing -->
+      <div class="dmt-row">
+        <div class="dmt-track">
+          <!-- Set A -->
+          <div class="dmt-set">
+            <div class="dmc-card" data-course="boxing">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">01 / 10</span>
+                <h3 class="dmc-card__title">BOXING</h3>
+                <p class="dmc-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="kickboxing">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">02 / 10</span>
+                <h3 class="dmc-card__title">KICKBOXING</h3>
+                <p class="dmc-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="youth">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">03 / 10</span>
+                <h3 class="dmc-card__title">YOUTH BOXING</h3>
+                <p class="dmc-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="olympic">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">04 / 10</span>
+                <h3 class="dmc-card__title">OLYMPISCHES BOXEN</h3>
+                <p class="dmc-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="women">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">09 / 10</span>
+                <h3 class="dmc-card__title">WOMEN'S BOXING</h3>
+                <p class="dmc-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
+              </div>
+            </div>
+          </div><!-- /dmt-set A -->
+          <!-- Set B (seamless clone) -->
+          <div class="dmt-set" aria-hidden="true">
+            <div class="dmc-card" data-course="boxing">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">01 / 10</span>
+                <h3 class="dmc-card__title">BOXING</h3>
+                <p class="dmc-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="kickboxing">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">02 / 10</span>
+                <h3 class="dmc-card__title">KICKBOXING</h3>
+                <p class="dmc-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="youth">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">03 / 10</span>
+                <h3 class="dmc-card__title">YOUTH BOXING</h3>
+                <p class="dmc-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="olympic">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">04 / 10</span>
+                <h3 class="dmc-card__title">OLYMPISCHES BOXEN</h3>
+                <p class="dmc-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="women">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">09 / 10</span>
+                <h3 class="dmc-card__title">WOMEN'S BOXING</h3>
+                <p class="dmc-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
+              </div>
+            </div>
+          </div><!-- /dmt-set B -->
         </div>
+      </div><!-- /dmt-row 1 -->
 
-        <div class="course-card" data-course="kickboxing" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('kickboxing')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('kickboxing')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">02 / 10</span>
-            <h3 class="course-card__title">KICKBOXING</h3>
-            <p class="course-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
+      <!-- Row 2: Mental Coaching · Corporate Boxing · Executive Training · Morning Training · Strength & Conditioning -->
+      <div class="dmt-row">
+        <div class="dmt-track">
+          <!-- Set A -->
+          <div class="dmt-set">
+            <div class="dmc-card" data-course="mental">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">05 / 10</span>
+                <h3 class="dmc-card__title">MENTAL COACHING</h3>
+                <p class="dmc-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="firmenfitness">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">06 / 10</span>
+                <h3 class="dmc-card__title">CORPORATE BOXING</h3>
+                <p class="dmc-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="executive">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">07 / 10</span>
+                <h3 class="dmc-card__title">EXECUTIVE TRAINING</h3>
+                <p class="dmc-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="morning">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">08 / 10</span>
+                <h3 class="dmc-card__title">MORNING TRAINING</h3>
+                <p class="dmc-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="strength">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">10 / 10</span>
+                <h3 class="dmc-card__title">STRENGTH & CONDITIONING</h3>
+                <p class="dmc-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
+              </div>
+            </div>
+          </div><!-- /dmt-set A -->
+          <!-- Set B (seamless clone) -->
+          <div class="dmt-set" aria-hidden="true">
+            <div class="dmc-card" data-course="mental">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">05 / 10</span>
+                <h3 class="dmc-card__title">MENTAL COACHING</h3>
+                <p class="dmc-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="firmenfitness">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">06 / 10</span>
+                <h3 class="dmc-card__title">CORPORATE BOXING</h3>
+                <p class="dmc-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="executive">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">07 / 10</span>
+                <h3 class="dmc-card__title">EXECUTIVE TRAINING</h3>
+                <p class="dmc-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="morning">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">08 / 10</span>
+                <h3 class="dmc-card__title">MORNING TRAINING</h3>
+                <p class="dmc-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
+              </div>
+            </div>
+            <div class="dmc-card" data-course="strength">
+              <div class="dmc-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+              <div class="dmc-card__overlay"></div>
+              <div class="dmc-card__body">
+                <span class="dmc-card__num">10 / 10</span>
+                <h3 class="dmc-card__title">STRENGTH & CONDITIONING</h3>
+                <p class="dmc-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
+              </div>
+            </div>
+          </div><!-- /dmt-set B -->
         </div>
+      </div><!-- /dmt-row 2 -->
 
-        <div class="course-card" data-course="youth" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('youth')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('youth')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">03 / 10</span>
-            <h3 class="course-card__title">YOUTH BOXING</h3>
-            <p class="course-card__short">Boxen für Kids & Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
+    </div><!-- /desk-marquee -->
 
-        <div class="course-card" data-course="olympic" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('olympic')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('olympic')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">04 / 10</span>
-            <h3 class="course-card__title">OLYMPISCHES BOXEN</h3>
-            <p class="course-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="mental" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('mental')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('mental')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">05 / 10</span>
-            <h3 class="course-card__title">MENTAL COACHING</h3>
-            <p class="course-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="firmenfitness" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('firmenfitness')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('firmenfitness')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">06 / 10</span>
-            <h3 class="course-card__title">CORPORATE BOXING</h3>
-            <p class="course-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="executive" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('executive')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('executive')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">07 / 10</span>
-            <h3 class="course-card__title">EXECUTIVE TRAINING</h3>
-            <p class="course-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="morning" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('morning')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('morning')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">08 / 10</span>
-            <h3 class="course-card__title">MORNING TRAINING</h3>
-            <p class="course-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="women" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('women')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('women')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">09 / 10</span>
-            <h3 class="course-card__title">WOMEN'S BOXING</h3>
-            <p class="course-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-        <div class="course-card" data-course="strength" role="tab" aria-selected="false" tabindex="0"
-             onclick="openCourse('strength')" onkeydown="if(event.key==='Enter'||event.key===' ')openCourse('strength')">
-          <div class="course-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-          <div class="course-card__overlay"></div>
-          <div class="course-card__body">
-            <span class="course-card__num">10 / 10</span>
-            <h3 class="course-card__title">STRENGTH & CONDITIONING</h3>
-            <p class="course-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
-          </div>
-          <div class="course-card__arrow"><i class="fa-solid fa-chevron-down"></i></div>
-        </div>
-
-      </div><!-- /courses-grid -->
-
-      <!-- ── DESKTOP DETAIL PANEL ── -->
-      <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
-        <div class="container">
+    <!-- ── DESKTOP DETAIL PANEL ── -->
+    <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
+      <div class="container">
           <div class="course-detail__inner">
             <div class="course-detail__img">
               <img id="detail-img" src="/assets/images/service-exec.webp" alt="Boxing Training" loading="lazy" decoding="async" />
@@ -600,8 +687,6 @@
           </div>
         </div>
       </div>
-
-    </div><!-- /container -->
 
     <!-- ── MOBILE CAROUSEL ── -->
     <div class="courses-carousel-wrap">
@@ -970,11 +1055,9 @@ function openCourse(id) {
   const data = COURSES[id];
   if (!data) return;
 
-  /* Update cards */
-  document.querySelectorAll('.course-card').forEach(c => {
-    const isActive = c.dataset.course === id;
-    c.classList.toggle('active', isActive);
-    c.setAttribute('aria-selected', String(isActive));
+  /* Update desktop marquee cards (all sets including clones) */
+  document.querySelectorAll('.dmc-card').forEach(c => {
+    c.classList.toggle('dmc-active', c.dataset.course === id);
   });
 
   /* Update detail */
@@ -1051,13 +1134,26 @@ function openMobileCourse(id, idx) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   PREMIUM COURSE CAROUSEL ENGINE v2
-   — translateX track: zero scroll-physics conflict
-   — CSS transition 880 ms soft cubic-bezier, deliberate feel
-   — Seamless infinite loop: 2 clones per side, silent wrap jump
-   — Touch: axis-detection drag (pan-y safe, no scroll lock)
-   — Desktop: mouseenter pause → delayed resume on mouseleave
-   — prefers-reduced-motion: instant transitions, no autoplay
+   DESKTOP MARQUEE — click delegation
+   CSS animation handles all motion; JS only handles clicks.
+══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var marquee = document.getElementById('desk-marquee');
+  if (!marquee) return;
+  marquee.addEventListener('click', function (e) {
+    var card = e.target.closest('.dmc-card[data-course]');
+    if (card) openCourse(card.dataset.course);
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM MOBILE CAROUSEL ENGINE v3
+   — requestAnimationFrame continuous drift (no setInterval gaps)
+   — One dominant card centered, next card peeks at edge
+   — Touch drag with axis detection → snap-to-nearest on release
+   — Seamless infinite loop via head + tail clones
+   — prefers-reduced-motion: no drift, manual-only
 ══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -1066,253 +1162,196 @@ function openMobileCourse(id, idx) {
   if (!carousel) return;
 
   /* ── Config ─────────────────────────────────────────────── */
-  var CARD_W       = 300;   // px — matches CSS flex: 0 0 300px
-  var GAP          = 16;    // px — 1 rem
-  var CARD_STEP    = CARD_W + GAP;
-  var REAL_N       = 10;    // real slide count
-  var CLONE_N      = 2;     // clones per side
-  var TRANS_MS     = 880;   // slide transition ms
-  var EASE         = 'cubic-bezier(0.33, 0.1, 0.2, 1)'; // premium decelerate
-  var AUTO_MS      = 4200;  // autoplay interval ms
-  var RESUME_MS    = 3200;  // pause after interaction ms
-  var SWIPE_PX     = 60;    // px threshold to commit a swipe direction
-  var reduced      = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GAP        = 16;    // matches CSS gap on track
+  var REAL_N     = 10;
+  var CLONE_N    = 3;     // clones each side
+  var DRIFT_PPS  = 24;    // pixels per second — slow premium drift
+  var SNAP_MS    = 580;   // snap-to-card transition ms
+  var SNAP_EASE  = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
+  var RESUME_MS  = 2800;  // ms before resuming drift after touch
+  var reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── State ──────────────────────────────────────────────── */
-  var cur         = CLONE_N; // current index in extended track
-  var animating   = false;
-  var paused      = false;
-  var autoTimer   = null;
-  var resumeTimer = null;
-  var wrapTimer   = null;
+  /* ── Compute card width from rendered DOM ────────────────── */
+  var CARD_W, CARD_STEP;
+  function updateSizes() {
+    var sample = track.querySelector('.carousel-card');
+    CARD_W    = sample ? sample.offsetWidth : Math.min(Math.round(window.innerWidth * 0.78), 300);
+    CARD_STEP = CARD_W + GAP;
+  }
 
-  /* ── Build extended track ──────────────────────────────────
-     Layout: [clone(N-2) clone(N-1)] [card0…card9] [clone0 clone1]
-     Indices:       0          1          2…11          12    13   */
+  /* ── Build extended track ────────────────────────────────── */
   var realCards = Array.from(carousel.querySelectorAll('.carousel-card'));
 
   var track = document.createElement('div');
-  track.style.cssText = [
-    'display:flex',
-    'gap:' + GAP + 'px',
-    'will-change:transform',
-    'user-select:none',
-    '-webkit-user-select:none'
-  ].join(';');
+  track.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
 
-  /* Prepend clones of last CLONE_N cards */
+  /* Prepend CLONE_N last cards */
   for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
     var cl = realCards[i].cloneNode(true);
     cl.setAttribute('aria-hidden', 'true');
     cl.removeAttribute('onclick');
-    cl.style.pointerEvents = 'none';
     track.appendChild(cl);
   }
-
-  /* Real cards — preserve their onclick handlers */
+  /* Real cards */
   realCards.forEach(function (c) { track.appendChild(c); });
-
-  /* Append clones of first CLONE_N cards */
+  /* Append CLONE_N first cards */
   for (var j = 0; j < CLONE_N; j++) {
     var cl2 = realCards[j].cloneNode(true);
     cl2.setAttribute('aria-hidden', 'true');
     cl2.removeAttribute('onclick');
-    cl2.style.pointerEvents = 'none';
     track.appendChild(cl2);
   }
 
-  /* Swap carousel contents */
   carousel.innerHTML = '';
   carousel.appendChild(track);
+  carousel.style.cssText = 'overflow:hidden;position:relative;display:block;touch-action:pan-y pinch-zoom';
 
-  /* Override carousel to clipping viewport (overrides stylesheet) */
-  carousel.style.cssText = [
-    'overflow:hidden',
-    'position:relative',
-    'display:block',
-    'touch-action:pan-y pinch-zoom',
-    'cursor:grab'
-  ].join(';');
+  /* ── State ──────────────────────────────────────────────── */
+  var pos         = 0;    // current translateX (negative = scrolled left)
+  var curReal     = 0;    // real card index closest to center
+  var raf         = null;
+  var paused      = false;
+  var lastTime    = null;
+  var resumeTimer = null;
+  var snapping    = false;
 
-  /* ── Position helpers ───────────────────────────────────── */
-  function offset(idx) {
-    var w = carousel.offsetWidth || 375; /* fallback for hidden state */
-    return (w - CARD_W) / 2 - idx * CARD_STEP;
+  /* ── Helpers ─────────────────────────────────────────────── */
+  /* translateX that centers real card [realIdx] */
+  function posForCard(realIdx) {
+    updateSizes();
+    var k = CLONE_N + realIdx;
+    return (carousel.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
   }
 
-  function applyPos(idx, animate) {
-    track.style.transition = (animate && !reduced)
-      ? 'transform ' + TRANS_MS + 'ms ' + EASE
-      : 'none';
-    track.style.transform = 'translateX(' + offset(idx) + 'px)';
+  /* real card index (0–9) currently nearest viewport center */
+  function nearestReal() {
+    updateSizes();
+    /* viewport center in track coords */
+    var vc = carousel.offsetWidth / 2 - pos;
+    var k  = Math.round((vc - CARD_W / 2) / CARD_STEP);
+    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
   }
 
-  /* ── Dots ──────────────────────────────────────────────── */
-  function toReal(idx) {
-    return ((idx - CLONE_N) % REAL_N + REAL_N) % REAL_N;
+  /* silent position jump to maintain seamless loop */
+  function checkLoop() {
+    var cycle = REAL_N * CARD_STEP;
+    var vc    = carousel.offsetWidth / 2 - pos;
+    var k     = Math.round((vc - CARD_W / 2) / CARD_STEP);
+    if (k >= CLONE_N + REAL_N) { pos += cycle; }
+    else if (k < CLONE_N)       { pos -= cycle; }
   }
 
+  /* ── Dots ────────────────────────────────────────────────── */
   function setDots(realI) {
     document.querySelectorAll('.carousel-dot').forEach(function (d, i) {
       d.classList.toggle('active', i === realI);
     });
   }
 
-  /* ── Go to index ────────────────────────────────────────── */
-  function goTo(idx, animate) {
-    cur = idx;
-    applyPos(cur, animate);
-    setDots(toReal(cur));
+  /* ── Snap to a real card with animated transition ─────────── */
+  function snapTo(realIdx, animate) {
+    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
+    var target = posForCard(curReal);
+    pos = target;
+    if (animate && !reduced) {
+      track.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
+    } else {
+      track.style.transition = 'none';
+    }
+    track.style.transform = 'translateX(' + pos + 'px)';
+    setDots(curReal);
+    if (animate && !reduced) {
+      snapping = true;
+      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
+    }
   }
 
-  /* ── Wrap check after slide transition ends ─────────────── */
-  function scheduleWrap() {
-    clearTimeout(wrapTimer);
-    wrapTimer = setTimeout(function () {
-      /* Landed on clone-at-end → silent jump to real equivalent */
-      if (cur >= REAL_N + CLONE_N) {
-        goTo(cur - REAL_N, false);
-      /* Landed on clone-at-start → silent jump to real equivalent */
-      } else if (cur < CLONE_N) {
-        goTo(cur + REAL_N, false);
-      }
-      animating = false;
-    }, reduced ? 0 : TRANS_MS + 20);
+  /* ── RAF drift tick ──────────────────────────────────────── */
+  function tick(ts) {
+    if (!paused && !snapping && !reduced) {
+      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
+      pos -= DRIFT_PPS * dt;
+      checkLoop();
+      track.style.transition = 'none';
+      track.style.transform  = 'translateX(' + pos + 'px)';
+      setDots(nearestReal());
+    }
+    lastTime = ts;
+    raf = requestAnimationFrame(tick);
   }
 
-  /* ── Advance ±1 ─────────────────────────────────────────── */
-  function advance(dir) {
-    if (animating) return;
-    animating = true;
-    goTo(cur + dir, true);
-    scheduleWrap();
-  }
-
-  /* ── Autoplay ───────────────────────────────────────────── */
-  function startAuto() {
-    if (reduced) return;
-    clearInterval(autoTimer);
-    autoTimer = setInterval(function () { if (!paused) advance(1); }, AUTO_MS);
-  }
-  function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
-  function pauseAuto() { paused = true; stopAuto(); clearTimeout(resumeTimer); }
-  function scheduleResume() {
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { paused = false; startAuto(); }, RESUME_MS);
-  }
-
-  /* ── Touch drag ─────────────────────────────────────────── */
-  var t0x, t0y, tDx, axisSet, isHoriz, inTouch;
+  /* ── Touch ───────────────────────────────────────────────── */
+  var t0x, t0y, tStartPos, axisSet, isHoriz;
 
   carousel.addEventListener('touchstart', function (e) {
-    inTouch  = true;
-    axisSet  = false;
-    isHoriz  = false;
-    tDx      = 0;
-    t0x      = e.touches[0].clientX;
-    t0y      = e.touches[0].clientY;
-    pauseAuto();
-
-    /* Freeze track at its actual rendered position mid-animation */
-    if (animating) {
-      clearTimeout(wrapTimer);
-      try {
-        var m = new DOMMatrix(window.getComputedStyle(track).transform);
-        track.style.transition = 'none';
-        track.style.transform  = 'translateX(' + m.m41 + 'px)';
-      } catch (_) { applyPos(cur, false); }
-      animating = false;
-    }
-    carousel.style.cursor = 'grabbing';
+    paused      = true;
+    snapping    = false;
+    lastTime    = null;
+    clearTimeout(resumeTimer);
+    t0x         = e.touches[0].clientX;
+    t0y         = e.touches[0].clientY;
+    tStartPos   = pos;
+    axisSet     = false;
+    isHoriz     = false;
+    track.style.transition = 'none';
   }, { passive: true });
 
   carousel.addEventListener('touchmove', function (e) {
-    if (!inTouch) return;
     var dx = e.touches[0].clientX - t0x;
     var dy = e.touches[0].clientY - t0y;
-
-    /* Determine dominant axis on first significant movement */
-    if (!axisSet && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+    if (!axisSet && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
       isHoriz = Math.abs(dx) >= Math.abs(dy);
-      axisSet = true;
+      axisSet  = true;
     }
-    if (!axisSet || !isHoriz) return; /* vertical — let browser scroll */
-
-    e.preventDefault(); /* horizontal — block page scroll */
-    tDx = dx;
+    if (!axisSet || !isHoriz) return;
+    e.preventDefault();
+    pos = tStartPos + dx;
     track.style.transition = 'none';
-    track.style.transform  = 'translateX(' + (offset(cur) + dx) + 'px)';
+    track.style.transform  = 'translateX(' + pos + 'px)';
   }, { passive: false });
 
   function onTouchEnd() {
-    if (!inTouch) return;
-    inTouch = false;
-    carousel.style.cursor = 'grab';
-
-    if (!axisSet || !isHoriz) { scheduleResume(); return; }
-
-    if      (tDx < -SWIPE_PX) advance(1);
-    else if (tDx >  SWIPE_PX) advance(-1);
-    else                       applyPos(cur, true); /* snap back */
-
-    scheduleResume();
+    if (axisSet && isHoriz) {
+      snapTo(nearestReal(), true);
+    }
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   }
 
-  carousel.addEventListener('touchend',    onTouchEnd,  { passive: true });
+  carousel.addEventListener('touchend',    onTouchEnd, { passive: true });
   carousel.addEventListener('touchcancel', function () {
-    inTouch = false;
-    applyPos(cur, true);
-    scheduleResume();
+    snapTo(nearestReal(), true);
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   }, { passive: true });
 
-  /* ── Desktop hover pause / resume ──────────────────────── */
-  carousel.addEventListener('mouseenter', function () {
-    carousel.style.cursor = 'grab';
-    pauseAuto();
-  });
-  carousel.addEventListener('mouseleave', function () {
-    carousel.style.cursor = '';
-    scheduleResume();
-  });
-
-  /* ── Resize: recalculate position instantly ─────────────── */
+  /* ── Resize ──────────────────────────────────────────────── */
   var rTimer;
   window.addEventListener('resize', function () {
     clearTimeout(rTimer);
-    rTimer = setTimeout(function () { applyPos(cur, false); }, 150);
+    rTimer = setTimeout(function () { updateSizes(); snapTo(curReal, false); }, 150);
   }, { passive: true });
 
-  /* ResizeObserver: fires when carousel becomes visible (desktop→mobile) */
   if (typeof ResizeObserver !== 'undefined') {
     new ResizeObserver(function () {
-      if (carousel.offsetWidth > 0) applyPos(cur, false);
+      if (carousel.offsetWidth > 0) { updateSizes(); snapTo(curReal, false); }
     }).observe(carousel);
   }
 
-  /* ── External API (dot buttons call window.scrollCarouselTo) */
+  /* ── External API (dot buttons) ─────────────────────────── */
   window.scrollCarouselTo = function (realI) {
-    if (animating) return;
-    pauseAuto();
-    animating = true;
-    goTo(realI + CLONE_N, true);
-    clearTimeout(wrapTimer);
-    wrapTimer = setTimeout(function () { animating = false; }, TRANS_MS + 20);
-    scheduleResume();
+    paused = true;
+    clearTimeout(resumeTimer);
+    snapTo(realI, true);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   };
 
-  /* ── Init ──────────────────────────────────────────────── */
-  applyPos(cur, false);
-  setDots(0);
-  startAuto();
+  /* ── Init ────────────────────────────────────────────────── */
+  updateSizes();
+  snapTo(0, false);
+  if (!reduced) raf = requestAnimationFrame(tick);
 
 })();
-
-/* ── Dots helper: kept for global compat ─────────────────── */
-function updateDots(realI) {
-  document.querySelectorAll('.carousel-dot').forEach(function (d, i) {
-    d.classList.toggle('active', i === realI);
-  });
-}
 
 /* ─── Open first course by default on desktop ─────────────── */
 document.addEventListener('DOMContentLoaded', () => {
