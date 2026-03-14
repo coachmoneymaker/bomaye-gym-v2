@@ -344,6 +344,45 @@
     .mobile-course-detail__feat-body strong { font-size: 0.83rem; color: rgba(255,255,255,0.9); display: block; }
     .mobile-course-detail__feat-body span { font-size: 0.76rem; color: rgba(255,255,255,0.45); }
 
+    /* ── Desktop carousel outer wrapper & arrow navigation ── */
+    .desk-carousel-outer {
+      position: relative;
+    }
+    .dsk-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(calc(-50% - clamp(12px,2vw,20px)));
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(8, 8, 8, 0.80);
+      border: 1px solid rgba(197, 160, 89, 0.22);
+      color: rgba(255, 255, 255, 0.58);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      transition: background 0.22s ease, border-color 0.22s ease,
+                  color 0.22s ease, opacity 0.22s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0.65;
+    }
+    .dsk-arrow:hover {
+      background: rgba(197, 160, 89, 0.13);
+      border-color: rgba(197, 160, 89, 0.52);
+      color: var(--gold);
+      opacity: 1;
+    }
+    .dsk-arrow:active {
+      transform: translateY(calc(-50% - clamp(12px,2vw,20px))) scale(0.92);
+    }
+    .dsk-arrow--prev { left: 14px; }
+    .dsk-arrow--next { right: 14px; }
+    .desk-carousel { cursor: grab; }
+
     /* ══════════════════════════════════════════════════
        RESPONSIVE BREAKPOINTS
     ══════════════════════════════════════════════════ */
@@ -352,6 +391,7 @@
       .course-detail  { display: none !important; }
       .courses-carousel-wrap { display: block; }
       .course-detail__inner  { grid-template-columns: 1fr; }
+      .dsk-arrow { display: none !important; }
     }
 
     /* Nav */
@@ -443,6 +483,9 @@
     </div>
 
     <!-- ── DESKTOP PREMIUM CAROUSEL ── -->
+    <div class="desk-carousel-outer" id="dsk-outer">
+    <button class="dsk-arrow dsk-arrow--prev" id="dsk-prev" aria-label="Vorheriger Kurs" type="button"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+    <button class="dsk-arrow dsk-arrow--next" id="dsk-next" aria-label="Nächster Kurs" type="button"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
     <div class="desk-carousel" id="desk-carousel" aria-label="Kursauswahl">
       <div class="dsk-track" id="dsk-track">
 
@@ -548,6 +591,7 @@
 
       </div><!-- /dsk-track -->
     </div><!-- /desk-carousel -->
+    </div><!-- /desk-carousel-outer -->
 
     <!-- ── DESKTOP DETAIL PANEL ── -->
     <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
@@ -1169,30 +1213,104 @@ function openMobileCourse(id, idx) {
     raf = requestAnimationFrame(tick);
   }
 
-  /* ── Hover: pause on enter, resume on leave ─────────────── */
-  wrap.addEventListener('mouseenter', function () {
+  /* ── Mouse drag (desktop) ───────────────────────────────── */
+  var isDragging   = false;
+  var hasDragged   = false;
+  var dragStartX   = 0;
+  var dragStartPos = 0;
+  var hoverTimer   = null;
+  var isHovering   = false;
+  var outerEl      = document.getElementById('dsk-outer');
+
+  wrap.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    isDragging   = true;
+    hasDragged   = false;
+    dragStartX   = e.clientX;
+    dragStartPos = pos;
+    paused       = true;
+    snapping     = false;
+    clearTimeout(hoverTimer);
+    trackEl.style.transition = 'none';
+    wrap.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isDragging) return;
+    var dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 4) hasDragged = true;
+    pos = dragStartPos + dx;
+    checkLoop();
+    trackEl.style.transition = 'none';
+    trackEl.style.transform  = 'translateX(' + pos + 'px)';
+    updateCardVisuals();
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (!isDragging) return;
+    isDragging        = false;
+    wrap.style.cursor = '';
+    if (hasDragged) {
+      var k       = nearestK();
+      var realIdx = kToReal(k);
+      snapTo(realIdx, true);
+      openCourse(realCards[realIdx].dataset.course);
+    }
+    setTimeout(function () {
+      if (!isHovering) { paused = false; lastTime = null; }
+    }, 2200);
+  });
+
+  /* ── Hover: pause on enter, resume after delay on leave ──── */
+  var hoverTarget = outerEl || wrap;
+  hoverTarget.addEventListener('mouseenter', function () {
+    isHovering = true;
+    clearTimeout(hoverTimer);
     paused   = true;
     lastTime = null;
   });
-  wrap.addEventListener('mouseleave', function () {
-    paused   = false;
-    lastTime = null;
+  hoverTarget.addEventListener('mouseleave', function () {
+    isHovering = false;
+    if (isDragging) return;
+    hoverTimer = setTimeout(function () {
+      paused   = false;
+      lastTime = null;
+    }, 500);
   });
 
   /* ── Click: snap to clicked card + open detail ───────────── */
   wrap.addEventListener('click', function (e) {
+    if (hasDragged) { hasDragged = false; return; }
     var card = e.target.closest('.dsk-card[data-course]');
     if (!card) return;
     var courseId = card.dataset.course;
     var idx = realCards.findIndex(function (c) { return c.dataset.course === courseId; });
     if (idx >= 0) {
       paused = true;
+      clearTimeout(hoverTimer);
       snapTo(idx, true);
-      /* brief pause then resume drift */
-      setTimeout(function () { paused = false; lastTime = null; }, 2200);
+      setTimeout(function () {
+        if (!isHovering) { paused = false; lastTime = null; }
+      }, 2200);
     }
     openCourse(courseId);
   });
+
+  /* ── Arrow navigation ─────────────────────────────────────── */
+  function arrowNav(dir) {
+    paused = true;
+    clearTimeout(hoverTimer);
+    curReal = ((curReal + dir) % REAL_N + REAL_N) % REAL_N;
+    snapTo(curReal, true);
+    openCourse(realCards[curReal].dataset.course);
+    setTimeout(function () {
+      if (!isHovering) { paused = false; lastTime = null; }
+    }, 2200);
+  }
+  var prevBtn = document.getElementById('dsk-prev');
+  var nextBtn = document.getElementById('dsk-next');
+  if (prevBtn) prevBtn.addEventListener('click', function () { arrowNav(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { arrowNav(1); });
 
   /* ── External API: openCourse triggers carousel snap ─────── */
   window.__deskCarouselSnap = function (courseId) {
