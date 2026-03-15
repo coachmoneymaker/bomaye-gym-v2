@@ -1944,13 +1944,13 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 @media (max-width: 768px) {
   #hero { align-items: flex-start; }
   .hero-content {
-    padding-top: calc(var(--nav-h) + 1.25rem);
+    padding-top: calc(var(--nav-h) + 0.25rem);
     padding-bottom: 2rem;
   }
   .hero-h1 { margin-bottom: 1.25rem; }
 }
 @media (max-width: 480px) {
-  .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 2rem; }
+  .hero-content { padding-top: calc(var(--nav-h) + 0.25rem); padding-bottom: 2rem; }
 }
 /* Subtitle readability over background image */
 .hero-subtitle {
