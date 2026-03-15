@@ -231,7 +231,7 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
-      <a href="#dna" class="hero-eyebrow" aria-label="Zur Philosophy-Sektion scrollen">
+      <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
         <i class="fa-solid fa-circle-dot"></i>
         <span>THE SPIRIT OF 1974 &nbsp;·&nbsp; MUNICH</span>
         <i class="fa-solid fa-circle-dot"></i>
@@ -241,7 +241,7 @@
         <span class="shimmer">IT'S PASSION.</span>
       </h1>
       <p class="hero-subtitle">Münchens neues Boxgym für Anfänger, Fitness und Wettkämpfer.</p>
-      <a href="#early-bird" class="hero-eb-counter" id="hero-eb-counter" aria-live="polite" aria-label="Zum Early-Bird-Angebot scrollen">
+      <a href="#early-bird" class="hero-eb-counter" id="hero-eb-counter" onclick="event.preventDefault(); nav('home','early-bird')" aria-live="polite" aria-label="Zum Early-Bird-Angebot scrollen">
         <span class="spots-dot"></span>
         <span>Nur noch <strong id="hero-eb-num">150</strong> Early-Bird-Plätze verfügbar</span>
       </a>
@@ -775,7 +775,7 @@
           <h4>GYM</h4>
           <ul class="footer-links">
             <li><button onclick="nav('home','dna')" type="button">Unsere DNA</button></li>
-            <li><button onclick="nav('home','team')" type="button">Team</button></li>
+            <li><a href="/coaches" style="text-decoration:none;color:inherit;">Team</a></li>
             <li><button onclick="nav('home','pricing')" type="button">Preise</button></li>
             <li><button onclick="nav('home','faq')" type="button">FAQ</button></li>
             <li><button onclick="nav('home','location')" type="button">Standort</button></li>
