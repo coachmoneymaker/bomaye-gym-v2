@@ -154,21 +154,30 @@
       </ul>
     </div>
 
-    <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)">
+    <div class="fif-success" id="fif-success" hidden>
+      <p class="fif-success-icon">✅</p>
+      <h3 class="fif-success-title">Anfrage gesendet</h3>
+      <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+    </div>
+
+    <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)" novalidate>
       <div class="fif-row">
         <div class="fif-field">
-          <label for="fif-name">Name</label>
-          <input type="text" id="fif-name" name="name" required placeholder="Dein Name">
+          <label for="fif-name">Name <span class="fif-required">*</span></label>
+          <input type="text" id="fif-name" name="name" placeholder="Dein Name">
+          <span class="fif-error" id="fif-name-error" aria-live="polite"></span>
         </div>
         <div class="fif-field">
-          <label for="fif-email">E-Mail</label>
-          <input type="email" id="fif-email" name="email" required placeholder="deine@email.de">
+          <label for="fif-email">E-Mail <span class="fif-required">*</span></label>
+          <input type="email" id="fif-email" name="email" placeholder="deine@email.de">
+          <span class="fif-error" id="fif-email-error" aria-live="polite"></span>
         </div>
       </div>
       <div class="fif-row">
         <div class="fif-field">
-          <label for="fif-phone">Telefon</label>
+          <label for="fif-phone">Telefon <span class="fif-required">*</span></label>
           <input type="tel" id="fif-phone" name="phone" placeholder="0176 000 000">
+          <span class="fif-error" id="fif-phone-error" aria-live="polite"></span>
         </div>
         <div class="fif-field">
           <label for="fif-count">Anzahl Familienmitglieder</label>
@@ -198,6 +207,8 @@
       <button type="submit" class="btn btn--gold btn--full">
         <i class="fa-solid fa-paper-plane"></i> FAMILIENPLATZ ANFRAGEN
       </button>
+      <p class="fif-trust">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+      <p class="fif-pflichtfelder">* Pflichtfelder</p>
     </form>
   </div>
 </div>

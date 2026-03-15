@@ -615,14 +615,54 @@ function closeFamilyModal() {
   if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
   unlockBodyScroll();
+  // Reset form and success state on close
+  const form = document.getElementById('family-inquiry-form');
+  const success = document.getElementById('fif-success');
+  if (form) {
+    form.reset();
+    form.style.display = '';
+    form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
+    form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+  }
+  if (success) success.hidden = true;
 }
 
 function submitFamilyInquiry(e) {
   e.preventDefault();
-  const form      = e.target;
-  const name      = form.querySelector('[name="name"]').value.trim();
-  const email     = form.querySelector('[name="email"]').value.trim();
-  const phone     = form.querySelector('[name="phone"]').value.trim();
+  const form = e.target;
+
+  // Clear previous errors
+  form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
+  form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+
+  const nameEl  = form.querySelector('[name="name"]');
+  const emailEl = form.querySelector('[name="email"]');
+  const phoneEl = form.querySelector('[name="phone"]');
+
+  const name  = nameEl.value.trim();
+  const email = emailEl.value.trim();
+  const phone = phoneEl.value.trim();
+
+  let valid = true;
+
+  if (!name) {
+    document.getElementById('fif-name-error').textContent = 'Bitte gib deinen Namen ein';
+    nameEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('fif-email-error').textContent = 'Bitte gib eine gültige E-Mail-Adresse ein';
+    emailEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!phone) {
+    document.getElementById('fif-phone-error').textContent = 'Bitte gib deine Telefonnummer ein';
+    phoneEl.classList.add('fif-input-error');
+    valid = false;
+  }
+
+  if (!valid) return;
+
   const count     = form.querySelector('[name="count"]').value;
   const household = (form.querySelector('[name="household"]:checked') || {}).value || '';
   const message   = form.querySelector('[name="message"]').value.trim();
@@ -630,7 +670,7 @@ function submitFamilyInquiry(e) {
   const lines = [
     `Name: ${name}`,
     `E-Mail: ${email}`,
-    `Telefon: ${phone || '–'}`,
+    `Telefon: ${phone}`,
     `Anzahl Familienmitglieder: ${count}`,
     `Gleicher Haushalt: ${household}`,
   ];
@@ -639,6 +679,10 @@ function submitFamilyInquiry(e) {
   const subject = encodeURIComponent('Neue Family Membership Anfrage');
   const body    = encodeURIComponent(lines.join('\n'));
   window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+
+  // Show success state
+  form.style.display = 'none';
+  document.getElementById('fif-success').hidden = false;
 }
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
