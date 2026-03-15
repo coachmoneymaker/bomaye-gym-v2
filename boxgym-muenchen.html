@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Boxgym München | Bomaye Gym — Boxtraining, Fitnessboxen &amp; Personal Training</title>
+  <meta name="description" content="Bomaye Gym ist dein modernes Boxgym in München. Boxtraining für Anfänger, Fitnessboxen, Personal Training und kostenloses Probetraining im Pineapple Park. Jetzt Boxen lernen in München." />
+  <meta name="keywords" content="Boxgym München, Boxtraining München, Boxen lernen München, Fitnessboxen München, Boxen Anfänger München, Personal Training Boxen München" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Boxgym München — Bomaye Gym | Boxtraining &amp; Fitnessboxen" />
+  <meta property="og:description" content="Bomaye Gym ist dein modernes Boxgym in München für professionelles Boxtraining, Fitnessboxen und Personal Training. Kostenloses Probetraining buchen." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/boxgym-muenchen" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/boxgym-muenchen" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       BOXGYM MÜNCHEN SEO PAGE — scoped to .bgm-* prefix
+    ═══════════════════════════════════════════════════════ */
+
+    /* Nav active state */
+    .nav-link-active { color: var(--gold) !important; }
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .bgm-hero {
+      background: var(--ink);
+      padding: clamp(100px, 14vw, 160px) 0 clamp(56px, 8vw, 96px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bgm-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 65% at 50% 70%, rgba(197,160,89,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .bgm-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .bgm-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .bgm-hero h1 span { color: var(--gold); }
+    .bgm-hero-sub {
+      font-family: var(--font-body);
+      font-size: clamp(0.92rem, 2.2vw, 1.1rem);
+      color: rgba(255,255,255,0.55);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
+    .bgm-hero-ctas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Intro section ─────────────────────────────────── */
+    .bgm-intro {
+      background: var(--smoke);
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+    .bgm-intro-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .bgm-intro-inner p {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: rgba(255,255,255,0.65);
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
+    }
+    .bgm-intro-inner p:last-child { margin-bottom: 0; }
+
+    /* ── Content sections ──────────────────────────────── */
+    .bgm-section {
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+    .bgm-section--dark  { background: var(--ink); }
+    .bgm-section--smoke { background: var(--smoke2); }
+    .bgm-section--light { background: #F3EDE1; }
+    .bgm-section--white { background: #ffffff; }
+
+    .bgm-section-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: center;
+    }
+    .bgm-section-inner.reverse { direction: rtl; }
+    .bgm-section-inner.reverse > * { direction: ltr; }
+
+    .bgm-section-text {}
+    .bgm-section-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .bgm-section-tag--dark { color: var(--gold-dark); }
+
+    .bgm-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+    .bgm-section--dark  h2,
+    .bgm-section--smoke h2 { color: #fff; }
+    .bgm-section--light h2,
+    .bgm-section--white h2 { color: var(--ink); }
+    .bgm-section h2 .gold      { color: var(--gold); }
+    .bgm-section h2 .gold-dark { color: var(--gold-dark); }
+
+    .bgm-section-body {
+      font-family: var(--font-body);
+      font-size: clamp(0.9rem, 1.8vw, 1rem);
+      line-height: 1.85;
+      margin-bottom: 1.5rem;
+    }
+    .bgm-section--dark  .bgm-section-body,
+    .bgm-section--smoke .bgm-section-body { color: rgba(255,255,255,0.62); }
+    .bgm-section--light .bgm-section-body,
+    .bgm-section--white .bgm-section-body { color: rgba(12,12,12,0.65); }
+
+    /* Feature list */
+    .bgm-features {
+      list-style: none;
+      padding: 0; margin: 0 0 1.75rem;
+      display: flex; flex-direction: column; gap: 0.65rem;
+    }
+    .bgm-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .bgm-section--dark  .bgm-features li,
+    .bgm-section--smoke .bgm-features li { color: rgba(255,255,255,0.7); }
+    .bgm-section--light .bgm-features li,
+    .bgm-section--white .bgm-features li { color: rgba(12,12,12,0.7); }
+    .bgm-features li i {
+      color: var(--gold);
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+      font-size: 0.85rem;
+    }
+
+    /* Visual card (right side) */
+    .bgm-visual {
+      background: var(--smoke2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(2rem, 4vw, 3rem);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bgm-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 70% at 50% 30%, rgba(197,160,89,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .bgm-visual--light {
+      background: #fff;
+      border-color: rgba(12,12,12,0.08);
+    }
+    .bgm-visual-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(197,160,89,0.12);
+      border: 1px solid rgba(197,160,89,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: var(--gold);
+      margin: 0 auto 1.5rem;
+    }
+    .bgm-visual-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 3vw, 1.75rem);
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .bgm-visual--light .bgm-visual-title { color: var(--ink); }
+    .bgm-visual-desc {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1.5rem;
+    }
+    .bgm-visual--light .bgm-visual-desc { color: rgba(12,12,12,0.55); }
+    .bgm-visual-stat {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(197,160,89,0.15);
+    }
+    .bgm-visual-stat-item { text-align: center; }
+    .bgm-visual-stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .bgm-visual-stat-lbl {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 0.3rem;
+    }
+    .bgm-visual--light .bgm-visual-stat-lbl { color: rgba(12,12,12,0.4); }
+
+    /* ── Trial CTA section ─────────────────────────────── */
+    .bgm-trial {
+      background: var(--ink);
+      padding: clamp(64px, 9vw, 112px) 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bgm-trial::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(197,160,89,0.09) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .bgm-trial-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .bgm-trial h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 0.95;
+      margin-bottom: 1.25rem;
+    }
+    .bgm-trial h2 span { color: var(--gold); }
+    .bgm-trial-sub {
+      font-family: var(--font-body);
+      font-size: clamp(0.92rem, 2vw, 1rem);
+      color: rgba(255,255,255,0.5);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
+    .bgm-trial-perks {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .bgm-trial-perk {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .bgm-trial-perk i { color: var(--gold); font-size: 0.85rem; }
+    .bgm-trial-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── FAQ section ───────────────────────────────────── */
+    .bgm-faq {
+      background: #F3EDE1;
+      padding: clamp(56px, 8vw, 96px) 0;
+    }
+    .bgm-faq-header {
+      text-align: center;
+      margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    }
+    .bgm-faq-header-tag {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #a07c3a;
+      background: rgba(160,124,58,0.1);
+      border: 1px solid rgba(160,124,58,0.28);
+      padding: 4px 14px; border-radius: 999px;
+      margin-bottom: 1.25rem;
+    }
+    .bgm-faq-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      text-transform: uppercase;
+      color: #0c0c0c;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .bgm-faq-header h2 span { color: #a07c3a; }
+    .bgm-faq-header p {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(12,12,12,0.5);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .bgm-faq-container { max-width: 800px; margin: 0 auto; }
+    .bgm-faq-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .bgm-faq-item {
+      background: #ffffff;
+      border: 1px solid rgba(12,12,12,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .bgm-faq-item[data-open="true"] {
+      border-color: rgba(160,124,58,0.28);
+      box-shadow: 0 4px 22px rgba(0,0,0,0.07);
+    }
+    .bgm-faq-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 1.25rem 1.4rem;
+      text-align: left;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+    .bgm-faq-btn:focus-visible {
+      outline: 2px solid #a07c3a;
+      outline-offset: -2px;
+      border-radius: 12px;
+    }
+    .bgm-faq-question {
+      font-family: var(--font-head);
+      font-size: clamp(0.88rem, 2.5vw, 1rem);
+      letter-spacing: 0.4px;
+      color: #0c0c0c;
+      line-height: 1.45;
+      flex: 1;
+      transition: color 0.2s;
+    }
+    .bgm-faq-item[data-open="true"] .bgm-faq-question { color: #a07c3a; }
+    .bgm-faq-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      border-radius: 50%;
+      border: 1.5px solid rgba(12,12,12,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: rgba(12,12,12,0.45);
+      transition: all 0.25s;
+    }
+    .bgm-faq-item[data-open="true"] .bgm-faq-icon {
+      border-color: #a07c3a;
+      color: #a07c3a;
+      background: rgba(160,124,58,0.08);
+    }
+    .bgm-faq-icon-plus  { display: block; }
+    .bgm-faq-icon-minus { display: none; }
+    .bgm-faq-item[data-open="true"] .bgm-faq-icon-plus  { display: none; }
+    .bgm-faq-item[data-open="true"] .bgm-faq-icon-minus { display: block; }
+    .bgm-faq-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bgm-faq-answer {
+      padding: 0.95rem 1.4rem 1.3rem;
+      border-top: 1px solid rgba(12,12,12,0.07);
+    }
+    .bgm-faq-answer p {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(12,12,12,0.62);
+      line-height: 1.82;
+      margin: 0;
+    }
+
+    /* ── Mobile ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .bgm-section-inner,
+      .bgm-section-inner.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+      }
+      .bgm-section-inner.reverse > * { direction: ltr; }
+    }
+    @media (max-width: 768px) {
+      .bgm-hero-ctas { flex-direction: column; align-items: center; }
+      .bgm-hero-ctas .btn { width: 100%; max-width: 320px; }
+      .bgm-trial-btns { flex-direction: column; align-items: center; }
+      .bgm-trial-btns .btn { width: 100%; max-width: 320px; }
+      .bgm-trial-perks { gap: 1rem; }
+      .bgm-faq-btn { padding: 1rem 1.1rem; }
+      .bgm-faq-answer { padding: 0.85rem 1.1rem 1.1rem; }
+    }
+    @media (max-width: 480px) {
+      .bgm-visual-stat { gap: 1.25rem; }
+    }
+  </style>
+
+  <!-- JSON-LD: LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ExerciseGym",
+    "name": "Bomaye Gym Munich",
+    "url": "https://www.bomayegym.com",
+    "description": "Modernes Boxgym in München für professionelles Boxtraining, Fitnessboxen und Personal Training.",
+    "telephone": "+4917621932243",
+    "email": "info@bomayegym.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Str. 44, Pineapple Park",
+      "addressLocality": "München",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 48.1494,
+      "longitude": 11.5129
+    },
+    "priceRange": "€€",
+    "sameAs": [
+      "https://www.instagram.com/bomayegym_munich",
+      "https://www.youtube.com/@bomayegym",
+      "https://www.tiktok.com/@bomayegym"
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wo kann man in München Boxen lernen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Im Bomaye Gym München im Pineapple Park (Wilhelm-Hale-Str. 44, 80639 München) kannst du Boxen von Grund auf lernen. Wir bieten strukturierte Kurse für Anfänger, regelmäßige Gruppentrainings und Personal Training – alles mit professionellen Coaches."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist Boxtraining auch für Anfänger geeignet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja, absolut. Unser Anfängerkurs im Bomaye Gym München ist speziell für Menschen ohne Vorkenntnisse konzipiert. Du lernst Grundtechniken, Fußarbeit und Kondition in einem sicheren, unterstützenden Umfeld. Kein Vorkenntnisse nötig – du kannst jederzeit einsteigen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Was kostet Boxtraining in München?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Im Bomaye Gym München bieten wir verschiedene Mitgliedschaftsmodelle an. Das erste Probetraining ist für dich komplett kostenlos. Danach gibt es flexible Monats- und Jahresmitgliedschaften. Kontaktiere uns für aktuelle Preise oder buche direkt dein kostenloses Probetraining."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" id="bgm-logo-img" decoding="async" />
+      <span class="logo-text" id="bgm-logo-text">BOMAYE</span>
+    </a>
+
+    <a href="/" class="back-btn visible" aria-label="Zurück zur Startseite">
+      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/#schedule">STUNDENPLAN</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ÜBER UNS</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <button class="btn btn--gold btn--sm" onclick="openBooking()" type="button">MITGLIED WERDEN</button>
+    </nav>
+
+    <button class="burger" onclick="toggleBgmMenu()" aria-label="Menü" aria-expanded="false" id="bgm-burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="bgm-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;">
+  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/#schedule" style="--mn-i:2">STUNDENPLAN</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:3">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:4">ÜBER UNS</a>
+  <a class="mn-item" href="/faq" style="--mn-i:5">FAQ</a>
+  <button class="btn btn--gold mn-cta" onclick="toggleBgmMenu(); openBooking();" type="button" style="--mn-i:6">
+    PROBETRAINING
+  </button>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20f%C3%BCr%20Boxtraining%20in%20M%C3%BCnchen."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- ══════════════════════════════════════════════════
+       HERO — H1
+  ══════════════════════════════════════════════════ -->
+  <section class="bgm-hero" aria-label="Boxgym München">
+    <div class="container">
+      <div class="bgm-hero-tag">MÜNCHEN · PINEAPPLE PARK</div>
+      <h1>BOXGYM<br><span>MÜNCHEN</span></h1>
+      <p class="bgm-hero-sub">Professionelles Boxtraining, Fitnessboxen und Personal Training im Herzen Münchens. Für Anfänger, Fitness&shy;sportler und Wettkämpfer.</p>
+      <div class="bgm-hero-ctas">
+        <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <i class="fa-solid fa-calendar-plus"></i> KOSTENLOSES PROBETRAINING
+        </button>
+        <a href="#boxtraining-anfaenger" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-chevron-down"></i> MEHR ERFAHREN
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       INTRO
+  ══════════════════════════════════════════════════ -->
+  <section class="bgm-intro" aria-label="Modernes Boxtraining im Bomaye Gym München">
+    <div class="container">
+      <div class="bgm-intro-inner reveal">
+        <span class="tag tag--dark" style="display:inline-block;margin-bottom:1.5rem;">MODERNES BOXTRAINING IN MÜNCHEN</span>
+        <p>Bomaye Gym ist dein modernes Boxgym in München für professionelles Boxtraining, Fitnessboxen und Personal Training.</p>
+        <p>Unser Gym richtet sich an Anfänger, Fitnesssportler und Wettkämpfer, die Boxen in München lernen oder ihre Technik verbessern möchten.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       H2 — Boxtraining für Anfänger in München
+  ══════════════════════════════════════════════════ -->
+  <section id="boxtraining-anfaenger" class="bgm-section bgm-section--dark" aria-labelledby="h2-anfaenger">
+    <div class="container">
+      <div class="bgm-section-inner">
+        <div class="bgm-section-text reveal">
+          <div class="bgm-section-tag">FÜR EINSTEIGER</div>
+          <h2 id="h2-anfaenger">BOXTRAINING FÜR ANFÄNGER IN <span class="gold">MÜNCHEN</span></h2>
+          <p class="bgm-section-body">Noch nie geboxt? Kein Problem. Unser Anfängertraining im Bomaye Gym München ist so aufgebaut, dass du vom ersten Tag an sicher und strukturiert in die Welt des Boxens einsteigst — ganz ohne Vorkenntnisse.</p>
+          <p class="bgm-section-body">In kleinen Gruppen lernst du die wichtigsten Grundtechniken: Stance, Footwork, Jab, Cross, Hook und Uppercut. Schritt für Schritt baust du Selbstvertrauen, Koordination und Kondition auf.</p>
+          <ul class="bgm-features" aria-label="Vorteile Anfängertraining">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Keine Vorkenntnisse nötig — du startest direkt</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Kleine Trainingsgruppen für individuelle Betreuung</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Strukturierter Lehrplan von Grundtechnik bis Kombination</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Professionelle Coaches mit Wettkampferfahrung</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Gesamtheitliches Training: Technik, Kondition &amp; Mentale Stärke</li>
+          </ul>
+          <button class="btn btn--gold" onclick="openBooking()" type="button">
+            <i class="fa-solid fa-calendar-plus"></i> JETZT PROBETRAINING BUCHEN
+          </button>
+        </div>
+        <div class="bgm-visual reveal delay-2" aria-hidden="true">
+          <div class="bgm-visual-icon"><i class="fa-solid fa-boxing-glove"></i></div>
+          <div class="bgm-visual-title">BOXEN LERNEN<br>IN MÜNCHEN</div>
+          <p class="bgm-visual-desc">Von Null zum ersten Kombinations&shy;treffer — in einer unterstützenden, motivierenden Trainingsumgebung.</p>
+          <div class="bgm-visual-stat">
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">1.</div>
+              <div class="bgm-visual-stat-lbl">Stunde gratis</div>
+            </div>
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">20+</div>
+              <div class="bgm-visual-stat-lbl">Jahre Erfahrung</div>
+            </div>
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">∞</div>
+              <div class="bgm-visual-stat-lbl">Fortschritt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       H2 — Fitnessboxen in München
+  ══════════════════════════════════════════════════ -->
+  <section id="fitnessboxen" class="bgm-section bgm-section--light" aria-labelledby="h2-fitness">
+    <div class="container">
+      <div class="bgm-section-inner reverse">
+        <div class="bgm-section-text reveal">
+          <div class="bgm-section-tag bgm-section-tag--dark">KONDITION &amp; FITNESS</div>
+          <h2 id="h2-fitness">FITNESSBOXEN IN <span class="gold-dark">MÜNCHEN</span></h2>
+          <p class="bgm-section-body">Fitnessboxen ist das perfekte Training für alle, die einen leistungsstarken Körper formen und gleichzeitig Stress abbauen wollen — ohne Wettkampfambitionen. Intensives Pad-Work, Sandsack-Kombinationen und Conditioning-Runden fordern dich auf jedem Level.</p>
+          <p class="bgm-section-body">Bei Bomaye Gym München verbinden wir klassisches Boxtraining mit modernem Konditionstraining. Das Ergebnis: maximale Fettverbrennung, ein starker Core und echte Ausdauer.</p>
+          <ul class="bgm-features" aria-label="Vorteile Fitnessboxen">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Hochintensives Ganzkörpertraining</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Maximale Kalorienverbrennung durch Boxrunden</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Pad-Work, Sandsack &amp; Conditioning-Circuits</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Kein Kontaktsport nötig — ideal für alle Fitnesslevel</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Geeignet für Frauen, Männer und alle Altersgruppen</li>
+          </ul>
+          <button class="btn btn--gold" onclick="openBooking()" type="button">
+            <i class="fa-solid fa-calendar-plus"></i> GRATIS PROBETRAINING
+          </button>
+        </div>
+        <div class="bgm-visual bgm-visual--light reveal delay-2" aria-hidden="true">
+          <div class="bgm-visual-icon" style="background:rgba(160,124,58,0.1);border-color:rgba(160,124,58,0.25);">
+            <i class="fa-solid fa-dumbbell" style="color:#a07c3a;"></i>
+          </div>
+          <div class="bgm-visual-title" style="color:var(--ink);">FITNESSBOXEN<br>MÜNCHEN</div>
+          <p class="bgm-visual-desc" style="color:rgba(12,12,12,0.55);">Forme deinen Körper, steigere deine Ausdauer und bau Stress ab — mit dem effektivsten Ganzkörpertraining.</p>
+          <div class="bgm-visual-stat" style="border-color:rgba(160,124,58,0.12);">
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num" style="color:#a07c3a;">800+</div>
+              <div class="bgm-visual-stat-lbl" style="color:rgba(12,12,12,0.4);">Kcal/Stunde</div>
+            </div>
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num" style="color:#a07c3a;">60'</div>
+              <div class="bgm-visual-stat-lbl" style="color:rgba(12,12,12,0.4);">pro Session</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       H2 — Personal Training Boxen München
+  ══════════════════════════════════════════════════ -->
+  <section id="personal-training" class="bgm-section bgm-section--smoke" aria-labelledby="h2-personal">
+    <div class="container">
+      <div class="bgm-section-inner">
+        <div class="bgm-section-text reveal">
+          <div class="bgm-section-tag">1:1 COACHING</div>
+          <h2 id="h2-personal">PERSONAL TRAINING<br>BOXEN <span class="gold">MÜNCHEN</span></h2>
+          <p class="bgm-section-body">Maximaler Fortschritt in kürzester Zeit: Beim Personal Training im Bomaye Gym München trainierst du 1:1 mit einem unserer professionellen Boxing-Coaches. Jede Einheit ist individuell auf deine Ziele, dein Tempo und dein Niveau zugeschnitten.</p>
+          <p class="bgm-section-body">Ob Technikverbesserung, Wettkampfvorbereitung oder Körperformung — dein Coach ist voll auf dich fokussiert und gibt dir direktes Feedback in jeder Runde.</p>
+          <ul class="bgm-features" aria-label="Vorteile Personal Training">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> 100 % individueller Trainingsplan nach deinen Zielen</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Direktes Coaching-Feedback in Echtzeit</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Flexible Terminvereinbarung nach deinem Zeitplan</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Ideal für Wettkampfvorbereitung &amp; schnelle Ergebnisse</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Coaches mit nationaler &amp; internationaler Wettkampferfahrung</li>
+          </ul>
+          <button class="btn btn--gold" onclick="openBooking()" type="button">
+            <i class="fa-solid fa-user-check"></i> PERSONAL TRAINING ANFRAGEN
+          </button>
+        </div>
+        <div class="bgm-visual reveal delay-2" aria-hidden="true">
+          <div class="bgm-visual-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          <div class="bgm-visual-title">DEIN PERSONAL<br>BOXING COACH</div>
+          <p class="bgm-visual-desc">1:1 Coaching mit erfahrenen Profi-Trainern. Maximale Aufmerksamkeit, maximale Resultate.</p>
+          <div class="bgm-visual-stat">
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">1:1</div>
+              <div class="bgm-visual-stat-lbl">Coaching</div>
+            </div>
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">Pro</div>
+              <div class="bgm-visual-stat-lbl">Coaches</div>
+            </div>
+            <div class="bgm-visual-stat-item">
+              <div class="bgm-visual-stat-num">100%</div>
+              <div class="bgm-visual-stat-lbl">Für dich</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       H2 — Kostenloses Probetraining
+  ══════════════════════════════════════════════════ -->
+  <section id="probetraining" class="bgm-trial" aria-labelledby="h2-probe">
+    <div class="container">
+      <div class="bgm-trial-eyebrow">JETZT STARTEN</div>
+      <h2 id="h2-probe">KOSTENLOSES<br><span>PROBETRAINING</span></h2>
+      <p class="bgm-trial-sub">Überzeuge dich selbst: Teste das Bomaye Gym München mit einer kostenlosen Probeeinheit. Kein Vertrag, kein Risiko — einfach kommen und Boxen.</p>
+      <div class="bgm-trial-perks" aria-label="Inklusive beim Probetraining">
+        <div class="bgm-trial-perk"><i class="fa-solid fa-check" aria-hidden="true"></i> Erste Stunde gratis</div>
+        <div class="bgm-trial-perk"><i class="fa-solid fa-check" aria-hidden="true"></i> Kein Vertrag</div>
+        <div class="bgm-trial-perk"><i class="fa-solid fa-check" aria-hidden="true"></i> Kein Vorwissen nötig</div>
+        <div class="bgm-trial-perk"><i class="fa-solid fa-check" aria-hidden="true"></i> Ausrüstung inklusive</div>
+      </div>
+      <div class="bgm-trial-btns">
+        <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <i class="fa-solid fa-calendar-plus"></i> KOSTENLOSES PROBETRAINING BUCHEN
+        </button>
+        <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20m%C3%B6chte%20ein%20kostenloses%20Probetraining%20buchen."
+           target="_blank" rel="noopener"
+           class="btn btn--outline-dark"
+           style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-brands fa-whatsapp"></i> VIA WHATSAPP ANFRAGEN
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SEO FAQ SECTION
+  ══════════════════════════════════════════════════ -->
+  <section class="bgm-faq" aria-labelledby="h2-faq">
+    <div class="container">
+      <div class="bgm-faq-header reveal">
+        <div class="bgm-faq-header-tag">HÄUFIGE FRAGEN</div>
+        <h2 id="h2-faq">BOXGYM MÜNCHEN —<br><span>DEINE FRAGEN.</span></h2>
+        <p>Alles, was du über Boxtraining im Bomaye Gym München wissen möchtest.</p>
+      </div>
+      <div class="bgm-faq-container">
+        <div class="bgm-faq-list" role="list">
+
+          <!-- FAQ 1 -->
+          <div class="bgm-faq-item" role="listitem" data-open="false">
+            <button class="bgm-faq-btn" id="bgm-faq-btn-1"
+                    aria-expanded="false" aria-controls="bgm-faq-panel-1" type="button">
+              <span class="bgm-faq-question">Wo kann man in München Boxen lernen?</span>
+              <span class="bgm-faq-icon" aria-hidden="true">
+                <i class="fa-solid fa-plus bgm-faq-icon-plus"></i>
+                <i class="fa-solid fa-minus bgm-faq-icon-minus"></i>
+              </span>
+            </button>
+            <div class="bgm-faq-panel" id="bgm-faq-panel-1" role="region" aria-labelledby="bgm-faq-btn-1">
+              <div class="bgm-faq-answer">
+                <p>Im Bomaye Gym München im Pineapple Park (Wilhelm-Hale-Str. 44, 80639 München) kannst du Boxen von Grund auf lernen. Wir bieten strukturierte Kurse für Anfänger, regelmäßige Gruppentrainings und Personal Training – alles mit professionellen Coaches, die selbst auf nationaler und internationaler Ebene gekämpft haben. Das erste Probetraining ist für dich kostenlos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="bgm-faq-item" role="listitem" data-open="false">
+            <button class="bgm-faq-btn" id="bgm-faq-btn-2"
+                    aria-expanded="false" aria-controls="bgm-faq-panel-2" type="button">
+              <span class="bgm-faq-question">Ist Boxtraining auch für Anfänger geeignet?</span>
+              <span class="bgm-faq-icon" aria-hidden="true">
+                <i class="fa-solid fa-plus bgm-faq-icon-plus"></i>
+                <i class="fa-solid fa-minus bgm-faq-icon-minus"></i>
+              </span>
+            </button>
+            <div class="bgm-faq-panel" id="bgm-faq-panel-2" role="region" aria-labelledby="bgm-faq-btn-2">
+              <div class="bgm-faq-answer">
+                <p>Ja, absolut. Unser Anfängerkurs im Bomaye Gym München ist speziell für Menschen ohne Vorkenntnisse konzipiert. Du lernst Grundtechniken, Fußarbeit und Kondition in einem sicheren, unterstützenden Umfeld. Kein Vorwissen nötig – du kannst jederzeit einsteigen und in deinem eigenen Tempo Fortschritte machen. Auch Fitnessboxen eignet sich perfekt als Einstieg ohne Kontaktsport.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="bgm-faq-item" role="listitem" data-open="false">
+            <button class="bgm-faq-btn" id="bgm-faq-btn-3"
+                    aria-expanded="false" aria-controls="bgm-faq-panel-3" type="button">
+              <span class="bgm-faq-question">Was kostet Boxtraining in München?</span>
+              <span class="bgm-faq-icon" aria-hidden="true">
+                <i class="fa-solid fa-plus bgm-faq-icon-plus"></i>
+                <i class="fa-solid fa-minus bgm-faq-icon-minus"></i>
+              </span>
+            </button>
+            <div class="bgm-faq-panel" id="bgm-faq-panel-3" role="region" aria-labelledby="bgm-faq-btn-3">
+              <div class="bgm-faq-answer">
+                <p>Im Bomaye Gym München bieten wir verschiedene Mitgliedschaftsmodelle an – von flexiblen Monatsmitgliedschaften bis hin zu Jahresmitgliedschaften mit attraktiven Konditionen. Das erste Probetraining ist komplett kostenlos und ohne Verpflichtung. Für aktuelle Preise und alle Informationen zu unseren Tarifen besuche unsere Kursseite oder kontaktiere uns direkt per WhatsApp oder E-Mail.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><a href="/kurse">Olympic Boxing</a></li>
+            <li><a href="/kurse">Kickboxing</a></li>
+            <li><a href="/kurse">Women's Boxing</a></li>
+            <li><a href="/kurse">Youth Boxing</a></li>
+            <li><a href="/kurse">Personal Training</a></li>
+            <li><a href="/kurse">Corporate Boxing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Team</a></li>
+            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        </div>
+      </div>
+
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <span class="dot">•</span>
+        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="/impressum">IMPRESSUM</a>
+          <a href="/datenschutz">DATENSCHUTZ</a>
+          <a href="/agb">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+/* ── Header scroll styling ── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ── Logo image fallback ── */
+(function () {
+  const img  = document.getElementById('bgm-logo-img');
+  const text = document.getElementById('bgm-logo-text');
+  if (!img) return;
+  function onLoad()  { img.classList.remove('hidden'); }
+  function onError() { img.classList.add('hidden'); if (text) text.classList.add('visible'); }
+  img.addEventListener('load',  onLoad);
+  img.addEventListener('error', onError);
+  if (img.complete) { img.naturalWidth > 0 ? onLoad() : onError(); }
+})();
+
+/* ── iOS-compatible scroll lock ── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow  = 'hidden';
+  document.body.style.position  = 'fixed';
+  document.body.style.top       = `-${_scrollLockY}px`;
+  document.body.style.width     = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow  = '';
+  document.body.style.position  = '';
+  document.body.style.top       = '';
+  document.body.style.width     = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
+/* ── Mobile nav toggle ── */
+function toggleBgmMenu() {
+  const nav = document.getElementById('bgm-mobile-nav');
+  const btn = document.getElementById('bgm-burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+
+/* ── Booking modal ── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id  = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ── FAQ accordion ── */
+(function () {
+  document.querySelectorAll('.bgm-faq-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const item   = btn.closest('.bgm-faq-item');
+      const panel  = document.getElementById(btn.getAttribute('aria-controls'));
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      /* Close all */
+      document.querySelectorAll('.bgm-faq-item').forEach(function (el) {
+        el.setAttribute('data-open', 'false');
+      });
+      document.querySelectorAll('.bgm-faq-btn').forEach(function (b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+      document.querySelectorAll('.bgm-faq-panel').forEach(function (p) {
+        p.style.maxHeight = null;
+      });
+
+      /* Open clicked item if it was closed */
+      if (!isOpen) {
+        item.setAttribute('data-open', 'true');
+        btn.setAttribute('aria-expanded', 'true');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+})();
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
