@@ -2522,22 +2522,76 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .fif-field textarea { resize: vertical; min-height: 80px; }
 .fif-field--radio .fif-radio-group {
   display: flex;
-  gap: 1.5rem;
-  padding: 0.5rem 0;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
 }
-.fif-radio-label {
+
+/* Card-style radio option */
+.fif-radio-card {
+  flex: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide the native radio but keep it accessible */
+.fif-radio-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* The visible box */
+.fif-radio-card__box {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  background: #ffffff;
+  border: 1.5px solid rgba(8,8,8,0.14);
+  border-radius: 6px;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--ink);
-  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 2.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
-.fif-radio-label input[type="radio"] {
-  accent-color: var(--gold-dark);
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
+
+/* Checkmark — hidden by default */
+.fif-radio-card__check {
+  display: none;
+  color: var(--gold-dark);
+  font-size: 0.95rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* Hover state */
+.fif-radio-card:hover .fif-radio-card__box {
+  border-color: rgba(160,124,58,0.45);
+}
+
+/* Selected state — triggered when the hidden radio is checked */
+.fif-radio-card input[type="radio"]:checked + .fif-radio-card__box {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(160,124,58,0.12);
+  background: rgba(160,124,58,0.04);
+}
+
+.fif-radio-card input[type="radio"]:checked + .fif-radio-card__box .fif-radio-card__check {
+  display: inline;
+}
+
+/* Focus ring for keyboard users */
+.fif-radio-card input[type="radio"]:focus-visible + .fif-radio-card__box {
+  outline: 2px solid var(--gold-dark);
+  outline-offset: 2px;
 }
 
 .fif-required {

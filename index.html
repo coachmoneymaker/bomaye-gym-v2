@@ -191,12 +191,20 @@
       </div>
       <div class="fif-field fif-field--radio">
         <label>Gleicher Haushalt?</label>
-        <div class="fif-radio-group">
-          <label class="fif-radio-label">
-            <input type="radio" name="household" value="Ja" required> Ja
+        <div class="fif-radio-group" role="radiogroup" aria-label="Gleicher Haushalt">
+          <label class="fif-radio-card">
+            <input type="radio" name="household" value="Ja" required>
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Ja</span>
+            </span>
           </label>
-          <label class="fif-radio-label">
-            <input type="radio" name="household" value="Nein"> Nein
+          <label class="fif-radio-card">
+            <input type="radio" name="household" value="Nein">
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Nein</span>
+            </span>
           </label>
         </div>
       </div>
