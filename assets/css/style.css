@@ -2210,11 +2210,21 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* ── Pricing Section → Off-White Premium ───────────── */
 #pricing { background: #f7f7f7 !important; }
 
-/* Section header text on light bg */
+/* Section header — premium gold badge for membership */
 #pricing .sec-header .tag {
-  background: rgba(8,8,8,0.07);
-  color: rgba(8,8,8,0.65);
-  border-color: rgba(8,8,8,0.12);
+  background: rgba(197,160,89,0.12);
+  color: var(--gold-dark);
+  border-color: rgba(197,160,89,0.45);
+}
+
+/* Divider above membership section */
+#pricing .sec-header::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: rgba(197,160,89,0.4);
+  margin: 0 auto 1.75rem;
 }
 #pricing .sec-header h2 { color: var(--ink) !important; }
 #pricing .sec-header .gold { color: var(--gold-dark) !important; }
