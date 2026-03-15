@@ -25,7 +25,7 @@ const BOMAYE = {
     phoneHref:     '+4917621932243',
     whatsappHref:  '4917621932243',
     email:         'info@bomayegym.com',
-    instagram:     'https://www.instagram.com/bomayegym',
+    instagram:     'https://www.instagram.com/bomayegym_munich',
     youtube:       'https://www.youtube.com/@bomayegym',
     tiktok:        'https://www.tiktok.com/@bomayegym',
   },

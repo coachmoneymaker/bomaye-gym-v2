@@ -375,7 +375,7 @@ function renderPricingDisplay(ageGroup, duration) {
           <div class="addon-name">${corp.name}</div>
           <div class="addon-price">${corp.priceLabel}</div>
           <p>${corp.note}</p>
-          <a href="mailto:info@bomayegym.com" class="btn btn--outline-light btn--sm btn--full" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">ANFRAGE SENDEN</a>
+          <button onclick="openCorporateModal()" class="btn btn--outline-light btn--sm btn--full" type="button">ANFRAGE SENDEN</button>
         </div>
       </div>`;
   }
@@ -593,19 +593,22 @@ function closeBooking() {
 
 /* Click backdrop (modal element itself, not its children) */
 document.addEventListener('click', e => {
-  if (e.target.id === 'booking-modal') closeBooking();
-  if (e.target.id === 'family-modal')  closeFamilyModal();
+  if (e.target.id === 'booking-modal')   closeBooking();
+  if (e.target.id === 'family-modal')    closeFamilyModal();
+  if (e.target.id === 'corporate-modal') closeCorporateModal();
 });
 
-/* ESC closes booking modal OR family modal OR mobile nav, whichever is open */
+/* ESC closes booking modal OR family modal OR corporate modal OR mobile nav, whichever is open */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const bookingModal = document.getElementById('booking-modal');
-  const familyModal  = document.getElementById('family-modal');
-  const mobileNav    = document.getElementById('mobile-nav');
-  if (bookingModal && bookingModal.classList.contains('open')) { closeBooking();      return; }
-  if (familyModal  && familyModal.classList.contains('open'))  { closeFamilyModal(); return; }
-  if (mobileNav    && mobileNav.classList.contains('open'))    { toggleMenu();       return; }
+  const bookingModal    = document.getElementById('booking-modal');
+  const familyModal     = document.getElementById('family-modal');
+  const corporateModal  = document.getElementById('corporate-modal');
+  const mobileNav       = document.getElementById('mobile-nav');
+  if (bookingModal   && bookingModal.classList.contains('open'))   { closeBooking();        return; }
+  if (familyModal    && familyModal.classList.contains('open'))    { closeFamilyModal();    return; }
+  if (corporateModal && corporateModal.classList.contains('open')) { closeCorporateModal(); return; }
+  if (mobileNav      && mobileNav.classList.contains('open'))      { toggleMenu();          return; }
 });
 
 /* ── Family Membership Modal ──────────────────────────────── */
@@ -689,6 +692,112 @@ function submitFamilyInquiry(e) {
   // Show success state
   form.style.display = 'none';
   document.getElementById('fif-success').hidden = false;
+}
+
+/* ── Corporate Boxing Modal ───────────────────────────────── */
+function openCorporateModal() {
+  const modal = document.getElementById('corporate-modal');
+  if (!modal || modal.classList.contains('open')) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+}
+
+function closeCorporateModal() {
+  const modal = document.getElementById('corporate-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+  const form    = document.getElementById('corporate-inquiry-form');
+  const success = document.getElementById('cbf-success');
+  if (form) {
+    form.reset();
+    form.style.display = '';
+    form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
+    form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+  }
+  if (success) success.hidden = true;
+}
+
+function submitCorporateInquiry(e) {
+  e.preventDefault();
+  const form = e.target;
+
+  form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
+  form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+
+  const nameEl    = form.querySelector('[name="name"]');
+  const emailEl   = form.querySelector('[name="email"]');
+  const phoneEl   = form.querySelector('[name="phone"]');
+  const personsEl = form.querySelector('[name="persons"]');
+  const dateEl    = form.querySelector('[name="date"]');
+  const timeEl    = form.querySelector('[name="time"]');
+
+  const name    = nameEl.value.trim();
+  const email   = emailEl.value.trim();
+  const phone   = phoneEl.value.trim();
+  const persons = personsEl.value;
+  const date    = dateEl.value;
+  const time    = timeEl.value.trim();
+
+  let valid = true;
+
+  if (!name) {
+    document.getElementById('cbf-name-error').textContent = 'Bitte gib deinen Namen ein';
+    nameEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('cbf-email-error').textContent = 'Bitte gib eine gültige E-Mail-Adresse ein';
+    emailEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!phone) {
+    document.getElementById('cbf-phone-error').textContent = 'Bitte gib deine Telefonnummer ein';
+    phoneEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!persons) {
+    document.getElementById('cbf-persons-error').textContent = 'Bitte wähle die Anzahl der Personen';
+    personsEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!date) {
+    document.getElementById('cbf-date-error').textContent = 'Bitte wähle ein gewünschtes Datum';
+    dateEl.classList.add('fif-input-error');
+    valid = false;
+  }
+  if (!time) {
+    document.getElementById('cbf-time-error').textContent = 'Bitte gib eine gewünschte Uhrzeit an';
+    timeEl.classList.add('fif-input-error');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  const company  = form.querySelector('[name="company"]').value.trim();
+  const catering = (form.querySelector('[name="catering"]:checked') || {}).value || '';
+  const event    = form.querySelector('[name="event"]').value.trim();
+  const message  = form.querySelector('[name="message"]').value.trim();
+
+  const lines = [
+    `Name: ${name}`,
+    `E-Mail: ${email}`,
+    `Telefon: ${phone}`,
+    company  ? `Firma / Organisation: ${company}`          : null,
+    `Anzahl Personen: ${persons}`,
+    `Gewünschtes Datum: ${date}`,
+    `Gewünschte Uhrzeit / Zeitraum: ${time}`,
+    catering ? `Catering gewünscht: ${catering}`           : null,
+    event    ? `Art des Events / Anlass: ${event}`         : null,
+    message  ? `Nachricht / Wünsche: ${message}`           : null,
+  ].filter(Boolean);
+
+  const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
+  const body    = encodeURIComponent(lines.join('\n'));
+  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+
+  form.style.display = 'none';
+  document.getElementById('cbf-success').hidden = false;
 }
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */

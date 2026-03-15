@@ -221,6 +221,108 @@
   </div>
 </div>
 
+<!-- ═══════ CORPORATE BOXING MODAL ═══════ -->
+<div id="corporate-modal" role="dialog" aria-label="Corporate Boxing Anfrage" aria-modal="true">
+  <div class="family-modal-card">
+    <button class="family-modal-close" onclick="closeCorporateModal()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="family-modal-header">
+      <span class="family-label">TEAMBUILDING</span>
+      <h2 class="family-headline">CORPORATE BOXING</h2>
+      <p class="family-sub">Stärke dein Team im Boxring.</p>
+    </div>
+
+    <div id="cbf-success" hidden>
+      <p class="fif-success-icon">✅</p>
+      <h3 class="fif-success-title">Anfrage gesendet</h3>
+      <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+    </div>
+
+    <form class="family-inquiry-form" id="corporate-inquiry-form" onsubmit="submitCorporateInquiry(event)" novalidate>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-name">Name <span class="fif-required">*</span></label>
+          <input type="text" id="cbf-name" name="name" placeholder="Dein Name">
+          <span class="fif-error" id="cbf-name-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-email">E-Mail <span class="fif-required">*</span></label>
+          <input type="email" id="cbf-email" name="email" placeholder="deine@email.de">
+          <span class="fif-error" id="cbf-email-error" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-phone">Telefon <span class="fif-required">*</span></label>
+          <input type="tel" id="cbf-phone" name="phone" placeholder="0176 000 000">
+          <span class="fif-error" id="cbf-phone-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-company">Firma / Organisation</label>
+          <input type="text" id="cbf-company" name="company" placeholder="Dein Unternehmen">
+        </div>
+      </div>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-persons">Anzahl Personen <span class="fif-required">*</span></label>
+          <select id="cbf-persons" name="persons">
+            <option value="">Bitte wählen</option>
+            <option value="5–10 Personen">5–10 Personen</option>
+            <option value="11–20 Personen">11–20 Personen</option>
+            <option value="21–50 Personen">21–50 Personen</option>
+            <option value="50+ Personen">50+ Personen</option>
+          </select>
+          <span class="fif-error" id="cbf-persons-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-date">Gewünschtes Datum <span class="fif-required">*</span></label>
+          <input type="date" id="cbf-date" name="date">
+          <span class="fif-error" id="cbf-date-error" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="fif-field">
+        <label for="cbf-time">Gewünschte Uhrzeit / Zeitraum <span class="fif-required">*</span></label>
+        <input type="text" id="cbf-time" name="time" placeholder="z.B. 18:00–20:00 Uhr">
+        <span class="fif-error" id="cbf-time-error" aria-live="polite"></span>
+      </div>
+      <div class="fif-field fif-field--radio">
+        <label>Catering gewünscht?</label>
+        <div class="fif-radio-group" role="radiogroup" aria-label="Catering gewünscht">
+          <label class="fif-radio-card">
+            <input type="radio" name="catering" value="Ja">
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Ja</span>
+            </span>
+          </label>
+          <label class="fif-radio-card">
+            <input type="radio" name="catering" value="Nein">
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Nein</span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="fif-field">
+        <label for="cbf-event">Art des Events / Anlass</label>
+        <input type="text" id="cbf-event" name="event" placeholder="z.B. Teambuilding, Firmenfeier, Incentive …">
+      </div>
+      <div class="fif-field">
+        <label for="cbf-message">Nachricht / Wünsche</label>
+        <textarea id="cbf-message" name="message" rows="3" placeholder="Weitere Informationen, spezielle Wünsche …"></textarea>
+      </div>
+      <button type="submit" class="btn btn--gold btn--full">
+        <i class="fa-solid fa-paper-plane"></i> CORPORATE ANFRAGE SENDEN
+      </button>
+      <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
+      <p class="fif-pflichtfelder">* Pflichtfelder</p>
+    </form>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════
      HOME VIEW
 ══════════════════════════════════════════════════════════ -->
@@ -752,7 +854,7 @@
           <p style="margin-top:0.75rem;">It's not a gym, it's our passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">
-            <a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.tiktok.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
             <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -786,7 +888,7 @@
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
           <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
           <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
-          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym" target="_blank" rel="noopener">@bomayegym</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         </div>
       </div>
 
