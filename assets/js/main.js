@@ -611,12 +611,34 @@ document.addEventListener('keydown', e => {
   if (mobileNav      && mobileNav.classList.contains('open'))      { toggleMenu();          return; }
 });
 
+/* ── Modal Scroll Fade ────────────────────────────────────── */
+function initModalScrollFade(modalId) {
+  const modal = document.getElementById(modalId);
+  if (!modal) return;
+  const card    = modal.querySelector('.family-modal-card');
+  const wrapper = modal.querySelector('.modal-card-wrapper');
+  if (!card || !wrapper) return;
+
+  card.scrollTop = 0;
+
+  function check() {
+    const atBottom = card.scrollTop + card.clientHeight >= card.scrollHeight - 30;
+    wrapper.classList.toggle('at-bottom', atBottom);
+  }
+
+  if (card._scrollFadeHandler) card.removeEventListener('scroll', card._scrollFadeHandler);
+  card._scrollFadeHandler = check;
+  card.addEventListener('scroll', check, { passive: true });
+  requestAnimationFrame(check);
+}
+
 /* ── Family Membership Modal ──────────────────────────────── */
 function openFamilyModal() {
   const modal = document.getElementById('family-modal');
   if (!modal || modal.classList.contains('open')) return;
   modal.classList.add('open');
   lockBodyScroll();
+  initModalScrollFade('family-modal');
 }
 
 function closeFamilyModal() {
@@ -632,8 +654,47 @@ function closeFamilyModal() {
     form.style.display = '';
     form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
     form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+    // Reset dynamic fields
+    const memberNames = document.getElementById('fif-member-names');
+    if (memberNames) memberNames.innerHTML = '';
+    const addressSection = document.getElementById('fif-address-section');
+    if (addressSection) addressSection.hidden = true;
   }
   if (success) success.hidden = true;
+}
+
+/* Dynamic family member name fields */
+function updateFamilyMemberFields() {
+  const select    = document.getElementById('fif-count');
+  const container = document.getElementById('fif-member-names');
+  if (!select || !container) return;
+
+  const val   = select.value;
+  container.innerHTML = '';
+  if (!val) return;
+
+  const count = parseInt(val) || 0; // '6' = 6 (label shown as "6+")
+  for (let i = 1; i <= count; i++) {
+    const div = document.createElement('div');
+    div.className = 'fif-field';
+    div.innerHTML =
+      `<label for="fif-member-${i}">Name Familienmitglied ${i} <span class="fif-required">*</span></label>` +
+      `<input type="text" id="fif-member-${i}" name="member_${i}" placeholder="Vor- und Nachname">` +
+      `<span class="fif-error" id="fif-member-${i}-error" aria-live="polite"></span>`;
+    container.appendChild(div);
+  }
+
+  // Re-check scroll fade after fields are added
+  requestAnimationFrame(() => initModalScrollFade('family-modal'));
+}
+
+/* Household conditional address fields */
+function handleHouseholdChange(value) {
+  const section = document.getElementById('fif-address-section');
+  if (!section) return;
+  section.hidden = (value !== 'Nein');
+  // Re-check scroll fade after address fields appear/disappear
+  requestAnimationFrame(() => initModalScrollFade('family-modal'));
 }
 
 function submitFamilyInquiry(e) {
@@ -670,19 +731,42 @@ function submitFamilyInquiry(e) {
     valid = false;
   }
 
+  // Validate dynamic member name fields
+  const countSelect = form.querySelector('[name="count"]');
+  const countVal    = countSelect ? countSelect.value : '';
+  const count       = parseInt(countVal) || 0;
+  const memberNames = [];
+  for (let i = 1; i <= count; i++) {
+    const el  = form.querySelector(`[name="member_${i}"]`);
+    const val = el ? el.value.trim() : '';
+    memberNames.push(val);
+    if (!val) {
+      const errEl = document.getElementById(`fif-member-${i}-error`);
+      if (errEl) errEl.textContent = 'Bitte Namen eingeben';
+      if (el) el.classList.add('fif-input-error');
+      valid = false;
+    }
+  }
+
   if (!valid) return;
 
-  const count     = form.querySelector('[name="count"]').value;
   const household = (form.querySelector('[name="household"]:checked') || {}).value || '';
   const message   = form.querySelector('[name="message"]').value.trim();
 
   const lines = [
-    `Name: ${name}`,
+    `Name (Kontaktperson): ${name}`,
     `E-Mail: ${email}`,
     `Telefon: ${phone}`,
-    `Anzahl Familienmitglieder: ${count}`,
-    `Gleicher Haushalt: ${household}`,
+    `Anzahl Familienmitglieder: ${countVal}`,
   ];
+  memberNames.forEach((n, i) => lines.push(`Familienmitglied ${i + 1}: ${n}`));
+  lines.push(`Gleicher Haushalt: ${household}`);
+  if (household === 'Nein') {
+    const street = (form.querySelector('[name="address_street"]') || {}).value || '';
+    const plz    = (form.querySelector('[name="address_plz"]')    || {}).value || '';
+    const city   = (form.querySelector('[name="address_city"]')   || {}).value || '';
+    if (street || plz || city) lines.push(`Adresse: ${street}, ${plz} ${city}`);
+  }
   if (message) lines.push(`Nachricht: ${message}`);
 
   const subject = encodeURIComponent('Neue Family Membership Anfrage');
@@ -700,6 +784,7 @@ function openCorporateModal() {
   if (!modal || modal.classList.contains('open')) return;
   modal.classList.add('open');
   lockBodyScroll();
+  initModalScrollFade('corporate-modal');
 }
 
 function closeCorporateModal() {

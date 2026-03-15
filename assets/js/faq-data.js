@@ -56,7 +56,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
-        a: "Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten. Je länger die Laufzeit, desto günstiger der Wochenpreis. Unsere Early-Bird-Mitglieder sichern sich einen dauerhaft garantierten Sonderpreis – dieser bleibt für immer, auch wenn die regulären Preise später steigen."
+        a: "Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90 €/Woche · Youth Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Unsere Early-Bird-Mitglieder sichern sich diesen Preis dauerhaft garantiert – auch wenn die regulären Preise später steigen."
       },
       {
         q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",

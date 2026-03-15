@@ -134,95 +134,132 @@
 
 <!-- ═══════ FAMILY MEMBERSHIP MODAL ═══════ -->
 <div id="family-modal" role="dialog" aria-label="Family Membership" aria-modal="true">
-  <div class="family-modal-card">
-    <button class="family-modal-close" onclick="closeFamilyModal()" type="button" aria-label="Schließen">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
+  <div class="modal-card-wrapper">
+    <div class="family-modal-card">
+      <button class="family-modal-close" onclick="closeFamilyModal()" type="button" aria-label="Schließen">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
-    <div class="family-modal-header">
-      <span class="family-label">COMMUNITY BENEFIT</span>
-      <h2 class="family-headline">FAMILY MEMBERSHIP</h2>
-      <p class="family-sub">Train together. Grow together.</p>
-    </div>
-
-    <div class="family-modal-body">
-      <p class="family-desc">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
-      <ul class="family-bullets">
-        <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
-        <li><i class="fa-solid fa-check"></i> Geschwister</li>
-        <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
-      </ul>
-    </div>
-
-    <div class="fif-success" id="fif-success" hidden>
-      <p class="fif-success-icon">✅</p>
-      <h3 class="fif-success-title">Anfrage gesendet</h3>
-      <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
-    </div>
-
-    <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)" novalidate>
-      <div class="fif-row">
-        <div class="fif-field">
-          <label for="fif-name">Name <span class="fif-required">*</span></label>
-          <input type="text" id="fif-name" name="name" placeholder="Dein Name">
-          <span class="fif-error" id="fif-name-error" aria-live="polite"></span>
-        </div>
-        <div class="fif-field">
-          <label for="fif-email">E-Mail <span class="fif-required">*</span></label>
-          <input type="email" id="fif-email" name="email" placeholder="deine@email.de">
-          <span class="fif-error" id="fif-email-error" aria-live="polite"></span>
-        </div>
+      <div class="family-modal-header">
+        <span class="family-label">COMMUNITY BENEFIT</span>
+        <h2 class="family-headline">FAMILY MEMBERSHIP</h2>
+        <p class="family-sub">Train together. Grow together.</p>
       </div>
-      <div class="fif-row">
+
+      <div class="family-modal-body">
+        <p class="family-desc">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
+        <ul class="family-bullets">
+          <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
+          <li><i class="fa-solid fa-check"></i> Geschwister</li>
+          <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
+        </ul>
+      </div>
+
+      <div class="fif-success" id="fif-success" hidden>
+        <p class="fif-success-icon">✅</p>
+        <h3 class="fif-success-title">Anfrage gesendet</h3>
+        <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+      </div>
+
+      <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)" novalidate>
+
+        <!-- 1. Anzahl Familienmitglieder -->
+        <div class="fif-field">
+          <label for="fif-count">Anzahl Familienmitglieder <span class="fif-required">*</span></label>
+          <select id="fif-count" name="count" onchange="updateFamilyMemberFields()">
+            <option value="">Bitte wählen</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6+</option>
+          </select>
+        </div>
+
+        <!-- 2. Dynamische Namen-Felder -->
+        <div id="fif-member-names" class="fif-member-names"></div>
+
+        <!-- 3. Kontaktdaten -->
+        <div class="fif-row">
+          <div class="fif-field">
+            <label for="fif-name">Dein Name <span class="fif-required">*</span></label>
+            <input type="text" id="fif-name" name="name" placeholder="Dein Name">
+            <span class="fif-error" id="fif-name-error" aria-live="polite"></span>
+          </div>
+          <div class="fif-field">
+            <label for="fif-email">E-Mail <span class="fif-required">*</span></label>
+            <input type="email" id="fif-email" name="email" placeholder="deine@email.de">
+            <span class="fif-error" id="fif-email-error" aria-live="polite"></span>
+          </div>
+        </div>
         <div class="fif-field">
           <label for="fif-phone">Telefon <span class="fif-required">*</span></label>
           <input type="tel" id="fif-phone" name="phone" placeholder="0176 000 000">
           <span class="fif-error" id="fif-phone-error" aria-live="polite"></span>
         </div>
+
+        <!-- 4. Gleicher Haushalt -->
+        <div class="fif-field fif-field--radio">
+          <label>Gleicher Haushalt?</label>
+          <div class="fif-radio-group" role="radiogroup" aria-label="Gleicher Haushalt">
+            <label class="fif-radio-card">
+              <input type="radio" name="household" value="Ja" required onchange="handleHouseholdChange(this.value)">
+              <span class="fif-radio-card__box">
+                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                <span class="fif-radio-card__text">Ja</span>
+              </span>
+            </label>
+            <label class="fif-radio-card">
+              <input type="radio" name="household" value="Nein" onchange="handleHouseholdChange(this.value)">
+              <span class="fif-radio-card__box">
+                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                <span class="fif-radio-card__text">Nein</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Adresse (nur bei Nein) -->
+        <div id="fif-address-section" class="fif-address-section" hidden>
+          <p class="fif-address-label">Adresse der Familienmitglieder</p>
+          <div class="fif-field">
+            <label for="fif-street">Straße &amp; Hausnummer</label>
+            <input type="text" id="fif-street" name="address_street" placeholder="Musterstraße 1">
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="fif-plz">PLZ</label>
+              <input type="text" id="fif-plz" name="address_plz" placeholder="80639">
+            </div>
+            <div class="fif-field">
+              <label for="fif-city">Stadt</label>
+              <input type="text" id="fif-city" name="address_city" placeholder="München">
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Nachricht -->
         <div class="fif-field">
-          <label for="fif-count">Anzahl Familienmitglieder</label>
-          <select id="fif-count" name="count">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5+">5+</option>
-          </select>
+          <label for="fif-message">Nachricht (optional)</label>
+          <textarea id="fif-message" name="message" rows="3" placeholder="Weitere Informationen..."></textarea>
         </div>
-      </div>
-      <div class="fif-field fif-field--radio">
-        <label>Gleicher Haushalt?</label>
-        <div class="fif-radio-group" role="radiogroup" aria-label="Gleicher Haushalt">
-          <label class="fif-radio-card">
-            <input type="radio" name="household" value="Ja" required>
-            <span class="fif-radio-card__box">
-              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
-              <span class="fif-radio-card__text">Ja</span>
-            </span>
-          </label>
-          <label class="fif-radio-card">
-            <input type="radio" name="household" value="Nein">
-            <span class="fif-radio-card__box">
-              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
-              <span class="fif-radio-card__text">Nein</span>
-            </span>
-          </label>
-        </div>
-      </div>
-      <div class="fif-field">
-        <label for="fif-message">Nachricht (optional)</label>
-        <textarea id="fif-message" name="message" rows="3" placeholder="Weitere Informationen..."></textarea>
-      </div>
-      <button type="submit" class="btn btn--gold btn--full">
-        <i class="fa-solid fa-paper-plane"></i> FAMILIENPLATZ ANFRAGEN
-      </button>
-      <p class="fif-trust">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
-      <p class="fif-pflichtfelder">* Pflichtfelder</p>
-    </form>
+
+        <button type="submit" class="btn btn--gold btn--full">
+          <i class="fa-solid fa-paper-plane"></i> FAMILIENPLATZ ANFRAGEN
+        </button>
+        <p class="fif-trust">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+        <p class="fif-pflichtfelder">* Pflichtfelder</p>
+      </form>
+    </div>
+    <div class="modal-scroll-fade" aria-hidden="true">
+      <span class="modal-scroll-fade__hint"><i class="fa-solid fa-chevron-down"></i> Weitere Felder unten</span>
+    </div>
   </div>
 </div>
 
 <!-- ═══════ CORPORATE BOXING MODAL ═══════ -->
 <div id="corporate-modal" role="dialog" aria-label="Corporate Boxing Anfrage" aria-modal="true">
+  <div class="modal-card-wrapper">
   <div class="family-modal-card">
     <button class="family-modal-close" onclick="closeCorporateModal()" type="button" aria-label="Schließen">
       <i class="fa-solid fa-xmark"></i>
@@ -320,6 +357,10 @@
       <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
       <p class="fif-pflichtfelder">* Pflichtfelder</p>
     </form>
+  </div>
+  <div class="modal-scroll-fade" aria-hidden="true">
+    <span class="modal-scroll-fade__hint"><i class="fa-solid fa-chevron-down"></i> Weitere Felder unten</span>
+  </div>
   </div>
 </div>
 
