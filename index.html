@@ -1316,7 +1316,7 @@
               <td><span class="price-em">Auf Anfrage</span></td>
               <td>ab 5 Personen</td>
               <td>Team ab 5 Personen · Catering optional</td>
-              <td><a href="mailto:info@bomayegym.com">Anfragen</a></td>
+              <td><a href="#corporate-boxing-form" onclick="event.preventDefault();document.getElementById('corporate-boxing-form').scrollIntoView({behavior:'smooth'})">Anfragen</a></td>
             </tr>
           </tbody>
         </table>
@@ -1327,6 +1327,103 @@
           <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
         </button>
       </div>
+
+      <!-- ── Corporate Boxing Inline Inquiry Form ── -->
+      <section id="corporate-boxing-form" style="margin-top:4rem; scroll-margin-top:5rem;">
+        <div class="family-modal-header" style="text-align:left; padding:0 0 1.5rem;">
+          <span class="family-label">TEAMBUILDING</span>
+          <h2 class="family-headline" style="font-size:clamp(1.6rem,4vw,2.4rem);">CORPORATE BOXING</h2>
+          <p class="family-sub">Stärke dein Team im Boxring. Füll das Formular aus — wir melden uns schnellstmöglich.</p>
+        </div>
+
+        <div id="cbi-success" hidden style="text-align:center; padding:2rem 0;">
+          <p class="fif-success-icon">✅</p>
+          <h3 class="fif-success-title">Anfrage gesendet</h3>
+          <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+        </div>
+
+        <form class="family-inquiry-form" id="cbi-form" onsubmit="submitCorporateInquiryInline(event)" novalidate>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-name">Name <span class="fif-required">*</span></label>
+              <input type="text" id="cbi-name" name="name" placeholder="Dein Name">
+              <span class="fif-error" id="cbi-name-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-email">E-Mail <span class="fif-required">*</span></label>
+              <input type="email" id="cbi-email" name="email" placeholder="deine@email.de">
+              <span class="fif-error" id="cbi-email-error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-phone">Telefon <span class="fif-required">*</span></label>
+              <input type="tel" id="cbi-phone" name="phone" placeholder="0176 000 000">
+              <span class="fif-error" id="cbi-phone-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-company">Firma / Organisation</label>
+              <input type="text" id="cbi-company" name="company" placeholder="Dein Unternehmen">
+            </div>
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-persons">Anzahl Personen <span class="fif-required">*</span></label>
+              <select id="cbi-persons" name="persons">
+                <option value="">Bitte wählen</option>
+                <option value="5–10 Personen">5–10 Personen</option>
+                <option value="11–20 Personen">11–20 Personen</option>
+                <option value="21–50 Personen">21–50 Personen</option>
+                <option value="50+ Personen">50+ Personen</option>
+              </select>
+              <span class="fif-error" id="cbi-persons-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-date">Gewünschtes Datum <span class="fif-required">*</span></label>
+              <input type="date" id="cbi-date" name="date">
+              <span class="fif-error" id="cbi-date-error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="fif-field">
+            <label for="cbi-time">Gewünschte Uhrzeit / Zeitraum <span class="fif-required">*</span></label>
+            <input type="text" id="cbi-time" name="time" placeholder="z.B. 18:00–20:00 Uhr">
+            <span class="fif-error" id="cbi-time-error" aria-live="polite"></span>
+          </div>
+          <div class="fif-field fif-field--radio">
+            <label>Catering gewünscht?</label>
+            <div class="fif-radio-group" role="radiogroup" aria-label="Catering gewünscht">
+              <label class="fif-radio-card">
+                <input type="radio" name="catering" value="Ja">
+                <span class="fif-radio-card__box">
+                  <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                  <span class="fif-radio-card__text">Ja</span>
+                </span>
+              </label>
+              <label class="fif-radio-card">
+                <input type="radio" name="catering" value="Nein">
+                <span class="fif-radio-card__box">
+                  <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                  <span class="fif-radio-card__text">Nein</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="fif-field">
+            <label for="cbi-event">Art des Events / Anlass</label>
+            <input type="text" id="cbi-event" name="event" placeholder="z.B. Teambuilding, Firmenfeier, Incentive …">
+          </div>
+          <div class="fif-field">
+            <label for="cbi-message">Nachricht / Wünsche</label>
+            <textarea id="cbi-message" name="message" rows="3" placeholder="Weitere Informationen, spezielle Wünsche …"></textarea>
+          </div>
+          <button type="submit" class="btn btn--gold btn--full">
+            <i class="fa-solid fa-paper-plane"></i> CORPORATE ANFRAGE SENDEN
+          </button>
+          <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
+          <p class="fif-pflichtfelder">* Pflichtfelder</p>
+        </form>
+      </section>
+
     </div>
   </div>
 </div>

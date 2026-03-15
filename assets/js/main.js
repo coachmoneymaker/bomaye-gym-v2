@@ -885,6 +885,72 @@ function submitCorporateInquiry(e) {
   document.getElementById('cbf-success').hidden = false;
 }
 
+/* ── Corporate Boxing Inline Form ──────────────────────────── */
+function submitCorporateInquiryInline(e) {
+  e.preventDefault();
+  const form = e.target;
+
+  form.querySelectorAll('.fif-error').forEach(el => { el.textContent = ''; });
+  form.querySelectorAll('.fif-input-error').forEach(el => el.classList.remove('fif-input-error'));
+
+  const nameEl    = form.querySelector('[name="name"]');
+  const emailEl   = form.querySelector('[name="email"]');
+  const phoneEl   = form.querySelector('[name="phone"]');
+  const personsEl = form.querySelector('[name="persons"]');
+  const dateEl    = form.querySelector('[name="date"]');
+  const timeEl    = form.querySelector('[name="time"]');
+
+  const name    = nameEl.value.trim();
+  const email   = emailEl.value.trim();
+  const phone   = phoneEl.value.trim();
+  const persons = personsEl.value;
+  const date    = dateEl.value;
+  const time    = timeEl.value.trim();
+
+  let valid = true;
+
+  const showErr = (el, msg) => {
+    el.nextElementSibling.textContent = msg;
+    el.classList.add('fif-input-error');
+    valid = false;
+  };
+
+  if (!name)    showErr(nameEl,    'Bitte gib deinen Namen ein');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                showErr(emailEl,   'Bitte gib eine gültige E-Mail-Adresse ein');
+  if (!phone)   showErr(phoneEl,   'Bitte gib deine Telefonnummer ein');
+  if (!persons) showErr(personsEl, 'Bitte wähle die Anzahl der Personen');
+  if (!date)    showErr(dateEl,    'Bitte wähle ein gewünschtes Datum');
+  if (!time)    showErr(timeEl,    'Bitte gib eine gewünschte Uhrzeit an');
+
+  if (!valid) return;
+
+  const company  = form.querySelector('[name="company"]').value.trim();
+  const catering = (form.querySelector('[name="catering"]:checked') || {}).value || '';
+  const event    = form.querySelector('[name="event"]').value.trim();
+  const message  = form.querySelector('[name="message"]').value.trim();
+
+  const lines = [
+    `Name: ${name}`,
+    `E-Mail: ${email}`,
+    `Telefon: ${phone}`,
+    company  ? `Firma / Organisation: ${company}`          : null,
+    `Anzahl Personen: ${persons}`,
+    `Gewünschtes Datum: ${date}`,
+    `Gewünschte Uhrzeit / Zeitraum: ${time}`,
+    catering ? `Catering gewünscht: ${catering}`           : null,
+    event    ? `Art des Events / Anlass: ${event}`         : null,
+    message  ? `Nachricht / Wünsche: ${message}`           : null,
+  ].filter(Boolean);
+
+  const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
+  const body    = encodeURIComponent(lines.join('\n'));
+  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+
+  form.style.display = 'none';
+  document.getElementById('cbi-success').hidden = false;
+}
+
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
 
 /* ── Scroll reveal ─────────────────────────────────────────── */
