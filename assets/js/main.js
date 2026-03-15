@@ -328,6 +328,11 @@ function renderPricingDisplay(ageGroup, duration) {
         ${savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€/Jahr vs. monatlich</div>` : '<div class="mp-savings-empty"></div>'}
       </div>
       <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
+      <div class="family-benefit-trigger">
+        <span class="fbt-label">Family Benefit</span>
+        <p class="fbt-desc">Ab 3 Familienmitgliedern trainiert jede weitere Person kostenfrei.</p>
+        <button class="fbt-cta" type="button" onclick="openFamilyModal()">Mehr erfahren →</button>
+      </div>
       <div class="membership-enrollment" onclick="toggleEnrollmentInfo(this)" style="cursor:pointer;color:#000000;font-weight:600;" title="Klicken für Details">
         <i class="fa-solid fa-circle-plus enrollment-toggle-icon" aria-hidden="true"></i>
         <span>+ 100€ Aufnahmegebühr einmalig</span>
@@ -345,11 +350,6 @@ function renderPricingDisplay(ageGroup, duration) {
       <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
         <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
       </button>
-    </div>
-    <div class="family-benefit-trigger reveal">
-      <span class="fbt-label">FAMILY BENEFIT</span>
-      <p class="fbt-desc">Ab 3 Familienmitgliedern trainiert jede weitere Person kostenfrei.</p>
-      <button class="fbt-cta" type="button" onclick="openFamilyModal()">MEHR ERFAHREN</button>
     </div>`;
 
   if (ageGroup === 'erwachsene') {
