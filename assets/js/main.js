@@ -290,7 +290,8 @@ function renderPricingDisplay(ageGroup, duration) {
   const price        = prog.earlyBirdPrices ? prog.earlyBirdPrices[duration] : prog.prices[duration];
   const regularPrice = prog.regularPrices   ? prog.regularPrices[duration]   : null;
   const basePrice    = prog.earlyBirdPrices ? prog.earlyBirdPrices['1M'] : prog.prices['1M'];
-  const savings      = duration === '1M' ? 0 : Math.round((basePrice - price) * 12);
+  const weeksMap     = { '1M': 0, '3M': 13, '6M': 26, '12M': 52 };
+  const savings      = weeksMap[duration] > 0 ? Math.round((basePrice - price) * weeksMap[duration]) : 0;
 
   const durs = [
     { key: '1M',  label: '1 Monat' },
@@ -319,13 +320,13 @@ function renderPricingDisplay(ageGroup, duration) {
       ${isFeatured ? '<div class="membership-featured-badge">BELIEBTESTE WAHL</div>' : ''}
       <div class="membership-duration-tabs">${tabsHtml}</div>
       <div class="membership-price-display">
-        ${regularPrice ? `<div class="mp-regular-price-row"><span class="mp-regular-price">${regularPrice.toFixed(2).replace('.', ',')} €</span><span class="mp-regular-unit">/ Monat</span></div>` : ''}
+        ${regularPrice ? `<div class="mp-regular-price-row"><span class="mp-regular-price">${regularPrice.toFixed(2).replace('.', ',')} €</span><span class="mp-regular-unit">/ Woche</span></div>` : ''}
         <div class="membership-price-main">
           <span class="mp-amount">${price.toFixed(2).replace('.', ',')} €</span>
-          <span class="mp-unit">/ Monat</span>
+          <span class="mp-unit">/ Woche</span>
           <span class="mp-early-bird-label">Early Bird Preis</span>
         </div>
-        ${savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€/Jahr vs. monatlich</div>` : '<div class="mp-savings-empty"></div>'}
+        ${duration === '12M' ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€ pro Jahr vs. 1-Monatsplan</div>` : savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€</div>` : '<div class="mp-savings-empty"></div>'}
       </div>
       <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
       <div class="family-benefit-trigger">
