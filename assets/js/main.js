@@ -212,7 +212,12 @@ function nav(viewId, sectionId, restoreY) {
   if (sectionId) {
     setTimeout(() => {
       const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (!el) return;
+      // scrollIntoView({ behavior:'instant' }) is unreliable on iOS Safari <15.4.
+      // Manually compute the target scroll position accounting for the fixed header.
+      const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 72;
+      const top = el.getBoundingClientRect().top + window.scrollY - navH;
+      window.scrollTo(0, Math.max(0, top));
     }, 80);
   }
   setTimeout(runReveal, 120);
