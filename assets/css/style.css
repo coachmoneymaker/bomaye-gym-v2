@@ -1950,7 +1950,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   .hero-h1 { margin-bottom: 1.25rem; }
 }
 @media (max-width: 480px) {
-  .hero-content { padding-top: calc(var(--nav-h) + 0.25rem); padding-bottom: 2rem; }
+  /* Remove vertical centering and section padding so content sits close under the header */
+  #hero { align-items: flex-start; padding-top: 0; }
+  .hero-content { padding-top: calc(var(--nav-h) + 1.25rem); padding-bottom: 2rem; }
 }
 /* Subtitle readability over background image */
 .hero-subtitle {
