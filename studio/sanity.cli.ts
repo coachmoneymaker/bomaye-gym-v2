@@ -3,7 +3,7 @@ import {defineCliConfig} from 'sanity/cli'
 export default defineCliConfig({
   api: {
     // TODO: Replace with your actual Sanity project ID from sanity.io/manage
-    projectId: 'REPLACE_WITH_PROJECT_ID',
+    projectId: '1in3t0lk',
     dataset: 'production',
   },
   /**

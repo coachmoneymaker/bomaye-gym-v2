@@ -20,7 +20,7 @@ export default defineConfig({
   title: 'Bomaye Gym Munich',
 
   // TODO: Replace with your actual Sanity project ID from sanity.io/manage
-  projectId: 'REPLACE_WITH_PROJECT_ID',
+  projectId: '1in3t0lk',
   dataset: 'production',
 
   plugins: [
