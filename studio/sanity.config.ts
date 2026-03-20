@@ -10,6 +10,7 @@ const SINGLETONS = [
   {id: 'pricing', title: 'Pricing', icon: '💰'},
   {id: 'familyBenefit', title: 'Family Benefit', icon: '👨‍👩‍👧'},
   {id: 'corporateBoxing', title: 'Corporate Boxing', icon: '🏢'},
+  {id: 'faq', title: 'FAQ', icon: '❓'},
 ]
 
 // Singleton type names (used to hide "Create new" from list views)
@@ -87,6 +88,19 @@ export default defineConfig({
                   .schemaType('corporateBoxing')
                   .documentId('corporateBoxing')
                   .title('Corporate Boxing'),
+              ),
+
+            S.divider(),
+
+            // ── FAQ ───────────────────────────────────────────────
+            S.listItem()
+              .title('FAQ')
+              .id('faq')
+              .child(
+                S.document()
+                  .schemaType('faq')
+                  .documentId('faq')
+                  .title('FAQ'),
               ),
           ]),
     }),

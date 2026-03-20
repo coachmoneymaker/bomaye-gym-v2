@@ -9,6 +9,7 @@ import {homepage} from './documents/homepage'
 import {pricing} from './documents/pricing'
 import {familyBenefit} from './documents/familyBenefit'
 import {corporateBoxing} from './documents/corporateBoxing'
+import {faq} from './documents/faq'
 
 /**
  * All schema types registered with Sanity Studio.
@@ -27,4 +28,5 @@ export const schemaTypes = [
   pricing,
   familyBenefit,
   corporateBoxing,
+  faq,
 ]
