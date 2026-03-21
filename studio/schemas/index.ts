@@ -11,6 +11,10 @@ import {familyBenefit} from './documents/familyBenefit'
 import {corporateBoxing} from './documents/corporateBoxing'
 import {faq} from './documents/faq'
 
+// ── Document types (collections) ─────────────────────────────
+import {coach} from './documents/coach'
+import {course} from './documents/course'
+
 /**
  * All schema types registered with Sanity Studio.
  * Object types must be declared before document types that reference them.
@@ -29,4 +33,8 @@ export const schemaTypes = [
   familyBenefit,
   corporateBoxing,
   faq,
+
+  // Collection documents
+  coach,
+  course,
 ]

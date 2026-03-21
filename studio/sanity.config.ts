@@ -102,6 +102,28 @@ export default defineConfig({
                   .documentId('faq')
                   .title('FAQ'),
               ),
+
+            S.divider(),
+
+            // ── Coaches ───────────────────────────────────────────
+            S.listItem()
+              .title('Coaches')
+              .id('coaches')
+              .child(
+                S.documentTypeList('coach')
+                  .title('Coaches')
+                  .defaultOrdering([{field: 'order', direction: 'asc'}]),
+              ),
+
+            // ── Courses ───────────────────────────────────────────
+            S.listItem()
+              .title('Courses')
+              .id('courses')
+              .child(
+                S.documentTypeList('course')
+                  .title('Courses')
+                  .defaultOrdering([{field: 'order', direction: 'asc'}]),
+              ),
           ]),
     }),
     visionTool(),

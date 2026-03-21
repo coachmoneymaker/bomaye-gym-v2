@@ -1,0 +1,38 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'studio/**'
+  workflow_dispatch:   # allow manual trigger from GitHub Actions tab
+
+jobs:
+  deploy:
+    name: Deploy to Sanity Hosting
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: studio
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy Sanity Studio
+        run: npx sanity deploy --yes
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
