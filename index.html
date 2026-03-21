@@ -1451,8 +1451,19 @@
 </div>
 
 
-<!-- Scripts: config must load synchronously before main.js -->
+<!-- 1. Core config (contact, address, hours, early bird) -->
 <script src="assets/js/config.js"></script>
+
+<!-- 2. Content modules (no inter-dependencies among these four) -->
+<script src="assets/js/pricing.js"></script>
+<script src="assets/js/family-benefit.js"></script>
+<script src="assets/js/corporate-boxing.js"></script>
+<script src="assets/js/homepage-content.js"></script>
+
+<!-- 3. FAQ data -->
+<script src="assets/js/faq-data.js"></script>
+
+<!-- 4. Main application logic -->
 <script src="assets/js/main.js"></script>
 
 <!-- ══════════════════════════════════════════════════════════
