@@ -425,7 +425,7 @@ async function initEarlyBirdFOMO() {
   if (barFill) setTimeout(() => { barFill.style.width = pct + '%'; }, 700);
 
   // CTA state
-  const btn = document.getElementById('eb-cta-btn');
+  const btn = document.getElementById('sanity-eb-cta');
   if (btn && spotsLeft <= 0) {
     btn.textContent = 'AUSVERKAUFT';
     btn.disabled = true;
