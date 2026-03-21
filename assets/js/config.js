@@ -145,6 +145,18 @@ const BOMAYE = {
    The rest of the site reads ONLY from getEarlyBirdSpotsLeft().
 ───────────────────────────────────────────────────────────── */
 async function getEarlyBirdSpotsLeft() {
+  // MODE S — Sanity CMS (highest priority when available)
+  if (typeof window.sanityFetch === 'function') {
+    try {
+      const data = await window.sanityFetch(
+        '*[_type == "siteSettings"][0]{ earlyBird{ remaining } }'
+      );
+      if (data && data.earlyBird && typeof data.earlyBird.remaining === 'number') {
+        return data.earlyBird.remaining;
+      }
+    } catch (_) { /* fall through */ }
+  }
+
   // MODE A — dynamic JSON (update /data/earlybird.json on your server)
   try {
     const res = await fetch('/data/earlybird.json', { cache: 'no-cache' });

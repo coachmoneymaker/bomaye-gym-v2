@@ -142,13 +142,13 @@
 
       <div class="family-modal-header">
         <span class="family-label">COMMUNITY BENEFIT</span>
-        <h2 class="family-headline">FAMILY MEMBERSHIP</h2>
+        <h2 class="family-headline" id="family-modal-title">FAMILY MEMBERSHIP</h2>
         <p class="family-sub">Train together. Grow together.</p>
       </div>
 
       <div class="family-modal-body">
-        <p class="family-desc">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
-        <ul class="family-bullets">
+        <p class="family-desc" id="family-modal-support">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
+        <ul class="family-bullets" id="family-modal-bullets">
           <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
           <li><i class="fa-solid fa-check"></i> Geschwister</li>
           <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
@@ -157,8 +157,8 @@
 
       <div class="fif-success" id="fif-success" hidden>
         <p class="fif-success-icon">✅</p>
-        <h3 class="fif-success-title">Anfrage gesendet</h3>
-        <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+        <h3 class="fif-success-title" id="fif-success-title">Anfrage gesendet</h3>
+        <p class="fif-success-text" id="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
       </div>
 
       <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)" novalidate>
@@ -267,14 +267,14 @@
 
     <div class="family-modal-header">
       <span class="family-label">TEAMBUILDING</span>
-      <h2 class="family-headline">CORPORATE BOXING</h2>
-      <p class="family-sub">Stärke dein Team im Boxring.</p>
+      <h2 class="family-headline" id="corporate-modal-title">CORPORATE BOXING</h2>
+      <p class="family-sub" id="corporate-modal-support">Stärke dein Team im Boxring.</p>
     </div>
 
     <div id="cbf-success" hidden>
       <p class="fif-success-icon">✅</p>
-      <h3 class="fif-success-title">Anfrage gesendet</h3>
-      <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+      <h3 class="fif-success-title" id="cbf-success-title">Anfrage gesendet</h3>
+      <p class="fif-success-text" id="cbf-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
     </div>
 
     <form class="family-inquiry-form" id="corporate-inquiry-form" onsubmit="submitCorporateInquiry(event)" novalidate>
@@ -386,7 +386,7 @@
         IT'S NOT A GYM.<br>
         <span class="shimmer">IT'S PASSION.</span>
       </h2>
-      <p class="hero-subtitle">Professionelles Boxtraining in München für Anfänger,<br>Fitnesssportler und Wettkämpfer.</p>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Professionelles Boxtraining in München für Anfänger,<br>Fitnesssportler und Wettkämpfer.</p>
       <a href="#early-bird" class="hero-eb-counter" id="hero-eb-counter" onclick="event.preventDefault(); nav('home','early-bird')" aria-live="polite" aria-label="Zum Early-Bird-Angebot scrollen">
         <span class="spots-dot"></span>
         <span>Kostenloses Probetraining &nbsp;·&nbsp; DBV A-Trainer Lizenz &nbsp;·&nbsp; 20+ Jahre Erfahrung</span>
@@ -565,7 +565,7 @@
             <span class="spots-dot"></span>
             <span id="spots-badge-text">Early Bird — noch 150 Plätze</span>
           </div>
-          <span class="tag tag--dark">⚡ EARLY BIRD — LIMITIERT</span>
+          <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD — LIMITIERT</span>
           <h2 style="margin:1.25rem 0;">NUR 150 PLÄTZE.<br><span class="gold">PREIS STEIGT DANACH.</span></h2>
           <p style="margin-bottom:1.5rem;">Die Türen von Bomaye Gym Munich öffnen sich bald. Wer jetzt Mitglied wird, sichert sich den Early-Bird-Preis — <strong style="color:var(--gold);">dauerhaft und garantiert.</strong></p>
           <div class="eb-checklist">
@@ -694,7 +694,7 @@
   <section id="pricing" class="sec--ink2">
     <div class="container">
       <div class="sec-header reveal">
-        <span class="tag tag--dark">MITGLIEDSCHAFT</span>
+        <span class="tag tag--dark" id="sanity-membership-badge">MITGLIEDSCHAFT</span>
         <h2 style="margin-top:1rem;">WÄHLE DEINEN <span class="gold">PLAN.</span></h2>
         <p style="color:var(--muted);margin-top:0.75rem;font-size:0.8rem;font-family:var(--font-head);letter-spacing:1.5px;">
           WÖCHENTLICHER PREIS · KOSTENLOSES PROBETRAINING
@@ -1451,20 +1451,26 @@
 </div>
 
 
-<!-- 1. Core config (contact, address, hours, early bird) -->
+<!-- 1. Sanity CDN client (must be first — defines window.sanityFetch) -->
+<script src="assets/js/sanity-client.js"></script>
+
+<!-- 2. Core config (contact, address, hours, early bird) -->
 <script src="assets/js/config.js"></script>
 
-<!-- 2. Content modules (no inter-dependencies among these four) -->
+<!-- 3. Content modules (static fallbacks — overridden by Sanity at runtime) -->
 <script src="assets/js/pricing.js"></script>
 <script src="assets/js/family-benefit.js"></script>
 <script src="assets/js/corporate-boxing.js"></script>
 <script src="assets/js/homepage-content.js"></script>
 
-<!-- 3. FAQ data -->
+<!-- 4. FAQ data -->
 <script src="assets/js/faq-data.js"></script>
 
-<!-- 4. Main application logic -->
+<!-- 5. Main application logic -->
 <script src="assets/js/main.js"></script>
+
+<!-- 6. Sanity loader (runs after main.js — patches globals + re-renders) -->
+<script src="assets/js/sanity-loader.js"></script>
 
 <!-- ══════════════════════════════════════════════════════════
      BSPORT WIDGET — exact embed code from Bsport

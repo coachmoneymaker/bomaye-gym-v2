@@ -443,6 +443,8 @@
 <!-- ═══════ SCRIPTS ═══════ -->
 <!-- JSON-LD FAQ Schema — generated from same data as accordion -->
 <script type="application/ld+json" id="faq-jsonld"></script>
+<!-- Sanity CDN client (defines window.sanityFetch) -->
+<script src="/assets/js/sanity-client.js"></script>
 <script src="/assets/js/faq-data.js"></script>
 <script>
 /* ── Header scroll styling (same as main site) ─── */
@@ -647,6 +649,9 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 </script>
+
+<!-- Sanity FAQ loader — re-renders accordion + JSON-LD from Sanity CMS -->
+<script src="/assets/js/sanity-faq-loader.js"></script>
 
 </body>
 </html>
