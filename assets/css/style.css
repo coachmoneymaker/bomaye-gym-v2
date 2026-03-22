@@ -5420,3 +5420,103 @@ section { padding: var(--sv) 0; }
   .service-card img,
   .coach-photo img                      { transition: none !important; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE TYPOGRAPHY OPTIMISATION
+   Applied ONLY inside mobile breakpoints (≤768px / ≤480px)
+   — No layout, desktop styles, colours, or positioning changed —
+══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* ── Hero H1: +10–15% visual impact on tablet/mobile ── */
+  .hero-h1 {
+    font-size: clamp(3.2rem, 11.5vw, 4.6rem);
+  }
+
+  /* ── Hero subtitle: slightly larger + better line-height ── */
+  .hero-subtitle {
+    font-size: clamp(1.02rem, 2.6vw, 1.2rem);
+    line-height: 1.68;
+  }
+
+  /* ── Body text: improved readability ── */
+  .eb-check       { font-size: 0.97rem; line-height: 1.68; }
+  .intro-text p,
+  .dna-text p,
+  .location-body,
+  .why-desc,
+  .coach-bio      { font-size: 1rem; line-height: 1.72; }
+
+  /* ── Buttons: thumb-friendly tap targets ── */
+  .btn {
+    padding: 1rem 2.3rem;
+  }
+  .btn--sm {
+    padding: 0.75rem 1.55rem;
+  }
+  .btn--hero-primary {
+    padding: 1.15rem 2.5rem;
+  }
+
+  /* ── Tags / badges: less cramped, easier to read ── */
+  .tag {
+    font-size: 0.72rem;
+    padding: 5px 16px;
+  }
+  .eb-card-label {
+    font-size: 0.72rem;
+    letter-spacing: 2.5px;
+  }
+  .eb-card-sublabel {
+    font-size: 0.74rem;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* ── Hero H1: maintain +10–12% on small phones ── */
+  .hero-h1 {
+    font-size: clamp(2.9rem, 12vw, 4.1rem);
+  }
+
+  /* ── Hero subtitle ── */
+  .hero-subtitle {
+    font-size: 1.03rem;
+    line-height: 1.68;
+  }
+
+  /* ── Body text: bump +1–2px on small screens ── */
+  .discipline-card p { font-size: 0.94rem; line-height: 1.68; }
+  .faq-q--light      { font-size: 0.95rem; }
+  .faq-a-inner       { font-size: 0.93rem; line-height: 1.67; }
+  .eb-check          { font-size: 0.97rem; line-height: 1.68; }
+
+  /* ── Buttons: larger tap area, safer letter-spacing ── */
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 0.92rem;
+    letter-spacing: 2px;
+  }
+  .btn--sm {
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+  }
+  .btn--hero-primary {
+    padding: 1.15rem 2rem;
+    font-size: 0.95rem;
+  }
+
+  /* ── Tags / badges ── */
+  .tag {
+    font-size: 0.73rem;
+    padding: 5px 15px;
+  }
+  .eb-card-label    { font-size: 0.73rem; }
+  .eb-card-sublabel { font-size: 0.75rem; }
+}
+
+/* ── 375px: keep hero title strong on smallest phones ── */
+@media (max-width: 375px) {
+  .hero-h1 { font-size: 3.1rem; }
+}
