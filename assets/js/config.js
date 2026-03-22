@@ -42,9 +42,9 @@ const BOMAYE = {
 
   /* ── Opening Hours ───────────────────────────────────────── */
   hours: {
-    weekdays: '07:00 – 22:00 Uhr',
-    saturday: '09:00 – 16:00 Uhr',
-    sunday:   'Geschlossen',
+    weekdays: '07:00 – 11:30 Uhr · 16:00 – 22:30 Uhr',
+    saturday: '10:00 – 16:00 Uhr (außer bei Veranstaltungen)',
+    sunday:   'Ruhetag (außer bei Veranstaltungen)',
   },
 
   /* ── Pricing ─────────────────────────────────────────────

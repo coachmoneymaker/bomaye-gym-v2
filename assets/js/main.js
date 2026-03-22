@@ -311,9 +311,9 @@ function renderPricingDisplay(ageGroup, duration) {
   const benefits = [
     'Alle Kurse inklusive',
     'Community Events &amp; Sparring',
-    'Zugang Mo–Fr 07–22 Uhr, Sa 09–16 Uhr',
     'Professionelles Coaching',
-    'Kostenloses Probetraining',
+    'Fokus auf Technik, Disziplin und echte Boxkultur',
+    'Flexible Trainingsmöglichkeiten für jedes Level',
   ];
   const benefitsHtml = benefits.map(b =>
     `<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>${b}</span></li>`
