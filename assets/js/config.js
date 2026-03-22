@@ -15,8 +15,8 @@ const BOMAYE = {
      Change `total` if the overall limit changes.
   ─────────────────────────────────────────────────────────── */
   earlyBird: {
-    total:     150,    // ← Edit: total spots ever offered
-    remaining: 150,    // ← Edit: current remaining spots
+    total:     300,    // ← Edit: total spots ever offered
+    remaining: 300,    // ← Edit: current remaining spots
   },
 
   /* ── Contact ─────────────────────────────────────────────── */
