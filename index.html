@@ -75,6 +75,7 @@
   <div class="loader-line" id="loader-line"></div>
   <div class="loader-sub">MUNICH · PINEAPPLE PARK</div>
 </div>
+<script>if(sessionStorage.getItem('introShown')){var _p=document.getElementById('preloader');if(_p)_p.classList.add('hidden');}</script>
 
 <!-- ═══════ HEADER ═══════ -->
 <header id="header" role="banner">
@@ -84,7 +85,7 @@
       <span class="logo-text">BOMAYE</span>
     </a>
 
-    <button class="back-btn" type="button" onclick="navBack()" aria-label="Zurück">
+    <button class="back-btn" type="button" onclick="history.back()" aria-label="Zurück">
       <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
     </button>
 
@@ -788,7 +789,7 @@
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Unsere Preise werden als Wochenpreise angegeben. Youth Boxing startet ab 11,90€/Woche, Erwachsene Kurse ab 15,90€/Woche — jeweils bei 12 Monaten Laufzeit. Hinzu kommt eine einmalige Aufnahmegebühr von 100€. Das Probetraining ist immer kostenlos.</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90€/Woche · Jugend Boxing ab 15,90€/Woche · Erwachsene Kurse ab 18,90€/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
