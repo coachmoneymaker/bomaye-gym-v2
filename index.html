@@ -659,16 +659,16 @@
 
       <!-- Age group tabs -->
       <div class="membership-tabs reveal" role="tablist" aria-label="Altersgruppe wählen">
-        <button class="mtab active" data-group="kids" role="tab" type="button" onclick="selectMembershipTab(this)">
+        <button class="mtab" data-group="kids" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
           <span class="mtab-label">Kids</span>
           <span class="mtab-age">6–9 Jahre</span>
         </button>
-        <button class="mtab" data-group="youth" role="tab" type="button" onclick="selectMembershipTab(this)">
-          <span class="mtab-label">Youth</span>
+        <button class="mtab" data-group="youth" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">Jugend</span>
           <span class="mtab-age">10–17 Jahre</span>
         </button>
-        <button class="mtab" data-group="adult" role="tab" type="button" onclick="selectMembershipTab(this)">
-          <span class="mtab-label">Unlimited</span>
+        <button class="mtab active" data-group="adult" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">Erwachsene</span>
           <span class="mtab-age">18+ Jahre</span>
         </button>
       </div>
@@ -676,16 +676,17 @@
       <!-- Trust badges — conversion boosters -->
       <div class="membership-trust reveal">
         <div class="trust-badge"><i class="fa-solid fa-shield-check"></i><span>Lifetime Preisgarantie</span></div>
-        <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Trainiere erst ab Opening</span></div>
-        <div class="trust-badge"><i class="fa-solid fa-tag"></i><span>100€ Aufnahmegebühr einmalig</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Zahle erst ab Opening</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-lock"></i><span>Sichere Buchung via Bsport</span></div>
         <div class="trust-badge"><i class="fa-solid fa-fire"></i><span>Limitiert auf 300 Mitglieder</span></div>
       </div>
 
       <!-- Primary CTA -->
       <div class="membership-cta-row reveal">
-        <button class="btn btn--gold btn--hero-primary membership-main-cta" onclick="scrollToWidget()" type="button">
+        <a id="plan-checkout-btn" class="btn btn--gold btn--hero-primary membership-main-cta" href="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" target="_blank" rel="noopener">
           <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-        </button>
+        </a>
+        <p class="plan-checkout-hint">Plan oben wählen · Direkt zur sicheren Bsport-Anmeldung</p>
       </div>
 
       <!-- Bsport subscription widget -->
@@ -693,7 +694,7 @@
         <div class="membership-widget-inner">
           <div class="widget-header-note">
             <i class="fa-solid fa-lock"></i>
-            <span>Sichere Buchung via Bsport · Kein Abo · Jederzeit kündbar</span>
+            <span>Sichere Buchung via Bsport · Zahle erst ab Opening · Lifetime Preisgarantie</span>
           </div>
           <div id="bsport-widget-78464"></div>
           <noscript>
@@ -1026,7 +1027,7 @@
         <span class="target-tag">Berufstätige</span>
       </div>
       <div class="detail-ctas">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">KOSTENLOSES PROBETRAINING</button>
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">EARLY BIRD PLATZ SICHERN</button>
         <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
       </div>
     </div></div>
@@ -1327,7 +1328,7 @@
 
       <div style="text-align:center; margin-top:3rem; display:flex; flex-wrap:wrap; gap:1.25rem; justify-content:center; align-items:center;">
         <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">
-          <i class="fa-solid fa-fist-raised"></i> KOSTENLOSES PROBETRAINING
+          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
         </button>
       </div>
 

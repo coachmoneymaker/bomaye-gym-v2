@@ -266,14 +266,16 @@ function navFromMehrPreise() {
 }
 
 /* ── Membership tab selector ──────────────────────────────────
-   Tabs (Kids / Youth / Unlimited) visually indicate the selected
-   age group and smooth-scroll to the Bsport subscription widget.
+   Tabs (Kids / Jugend / Erwachsene) visually indicate the selected
+   age group and update the direct Bsport checkout button URL.
 ──────────────────────────────────────────────────────────── */
 function selectMembershipTab(btn) {
   document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  // Scroll to widget after a short delay for visual feedback
-  setTimeout(scrollToWidget, 150);
+  // Update the direct checkout button URL for the selected plan
+  const checkoutUrl = btn.dataset.checkout;
+  const checkoutBtn = document.getElementById('plan-checkout-btn');
+  if (checkoutBtn && checkoutUrl) checkoutBtn.href = checkoutUrl;
 }
 
 /* ── Early Bird FOMO (async, non-blocking) ─────────────────── */

@@ -5676,6 +5676,15 @@ section { padding: var(--sv) 0; }
   transform: translateY(-2px);
 }
 
+.plan-checkout-hint {
+  margin-top: 0.75rem;
+  font-family: var(--font-head);
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+}
+
 /* ── Bsport widget container ── */
 .membership-widget-wrap {
   max-width: 640px;
