@@ -97,21 +97,25 @@ function initImageFallbacks() {
 function initPreloader() {
   const pre  = document.getElementById('preloader');
   const line = document.getElementById('loader-line');
-  if (!pre) return;
+  // Already hidden by inline script on repeat visits
+  if (!pre || pre.style.display === 'none') return;
 
-  // Show intro only once per browser session
-  if (sessionStorage.getItem('introShown')) {
-    pre.classList.add('hidden');
-    return;
+  // Trigger line animation on next paint (GPU-accelerated scaleX)
+  if (line) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { line.style.transform = 'scaleX(1)'; });
+    });
   }
 
-  if (line) setTimeout(() => { line.style.width = '220px'; }, 50);
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      pre.classList.add('hidden');
-      sessionStorage.setItem('introShown', 'true');
-    }, 400);
-  });
+  // Fixed 1300ms timer — independent of page load
+  setTimeout(() => {
+    pre.classList.add('loader-exit');
+    sessionStorage.setItem('introShown', 'true');
+    // Remove from layout after CSS transition completes
+    pre.addEventListener('transitionend', () => {
+      pre.style.display = 'none';
+    }, { once: true });
+  }, 1300);
 }
 
 /* ── Header scroll + active nav ────────────────────────────── */

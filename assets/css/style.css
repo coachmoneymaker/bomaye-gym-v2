@@ -69,11 +69,13 @@ ul { list-style: none; }
   position: fixed; inset: 0; z-index: 9998;
   background: var(--ink);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
-  transition: opacity 0.6s var(--ease-expo), visibility 0.6s;
+  will-change: opacity, transform;
+  transform: translateY(0) translateZ(0);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
-#preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+#preloader.loader-exit { opacity: 0; transform: translateY(-10px) translateZ(0); pointer-events: none; }
 .loader-logo { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 5rem); letter-spacing: 0.15em; color: var(--gold); }
-.loader-line  { width: 0; height: 1px; background: var(--gold); transition: width 0.8s var(--ease-expo); }
+.loader-line  { width: 220px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left center; transition: transform 0.8s var(--ease-expo); will-change: transform; }
 .loader-sub   { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
 
 /* ── Layout ────────────────────────────────────────────────── */
