@@ -5,17 +5,17 @@
 
 /* ── Variables ─────────────────────────────────────────────── */
 :root {
-  --ink:        #141414;
-  --ink2:       #1a1a1a;
-  --smoke:      #212121;
-  --smoke2:     #282828;
+  --ink:        #0A0A0A;
+  --ink2:       #141414;
+  --smoke:      #1a1a1a;
+  --smoke2:     #212121;
   --white:      #ffffff;
   --off-white:  #f0ede8;
-  --gold:       #c5a059;
-  --gold-dark:  #a07c3a;
+  --gold:       #C6A45A;
+  --gold-dark:  #A67C2E;
   --gold-light: #d4b472;
-  --muted:      rgba(255,255,255,0.58);
-  --border:     rgba(197,160,89,0.22);
+  --muted:      rgba(255,255,255,0.65);
+  --border:     rgba(198,164,90,0.25);
 
   --font-display: 'Bebas Neue', 'Oswald', sans-serif;
   --font-head:    'Oswald', sans-serif;
@@ -93,17 +93,17 @@ section[id],
 .sec--ink2  { background: var(--smoke2); }
 .sec--light { background: #f9f7f4; }
 .sec--light-2 { background: #f4f1ed; }
-section { padding: clamp(44px, 5.5vw, 80px) 0; }
+section { padding: clamp(80px, 8vw, 120px) 0; }
 .sec-header { text-align: center; margin-bottom: clamp(24px, 4vw, 56px); }
 .sec-header > p { max-width: 640px; margin-left: auto; margin-right: auto; }
 
 /* ── Typography ────────────────────────────────────────────── */
 h1, h2, h3, h4 { font-family: var(--font-display); text-transform: uppercase; line-height: 1.05; letter-spacing: 0.02em; }
-h1 { font-size: clamp(2.4rem, 6.5vw, 5rem); }
-h2 { font-size: clamp(2rem, 4.5vw, 3.5rem); }
-h3 { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
+h1 { font-size: clamp(3rem, 8vw, 6.5rem); }
+h2 { font-size: clamp(2.5rem, 5.5vw, 4.5rem); }
+h3 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 h4 { font-size: 0.8rem; letter-spacing: 3px; }
-p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
+p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 
 .gold { color: var(--gold); }
 .shimmer {
@@ -129,25 +129,26 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
-  padding: 0.85rem 2rem; border-radius: 999px; border: 1px solid transparent;
+  padding: 0.9rem 2.2rem; border-radius: 12px; border: 1px solid transparent;
   transition: all 0.28s var(--ease-out); white-space: nowrap; text-decoration: none;
 }
 .btn--gold {
-  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 52%, var(--gold) 100%);
-  color: var(--ink); border-color: transparent;
-  box-shadow: 0 0 18px rgba(197,160,89,0.28), 0 2px 10px rgba(0,0,0,0.35);
+  background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+  color: #0A0A0A; border-color: transparent; font-weight: 700;
+  box-shadow: 0 0 20px rgba(198,164,90,0.30), 0 4px 14px rgba(0,0,0,0.40);
 }
 .btn--gold:hover {
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 52%, var(--gold-dark) 100%);
+  background: linear-gradient(135deg, #d4b472 0%, #C6A45A 52%, #A67C2E 100%);
   border-color: transparent;
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 0 36px rgba(197,160,89,0.60), 0 8px 28px rgba(197,160,89,0.30);
+  filter: brightness(1.08);
+  box-shadow: 0 0 40px rgba(198,164,90,0.65), 0 10px 32px rgba(198,164,90,0.32);
 }
-.btn--outline-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.35); }
-.btn--outline-light:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.85); color: var(--white); }
-.btn--outline-dark  { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.25); }
-.btn--outline-dark:hover  { background: rgba(197,160,89,0.08); border-color: var(--gold); color: var(--gold); }
-.btn--sm   { font-size: 0.8rem; padding: 0.6rem 1.3rem; letter-spacing: 2px; }
+.btn--outline-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.4); }
+.btn--outline-light:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.9); color: var(--white); transform: translateY(-1px); }
+.btn--outline-dark  { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.28); }
+.btn--outline-dark:hover  { background: rgba(198,164,90,0.1); border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+.btn--sm   { font-size: 0.8rem; padding: 0.65rem 1.4rem; letter-spacing: 2px; border-radius: 10px; }
 .btn--full { width: 100%; }
 
 /* ── Header ────────────────────────────────────────────────── */
@@ -291,7 +292,7 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
   box-shadow: 0 0 32px rgba(197,160,89,0.22), inset 0 0 16px rgba(197,160,89,0.07);
 }
 .hero-h1 {
-  font-size: clamp(3rem, 7.5vw, 6rem);
+  font-size: clamp(3.75rem, 9.5vw, 7.5rem);
   line-height: 0.95; color: var(--white); margin-bottom: 2.5rem;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
   transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
@@ -1328,13 +1329,14 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem;
 }
 .prog-card {
-  background: var(--smoke); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: var(--radius-lg); padding: 1.75rem;
-  display: flex; flex-direction: column; gap: 0.6rem;
-  transition: border-color 0.3s, transform 0.3s;
+  background: var(--smoke); border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius-lg); padding: 2.25rem 2rem;
+  display: flex; flex-direction: column; gap: 0.7rem;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   position: relative; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
 }
-.prog-card:hover { border-color: var(--border); transform: translateY(-3px); }
+.prog-card:hover { border-color: var(--border); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
 .prog-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, rgba(197,160,89,0.4), transparent);
@@ -1718,7 +1720,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   :root { --nav-h: 84px; }
-  section { padding: clamp(40px, 5vw, 80px) 0; }
+  section { padding: clamp(60px, 6vw, 96px) 0; }
 
   .nav-links { display: none; }
   .burger    { display: flex; }
@@ -1764,7 +1766,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
   :root { --nav-h: 150px; }
-  section { padding: clamp(32px, 4vw, 56px) 0; }
+  section { padding: clamp(48px, 5vw, 72px) 0; }
   .container { padding: 0 1.25rem; }
   .logo-img { height: 130px !important; width: auto; }
 
@@ -2068,8 +2070,9 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 .membership-card {
   max-width: 560px; margin: 0 auto;
-  background: var(--smoke); border: 1px solid rgba(197,160,89,0.2);
-  border-radius: var(--radius-lg); padding: 2.25rem 2.5rem;
+  background: var(--smoke); border: 1px solid rgba(198,164,90,0.25);
+  border-radius: var(--radius-lg); padding: 2.75rem 2.75rem;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(198,164,90,0.08);
 }
 .membership-duration-tabs {
   display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 2rem;
@@ -2089,7 +2092,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 .membership-price-main {
   display: flex; align-items: baseline; gap: 0.4rem; justify-content: center; margin-bottom: 0.75rem;
 }
-.mp-amount { font-family: var(--font-display); font-size: 3.5rem; color: var(--gold); line-height: 1; }
+.mp-amount { font-family: var(--font-display); font-size: 4.5rem; color: var(--gold); line-height: 1; }
 .mp-unit   { font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 1.5px; color: var(--muted); }
 .mp-savings {
   display: inline-flex; align-items: center; gap: 0.4rem;
@@ -2870,37 +2873,37 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* intro — first content section after hero */
 #intro {
-  background: rgba(8,6,4,0.52) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+/* services — softer charcoal glass */
+#services {
+  background: rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid rgba(255,255,255,0.06);
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
 }
 
-/* services — softer charcoal glass, less harsh than pure black */
-#services {
-  background: rgba(22,17,12,0.55) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-}
-
 /* booking — CTA block above footer */
 #booking {
-  background: rgba(8,6,4,0.50) !important;
+  background: rgba(0,0,0,0.60) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(197,160,89,0.10);
+  border-top: 1px solid rgba(198,164,90,0.12);
 }
 
-/* faq — lighter smoke section gets glass so it lifts off the page */
+/* faq — premium glass */
 #faq {
-  background: rgba(12,10,6,0.50) !important;
+  background: rgba(0,0,0,0.60) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(197,160,89,0.08);
-  border-bottom: 1px solid rgba(197,160,89,0.08);
+  border-top: 1px solid rgba(198,164,90,0.10);
+  border-bottom: 1px solid rgba(198,164,90,0.10);
 }
 
 /* Glass cards within solid sections for layered depth */
@@ -5787,8 +5790,38 @@ section { padding: var(--sv) 0; }
 }
 
 .plan-card--featured {
-  border-color: rgba(197,160,89,0.4);
-  background: linear-gradient(145deg, #181508 0%, #1c1c1c 100%);
+  border-color: rgba(198,164,90,0.65);
+  border-width: 2px;
+  background: linear-gradient(145deg, #181508 0%, #1e1a10 60%, #1c1c1c 100%);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(198,164,90,0.12), 0 0 40px rgba(198,164,90,0.08);
+  transform: scale(1.02);
+}
+.plan-card--featured:hover {
+  transform: scale(1.02) translateY(-5px);
+}
+
+/* BELIEBTESTE WAHL ribbon — CSS-injected above the featured card */
+.plan-panel#panel-unlimited .plan-card--featured::before {
+  content: '★ BELIEBTESTE WAHL';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #C6A45A 0%, #A67C2E 100%);
+  color: #080808;
+  font-family: var(--font-head);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  padding: 5px 20px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(198,164,90,0.5);
+  z-index: 2;
+}
+/* Shift the existing early-bird badge down to avoid overlap */
+.plan-panel#panel-unlimited .plan-card--featured .plan-card-badge {
+  top: 14px;
 }
 
 /* Early bird badge */
@@ -5872,7 +5905,7 @@ section { padding: var(--sv) 0; }
 
 .price-value {
   font-family: var(--font-head);
-  font-size: 3.2rem;
+  font-size: 4rem;
   color: #C6A45A;
   letter-spacing: 1px;
   line-height: 1;
@@ -5932,22 +5965,25 @@ section { padding: var(--sv) 0; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #C6A45A 0%, #A67C2E 100%);
+  background: linear-gradient(135deg, #C6A45A 0%, #d4b472 50%, #A67C2E 100%);
   color: #080808;
   font-family: var(--font-head);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 2px;
-  padding: 0.9rem 2.2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 18px rgba(197,160,89,0.3);
-  transition: box-shadow 0.2s ease;
+  letter-spacing: 2.5px;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(198,164,90,0.4);
+  transition: box-shadow 0.25s ease, transform 0.2s ease, filter 0.2s ease;
   pointer-events: none;
   white-space: nowrap;
+  width: 100%;
+  justify-content: center;
 }
 
 .plan-card:hover .plan-card-cta-btn {
-  box-shadow: 0 6px 28px rgba(197,160,89,0.55);
+  box-shadow: 0 8px 36px rgba(198,164,90,0.65);
+  filter: brightness(1.08);
 }
 
 /* Security line */
@@ -6132,11 +6168,11 @@ section { padding: var(--sv) 0; }
 
 /* Philosophy / Philosophie */
 #dna {
-  background: rgba(16, 13, 10, 0.93) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(197, 160, 89, 0.09);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.09);
+  background: rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(198, 164, 90, 0.10);
+  border-bottom: 1px solid rgba(198, 164, 90, 0.10);
   position: relative;
 }
 #dna::before {
@@ -6149,22 +6185,22 @@ section { padding: var(--sv) 0; }
 }
 #dna > * { position: relative; z-index: 1; }
 
-/* Differentiator block — Echtes Boxtraining, Community First, Coaching von Champions */
+/* Differentiator block */
 .diff-block {
-  background: rgba(12, 10, 8, 0.95) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(197, 160, 89, 0.07) !important;
-  border-bottom: 1px solid rgba(197, 160, 89, 0.07) !important;
+  background: rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(198, 164, 90, 0.10) !important;
+  border-bottom: 1px solid rgba(198, 164, 90, 0.10) !important;
 }
 
 /* Disciplines / Trainiere wie ein Kämpfer / Kurse */
 #disciplines {
-  background: rgba(14, 11, 9, 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(197, 160, 89, 0.08);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(198, 164, 90, 0.10);
+  border-bottom: 1px solid rgba(198, 164, 90, 0.10);
   position: relative;
 }
 #disciplines::before {
@@ -6177,13 +6213,13 @@ section { padding: var(--sv) 0; }
 }
 #disciplines > * { position: relative; z-index: 1; }
 
-/* Early Bird — subtle premium refinement */
+/* Early Bird — premium glass */
 #early-bird {
-  background: rgba(18, 14, 9, 0.94);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(197, 160, 89, 0.10);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.10);
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(198, 164, 90, 0.12);
+  border-bottom: 1px solid rgba(198, 164, 90, 0.12);
   position: relative;
 }
 #early-bird::before {
@@ -6227,3 +6263,173 @@ section { padding: var(--sv) 0; }
 .disc-panel--clickable:hover .disc-panel__content::after {
   color: var(--gold-light);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM REFINEMENT — Bomaye × Apple/Nike Level
+   Visual hierarchy, spacing, contrast, mobile readability
+══════════════════════════════════════════════════════════════ */
+
+/* ── Reduce visual weight of secondary/caption text ──────── */
+.tag, .hero-trust-item, .trust-strip-item, .diff-item span,
+.coach-title, .plan-card-security, .plan-card-duration,
+.plan-card-age, .plan-checkout-hint, .widget-header-note,
+.loader-sub, .scroll-hint, .footer-col h4, .brand-line {
+  opacity: 0.75;
+}
+
+/* ── Stronger section header sub-text contrast ───────────── */
+.sec-header > p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.95rem;
+  letter-spacing: 1.5px;
+}
+
+/* ── Stat numbers — bigger dominant prices ───────────────── */
+.stat-num { font-size: 3.5rem; }
+.eb-card-number { font-size: 6rem; }
+.prog-price-amount { font-size: 2.75rem; }
+
+/* ── Hero: tighter spacing, more breathing room ──────────── */
+.hero-content {
+  max-width: 980px;
+}
+.hero-ctas { gap: 1.25rem; margin-bottom: 3.5rem; }
+.hero-ctas .btn--gold { padding: 1.05rem 2.75rem; font-size: 1.05rem; }
+
+/* ── Section header: more top margin before h2 ───────────── */
+.sec-header { margin-bottom: clamp(40px, 5vw, 72px); }
+
+/* ── Plan card: more padding, stronger price dominance ───── */
+.plan-card {
+  padding: 2.75rem 2.25rem 2rem;
+}
+.plan-card-name { font-size: 2.6rem; }
+
+/* ── Membership card on light bg — increased breathing room */
+#pricing .membership-card { padding: 3rem 3rem; }
+#pricing .mp-amount { font-size: 5rem; }
+
+/* ── Addon cards: larger padding ────────────────────────── */
+.addon-card { padding: 2rem 1.75rem; }
+.addon-price { font-size: 1.7rem; }
+
+/* ── Footer: more top padding ───────────────────────────── */
+footer { padding: 5.5rem 0 2.5rem; }
+
+/* ── Quote section: bigger text ─────────────────────────── */
+.quote-text { font-size: clamp(2rem, 4vw, 3.2rem); }
+
+/* ── Community section: more impressive h2 ───────────────── */
+#community h2 { font-size: clamp(3rem, 7vw, 6rem); }
+
+/* ── Trust strip: slightly more visible ─────────────────── */
+.trust-strip {
+  background: rgba(198,164,90,0.07);
+  border-top: 1px solid rgba(198,164,90,0.15);
+  border-bottom: 1px solid rgba(198,164,90,0.15);
+}
+
+/* ── Booking section header: stronger H2 ────────────────── */
+.booking-head h2 { margin-bottom: 1rem; }
+
+/* ── FAQ questions: slightly bigger for readability ─────── */
+.faq-q { font-size: 1rem; }
+
+/* ── Location section: brighter text on white ───────────── */
+.location-detail-text span { color: rgba(8,8,8,0.72); }
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE PREMIUM — ≤768px
+   Larger fonts, full-width CTAs, max readability
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Section headers slightly larger on mobile */
+  h2 { font-size: clamp(2.2rem, 6.5vw, 3.5rem); }
+  h3 { font-size: clamp(1.4rem, 4.5vw, 1.9rem); }
+
+  /* Hero bigger on mobile */
+  .hero-h1 { font-size: clamp(3.2rem, 11vw, 5rem); }
+
+  /* Full-width primary CTAs on mobile */
+  .hero-ctas .btn { width: 100%; text-align: center; justify-content: center; }
+  .hero-ctas { flex-direction: column; align-items: stretch; }
+  .steps-cta .btn, .booking-head + * .btn { width: 100%; }
+
+  /* Plan card: full breathing room */
+  .plan-card { padding: 2.25rem 1.75rem 1.75rem; }
+  .plan-card-name { font-size: 2.2rem; }
+  .price-value { font-size: 3.5rem; }
+
+  /* Bigger body text for readability */
+  p { font-size: 1.05rem; }
+  .faq-q { font-size: 1rem; padding: 1.5rem 0; }
+
+  /* Section header subtext readable */
+  .sec-header > p { font-size: 0.9rem; }
+
+  /* Membership card: full width comfortable padding */
+  #pricing .membership-card { padding: 2rem 1.5rem; }
+  #pricing .mp-amount { font-size: 4rem; }
+
+  /* Diff items: more spacing */
+  .diff-item { padding: 0.9rem 0; }
+
+  /* Full width buttons in key conversion spots */
+  .eb-card .btn { width: 100%; }
+  .intro-text .btn { width: 100%; max-width: none; }
+
+  /* Plan card cta full width already set — ensure scale doesn't cause overflow */
+  .plan-card--featured { transform: scale(1.0); }
+  .plan-card--featured:hover { transform: translateY(-4px); }
+
+  /* Slightly reduce mobile section padding for featured plan panel extra spacing */
+  .plan-panels { padding: 0 0.25rem; }
+}
+
+@media (max-width: 480px) {
+  /* Extra small: max legibility */
+  h2 { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-h1 { font-size: clamp(2.8rem, 12vw, 4.2rem); }
+  .stat-num { font-size: 2.5rem; }
+  .eb-card-number { font-size: 4.5rem; }
+  p { font-size: 1rem; }
+
+  /* Buttons: full width everywhere on small screens */
+  .detail-ctas .btn,
+  .location-btns .btn,
+  .hero-ctas .btn { width: 100%; }
+
+  /* Plan card small screen */
+  .plan-card { padding: 2rem 1.25rem 1.5rem; }
+  .price-value { font-size: 3rem; }
+
+  /* Membership card */
+  #pricing .mp-amount { font-size: 3.5rem; }
+}
+
+/* ── Android mobile: disable backdrop for glass sections ─── */
+@media (max-width: 768px) {
+  #intro, #services, #booking, #faq, #dna, #disciplines, #early-bird {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Use solid dark fallback instead */
+  #intro      { background: #0A0A0A !important; }
+  #services   { background: #111111 !important; }
+  #booking    { background: #0A0A0A !important; }
+  #faq        { background: #111111 !important; }
+  #dna        { background: #0D0D0D !important; }
+  #disciplines{ background: #0A0A0A !important; }
+  #early-bird { background: #0D0A06 !important; }
+  .diff-block { background: #0A0A0A !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+}
+
+
+/* ── Unlimited panel: top clearance for BELIEBTESTE WAHL badge ── */
+.plan-panel#panel-unlimited {
+  padding-top: 1.5rem;
+}
+
+/* ── Plan card CTA: full width already (width:100% set above) ── */
+.plan-card-cta { width: 100%; }
+
