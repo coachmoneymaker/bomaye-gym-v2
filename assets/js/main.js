@@ -36,16 +36,12 @@ document.addEventListener('DOMContentLoaded', function () {
   initHeader();
   initLogoImage();
   initImageFallbacks(); // Android/WebP safety net — runs immediately
-  initPricingSection();
   initSliderDots();
   initTeamSliderDots();
   runReveal();
   initEarlyBirdFOMO(); // async — does not block rendering
   initAutoCarousels();
   initQuoteMobileReveal();
-  // Bsport schedule widget is mounted by inline script at bottom of page.
-  // Back-button for Bsport detail view initialised after widget has had time to render.
-  setTimeout(initScheduleBackBtn, 2500);
 });
 
 /* ── Android / WebP image fallback ──────────────────────────
@@ -140,10 +136,10 @@ function initHeader() {
 }
 
 function updateActiveNav() {
-  const sections = ['disciplines', 'schedule', 'team', 'faq'];
+  const sections = ['disciplines', 'pricing', 'faq'];
   const navLinks = document.querySelectorAll('.nav-links .nav-link');
-  // nav order: HOME(0), KURSE(1), STUNDENPLAN(2), COACHES(3), FAQ(4)
-  const navMap   = { disciplines: 1, schedule: 2, team: 3, faq: 4 };
+  // nav order: HOME(0), KURSE(1), COACHES(2), ÜBER UNS(3), FAQ(4)
+  const navMap   = { disciplines: 1, pricing: 4, faq: 4 };
   let current = '';
   sections.forEach(id => {
     const el = document.getElementById(id);
@@ -269,151 +265,15 @@ function navFromMehrPreise() {
   nav('home', null, window._returnScrollY || 0);
 }
 
-/* ── Stundenplan ─────────────────────────────────────────────
-   The Bsport calendar widget is mounted by the inline script
-   block at the bottom of index.html (bsport-widget-172485).
-   No JS mount logic needed here.
+/* ── Membership tab selector ──────────────────────────────────
+   Tabs (Kids / Youth / Unlimited) visually indicate the selected
+   age group and smooth-scroll to the Bsport subscription widget.
 ──────────────────────────────────────────────────────────── */
-
-/* ── Membership checkout URLs ────────────────────────────────── */
-const MEMBERSHIP_CHECKOUT_URLS = {
-  kids:       'https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true',
-  jugend:     'https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true',
-  erwachsene: 'https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true',
-};
-
-function getMembershipCheckoutUrl(ageGroup) {
-  return MEMBERSHIP_CHECKOUT_URLS[ageGroup] || MEMBERSHIP_CHECKOUT_URLS.erwachsene;
-}
-
-/* ── Pricing section — age + duration selectors ─────────────── */
-function initPricingSection() {
-  if (typeof BOMAYE === 'undefined') return;
-  renderPricingDisplay('erwachsene', '12M');
-  document.querySelectorAll('.atab').forEach(tab => {
-    tab.addEventListener('click', function () {
-      document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      renderPricingDisplay(this.dataset.age, '12M');
-    });
-  });
-}
-
-function getPrimaryProgram(ageGroup) {
-  // Prefer a program exclusively for this age group
-  return BOMAYE.pricing.programs.find(p =>
-    p.ageGroups && p.ageGroups.length === 1 && p.ageGroups[0] === ageGroup
-  ) || BOMAYE.pricing.programs.find(p =>
-    p.ageGroups && p.ageGroups.includes(ageGroup)
-  );
-}
-
-function renderPricingDisplay(ageGroup, duration) {
-  if (typeof BOMAYE === 'undefined') return;
-  const display = document.getElementById('pricing-display');
-  if (!display) return;
-
-  const prog = getPrimaryProgram(ageGroup);
-  if (!prog) return;
-
-  const price        = prog.earlyBirdPrices ? prog.earlyBirdPrices[duration] : prog.prices[duration];
-  const regularPrice = prog.regularPrices   ? prog.regularPrices[duration]   : null;
-  const basePrice    = prog.earlyBirdPrices ? prog.earlyBirdPrices['1M'] : prog.prices['1M'];
-  const weeksMap     = { '1M': 0, '3M': 13, '6M': 26, '12M': 52 };
-  const savings      = weeksMap[duration] > 0 ? Math.round((basePrice - price) * weeksMap[duration]) : 0;
-
-  const durs = [
-    { key: '1M',  label: '1 Monat' },
-    { key: '3M',  label: '3 Monate' },
-    { key: '6M',  label: '6 Monate' },
-    { key: '12M', label: '12 Monate ⭐' },
-  ];
-  const tabsHtml = durs.map(d =>
-    `<button class="dtab-inner${d.key === duration ? ' active' : ''}" data-dur="${d.key}" type="button">${d.label}</button>`
-  ).join('');
-
-  const benefits = [
-    'Alle Kurse inklusive',
-    'Community Events &amp; Sparring',
-    'Professionelles Coaching',
-    'Fokus auf Technik, Disziplin und echte Boxkultur',
-    'Flexible Trainingsmöglichkeiten für jedes Level',
-  ];
-  const benefitsHtml = benefits.map(b =>
-    `<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>${b}</span></li>`
-  ).join('');
-
-  const isFeatured = duration === '12M';
-  let html = `
-    <div class="membership-card reveal${isFeatured ? ' membership-card--featured' : ''}">
-      ${isFeatured ? '<div class="membership-featured-badge">BELIEBTESTE WAHL</div>' : ''}
-      <div class="membership-duration-tabs">${tabsHtml}</div>
-      <div class="membership-price-display">
-        ${regularPrice ? `<div class="mp-regular-price-row"><span class="mp-regular-price">${regularPrice.toFixed(2).replace('.', ',')} €</span><span class="mp-regular-unit">/ Woche</span></div>` : ''}
-        <div class="membership-price-main">
-          <span class="mp-amount">${price.toFixed(2).replace('.', ',')} €</span>
-          <span class="mp-unit">/ Woche</span>
-          <span class="mp-early-bird-label">Early Bird Preis</span>
-        </div>
-        ${duration === '12M' ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€ pro Jahr vs. 1-Monatsplan</div>` : savings > 0 ? `<div class="mp-savings"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Du sparst ${savings}€</div>` : '<div class="mp-savings-empty"></div>'}
-      </div>
-      <ul class="membership-benefits" aria-label="Leistungen">${benefitsHtml}</ul>
-      <div class="family-benefit-trigger">
-        <span class="fbt-label">Family Benefit</span>
-        <p class="fbt-desc">Ab 3 Familienmitgliedern trainiert jede weitere Person kostenfrei.</p>
-        <button class="fbt-cta" type="button" onclick="openFamilyModal()">Mehr erfahren →</button>
-      </div>
-      <div class="membership-enrollment" onclick="toggleEnrollmentInfo(this)" style="cursor:pointer;color:#000000;font-weight:600;" title="Klicken für Details">
-        <i class="fa-solid fa-circle-plus enrollment-toggle-icon" aria-hidden="true"></i>
-        <span>+ 100€ Aufnahmegebühr einmalig</span>
-      </div>
-      <div class="enrollment-info-panel" style="display:none;background:rgba(197,160,89,0.07);border:1px solid rgba(197,160,89,0.2);border-radius:6px;padding:1rem 1.1rem;margin-top:0.5rem;font-size:0.82rem;color:#000000;line-height:1.6;">
-        <p style="margin:0 0 0.65rem;font-family:var(--font-head);font-size:0.6rem;letter-spacing:3px;color:var(--gold);">IM STARTER KIT ENTHALTEN</p>
-        <ul style="margin:0;padding:0 0 0 1rem;list-style:disc;">
-          <li>Bomaye Boxhandschuhe</li>
-          <li>Bandagen (Hand Wraps)</li>
-          <li>Springseil</li>
-          <li>Bomaye T-Shirt</li>
-        </ul>
-        <p style="margin:0.75rem 0 0;font-size:0.78rem;color:#000000;">Die Aufnahmegebühr wird einmalig bei Vertragsstart fällig und beinhaltet dein komplettes Starter Kit im Bomaye-Design.</p>
-      </div>
-      <button onclick="window.open('${getMembershipCheckoutUrl(ageGroup)}','_blank')" class="btn btn--gold btn--full" type="button">
-        <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
-      </button>
-    </div>`;
-
-  if (ageGroup === 'erwachsene') {
-    const pt   = BOMAYE.pricing.personal;
-    const corp = BOMAYE.pricing.corporate;
-    html += `
-      <div class="membership-addon-grid">
-        <div class="addon-card">
-          <div class="addon-icon"><i class="fa-solid ${pt.icon}" aria-hidden="true"></i></div>
-          <div class="addon-name">${pt.name}</div>
-          <div class="addon-price">${pt.priceLabel} <span>${pt.priceUnit}</span></div>
-          <p>${pt.note}</p>
-          <button onclick="openBooking('Personal Training')" class="btn btn--gold btn--sm btn--full" type="button">TERMIN BUCHEN</button>
-        </div>
-        <div class="addon-card">
-          <div class="addon-icon"><i class="fa-solid ${corp.icon}" aria-hidden="true"></i></div>
-          <div class="addon-name">${corp.name}</div>
-          <div class="addon-price">${corp.priceLabel}</div>
-          <p>${corp.note}</p>
-          <button onclick="openCorporateModal()" class="btn btn--outline-light btn--sm btn--full" type="button">ANFRAGE SENDEN</button>
-        </div>
-      </div>`;
-  }
-
-  display.innerHTML = html;
-
-  // Bind duration tab clicks
-  display.querySelectorAll('.dtab-inner').forEach(tab => {
-    tab.addEventListener('click', function () {
-      renderPricingDisplay(ageGroup, this.dataset.dur);
-    });
-  });
-
-  runReveal();
+function selectMembershipTab(btn) {
+  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  // Scroll to widget after a short delay for visual feedback
+  setTimeout(scrollToWidget, 150);
 }
 
 /* ── Early Bird FOMO (async, non-blocking) ─────────────────── */
@@ -568,68 +428,26 @@ function loadMap() {
   if (gate) gate.classList.add('hidden');
 }
 
-/* ── Booking modal ─────────────────────────────────────────────
-   Opens the modal overlay and lazy-mounts the Bsport calendar
-   widget into it on first call. Uses MountBsportWidget (defined
-   by the inline script block at the bottom of index.html) — same
-   helper and same config as the schedule-section widget, but
-   targeting a different container (bsport-widget-464090) so both
-   instances can coexist independently.
-
-   EARLY BIRD / MITGLIED WERDEN CTAs:
-   All buttons that call openBooking() lead here. When a final
-   Bsport membership-signup URL is available, replace the
-   MountBsportWidget call below with a direct link/redirect —
-   no other page structure changes needed.
+/* ── Scroll to membership widget ──────────────────────────────
+   Smooth-scrolls to the Bsport subscription widget on the page.
+   Used by any CTA that previously called openBooking().
 ──────────────────────────────────────────────────────────── */
-let _bsportModalMounted = false;
-
-function openBooking() {
-  const modal = document.getElementById('booking-modal');
-  if (!modal || modal.classList.contains('open')) return;
-  modal.classList.add('open');
-  lockBodyScroll();
-
-  if (!_bsportModalMounted) {
-    _bsportModalMounted = true;
-    // MountBsportWidget is defined by the inline Bsport script block
-    if (typeof MountBsportWidget === 'function') {
-      MountBsportWidget({
-        parentElement: 'bsport-widget-464090',
-        companyId: 5473,
-        franchiseId: null,
-        dialogMode: 1,
-        widgetType: 'calendar',
-        showFab: false,
-        fullScreenPopup: false,
-        config: { calendar: {} },
-      });
-    }
-  }
-}
-
-function closeBooking() {
-  const modal = document.getElementById('booking-modal');
-  if (!modal || !modal.classList.contains('open')) return; /* guard: only unlock if we locked */
-  modal.classList.remove('open');
-  unlockBodyScroll();
+function scrollToWidget() {
+  nav('home', 'membership-widget-section');
 }
 
 /* Click backdrop (modal element itself, not its children) */
 document.addEventListener('click', e => {
-  if (e.target.id === 'booking-modal')   closeBooking();
   if (e.target.id === 'family-modal')    closeFamilyModal();
   if (e.target.id === 'corporate-modal') closeCorporateModal();
 });
 
-/* ESC closes booking modal OR family modal OR corporate modal OR mobile nav, whichever is open */
+/* ESC closes family modal OR corporate modal OR mobile nav, whichever is open */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const bookingModal    = document.getElementById('booking-modal');
   const familyModal     = document.getElementById('family-modal');
   const corporateModal  = document.getElementById('corporate-modal');
   const mobileNav       = document.getElementById('mobile-nav');
-  if (bookingModal   && bookingModal.classList.contains('open'))   { closeBooking();        return; }
   if (familyModal    && familyModal.classList.contains('open'))    { closeFamilyModal();    return; }
   if (corporateModal && corporateModal.classList.contains('open')) { closeCorporateModal(); return; }
   if (mobileNav      && mobileNav.classList.contains('open'))      { toggleMenu();          return; }
@@ -1151,86 +969,6 @@ function initQuoteMobileReveal() {
   io.observe(quote);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   SCHEDULE BACK BUTTON
-   Watches the Bsport calendar widget for navigation into a
-   detail/booking view and surfaces a "← Zurück" button so
-   mobile users can always return to the calendar in one tap.
-══════════════════════════════════════════════════════════════ */
-function initScheduleBackBtn() {
-  const wrapEl   = document.getElementById('schedule-section-wrap');
-  const widgetEl = document.getElementById('bsport-widget-172485');
-  if (!wrapEl || !widgetEl) return;
-
-  /* Create the button and inject it just before the widget card */
-  const btn = document.createElement('button');
-  btn.type      = 'button';
-  btn.id        = 'schedule-back-btn';
-  btn.className = 'schedule-back-btn';
-  btn.setAttribute('aria-label', 'Zurück zum Stundenplan');
-  btn.innerHTML = '<i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>&nbsp; ZURÜCK ZUM STUNDENPLAN';
-  wrapEl.insertBefore(btn, wrapEl.firstChild);
-
-  /* Baseline element count — set once the widget has rendered */
-  let baselineCount = widgetEl.querySelectorAll('*').length;
-  let debounceId    = null;
-
-  /* Ordered list of selectors to try when clicking the widget's own back control */
-  const BACK_SELECTORS = [
-    'button[class*="back"]',   'button[class*="Back"]',
-    'button[class*="return"]', 'button[class*="Return"]',
-    'button[class*="close"]',  'button[class*="Close"]',
-    '[class*="back-btn"]',     '[class*="backBtn"]',
-    '[class*="close-btn"]',    '[class*="closeBtn"]',
-    '[aria-label*="back"]',    '[aria-label*="retour"]',
-    '[aria-label*="close"]',   '[aria-label*="fermer"]',
-    '[class*="chevron-left"]', '[class*="ChevronLeft"]',
-    '[class*="arrow-left"]',   '[class*="ArrowLeft"]',
-  ];
-
-  btn.addEventListener('click', () => {
-    let handled = false;
-    for (const sel of BACK_SELECTORS) {
-      const target = widgetEl.querySelector(sel);
-      if (target) { target.click(); handled = true; break; }
-    }
-    /* Fallback: if we couldn't find the widget's own control, hide our button
-       so the user knows the tap registered, then re-check state after a moment */
-    if (!handled) {
-      btn.classList.remove('schedule-back-btn--visible');
-    }
-  });
-
-  /* Determine whether the widget is showing a "deep" view vs the calendar root */
-  function evaluateState() {
-    /* Signal 1: recognised detail/booking view element present */
-    const detailEl = widgetEl.querySelector(
-      '[class*="detail"],[class*="Detail"],' +
-      '[class*="event-view"],[class*="EventView"],' +
-      '[class*="booking-panel"],[class*="BookingPanel"],' +
-      '[class*="session-view"],[class*="SessionView"],' +
-      '[class*="activity-detail"],[class*="ActivityDetail"],' +
-      '[role="dialog"],[aria-modal="true"]'
-    );
-    /* Signal 2: DOM significantly grew from baseline (view change) */
-    const currentCount = widgetEl.querySelectorAll('*').length;
-    const grew = baselineCount > 0 && currentCount > baselineCount * 1.6;
-    const show = !!(detailEl || grew);
-    btn.classList.toggle('schedule-back-btn--visible', show);
-    /* Update baseline if DOM shrank back (user returned to calendar via widget UI) */
-    if (!show && currentCount < baselineCount) baselineCount = currentCount;
-  }
-
-  /* MutationObserver — debounced so rapid DOM updates don't thrash */
-  const observer = new MutationObserver(() => {
-    clearTimeout(debounceId);
-    debounceId = setTimeout(evaluateState, 180);
-  });
-  observer.observe(widgetEl, { childList: true, subtree: true, attributes: true, attributeFilter: ['class','aria-hidden','style'] });
-
-  /* Update baseline once (called after the 2.5 s delay from DOMContentLoaded) */
-  baselineCount = widgetEl.querySelectorAll('*').length;
-}
 
 /* ══════════════════════════════════════════════════════════════
    FLOATING SOCIAL PROOF NOTIFICATIONS
