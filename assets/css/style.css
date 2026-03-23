@@ -5729,6 +5729,317 @@ section { padding: var(--sv) 0; }
   min-height: 320px;
 }
 
+/* ── Plan panels ── */
+.plan-panels {
+  max-width: 480px;
+  margin: 0 auto 2rem;
+}
+
+.plan-panel {
+  display: none;
+}
+
+.plan-panel.active {
+  display: block;
+  animation: planPanelIn 0.3s ease both;
+}
+
+@keyframes planPanelIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Plan card */
+.plan-card {
+  background: linear-gradient(145deg, #161616 0%, #1c1c1c 100%);
+  border: 1px solid rgba(197,160,89,0.22);
+  border-radius: 20px;
+  padding: 2.25rem 2rem 1.5rem;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.22s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(197,160,89,0.08);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(197,160,89,0.45);
+  border-color: rgba(197,160,89,0.55);
+}
+
+.plan-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+}
+
+.plan-card:focus-visible {
+  outline: 2px solid rgba(197,160,89,0.8);
+  outline-offset: 3px;
+}
+
+.plan-card--featured {
+  border-color: rgba(197,160,89,0.4);
+  background: linear-gradient(145deg, #181508 0%, #1c1c1c 100%);
+}
+
+/* Early bird badge */
+.plan-card-badge {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #C6A45A, #A67C2E);
+  color: #080808;
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  padding: 5px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(197,160,89,0.35);
+}
+
+/* Icon */
+.plan-card-icon {
+  text-align: center;
+  font-size: 2.25rem;
+  color: #C6A45A;
+  margin-bottom: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+/* Name */
+.plan-card-name {
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 2.2rem;
+  letter-spacing: 3px;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+/* Age label */
+.plan-card-age {
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 2.5px;
+  color: rgba(197,160,89,0.72);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+/* Price row */
+.plan-card-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 0.3rem;
+}
+
+.price-from {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.price-value {
+  font-family: var(--font-head);
+  font-size: 3.2rem;
+  color: #C6A45A;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.price-unit {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.55);
+}
+
+/* Duration hint */
+.plan-card-duration {
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.32);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+/* Features list */
+.plan-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 1.25rem;
+}
+
+.plan-card-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.85);
+  padding: 0.38rem 0;
+  line-height: 1.3;
+}
+
+.plan-card-features li i {
+  color: #C6A45A;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+
+/* CTA button inside card */
+.plan-card-cta {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.plan-card-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #C6A45A 0%, #A67C2E 100%);
+  color: #080808;
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 0.9rem 2.2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(197,160,89,0.3);
+  transition: box-shadow 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.plan-card:hover .plan-card-cta-btn {
+  box-shadow: 0 6px 28px rgba(197,160,89,0.55);
+}
+
+/* Security line */
+.plan-card-security {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 0.02em;
+}
+
+.plan-card-security i {
+  color: #4CAF50;
+  margin-right: 4px;
+}
+
+/* ── Booking Modal ── */
+.booking-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.booking-modal.open {
+  display: flex;
+}
+
+.booking-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.booking-modal-card {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 740px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 32px 96px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.booking-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: background 0.15s ease;
+}
+
+.booking-modal-close:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.booking-modal-header {
+  padding: 1rem 1.5rem;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.booking-modal-header-icon {
+  color: #C6A45A;
+  font-size: 0.85rem;
+}
+
+.booking-modal-title {
+  font-family: var(--font-head);
+  font-size: 0.88rem;
+  letter-spacing: 3px;
+  color: #C6A45A;
+}
+
+.booking-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.booking-modal-body iframe {
+  display: block;
+  width: 100%;
+  height: 700px;
+  min-height: 500px;
+  border: none;
+}
+
 /* ── Responsive adjustments ── */
 @media (max-width: 480px) {
   .membership-section { padding: 3.5rem 0 4rem; }
@@ -5739,31 +6050,41 @@ section { padding: var(--sv) 0; }
     padding: 5px;
   }
 
-  .mtab {
-    padding: 0.65rem 0.35rem;
-  }
-
+  .mtab { padding: 0.65rem 0.35rem; }
   .mtab-label { font-size: 0.72rem; letter-spacing: 1px; }
   .mtab-age   { font-size: 0.62rem; }
+
+  .plan-panels { max-width: 100%; }
+
+  .plan-card {
+    padding: 1.75rem 1.25rem 1.25rem;
+  }
+
+  .plan-card-name { font-size: 1.75rem; }
+  .price-value    { font-size: 2.6rem; }
 
   .membership-trust {
     grid-template-columns: 1fr;
     gap: 0.55rem;
   }
 
-  .membership-widget-inner {
-    padding: 20px 18px;
-    border-radius: 12px;
+  .booking-modal {
+    padding: 0;
+    align-items: flex-end;
   }
 
-  .membership-main-cta {
-    min-width: 0;
-    width: 100%;
+  .booking-modal-card {
+    max-height: 95vh;
+    border-radius: 18px 18px 0 0;
+    max-width: 100%;
+  }
+
+  .booking-modal-body iframe {
+    height: 78vh;
+    min-height: 420px;
   }
 }
 
 @media (max-width: 600px) {
-  .membership-trust {
-    grid-template-columns: 1fr;
-  }
+  .membership-trust { grid-template-columns: 1fr; }
 }

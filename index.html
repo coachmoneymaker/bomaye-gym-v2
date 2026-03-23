@@ -352,6 +352,23 @@
   </div>
 </div>
 
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" class="booking-modal" role="dialog" aria-modal="true" aria-label="Mitgliedschaft buchen">
+  <div class="booking-modal-overlay" onclick="closeBookingModal()"></div>
+  <div class="booking-modal-card">
+    <button class="booking-modal-close" onclick="closeBookingModal()" aria-label="Schließen" type="button">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="booking-modal-header">
+      <i class="fa-solid fa-bolt booking-modal-header-icon"></i>
+      <span class="booking-modal-title">MITGLIEDSCHAFT SICHERN</span>
+    </div>
+    <div class="booking-modal-body">
+      <iframe id="booking-iframe" src="" width="100%" height="700" style="border:none;" title="Mitgliedschaft buchen" loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════
      HOME VIEW
 ══════════════════════════════════════════════════════════ -->
@@ -659,18 +676,107 @@
 
       <!-- Age group tabs -->
       <div class="membership-tabs reveal" role="tablist" aria-label="Altersgruppe wählen">
-        <button class="mtab" data-group="kids" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
-          <span class="mtab-label">Kids</span>
-          <span class="mtab-age">6–9 Jahre</span>
+        <button class="mtab active" data-group="kids" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">KIDS</span>
+          <span class="mtab-age">6–9</span>
         </button>
-        <button class="mtab" data-group="youth" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
-          <span class="mtab-label">Jugend</span>
-          <span class="mtab-age">10–17 Jahre</span>
+        <button class="mtab" data-group="youth" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">YOUTH</span>
+          <span class="mtab-age">10–17</span>
         </button>
-        <button class="mtab active" data-group="adult" data-checkout="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" role="tab" type="button" onclick="selectMembershipTab(this)">
-          <span class="mtab-label">Erwachsene</span>
-          <span class="mtab-age">18+ Jahre</span>
+        <button class="mtab" data-group="unlimited" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">UNLIMITED</span>
+          <span class="mtab-age">18+</span>
         </button>
+      </div>
+
+      <!-- Plan panels (one per tab) -->
+      <div class="plan-panels reveal">
+
+        <!-- KIDS PANEL -->
+        <div class="plan-panel active" id="panel-kids">
+          <div class="plan-card" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-child"></i></div>
+            <div class="plan-card-name">Kids Boxing</div>
+            <div class="plan-card-age">6–9 Jahre</div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">14,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">bei 12 Monaten Laufzeit</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Professionelles Kinder-Boxing</li>
+              <li><i class="fa-solid fa-check"></i> Kleine Gruppen, max. 8 Kinder</li>
+              <li><i class="fa-solid fa-check"></i> Lifetime Early-Bird-Preis</li>
+              <li><i class="fa-solid fa-check"></i> Zahle erst ab Opening</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> JETZT ANMELDEN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
+        <!-- YOUTH PANEL -->
+        <div class="plan-panel" id="panel-youth">
+          <div class="plan-card" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-child-reaching"></i></div>
+            <div class="plan-card-name">Youth Boxing</div>
+            <div class="plan-card-age">10–17 Jahre</div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">15,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">bei 12 Monaten Laufzeit</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Jugend-Boxing &amp; Wettkampfvorbereitung</li>
+              <li><i class="fa-solid fa-check"></i> Disziplin, Respekt &amp; Teamgeist</li>
+              <li><i class="fa-solid fa-check"></i> Lifetime Early-Bird-Preis</li>
+              <li><i class="fa-solid fa-check"></i> Zahle erst ab Opening</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> JETZT ANMELDEN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
+        <!-- UNLIMITED PANEL -->
+        <div class="plan-panel" id="panel-unlimited">
+          <div class="plan-card plan-card--featured" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-infinity"></i></div>
+            <div class="plan-card-name">Unlimited</div>
+            <div class="plan-card-age">18+ Jahre</div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">18,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">bei 12 Monaten Laufzeit</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Olympic Boxing · Kickboxing · Women's</li>
+              <li><i class="fa-solid fa-check"></i> Unbegrenzt alle Kurse nutzen</li>
+              <li><i class="fa-solid fa-check"></i> Lifetime Early-Bird-Preis</li>
+              <li><i class="fa-solid fa-check"></i> Zahle erst ab Opening</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> JETZT ANMELDEN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Trust badges — conversion boosters -->
@@ -679,28 +785,6 @@
         <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Zahle erst ab Opening</span></div>
         <div class="trust-badge"><i class="fa-solid fa-lock"></i><span>Sichere Buchung via Bsport</span></div>
         <div class="trust-badge"><i class="fa-solid fa-fire"></i><span>Limitiert auf 300 Mitglieder</span></div>
-      </div>
-
-      <!-- Primary CTA -->
-      <div class="membership-cta-row reveal">
-        <a id="plan-checkout-btn" class="btn btn--gold btn--hero-primary membership-main-cta" href="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" target="_blank" rel="noopener">
-          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-        </a>
-        <p class="plan-checkout-hint">Plan oben wählen · Direkt zur sicheren Bsport-Anmeldung</p>
-      </div>
-
-      <!-- Bsport subscription widget -->
-      <div id="membership-widget-section" class="membership-widget-wrap reveal">
-        <div class="membership-widget-inner">
-          <div class="widget-header-note">
-            <i class="fa-solid fa-lock"></i>
-            <span>Sichere Buchung via Bsport · Zahle erst ab Opening · Lifetime Preisgarantie</span>
-          </div>
-          <div id="bsport-widget-78464"></div>
-          <noscript>
-            <p style="text-align:center;padding:2rem;color:rgba(8,8,8,0.5);">Bitte JavaScript aktivieren, um das Anmeldeformular zu laden.</p>
-          </noscript>
-        </div>
       </div>
 
     </div>

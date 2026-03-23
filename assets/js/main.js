@@ -270,12 +270,38 @@ function navFromMehrPreise() {
    age group and update the direct Bsport checkout button URL.
 ──────────────────────────────────────────────────────────── */
 function selectMembershipTab(btn) {
-  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+  // Update active tab
+  document.querySelectorAll('.mtab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
   btn.classList.add('active');
-  // Update the direct checkout button URL for the selected plan
-  const checkoutUrl = btn.dataset.checkout;
-  const checkoutBtn = document.getElementById('plan-checkout-btn');
-  if (checkoutBtn && checkoutUrl) checkoutBtn.href = checkoutUrl;
+  btn.setAttribute('aria-selected', 'true');
+
+  // Show matching plan panel
+  const group = btn.dataset.group;
+  document.querySelectorAll('.plan-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + group);
+  if (panel) panel.classList.add('active');
+}
+
+/* ── Booking Modal ─────────────────────────────────────────── */
+function openBookingModal(url) {
+  const modal  = document.getElementById('booking-modal');
+  const iframe = document.getElementById('booking-iframe');
+  if (!modal || !iframe) return;
+  iframe.src = url;
+  modal.classList.add('open');
+  lockBodyScroll();
+}
+
+function closeBookingModal() {
+  const modal  = document.getElementById('booking-modal');
+  const iframe = document.getElementById('booking-iframe');
+  if (!modal) return;
+  modal.classList.remove('open');
+  if (iframe) iframe.src = '';
+  unlockBodyScroll();
 }
 
 /* ── Early Bird FOMO (async, non-blocking) ─────────────────── */
@@ -444,12 +470,14 @@ document.addEventListener('click', e => {
   if (e.target.id === 'corporate-modal') closeCorporateModal();
 });
 
-/* ESC closes family modal OR corporate modal OR mobile nav, whichever is open */
+/* ESC closes any open modal or mobile nav */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const familyModal     = document.getElementById('family-modal');
-  const corporateModal  = document.getElementById('corporate-modal');
-  const mobileNav       = document.getElementById('mobile-nav');
+  const bookingModal   = document.getElementById('booking-modal');
+  const familyModal    = document.getElementById('family-modal');
+  const corporateModal = document.getElementById('corporate-modal');
+  const mobileNav      = document.getElementById('mobile-nav');
+  if (bookingModal   && bookingModal.classList.contains('open'))   { closeBookingModal();   return; }
   if (familyModal    && familyModal.classList.contains('open'))    { closeFamilyModal();    return; }
   if (corporateModal && corporateModal.classList.contains('open')) { closeCorporateModal(); return; }
   if (mobileNav      && mobileNav.classList.contains('open'))      { toggleMenu();          return; }
