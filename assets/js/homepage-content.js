@@ -18,8 +18,8 @@ const BOMAYE_HOMEPAGE = {
     badge:        'NOW OPEN · EARLY BIRD ACTIVE',
     headline:     'Boxen. Leben. München.',
     subheadline:  'Das Boxgym im Pineapple Park — für Anfänger, Fortgeschrittene und Wettkämpfer. Sichere dir jetzt deinen Early-Bird-Preis.',
-    ctaPrimary:   { label: 'Probetraining buchen',   href: '#booking' },
-    ctaSecondary: { label: 'Mitgliedschaft sichern', href: '#membership' },
+    ctaPrimary:   { label: 'JETZT EARLY BIRD SICHERN', href: '#pricing' },
+    ctaSecondary: { label: 'MEHR ERFAHREN',            href: '#dna' },
   },
 
   /* ── Announcement Bar ──────────────────────────────────── */

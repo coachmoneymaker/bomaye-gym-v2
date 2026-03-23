@@ -51,8 +51,8 @@ const BOMAYE_FAQ = [
     id: "buchung",
     items: [
       {
-        q: "Wie buche ich ein Probetraining oder meine erste Session?",
-        a: "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle eine freie Zeit, trag dich ein – fertig. Das Probetraining ist kostenlos und unverbindlich, kein Vertrag, kein Druck. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
+        q: "Wie werde ich Mitglied und starte mit dem Training?",
+        a: "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Early-Bird-Mitglieder sichern sich den Gründerpreis dauerhaft. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
       },
       {
         q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
@@ -80,11 +80,11 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?",
-        a: "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein kostenloses Probetraining ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern."
+        a: "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein erster Kurs ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern."
       },
       {
         q: "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
-        a: "Bring Sportkleidung, saubere Hallenschuhe und ein Handtuch mit. Für das Probetraining leihen wir dir Boxhandschuhe kostenlos. Wer regelmäßig trainiert, sollte eigene Handschuhe (10–14 Oz) und Bandagen mitbringen."
+        a: "Bring Sportkleidung, saubere Hallenschuhe und ein Handtuch mit. Beim ersten Training kannst du dir Boxhandschuhe kostenlos leihen. Wer regelmäßig trainiert, sollte eigene Handschuhe (10–14 Oz) und Bandagen mitbringen."
       }
     ]
   },

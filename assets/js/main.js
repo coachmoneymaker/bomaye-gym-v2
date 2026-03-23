@@ -1005,10 +1005,10 @@ function initQuoteMobileReveal() {
 ══════════════════════════════════════════════════════════════ */
 (function initSocialProof() {
   const messages = [
-    { name: 'Ahmed aus München',  msg: 'hat gerade ein Probetraining gebucht' },
+    { name: 'Ahmed aus München',  msg: 'hat gerade seinen Early-Bird-Platz gesichert' },
     { name: 'Lisa',               msg: 'ist dem Bomaye Gym beigetreten' },
     { name: 'Neues Mitglied',     msg: 'hat sich der Fighter Community angeschlossen' },
-    { name: 'Marco aus München',  msg: 'hat sein Probetraining gesichert' },
+    { name: 'Marco aus München',  msg: 'hat sich seinen Early-Bird-Preis gesichert' },
     { name: 'Sarah',              msg: 'hat heute mit Boxing angefangen' },
     { name: 'Kevin aus Schwabing',msg: 'hat gerade ein Early-Bird-Abo gebucht' },
   ];
