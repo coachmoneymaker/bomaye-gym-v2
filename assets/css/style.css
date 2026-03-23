@@ -26,7 +26,7 @@
 
   --radius:    6px;
   --radius-lg: 12px;
-  --nav-h:     72px;
+  --nav-h:     96px;
 
   --anthracite: #1d1d1d;
   --ink-deep:   #131313;
@@ -172,10 +172,16 @@ p  { color: rgba(255,255,255,0.65); line-height: 1.8; font-size: 1rem; }
   height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
 
+/* Legal pages: centered single-logo header */
+.header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+  height: 100%; display: flex; align-items: center; justify-content: center;
+}
+
 /* Logo */
 .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; flex-shrink: 0; }
 .logo-img {
-  width: 160px; height: auto;
+  width: 240px; height: auto;
   display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -1711,7 +1717,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 900px (Tablet)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  :root { --nav-h: 64px; }
+  :root { --nav-h: 84px; }
   section { padding: clamp(40px, 5vw, 80px) 0; }
 
   .nav-links { display: none; }
@@ -1757,11 +1763,10 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 480px (Mobile)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  :root { --nav-h: 112px; }
+  :root { --nav-h: 150px; }
   section { padding: clamp(32px, 4vw, 56px) 0; }
   .container { padding: 0 1.25rem; }
-  /* 112px nav-h on phones — 90px logo matches the ≤768px experience */
-  .logo-img { height: 90px !important; width: auto; }
+  .logo-img { height: 130px !important; width: auto; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
   .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 3rem; }
@@ -1792,7 +1797,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
 /* ── Mobile logo sizing ─────────────────────────────────────── */
 @media (max-width: 900px) {
-  .logo-img { width: 130px; }
+  .logo-img { width: 195px; }
   .trust-strip-divider { display: none; }
   .trust-strip-inner  { gap: 1rem; }
   .trust-strip-item   { font-size: 0.58rem; }
@@ -1832,7 +1837,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 @media (min-width: 1600px) {
   .nav-inner  { max-width: 1440px; }
   .container  { max-width: 1440px; }
-  .logo-img   { width: 180px; }
+  .logo-img   { width: 270px; }
 }
 
 /* ── 375px fine-tuning ──────────────────────────────────────── */
@@ -1929,7 +1934,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    MOBILE NAV — CENTERED LOGO
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  :root { --nav-h: 120px; }
+  :root { --nav-h: 150px; }
 
   .nav-inner {
     display: grid;
@@ -1938,7 +1943,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
     position: relative;
   }
 
-  .logo-img { width: auto; height: 90px; }
+  .logo-img { width: auto; height: 130px; }
 
   .burger {
     position: static;
@@ -6116,4 +6121,109 @@ section { padding: var(--sv) 0; }
 
 @media (max-width: 600px) {
   .membership-trust { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM TRANSLUCENT DARK TREATMENT
+   Mirrors the header glass-morphism style across dark sections.
+   Applied to: Philosophy (#dna), Differentiator (.diff-block),
+   Disciplines (#disciplines), Early Bird (#early-bird)
+══════════════════════════════════════════════════════════════ */
+
+/* Philosophy / Philosophie */
+#dna {
+  background: rgba(16, 13, 10, 0.93) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(197, 160, 89, 0.09);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.09);
+  position: relative;
+}
+#dna::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(197, 160, 89, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+#dna > * { position: relative; z-index: 1; }
+
+/* Differentiator block — Echtes Boxtraining, Community First, Coaching von Champions */
+.diff-block {
+  background: rgba(12, 10, 8, 0.95) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(197, 160, 89, 0.07) !important;
+  border-bottom: 1px solid rgba(197, 160, 89, 0.07) !important;
+}
+
+/* Disciplines / Trainiere wie ein Kämpfer / Kurse */
+#disciplines {
+  background: rgba(14, 11, 9, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(197, 160, 89, 0.08);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+  position: relative;
+}
+#disciplines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(197, 160, 89, 0.03) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+#disciplines > * { position: relative; z-index: 1; }
+
+/* Early Bird — subtle premium refinement */
+#early-bird {
+  background: rgba(18, 14, 9, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(197, 160, 89, 0.10);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.10);
+  position: relative;
+}
+#early-bird::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+#early-bird > * { position: relative; z-index: 1; }
+
+/* Legal pages header: always show the dark glass background */
+.header-inner ~ * { }
+#header:has(.header-inner) {
+  background: rgba(10, 10, 10, 0.80);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+}
+
+/* Disc-panel clickable cursor */
+.disc-panel--clickable {
+  cursor: pointer;
+}
+.disc-panel--clickable:hover .disc-panel__title {
+  color: var(--gold-light);
+  transition: color 0.25s ease;
+}
+.disc-panel--clickable .disc-panel__content::after {
+  content: 'Mehr erfahren →';
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: rgba(197, 160, 89, 0.75);
+  margin-top: 1rem;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+.disc-panel--clickable:hover .disc-panel__content::after {
+  color: var(--gold-light);
 }
