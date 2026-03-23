@@ -97,8 +97,13 @@ function initImageFallbacks() {
 function initPreloader() {
   const pre  = document.getElementById('preloader');
   const line = document.getElementById('loader-line');
-  // Already hidden by inline script on repeat visits
-  if (!pre || pre.style.display === 'none') return;
+  const hero = document.getElementById('hero');
+
+  // Repeat visit — preloader already hidden by inline script; reveal hero instantly
+  if (!pre || pre.style.display === 'none') {
+    if (hero) hero.classList.add('hero-revealed');
+    return;
+  }
 
   // Trigger line animation on next paint (GPU-accelerated scaleX)
   if (line) {
@@ -109,8 +114,12 @@ function initPreloader() {
 
   // Fixed 1300ms timer — independent of page load
   setTimeout(() => {
+    // Start loader fade-out and hero reveal simultaneously — one continuous motion
     pre.classList.add('loader-exit');
     sessionStorage.setItem('introShown', 'true');
+    if (hero) {
+      requestAnimationFrame(() => { hero.classList.add('hero-revealed'); });
+    }
     // Remove from layout after CSS transition completes
     pre.addEventListener('transitionend', () => {
       pre.style.display = 'none';
