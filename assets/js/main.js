@@ -275,6 +275,17 @@ function navFromMehrPreise() {
    No JS mount logic needed here.
 ──────────────────────────────────────────────────────────── */
 
+/* ── Membership checkout URLs ────────────────────────────────── */
+const MEMBERSHIP_CHECKOUT_URLS = {
+  kids:       'https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true',
+  jugend:     'https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true',
+  erwachsene: 'https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true',
+};
+
+function getMembershipCheckoutUrl(ageGroup) {
+  return MEMBERSHIP_CHECKOUT_URLS[ageGroup] || MEMBERSHIP_CHECKOUT_URLS.erwachsene;
+}
+
 /* ── Pricing section — age + duration selectors ─────────────── */
 function initPricingSection() {
   if (typeof BOMAYE === 'undefined') return;
@@ -366,7 +377,7 @@ function renderPricingDisplay(ageGroup, duration) {
         </ul>
         <p style="margin:0.75rem 0 0;font-size:0.78rem;color:#000000;">Die Aufnahmegebühr wird einmalig bei Vertragsstart fällig und beinhaltet dein komplettes Starter Kit im Bomaye-Design.</p>
       </div>
-      <button onclick="openBooking()" class="btn btn--gold btn--full" type="button">
+      <button onclick="window.open('${getMembershipCheckoutUrl(ageGroup)}','_blank')" class="btn btn--gold btn--full" type="button">
         <i class="fa-solid fa-fist-raised"></i> JETZT MITGLIED WERDEN
       </button>
     </div>`;
