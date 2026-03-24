@@ -1863,7 +1863,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   }
   .hero-eyebrow       { align-self: center; order: 0; }
   .hero-h1            { order: 1; }
-  .hero-brand-tagline { order: 2; margin-top: 0; }
+  .hero-brand-tagline { order: 2; margin-top: 2.8rem; margin-bottom: 2rem; font-size: clamp(1.5rem, 3.5vw, 2.15rem); letter-spacing: 0.14em; }
   .hero-subtitle      { order: 3; }
   .hero-ctas          { order: 4; }
   .hero-credentials   { order: 5; }
