@@ -42,7 +42,7 @@ const BOMAYE_HOMEPAGE = {
 
   /* ── Membership Intro ──────────────────────────────────── */
   membershipIntro: {
-    sectionBadge: 'MITGLIEDSCHAFT',
+    sectionBadge: 'MEMBERSHIP',
     headline:     'Dein Training. Dein Preis.',
     subtext:      'Von Kids bis Erwachsene, von Anfänger bis Wettkämpfer — wähle das Programm, das zu dir passt, und profitiere von fairen Wochenpreisen ohne versteckte Kosten.',
     cta:          { label: 'Alle Mitgliedschaften', href: '#pricing' },
