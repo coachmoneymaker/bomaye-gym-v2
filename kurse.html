@@ -1079,8 +1079,8 @@ function openCourse(id) {
   document.getElementById('detail-tag').textContent     = data.tag;
   document.getElementById('detail-title').innerHTML     = data.title;
   document.getElementById('detail-desc').textContent    = data.desc;
-  document.getElementById('detail-img').src             = data.img;
-  document.getElementById('detail-img').alt             = data.imgAlt;
+  const detailImg = document.getElementById('detail-img');
+  if (detailImg) { detailImg.src = data.img; detailImg.alt = data.imgAlt; }
 
   const featsEl = document.getElementById('detail-feats');
   featsEl.innerHTML = data.feats.map(f => `

@@ -87,7 +87,7 @@ const BOMAYE_HOMEPAGE = {
     sectionBadge:  'FAQ',
     headline:      'Häufig gestellte Fragen.',
     subtext:       'Alles Wichtige zu Mitgliedschaft, Training, Standort und mehr — übersichtlich auf unserer FAQ-Seite.',
-    cta:           { label: 'Alle FAQs ansehen', href: '/faq.html' },
+    cta:           { label: 'Alle FAQs ansehen', href: '/faq' },
     seoFooterText: 'Bomaye Gym Munich ist ein modernes Boxgym in München Neuhausen-Nymphenburg, direkt im Pineapple Park an der Wilhelm-Hale-Straße. Wir bieten Olympic Boxing, Kickboxen, Women\'s Boxing, Kids & Youth Boxing, Personal Training und Corporate Boxing für alle Leistungsstufen — vom Anfänger bis zum Wettkämpfer. Gut erreichbar mit der S-Bahn (Hirschgarten, 5 Minuten).',
   },
 
