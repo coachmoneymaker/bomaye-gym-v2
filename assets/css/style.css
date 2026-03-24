@@ -332,6 +332,14 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
   opacity: 0; transform: translateY(10px); will-change: opacity, transform;
   transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
 }
+@media (min-width: 769px) {
+  .hero-brand-tagline {
+    font-size: clamp(1.38rem, 3.2vw, 1.95rem);
+    letter-spacing: 0.18em;
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
+  }
+}
 .hero-ctas {
   display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;
   margin-bottom: 3rem;
