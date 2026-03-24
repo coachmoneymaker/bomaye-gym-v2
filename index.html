@@ -23,6 +23,12 @@
   <link rel="preload" href="/assets/images/community.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
+  <!-- Bsport: early connection warm-up before user clicks -->
+  <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="preconnect" href="https://cdn.bsport.io" crossorigin />
+  <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
+
   <!-- Fonts: preconnect + async (swap avoids FOIT) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -364,7 +370,11 @@
       <span class="booking-modal-title">MITGLIEDSCHAFT SICHERN</span>
     </div>
     <div class="booking-modal-body">
-      <iframe id="booking-iframe" src="" width="100%" height="700" style="border:none;" title="Mitgliedschaft buchen" loading="lazy"></iframe>
+      <div id="booking-modal-loading" class="booking-modal-loading">
+        <div class="booking-modal-spinner"></div>
+        <p class="booking-modal-loading-text">Mitgliedschaft wird geladen…</p>
+      </div>
+      <iframe id="booking-iframe" src="" width="100%" height="700" style="border:none;visibility:hidden;" title="Mitgliedschaft buchen"></iframe>
     </div>
   </div>
 </div>

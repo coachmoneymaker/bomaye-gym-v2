@@ -287,20 +287,38 @@ function selectMembershipTab(btn) {
 
 /* ── Booking Modal ─────────────────────────────────────────── */
 function openBookingModal(url) {
-  const modal  = document.getElementById('booking-modal');
-  const iframe = document.getElementById('booking-iframe');
+  const modal   = document.getElementById('booking-modal');
+  const iframe  = document.getElementById('booking-iframe');
+  const loading = document.getElementById('booking-modal-loading');
   if (!modal || !iframe) return;
-  iframe.src = url;
+
+  if (iframe.getAttribute('data-bsport-url') !== url) {
+    // New URL — show loading state until iframe fires onload
+    if (loading) loading.style.display = 'flex';
+    iframe.style.visibility = 'hidden';
+    iframe.setAttribute('data-bsport-url', url);
+
+    iframe.onload = function () {
+      if (loading) loading.style.display = 'none';
+      iframe.style.visibility = 'visible';
+    };
+
+    iframe.src = url;
+  } else {
+    // Same URL already loaded — reveal instantly
+    if (loading) loading.style.display = 'none';
+    iframe.style.visibility = 'visible';
+  }
+
   modal.classList.add('open');
   lockBodyScroll();
 }
 
 function closeBookingModal() {
-  const modal  = document.getElementById('booking-modal');
-  const iframe = document.getElementById('booking-iframe');
+  const modal = document.getElementById('booking-modal');
   if (!modal) return;
   modal.classList.remove('open');
-  if (iframe) iframe.src = '';
+  // Intentionally NOT resetting iframe.src — keeps Bsport content warm for re-open
   unlockBodyScroll();
 }
 
@@ -1060,3 +1078,32 @@ function initQuoteMobileReveal() {
 
   window.addEventListener('scroll', onScroll, { passive: true });
 }());
+
+/* ── Bsport iframe warm-up ─────────────────────────────────────
+   After page load, silently pre-loads the featured plan into the
+   hidden booking iframe so the first click opens near-instantly.
+   Uses a 2 s delay so it doesn't compete with critical resources.
+────────────────────────────────────────────────────────────── */
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    const iframe = document.getElementById('booking-iframe');
+    if (!iframe || iframe.src) return;                 // already loaded
+
+    // Auto-discover the featured plan's URL from the DOM
+    const featuredCard = document.querySelector('.plan-card--featured[onclick]');
+    if (!featuredCard) return;
+    const match = (featuredCard.getAttribute('onclick') || '')
+      .match(/openBookingModal\('([^']+)'\)/);
+    if (!match) return;
+
+    const url     = match[1];
+    const loading = document.getElementById('booking-modal-loading');
+
+    iframe.setAttribute('data-bsport-url', url);
+    iframe.onload = function () {
+      if (loading) loading.style.display = 'none';
+      iframe.style.visibility = 'visible';
+    };
+    iframe.src = url;
+  }, 2000);
+});
