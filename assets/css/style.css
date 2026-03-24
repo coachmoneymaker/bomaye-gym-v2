@@ -6171,7 +6171,7 @@ section { padding: var(--sv) 0; }
   }
 
   .booking-modal-card {
-    max-height: 95vh;
+    max-height: 96vh;
     border-radius: 18px 18px 0 0;
     width: 100%;
     max-width: 100%;
@@ -6180,13 +6180,13 @@ section { padding: var(--sv) 0; }
   }
 
   .booking-modal-body {
-    padding: 0 16px;
+    padding: 0;
     box-sizing: border-box;
   }
 
   .booking-modal-body iframe {
-    height: 78vh;
-    min-height: 420px;
+    height: 83vh;
+    min-height: 520px;
     width: 100%;
     max-width: 100%;
   }
