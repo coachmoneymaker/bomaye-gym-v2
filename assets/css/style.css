@@ -6453,8 +6453,8 @@ footer { padding: 5.5rem 0 2.5rem; }
   #services   { background: #111111 !important; }
   #booking    { background: #0A0A0A !important; }
   #faq        { background: #111111 !important; }
-  #dna        { background: #0D0D0D !important; }
-  #disciplines{ background: #0A0A0A !important; }
+  #dna        { background: #F8F6F1 !important; }
+  #disciplines{ background: #F8F6F1 !important; }
   #early-bird { background: #0D0A06 !important; }
   .diff-block { background: #0A0A0A !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }
@@ -6467,4 +6467,50 @@ footer { padding: 5.5rem 0 2.5rem; }
 
 /* ── Plan card CTA: full width already (width:100% set above) ── */
 .plan-card-cta { width: 100%; }
+
+/* ══════════════════════════════════════════════════════════════
+   DNA (AUTHORITY) + DISCIPLINES (KURSE) — LIGHT PREMIUM THEME
+   Soft off-white cream background, dark text, gold accents kept.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Authority / DNA Section ─────────────────────────────── */
+#dna {
+  background: #F8F6F1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-top: 1px solid rgba(197,160,89,0.18) !important;
+  border-bottom: 1px solid rgba(197,160,89,0.18) !important;
+}
+#dna::before { background: transparent !important; }
+
+#dna h2            { color: var(--ink) !important; }
+#dna h2 .gold      { color: var(--gold-dark) !important; }
+#dna p             { color: rgba(8,8,8,0.65) !important; }
+#dna strong        { color: var(--ink) !important; }
+
+#dna .tag--light {
+  background: rgba(197,160,89,0.12) !important;
+  color: var(--gold-dark) !important;
+  border-color: rgba(197,160,89,0.38) !important;
+}
+
+/* ── Disciplines / Kurse Section ─────────────────────────── */
+#disciplines {
+  background: #F8F6F1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-top: 1px solid rgba(197,160,89,0.18) !important;
+  border-bottom: 1px solid rgba(197,160,89,0.18) !important;
+}
+#disciplines::before { background: transparent !important; }
+
+#disciplines .sec-header h2       { color: var(--ink) !important; }
+#disciplines .sec-header .gold    { color: var(--gold-dark) !important; }
+#disciplines .sec-header p        { color: rgba(8,8,8,0.55) !important; }
+
+#disciplines .tag--dark {
+  background: rgba(197,160,89,0.12) !important;
+  color: var(--gold-dark) !important;
+  border-color: rgba(197,160,89,0.38) !important;
+}
 
