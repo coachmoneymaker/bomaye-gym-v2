@@ -6527,3 +6527,292 @@ footer { padding: 5.5rem 0 2.5rem; }
   border-color: rgba(197,160,89,0.38) !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BSPORT REGISTRATION FORM — MOBILE LAYOUT FIX (v3)
+   ──────────────────────────────────────────────────────────────
+   Problem: On mobile the Bsport registration form (opened by the
+   subscription widget with dialogMode:1) renders password fields
+   side-by-side and consent checkboxes overlap each other.
+
+   Root cause: Bsport's widget injects content into .cleanslate
+   wrappers in the page DOM. The existing CSS targeted
+   #bsport-widget-trial / #bsport-widget-subscription which do NOT
+   exist in the HTML. The actual widget is #bsport-widget-78464.
+
+   Fix: Target .cleanslate (Bsport's exclusive wrapper class) and
+   #bsport-widget-78464 with forced single-column layout, full-
+   width inputs, and correct checkbox row layout on mobile.
+   Use !important throughout to beat Bsport's own inline styles.
+══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ── Root: actual subscription widget + any Bsport portal dialog ── */
+  #bsport-widget-78464,
+  #bsport-widget-78464 * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ── .cleanslate is Bsport's exclusive reset wrapper ── */
+  /* It appears both inside #bsport-widget-78464 and in portal    */
+  /* dialogs appended to <body> — target both.                    */
+
+  /* 1. Force every flex/grid "row" to stack vertically */
+  .cleanslate [class*="row"],
+  .cleanslate [class*="Row"],
+  .cleanslate [class*="grid"]:not([class*="filter"]),
+  .cleanslate [class*="Grid"]:not([class*="filter"]),
+  .cleanslate [class*="columns"],
+  .cleanslate [class*="Columns"],
+  .cleanslate [class*="fields"],
+  .cleanslate [class*="Fields"],
+  .cleanslate [class*="inputs"],
+  .cleanslate [class*="Inputs"],
+  .cleanslate [class*="two-col"],
+  .cleanslate [class*="twoCol"],
+  .cleanslate [class*="col-2"],
+  .cleanslate [class*="form-line"],
+  .cleanslate [class*="formLine"] {
+    display:               flex !important;
+    flex-direction:        column !important;
+    flex-wrap:             nowrap !important;
+    grid-template-columns: 1fr !important;
+    width:                 100% !important;
+    max-width:             100% !important;
+    gap:                   0.75rem !important;
+  }
+
+  /* 2. Every form group / field / input wrapper → full width */
+  .cleanslate [class*="form-group"],
+  .cleanslate [class*="formGroup"],
+  .cleanslate [class*="form-field"],
+  .cleanslate [class*="formField"],
+  .cleanslate [class*="field-wrap"],
+  .cleanslate [class*="fieldWrap"],
+  .cleanslate [class*="input-wrap"],
+  .cleanslate [class*="inputWrap"],
+  .cleanslate [class*="input-group"],
+  .cleanslate [class*="inputGroup"],
+  .cleanslate [class*="form-control"],
+  .cleanslate [class*="formControl"],
+  .cleanslate [class*="field"]:not(input):not(select):not(textarea) {
+    width:     100% !important;
+    max-width: 100% !important;
+    flex:      0 0 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 3. Password fields — full width, stacked, no overlap */
+  .cleanslate [class*="password"],
+  .cleanslate [class*="Password"],
+  .cleanslate [class*="pwd"],
+  .cleanslate [class*="Pwd"],
+  .cleanslate [class*="passwort"],
+  .cleanslate [class*="Passwort"] {
+    width:        100% !important;
+    max-width:    100% !important;
+    flex:         0 0 100% !important;
+    display:      block !important;
+    position:     relative !important;
+    margin-bottom: 1rem !important;
+    box-sizing:   border-box !important;
+  }
+
+  /* Password show/hide toggle icon stays inside the field */
+  .cleanslate [class*="password"] [class*="toggle"],
+  .cleanslate [class*="password"] [class*="Toggle"],
+  .cleanslate [class*="password"] [class*="eye"],
+  .cleanslate [class*="password"] [class*="Eye"],
+  .cleanslate [class*="password"] [class*="icon"],
+  .cleanslate [class*="Password"] [class*="toggle"],
+  .cleanslate [class*="Password"] [class*="Eye"],
+  .cleanslate [class*="Password"] [class*="icon"] {
+    position:  absolute !important;
+    right:     12px !important;
+    top:       50% !important;
+    transform: translateY(-50%) !important;
+    z-index:   2 !important;
+  }
+
+  /* 4. All text inputs, selects, textareas → full width */
+  .cleanslate input:not([type="checkbox"]):not([type="radio"]),
+  .cleanslate select,
+  .cleanslate textarea {
+    width:      100% !important;
+    max-width:  100% !important;
+    min-width:  0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 5. Checkbox / consent rows — horizontal (checkbox left, text right) */
+  .cleanslate [class*="checkbox"],
+  .cleanslate [class*="Checkbox"],
+  .cleanslate [class*="consent"],
+  .cleanslate [class*="Consent"],
+  .cleanslate [class*="agreement"],
+  .cleanslate [class*="Agreement"],
+  .cleanslate [class*="terms"]:not([class*="termsRow"]):not(h1):not(h2):not(h3),
+  .cleanslate [class*="Terms"]:not(h1):not(h2):not(h3),
+  .cleanslate [class*="gdpr"],
+  .cleanslate [class*="GDPR"],
+  .cleanslate [class*="legal"],
+  .cleanslate [class*="Legal"],
+  .cleanslate [class*="accept"],
+  .cleanslate [class*="Accept"] {
+    display:        flex !important;
+    flex-direction: row !important;
+    flex-wrap:      nowrap !important;
+    align-items:    flex-start !important;
+    gap:            0.65rem !important;
+    margin-bottom:  1rem !important;
+    width:          100% !important;
+    max-width:      100% !important;
+    box-sizing:     border-box !important;
+    overflow:       visible !important;
+  }
+
+  /* Checkbox input: non-shrinking fixed-size square */
+  .cleanslate input[type="checkbox"],
+  .cleanslate input[type="radio"] {
+    flex:       0 0 auto !important;
+    width:      18px !important;
+    height:     18px !important;
+    min-width:  18px !important;
+    min-height: 18px !important;
+    margin:     3px 0 0 0 !important;
+  }
+
+  /* Checkbox / consent label text: wraps, readable */
+  .cleanslate [class*="checkbox"] label,
+  .cleanslate [class*="checkbox"] span,
+  .cleanslate [class*="checkbox"] p,
+  .cleanslate [class*="Checkbox"] label,
+  .cleanslate [class*="Checkbox"] span,
+  .cleanslate [class*="consent"] label,
+  .cleanslate [class*="consent"] span,
+  .cleanslate [class*="consent"] p,
+  .cleanslate [class*="Consent"] label,
+  .cleanslate [class*="Consent"] span,
+  .cleanslate [class*="agreement"] label,
+  .cleanslate [class*="agreement"] span,
+  .cleanslate [class*="terms"] label,
+  .cleanslate [class*="terms"] span,
+  .cleanslate [class*="gdpr"] label,
+  .cleanslate [class*="gdpr"] span,
+  .cleanslate [class*="legal"] label,
+  .cleanslate [class*="legal"] span {
+    flex:            1 1 auto !important;
+    white-space:     normal !important;
+    word-wrap:       break-word !important;
+    overflow-wrap:   break-word !important;
+    line-height:     1.5 !important;
+    min-width:       0 !important;
+    max-width:       100% !important;
+    display:         block !important;
+  }
+
+  /* 6. Form container: no overflow clipping that hides elements */
+  .cleanslate form,
+  .cleanslate [class*="form"]:not([class*="platform"]),
+  .cleanslate [class*="Form"]:not([class*="Platform"]) {
+    width:      100% !important;
+    max-width:  100% !important;
+    overflow:   visible !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 7. Step / section / panel containers → full width */
+  .cleanslate [class*="step"],
+  .cleanslate [class*="Step"],
+  .cleanslate [class*="section"],
+  .cleanslate [class*="Section"],
+  .cleanslate [class*="panel"],
+  .cleanslate [class*="Panel"],
+  .cleanslate [class*="page"],
+  .cleanslate [class*="Page"],
+  .cleanslate [class*="group"],
+  .cleanslate [class*="Group"] {
+    width:      100% !important;
+    max-width:  100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 8. Vertical spacing between form groups */
+  .cleanslate [class*="group"] + [class*="group"],
+  .cleanslate [class*="Group"] + [class*="Group"] {
+    margin-top: 1.25rem !important;
+  }
+
+  /* 9. Widget dialog / popup / modal overlay → full width */
+  .cleanslate [class*="popup"],
+  .cleanslate [class*="Popup"],
+  .cleanslate [class*="modal"],
+  .cleanslate [class*="Modal"],
+  .cleanslate [class*="dialog"],
+  .cleanslate [class*="Dialog"],
+  .cleanslate [class*="overlay"],
+  .cleanslate [class*="Overlay"] {
+    width:      100% !important;
+    max-width:  100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 10. Inner popup/modal content box */
+  .cleanslate [class*="popup-inner"],
+  .cleanslate [class*="popupInner"],
+  .cleanslate [class*="popup-content"],
+  .cleanslate [class*="popupContent"],
+  .cleanslate [class*="modal-inner"],
+  .cleanslate [class*="modalInner"],
+  .cleanslate [class*="modal-content"],
+  .cleanslate [class*="modalContent"],
+  .cleanslate [class*="dialog-inner"],
+  .cleanslate [class*="dialogInner"],
+  .cleanslate [class*="dialog-content"],
+  .cleanslate [class*="dialogContent"] {
+    width:      100% !important;
+    max-width:  100vw !important;
+    padding:    1rem !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 11. Labels: prevent collision with icons/borders */
+  .cleanslate label {
+    display:       block !important;
+    width:         100% !important;
+    margin-bottom: 0.25rem !important;
+    line-height:   1.4 !important;
+    white-space:   normal !important;
+    word-wrap:     break-word !important;
+  }
+}
+
+/* ── 480px and below: extra-small phone adjustments ── */
+@media (max-width: 480px) {
+
+  /* Tighten popup padding on very small screens */
+  .cleanslate [class*="popup-inner"],
+  .cleanslate [class*="popupInner"],
+  .cleanslate [class*="popup-content"],
+  .cleanslate [class*="popupContent"],
+  .cleanslate [class*="modal-inner"],
+  .cleanslate [class*="modal-content"] {
+    padding: 0.75rem !important;
+  }
+
+  /* Booking modal iframe: tall enough for multi-step form */
+  .booking-modal-body iframe {
+    height:     88vh !important;
+    min-height: 620px !important;
+  }
+
+  /* Ensure Bsport widget dialog doesn't clip horizontally */
+  .cleanslate {
+    max-width:  100vw !important;
+    overflow-x: hidden !important;
+  }
+}
+
