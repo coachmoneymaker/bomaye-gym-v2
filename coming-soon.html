@@ -322,6 +322,10 @@ border-radius: 8px;
 padding: clamp(32px, 5vw, 52px) clamp(24px, 5vw, 48px);
 backdrop-filter: blur(12px);
 -webkit-backdrop-filter: blur(12px);
+transition: transform 0.35s var(--ease-expo);
+}
+.form-card:hover {
+transform: translateY(-2px);
 }
 
 /* ── Progress indicator ──────────────────────────────────────── */
@@ -366,14 +370,14 @@ transition: transform 0.55s var(--ease-expo);
 .form-step.step-hidden { display: none; }
 .form-step.step-exit {
 opacity: 0;
-transform: translateX(-14px);
-transition: opacity 0.22s ease, transform 0.22s ease;
+transform: translateX(-12px);
+transition: opacity 0.18s ease, transform 0.18s ease;
 pointer-events: none;
 }
 .form-step.step-enter {
 opacity: 0;
-transform: translateX(14px);
-transition: opacity 0.35s ease, transform 0.35s ease;
+transform: translateX(12px);
+transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .form-step.step-enter-active {
 opacity: 1;
@@ -462,21 +466,22 @@ margin-bottom: 8px;
 width: 100%;
 background: rgba(255,255,255,0.04);
 border: 1px solid rgba(255,255,255,0.1);
-border-radius: 4px;
+border-radius: 6px;
 color: #fff;
 font-family: var(--font-body);
 font-size: 0.95rem;
-padding: 13px 16px;
+padding: 15px 18px;
 outline: none;
 transition: border-color 0.2s, background 0.2s, box-shadow 0.25s;
 -webkit-appearance: none;
 appearance: none;
+box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
 }
-.field-input::placeholder { color: rgba(255,255,255,0.25); }
+.field-input::placeholder { color: rgba(255,255,255,0.22); }
 .field-input:focus {
 border-color: rgba(198,164,90,0.55);
 background: rgba(255,255,255,0.06);
-box-shadow: 0 0 0 3px rgba(198,164,90,0.07);
+box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 0 3px rgba(198,164,90,0.07);
 }
 .field-input option { background: #1a1a1a; color: #fff; }
 .field-row {
@@ -785,6 +790,7 @@ Begrenzte Early-Bird-Plätze verfügbar
 <div class="form-success-body">
 <p><strong>Du bist drin.</strong></p>
 <p>Dein Platz ist gesichert.</p>
+<p>Du gehörst zu den Ersten.</p>
 <p class="form-success-tension">Die meisten werden es verpassen.<br />Du nicht.</p>
 </div>
 <div class="form-success-spot" id="form-success-spot">Platz #-- von 300</div>
@@ -839,7 +845,7 @@ placeholder="deine@email.de" autocomplete="email" required />
 </div>
 
 <button type="button" class="continue-btn" id="btn-continue">
-Weiter <i class="fa-solid fa-arrow-right"></i>
+Next Step <i class="fa-solid fa-arrow-right"></i>
 </button>
 </div>
 
@@ -883,13 +889,10 @@ autocomplete="bday" />
 
 <button type="submit" class="submit-btn">
 <i class="fa-solid fa-bolt"></i>
-Platz sichern
+Secure Your Early Access
 </button>
 
-<p class="form-note">
-<i class="fa-solid fa-lock"></i>
-Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
-</p>
+<p class="form-note" style="margin-top:10px;">Limitierte Plätze. Kein Spam.</p>
 </div>
 
 </form>
@@ -999,7 +1002,7 @@ function goToStep2() {
     // Trigger reflow so transition fires
     void step2El.offsetWidth;
     step2El.classList.add('step-enter-active');
-    setTimeout(() => step2El.classList.remove('step-enter'), 400);
+    setTimeout(() => step2El.classList.remove('step-enter'), 250);
 
     // Update progress
     progFill.classList.add('full');
@@ -1007,7 +1010,7 @@ function goToStep2() {
     progStep2.classList.add('active');
 
     document.getElementById('cs-lastname').focus();
-  }, 230);
+  }, 200);
 }
 
 document.getElementById('btn-continue').addEventListener('click', goToStep2);
@@ -1050,17 +1053,17 @@ form.addEventListener('submit', async e => {
   document.getElementById('form-success-spot').textContent = `Platz #${spot} von 300`;
 
   // Fade out form, then show success
-  form.style.transition = 'opacity 0.3s ease';
+  form.style.transition = 'opacity 0.2s ease';
   form.style.opacity = '0';
   setTimeout(() => {
     form.style.display = 'none';
     successEl.style.opacity = '0';
     successEl.classList.add('visible');
     requestAnimationFrame(() => {
-      successEl.style.transition = 'opacity 0.45s ease';
+      successEl.style.transition = 'opacity 0.38s ease';
       successEl.style.opacity = '1';
     });
-  }, 300);
+  }, 200);
 });
 
 // ── Fade-in on scroll (for features) ────────────────────────
