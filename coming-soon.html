@@ -759,17 +759,50 @@
     const successEl = document.getElementById('form-success');
     const submitBtn = form.querySelector('.submit-btn');
 
+    function showFieldError(msg) {
+      let errEl = form.querySelector('.form-error-msg');
+      if (!errEl) {
+        errEl = document.createElement('p');
+        errEl.className = 'form-error-msg';
+        errEl.style.cssText = 'color:#ff6b6b;font-size:.8rem;text-align:center;margin-top:8px;';
+        submitBtn.insertAdjacentElement('afterend', errEl);
+      }
+      errEl.textContent = msg;
+    }
+
+    function clearFieldError() {
+      const errEl = form.querySelector('.form-error-msg');
+      if (errEl) errEl.remove();
+    }
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
+      clearFieldError();
 
-      const email    = form.querySelector('#cs-email');
-      const fname    = form.querySelector('#cs-firstname');
-      const category = form.querySelector('#cs-category').value;
+      const emailEl    = form.querySelector('#cs-email');
+      const fnameEl    = form.querySelector('#cs-firstname');
+      const lnameEl    = form.querySelector('#cs-lastname');
+      const category   = form.querySelector('#cs-category').value;
 
-      // Client-side validation
-      if (!email.value.trim()) { email.focus(); return; }
+      // Client-side validation — only these four conditions ever show errors
+      if (!fnameEl.value.trim()) {
+        fnameEl.focus();
+        showFieldError('Please enter your first name.');
+        return;
+      }
+      if (!lnameEl.value.trim()) {
+        lnameEl.focus();
+        showFieldError('Please enter your last name.');
+        return;
+      }
+      if (!emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+        emailEl.focus();
+        showFieldError('Please enter a valid email address.');
+        return;
+      }
       if (!category) {
-        form.querySelector('.category-selector').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        form.querySelector('.category-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showFieldError('Please select a category (Kids, Youth, or Adults).');
         return;
       }
 
@@ -777,46 +810,31 @@
       submitBtn.disabled = true;
       submitBtn.style.opacity = '0.7';
 
-      try {
-        const payload = {
-          firstName: fname.value.trim(),
-          lastName:  form.querySelector('#cs-lastname').value.trim(),
-          email:     email.value.trim(),
-          phone:     form.querySelector('#cs-phone').value.trim(),
-          category,
-        };
+      const payload = {
+        firstName: fnameEl.value.trim(),
+        lastName:  lnameEl.value.trim(),
+        email:     emailEl.value.trim(),
+        phone:     form.querySelector('#cs-phone').value.trim(),
+        category,
+      };
 
-        const res = await fetch('/api/lead', {
+      // Fire-and-forget — backend/email errors must never block the user
+      try {
+        await fetch('/api/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || 'Submission failed');
-        }
-
-        // Show premium success state
-        successEl.querySelector('.form-success-title').textContent = "You're in. Early Bird secured.";
-        successEl.querySelector('.form-success-msg').innerHTML =
-          "We'll be in touch as soon as doors open.<br />Your Early Bird advantage is locked in.";
-        form.style.display = 'none';
-        successEl.classList.add('visible');
-
       } catch (err) {
-        console.error('[lead form]', err);
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '';
-        let errEl = form.querySelector('.form-error-msg');
-        if (!errEl) {
-          errEl = document.createElement('p');
-          errEl.className = 'form-error-msg';
-          errEl.style.cssText = 'color:#ff6b6b;font-size:.8rem;text-align:center;margin-top:8px;';
-          submitBtn.insertAdjacentElement('afterend', errEl);
-        }
-        errEl.textContent = 'Something went wrong — please try again.';
+        console.error('[lead form] fetch error (non-fatal):', err);
       }
+
+      // Always show success once validation passed
+      successEl.querySelector('.form-success-title').textContent = "You're in. Early Bird secured.";
+      successEl.querySelector('.form-success-msg').innerHTML =
+        "We'll be in touch as soon as doors open.<br />Your Early Bird advantage is locked in.";
+      form.style.display = 'none';
+      successEl.classList.add('visible');
     });
 
     // ── Fade-in on scroll (for features) ────────────────────────

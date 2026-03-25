@@ -26,10 +26,20 @@ export default async function handler(req, res) {
 
   // ── Validation ───────────────────────────────────────────────
   const errors = {};
+  if (!firstName?.trim()) {
+    errors.firstName = 'First name is required.';
+  }
+  if (!lastName?.trim()) {
+    errors.lastName = 'Last name is required.';
+  }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errors.email = 'A valid email is required.';
   }
-  if (!category || !['Kids', 'Youth', 'Adults'].includes(category)) {
+  // Normalize category to title-case to accept both 'kids' and 'Kids'
+  const normalizedCategory = category
+    ? category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
+    : null;
+  if (!normalizedCategory || !['Kids', 'Youth', 'Adults'].includes(normalizedCategory)) {
     errors.category = 'Category must be Kids, Youth, or Adults.';
   }
 
@@ -39,17 +49,17 @@ export default async function handler(req, res) {
 
   // ── Build lead object ────────────────────────────────────────
   const lead = {
-    firstName: firstName?.trim() ?? '',
-    lastName:  lastName?.trim()  ?? '',
+    firstName: firstName.trim(),
+    lastName:  lastName.trim(),
     email:     email.trim().toLowerCase(),
-    phone:     phone?.trim()     ?? '',
-    category,
+    phone:     phone?.trim() ?? '',
+    category:  normalizedCategory,
     submittedAt: new Date().toISOString(),
     source: 'coming-soon',
   };
 
   // ── Log (always runs) ────────────────────────────────────────
-  console.log('[LEAD]', JSON.stringify(lead));
+  console.log('[LEAD_CAPTURED]', JSON.stringify(lead));
 
   // ── Send admin email via Resend ──────────────────────────────
   try {
