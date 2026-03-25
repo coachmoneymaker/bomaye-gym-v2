@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   try {
     await sendAdminEmail(lead);
   } catch (err) {
-    console.error('[LEAD] Email send failed:', err?.message ?? err);
+    console.error('[LEAD] Email send failed:', JSON.stringify(err) ?? err);
     // Non-fatal — lead is already logged above.
   }
 
@@ -74,16 +74,26 @@ async function sendAdminEmail(lead) {
     return; // treat as non-fatal in dev / staging
   }
 
+  // Resend onboarding mode: can only deliver to the account owner's email.
+  // Set RESEND_ACCOUNT_EMAIL to override ADMIN_EMAIL during testing.
+  const recipient = process.env.RESEND_ACCOUNT_EMAIL || adminEmail;
+  if (process.env.RESEND_ACCOUNT_EMAIL) {
+    console.log('[LEAD] Resend onboarding mode — sending to account email instead of admin.');
+  }
+
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
     from:    fromEmail,
-    to:      adminEmail,
+    to:      recipient,
     subject: 'New Early Bird Lead – BOMAYE GYM MUNICH',
     html:    buildEmailHtml(lead),
   });
 
-  if (error) throw error;
+  if (error) {
+    console.error('[LEAD] Resend API error:', JSON.stringify(error));
+    throw error;
+  }
 }
 
 function buildEmailHtml(lead) {
