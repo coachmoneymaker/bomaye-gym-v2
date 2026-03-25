@@ -323,6 +323,63 @@ padding: clamp(32px, 5vw, 52px) clamp(24px, 5vw, 48px);
 backdrop-filter: blur(12px);
 -webkit-backdrop-filter: blur(12px);
 }
+
+/* ── Progress indicator ──────────────────────────────────────── */
+.form-progress {
+display: flex;
+align-items: center;
+margin-bottom: 32px;
+gap: 10px;
+}
+.form-progress-step {
+font-family: var(--font-head);
+font-size: 0.58rem;
+letter-spacing: 0.28em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.22);
+white-space: nowrap;
+transition: color 0.3s;
+}
+.form-progress-step.active {
+color: var(--gold);
+}
+.form-progress-track {
+flex: 1;
+height: 1px;
+background: rgba(255,255,255,0.08);
+position: relative;
+overflow: hidden;
+border-radius: 1px;
+}
+.form-progress-fill {
+position: absolute;
+inset: 0;
+background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+transform-origin: left;
+transform: scaleX(0.5);
+transition: transform 0.55s var(--ease-expo);
+}
+.form-progress-fill.full { transform: scaleX(1); }
+
+/* ── Step transitions ────────────────────────────────────────── */
+.form-step { }
+.form-step.step-hidden { display: none; }
+.form-step.step-exit {
+opacity: 0;
+transform: translateX(-14px);
+transition: opacity 0.22s ease, transform 0.22s ease;
+pointer-events: none;
+}
+.form-step.step-enter {
+opacity: 0;
+transform: translateX(14px);
+transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.form-step.step-enter-active {
+opacity: 1;
+transform: translateX(0);
+}
+
 .form-title {
 font-family: var(--font-head);
 font-size: clamp(1rem, 3vw, 1.25rem);
@@ -372,9 +429,7 @@ text-transform: uppercase;
 cursor: pointer;
 transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
-.cat-btn i {
-font-size: 1.2rem;
-}
+.cat-btn i { font-size: 1.2rem; }
 .cat-btn:hover {
 border-color: rgba(198,164,90,0.5);
 color: var(--gold-light);
@@ -393,9 +448,7 @@ margin-top: -4px;
 .cat-btn.active .cat-age { color: rgba(198,164,90,0.7); }
 
 /* Form fields */
-.form-group {
-margin-bottom: 16px;
-}
+.form-group { margin-bottom: 16px; }
 .field-label {
 display: block;
 font-family: var(--font-head);
@@ -415,19 +468,51 @@ font-family: var(--font-body);
 font-size: 0.95rem;
 padding: 13px 16px;
 outline: none;
-transition: border-color 0.2s, background 0.2s;
+transition: border-color 0.2s, background 0.2s, box-shadow 0.25s;
 -webkit-appearance: none;
+appearance: none;
 }
 .field-input::placeholder { color: rgba(255,255,255,0.25); }
 .field-input:focus {
-border-color: rgba(198,164,90,0.5);
+border-color: rgba(198,164,90,0.55);
 background: rgba(255,255,255,0.06);
+box-shadow: 0 0 0 3px rgba(198,164,90,0.07);
 }
+.field-input option { background: #1a1a1a; color: #fff; }
 .field-row {
 display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 12px;
 }
+
+/* Continue button */
+.continue-btn {
+width: 100%;
+margin-top: 8px;
+padding: 17px 24px;
+background: transparent;
+border: 1px solid rgba(198,164,90,0.45);
+color: var(--gold);
+font-family: var(--font-head);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+border-radius: 4px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.continue-btn:hover {
+background: rgba(198,164,90,0.07);
+border-color: var(--gold);
+transform: translateY(-1px);
+box-shadow: 0 6px 22px rgba(198,164,90,0.09);
+}
+.continue-btn:active { transform: translateY(0); }
 
 /* Submit button */
 .submit-btn {
@@ -448,9 +533,13 @@ display: flex;
 align-items: center;
 justify-content: center;
 gap: 10px;
-transition: opacity 0.2s, transform 0.15s;
+transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
 }
-.submit-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+.submit-btn:hover {
+opacity: 0.92;
+transform: translateY(-1px);
+box-shadow: 0 8px 28px rgba(198,164,90,0.16);
+}
 .submit-btn:active { transform: translateY(0); }
 
 .form-note {
@@ -462,29 +551,57 @@ line-height: 1.5;
 }
 .form-note i { color: var(--gold); margin-right: 4px; }
 
-/* ── Success state ───────────────────────────────────────────── */
+/* ── Success card ────────────────────────────────────────────── */
 .form-success {
 display: none;
 text-align: center;
-padding: 20px 0;
+padding: 16px 0 8px;
 }
 .form-success.visible { display: block; }
-.form-success-icon {
-font-size: 2.5rem;
-color: var(--gold);
-margin-bottom: 16px;
+.form-success-divider {
+width: 32px;
+height: 1px;
+background: rgba(198,164,90,0.4);
+margin: 0 auto 28px;
 }
 .form-success-title {
 font-family: var(--font-display);
-font-size: clamp(1.8rem, 5vw, 2.4rem);
-letter-spacing: 0.08em;
+font-size: clamp(2.2rem, 7vw, 3.2rem);
+letter-spacing: 0.1em;
 color: #fff;
-margin-bottom: 10px;
+line-height: 1;
+margin-bottom: 28px;
 }
-.form-success-msg {
-font-size: 0.9rem;
-color: var(--muted);
-line-height: 1.7;
+.form-success-body {
+margin-bottom: 28px;
+}
+.form-success-body p {
+font-size: 0.95rem;
+color: rgba(255,255,255,0.65);
+line-height: 1.85;
+margin-bottom: 2px;
+}
+.form-success-body p strong {
+color: #fff;
+font-weight: 500;
+}
+.form-success-tension {
+font-size: 0.82rem;
+color: rgba(255,255,255,0.28);
+font-style: italic;
+font-weight: 300;
+margin-top: 16px;
+}
+.form-success-spot {
+display: inline-block;
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.32em;
+text-transform: uppercase;
+color: var(--gold);
+border: 1px solid rgba(198,164,90,0.28);
+padding: 8px 20px;
+border-radius: 2px;
 }
 
 /* ── Features strip ──────────────────────────────────────────── */
@@ -661,22 +778,35 @@ Begrenzte Early-Bird-Plätze verfügbar
 <section class="form-section" id="form-section">
 <div class="form-card fade-up delay-5 visible">
 
-<!-- Success state (hidden until submit) -->
+<!-- Success card (hidden until submit) -->
 <div class="form-success" id="form-success" role="alert" aria-live="polite">
-<div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-<div class="form-success-title">Du bist dabei!</div>
-<p class="form-success-msg">
-Wir melden uns bei dir, sobald es losgehen kann.<br />
-Dein Early-Bird-Vorteil ist gesichert.
-</p>
+<div class="form-success-divider"></div>
+<div class="form-success-title">WELCOME TO BOMAYE.</div>
+<div class="form-success-body">
+<p><strong>Du bist drin.</strong></p>
+<p>Dein Platz ist gesichert.</p>
+<p class="form-success-tension">Die meisten werden es verpassen.<br />Du nicht.</p>
+</div>
+<div class="form-success-spot" id="form-success-spot">Platz #-- von 300</div>
 </div>
 
 <!-- Form -->
 <form id="earlybird-form" novalidate>
-<p class="form-title">Early-Bird-Zugang sichern</p>
-<p class="form-subtitle">Trag dich jetzt ein — kostenlos &amp; unverbindlich. Du wirst als Erstes informiert.</p>
 
-<!-- Category selector -->
+<!-- Progress indicator -->
+<div class="form-progress" aria-label="Fortschritt">
+<span class="form-progress-step active" id="prog-step1">Schritt 1</span>
+<div class="form-progress-track">
+<div class="form-progress-fill" id="prog-fill"></div>
+</div>
+<span class="form-progress-step" id="prog-step2">Schritt 2</span>
+</div>
+
+<!-- ── STEP 1 ── -->
+<div class="form-step" id="form-step-1">
+<p class="form-title">Early-Bird-Zugang sichern</p>
+<p class="form-subtitle">Kostenlos &amp; unverbindlich — du wirst als Erstes informiert.</p>
+
 <span class="category-label">Für wen meldest du dich an?</span>
 <div class="category-grid" role="group" aria-label="Kategorie auswählen">
 <button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
@@ -696,73 +826,72 @@ Erwachsene
 </button>
 </div>
 
-<!-- Name row -->
-<div class="field-row">
 <div class="form-group">
-<label class="field-label" for="cs-firstname">Vorname</label>
-<input
-class="field-input"
-type="text"
-id="cs-firstname"
-name="firstname"
-placeholder="Max"
-autocomplete="given-name"
-required
-/>
-</div>
-<div class="form-group">
-<label class="field-label" for="cs-lastname">Nachname</label>
-<input
-class="field-input"
-type="text"
-id="cs-lastname"
-name="lastname"
-placeholder="Mustermann"
-autocomplete="family-name"
-/>
-</div>
+<label class="field-label" for="cs-firstname">Vorname *</label>
+<input class="field-input" type="text" id="cs-firstname" name="firstname"
+placeholder="Max" autocomplete="given-name" required />
 </div>
 
-<!-- Email -->
 <div class="form-group">
 <label class="field-label" for="cs-email">E-Mail-Adresse *</label>
-<input
-class="field-input"
-type="email"
-id="cs-email"
-name="email"
-placeholder="deine@email.de"
-autocomplete="email"
-required
-/>
+<input class="field-input" type="email" id="cs-email" name="email"
+placeholder="deine@email.de" autocomplete="email" required />
 </div>
 
-<!-- Phone (optional) -->
+<button type="button" class="continue-btn" id="btn-continue">
+Weiter <i class="fa-solid fa-arrow-right"></i>
+</button>
+</div>
+
+<!-- ── STEP 2 ── -->
+<div class="form-step step-hidden" id="form-step-2">
+<p class="form-title">Fast geschafft.</p>
+<p class="form-subtitle">Noch ein paar Details — damit wir dich richtig einordnen können.</p>
+
 <div class="form-group">
-<label class="field-label" for="cs-phone">Telefon <span style="opacity:.45;font-size:.85em;">(optional)</span></label>
-<input
-class="field-input"
-type="tel"
-id="cs-phone"
-name="phone"
-placeholder="+49 89 …"
-autocomplete="tel"
-/>
+<label class="field-label" for="cs-lastname">Nachname</label>
+<input class="field-input" type="text" id="cs-lastname" name="lastname"
+placeholder="Mustermann" autocomplete="family-name" />
 </div>
 
-<!-- Hidden category field -->
+<div class="field-row">
+<div class="form-group">
+<label class="field-label" for="cs-phone">Telefon <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
+<input class="field-input" type="tel" id="cs-phone" name="phone"
+placeholder="+49 89 …" autocomplete="tel" />
+</div>
+<div class="form-group">
+<label class="field-label" for="cs-dob">Geburtsdatum <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
+<input class="field-input" type="date" id="cs-dob" name="dob"
+autocomplete="bday" />
+</div>
+</div>
+
+<div class="form-group">
+<label class="field-label" for="cs-goal">Dein Ziel</label>
+<select class="field-input" id="cs-goal" name="goal">
+<option value="" disabled selected>Bitte auswählen …</option>
+<option value="fitness">Fitness</option>
+<option value="boxen-lernen">Boxen lernen</option>
+<option value="wettkampf">Wettkampf</option>
+<option value="abnehmen">Abnehmen</option>
+</select>
+</div>
+
+<!-- Hidden fields -->
 <input type="hidden" name="category" id="cs-category" value="" />
 
-<!-- Submit -->
 <button type="submit" class="submit-btn">
 <i class="fa-solid fa-bolt"></i>
-Early-Bird-Platz sichern
+Platz sichern
 </button>
 
 <p class="form-note">
 <i class="fa-solid fa-lock"></i>
 Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
 </p>
+</div>
+
 </form>
 
 </div>
@@ -807,116 +936,144 @@ Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
 // ── Category toggle ──────────────────────────────────────────
 const catBtns = document.querySelectorAll('.cat-btn');
 const catHidden = document.getElementById('cs-category');
-
 catBtns.forEach(btn => {
-btn.addEventListener('click', () => {
-catBtns.forEach(b => {
-b.classList.remove('active');
-b.setAttribute('aria-pressed', 'false');
+  btn.addEventListener('click', () => {
+    catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    catHidden.value = btn.dataset.cat;
+  });
 });
-btn.classList.add('active');
-btn.setAttribute('aria-pressed', 'true');
-catHidden.value = btn.dataset.cat;
-});
-});
+
+// ── Multi-step logic ─────────────────────────────────────────
+const step1El   = document.getElementById('form-step-1');
+const step2El   = document.getElementById('form-step-2');
+const progFill  = document.getElementById('prog-fill');
+const progStep1 = document.getElementById('prog-step1');
+const progStep2 = document.getElementById('prog-step2');
+
+function showError(referenceEl, msg) {
+  clearError();
+  const err = document.createElement('p');
+  err.className = 'form-error-msg';
+  err.style.cssText = 'color:#e07070;font-size:.78rem;text-align:center;margin-top:8px;letter-spacing:.02em;';
+  err.textContent = msg;
+  referenceEl.insertAdjacentElement('afterend', err);
+}
+function clearError() {
+  const e = document.querySelector('.form-error-msg');
+  if (e) e.remove();
+}
+
+function goToStep2() {
+  clearError();
+  const fname    = document.getElementById('cs-firstname').value.trim();
+  const email    = document.getElementById('cs-email').value.trim();
+  const category = catHidden.value;
+
+  if (!category) {
+    document.querySelector('.category-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showError(document.querySelector('.category-grid'), 'Bitte eine Kategorie auswählen.');
+    return;
+  }
+  if (!fname) {
+    document.getElementById('cs-firstname').focus();
+    showError(document.getElementById('cs-firstname'), 'Bitte Vorname eingeben.');
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('cs-email').focus();
+    showError(document.getElementById('cs-email'), 'Bitte gültige E-Mail-Adresse eingeben.');
+    return;
+  }
+
+  // Exit step 1
+  step1El.classList.add('step-exit');
+  setTimeout(() => {
+    step1El.classList.add('step-hidden');
+    step1El.classList.remove('step-exit');
+
+    // Enter step 2
+    step2El.classList.remove('step-hidden');
+    step2El.classList.add('step-enter');
+    // Trigger reflow so transition fires
+    void step2El.offsetWidth;
+    step2El.classList.add('step-enter-active');
+    setTimeout(() => step2El.classList.remove('step-enter'), 400);
+
+    // Update progress
+    progFill.classList.add('full');
+    progStep1.classList.remove('active');
+    progStep2.classList.add('active');
+
+    document.getElementById('cs-lastname').focus();
+  }, 230);
+}
+
+document.getElementById('btn-continue').addEventListener('click', goToStep2);
 
 // ── Form submit ──────────────────────────────────────────────
-const form = document.getElementById('earlybird-form');
+const form      = document.getElementById('earlybird-form');
 const successEl = document.getElementById('form-success');
 const submitBtn = form.querySelector('.submit-btn');
 
-function showFieldError(msg) {
-let errEl = form.querySelector('.form-error-msg');
-if (!errEl) {
-errEl = document.createElement('p');
-errEl.className = 'form-error-msg';
-errEl.style.cssText = 'color:#ff6b6b;font-size:.8rem;text-align:center;margin-top:8px;';
-submitBtn.insertAdjacentElement('afterend', errEl);
-}
-errEl.textContent = msg;
-}
-
-function clearFieldError() {
-const errEl = form.querySelector('.form-error-msg');
-if (errEl) errEl.remove();
-}
-
 form.addEventListener('submit', async e => {
-e.preventDefault();
-clearFieldError();
+  e.preventDefault();
+  clearError();
 
-const emailEl = form.querySelector('#cs-email');
-const fnameEl = form.querySelector('#cs-firstname');
-const lnameEl = form.querySelector('#cs-lastname');
-const category = form.querySelector('#cs-category').value;
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = '0.65';
 
-// Client-side validation — only these four conditions ever show errors
-if (!fnameEl.value.trim()) {
-fnameEl.focus();
-showFieldError('Please enter your first name.');
-return;
-}
-if (!lnameEl.value.trim()) {
-lnameEl.focus();
-showFieldError('Please enter your last name.');
-return;
-}
-if (!emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
-emailEl.focus();
-showFieldError('Please enter a valid email address.');
-return;
-}
-if (!category) {
-form.querySelector('.category-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
-showFieldError('Please select a category (Kids, Youth, or Adults).');
-return;
-}
+  const payload = {
+    firstName : document.getElementById('cs-firstname').value.trim(),
+    lastName  : document.getElementById('cs-lastname').value.trim(),
+    email     : document.getElementById('cs-email').value.trim(),
+    phone     : document.getElementById('cs-phone').value.trim(),
+    dob       : document.getElementById('cs-dob').value,
+    goal      : document.getElementById('cs-goal').value,
+    category  : catHidden.value,
+  };
 
-// Disable button while submitting
-submitBtn.disabled = true;
-submitBtn.style.opacity = '0.7';
+  // Fire-and-forget — backend errors must never block the user
+  try {
+    await fetch('/api/lead', {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error('[lead form] fetch error (non-fatal):', err);
+  }
 
-const payload = {
-firstName: fnameEl.value.trim(),
-lastName: lnameEl.value.trim(),
-email: emailEl.value.trim(),
-phone: form.querySelector('#cs-phone').value.trim(),
-category,
-};
+  // Simulated spot number (47–119)
+  const spot = Math.floor(Math.random() * 73) + 47;
+  document.getElementById('form-success-spot').textContent = `Platz #${spot} von 300`;
 
-// Fire-and-forget — backend/email errors must never block the user
-try {
-await fetch('/api/lead', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload),
-});
-} catch (err) {
-console.error('[lead form] fetch error (non-fatal):', err);
-}
-
-// Always show success once validation passed
-successEl.querySelector('.form-success-title').textContent = "You're in. Early Bird secured.";
-successEl.querySelector('.form-success-msg').innerHTML =
-"We'll be in touch as soon as doors open.<br />Your Early Bird advantage is locked in.";
-form.style.display = 'none';
-successEl.classList.add('visible');
+  // Fade out form, then show success
+  form.style.transition = 'opacity 0.3s ease';
+  form.style.opacity = '0';
+  setTimeout(() => {
+    form.style.display = 'none';
+    successEl.style.opacity = '0';
+    successEl.classList.add('visible');
+    requestAnimationFrame(() => {
+      successEl.style.transition = 'opacity 0.45s ease';
+      successEl.style.opacity = '1';
+    });
+  }, 300);
 });
 
 // ── Fade-in on scroll (for features) ────────────────────────
 const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
 if (fadeEls.length && 'IntersectionObserver' in window) {
-const obs = new IntersectionObserver(entries => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
-entry.target.classList.add('visible');
-obs.unobserve(entry.target);
-}
-});
-}, { threshold: 0.15 });
-fadeEls.forEach(el => obs.observe(el));
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.15 });
+  fadeEls.forEach(el => obs.observe(el));
 } else {
-fadeEls.forEach(el => el.classList.add('visible'));
+  fadeEls.forEach(el => el.classList.add('visible'));
 }
 </script>
 </body>
