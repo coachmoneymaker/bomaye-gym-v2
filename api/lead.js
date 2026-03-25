@@ -52,12 +52,11 @@ export default async function handler(req, res) {
   console.log('[LEAD]', JSON.stringify(lead));
 
   // ── Send admin email via Resend ──────────────────────────────
-  const emailResult = await sendAdminEmail(lead);
-  if (!emailResult.ok) {
-    console.error('[LEAD] Email send failed:', emailResult.error);
-    // Still return success to the user — the lead is logged.
-    // Change to return res.status(500) here if email is business-critical.
-    return res.status(200).json({ success: true, emailWarning: 'Notification email could not be sent.' });
+  try {
+    await sendAdminEmail(lead);
+  } catch (err) {
+    console.error('[LEAD] Email send failed:', err?.message ?? err);
+    // Non-fatal — lead is already logged above.
   }
 
   return res.status(200).json({ success: true });
@@ -72,24 +71,19 @@ async function sendAdminEmail(lead) {
 
   if (!apiKey || !adminEmail || !fromEmail) {
     console.warn('[LEAD] Email env vars not configured — skipping send.');
-    return { ok: true }; // treat as non-fatal in dev / staging
+    return; // treat as non-fatal in dev / staging
   }
 
-  try {
-    const resend = new Resend(apiKey);
+  const resend = new Resend(apiKey);
 
-    const { error } = await resend.emails.send({
-      from:    fromEmail,
-      to:      adminEmail,
-      subject: 'New Early Bird Lead – BOMAYE GYM MUNICH',
-      html:    buildEmailHtml(lead),
-    });
+  const { error } = await resend.emails.send({
+    from:    fromEmail,
+    to:      adminEmail,
+    subject: 'New Early Bird Lead – BOMAYE GYM MUNICH',
+    html:    buildEmailHtml(lead),
+  });
 
-    if (error) throw error;
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, error: err?.message ?? err };
-  }
+  if (error) throw error;
 }
 
 function buildEmailHtml(lead) {
