@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>BOMAYE GYM MUNICH — Coming Soon</title>
+<meta name="description" content="Münchens neues Premium-Boxgym öffnet bald. Sichere dir jetzt deinen Early-Bird-Vorteil." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+rel="stylesheet"
+/>
+
+<!-- Font Awesome -->
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+crossorigin="anonymous"
+referrerpolicy="no-referrer"
+/>
+
+<style>
+/* ── Reset & Base ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+background: #0A0A0A;
+color: #fff;
+font-family: 'DM Sans', system-ui, sans-serif;
+font-size: 18px;
+line-height: 1.7;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+min-height: 100vh;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ── Design Tokens ───────────────────────────────────────────── */
+:root {
+--gold: #C6A45A;
+--gold-dark: #A67C2E;
+--gold-light: #d4b472;
+--ink: #0A0A0A;
+--ink2: #141414;
+--smoke: #1a1a1a;
+--border: rgba(198,164,90,0.25);
+--muted: rgba(255,255,255,0.55);
+--font-display: 'Bebas Neue', 'Oswald', sans-serif;
+--font-head: 'Oswald', sans-serif;
+--font-body: 'DM Sans', system-ui, sans-serif;
+--ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Noise overlay ───────────────────────────────────────────── */
+.noise {
+position: fixed; inset: 0; z-index: 9000; pointer-events: none;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+opacity: 0.4;
+}
+
+/* ── Page layout ─────────────────────────────────────────────── */
+.page {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+position: relative;
+}
+
+/* ── Decorative background ───────────────────────────────────── */
+.bg-gradient {
+position: fixed;
+inset: 0;
+z-index: 0;
+background:
+radial-gradient(ellipse 80% 50% at 50% -10%, rgba(198,164,90,0.08) 0%, transparent 70%),
+linear-gradient(160deg, #141414 0%, #0A0A0A 50%, #0f0f0f 100%);
+}
+.bg-lines {
+position: fixed;
+inset: 0;
+z-index: 0;
+pointer-events: none;
+background-image:
+repeating-linear-gradient(
+90deg,
+rgba(198,164,90,0.03) 0px,
+rgba(198,164,90,0.03) 1px,
+transparent 1px,
+transparent 80px
+);
+}
+
+/* ── Top bar ─────────────────────────────────────────────────── */
+.topbar {
+position: relative;
+z-index: 10;
+padding: 28px 40px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid rgba(198,164,90,0.12);
+}
+.logo-lockup {
+display: flex;
+flex-direction: column;
+line-height: 1;
+}
+.logo-name {
+font-family: var(--font-display);
+font-size: clamp(1.5rem, 4vw, 2.1rem);
+letter-spacing: 0.15em;
+color: var(--gold);
+}
+.logo-city {
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.35em;
+color: var(--muted);
+text-transform: uppercase;
+margin-top: 2px;
+}
+.topbar-badge {
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(--gold);
+border: 1px solid var(--border);
+padding: 6px 14px;
+border-radius: 2px;
+}
+
+/* ── Hero ────────────────────────────────────────────────────── */
+.hero {
+position: relative;
+z-index: 10;
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: clamp(60px, 10vh, 100px) 24px clamp(40px, 6vh, 60px);
+}
+
+/* Barely-there atmosphere behind the headline */
+.hero::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -60%);
+width: clamp(400px, 70vw, 900px);
+height: clamp(300px, 50vw, 600px);
+border-radius: 50%;
+background: radial-gradient(ellipse at center, rgba(198,164,90,0.03) 0%, transparent 65%);
+pointer-events: none;
+z-index: -1;
+}
+
+.hero-eyebrow {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+font-family: var(--font-head);
+font-size: 0.65rem;
+letter-spacing: 0.4em;
+text-transform: uppercase;
+color: var(--gold);
+margin-bottom: 28px;
+}
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+content: '';
+display: block;
+width: 32px;
+height: 1px;
+background: var(--gold);
+opacity: 0.6;
+}
+
+/* ── Headline ────────────────────────────────────────────────── */
+.hero-headline {
+font-family: var(--font-display);
+font-size: clamp(3.2rem, 10.5vw, 9rem);
+line-height: 1;
+letter-spacing: 0.08em;
+margin-bottom: 28px;
+}
+.hero-headline .word-line {
+display: block;
+color: #fff;
+margin-bottom: 0.1em;
+}
+.hero-headline .word-line:last-child {
+margin-bottom: 0;
+}
+.hero-headline .word-gold {
+color: var(--gold);
+}
+
+/* ── Opening date line ───────────────────────────────────────── */
+.hero-date {
+font-family: var(--font-head);
+font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+letter-spacing: 0.5em;
+text-transform: uppercase;
+color: var(--muted);
+margin-bottom: 28px;
+display: flex;
+align-items: center;
+gap: 14px;
+}
+.hero-date::before,
+.hero-date::after {
+content: '';
+display: block;
+width: 24px;
+height: 1px;
+background: rgba(255,255,255,0.2);
+}
+
+/* ── Tension line ────────────────────────────────────────────── */
+.hero-tension {
+font-family: var(--font-body);
+font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+font-style: italic;
+font-weight: 300;
+color: rgba(255,255,255,0.38);
+letter-spacing: 0.02em;
+margin-bottom: 44px;
+}
+
+/* ── "Coming Soon" sub ───────────────────────────────────────── */
+.hero-sub {
+font-family: var(--font-head);
+font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+letter-spacing: 0.55em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.28);
+margin-bottom: 36px;
+}
+
+.hero-desc {
+font-size: clamp(0.95rem, 2vw, 1.05rem);
+color: var(--muted);
+max-width: 520px;
+margin: 0 auto 48px;
+line-height: 1.8;
+}
+.hero-desc strong { color: #fff; font-weight: 600; }
+
+/* ── Gold divider ────────────────────────────────────────────── */
+.gold-divider {
+display: flex;
+align-items: center;
+gap: 16px;
+margin: 0 auto 48px;
+max-width: 320px;
+}
+.gold-divider::before,
+.gold-divider::after {
+content: '';
+flex: 1;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.gold-divider-icon {
+color: var(--gold);
+font-size: 0.8rem;
+}
+
+/* ── Spots counter ───────────────────────────────────────────── */
+.spots-bar {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+background: rgba(198,164,90,0.08);
+border: 1px solid var(--border);
+border-radius: 4px;
+padding: 10px 20px;
+font-family: var(--font-head);
+font-size: 0.7rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(--gold);
+margin-bottom: 56px;
+}
+.spots-dot {
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background: var(--gold);
+animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.35; }
+}
+
+/* ── Form section + spots counter ───────────────────────────── */
+.form-section {
+position: relative;
+z-index: 10;
+padding: 0 24px clamp(60px, 10vh, 100px);
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.spots-counter {
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.25);
+text-align: center;
+margin-bottom: 14px;
+min-height: 1.2em;
+transition: color 0.3s;
+}
+.spots-counter .spots-num {
+color: rgba(198,164,90,0.65);
+}
+.form-card {
+width: 100%;
+max-width: 560px;
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(198,164,90,0.2);
+border-radius: 8px;
+padding: clamp(32px, 5vw, 52px) clamp(24px, 5vw, 48px);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+transition: transform 0.35s var(--ease-expo);
+}
+.form-card:hover {
+transform: translateY(-2px);
+}
+
+/* ── Progress indicator ──────────────────────────────────────── */
+.form-progress {
+display: flex;
+align-items: center;
+margin-bottom: 32px;
+gap: 10px;
+}
+.form-progress-step {
+font-family: var(--font-head);
+font-size: 0.58rem;
+letter-spacing: 0.28em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.22);
+white-space: nowrap;
+transition: color 0.3s;
+}
+.form-progress-step.active {
+color: var(--gold);
+}
+.form-progress-track {
+flex: 1;
+height: 1px;
+background: rgba(255,255,255,0.08);
+position: relative;
+overflow: hidden;
+border-radius: 1px;
+}
+.form-progress-fill {
+position: absolute;
+inset: 0;
+background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+transform-origin: left;
+transform: scaleX(0.5);
+transition: transform 0.55s var(--ease-expo);
+}
+.form-progress-fill.full { transform: scaleX(1); }
+
+/* ── Step transitions ────────────────────────────────────────── */
+.form-step { }
+.form-step.step-hidden { display: none; }
+.form-step.step-exit {
+opacity: 0;
+transform: translateX(-12px);
+transition: opacity 0.18s ease, transform 0.18s ease;
+pointer-events: none;
+}
+.form-step.step-enter {
+opacity: 0;
+transform: translateX(12px);
+transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.form-step.step-enter-active {
+opacity: 1;
+transform: translateX(0);
+}
+
+.form-title {
+font-family: var(--font-head);
+font-size: clamp(1rem, 3vw, 1.25rem);
+font-weight: 600;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: #fff;
+margin-bottom: 6px;
+}
+.form-subtitle {
+font-size: 0.88rem;
+color: var(--muted);
+margin-bottom: 32px;
+line-height: 1.6;
+}
+
+/* Category selector */
+.category-label {
+font-family: var(--font-head);
+font-size: 0.65rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--gold);
+margin-bottom: 12px;
+display: block;
+}
+.category-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 10px;
+margin-bottom: 24px;
+}
+.cat-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+padding: 16px 8px;
+border: 1px solid rgba(198,164,90,0.2);
+border-radius: 6px;
+background: transparent;
+color: var(--muted);
+font-family: var(--font-head);
+font-size: 0.7rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+cursor: pointer;
+transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.cat-btn i { font-size: 1.2rem; }
+.cat-btn:hover {
+border-color: rgba(198,164,90,0.5);
+color: var(--gold-light);
+}
+.cat-btn.active {
+border-color: var(--gold);
+color: var(--gold);
+background: rgba(198,164,90,0.08);
+}
+.cat-age {
+font-size: 0.58rem;
+color: var(--muted);
+letter-spacing: 0.1em;
+margin-top: -4px;
+}
+.cat-btn.active .cat-age { color: rgba(198,164,90,0.7); }
+
+/* Form fields */
+.form-group { margin-bottom: 16px; }
+.field-label {
+display: block;
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(--muted);
+margin-bottom: 8px;
+}
+.field-input {
+width: 100%;
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 6px;
+color: #fff;
+font-family: var(--font-body);
+font-size: 0.95rem;
+padding: 15px 18px;
+outline: none;
+transition: border-color 0.2s, background 0.2s, box-shadow 0.25s;
+-webkit-appearance: none;
+appearance: none;
+box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
+}
+.field-input::placeholder { color: rgba(255,255,255,0.22); }
+.field-input:focus {
+border-color: rgba(198,164,90,0.55);
+background: rgba(255,255,255,0.06);
+box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 0 3px rgba(198,164,90,0.07);
+}
+.field-input option { background: #1a1a1a; color: #fff; }
+.field-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+/* Continue button */
+.continue-btn {
+width: 100%;
+margin-top: 8px;
+padding: 17px 24px;
+background: transparent;
+border: 1px solid rgba(198,164,90,0.45);
+color: var(--gold);
+font-family: var(--font-head);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+border-radius: 4px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.continue-btn:hover {
+background: rgba(198,164,90,0.07);
+border-color: var(--gold);
+transform: translateY(-1px);
+box-shadow: 0 6px 22px rgba(198,164,90,0.09);
+}
+.continue-btn:active { transform: translateY(0); }
+
+/* Submit button */
+.submit-btn {
+width: 100%;
+margin-top: 8px;
+padding: 17px 24px;
+background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 60%, var(--gold-light) 100%);
+color: #0A0A0A;
+font-family: var(--font-head);
+font-size: 0.8rem;
+font-weight: 700;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+border-radius: 4px;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.submit-btn:hover {
+opacity: 0.92;
+transform: translateY(-1px);
+box-shadow: 0 8px 28px rgba(198,164,90,0.16);
+}
+.submit-btn:active { transform: translateY(0); }
+
+.form-note {
+text-align: center;
+font-size: 0.75rem;
+color: rgba(255,255,255,0.3);
+margin-top: 14px;
+line-height: 1.5;
+}
+.form-note i { color: var(--gold); margin-right: 4px; }
+
+/* ── Success card ────────────────────────────────────────────── */
+.form-success {
+display: none;
+text-align: center;
+padding: 16px 0 8px;
+}
+.form-success.visible { display: block; }
+.form-success-divider {
+width: 32px;
+height: 1px;
+background: rgba(198,164,90,0.4);
+margin: 0 auto 28px;
+}
+.form-success-title {
+font-family: var(--font-display);
+font-size: clamp(2.2rem, 7vw, 3.2rem);
+letter-spacing: 0.1em;
+color: #fff;
+line-height: 1;
+margin-bottom: 28px;
+}
+.form-success-body {
+margin-bottom: 28px;
+}
+.form-success-body p {
+font-size: 0.95rem;
+color: rgba(255,255,255,0.65);
+line-height: 1.85;
+margin-bottom: 2px;
+}
+.form-success-body p strong {
+color: #fff;
+font-weight: 500;
+}
+.form-success-tension {
+font-size: 0.82rem;
+color: rgba(255,255,255,0.28);
+font-style: italic;
+font-weight: 300;
+margin-top: 16px;
+}
+.form-success-spot {
+display: inline-block;
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.32em;
+text-transform: uppercase;
+color: var(--gold);
+border: 1px solid rgba(198,164,90,0.28);
+padding: 8px 20px;
+border-radius: 2px;
+}
+
+/* ── Features strip ──────────────────────────────────────────── */
+.features {
+position: relative;
+z-index: 10;
+border-top: 1px solid rgba(198,164,90,0.1);
+border-bottom: 1px solid rgba(198,164,90,0.1);
+padding: clamp(40px, 6vh, 60px) 24px;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+gap: 32px 24px;
+max-width: 900px;
+margin: 0 auto;
+width: 100%;
+}
+.feature-item {
+text-align: center;
+}
+.feature-icon {
+font-size: 1.6rem;
+color: var(--gold);
+margin-bottom: 12px;
+}
+.feature-name {
+font-family: var(--font-head);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: #fff;
+margin-bottom: 4px;
+}
+.feature-desc {
+font-size: 0.8rem;
+color: var(--muted);
+line-height: 1.5;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.cs-footer {
+position: relative;
+z-index: 10;
+text-align: center;
+padding: 32px 24px;
+border-top: 1px solid rgba(198,164,90,0.08);
+}
+.cs-footer-logo {
+font-family: var(--font-display);
+font-size: 1.4rem;
+letter-spacing: 0.2em;
+color: var(--gold);
+margin-bottom: 6px;
+}
+.cs-footer-text {
+font-size: 0.75rem;
+color: rgba(255,255,255,0.2);
+letter-spacing: 0.1em;
+}
+.cs-footer-text a {
+color: rgba(198,164,90,0.5);
+text-decoration: underline;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 600px) {
+.topbar {
+padding: 20px 20px;
+}
+.topbar-badge {
+display: none;
+}
+.hero {
+padding-top: 48px;
+padding-bottom: 32px;
+}
+.hero-headline {
+font-size: clamp(2.6rem, 13vw, 4.5rem);
+letter-spacing: 0.06em;
+}
+.hero-sub {
+font-size: clamp(0.6rem, 4vw, 0.7rem);
+letter-spacing: 0.4em;
+}
+.field-row {
+grid-template-columns: 1fr;
+}
+.features {
+grid-template-columns: 1fr 1fr;
+gap: 24px;
+}
+.form-card {
+padding: 28px 20px;
+}
+}
+@media (max-width: 360px) {
+.category-grid {
+gap: 7px;
+}
+.cat-btn {
+padding: 13px 4px;
+font-size: 0.62rem;
+}
+}
+
+/* ── Fade-in animation ───────────────────────────────────────── */
+.fade-up {
+opacity: 0;
+transform: translateY(24px);
+transition: opacity 0.7s var(--ease-expo), transform 0.7s var(--ease-expo);
+}
+.fade-up.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.55s; }
+.delay-6 { transition-delay: 0.7s; }
+</style>
+</head>
+<body>
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- Background layers -->
+<div class="bg-gradient" aria-hidden="true"></div>
+<div class="bg-lines" aria-hidden="true"></div>
+
+<div class="page">
+
+<!-- Top bar -->
+<header class="topbar">
+<div class="logo-lockup">
+<span class="logo-name">BOMAYE GYM</span>
+<span class="logo-city">Munich</span>
+</div>
+<div class="topbar-badge">Early Access</div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+<div class="hero-eyebrow fade-up visible">Münchens neues Premium-Boxgym</div>
+
+<h1 class="hero-headline fade-up delay-1 visible">
+<span class="word-line">IT'S NOT A GYM.</span>
+<span class="word-line">IT'S <span class="word-gold">PASSION.</span></span>
+</h1>
+
+<p class="hero-tension fade-up delay-2 visible">Built for those who take it serious.</p>
+
+<p class="hero-date fade-up delay-2 visible">Opening · April 2026 · Munich</p>
+
+<p class="hero-sub fade-up delay-3 visible">Coming Soon</p>
+
+<p class="hero-desc fade-up delay-3 visible">
+Boxen auf <strong>Premium-Niveau</strong> — für Kids, Jugend und Erwachsene.
+Sei dabei, bevor wir offiziell öffnen und sichere dir deinen Early-Bird-Vorteil.
+</p>
+
+<div class="gold-divider fade-up delay-3 visible" aria-hidden="true">
+<i class="gold-divider-icon fa-solid fa-boxing-glove"></i>
+</div>
+
+<div class="spots-bar fade-up delay-4 visible">
+<span class="spots-dot"></span>
+Begrenzte Early-Bird-Plätze verfügbar
+</div>
+</section>
+
+<!-- Lead Capture Form -->
+<section class="form-section" id="form-section">
+<p class="spots-counter fade-up delay-5 visible" id="spots-counter" aria-live="polite"></p>
+<div class="form-card fade-up delay-5 visible">
+
+<!-- Success card (hidden until submit) -->
+<div class="form-success" id="form-success" role="alert" aria-live="polite">
+<div class="form-success-divider"></div>
+<div class="form-success-title">WELCOME TO BOMAYE.</div>
+<div class="form-success-body">
+<p><strong>Du bist drin.</strong></p>
+<p>Dein Platz ist gesichert.</p>
+<p>Du gehörst zu den Ersten.</p>
+<p class="form-success-tension">Die meisten werden es verpassen.<br />Du nicht.</p>
+</div>
+<div class="form-success-spot" id="form-success-spot">Platz #-- von 300</div>
+</div>
+
+<!-- Form -->
+<form id="earlybird-form" novalidate>
+
+<!-- Progress indicator -->
+<div class="form-progress" aria-label="Fortschritt">
+<span class="form-progress-step active" id="prog-step1">Schritt 1</span>
+<div class="form-progress-track">
+<div class="form-progress-fill" id="prog-fill"></div>
+</div>
+<span class="form-progress-step" id="prog-step2">Schritt 2</span>
+</div>
+
+<!-- ── STEP 1 ── -->
+<div class="form-step" id="form-step-1">
+<p class="form-title">Early-Bird-Zugang sichern</p>
+<p class="form-subtitle">Kostenlos &amp; unverbindlich — du wirst als Erstes informiert.</p>
+
+<span class="category-label">Für wen meldest du dich an?</span>
+<div class="category-grid" role="group" aria-label="Kategorie auswählen">
+<button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
+<i class="fa-solid fa-child"></i>
+Kids
+<span class="cat-age">4 – 12 Jahre</span>
+</button>
+<button type="button" class="cat-btn" data-cat="youth" aria-pressed="false">
+<i class="fa-solid fa-person-running"></i>
+Jugend
+<span class="cat-age">13 – 17 Jahre</span>
+</button>
+<button type="button" class="cat-btn" data-cat="adults" aria-pressed="false">
+<i class="fa-solid fa-dumbbell"></i>
+Erwachsene
+<span class="cat-age">18+ Jahre</span>
+</button>
+</div>
+
+<div class="form-group">
+<label class="field-label" for="cs-firstname">Vorname *</label>
+<input class="field-input" type="text" id="cs-firstname" name="firstname"
+placeholder="Max" autocomplete="given-name" required />
+</div>
+
+<div class="form-group">
+<label class="field-label" for="cs-email">E-Mail-Adresse *</label>
+<input class="field-input" type="email" id="cs-email" name="email"
+placeholder="deine@email.de" autocomplete="email" required />
+</div>
+
+<button type="button" class="continue-btn" id="btn-continue">
+Next Step <i class="fa-solid fa-arrow-right"></i>
+</button>
+</div>
+
+<!-- ── STEP 2 ── -->
+<div class="form-step step-hidden" id="form-step-2">
+<p class="form-title">Fast geschafft.</p>
+<p class="form-subtitle">Noch ein paar Details — damit wir dich richtig einordnen können.</p>
+
+<div class="form-group">
+<label class="field-label" for="cs-lastname">Nachname</label>
+<input class="field-input" type="text" id="cs-lastname" name="lastname"
+placeholder="Mustermann" autocomplete="family-name" />
+</div>
+
+<div class="field-row">
+<div class="form-group">
+<label class="field-label" for="cs-phone">Telefon <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
+<input class="field-input" type="tel" id="cs-phone" name="phone"
+placeholder="+49 89 …" autocomplete="tel" />
+</div>
+<div class="form-group">
+<label class="field-label" for="cs-dob">Geburtsdatum <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
+<input class="field-input" type="date" id="cs-dob" name="dob"
+autocomplete="bday" />
+</div>
+</div>
+
+<div class="form-group">
+<label class="field-label" for="cs-goal">Dein Ziel</label>
+<select class="field-input" id="cs-goal" name="goal">
+<option value="" disabled selected>Bitte auswählen …</option>
+<option value="fitness">Fitness</option>
+<option value="boxen-lernen">Boxen lernen</option>
+<option value="wettkampf">Wettkampf</option>
+<option value="abnehmen">Abnehmen</option>
+</select>
+</div>
+
+<!-- Hidden fields -->
+<input type="hidden" name="category" id="cs-category" value="" />
+
+<button type="submit" class="submit-btn">
+<i class="fa-solid fa-bolt"></i>
+Secure Your Early Access
+</button>
+
+<p class="form-note" style="margin-top:10px;">Limitierte Plätze. Kein Spam.</p>
+</div>
+
+</form>
+
+</div>
+</section>
+
+<!-- Features strip -->
+<div class="features" aria-label="Was dich erwartet">
+<div class="feature-item fade-up visible">
+<div class="feature-icon"><i class="fa-solid fa-boxing-glove"></i></div>
+<div class="feature-name">Premium Boxtraining</div>
+<div class="feature-desc">Professionelle Trainer, kleine Gruppen, maximale Qualität.</div>
+</div>
+<div class="feature-item fade-up delay-1 visible">
+<div class="feature-icon"><i class="fa-solid fa-child-reaching"></i></div>
+<div class="feature-name">Kids &amp; Jugend</div>
+<div class="feature-desc">Altersgerechte Programme ab 4 Jahren — Charakter, Disziplin, Spaß.</div>
+</div>
+<div class="feature-item fade-up delay-2 visible">
+<div class="feature-icon"><i class="fa-solid fa-trophy"></i></div>
+<div class="feature-name">Early-Bird-Vorteile</div>
+<div class="feature-desc">Sonderkonditionen und Prioritätszugang für die ersten Mitglieder.</div>
+</div>
+<div class="feature-item fade-up delay-3 visible">
+<div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
+<div class="feature-name">München</div>
+<div class="feature-desc">Zentrale Lage — bald mehr Details zu Adresse und Eröffnung.</div>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="cs-footer">
+<div class="cs-footer-logo">BOMAYE GYM</div>
+<p class="cs-footer-text">
+&copy; 2025 BOMAYE GYM MUNICH &mdash;
+<a href="/impressum.html">Impressum</a>
+</p>
+</footer>
+
+</div><!-- /.page -->
+
+<script>
+// ── Spots counter ────────────────────────────────────────────
+const spotsCounterEl = document.getElementById('spots-counter');
+let currentTaken = null;
+
+function renderSpots(taken) {
+  if (!spotsCounterEl || taken === null) return;
+  currentTaken = taken;
+  const remaining = 300 - taken;
+  spotsCounterEl.innerHTML =
+    `<span class="spots-num">${taken}</span> of 300 Founding Spots taken`;
+}
+
+async function loadSpots() {
+  try {
+    const res  = await fetch('/api/spots');
+    const data = await res.json();
+    if (typeof data.taken === 'number') renderSpots(data.taken);
+  } catch { /* silent — counter stays empty */ }
+}
+loadSpots();
+
+// ── Category toggle ──────────────────────────────────────────
+const catBtns = document.querySelectorAll('.cat-btn');
+const catHidden = document.getElementById('cs-category');
+catBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    catHidden.value = btn.dataset.cat;
+  });
+});
+
+// ── Multi-step logic ─────────────────────────────────────────
+const step1El   = document.getElementById('form-step-1');
+const step2El   = document.getElementById('form-step-2');
+const progFill  = document.getElementById('prog-fill');
+const progStep1 = document.getElementById('prog-step1');
+const progStep2 = document.getElementById('prog-step2');
+
+function showError(referenceEl, msg) {
+  clearError();
+  const err = document.createElement('p');
+  err.className = 'form-error-msg';
+  err.style.cssText = 'color:#e07070;font-size:.78rem;text-align:center;margin-top:8px;letter-spacing:.02em;';
+  err.textContent = msg;
+  referenceEl.insertAdjacentElement('afterend', err);
+}
+function clearError() {
+  const e = document.querySelector('.form-error-msg');
+  if (e) e.remove();
+}
+
+function goToStep2() {
+  clearError();
+  const fname    = document.getElementById('cs-firstname').value.trim();
+  const email    = document.getElementById('cs-email').value.trim();
+  const category = catHidden.value;
+
+  if (!category) {
+    document.querySelector('.category-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showError(document.querySelector('.category-grid'), 'Bitte eine Kategorie auswählen.');
+    return;
+  }
+  if (!fname) {
+    document.getElementById('cs-firstname').focus();
+    showError(document.getElementById('cs-firstname'), 'Bitte Vorname eingeben.');
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('cs-email').focus();
+    showError(document.getElementById('cs-email'), 'Bitte gültige E-Mail-Adresse eingeben.');
+    return;
+  }
+
+  // Exit step 1
+  step1El.classList.add('step-exit');
+  setTimeout(() => {
+    step1El.classList.add('step-hidden');
+    step1El.classList.remove('step-exit');
+
+    // Enter step 2
+    step2El.classList.remove('step-hidden');
+    step2El.classList.add('step-enter');
+    // Trigger reflow so transition fires
+    void step2El.offsetWidth;
+    step2El.classList.add('step-enter-active');
+    setTimeout(() => step2El.classList.remove('step-enter'), 250);
+
+    // Update progress
+    progFill.classList.add('full');
+    progStep1.classList.remove('active');
+    progStep2.classList.add('active');
+
+    document.getElementById('cs-lastname').focus();
+  }, 200);
+}
+
+document.getElementById('btn-continue').addEventListener('click', goToStep2);
+
+// ── Form submit ──────────────────────────────────────────────
+const form      = document.getElementById('earlybird-form');
+const successEl = document.getElementById('form-success');
+const submitBtn = form.querySelector('.submit-btn');
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  clearError();
+
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = '0.65';
+
+  const payload = {
+    firstName : document.getElementById('cs-firstname').value.trim(),
+    lastName  : document.getElementById('cs-lastname').value.trim(),
+    email     : document.getElementById('cs-email').value.trim(),
+    phone     : document.getElementById('cs-phone').value.trim(),
+    dob       : document.getElementById('cs-dob').value,
+    goal      : document.getElementById('cs-goal').value,
+    category  : catHidden.value,
+  };
+
+  // Fire-and-forget — backend errors must never block the user
+  try {
+    await fetch('/api/lead', {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error('[lead form] fetch error (non-fatal):', err);
+  }
+
+  // Update counter: use real value if loaded, otherwise increment local state
+  const newTaken = currentTaken !== null ? Math.min(currentTaken + 1, 300) : null;
+  if (newTaken !== null) renderSpots(newTaken);
+  const spotNum = newTaken ?? (Math.floor(Math.random() * 73) + 47);
+  document.getElementById('form-success-spot').textContent = `Platz #${spotNum} von 300`;
+
+  // Fade out form, then show success
+  form.style.transition = 'opacity 0.2s ease';
+  form.style.opacity = '0';
+  setTimeout(() => {
+    form.style.display = 'none';
+    successEl.style.opacity = '0';
+    successEl.classList.add('visible');
+    requestAnimationFrame(() => {
+      successEl.style.transition = 'opacity 0.38s ease';
+      successEl.style.opacity = '1';
+    });
+  }, 200);
+});
+
+// ── Fade-in on scroll (for features) ────────────────────────
+const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
+if (fadeEls.length && 'IntersectionObserver' in window) {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.15 });
+  fadeEls.forEach(el => obs.observe(el));
+} else {
+  fadeEls.forEach(el => el.classList.add('visible'));
+}
+</script>
+</body>
+</html>
