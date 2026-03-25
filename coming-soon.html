@@ -305,13 +305,28 @@ animation: pulse 2s ease-in-out infinite;
 50% { opacity: 0.35; }
 }
 
-/* ── Form card ───────────────────────────────────────────────── */
+/* ── Form section + spots counter ───────────────────────────── */
 .form-section {
 position: relative;
 z-index: 10;
 padding: 0 24px clamp(60px, 10vh, 100px);
 display: flex;
-justify-content: center;
+flex-direction: column;
+align-items: center;
+}
+.spots-counter {
+font-family: var(--font-head);
+font-size: 0.6rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.25);
+text-align: center;
+margin-bottom: 14px;
+min-height: 1.2em;
+transition: color 0.3s;
+}
+.spots-counter .spots-num {
+color: rgba(198,164,90,0.65);
 }
 .form-card {
 width: 100%;
@@ -781,6 +796,7 @@ Begrenzte Early-Bird-Plätze verfügbar
 
 <!-- Lead Capture Form -->
 <section class="form-section" id="form-section">
+<p class="spots-counter fade-up delay-5 visible" id="spots-counter" aria-live="polite"></p>
 <div class="form-card fade-up delay-5 visible">
 
 <!-- Success card (hidden until submit) -->
@@ -936,6 +952,27 @@ Secure Your Early Access
 </div><!-- /.page -->
 
 <script>
+// ── Spots counter ────────────────────────────────────────────
+const spotsCounterEl = document.getElementById('spots-counter');
+let currentTaken = null;
+
+function renderSpots(taken) {
+  if (!spotsCounterEl || taken === null) return;
+  currentTaken = taken;
+  const remaining = 300 - taken;
+  spotsCounterEl.innerHTML =
+    `<span class="spots-num">${taken}</span> of 300 Founding Spots taken`;
+}
+
+async function loadSpots() {
+  try {
+    const res  = await fetch('/api/spots');
+    const data = await res.json();
+    if (typeof data.taken === 'number') renderSpots(data.taken);
+  } catch { /* silent — counter stays empty */ }
+}
+loadSpots();
+
 // ── Category toggle ──────────────────────────────────────────
 const catBtns = document.querySelectorAll('.cat-btn');
 const catHidden = document.getElementById('cs-category');
@@ -1048,9 +1085,11 @@ form.addEventListener('submit', async e => {
     console.error('[lead form] fetch error (non-fatal):', err);
   }
 
-  // Simulated spot number (47–119)
-  const spot = Math.floor(Math.random() * 73) + 47;
-  document.getElementById('form-success-spot').textContent = `Platz #${spot} von 300`;
+  // Update counter: use real value if loaded, otherwise increment local state
+  const newTaken = currentTaken !== null ? Math.min(currentTaken + 1, 300) : null;
+  if (newTaken !== null) renderSpots(newTaken);
+  const spotNum = newTaken ?? (Math.floor(Math.random() * 73) + 47);
+  document.getElementById('form-success-spot').textContent = `Platz #${spotNum} von 300`;
 
   // Fade out form, then show success
   form.style.transition = 'opacity 0.2s ease';
