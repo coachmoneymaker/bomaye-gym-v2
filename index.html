@@ -28,7 +28,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
-      background: #080808;
+      background: #0f0f0f;
       color: #fff;
       font-family: 'DM Sans', system-ui, sans-serif;
       font-size: 18px;
@@ -69,15 +69,15 @@
     /* ── Fixed background layers ─────────────────────────────────── */
     .bg-base {
       position: fixed; inset: 0; z-index: 0;
-      background: #0d0d0d;
+      background: #141414;
     }
 
-    /* Cinematic vignette — slightly lifted for more depth */
+    /* Cinematic vignette — clean depth, not heavy */
     .bg-vignette {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background:
-        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 22%, rgba(0,0,0,0.78) 100%),
-        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.12) 100%);
+        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 22%, rgba(0,0,0,0.52) 100%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 100%);
     }
 
     /* Gold crown glow at top — slightly boosted */
@@ -140,7 +140,7 @@
     /* Fine grain texture overlay */
     .bg-grain {
       position: fixed; inset: 0; z-index: 3; pointer-events: none;
-      opacity: 0.28;
+      opacity: 0.16;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
     }
 
@@ -648,7 +648,7 @@
       margin-bottom: 8px;
     }
     .cs-footer-logo-img {
-      height: clamp(64px, 8vw, 84px);
+      height: clamp(92px, 11vw, 132px);
       width: auto;
       display: block;
       margin: 0 auto 16px;
@@ -1212,16 +1212,16 @@
       fadeEls.forEach(el => el.classList.add('visible'));
     }
 
-    // ── Luxury particle system ────────────────────────────────────
+    // ── Cinematic smoke system ────────────────────────────────────
     (function() {
       const canvas = document.getElementById('particle-canvas');
       if (!canvas || !canvas.getContext) return;
       const ctx = canvas.getContext('2d');
       const isMobile = window.matchMedia('(max-width: 600px)').matches;
-      const COUNT = isMobile ? 30 : 65;
+      const COUNT = isMobile ? 7 : 14;
 
       let W, H;
-      const particles = [];
+      const smokes = [];
 
       function rand(min, max) { return min + Math.random() * (max - min); }
 
@@ -1230,71 +1230,106 @@
         H = canvas.height = window.innerHeight;
       }
 
-      function mkParticle(randomY) {
-        const gold = Math.random() > 0.55;
+      // Slightly warm / neutral smoke tones — no grey muddy look
+      const COLORS = [
+        '225,218,208',
+        '218,212,200',
+        '222,215,204',
+        '228,220,210',
+      ];
+
+      function mkSmoke(startBelow) {
+        // Distribute mainly in lower & mid background, leave upper 30% cleaner
+        const yStart = startBelow
+          ? H + rand(20, 80)
+          : rand(H * 0.38, H + 20);
+        // Keep some negative space: cluster in bands, not full width
+        const xBand = Math.random() < 0.5
+          ? rand(W * 0.03, W * 0.45)   // left band
+          : rand(W * 0.50, W * 0.97);  // right band
         return {
-          x:           rand(0, W),
-          y:           randomY ? rand(0, H) : H + rand(5, 20),
-          r:           rand(0.4, 1.9),
-          vy:          rand(0.08, 0.22),
-          vx:          rand(-0.04, 0.04),
-          opacity:     0,
-          peak:        rand(0.06, 0.20),
-          fadeIn:      true,
-          fadeSpeed:   rand(0.0006, 0.0022),
-          gold,
-          hue:         gold ? `198,164,90` : `255,255,255`,
-          alphaMult:   gold ? 1 : 0.55,
+          x:          xBand,
+          y:          yStart,
+          r:          rand(22, 55),           // starting radius
+          maxR:       rand(90, 200),          // expand to this
+          vy:         rand(0.20, 0.52),       // slow upward drift
+          vx:         rand(-0.12, 0.12),      // gentle lateral drift
+          opacity:    0,
+          peakOp:     rand(0.055, 0.13),      // visible but premium — not heavy
+          fadeInSpd:  rand(0.0007, 0.0018),
+          fadeOutSpd: rand(0.0004, 0.001),
+          expandSpd:  rand(0.12, 0.30),       // radius growth per frame
+          phase:      'in',                   // 'in' → 'out'
+          color:      COLORS[Math.floor(Math.random() * COLORS.length)],
+          wobble:     rand(0, Math.PI * 2),   // phase offset for sine wobble
+          wobbleSpd:  rand(0.006, 0.020),     // wobble frequency
+          wobbleAmp:  rand(0.25, 0.90),       // wobble width in px
         };
       }
 
       function init() {
         resize();
-        for (let i = 0; i < COUNT; i++) particles.push(mkParticle(true));
+        for (let i = 0; i < COUNT; i++) smokes.push(mkSmoke(false));
       }
 
       let raf;
       function tick() {
         ctx.clearRect(0, 0, W, H);
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.y -= p.vy;
-          p.x += p.vx;
 
-          if (p.fadeIn) {
-            p.opacity += p.fadeSpeed;
-            if (p.opacity >= p.peak) p.fadeIn = false;
+        for (let i = 0; i < smokes.length; i++) {
+          const s = smokes[i];
+
+          // Movement — upward + gentle sinusoidal side drift
+          s.y -= s.vy;
+          s.wobble += s.wobbleSpd;
+          s.x += s.vx + Math.sin(s.wobble) * s.wobbleAmp;
+
+          // Expand — smoke blob grows as it rises
+          if (s.r < s.maxR) s.r += s.expandSpd;
+
+          // Opacity lifecycle: fade in, then fade out once expanded past 45% maxR
+          if (s.phase === 'in') {
+            s.opacity += s.fadeInSpd;
+            if (s.opacity >= s.peakOp) { s.opacity = s.peakOp; s.phase = 'out'; }
           } else {
-            p.opacity -= p.fadeSpeed * 0.7;
+            // Begin fading out gradually — dissolves as it expands
+            s.opacity -= s.fadeOutSpd;
           }
 
-          if (p.y < -8 || p.opacity <= 0) {
-            particles[i] = mkParticle(false);
+          // Recycle when fully off-screen or invisible
+          if (s.y + s.r < 0 || s.opacity <= 0) {
+            smokes[i] = mkSmoke(true);
             continue;
           }
 
+          // Draw soft volumetric smoke blob with radial gradient
+          const op = Math.max(0, Math.min(1, s.opacity));
+          const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+          grd.addColorStop(0,    `rgba(${s.color},${op})`);
+          grd.addColorStop(0.30, `rgba(${s.color},${(op * 0.68).toFixed(4)})`);
+          grd.addColorStop(0.65, `rgba(${s.color},${(op * 0.22).toFixed(4)})`);
+          grd.addColorStop(1,    `rgba(${s.color},0)`);
+
           ctx.save();
-          ctx.globalAlpha = Math.max(0, Math.min(1, p.opacity * p.alphaMult));
-          ctx.fillStyle = `rgba(${p.hue},1)`;
+          ctx.fillStyle = grd;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
+
         raf = requestAnimationFrame(tick);
       }
 
       init();
       tick();
 
-      window.addEventListener('resize', () => {
-        resize();
-      }, { passive: true });
+      window.addEventListener('resize', resize, { passive: true });
 
       // Pause when tab is hidden to save resources
       document.addEventListener('visibilitychange', () => {
-        if (document.hidden) { cancelAnimationFrame(raf); }
-        else { tick(); }
+        if (document.hidden) cancelAnimationFrame(raf);
+        else tick();
       });
     })();
   </script>
