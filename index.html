@@ -69,18 +69,18 @@
     /* ── Fixed background layers ─────────────────────────────────── */
     .bg-base {
       position: fixed; inset: 0; z-index: 0;
-      background: #080808;
+      background: #0d0d0d;
     }
 
-    /* Cinematic vignette */
+    /* Cinematic vignette — slightly lifted for more depth */
     .bg-vignette {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background:
-        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 20%, rgba(0,0,0,0.92) 100%),
-        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 100%);
+        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 22%, rgba(0,0,0,0.78) 100%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.12) 100%);
     }
 
-    /* Gold crown glow at top */
+    /* Gold crown glow at top — slightly boosted */
     .bg-glow {
       position: fixed;
       top: -25%;
@@ -92,9 +92,9 @@
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 70% 65% at 50% 0%, rgba(198,164,90,0.22) 0%, rgba(198,164,90,0.08) 45%, transparent 72%),
-        radial-gradient(ellipse 45% 40% at 50% 0%, rgba(220,180,90,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 30% 25% at 50% 0%, rgba(240,200,100,0.1) 0%, transparent 40%);
+        radial-gradient(ellipse 70% 65% at 50% 0%, rgba(198,164,90,0.28) 0%, rgba(198,164,90,0.10) 45%, transparent 72%),
+        radial-gradient(ellipse 45% 40% at 50% 0%, rgba(220,180,90,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 25% at 50% 0%, rgba(240,200,100,0.13) 0%, transparent 40%);
     }
 
     /* Subtle vertical lines grid */
@@ -122,8 +122,8 @@
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 65% 60% at 50% 50%, rgba(198,164,90,0.065) 0%, rgba(198,164,90,0.02) 55%, transparent 78%),
-        radial-gradient(ellipse 40% 35% at 50% 50%, rgba(220,180,90,0.04) 0%, transparent 60%);
+        radial-gradient(ellipse 65% 60% at 50% 50%, rgba(198,164,90,0.10) 0%, rgba(198,164,90,0.032) 55%, transparent 78%),
+        radial-gradient(ellipse 40% 35% at 50% 50%, rgba(220,180,90,0.06) 0%, transparent 60%);
       filter: blur(48px);
     }
 
@@ -178,7 +178,7 @@
       padding: 22px 64px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       border-bottom: 1px solid rgba(198,164,90,0.08);
       background: rgba(8,8,8,0.82);
       backdrop-filter: blur(28px);
@@ -206,6 +206,8 @@
       transition-duration: 0.1s;
     }
     .topbar-badge {
+      position: absolute;
+      right: 64px;
       font-family: var(--font-head);
       font-size: 0.55rem;
       letter-spacing: 0.35em;
@@ -679,7 +681,8 @@
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .topbar { padding: 20px 24px; }
+      .topbar { padding: 16px 24px; }
+      .topbar-badge { right: 24px; }
       .topbar-badge { display: none; }
       .logo-img { height: clamp(72px, 17vw, 92px); }
       .hero { padding-top: 56px; padding-bottom: 40px; }
