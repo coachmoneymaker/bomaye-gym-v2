@@ -76,8 +76,8 @@
     .bg-vignette {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background:
-        radial-gradient(ellipse 80% 80% at 50% 50%, transparent 25%, rgba(0,0,0,0.88) 100%),
-        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
+        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 20%, rgba(0,0,0,0.92) 100%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 100%);
     }
 
     /* Gold crown glow at top */
@@ -86,11 +86,13 @@
       top: -20%;
       left: 50%;
       transform: translateX(-50%);
-      width: 900px;
-      height: 600px;
+      width: 1100px;
+      height: 700px;
       z-index: 1;
       pointer-events: none;
-      background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(198,164,90,0.07) 0%, transparent 70%);
+      background:
+        radial-gradient(ellipse 65% 60% at 50% 0%, rgba(198,164,90,0.13) 0%, rgba(198,164,90,0.04) 50%, transparent 72%),
+        radial-gradient(ellipse 40% 35% at 50% 0%, rgba(220,180,90,0.06) 0%, transparent 55%);
     }
 
     /* Subtle vertical lines grid */
@@ -106,15 +108,15 @@
         );
     }
 
-    /* Smoke / haze layer — very subtle, slow drift */
+    /* Smoke / haze layer — cinematic slow drift */
     .bg-smoke {
       position: fixed; inset: -20%; z-index: 2; pointer-events: none;
       width: 140%; height: 140%;
       background:
-        radial-gradient(ellipse 55% 32% at 22% 52%, rgba(198,164,90,0.022) 0%, transparent 65%),
-        radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,0.02) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 35% at 75% 35%, rgba(255,255,255,0.013) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 28% at 68% 72%, rgba(255,255,255,0.009) 0%, transparent 50%);
+        radial-gradient(ellipse 55% 32% at 22% 52%, rgba(198,164,90,0.048) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,0.038) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 75% 35%, rgba(255,255,255,0.028) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 28% at 68% 72%, rgba(255,255,255,0.018) 0%, transparent 50%);
       animation: smokeFloat 28s ease-in-out infinite alternate;
       will-change: transform;
       filter: blur(2px);
@@ -123,8 +125,8 @@
       position: fixed; inset: -30%; z-index: 2; pointer-events: none;
       width: 160%; height: 160%;
       background:
-        radial-gradient(ellipse 60% 38% at 65% 42%, rgba(255,255,255,0.011) 0%, transparent 58%),
-        radial-gradient(ellipse 45% 30% at 35% 25%, rgba(255,255,255,0.007) 0%, transparent 52%);
+        radial-gradient(ellipse 60% 38% at 65% 42%, rgba(255,255,255,0.025) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 30% at 35% 25%, rgba(255,255,255,0.018) 0%, transparent 52%);
       animation: smokeFloat2 38s ease-in-out infinite alternate;
       will-change: transform;
       filter: blur(3px);
@@ -133,12 +135,32 @@
       position: fixed; inset: -15%; z-index: 2; pointer-events: none;
       width: 130%; height: 130%;
       background:
-        radial-gradient(ellipse 80% 50% at 50% 80%, rgba(198,164,90,0.018) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 30% at 80% 20%, rgba(255,255,255,0.008) 0%, transparent 55%),
-        radial-gradient(ellipse 35% 25% at 15% 70%, rgba(198,164,90,0.012) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 50% at 50% 80%, rgba(198,164,90,0.038) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 30% at 80% 20%, rgba(255,255,255,0.018) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 25% at 15% 70%, rgba(198,164,90,0.028) 0%, transparent 50%);
       animation: smokeFloat3 52s ease-in-out infinite alternate;
       will-change: transform;
       filter: blur(4px);
+    }
+    /* Centered atmospheric haze — cinematic hero ambiance */
+    .bg-smoke-haze {
+      position: fixed;
+      top: 20%; left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 70%;
+      z-index: 2; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 55% at 50% 40%, rgba(255,255,255,0.022) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 50% 55%, rgba(198,164,90,0.02) 0%, transparent 65%);
+      animation: hazeFloat 44s ease-in-out infinite alternate;
+      will-change: transform;
+      filter: blur(8px);
+    }
+    @keyframes hazeFloat {
+      0%   { transform: translateX(-50%) scale(1) translateY(0); }
+      50%  { transform: translateX(-50%) scale(1.04) translateY(-12px); }
+      100% { transform: translateX(-50%) scale(0.97) translateY(8px); }
     }
     @keyframes smokeFloat3 {
       0%   { transform: translate(0,0) scale(1); }
@@ -176,8 +198,8 @@
       pointer-events: none;
       font-family: var(--font-display);
       font-size: clamp(18vw, 24vw, 340px);
-      letter-spacing: 0.06em;
-      color: rgba(198,164,90,0.028);
+      letter-spacing: 0.08em;
+      color: rgba(198,164,90,0.042);
       white-space: nowrap;
       user-select: none;
       line-height: 1;
@@ -187,14 +209,14 @@
     .topbar {
       position: relative;
       z-index: 10;
-      padding: 32px 56px;
+      padding: 36px 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(198,164,90,0.12);
-      background: rgba(8,8,8,0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(198,164,90,0.1);
+      background: rgba(8,8,8,0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
     }
     .logo-lockup {
       display: flex;
@@ -202,10 +224,20 @@
       line-height: 1;
     }
     .logo-img {
-      height: clamp(36px, 5vw, 52px);
+      height: clamp(44px, 6vw, 64px);
       width: auto;
       display: block;
-      filter: brightness(1.08) contrast(1.02) drop-shadow(0 1px 10px rgba(198,164,90,0.22));
+      filter: brightness(1.05) contrast(1.02) drop-shadow(0 2px 16px rgba(198,164,90,0.3));
+      transition: filter 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .logo-img:hover {
+      filter: brightness(1.15) contrast(1.02) drop-shadow(0 2px 28px rgba(198,164,90,0.55));
+      transform: scale(1.04);
+    }
+    .logo-img:active {
+      transform: scale(1.01);
+      filter: brightness(1.1) contrast(1.02) drop-shadow(0 1px 14px rgba(198,164,90,0.4));
+      transition-duration: 0.12s;
     }
     .topbar-badge {
       font-family: var(--font-head);
@@ -235,14 +267,15 @@
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.45em;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.38em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 28px;
-      opacity: 0.85;
+      margin-bottom: 32px;
+      opacity: 0.9;
     }
     .hero-eyebrow::before,
     .hero-eyebrow::after {
@@ -267,52 +300,65 @@
       margin-bottom: 0;
       position: relative;
     }
+    .hero-headline::before {
+      content: '';
+      position: absolute;
+      inset: -10% -8%;
+      background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 80%);
+      z-index: -1;
+      pointer-events: none;
+    }
     .hero-headline .line-white {
       display: block;
       color: #fff;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08);
+      text-shadow:
+        0 4px 32px rgba(0,0,0,0.98),
+        0 8px 64px rgba(0,0,0,0.75),
+        0 1px 0 rgba(255,255,255,0.12),
+        0 -1px 0 rgba(255,255,255,0.04);
     }
     .hero-headline .line-gold {
       display: block;
       background: linear-gradient(
-        160deg,
-        #f8e8a8 0%,
-        #e0c060 18%,
-        #c8960a 36%,
-        #a07020 50%,
-        #c09838 62%,
-        #e0c060 76%,
-        #f0d880 88%,
-        #c8a040 100%
+        152deg,
+        #f7eecc 0%,
+        #e8c85a 12%,
+        #c8961a 28%,
+        #9a6c10 42%,
+        #b88420 54%,
+        #d4aa3c 66%,
+        #f0da80 80%,
+        #ddb840 90%,
+        #b88828 100%
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       filter:
-        drop-shadow(0 4px 20px rgba(0,0,0,0.85))
-        drop-shadow(0 1px 0 rgba(255,220,100,0.15))
-        drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-      margin-top: 4px;
+        drop-shadow(0 6px 36px rgba(0,0,0,0.95))
+        drop-shadow(0 3px 8px rgba(0,0,0,0.75))
+        drop-shadow(0 0 48px rgba(160,120,20,0.18));
+      margin-top: 6px;
     }
 
     .hero-sub {
       font-family: var(--font-display);
-      font-size: clamp(1.2rem, 3vw, 2.2rem);
-      letter-spacing: 0.28em;
-      color: rgba(255,255,255,0.3);
-      margin-top: 28px;
+      font-size: clamp(1.1rem, 2.6vw, 2rem);
+      letter-spacing: 0.32em;
+      color: rgba(255,255,255,0.35);
+      margin-top: 32px;
       margin-bottom: 0;
     }
 
     .hero-desc {
-      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
-      color: var(--muted);
-      max-width: 500px;
+      font-size: clamp(0.88rem, 1.6vw, 1rem);
+      color: rgba(255,255,255,0.48);
+      max-width: 460px;
       margin: 36px auto 0;
-      line-height: 1.8;
-      letter-spacing: 0.01em;
+      line-height: 1.85;
+      letter-spacing: 0.015em;
     }
-    .hero-desc strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+    .hero-desc strong { color: rgba(255,255,255,0.88); font-weight: 500; }
 
     /* ── Gold divider ────────────────────────────────────────────── */
     .gold-divider {
@@ -654,14 +700,17 @@
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .topbar { padding: 22px 24px; }
+      .topbar { padding: 24px 28px; }
       .topbar-badge { display: none; }
-      .hero { padding-top: 52px; padding-bottom: 36px; }
+      .hero { padding-top: 56px; padding-bottom: 40px; }
+      .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.32em; margin-bottom: 24px; }
       .hero-headline { font-size: clamp(3.2rem, 18vw, 5.5rem); }
-      .hero-sub { font-size: clamp(0.9rem, 5.5vw, 1.4rem); }
+      .hero-sub { font-size: clamp(0.88rem, 5vw, 1.3rem); letter-spacing: 0.24em; }
+      .hero-desc { font-size: clamp(0.82rem, 4vw, 0.95rem); max-width: 90%; }
       .field-row { grid-template-columns: 1fr; }
       .features { grid-template-columns: 1fr 1fr; gap: 28px; }
       .form-card { padding: 36px 24px; }
+      .bg-smoke-haze { width: 160%; filter: blur(12px); }
     }
     @media (max-width: 360px) {
       .category-grid { gap: 8px; }
@@ -801,6 +850,7 @@
   <div class="bg-smoke" aria-hidden="true"></div>
   <div class="bg-smoke2" aria-hidden="true"></div>
   <div class="bg-smoke3" aria-hidden="true"></div>
+  <div class="bg-smoke-haze" aria-hidden="true"></div>
   <div class="bg-grain" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
