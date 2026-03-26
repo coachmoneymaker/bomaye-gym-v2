@@ -757,6 +757,233 @@
       .eb-counter { margin-bottom: 44px; }
       .eb-cta-btn { padding: 18px 36px; width: 100%; justify-content: center; }
     }
+
+    /* ── Urgency counter line ─────────────────────────────────── */
+    .eb-counter-urgency {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 14px;
+    }
+
+    /* ── Founding note wider ─────────────────────────────────── */
+    .eb-founding-note {
+      font-family: var(--font-head);
+      font-size: 0.56rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      max-width: 360px;
+      text-align: center;
+    }
+
+    /* ── Form no-obligation line ──────────────────────────────── */
+    .form-no-obligation {
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(198,164,90,0.65);
+      margin-top: 14px;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+    .form-no-obligation i { margin-right: 6px; }
+
+    /* ── Shared section styles ────────────────────────────────── */
+    .section-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.48em;
+      text-transform: uppercase;
+      color: rgba(198,164,90,0.7);
+      margin-bottom: 18px;
+    }
+    .section-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 0.95;
+      margin-bottom: 24px;
+    }
+
+    /* ── So geht es weiter ────────────────────────────────────── */
+    .next-steps-section {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(180deg, #0f0f0f 0%, #111 100%);
+      border-top: 1px solid rgba(198,164,90,0.08);
+      border-bottom: 1px solid rgba(198,164,90,0.08);
+      padding: clamp(72px, 12vh, 120px) 24px;
+      text-align: center;
+    }
+    .next-steps-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .steps-grid {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      margin-top: 52px;
+      flex-wrap: wrap;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 180px;
+      padding: 0 8px;
+    }
+    .step-number {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      line-height: 1;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+    }
+    .step-body {
+      flex: 1;
+    }
+    .step-text {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+    }
+    .step-connector {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.3), transparent);
+      margin-top: 24px;
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+    @media (max-width: 700px) {
+      .steps-grid { flex-direction: column; align-items: center; gap: 0; }
+      .step-connector { width: 1px; height: 28px; background: linear-gradient(180deg, transparent, rgba(198,164,90,0.3), transparent); margin: 0; }
+      .step-item { width: 260px; }
+    }
+
+    /* ── Warum BOMAYE? Trust Section ─────────────────────────── */
+    .trust-section {
+      position: relative;
+      z-index: 10;
+      padding: clamp(72px, 12vh, 120px) 24px;
+      text-align: center;
+    }
+    .trust-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .trust-subtext {
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+      color: rgba(255,255,255,0.45);
+      max-width: 580px;
+      margin: 0 auto 56px;
+      line-height: 1.8;
+    }
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 32px 24px;
+    }
+    .trust-pillar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 32px 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(198,164,90,0.12);
+      border-radius: 6px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .trust-pillar:hover {
+      border-color: rgba(198,164,90,0.28);
+      background: rgba(198,164,90,0.04);
+    }
+    .trust-icon {
+      font-size: 1.6rem;
+      color: rgba(198,164,90,0.7);
+    }
+    .trust-pillar-text {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.55;
+      font-family: var(--font-head);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    /* ── FAQ Section ─────────────────────────────────────────── */
+    .faq-section {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(180deg, #0f0f0f 0%, #111 100%);
+      border-top: 1px solid rgba(198,164,90,0.08);
+      border-bottom: 1px solid rgba(198,164,90,0.08);
+      padding: clamp(72px, 12vh, 120px) 24px;
+      text-align: center;
+    }
+    .faq-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .faq-list {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+    }
+    .faq-item {
+      border: 1px solid rgba(198,164,90,0.12);
+      border-radius: 5px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      transition: border-color 0.25s;
+    }
+    .faq-item[open] {
+      border-color: rgba(198,164,90,0.28);
+    }
+    .faq-item + .faq-item { margin-top: 6px; }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.85);
+      user-select: none;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question:hover { color: #fff; }
+    .faq-icon {
+      color: rgba(198,164,90,0.6);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+      transition: transform 0.25s;
+    }
+    .faq-item[open] .faq-icon { transform: rotate(45deg); color: var(--gold); }
+    .faq-answer {
+      padding: 0 24px 20px;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.75;
+    }
   </style>
 </head>
 <body>
@@ -826,6 +1053,7 @@
       <div class="eb-counter fade-up delay-4" aria-live="polite" aria-label="Verfügbare Plätze">
         <span class="eb-counter-number" id="eb-spots-number">300</span>
         <span class="eb-counter-label">Early Bird Plätze</span>
+        <span class="eb-counter-urgency">Nur solange Plätze verfügbar sind.</span>
       </div>
 
       <div class="eb-divider fade-up delay-4" aria-hidden="true">
@@ -840,9 +1068,9 @@
           aria-label="Zum Anmeldeformular scrollen"
         >
           <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-          Secure Your Spot
+          Jetzt Early Bird Platz sichern
         </button>
-        <p class="eb-founding-note">Early Bird Access</p>
+        <p class="eb-founding-note">Die ersten 300 sichern sich den besten Preis dauerhaft.</p>
       </div>
 
     </section>
@@ -946,15 +1174,56 @@
           <!-- Submit -->
           <button type="submit" class="submit-btn">
             <i class="fa-solid fa-bolt"></i>
-            Early-Bird-Platz sichern
+            Jetzt Early Bird Platz sichern
           </button>
 
+          <p class="form-no-obligation">
+            <i class="fa-solid fa-shield-halved"></i>
+            Keine Verpflichtung. Wir melden uns zuerst persönlich bei dir.
+          </p>
           <p class="form-note">
             <i class="fa-solid fa-lock"></i>
             Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
           </p>
         </form>
 
+      </div>
+    </section>
+
+    <!-- So geht es weiter -->
+    <section class="next-steps-section" aria-labelledby="next-steps-headline">
+      <div class="next-steps-inner">
+        <div class="section-eyebrow fade-up">Was passiert als Nächstes</div>
+        <h2 class="section-headline fade-up delay-1" id="next-steps-headline">So geht es weiter</h2>
+        <div class="steps-grid fade-up delay-2">
+          <div class="step-item">
+            <div class="step-number">01</div>
+            <div class="step-body">
+              <p class="step-text">Du sicherst dir deinen Early Bird Platz</p>
+            </div>
+          </div>
+          <div class="step-connector" aria-hidden="true"></div>
+          <div class="step-item">
+            <div class="step-number">02</div>
+            <div class="step-body">
+              <p class="step-text">Wir kontaktieren dich persönlich mit allen Details</p>
+            </div>
+          </div>
+          <div class="step-connector" aria-hidden="true"></div>
+          <div class="step-item">
+            <div class="step-number">03</div>
+            <div class="step-body">
+              <p class="step-text">Du bekommst Zugang zum finalen Trainingsstart</p>
+            </div>
+          </div>
+          <div class="step-connector" aria-hidden="true"></div>
+          <div class="step-item">
+            <div class="step-number">04</div>
+            <div class="step-body">
+              <p class="step-text">Du startest als Founding Member</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -982,11 +1251,89 @@
       </div>
     </div>
 
+    <!-- Warum BOMAYE? Trust Section -->
+    <section class="trust-section" aria-labelledby="trust-headline">
+      <div class="trust-inner">
+        <div class="section-eyebrow fade-up">Unser Versprechen</div>
+        <h2 class="section-headline fade-up delay-1" id="trust-headline">Warum BOMAYE?</h2>
+        <p class="trust-subtext fade-up delay-2">Kein gewöhnliches Fitnessstudio. Sondern ein Ort, an dem Disziplin, Stärke und Gemeinschaft aufgebaut werden.</p>
+        <div class="trust-grid fade-up delay-3">
+          <div class="trust-pillar">
+            <div class="trust-icon"><i class="fa-solid fa-medal"></i></div>
+            <p class="trust-pillar-text">Professionelle Trainer aus dem Leistungssport</p>
+          </div>
+          <div class="trust-pillar">
+            <div class="trust-icon"><i class="fa-solid fa-users"></i></div>
+            <p class="trust-pillar-text">Kleine Gruppen für maximale Qualität</p>
+          </div>
+          <div class="trust-pillar">
+            <div class="trust-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <p class="trust-pillar-text">Strukturierte Programme für jedes Level</p>
+          </div>
+          <div class="trust-pillar">
+            <div class="trust-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <p class="trust-pillar-text">Fokus auf echte Entwicklung, nicht nur Training</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-headline">
+      <div class="faq-inner">
+        <div class="section-eyebrow fade-up">Häufige Fragen</div>
+        <h2 class="section-headline fade-up delay-1" id="faq-headline">FAQ</h2>
+        <div class="faq-list fade-up delay-2">
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Was passiert nach meiner Anmeldung?</span>
+              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+            </summary>
+            <p class="faq-answer">Wir melden uns persönlich bei dir — mit allen Details zu Eröffnung, Trainingszeiten und deinem Early Bird Preis. Kein Automatismus, kein Spam.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Ist der Preis wirklich dauerhaft?</span>
+              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+            </summary>
+            <p class="faq-answer">Ja. Die ersten 300 Mitglieder sichern sich ihren Early Bird Preis dauerhaft — solange die Mitgliedschaft aktiv bleibt. Kein Preisanstieg nach der Eröffnung.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Kann ich später upgraden?</span>
+              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+            </summary>
+            <p class="faq-answer">Selbstverständlich. Du kannst dein Paket jederzeit erweitern — z.B. von Kids auf Familienpaket oder auf Personal Training. Wir besprechen das gemeinsam beim ersten Kontakt.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Wie viele Plätze sind noch verfügbar?</span>
+              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+            </summary>
+            <p class="faq-answer">Maximal 300 Early Bird Mitgliedschaften — danach gilt der reguläre Preis. Sobald diese vergeben sind, schließen wir die Early Bird Phase.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Für wen ist BOMAYE GYM geeignet?</span>
+              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+            </summary>
+            <p class="faq-answer">Für alle: Kids ab 4 Jahren, Jugendliche, Erwachsene und Familien. Ob Anfänger oder Fortgeschrittener — unsere Programme sind auf jedes Level ausgelegt.</p>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="cs-footer">
       <div class="cs-footer-logo">BOMAYE GYM</div>
       <p class="cs-footer-text">
-        &copy; 2025 BOMAYE GYM MUNICH &mdash;
+        &copy; 2026 BOMAYE GYM MUNICH &mdash;
         <a href="/impressum.html">Impressum</a>
       </p>
     </footer>
