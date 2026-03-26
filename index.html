@@ -353,22 +353,47 @@
       filter: drop-shadow(0 0 6px rgba(198,164,90,0.4));
     }
 
-    /* ── Spots counter bar ───────────────────────────────────────── */
-    .spots-bar {
+    /* ── Big spots counter (hero) ────────────────────────────────── */
+    .spots-counter-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-top: 48px;
+    }
+    .spots-number-big {
+      font-family: var(--font-display);
+      font-size: clamp(5.5rem, 20vw, 11rem);
+      line-height: 1;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      text-shadow:
+        0 0 60px rgba(198,164,90,0.4),
+        0 0 120px rgba(198,164,90,0.15);
+      animation: counterGlow 3.2s ease-in-out infinite alternate;
+    }
+    @keyframes counterGlow {
+      0%   { text-shadow: 0 0 60px rgba(198,164,90,0.4), 0 0 120px rgba(198,164,90,0.15); }
+      100% { text-shadow: 0 0 90px rgba(198,164,90,0.6), 0 0 180px rgba(198,164,90,0.22); }
+    }
+    .spots-label-upper {
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-top: -6px;
+    }
+    .spots-scarcity-line {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(198,164,90,0.06);
-      border: 1px solid rgba(198,164,90,0.2);
-      border-radius: 3px;
-      padding: 11px 22px;
+      gap: 10px;
+      margin-top: 14px;
       font-family: var(--font-head);
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
+      font-size: 0.58rem;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      color: var(--gold);
-      margin-top: 40px;
-      margin-bottom: 0;
+      color: rgba(198,164,90,0.6);
     }
     .spots-dot {
       width: 6px;
@@ -382,6 +407,46 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(198,164,90,0.6); }
       50%       { opacity: 0.3; box-shadow: 0 0 3px rgba(198,164,90,0.2); }
+    }
+
+    /* ── Selected plan badge in form ─────────────────────────────── */
+    .selected-plan-badge {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: rgba(198,164,90,0.07);
+      border: 1px solid rgba(198,164,90,0.28);
+      border-radius: 3px;
+      padding: 10px 16px;
+      margin-bottom: 28px;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .selected-plan-badge.visible { display: flex; }
+    .selected-plan-icon { font-size: 0.75rem; opacity: 0.85; }
+    .selected-plan-change {
+      color: rgba(255,255,255,0.28);
+      margin-left: auto;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .selected-plan-change:hover { color: rgba(255,255,255,0.55); }
+    .no-plan-prompt {
+      text-align: center;
+      padding: 12px 0 20px;
+      color: rgba(255,255,255,0.32);
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .no-plan-prompt a {
+      color: rgba(198,164,90,0.75);
+      text-decoration: underline;
     }
 
     /* ── Form section ────────────────────────────────────────────── */
@@ -694,6 +759,8 @@
       .features { grid-template-columns: 1fr 1fr; gap: 28px; }
       .form-card { padding: 36px 24px; }
       .topbar { padding: 16px 24px; }
+      .goal-grid { grid-template-columns: 1fr 1fr; }
+      .spots-number-big { font-size: clamp(4.5rem, 22vw, 7rem); }
     }
     @media (max-width: 360px) {
       .category-grid { gap: 8px; }
@@ -784,10 +851,10 @@
       box-shadow: 0 8px 32px rgba(166,124,46,0.38), inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
-    /* Goal selector — same style as category */
+    /* Goal selector */
     .goal-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 28px;
     }
@@ -795,31 +862,32 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      padding: 18px 10px;
+      gap: 9px;
+      padding: 20px 8px;
       border: 1px solid rgba(255,255,255,0.09);
       border-radius: 4px;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.022);
       color: rgba(255,255,255,0.38);
       font-family: var(--font-head);
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .goal-btn i { font-size: 1.1rem; }
     .goal-btn:hover {
       border-color: rgba(198,164,90,0.5);
-      color: rgba(255,255,255,0.82);
-      background: rgba(198,164,90,0.055);
+      color: rgba(255,255,255,0.85);
+      background: rgba(198,164,90,0.065);
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
     .goal-btn.active {
-      border-color: rgba(198,164,90,0.8);
+      border-color: rgba(198,164,90,0.85);
       color: var(--gold);
-      background: rgba(198,164,90,0.1);
-      box-shadow: 0 0 0 1px rgba(198,164,90,0.22), 0 6px 24px rgba(0,0,0,0.28);
+      background: rgba(198,164,90,0.12);
+      box-shadow: 0 0 0 1px rgba(198,164,90,0.28), 0 8px 28px rgba(0,0,0,0.32);
       transform: translateY(-1px);
     }
 
@@ -1054,6 +1122,7 @@
     .card-cta {
       display: block;
       width: 100%;
+      min-height: 52px;
       padding: 16px 20px;
       text-align: center;
       font-family: var(--font-head);
@@ -1067,15 +1136,16 @@
     }
 
     .card-cta.cta-default {
-      background: transparent;
-      border: 1px solid rgba(198,164,90,0.3);
-      color: rgba(198,164,90,0.75);
+      background: rgba(198,164,90,0.06);
+      border: 1px solid rgba(198,164,90,0.38);
+      color: rgba(198,164,90,0.85);
     }
     .card-cta.cta-default:hover {
-      border-color: rgba(198,164,90,0.65);
+      background: rgba(198,164,90,0.12);
+      border-color: rgba(198,164,90,0.7);
       color: var(--gold-light);
       transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.32);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 0 1px rgba(198,164,90,0.2);
     }
 
     .card-cta.cta-premium {
@@ -1158,9 +1228,13 @@
         <i class="gold-divider-icon fa-solid fa-boxing-glove"></i>
       </div>
 
-      <div class="spots-bar fade-up delay-4 visible">
-        <span class="spots-dot"></span>
-        <span id="spots-count">Founding Spots — Limitiert</span>
+      <div class="spots-counter-hero fade-up delay-4 visible">
+        <div class="spots-number-big" id="spots-count">300</div>
+        <div class="spots-label-upper">Founding Spots</div>
+        <div class="spots-scarcity-line">
+          <span class="spots-dot"></span>
+          <span>Nur noch wenige Plätze verfügbar</span>
+        </div>
       </div>
     </section>
 
@@ -1168,9 +1242,9 @@
     <section class="pricing-section" id="pricing-section" aria-label="Early Bird Preise">
 
       <div class="pricing-header fade-up">
-        <div class="pricing-eyebrow-tag">Early Bird Preise</div>
-        <h2 class="pricing-headline">WÄHLE DEINEN PLAN</h2>
-        <p class="pricing-sub">Founding Members sichern sich dauerhaft günstigere Konditionen — ausschließlich während der Vorregistrierungsphase.</p>
+        <div class="pricing-eyebrow-tag">Founding Member</div>
+        <h2 class="pricing-headline">WÄHLE DEINEN WEG</h2>
+        <p class="pricing-sub">Werde Teil der ersten Generation von BOMAYE Athleten. Dauerhaft bessere Konditionen — ausschließlich für die Ersten.</p>
       </div>
 
       <div class="pricing-grid">
@@ -1195,9 +1269,9 @@
               <span class="card-price-regular-amount">17,90 € / Woche</span>
             </div>
           </div>
-          <div class="card-urgency">Limitierte Gründungsplätze — jetzt und dauerhaft besser.</div>
+          <div class="card-urgency">Founding-Member-Preis. Dauerhaft gesichert.</div>
           <button type="button" class="card-cta cta-default" data-pricing-cat="kids">
-            Platz sichern
+            Founding Spot sichern
           </button>
         </div>
 
@@ -1221,9 +1295,9 @@
               <span class="card-price-regular-amount">18,90 € / Woche</span>
             </div>
           </div>
-          <div class="card-urgency">Limitierte Gründungsplätze — jetzt und dauerhaft besser.</div>
+          <div class="card-urgency">Founding-Member-Preis. Dauerhaft gesichert.</div>
           <button type="button" class="card-cta cta-default" data-pricing-cat="youth">
-            Early Bird sichern
+            Founding Spot sichern
           </button>
         </div>
 
@@ -1248,7 +1322,7 @@
               <span class="card-price-regular-amount">21,90 € / Woche</span>
             </div>
           </div>
-          <div class="card-urgency">Founding-Member-Preis dauerhaft gesichert — solange Spots verfügbar.</div>
+          <div class="card-urgency">Exklusiver Founding-Preis. Dauerhaft. Solange Spots verfügbar.</div>
           <button type="button" class="card-cta cta-premium" data-pricing-cat="adults">
             Founding Spot sichern
           </button>
@@ -1288,28 +1362,22 @@
             <div class="step-dot" id="dot-3">3</div>
           </div>
 
-          <!-- ── Step 1: Category ── -->
+          <!-- ── Step 1: Goal selection ── -->
           <div class="form-step active" id="step-1">
-            <span class="category-label">Für wen meldest du dich an?</span>
-            <div class="category-grid" role="group" aria-label="Kategorie auswählen">
-              <button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
-                <i class="fa-solid fa-child"></i>
-                Kids
-                <span class="cat-age">4 – 12 Jahre</span>
-              </button>
-              <button type="button" class="cat-btn" data-cat="youth" aria-pressed="false">
-                <i class="fa-solid fa-person-running"></i>
-                Jugend
-                <span class="cat-age">13 – 17 Jahre</span>
-              </button>
-              <button type="button" class="cat-btn" data-cat="adults" aria-pressed="false">
-                <i class="fa-solid fa-dumbbell"></i>
-                Erwachsene
-                <span class="cat-age">18+ Jahre</span>
-              </button>
+
+            <!-- Selected plan badge (shown after pricing card click) -->
+            <div class="selected-plan-badge" id="selected-plan-badge">
+              <span class="selected-plan-icon"><i class="fa-solid fa-bolt"></i></span>
+              <span id="selected-plan-name">—</span>
+              <a href="#pricing-section" class="selected-plan-change">Plan ändern</a>
             </div>
 
-            <span class="category-label" style="margin-top:4px;">Dein Ziel</span>
+            <!-- Prompt shown when no plan selected -->
+            <div class="no-plan-prompt" id="no-plan-prompt">
+              <a href="#pricing-section">↑ Wähle zuerst deinen Plan</a>
+            </div>
+
+            <span class="category-label">Dein Ziel</span>
             <div class="goal-grid" role="group" aria-label="Ziel auswählen">
               <button type="button" class="goal-btn" data-goal="fitness" aria-pressed="false">
                 <i class="fa-solid fa-heart-pulse"></i>Fitness
@@ -1322,6 +1390,12 @@
               </button>
               <button type="button" class="goal-btn" data-goal="abnehmen" aria-pressed="false">
                 <i class="fa-solid fa-fire"></i>Abnehmen
+              </button>
+              <button type="button" class="goal-btn" data-goal="kickboxen" aria-pressed="false">
+                <i class="fa-solid fa-hand-fist"></i>Kickboxen
+              </button>
+              <button type="button" class="goal-btn" data-goal="kraft" aria-pressed="false">
+                <i class="fa-solid fa-dumbbell"></i>Kraft &amp; Athletik
               </button>
             </div>
 
@@ -1455,31 +1529,26 @@
   </div><!-- /.page -->
 
   <script>
-    // ── Category toggle ──────────────────────────────────────────
-    const catBtns  = document.querySelectorAll('.cat-btn');
+    // ── Category hidden field ────────────────────────────────────
     const catHidden = document.getElementById('cs-category');
-    catBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed','true');
-        catHidden.value = btn.dataset.cat;
-      });
-    });
+    const planBadge = document.getElementById('selected-plan-badge');
+    const planNameEl = document.getElementById('selected-plan-name');
+    const noPlanPrompt = document.getElementById('no-plan-prompt');
 
-    // ── Pricing card CTA → preselect category + scroll to form ───
+    const PLAN_NAMES = { kids: 'BOMAYE KIDS', youth: 'BOMAYE YOUTH', adults: 'BOMAYE UNLIMITED' };
+
+    function selectPlan(cat) {
+      catHidden.value = cat;
+      if (planNameEl) planNameEl.textContent = PLAN_NAMES[cat] || cat;
+      if (planBadge) planBadge.classList.add('visible');
+      if (noPlanPrompt) noPlanPrompt.style.display = 'none';
+    }
+
+    // ── Pricing card CTA → auto-select category + go to step 1 ──
     document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const cat = btn.dataset.pricingCat;
-        // Preselect the matching category in the form
-        const target = document.querySelector('.cat-btn[data-cat="' + cat + '"]');
-        if (target) {
-          catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-          target.classList.add('active');
-          target.setAttribute('aria-pressed', 'true');
-          catHidden.value = cat;
-        }
-        // Smooth scroll to form section
+        selectPlan(btn.dataset.pricingCat);
+        showStep(1);
         const formSection = document.getElementById('form-section');
         if (formSection) {
           formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1535,8 +1604,8 @@
 
     document.getElementById('step1-next').addEventListener('click', () => {
       clearStepError('step-1');
-      if (!catHidden.value) {
-        showStepError('step-1', 'Bitte wähle eine Kategorie aus.');
+      if (!goalHidden.value) {
+        showStepError('step-1', 'Bitte wähle dein Ziel aus.');
         return;
       }
       showStep(2);
@@ -1602,7 +1671,16 @@
         const data = await res.json();
         const el   = document.getElementById('spots-count');
         if (el && typeof data.spots_left === 'number') {
-          el.textContent = data.spots_left + ' Founding Spots — Limitiert';
+          // Animate count down from 300 to actual value
+          const from = 300;
+          const to   = data.spots_left;
+          const dur  = 1600;
+          const t0   = performance.now();
+          (function tick(now) {
+            const p = Math.min((now - t0) / dur, 1);
+            el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(tick);
+          })(performance.now());
         }
       } catch (_) {}
     })();
