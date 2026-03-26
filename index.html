@@ -110,150 +110,31 @@
         );
     }
 
-    /* Smoke / haze layer — cinematic slow drift */
-    .bg-smoke {
-      position: fixed; inset: -20%; z-index: 2; pointer-events: none;
-      width: 140%; height: 140%;
-      background:
-        radial-gradient(ellipse 55% 32% at 22% 52%, rgba(198,164,90,0.13) 0%, transparent 65%),
-        radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 35% at 75% 35%, rgba(255,255,255,0.075) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 28% at 68% 72%, rgba(255,255,255,0.05) 0%, transparent 50%);
-      animation: smokeFloat 28s ease-in-out infinite alternate;
-      will-change: transform;
-      filter: blur(6px);
-    }
-    .bg-smoke2 {
-      position: fixed; inset: -30%; z-index: 2; pointer-events: none;
-      width: 160%; height: 160%;
-      background:
-        radial-gradient(ellipse 60% 38% at 65% 42%, rgba(198,164,90,0.09) 0%, transparent 58%),
-        radial-gradient(ellipse 45% 30% at 35% 25%, rgba(255,255,255,0.07) 0%, transparent 52%),
-        radial-gradient(ellipse 55% 42% at 50% 65%, rgba(198,164,90,0.06) 0%, transparent 62%);
-      animation: smokeFloat2 38s ease-in-out infinite alternate;
-      will-change: transform;
-      filter: blur(8px);
-    }
-    .bg-smoke3 {
-      position: fixed; inset: -15%; z-index: 2; pointer-events: none;
-      width: 130%; height: 130%;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 80%, rgba(198,164,90,0.1) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 30% at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 55%),
-        radial-gradient(ellipse 35% 25% at 15% 70%, rgba(198,164,90,0.09) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 35% at 50% 30%, rgba(255,255,255,0.045) 0%, transparent 60%);
-      animation: smokeFloat3 52s ease-in-out infinite alternate;
-      will-change: transform;
-      filter: blur(10px);
-    }
-    /* Centered atmospheric haze — cinematic hero ambiance */
-    .bg-smoke-haze {
+
+    /* Subtle center glow behind headline */
+    .bg-hero-glow {
       position: fixed;
-      top: 10%; left: 50%;
-      transform: translateX(-50%);
-      width: 130%;
-      height: 80%;
-      z-index: 2; pointer-events: none;
+      top: 28%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(900px, 110vw);
+      height: 600px;
+      z-index: 1;
+      pointer-events: none;
       background:
-        radial-gradient(ellipse 65% 60% at 50% 38%, rgba(255,255,255,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 45% 40% at 50% 52%, rgba(198,164,90,0.065) 0%, transparent 65%),
-        radial-gradient(ellipse 30% 25% at 50% 25%, rgba(220,180,100,0.055) 0%, transparent 55%);
-      animation: hazeFloat 44s ease-in-out infinite alternate;
-      will-change: transform;
-      filter: blur(12px);
-    }
-    @keyframes hazeFloat {
-      0%   { transform: translateX(-50%) scale(1) translateY(0); }
-      35%  { transform: translateX(-50%) scale(1.04) translateY(-22px); }
-      70%  { transform: translateX(-50%) scale(1.01) translateY(-8px); }
-      100% { transform: translateX(-50%) scale(0.97) translateY(14px); }
-    }
-    @keyframes smokeFloat3 {
-      0%   { transform: translate(0,0) scale(1); }
-      30%  { transform: translate(14px,-10px) scale(1.02); }
-      60%  { transform: translate(-10px, 16px) scale(0.98); }
-      100% { transform: translate(6px, -8px) scale(1.015); }
-    }
-    @keyframes smokeFloat {
-      0%   { transform: translate(0,0) scale(1); }
-      33%  { transform: translate(-18px, 10px) scale(1.025); }
-      66%  { transform: translate(12px,-12px) scale(0.985); }
-      100% { transform: translate(-10px, 18px) scale(1.015); }
-    }
-    @keyframes smokeFloat2 {
-      0%   { transform: translate(0,0) scale(1); }
-      40%  { transform: translate(20px, -8px) scale(1.03); }
-      70%  { transform: translate(-14px, 14px) scale(0.97); }
-      100% { transform: translate(8px, -20px) scale(1.02); }
+        radial-gradient(ellipse 65% 60% at 50% 50%, rgba(198,164,90,0.065) 0%, rgba(198,164,90,0.02) 55%, transparent 78%),
+        radial-gradient(ellipse 40% 35% at 50% 50%, rgba(220,180,90,0.04) 0%, transparent 60%);
+      filter: blur(48px);
     }
 
-    /* ── Rising smoke / vertical atmospheric drift ─────────────── */
-    .bg-smoke-rise {
+    /* Particle canvas */
+    #particle-canvas {
       position: fixed;
-      bottom: -10%;
-      left: 0;
-      width: 100%;
-      height: 110%;
-      z-index: 2; pointer-events: none;
-      background:
-        radial-gradient(ellipse 28% 18% at 25% 100%, rgba(198,164,90,0.09) 0%, transparent 65%),
-        radial-gradient(ellipse 22% 16% at 72% 95%, rgba(255,255,255,0.05) 0%, transparent 58%),
-        radial-gradient(ellipse 18% 14% at 48% 98%, rgba(198,164,90,0.07) 0%, transparent 55%);
-      animation: smokeRiseA 22s cubic-bezier(0.4,0,0.6,1) infinite;
-      will-change: transform, opacity;
-      filter: blur(18px);
-      opacity: 0;
-    }
-    .bg-smoke-rise2 {
-      position: fixed;
-      bottom: -10%;
-      left: 0;
-      width: 100%;
-      height: 110%;
-      z-index: 2; pointer-events: none;
-      background:
-        radial-gradient(ellipse 32% 20% at 60% 100%, rgba(255,255,255,0.04) 0%, transparent 60%),
-        radial-gradient(ellipse 20% 15% at 15% 95%, rgba(198,164,90,0.08) 0%, transparent 55%),
-        radial-gradient(ellipse 24% 18% at 85% 98%, rgba(255,255,255,0.035) 0%, transparent 50%);
-      animation: smokeRiseB 32s cubic-bezier(0.4,0,0.6,1) infinite;
-      animation-delay: 11s;
-      will-change: transform, opacity;
-      filter: blur(22px);
-      opacity: 0;
-    }
-    .bg-smoke-rise3 {
-      position: fixed;
-      bottom: -10%;
-      left: 0;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
       width: 100%;
       height: 100%;
-      z-index: 2; pointer-events: none;
-      background:
-        radial-gradient(ellipse 35% 22% at 40% 100%, rgba(198,164,90,0.06) 0%, transparent 62%),
-        radial-gradient(ellipse 18% 13% at 82% 96%, rgba(198,164,90,0.05) 0%, transparent 52%);
-      animation: smokeRiseC 26s cubic-bezier(0.4,0,0.6,1) infinite;
-      animation-delay: 6s;
-      will-change: transform, opacity;
-      filter: blur(20px);
-      opacity: 0;
-    }
-    @keyframes smokeRiseA {
-      0%   { transform: translateY(0) scaleX(1);   opacity: 0; }
-      8%   { opacity: 0.9; }
-      75%  { opacity: 0.55; }
-      100% { transform: translateY(-85%) scaleX(1.08); opacity: 0; }
-    }
-    @keyframes smokeRiseB {
-      0%   { transform: translateY(0) scaleX(1);   opacity: 0; }
-      6%   { opacity: 0.75; }
-      80%  { opacity: 0.4; }
-      100% { transform: translateY(-75%) scaleX(0.94); opacity: 0; }
-    }
-    @keyframes smokeRiseC {
-      0%   { transform: translateY(0) scaleX(1.05); opacity: 0; }
-      10%  { opacity: 0.65; }
-      78%  { opacity: 0.3; }
-      100% { transform: translateY(-90%) scaleX(0.98); opacity: 0; }
     }
 
     /* Fine grain texture overlay */
@@ -291,16 +172,17 @@
 
     /* ── Top bar ─────────────────────────────────────────────────── */
     .topbar {
-      position: relative;
-      z-index: 10;
-      padding: 28px 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 22px 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(198,164,90,0.1);
-      background: rgba(8,8,8,0.72);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(198,164,90,0.08);
+      background: rgba(8,8,8,0.82);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
     }
     .logo-lockup {
       display: flex;
@@ -308,7 +190,7 @@
       line-height: 1;
     }
     .logo-img {
-      height: clamp(80px, 10vw, 116px);
+      height: clamp(92px, 11vw, 132px);
       width: auto;
       display: block;
       filter: brightness(1.1) contrast(1.04) drop-shadow(0 2px 28px rgba(198,164,90,0.52)) drop-shadow(0 0 56px rgba(198,164,90,0.22));
@@ -764,12 +646,12 @@
       margin-bottom: 8px;
     }
     .cs-footer-logo-img {
-      height: clamp(52px, 7vw, 72px);
+      height: clamp(64px, 8vw, 84px);
       width: auto;
       display: block;
-      margin: 0 auto 14px;
-      filter: brightness(1.05) contrast(1.02) drop-shadow(0 2px 20px rgba(198,164,90,0.38)) drop-shadow(0 0 40px rgba(198,164,90,0.14));
-      opacity: 0.82;
+      margin: 0 auto 16px;
+      filter: brightness(1.08) contrast(1.03) drop-shadow(0 2px 24px rgba(198,164,90,0.42)) drop-shadow(0 0 48px rgba(198,164,90,0.18));
+      opacity: 0.88;
     }
     .cs-footer-text {
       font-size: 0.7rem;
@@ -799,7 +681,7 @@
     @media (max-width: 600px) {
       .topbar { padding: 20px 24px; }
       .topbar-badge { display: none; }
-      .logo-img { height: clamp(64px, 16vw, 84px); }
+      .logo-img { height: clamp(72px, 17vw, 92px); }
       .hero { padding-top: 56px; padding-bottom: 40px; }
       .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.32em; margin-bottom: 24px; }
       .hero-headline { font-size: clamp(3.2rem, 18vw, 5.5rem); }
@@ -808,7 +690,7 @@
       .field-row { grid-template-columns: 1fr; }
       .features { grid-template-columns: 1fr 1fr; gap: 28px; }
       .form-card { padding: 36px 24px; }
-      .bg-smoke-haze { width: 160%; filter: blur(12px); }
+      .topbar { padding: 16px 24px; }
     }
     @media (max-width: 360px) {
       .category-grid { gap: 8px; }
@@ -944,14 +826,9 @@
   <!-- Background stack -->
   <div class="bg-base" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-hero-glow" aria-hidden="true"></div>
   <div class="bg-lines" aria-hidden="true"></div>
-  <div class="bg-smoke" aria-hidden="true"></div>
-  <div class="bg-smoke2" aria-hidden="true"></div>
-  <div class="bg-smoke3" aria-hidden="true"></div>
-  <div class="bg-smoke-haze" aria-hidden="true"></div>
-  <div class="bg-smoke-rise" aria-hidden="true"></div>
-  <div class="bg-smoke-rise2" aria-hidden="true"></div>
-  <div class="bg-smoke-rise3" aria-hidden="true"></div>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
   <div class="bg-grain" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
@@ -1331,6 +1208,92 @@
     } else {
       fadeEls.forEach(el => el.classList.add('visible'));
     }
+
+    // ── Luxury particle system ────────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('particle-canvas');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      const isMobile = window.matchMedia('(max-width: 600px)').matches;
+      const COUNT = isMobile ? 30 : 65;
+
+      let W, H;
+      const particles = [];
+
+      function rand(min, max) { return min + Math.random() * (max - min); }
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function mkParticle(randomY) {
+        const gold = Math.random() > 0.55;
+        return {
+          x:           rand(0, W),
+          y:           randomY ? rand(0, H) : H + rand(5, 20),
+          r:           rand(0.4, 1.9),
+          vy:          rand(0.08, 0.22),
+          vx:          rand(-0.04, 0.04),
+          opacity:     0,
+          peak:        rand(0.06, 0.20),
+          fadeIn:      true,
+          fadeSpeed:   rand(0.0006, 0.0022),
+          gold,
+          hue:         gold ? `198,164,90` : `255,255,255`,
+          alphaMult:   gold ? 1 : 0.55,
+        };
+      }
+
+      function init() {
+        resize();
+        for (let i = 0; i < COUNT; i++) particles.push(mkParticle(true));
+      }
+
+      let raf;
+      function tick() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.y -= p.vy;
+          p.x += p.vx;
+
+          if (p.fadeIn) {
+            p.opacity += p.fadeSpeed;
+            if (p.opacity >= p.peak) p.fadeIn = false;
+          } else {
+            p.opacity -= p.fadeSpeed * 0.7;
+          }
+
+          if (p.y < -8 || p.opacity <= 0) {
+            particles[i] = mkParticle(false);
+            continue;
+          }
+
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, Math.min(1, p.opacity * p.alphaMult));
+          ctx.fillStyle = `rgba(${p.hue},1)`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+          ctx.fill();
+          ctx.restore();
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      init();
+      tick();
+
+      window.addEventListener('resize', () => {
+        resize();
+      }, { passive: true });
+
+      // Pause when tab is hidden to save resources
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { cancelAnimationFrame(raf); }
+        else { tick(); }
+      });
+    })();
   </script>
 </body>
 </html>
