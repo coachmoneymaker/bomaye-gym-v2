@@ -302,7 +302,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
         <tr>
           <td style="background:#0A0A0A;padding:18px 36px;border-top:1px solid rgba(255,255,255,0.05);">
             <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2);text-align:center;">
-              Du erhältst diese E-Mail, weil du dich für einen Early Bird Spot bei BOMAYE GYM Munich beworben hast.
+              Du erhältst diese E-Mail, weil du dich für deinen Early Bird Spot at BOMAYE GYM Munich angemeldet hast.
               Wenn du das nicht warst, ignoriere diese E-Mail einfach.
             </p>
           </td>

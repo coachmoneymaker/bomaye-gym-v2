@@ -137,7 +137,7 @@ async function sendAdminEmail(lead, verifiedAt) {
   const { error } = await resend.emails.send({
     from:    fromEmail,
     to:      recipient,
-    subject: `✅ Verifizierter Early Bird Member – ${lead.firstName} ${lead.lastName}`,
+    subject: `✅ Early Bird Member verified – ${lead.firstName} ${lead.lastName}`,
     html:    buildAdminEmailHtml(lead, verifiedAt),
   });
 
@@ -178,7 +178,7 @@ function buildAdminEmailHtml(lead, verifiedAt) {
               BOMAYE GYM MUNICH
             </p>
             <h1 style="margin:8px 0 0;font-size:20px;color:#ffffff;">
-              ✅ Early Bird Member Verifiziert
+              ✅ Early Bird Member verified
             </h1>
           </td>
         </tr>
