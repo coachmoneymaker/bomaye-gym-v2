@@ -1581,7 +1581,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    intentional brand unit; all content in the column centers under it */
 .footer-brand               { display: flex; flex-direction: column; align-items: center; }
 .footer-logo-link           { display: inline-block; line-height: 0; }
-.footer-brand .logo-img     { height: 72px; width: auto; display: block; }
+.footer-brand .logo-img     { width: 200px; height: auto; display: block; }
 .footer-brand .logo-text    { display: block; text-align: center; margin-top: 0.5rem;
                                margin-bottom: 1rem; font-size: 1.8rem; line-height: 1;
                                letter-spacing: 0.12em; }
