@@ -1377,9 +1377,14 @@
     }
     .faq-inline-item {
       border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      transition: background 0.2s ease;
     }
     .faq-inline-item:first-child {
       border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .faq-inline-item.active {
+      background: rgba(198,164,90,0.04);
     }
     .faq-inline-btn {
       width: 100%;
@@ -1411,10 +1416,15 @@
       color: var(--gold);
     }
     .faq-inline-answer {
-      display: none;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 4px;
+      transition: max-height 0.32s cubic-bezier(0.16,1,0.3,1), padding 0.32s ease;
+    }
+    .faq-inline-answer.open {
+      max-height: 500px;
       padding: 0 4px 18px;
     }
-    .faq-inline-answer.open { display: block; }
     .faq-inline-answer p {
       font-size: 0.83rem;
       color: rgba(255,255,255,0.45);
@@ -1573,16 +1583,31 @@
     <section class="form-section conv-view" id="form-section" style="display:none;">
       <div class="form-card fade-up delay-5 visible">
 
-        <!-- Success state -->
+        <!-- Success state: two sub-states -->
         <div class="form-success" id="form-success" role="alert" aria-live="polite">
           <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="form-success-logo" />
-          <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="form-success-title">Du bist dabei.</div>
-          <p class="form-success-msg">
-            Dein Founding-Member-Platz ist gesichert.<br />
-            Wir melden uns, sobald die Türen öffnen.<br /><br />
-            <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM München.</strong>
-          </p>
+
+          <!-- Pending: shown immediately after form submit -->
+          <div id="success-pending">
+            <div class="form-success-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <div class="form-success-title">E-Mail bestätigen.</div>
+            <p class="form-success-msg">
+              Wir haben dir eine Bestätigungs-E-Mail geschickt.<br />
+              Klicke den Link darin, um deinen Founding-Spot zu sichern.<br /><br />
+              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Bitte prüfe auch deinen Spam-Ordner.</strong>
+            </p>
+          </div>
+
+          <!-- Verified: shown after email confirmation (?verified=1) -->
+          <div id="success-verified" style="display:none;">
+            <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="form-success-title">Du bist dabei.</div>
+            <p class="form-success-msg">
+              Dein Founding-Member-Platz ist gesichert.<br />
+              Wir melden uns, sobald die Türen öffnen.<br /><br />
+              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM München.</strong>
+            </p>
+          </div>
         </div>
 
         <!-- Form -->
@@ -2022,13 +2047,32 @@
       };
 
       try {
-        await fetch('/api/lead', {
+        const resp = await fetch('/api/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
+        const data = await resp.json().catch(() => ({}));
+
+        if (data.emailError || (!resp.ok && !data.pending)) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '';
+          showStepError('step-3', data.message || 'Bitte versuche es erneut oder kontaktiere uns.');
+          return;
+        }
+
+        if (data.duplicate) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '';
+          showStepError('step-3', data.message || 'Diese E-Mail-Adresse ist bereits registriert.');
+          return;
+        }
       } catch (err) {
-        console.error('[lead form] fetch error (non-fatal):', err);
+        console.error('[lead form] fetch error:', err);
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+        showStepError('step-3', 'Bitte versuche es erneut oder kontaktiere uns.');
+        return;
       }
 
       form.style.display = 'none';
@@ -2060,11 +2104,32 @@
     document.querySelectorAll('.faq-inline-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const expanded = btn.getAttribute('aria-expanded') === 'true';
-        const answer = btn.nextElementSibling;
+        const answer   = btn.nextElementSibling;
+        const item     = btn.closest('.faq-inline-item');
         btn.setAttribute('aria-expanded', String(!expanded));
         answer.classList.toggle('open', !expanded);
+        item.classList.toggle('active', !expanded);
       });
     });
+
+    // ── Handle ?verified=1 (email confirmation redirect) ─────────
+    if (new URLSearchParams(window.location.search).get('verified') === '1') {
+      const formSection   = document.getElementById('form-section');
+      const form          = document.getElementById('earlybird-form');
+      const successEl     = document.getElementById('form-success');
+      const pendingEl     = document.getElementById('success-pending');
+      const verifiedEl    = document.getElementById('success-verified');
+      if (formSection && form && successEl) {
+        formSection.style.display = 'flex';
+        form.style.display = 'none';
+        if (pendingEl)  pendingEl.style.display  = 'none';
+        if (verifiedEl) verifiedEl.style.display = '';
+        successEl.classList.add('visible');
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Clean URL
+        history.replaceState(null, '', window.location.pathname);
+      }
+    }
 
     // ── Fade-in on scroll ─────────────────────────────────────────
     const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
