@@ -600,6 +600,163 @@
       .category-grid { gap: 7px; }
       .cat-btn { padding: 14px 4px; font-size: 0.62rem; }
     }
+
+    /* ── Early Bird Membership Section ───────────────────────────── */
+    .earlybird-section {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(180deg, #131313 0%, #0f0f0f 100%);
+      border-top: 1px solid rgba(198,164,90,0.1);
+      border-bottom: 1px solid rgba(198,164,90,0.1);
+      padding: clamp(80px, 14vh, 140px) 24px;
+      text-align: center;
+    }
+
+    .eb-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.48em;
+      text-transform: uppercase;
+      color: rgba(198,164,90,0.7);
+      margin-bottom: 22px;
+    }
+
+    .eb-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7rem);
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 0.92;
+      margin-bottom: 22px;
+      text-shadow: 0 4px 60px rgba(0,0,0,0.6);
+    }
+
+    .eb-subline {
+      font-family: var(--font-head);
+      font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 52px;
+    }
+
+    .eb-text {
+      font-size: clamp(0.92rem, 1.8vw, 1.05rem);
+      color: rgba(255,255,255,0.55);
+      max-width: 520px;
+      margin: 0 auto 72px;
+      line-height: 1.9;
+      letter-spacing: 0.01em;
+    }
+
+    /* Counter */
+    .eb-counter {
+      margin-bottom: 60px;
+    }
+    .eb-counter-number {
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 18vw, 13rem);
+      line-height: 0.82;
+      color: #fff;
+      letter-spacing: -0.01em;
+      text-shadow:
+        0 0 100px rgba(255,255,255,0.06),
+        0 4px 60px rgba(0,0,0,0.8);
+      display: block;
+    }
+    .eb-counter-label {
+      font-family: var(--font-head);
+      font-size: clamp(0.7rem, 1.8vw, 0.88rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 12px;
+      display: block;
+    }
+    @keyframes ebCounterIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .eb-counter-number.animate-in {
+      animation: ebCounterIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Gold separator */
+    .eb-divider {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      max-width: 340px;
+      margin: 0 auto 64px;
+    }
+    .eb-divider::before,
+    .eb-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.35), transparent);
+    }
+    .eb-divider-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(198,164,90,0.5);
+      flex-shrink: 0;
+    }
+
+    /* CTA */
+    .eb-cta-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .eb-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 56px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 55%, var(--gold-light) 100%);
+      color: #080808;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition:
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.2s;
+      box-shadow: 0 6px 40px rgba(198,164,90,0.28);
+    }
+    .eb-cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 14px 50px rgba(198,164,90,0.45),
+        0 0 40px rgba(198,164,90,0.12);
+      opacity: 0.97;
+    }
+    .eb-cta-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 20px rgba(198,164,90,0.22);
+    }
+    .eb-founding-note {
+      font-family: var(--font-head);
+      font-size: 0.56rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+
+    @media (max-width: 600px) {
+      .earlybird-section { padding: clamp(60px, 10vh, 88px) 20px; }
+      .eb-text { margin-bottom: 52px; }
+      .eb-counter { margin-bottom: 44px; }
+      .eb-cta-btn { padding: 18px 36px; width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 <body>
@@ -648,6 +805,46 @@
         <span class="spots-dot"></span>
         Begrenzte Early-Bird-Plätze verfügbar
       </div>
+    </section>
+
+    <!-- Early Bird Membership Section -->
+    <section class="earlybird-section" id="earlybird-section" aria-labelledby="eb-headline">
+
+      <div class="eb-eyebrow fade-up">Early Bird</div>
+
+      <h2 class="eb-headline fade-up delay-1" id="eb-headline">
+        EARLY BIRD<br>MEMBERSHIP
+      </h2>
+
+      <p class="eb-subline fade-up delay-2">Be one of the first. Limited spots only.</p>
+
+      <p class="eb-text fade-up delay-3">
+        Sichere dir jetzt deinen Platz vor der offiziellen Eröffnung.<br />
+        Die ersten 300 Mitglieder erhalten exklusive Konditionen<br>und priorisierten Zugang.
+      </p>
+
+      <div class="eb-counter fade-up delay-4" aria-live="polite" aria-label="Verfügbare Plätze">
+        <span class="eb-counter-number" id="eb-spots-number">300</span>
+        <span class="eb-counter-label">spots left</span>
+      </div>
+
+      <div class="eb-divider fade-up delay-4" aria-hidden="true">
+        <div class="eb-divider-dot"></div>
+      </div>
+
+      <div class="eb-cta-wrap fade-up delay-5">
+        <button
+          type="button"
+          class="eb-cta-btn"
+          id="eb-cta-btn"
+          aria-label="Zum Anmeldeformular scrollen"
+        >
+          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+          Secure Your Spot
+        </button>
+        <p class="eb-founding-note">Founding Members Only</p>
+      </div>
+
     </section>
 
     <!-- Lead Capture Form -->
@@ -885,12 +1082,80 @@
         console.error('[lead form] fetch error (non-fatal):', err);
       }
 
-      successEl.querySelector('.form-success-title').textContent = "You're in. Early Bird secured.";
+      successEl.querySelector('.form-success-title').textContent = "You're almost in.";
       successEl.querySelector('.form-success-msg').innerHTML =
-        "We'll be in touch as soon as doors open.<br />Your Early Bird advantage is locked in.";
+        "Confirm your email to secure your spot.<br /><span style=\"display:block;margin-top:12px;font-size:.8rem;color:rgba(255,255,255,0.35);\">Check your inbox — we just sent you a confirmation link.</span>";
       form.style.display = 'none';
       successEl.classList.add('visible');
     });
+
+    // ── CTA scroll to form ───────────────────────────────────────
+    document.getElementById('eb-cta-btn').addEventListener('click', function() {
+      const formSection = document.getElementById('form-section');
+      if (formSection) {
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Brief focus delay so form is readable after scroll
+        setTimeout(function() {
+          const firstInput = formSection.querySelector('.cat-btn');
+          if (firstInput) firstInput.focus({ preventScroll: true });
+        }, 600);
+      }
+    });
+
+    // ── Early Bird counter ────────────────────────────────────────
+    (function() {
+      const numEl = document.getElementById('eb-spots-number');
+      if (!numEl) return;
+
+      function animateCount(from, to, duration) {
+        var startTime = null;
+        var range = to - from;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var elapsed = timestamp - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          // Ease-out cubic for smooth deceleration
+          var eased = 1 - Math.pow(1 - progress, 3);
+          numEl.textContent = Math.round(from + range * eased);
+          if (progress < 1) requestAnimationFrame(step);
+          else numEl.textContent = to;
+        }
+        requestAnimationFrame(step);
+      }
+
+      var loaded = false;
+      function loadAndAnimate() {
+        if (loaded) return;
+        loaded = true;
+        numEl.classList.add('animate-in');
+        fetch('/api/spots')
+          .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+          .then(function(data) {
+            var target = (typeof data.spots_left === 'number') ? data.spots_left : 300;
+            target = Math.max(0, Math.min(300, target));
+            animateCount(0, target, 1600);
+          })
+          .catch(function() {
+            // Fallback: animate to 300 (no KV available)
+            animateCount(0, 300, 1200);
+          });
+      }
+
+      // Trigger when counter scrolls into view
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              loadAndAnimate();
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.25 });
+        obs.observe(numEl);
+      } else {
+        loadAndAnimate();
+      }
+    })();
 
     // ── Fade-in on scroll ────────────────────────────────────────
     const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
