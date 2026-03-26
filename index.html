@@ -656,7 +656,7 @@
     .form-success-logo {
       display: block;
       margin: 0 auto 28px;
-      height: 52px;
+      height: clamp(100px, 22vw, 140px);
       width: auto;
       opacity: 0.92;
       filter: brightness(1.05);
@@ -1733,6 +1733,8 @@
       </div>
     </section>
 
+    </div><!-- /.conversion-zone -->
+
     <!-- FAQ Section -->
     <section class="faq-inline-section" id="faq-inline" aria-label="Häufige Fragen">
       <div class="faq-inline-inner">
@@ -1796,8 +1798,6 @@
         </div>
       </div>
     </section>
-
-    </div><!-- /.conversion-zone -->
 
     <!-- Features strip -->
     <div class="features" aria-label="Was dich erwartet">
