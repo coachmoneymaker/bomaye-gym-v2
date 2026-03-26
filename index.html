@@ -75,7 +75,9 @@
     /* Cinematic vignette */
     .bg-vignette {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
-      background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.75) 100%);
+      background:
+        radial-gradient(ellipse 80% 80% at 50% 50%, transparent 25%, rgba(0,0,0,0.88) 100%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
     }
 
     /* Gold crown glow at top */
@@ -109,16 +111,35 @@
       position: fixed; inset: -20%; z-index: 2; pointer-events: none;
       width: 140%; height: 140%;
       background:
-        radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,0.018) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 35% at 75% 35%, rgba(255,255,255,0.012) 0%, transparent 55%);
+        radial-gradient(ellipse 55% 32% at 22% 52%, rgba(198,164,90,0.022) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 40% at 30% 60%, rgba(255,255,255,0.02) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 75% 35%, rgba(255,255,255,0.013) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 28% at 68% 72%, rgba(255,255,255,0.009) 0%, transparent 50%);
       animation: smokeFloat 28s ease-in-out infinite alternate;
       will-change: transform;
+      filter: blur(2px);
+    }
+    .bg-smoke2 {
+      position: fixed; inset: -30%; z-index: 2; pointer-events: none;
+      width: 160%; height: 160%;
+      background:
+        radial-gradient(ellipse 60% 38% at 65% 42%, rgba(255,255,255,0.011) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 30% at 35% 25%, rgba(255,255,255,0.007) 0%, transparent 52%);
+      animation: smokeFloat2 38s ease-in-out infinite alternate;
+      will-change: transform;
+      filter: blur(3px);
     }
     @keyframes smokeFloat {
       0%   { transform: translate(0,0) scale(1); }
-      33%  { transform: translate(-15px, 8px) scale(1.02); }
-      66%  { transform: translate(10px,-10px) scale(0.99); }
-      100% { transform: translate(-8px, 15px) scale(1.01); }
+      33%  { transform: translate(-18px, 10px) scale(1.025); }
+      66%  { transform: translate(12px,-12px) scale(0.985); }
+      100% { transform: translate(-10px, 18px) scale(1.015); }
+    }
+    @keyframes smokeFloat2 {
+      0%   { transform: translate(0,0) scale(1); }
+      40%  { transform: translate(20px, -8px) scale(1.03); }
+      70%  { transform: translate(-14px, 14px) scale(0.97); }
+      100% { transform: translate(8px, -20px) scale(1.02); }
     }
 
     /* Fine grain texture overlay */
@@ -149,14 +170,14 @@
     .topbar {
       position: relative;
       z-index: 10;
-      padding: 26px 48px;
+      padding: 32px 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(198,164,90,0.1);
-      background: rgba(8,8,8,0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(198,164,90,0.12);
+      background: rgba(8,8,8,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
     .logo-lockup {
       display: flex;
@@ -165,17 +186,21 @@
     }
     .logo-name {
       font-family: var(--font-display);
-      font-size: clamp(1.4rem, 3.5vw, 2rem);
-      letter-spacing: 0.18em;
-      color: var(--gold);
+      font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+      letter-spacing: 0.2em;
+      background: linear-gradient(to bottom, #e8cc7a 0%, #c6a45a 50%, #a67c2e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 1px 8px rgba(198,164,90,0.2));
     }
     .logo-city {
       font-family: var(--font-head);
       font-size: 0.55rem;
-      letter-spacing: 0.45em;
-      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.5em;
+      color: rgba(255,255,255,0.28);
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-top: 4px;
     }
     .topbar-badge {
       font-family: var(--font-head);
@@ -235,15 +260,27 @@
       letter-spacing: 0.03em;
       color: #fff;
       margin-bottom: 0;
-      text-shadow: 0 4px 60px rgba(0,0,0,0.8);
+      position: relative;
     }
     .hero-headline .line-white {
       display: block;
       color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08);
     }
     .hero-headline .line-gold {
       display: block;
-      color: var(--gold);
+      background: linear-gradient(
+        to bottom,
+        #f0dc9a 0%,
+        #d4b060 25%,
+        #b08530 50%,
+        #c8a04e 72%,
+        #e8cc7a 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 3px 14px rgba(0,0,0,0.75)) drop-shadow(0 1px 2px rgba(0,0,0,0.5));
       margin-top: 4px;
     }
 
@@ -328,17 +365,18 @@
 
     .form-card {
       width: 100%;
-      max-width: 560px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(198,164,90,0.18);
+      max-width: 580px;
+      background: rgba(255,255,255,0.028);
+      border: 1px solid rgba(198,164,90,0.2);
       border-radius: 6px;
-      padding: clamp(36px, 5vw, 56px) clamp(28px, 5vw, 52px);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      padding: clamp(48px, 6vw, 68px) clamp(40px, 6vw, 64px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       box-shadow:
-        0 0 0 1px rgba(0,0,0,0.4),
-        0 24px 80px rgba(0,0,0,0.5),
-        0 0 60px rgba(198,164,90,0.04);
+        0 0 0 1px rgba(0,0,0,0.5),
+        0 40px 120px rgba(0,0,0,0.65),
+        inset 0 1px 0 rgba(255,255,255,0.045),
+        0 0 100px rgba(198,164,90,0.06);
     }
 
     .form-title {
@@ -360,120 +398,138 @@
     /* Category selector */
     .category-label {
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: rgba(198,164,90,0.7);
-      margin-bottom: 14px;
+      color: rgba(198,164,90,0.65);
+      margin-bottom: 16px;
       display: block;
     }
     .category-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 12px;
+      margin-bottom: 32px;
     }
     .cat-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 9px;
-      padding: 18px 8px;
-      border: 1px solid rgba(198,164,90,0.15);
-      border-radius: 5px;
-      background: transparent;
-      color: rgba(255,255,255,0.35);
+      gap: 10px;
+      padding: 24px 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.02);
+      color: rgba(255,255,255,0.38);
       font-family: var(--font-head);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: border-color 0.25s, color 0.25s, background 0.25s, box-shadow 0.25s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .cat-btn i { font-size: 1.25rem; }
+    .cat-btn i { font-size: 1.3rem; }
     .cat-btn:hover {
-      border-color: rgba(198,164,90,0.45);
-      color: rgba(255,255,255,0.75);
-      background: rgba(198,164,90,0.04);
+      border-color: rgba(198,164,90,0.5);
+      color: rgba(255,255,255,0.82);
+      background: rgba(198,164,90,0.055);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
     }
     .cat-btn.active {
-      border-color: var(--gold);
+      border-color: rgba(198,164,90,0.8);
       color: var(--gold);
-      background: rgba(198,164,90,0.07);
-      box-shadow: 0 0 20px rgba(198,164,90,0.08);
+      background: rgba(198,164,90,0.1);
+      box-shadow: 0 0 0 1px rgba(198,164,90,0.25), 0 8px 32px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
     }
     .cat-age {
-      font-size: 0.56rem;
-      letter-spacing: 0.08em;
-      margin-top: -4px;
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
+      margin-top: -5px;
       color: inherit;
-      opacity: 0.6;
+      opacity: 0.55;
+      font-family: var(--font-body);
+      font-weight: 400;
     }
 
     /* Form fields */
-    .form-group { margin-bottom: 18px; }
+    .form-group { margin-bottom: 24px; }
     .field-label {
       display: block;
       font-family: var(--font-head);
       font-size: 0.58rem;
-      letter-spacing: 0.3em;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 9px;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 10px;
     }
     .field-input {
       width: 100%;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
+      background: rgba(255,255,255,0.038);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px;
       color: #fff;
       font-family: var(--font-body);
       font-size: 0.95rem;
-      padding: 14px 18px;
+      padding: 16px 20px;
       outline: none;
-      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       -webkit-appearance: none;
     }
-    .field-input::placeholder { color: rgba(255,255,255,0.18); }
+    .field-input::placeholder { color: rgba(255,255,255,0.2); }
     .field-input:focus {
-      border-color: rgba(198,164,90,0.45);
-      background: rgba(255,255,255,0.055);
-      box-shadow: 0 0 0 3px rgba(198,164,90,0.06);
+      border-color: rgba(198,164,90,0.5);
+      background: rgba(255,255,255,0.058);
+      box-shadow: 0 0 0 3px rgba(198,164,90,0.09), 0 0 0 1px rgba(198,164,90,0.25);
+    }
+    .field-input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.6) sepia(1) saturate(0.8) hue-rotate(0deg);
+      opacity: 0.5;
+      cursor: pointer;
     }
     .field-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 16px;
     }
 
     /* Submit */
     .submit-btn {
       width: 100%;
-      margin-top: 10px;
-      padding: 18px 24px;
-      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 55%, var(--gold-light) 100%);
+      margin-top: 8px;
+      padding: 22px 24px;
+      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
       color: #080808;
       font-family: var(--font-head);
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      border-radius: 4px;
+      border-radius: 3px;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 32px rgba(198,164,90,0.25);
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease;
+      box-shadow:
+        0 4px 24px rgba(166,124,46,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(0,0,0,0.15);
     }
     .submit-btn:hover {
-      opacity: 0.94;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 40px rgba(198,164,90,0.35);
+      transform: translateY(-3px);
+      box-shadow:
+        0 10px 40px rgba(166,124,46,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(0,0,0,0.15);
     }
-    .submit-btn:active { transform: translateY(0); box-shadow: 0 2px 16px rgba(198,164,90,0.2); }
+    .submit-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 14px rgba(166,124,46,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
 
     .form-note {
       text-align: center;
@@ -587,18 +643,18 @@
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .topbar { padding: 20px 20px; }
+      .topbar { padding: 22px 24px; }
       .topbar-badge { display: none; }
       .hero { padding-top: 52px; padding-bottom: 36px; }
       .hero-headline { font-size: clamp(3.2rem, 18vw, 5.5rem); }
       .hero-sub { font-size: clamp(0.9rem, 5.5vw, 1.4rem); }
       .field-row { grid-template-columns: 1fr; }
       .features { grid-template-columns: 1fr 1fr; gap: 28px; }
-      .form-card { padding: 28px 20px; }
+      .form-card { padding: 36px 24px; }
     }
     @media (max-width: 360px) {
-      .category-grid { gap: 7px; }
-      .cat-btn { padding: 14px 4px; font-size: 0.62rem; }
+      .category-grid { gap: 8px; }
+      .cat-btn { padding: 18px 6px; font-size: 0.62rem; }
     }
   </style>
 </head>
@@ -609,6 +665,7 @@
   <div class="bg-glow" aria-hidden="true"></div>
   <div class="bg-lines" aria-hidden="true"></div>
   <div class="bg-smoke" aria-hidden="true"></div>
+  <div class="bg-smoke2" aria-hidden="true"></div>
   <div class="bg-grain" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
@@ -626,18 +683,17 @@
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-eyebrow fade-up visible">Münchens neues Premium-Boxgym</div>
+      <div class="hero-eyebrow fade-up visible">München · Premium Boxing</div>
 
       <h1 class="hero-headline fade-up delay-1 visible">
         <span class="line-white">IT'S NOT A GYM.</span>
         <span class="line-gold">IT'S PASSION.</span>
       </h1>
 
-      <p class="hero-sub fade-up delay-2 visible">Coming Soon</p>
+      <p class="hero-sub fade-up delay-2 visible">Coming Soon — München</p>
 
       <p class="hero-desc fade-up delay-3 visible">
-        Boxen auf <strong>Premium-Niveau</strong> — für Kids, Jugend und Erwachsene.
-        Sei dabei, bevor wir offiziell öffnen und sichere dir deinen Early-Bird-Vorteil.
+        <strong>Nur für die Ersten.</strong> Founding Members erhalten exklusive Konditionen — dauerhaft.
       </p>
 
       <div class="gold-divider fade-up delay-3 visible" aria-hidden="true">
@@ -646,7 +702,7 @@
 
       <div class="spots-bar fade-up delay-4 visible">
         <span class="spots-dot"></span>
-        Begrenzte Early-Bird-Plätze verfügbar
+        Founding Spots — Limitiert
       </div>
     </section>
 
@@ -666,8 +722,8 @@
 
         <!-- Form -->
         <form id="earlybird-form" novalidate>
-          <p class="form-title">Early-Bird-Zugang sichern</p>
-          <p class="form-subtitle">Trag dich jetzt ein — kostenlos &amp; unverbindlich. Du wirst als Erstes informiert.</p>
+          <p class="form-title">Founding Member werden</p>
+          <p class="form-subtitle">Kostenlos. Unverbindlich. Limitiert.</p>
 
           <!-- Category selector -->
           <span class="category-label">Für wen meldest du dich an?</span>
@@ -730,17 +786,29 @@
             />
           </div>
 
-          <!-- Phone -->
-          <div class="form-group">
-            <label class="field-label" for="cs-phone">Telefon <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
-            <input
-              class="field-input"
-              type="tel"
-              id="cs-phone"
-              name="phone"
-              placeholder="+49 89 …"
-              autocomplete="tel"
-            />
+          <!-- Phone + DOB row -->
+          <div class="field-row">
+            <div class="form-group">
+              <label class="field-label" for="cs-phone">Telefon <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
+              <input
+                class="field-input"
+                type="tel"
+                id="cs-phone"
+                name="phone"
+                placeholder="+49 89 …"
+                autocomplete="tel"
+              />
+            </div>
+            <div class="form-group">
+              <label class="field-label" for="cs-dob">Geburtsdatum</label>
+              <input
+                class="field-input"
+                type="date"
+                id="cs-dob"
+                name="dob"
+                autocomplete="bday"
+              />
+            </div>
           </div>
 
           <!-- Hidden category -->
@@ -872,6 +940,7 @@
         lastName:  lnameEl.value.trim(),
         email:     emailEl.value.trim(),
         phone:     form.querySelector('#cs-phone').value.trim(),
+        dob:       form.querySelector('#cs-dob').value,
         category,
       };
 
