@@ -549,7 +549,7 @@
     }
 
     /* Form fields */
-    .form-group { margin-bottom: 24px; }
+    .form-group { margin-bottom: 20px; }
     .field-label {
       display: block;
       font-family: var(--font-head);
@@ -572,11 +572,22 @@
       transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       -webkit-appearance: none;
     }
-    .field-input::placeholder { color: rgba(255,255,255,0.2); }
+    .field-input::placeholder { color: rgba(255,255,255,0.25); }
     .field-input:focus {
       border-color: rgba(198,164,90,0.5);
       background: rgba(255,255,255,0.058);
       box-shadow: 0 0 0 3px rgba(198,164,90,0.09), 0 0 0 1px rgba(198,164,90,0.25);
+    }
+    .field-input.field-error {
+      border-color: rgba(255,80,80,0.7);
+      background: rgba(255,60,60,0.04);
+      box-shadow: 0 0 0 3px rgba(255,60,60,0.08), 0 0 0 1px rgba(255,80,80,0.35);
+    }
+    .field-hint-error {
+      font-size: 0.72rem;
+      color: #ff6b6b;
+      margin-top: 5px;
+      letter-spacing: 0.01em;
     }
     .field-input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(0.6) sepia(1) saturate(0.8) hue-rotate(0deg);
@@ -642,6 +653,14 @@
       padding: 32px 0;
     }
     .form-success.visible { display: block; }
+    .form-success-logo {
+      display: block;
+      margin: 0 auto 28px;
+      height: 52px;
+      width: auto;
+      opacity: 0.92;
+      filter: brightness(1.05);
+    }
     .form-success-icon {
       font-size: 3rem;
       color: var(--gold);
@@ -765,6 +784,8 @@
     @media (max-width: 360px) {
       .category-grid { gap: 8px; }
       .cat-btn { padding: 18px 6px; font-size: 0.62rem; }
+      .goal-grid { gap: 8px; }
+      .goal-btn { padding: 20px 6px 18px; font-size: 0.56rem; }
     }
 
     /* ── Multi-step form ─────────────────────────────────────────── */
@@ -851,11 +872,29 @@
       box-shadow: 0 8px 32px rgba(166,124,46,0.38), inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
+    /* Goal section header */
+    .goal-section-header {
+      margin-bottom: 20px;
+    }
+    .goal-section-title {
+      font-family: var(--font-head);
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .goal-section-sub {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.55;
+    }
+
     /* Goal selector */
     .goal-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 32px;
     }
     .goal-btn {
@@ -863,36 +902,37 @@
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      padding: 22px 10px;
+      padding: 26px 10px 22px;
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 5px;
+      border-radius: 6px;
       background: rgba(255,255,255,0.03);
       color: rgba(255,255,255,0.42);
       font-family: var(--font-head);
-      font-size: 0.63rem;
-      letter-spacing: 0.13em;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
-    .goal-btn i { font-size: 1.2rem; }
+    .goal-btn i { font-size: 1.35rem; }
     .goal-btn:hover {
-      border-color: rgba(198,164,90,0.52);
-      color: rgba(255,255,255,0.88);
+      border-color: rgba(198,164,90,0.55);
+      color: rgba(255,255,255,0.9);
       background: rgba(198,164,90,0.07);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0,0,0,0.38);
     }
     .goal-btn.active {
       border-color: var(--gold);
+      border-width: 2px;
       color: var(--gold);
-      background: rgba(198,164,90,0.14);
-      box-shadow: 0 0 0 2px rgba(198,164,90,0.22), 0 8px 28px rgba(0,0,0,0.35);
-      transform: translateY(-1px);
+      background: rgba(198,164,90,0.13);
+      box-shadow: 0 0 0 3px rgba(198,164,90,0.18), 0 0 18px rgba(198,164,90,0.22), 0 8px 28px rgba(0,0,0,0.35);
+      transform: translateY(-2px);
     }
     .goal-btn.active i {
-      filter: drop-shadow(0 0 6px rgba(198,164,90,0.5));
+      filter: drop-shadow(0 0 8px rgba(198,164,90,0.65));
     }
 
     /* ── Pricing / Early Bird Section ────────────────────────────── */
@@ -1301,6 +1341,85 @@
       .pricing-card.is-premium { padding: 44px 18px 22px; }
       .card-price-amount { font-size: 2.2rem; }
     }
+
+    /* ── FAQ Inline Section ───────────────────────────────────────── */
+    .faq-inline-section {
+      padding: clamp(48px, 7vh, 72px) 24px clamp(56px, 8vh, 88px);
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .faq-inline-header {
+      text-align: center;
+      margin-bottom: clamp(28px, 4vh, 44px);
+    }
+    .faq-inline-eyebrow {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.55rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-bottom: 12px;
+    }
+    .faq-inline-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      letter-spacing: 0.05em;
+      color: #fff;
+      font-weight: 400;
+    }
+    .faq-inline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .faq-inline-item {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .faq-inline-item:first-child {
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .faq-inline-btn {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255,255,255,0.78);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-align: left;
+      transition: color 0.2s ease;
+    }
+    .faq-inline-btn:hover { color: #fff; }
+    .faq-inline-btn[aria-expanded="true"] { color: var(--gold); }
+    .faq-inline-chevron {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      transition: transform 0.28s cubic-bezier(0.16,1,0.3,1), color 0.2s ease;
+    }
+    .faq-inline-btn[aria-expanded="true"] .faq-inline-chevron {
+      transform: rotate(180deg);
+      color: var(--gold);
+    }
+    .faq-inline-answer {
+      display: none;
+      padding: 0 4px 18px;
+    }
+    .faq-inline-answer.open { display: block; }
+    .faq-inline-answer p {
+      font-size: 0.83rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+    }
   </style>
 </head>
 <body>
@@ -1456,6 +1575,7 @@
 
         <!-- Success state -->
         <div class="form-success" id="form-success" role="alert" aria-live="polite">
+          <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="form-success-logo" />
           <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
           <div class="form-success-title">Du bist dabei.</div>
           <p class="form-success-msg">
@@ -1494,25 +1614,28 @@
               <a href="#" id="no-plan-link">↑ Wähle zuerst deinen Plan</a>
             </div>
 
-            <span class="category-label">Dein Ziel</span>
+            <div class="goal-section-header">
+              <p class="goal-section-title">Was ist dein Hauptziel?</p>
+              <p class="goal-section-sub">Wir nutzen das, um dich bestmöglich einzuordnen. Du kannst trotzdem alle Kurse nutzen.</p>
+            </div>
             <div class="goal-grid" role="group" aria-label="Ziel auswählen">
-              <button type="button" class="goal-btn" data-goal="fitness" aria-pressed="false">
-                <i class="fa-solid fa-heart-pulse"></i>Fitness
-              </button>
               <button type="button" class="goal-btn" data-goal="boxen" aria-pressed="false">
                 <i class="fa-solid fa-boxing-glove"></i>Boxen lernen
               </button>
-              <button type="button" class="goal-btn" data-goal="wettkampf" aria-pressed="false">
-                <i class="fa-solid fa-trophy"></i>Wettkampf
+              <button type="button" class="goal-btn" data-goal="kickboxen" aria-pressed="false">
+                <i class="fa-solid fa-hand-fist"></i>Kickboxen lernen
+              </button>
+              <button type="button" class="goal-btn" data-goal="fitness" aria-pressed="false">
+                <i class="fa-solid fa-heart-pulse"></i>Fitter werden
               </button>
               <button type="button" class="goal-btn" data-goal="abnehmen" aria-pressed="false">
-                <i class="fa-solid fa-fire"></i>Abnehmen
-              </button>
-              <button type="button" class="goal-btn" data-goal="kickboxen" aria-pressed="false">
-                <i class="fa-solid fa-hand-fist"></i>Kickboxen
+                <i class="fa-solid fa-fire"></i>Gewicht verlieren
               </button>
               <button type="button" class="goal-btn" data-goal="kraft" aria-pressed="false">
                 <i class="fa-solid fa-dumbbell"></i>Kraft &amp; Athletik
+              </button>
+              <button type="button" class="goal-btn" data-goal="wettkampf" aria-pressed="false">
+                <i class="fa-solid fa-trophy"></i>Wettkämpfe bestreiten
               </button>
             </div>
 
@@ -1572,21 +1695,21 @@
           <!-- ── Step 3: Address + submit ── -->
           <div class="form-step" id="step-3">
             <div class="form-group">
-              <label class="field-label" for="cs-street">Straße &amp; Hausnummer <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
+              <label class="field-label" for="cs-street">Straße &amp; Hausnummer *</label>
               <input class="field-input" type="text" id="cs-street" name="street"
-                placeholder="Musterstraße 12" autocomplete="street-address" />
+                placeholder="Musterstraße 12" autocomplete="street-address" required />
             </div>
 
             <div class="field-row">
               <div class="form-group">
-                <label class="field-label" for="cs-plz">Postleitzahl</label>
+                <label class="field-label" for="cs-plz">PLZ *</label>
                 <input class="field-input" type="text" id="cs-plz" name="postalCode"
-                  placeholder="80639" autocomplete="postal-code" inputmode="numeric" maxlength="5" />
+                  placeholder="80639" autocomplete="postal-code" inputmode="numeric" maxlength="5" required />
               </div>
               <div class="form-group">
-                <label class="field-label" for="cs-city">Stadt</label>
+                <label class="field-label" for="cs-city">Stadt *</label>
                 <input class="field-input" type="text" id="cs-city" name="city"
-                  placeholder="München" autocomplete="address-level2" />
+                  placeholder="München" autocomplete="address-level2" required />
               </div>
             </div>
 
@@ -1596,7 +1719,7 @@
               </button>
               <button type="submit" class="btn-next submit-btn" style="padding:20px 24px;">
                 <i class="fa-solid fa-bolt"></i>
-                Early-Bird-Platz sichern
+                Founding Spot sichern
               </button>
             </div>
 
@@ -1607,6 +1730,70 @@
           </div>
         </form>
 
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-inline-section" id="faq-inline" aria-label="Häufige Fragen">
+      <div class="faq-inline-inner">
+        <div class="faq-inline-header">
+          <span class="faq-inline-eyebrow">Support</span>
+          <h2 class="faq-inline-title">Häufige Fragen</h2>
+        </div>
+        <div class="faq-inline-list">
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Wann startet das Gym?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Die Eröffnung ist für 2026 geplant. Als Early Bird wirst du rechtzeitig informiert.</p>
+            </div>
+          </div>
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Kann ich alle Kurse nutzen?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Ja. Mit deiner Mitgliedschaft hast du Zugriff auf das gesamte Kursangebot.</p>
+            </div>
+          </div>
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Wie läuft das mit Wettkämpfen?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Wir wählen unsere Wettkämpfer gezielt aus. Wenn du Potenzial zeigst und regelmäßig trainierst, kannst du Teil unserer Wettkampfgruppe werden. Aktive Wettkämpfer erhalten Sonderkonditionen.</p>
+              <p style="margin-top:10px;"><strong style="color:rgba(255,255,255,0.75);">Wichtig:</strong> Unentschuldigtes Fehlen kann zum Ausschluss aus der Wettkampfgruppe führen.</p>
+            </div>
+          </div>
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Ich bin bereits Wettkämpfer – was jetzt?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Sprich uns direkt an. Wir finden eine individuelle Lösung für dich.</p>
+            </div>
+          </div>
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Was ist der Early Bird Platz?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Du sicherst dir einen der limitierten Plätze vor der offiziellen Eröffnung – mit exklusiven Vorteilen.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -1786,9 +1973,36 @@
     const form      = document.getElementById('earlybird-form');
     const successEl = document.getElementById('form-success');
 
+    function setFieldError(inputEl, msg) {
+      inputEl.classList.add('field-error');
+      let hint = inputEl.parentElement.querySelector('.field-hint-error');
+      if (!hint) {
+        hint = document.createElement('p');
+        hint.className = 'field-hint-error';
+        inputEl.insertAdjacentElement('afterend', hint);
+      }
+      hint.textContent = msg;
+    }
+    function clearFieldError(inputEl) {
+      inputEl.classList.remove('field-error');
+      const hint = inputEl.parentElement.querySelector('.field-hint-error');
+      if (hint) hint.remove();
+    }
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
       clearStepError('step-3');
+
+      const streetEl = document.getElementById('cs-street');
+      const plzEl    = document.getElementById('cs-plz');
+      const cityEl   = document.getElementById('cs-city');
+      [streetEl, plzEl, cityEl].forEach(el => clearFieldError(el));
+
+      let addrError = false;
+      if (!streetEl.value.trim()) { setFieldError(streetEl, 'Bitte Straße & Hausnummer eingeben.'); addrError = true; }
+      if (!plzEl.value.trim())    { setFieldError(plzEl,    'Bitte PLZ eingeben.'); addrError = true; }
+      if (!cityEl.value.trim())   { setFieldError(cityEl,   'Bitte Stadt eingeben.'); addrError = true; }
+      if (addrError) { if (!streetEl.value.trim()) streetEl.focus(); else if (!plzEl.value.trim()) plzEl.focus(); else cityEl.focus(); return; }
 
       const submitBtn = form.querySelector('[type="submit"]');
       submitBtn.disabled = true;
@@ -1841,6 +2055,16 @@
         }
       } catch (_) {}
     })();
+
+    // ── FAQ accordion ────────────────────────────────────────────
+    document.querySelectorAll('.faq-inline-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        const answer = btn.nextElementSibling;
+        btn.setAttribute('aria-expanded', String(!expanded));
+        answer.classList.toggle('open', !expanded);
+      });
+    });
 
     // ── Fade-in on scroll ─────────────────────────────────────────
     const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
