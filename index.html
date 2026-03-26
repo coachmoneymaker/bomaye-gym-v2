@@ -822,6 +822,299 @@
       box-shadow: 0 0 0 1px rgba(198,164,90,0.22), 0 6px 24px rgba(0,0,0,0.28);
       transform: translateY(-1px);
     }
+
+    /* ── Pricing / Early Bird Section ────────────────────────────── */
+    .pricing-section {
+      position: relative;
+      z-index: 10;
+      padding: clamp(48px, 8vh, 88px) 24px clamp(56px, 9vh, 96px);
+      max-width: 1120px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .pricing-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: clamp(36px, 5vh, 60px);
+    }
+
+    .pricing-eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+      opacity: 0.9;
+    }
+    .pricing-eyebrow-tag::before,
+    .pricing-eyebrow-tag::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+      opacity: 0.5;
+    }
+    .pricing-eyebrow-tag::after {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .pricing-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .pricing-sub {
+      font-size: clamp(0.82rem, 2vw, 0.92rem);
+      color: rgba(255,255,255,0.42);
+      letter-spacing: 0.02em;
+      max-width: 500px;
+      line-height: 1.65;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* Base card */
+    .pricing-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: rgba(14, 13, 11, 0.92);
+      border: 1px solid rgba(198,164,90,0.16);
+      border-radius: 8px;
+      padding: 32px 26px 28px;
+      transition: transform 0.38s cubic-bezier(0.16,1,0.3,1), border-color 0.38s ease, box-shadow 0.38s ease;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.025);
+    }
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(198,164,90,0.34);
+      box-shadow: 0 10px 48px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    /* Premium card (adults) */
+    .pricing-card.is-premium {
+      border-color: rgba(198,164,90,0.38);
+      background: rgba(18, 15, 9, 0.97);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.48), 0 0 0 1px rgba(198,164,90,0.07), inset 0 1px 0 rgba(198,164,90,0.08);
+      padding-top: 44px;
+    }
+    .pricing-card.is-premium:hover {
+      transform: translateY(-6px);
+      border-color: rgba(198,164,90,0.62);
+      box-shadow: 0 14px 60px rgba(0,0,0,0.58), 0 0 0 1px rgba(198,164,90,0.14), inset 0 1px 0 rgba(198,164,90,0.1);
+    }
+
+    /* Subtle "recommended" ribbon on premium card */
+    .card-premium-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-head);
+      font-size: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: #0a0a0a;
+      background: linear-gradient(to right, #c8a050, #d4b472, #c8a050);
+      padding: 5px 18px 5px;
+      border-radius: 0 0 4px 4px;
+      white-space: nowrap;
+    }
+
+    /* Early Bird badge on each card */
+    .early-bird-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-head);
+      font-size: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(198,164,90,0.28);
+      background: rgba(198,164,90,0.06);
+      padding: 4px 11px;
+      border-radius: 2px;
+      margin-bottom: 18px;
+      width: fit-content;
+    }
+    .early-bird-badge i { font-size: 0.6rem; }
+
+    .card-category {
+      font-family: var(--font-display);
+      font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .card-age {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.14em;
+      font-family: var(--font-head);
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .card-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(198,164,90,0.1);
+      margin-bottom: 22px;
+    }
+
+    .card-pricing {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .card-price-label {
+      font-family: var(--font-head);
+      font-size: 0.5rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 7px;
+      opacity: 0.75;
+    }
+
+    .card-price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .card-price-amount {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 2.8rem);
+      letter-spacing: 0.02em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .card-price-unit {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.08em;
+    }
+
+    .card-price-regular {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.32);
+      margin-bottom: 16px;
+    }
+
+    .card-price-regular-amount {
+      text-decoration: line-through;
+      text-decoration-color: rgba(200,80,80,0.45);
+      color: rgba(255,255,255,0.28);
+    }
+
+    .card-urgency {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.32);
+      letter-spacing: 0.03em;
+      line-height: 1.55;
+      margin-bottom: 22px;
+      font-style: italic;
+    }
+
+    /* CTA buttons */
+    .card-cta {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      text-align: center;
+      font-family: var(--font-head);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+      cursor: pointer;
+    }
+
+    .card-cta.cta-default {
+      background: transparent;
+      border: 1px solid rgba(198,164,90,0.3);
+      color: rgba(198,164,90,0.75);
+    }
+    .card-cta.cta-default:hover {
+      border-color: rgba(198,164,90,0.65);
+      color: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.32);
+    }
+
+    .card-cta.cta-premium {
+      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
+      border: none;
+      color: #080808;
+      box-shadow: 0 4px 20px rgba(166,124,46,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .card-cta.cta-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(166,124,46,0.42), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    /* Pricing section separator */
+    .pricing-section-sep {
+      width: 100%;
+      max-width: 320px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.18), transparent);
+      margin: 0 auto clamp(32px, 5vh, 56px);
+    }
+
+    @media (max-width: 860px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        max-width: 440px;
+        margin: 0 auto;
+      }
+      .pricing-card.is-premium {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .pricing-card { padding: 26px 18px 22px; }
+      .pricing-card.is-premium { padding: 40px 18px 22px; }
+      .card-price-amount { font-size: 2.2rem; }
+    }
   </style>
 </head>
 <body>
@@ -870,6 +1163,101 @@
         <span id="spots-count">Founding Spots — Limitiert</span>
       </div>
     </section>
+
+    <!-- Pricing / Early Bird Section -->
+    <section class="pricing-section" id="pricing-section" aria-label="Early Bird Preise">
+
+      <div class="pricing-header fade-up">
+        <div class="pricing-eyebrow-tag">Early Bird Preise</div>
+        <h2 class="pricing-headline">WÄHLE DEINEN PLAN</h2>
+        <p class="pricing-sub">Founding Members sichern sich dauerhaft günstigere Konditionen — ausschließlich während der Vorregistrierungsphase.</p>
+      </div>
+
+      <div class="pricing-grid">
+
+        <!-- BOMAYE KIDS -->
+        <div class="pricing-card fade-up delay-1">
+          <div class="early-bird-badge">
+            <i class="fa-solid fa-bolt"></i>
+            Early Bird
+          </div>
+          <div class="card-category">BOMAYE KIDS</div>
+          <div class="card-age">6 – 9 Jahre</div>
+          <div class="card-divider"></div>
+          <div class="card-pricing">
+            <div class="card-price-label">Founding Member Preis</div>
+            <div class="card-price-main">
+              <span class="card-price-amount">13,90 €</span>
+              <span class="card-price-unit">/ Woche</span>
+            </div>
+            <div class="card-price-regular">
+              <span>Danach:</span>
+              <span class="card-price-regular-amount">17,90 € / Woche</span>
+            </div>
+          </div>
+          <div class="card-urgency">Limitierte Gründungsplätze — jetzt und dauerhaft besser.</div>
+          <button type="button" class="card-cta cta-default" data-pricing-cat="kids">
+            Platz sichern
+          </button>
+        </div>
+
+        <!-- BOMAYE YOUTH -->
+        <div class="pricing-card fade-up delay-2">
+          <div class="early-bird-badge">
+            <i class="fa-solid fa-bolt"></i>
+            Early Bird
+          </div>
+          <div class="card-category">BOMAYE YOUTH</div>
+          <div class="card-age">10 – 17 Jahre</div>
+          <div class="card-divider"></div>
+          <div class="card-pricing">
+            <div class="card-price-label">Founding Member Preis</div>
+            <div class="card-price-main">
+              <span class="card-price-amount">15,90 €</span>
+              <span class="card-price-unit">/ Woche</span>
+            </div>
+            <div class="card-price-regular">
+              <span>Danach:</span>
+              <span class="card-price-regular-amount">18,90 € / Woche</span>
+            </div>
+          </div>
+          <div class="card-urgency">Limitierte Gründungsplätze — jetzt und dauerhaft besser.</div>
+          <button type="button" class="card-cta cta-default" data-pricing-cat="youth">
+            Early Bird sichern
+          </button>
+        </div>
+
+        <!-- BOMAYE UNLIMITED — highlighted premium card -->
+        <div class="pricing-card is-premium fade-up delay-3">
+          <div class="card-premium-badge">Empfohlen</div>
+          <div class="early-bird-badge">
+            <i class="fa-solid fa-bolt"></i>
+            Early Bird
+          </div>
+          <div class="card-category">BOMAYE UNLIMITED</div>
+          <div class="card-age">18+ Jahre</div>
+          <div class="card-divider"></div>
+          <div class="card-pricing">
+            <div class="card-price-label">Founding Member Preis</div>
+            <div class="card-price-main">
+              <span class="card-price-amount">18,90 €</span>
+              <span class="card-price-unit">/ Woche</span>
+            </div>
+            <div class="card-price-regular">
+              <span>Danach:</span>
+              <span class="card-price-regular-amount">21,90 € / Woche</span>
+            </div>
+          </div>
+          <div class="card-urgency">Founding-Member-Preis dauerhaft gesichert — solange Spots verfügbar.</div>
+          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults">
+            Founding Spot sichern
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="pricing-section-sep" aria-hidden="true"></div>
 
     <!-- Lead Capture Form -->
     <section class="form-section" id="form-section">
@@ -1076,6 +1464,26 @@
         btn.classList.add('active');
         btn.setAttribute('aria-pressed','true');
         catHidden.value = btn.dataset.cat;
+      });
+    });
+
+    // ── Pricing card CTA → preselect category + scroll to form ───
+    document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.pricingCat;
+        // Preselect the matching category in the form
+        const target = document.querySelector('.cat-btn[data-cat="' + cat + '"]');
+        if (target) {
+          catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          target.classList.add('active');
+          target.setAttribute('aria-pressed', 'true');
+          catHidden.value = cat;
+        }
+        // Smooth scroll to form section
+        const formSection = document.getElementById('form-section');
+        if (formSection) {
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
