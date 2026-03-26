@@ -1291,6 +1291,18 @@
     .conversion-zone .card-cta.cta-premium {
       box-shadow: 0 4px 20px rgba(100,70,10,0.22), inset 0 1px 0 rgba(255,255,255,0.22);
     }
+    .conversion-zone .family-access-btn {
+      box-shadow: 0 4px 20px rgba(100,70,10,0.28), inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+    .conversion-zone .family-access-btn:hover {
+      box-shadow: 0 8px 32px rgba(100,70,10,0.38), 0 0 0 1px rgba(166,124,46,0.3), inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+    .conversion-zone .family-cta-note {
+      color: #7A6030;
+    }
+    .conversion-zone .family-cta-sub {
+      color: rgba(122,96,48,0.6);
+    }
 
     /* ── Form section on light bg ─────────────────────────────────── */
     .conversion-zone .form-section {
@@ -1442,45 +1454,50 @@
       align-items: center;
       gap: 10px;
       padding: 18px 44px;
-      background: rgba(198,164,90,0.07);
-      border: 1px solid rgba(198,164,90,0.48);
-      color: var(--gold-light);
+      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
+      border: none;
+      color: #080808;
       font-family: var(--font-head);
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       border-radius: 4px;
       cursor: pointer;
       transition:
-        border-color 0.28s cubic-bezier(0.16,1,0.3,1),
-        background 0.28s cubic-bezier(0.16,1,0.3,1),
         box-shadow 0.28s cubic-bezier(0.16,1,0.3,1),
-        color 0.28s,
+        filter 0.28s ease,
         transform 0.28s cubic-bezier(0.16,1,0.3,1);
       box-shadow:
-        0 0 0 1px rgba(198,164,90,0.06),
-        inset 0 0 24px rgba(198,164,90,0.04);
+        0 4px 20px rgba(166,124,46,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.18);
     }
     .family-access-btn:hover {
-      border-color: var(--gold);
-      background: rgba(198,164,90,0.13);
+      filter: brightness(1.08);
       box-shadow:
-        0 0 44px rgba(198,164,90,0.22),
-        0 8px 28px rgba(0,0,0,0.35),
-        inset 0 0 30px rgba(198,164,90,0.06);
-      color: #e8d49a;
+        0 8px 36px rgba(198,164,90,0.55),
+        0 0 0 1px rgba(198,164,90,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.18);
       transform: translateY(-2px);
     }
     .family-access-btn:active {
       transform: translateY(0);
-      box-shadow: 0 0 16px rgba(198,164,90,0.1);
+      filter: brightness(0.96);
+      box-shadow: 0 2px 12px rgba(166,124,46,0.28);
     }
     .family-cta-note {
-      margin-top: 10px;
-      font-size: 0.62rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
+      margin-top: 14px;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: rgba(198,164,90,0.85);
+      font-family: var(--font-head);
+    }
+    .family-cta-sub {
+      margin-top: 6px;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: none;
       color: rgba(198,164,90,0.5);
       font-family: var(--font-head);
     }
@@ -1827,7 +1844,7 @@
             </div>
             <div class="card-price-regular">
               <span>Danach:</span>
-              <span class="card-price-regular-amount">17,90 € / Woche</span>
+              <span class="card-price-regular-amount">16,90 € / Woche</span>
             </div>
           </div>
           <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
@@ -1897,7 +1914,8 @@
           <i class="fa-solid fa-users" aria-hidden="true"></i>
           Train together &amp; save
         </button>
-        <p class="family-cta-note">4th member trains for free</p>
+        <p class="family-cta-note">Bis zu 4 Familienmitglieder im Early Bird Preis enthalten.</p>
+        <p class="family-cta-sub">Gültig für Familien aus demselben Haushalt.</p>
       </div>
 
     </section>
