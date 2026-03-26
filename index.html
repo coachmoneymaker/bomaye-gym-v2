@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="index, follow" />
-  <title>BOMAYE GYM München — Premium Boxgym | Early Bird sichern</title>
-  <meta name="description" content="Münchens neues Premium-Boxgym für Kids, Jugend und Erwachsene. Sichere dir jetzt deinen Early-Bird-Platz als Early Bird Member — limitiert." />
+  <title>BOMAYE GYM MUNICH — Premium Boxgym | Early Bird sichern</title>
+  <meta name="description" content="Munich's new premium boxing gym for Kids, Youth and Adults. Sichere dir jetzt deinen Early-Bird-Platz als Early Bird Member — limitiert." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1430,6 +1430,169 @@
       color: rgba(255,255,255,0.45);
       line-height: 1.7;
     }
+
+    /* ── Family Access CTA ───────────────────────────────────────── */
+    .family-cta-row {
+      text-align: center;
+      margin-top: 40px;
+      padding-bottom: 4px;
+    }
+    .family-access-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 44px;
+      background: transparent;
+      border: 1px solid rgba(198,164,90,0.3);
+      color: var(--gold);
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, color 0.25s;
+    }
+    .family-access-btn:hover {
+      border-color: var(--gold);
+      background: rgba(198,164,90,0.06);
+      box-shadow: 0 0 28px rgba(198,164,90,0.1);
+    }
+    .family-cta-note {
+      margin-top: 10px;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      font-family: var(--font-head);
+    }
+
+    /* ── Family Modal Overlay ────────────────────────────────────── */
+    .family-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .family-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .family-modal {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #111111;
+      border: 1px solid rgba(198,164,90,0.18);
+      border-radius: 8px;
+      padding: clamp(32px,5vw,48px) clamp(24px,5vw,44px);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.5),
+        0 32px 80px rgba(0,0,0,0.7),
+        0 0 60px rgba(198,164,90,0.05);
+      transform: translateY(22px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      position: relative;
+    }
+    .family-overlay.open .family-modal {
+      transform: translateY(0) scale(1);
+    }
+    .family-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 6px 8px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .family-modal-close:hover { color: rgba(255,255,255,0.65); }
+    .family-modal-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.55rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(198,164,90,0.75);
+      margin-bottom: 10px;
+    }
+    .family-modal-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem,5vw,2.4rem);
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 0.95;
+      margin-bottom: 10px;
+    }
+    .family-modal-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .family-divider {
+      height: 1px;
+      background: rgba(198,164,90,0.1);
+      margin: 22px 0;
+    }
+    .family-section-label {
+      font-family: var(--font-head);
+      font-size: 0.56rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(198,164,90,0.6);
+      margin-bottom: 14px;
+      display: block;
+    }
+    .family-member-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .family-member-num {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: rgba(198,164,90,0.3);
+      min-width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .family-member-row.is-free .family-member-num { color: var(--gold); }
+    .family-free-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-head);
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(198,164,90,0.3);
+      border-radius: 2px;
+      padding: 4px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+      .family-modal { padding: 28px 20px; }
+      .family-access-btn { padding: 15px 28px; width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 <body>
@@ -1463,7 +1626,7 @@
         <span class="line-gold">IT'S PASSION.</span>
       </h1>
 
-      <p class="hero-sub fade-up delay-2 visible">Coming Soon — München</p>
+      <p class="hero-sub fade-up delay-2 visible">Coming Soon — Munich</p>
 
       <p class="hero-desc fade-up delay-3 visible">
         <strong>Nur für die Ersten.</strong> Early Bird Members erhalten exklusive Konditionen — dauerhaft.
@@ -1577,6 +1740,16 @@
         </div>
 
       </div>
+
+      <!-- Family Access CTA -->
+      <div class="family-cta-row fade-up">
+        <button type="button" class="family-access-btn" id="family-access-btn">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          Train together &amp; save
+        </button>
+        <p class="family-cta-note">4th member trains for free</p>
+      </div>
+
     </section>
 
     <!-- Lead Capture Form (hidden until pricing CTA clicked) -->
@@ -1605,7 +1778,7 @@
             <p class="form-success-msg">
               Dein Early Bird Platz ist gesichert.<br />
               Wir melden uns, sobald die Türen öffnen.<br /><br />
-              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM München.</strong>
+              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM Munich.</strong>
             </p>
           </div>
         </div>
@@ -1734,7 +1907,7 @@
               <div class="form-group">
                 <label class="field-label" for="cs-city">Stadt *</label>
                 <input class="field-input" type="text" id="cs-city" name="city"
-                  placeholder="München" autocomplete="address-level2" required />
+                  placeholder="Munich" autocomplete="address-level2" required />
               </div>
             </div>
 
@@ -1750,7 +1923,7 @@
 
             <p class="form-note" style="margin-top:14px;">
               <i class="fa-solid fa-lock"></i>
-              Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM München.
+              Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM Munich.
             </p>
           </div>
         </form>
@@ -1853,7 +2026,7 @@
       </div>
       <div class="feature-item fade-up delay-3 visible">
         <div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
-        <div class="feature-name">München</div>
+        <div class="feature-name">Munich</div>
         <div class="feature-desc">Zentrale Lage — bald mehr Details zu Adresse und Eröffnung.</div>
       </div>
     </div>
@@ -1868,6 +2041,103 @@
     </footer>
 
   </div><!-- /.page -->
+
+  <!-- ── Family Access Modal ──────────────────────────────────────── -->
+  <div class="family-overlay" id="family-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="family-modal-title">
+    <div class="family-modal">
+      <button type="button" class="family-modal-close" id="family-modal-close" aria-label="Close modal">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+
+      <p class="family-modal-eyebrow">Early Bird — Family Access</p>
+      <h2 class="family-modal-title" id="family-modal-title">TRAIN<br>TOGETHER</h2>
+      <p class="family-modal-sub">
+        Register 3 family members — the 4th trains for free.<br />
+        One form. One Early Bird rate. Locked in forever.
+      </p>
+
+      <!-- Success state -->
+      <div id="family-success" style="display:none; text-align:center; padding:16px 0 8px;">
+        <div style="font-size:2.6rem; color:var(--gold); margin-bottom:18px; filter:drop-shadow(0 0 20px rgba(198,164,90,0.4));">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        </div>
+        <div style="font-family:var(--font-display); font-size:1.9rem; letter-spacing:0.05em; color:#fff; margin-bottom:12px; line-height:1;">
+          You're almost in.
+        </div>
+        <p style="font-size:0.88rem; color:var(--muted); line-height:1.8;">
+          Confirm your email to secure your Early Bird access.<br />
+          <span style="display:block; margin-top:10px; font-size:0.76rem; color:rgba(255,255,255,0.28);">
+            Check your inbox — we sent you a confirmation link.
+          </span>
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form id="family-form" novalidate>
+
+        <!-- Main registrant -->
+        <span class="family-section-label">Your Details</span>
+
+        <div class="field-row" style="margin-bottom:14px;">
+          <div class="form-group">
+            <label class="field-label" for="fam-firstname">First Name *</label>
+            <input class="field-input" type="text" id="fam-firstname" autocomplete="given-name" placeholder="Max" />
+          </div>
+          <div class="form-group">
+            <label class="field-label" for="fam-lastname">Last Name *</label>
+            <input class="field-input" type="text" id="fam-lastname" autocomplete="family-name" placeholder="Mustermann" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="field-label" for="fam-email">Email *</label>
+          <input class="field-input" type="email" id="fam-email" autocomplete="email" placeholder="your@email.com" />
+        </div>
+
+        <div class="form-group" style="margin-bottom:6px;">
+          <label class="field-label" for="fam-phone">Phone <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
+          <input class="field-input" type="tel" id="fam-phone" autocomplete="tel" placeholder="+49 89 …" />
+        </div>
+
+        <div class="family-divider"></div>
+
+        <!-- Family members -->
+        <span class="family-section-label">Family Members</span>
+
+        <div class="family-member-row">
+          <span class="family-member-num">1</span>
+          <input class="field-input" style="flex:1;" type="text" id="fam-m1" placeholder="Full name" />
+        </div>
+        <div class="family-member-row">
+          <span class="family-member-num">2</span>
+          <input class="field-input" style="flex:1;" type="text" id="fam-m2" placeholder="Full name" />
+        </div>
+        <div class="family-member-row">
+          <span class="family-member-num">3</span>
+          <input class="field-input" style="flex:1;" type="text" id="fam-m3" placeholder="Full name" />
+        </div>
+        <div class="family-member-row is-free" style="margin-bottom:24px;">
+          <span class="family-member-num">4</span>
+          <input class="field-input" style="flex:1;" type="text" id="fam-m4" placeholder="Full name" />
+          <span class="family-free-badge">
+            <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+            FREE
+          </span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="family-submit-btn">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          Secure Family Access
+        </button>
+
+        <p class="form-note" style="margin-top:14px;">
+          <i class="fa-solid fa-lock"></i>
+          No spam. No sharing. Early Bird access only.
+        </p>
+
+      </form>
+    </div>
+  </div>
 
   <script>
     // ── Category hidden field ────────────────────────────────────
@@ -2319,6 +2589,105 @@
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) cancelAnimationFrame(raf);
         else tick();
+      });
+    })();
+
+    // ── Family Access Modal ───────────────────────────────────────
+    (function () {
+      const overlay     = document.getElementById('family-overlay');
+      const openBtn     = document.getElementById('family-access-btn');
+      const closeBtn    = document.getElementById('family-modal-close');
+      const famForm     = document.getElementById('family-form');
+      const famSuccess  = document.getElementById('family-success');
+      const famSubmitBtn = document.getElementById('family-submit-btn');
+      if (!overlay || !openBtn) return;
+
+      function openModal() {
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function () {
+          var first = overlay.querySelector('.field-input');
+          if (first) first.focus();
+        }, 350);
+      }
+
+      function closeModal() {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+
+      // Click outside modal to close
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+      });
+
+      // Escape key to close
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+      });
+
+      famForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        var fn = document.getElementById('fam-firstname').value.trim();
+        var ln = document.getElementById('fam-lastname').value.trim();
+        var em = document.getElementById('fam-email').value.trim();
+        var ph = document.getElementById('fam-phone').value.trim();
+        var m1 = document.getElementById('fam-m1').value.trim();
+        var m2 = document.getElementById('fam-m2').value.trim();
+        var m3 = document.getElementById('fam-m3').value.trim();
+        var m4 = document.getElementById('fam-m4').value.trim();
+
+        // Clear previous error
+        var prev = famForm.querySelector('.family-error-msg');
+        if (prev) prev.remove();
+
+        function showErr(msg) {
+          var el = document.createElement('p');
+          el.className = 'family-error-msg';
+          el.style.cssText = 'color:#ff6b6b;font-size:.78rem;text-align:center;margin-top:10px;';
+          el.textContent = msg;
+          famSubmitBtn.insertAdjacentElement('afterend', el);
+        }
+
+        if (!fn) { document.getElementById('fam-firstname').focus(); showErr('Please enter your first name.'); return; }
+        if (!ln) { document.getElementById('fam-lastname').focus();  showErr('Please enter your last name.'); return; }
+        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+          document.getElementById('fam-email').focus();
+          showErr('Please enter a valid email address.');
+          return;
+        }
+
+        famSubmitBtn.disabled = true;
+        famSubmitBtn.style.opacity = '0.7';
+
+        var payload = {
+          firstName: fn,
+          lastName:  ln,
+          email:     em,
+          phone:     ph,
+          category:  'Family',
+          goal:      'Family Registration',
+          members:   [m1, m2, m3, m4],
+        };
+
+        try {
+          await fetch('/api/lead', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload),
+          });
+        } catch (err) {
+          console.error('[family form] fetch error (non-fatal):', err);
+        }
+
+        famForm.style.display = 'none';
+        famSuccess.style.display = '';
       });
     })();
   </script>

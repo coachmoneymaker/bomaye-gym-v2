@@ -85,6 +85,7 @@ export default async function handler(req, res) {
   const {
     firstName, lastName, email, phone,
     category, dob, goal, street, postalCode, city,
+    members,
   } = req.body ?? {};
 
   // ── Validation ─────────────────────────────────────────────────────────────
@@ -97,8 +98,8 @@ export default async function handler(req, res) {
   const normalizedCategory = category
     ? category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
     : null;
-  if (!normalizedCategory || !['Kids', 'Youth', 'Adults'].includes(normalizedCategory))
-    errors.category = 'Kategorie muss Kids, Youth oder Adults sein.';
+  if (!normalizedCategory || !['Kids', 'Youth', 'Adults', 'Family'].includes(normalizedCategory))
+    errors.category = 'Kategorie muss Kids, Youth, Adults oder Family sein.';
 
   // DOB / category age validation (optional field, but must match category if provided)
   if (dob) {
@@ -178,6 +179,7 @@ export default async function handler(req, res) {
     city:       city?.trim()       ?? '',
     submittedAt: new Date().toISOString(),
     source: 'coming-soon',
+    ...(Array.isArray(members) && members.length ? { members: members.map(m => String(m).trim()).filter(Boolean) } : {}),
   };
 
   // ── Generate signed verification token ────────────────────────────────────

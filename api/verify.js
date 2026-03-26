@@ -208,6 +208,11 @@ function buildAdminEmailHtml(lead, verifiedAt) {
               ${row('Straße',        escapeHtml(lead.street))}
               ${row('PLZ',           escapeHtml(lead.postalCode))}
               ${row('Stadt',         escapeHtml(lead.city))}
+              ${Array.isArray(lead.members) && lead.members.length
+                ? row('Family Members', lead.members.map((m, i) =>
+                    escapeHtml(m) + (i === 3 ? ' <span style="color:#C6A45A;font-size:11px;">(free)</span>' : '')
+                  ).join('<br />'))
+                : ''}
               ${row('Eingereicht',   fmtTime(lead.submittedAt))}
               ${row('Verifiziert',   fmtTime(verifiedAt))}
             </table>
