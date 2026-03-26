@@ -233,7 +233,7 @@ async function sendVerificationEmail(lead, verifyUrl) {
   const { error } = await resend.emails.send({
     from:    fromEmail,
     to:      lead.email,
-    subject: 'Bestätige deinen BOMAYE Founding Spot',
+    subject: 'Bestätige deinen BOMAYE Early Bird Spot',
     html:    buildVerificationEmailHtml(lead, verifyUrl),
   });
 
@@ -272,7 +272,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
             <p style="margin:0 0 20px;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.65;">
               Hallo ${escapeHtml(lead.firstName)},<br /><br />
               fast geschafft. Klicke auf den Button unten, um deinen
-              <strong style="color:#ffffff;">Founding-Member-Spot</strong> zu sichern.
+              <strong style="color:#ffffff;">Early Bird Spot</strong> zu sichern.
               Der Link ist <strong style="color:#C6A45A;">24 Stunden</strong> gültig.
             </p>
 
@@ -302,7 +302,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
         <tr>
           <td style="background:#0A0A0A;padding:18px 36px;border-top:1px solid rgba(255,255,255,0.05);">
             <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2);text-align:center;">
-              Du erhältst diese E-Mail, weil du dich für einen Founding-Member-Spot bei BOMAYE GYM München beworben hast.
+              Du erhältst diese E-Mail, weil du dich für einen Early Bird Spot bei BOMAYE GYM Munich beworben hast.
               Wenn du das nicht warst, ignoriere diese E-Mail einfach.
             </p>
           </td>

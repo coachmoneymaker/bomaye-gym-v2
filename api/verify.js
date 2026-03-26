@@ -77,7 +77,7 @@ export default async function handler(req, res) {
       if (status === 'verified') {
         return res.status(200).send(renderPage('already', {
           title: 'Bereits bestätigt',
-          message: `Dein Founding-Spot für ${escapeHtml(lead.email)} wurde bereits bestätigt.`,
+          message: `Dein Early Bird Spot für ${escapeHtml(lead.email)} wurde bereits bestätigt.`,
         }));
       }
     } catch (err) {
@@ -137,7 +137,7 @@ async function sendAdminEmail(lead, verifiedAt) {
   const { error } = await resend.emails.send({
     from:    fromEmail,
     to:      recipient,
-    subject: `✅ Verifizierter Founding Member – ${lead.firstName} ${lead.lastName}`,
+    subject: `✅ Verifizierter Early Bird Member – ${lead.firstName} ${lead.lastName}`,
     html:    buildAdminEmailHtml(lead, verifiedAt),
   });
 
@@ -178,7 +178,7 @@ function buildAdminEmailHtml(lead, verifiedAt) {
               BOMAYE GYM MUNICH
             </p>
             <h1 style="margin:8px 0 0;font-size:20px;color:#ffffff;">
-              ✅ Founding Member Verifiziert
+              ✅ Early Bird Member Verifiziert
             </h1>
           </td>
         </tr>
