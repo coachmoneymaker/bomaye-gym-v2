@@ -164,8 +164,9 @@
     }
     @keyframes hazeFloat {
       0%   { transform: translateX(-50%) scale(1) translateY(0); }
-      50%  { transform: translateX(-50%) scale(1.04) translateY(-12px); }
-      100% { transform: translateX(-50%) scale(0.97) translateY(8px); }
+      35%  { transform: translateX(-50%) scale(1.04) translateY(-22px); }
+      70%  { transform: translateX(-50%) scale(1.01) translateY(-8px); }
+      100% { transform: translateX(-50%) scale(0.97) translateY(14px); }
     }
     @keyframes smokeFloat3 {
       0%   { transform: translate(0,0) scale(1); }
@@ -186,6 +187,75 @@
       100% { transform: translate(8px, -20px) scale(1.02); }
     }
 
+    /* ── Rising smoke / vertical atmospheric drift ─────────────── */
+    .bg-smoke-rise {
+      position: fixed;
+      bottom: -10%;
+      left: 0;
+      width: 100%;
+      height: 110%;
+      z-index: 2; pointer-events: none;
+      background:
+        radial-gradient(ellipse 28% 18% at 25% 100%, rgba(198,164,90,0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 22% 16% at 72% 95%, rgba(255,255,255,0.05) 0%, transparent 58%),
+        radial-gradient(ellipse 18% 14% at 48% 98%, rgba(198,164,90,0.07) 0%, transparent 55%);
+      animation: smokeRiseA 22s cubic-bezier(0.4,0,0.6,1) infinite;
+      will-change: transform, opacity;
+      filter: blur(18px);
+      opacity: 0;
+    }
+    .bg-smoke-rise2 {
+      position: fixed;
+      bottom: -10%;
+      left: 0;
+      width: 100%;
+      height: 110%;
+      z-index: 2; pointer-events: none;
+      background:
+        radial-gradient(ellipse 32% 20% at 60% 100%, rgba(255,255,255,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 20% 15% at 15% 95%, rgba(198,164,90,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 24% 18% at 85% 98%, rgba(255,255,255,0.035) 0%, transparent 50%);
+      animation: smokeRiseB 32s cubic-bezier(0.4,0,0.6,1) infinite;
+      animation-delay: 11s;
+      will-change: transform, opacity;
+      filter: blur(22px);
+      opacity: 0;
+    }
+    .bg-smoke-rise3 {
+      position: fixed;
+      bottom: -10%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2; pointer-events: none;
+      background:
+        radial-gradient(ellipse 35% 22% at 40% 100%, rgba(198,164,90,0.06) 0%, transparent 62%),
+        radial-gradient(ellipse 18% 13% at 82% 96%, rgba(198,164,90,0.05) 0%, transparent 52%);
+      animation: smokeRiseC 26s cubic-bezier(0.4,0,0.6,1) infinite;
+      animation-delay: 6s;
+      will-change: transform, opacity;
+      filter: blur(20px);
+      opacity: 0;
+    }
+    @keyframes smokeRiseA {
+      0%   { transform: translateY(0) scaleX(1);   opacity: 0; }
+      8%   { opacity: 0.9; }
+      75%  { opacity: 0.55; }
+      100% { transform: translateY(-85%) scaleX(1.08); opacity: 0; }
+    }
+    @keyframes smokeRiseB {
+      0%   { transform: translateY(0) scaleX(1);   opacity: 0; }
+      6%   { opacity: 0.75; }
+      80%  { opacity: 0.4; }
+      100% { transform: translateY(-75%) scaleX(0.94); opacity: 0; }
+    }
+    @keyframes smokeRiseC {
+      0%   { transform: translateY(0) scaleX(1.05); opacity: 0; }
+      10%  { opacity: 0.65; }
+      78%  { opacity: 0.3; }
+      100% { transform: translateY(-90%) scaleX(0.98); opacity: 0; }
+    }
+
     /* Fine grain texture overlay */
     .bg-grain {
       position: fixed; inset: 0; z-index: 3; pointer-events: none;
@@ -204,11 +274,19 @@
       font-family: var(--font-display);
       font-size: clamp(18vw, 24vw, 340px);
       letter-spacing: 0.10em;
-      color: rgba(198,164,90,0.075);
+      color: rgba(198,164,90,0.048);
       white-space: nowrap;
       user-select: none;
       line-height: 1;
-      filter: blur(1px);
+      filter: blur(3px);
+      -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 60%, transparent 82%);
+      mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 60%, transparent 82%);
+      animation: watermarkBreath 18s ease-in-out infinite alternate;
+    }
+    @keyframes watermarkBreath {
+      0%   { opacity: 0.85; filter: blur(3px); }
+      50%  { opacity: 1;    filter: blur(2px); }
+      100% { opacity: 0.7;  filter: blur(4px); }
     }
 
     /* ── Top bar ─────────────────────────────────────────────────── */
@@ -230,10 +308,10 @@
       line-height: 1;
     }
     .logo-img {
-      height: clamp(64px, 8vw, 96px);
+      height: clamp(80px, 10vw, 116px);
       width: auto;
       display: block;
-      filter: brightness(1.08) contrast(1.03) drop-shadow(0 2px 24px rgba(198,164,90,0.45)) drop-shadow(0 0 48px rgba(198,164,90,0.18));
+      filter: brightness(1.1) contrast(1.04) drop-shadow(0 2px 28px rgba(198,164,90,0.52)) drop-shadow(0 0 56px rgba(198,164,90,0.22));
       transition: filter 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1);
     }
     .logo-img:hover {
@@ -685,6 +763,14 @@
       color: rgba(198,164,90,0.5);
       margin-bottom: 8px;
     }
+    .cs-footer-logo-img {
+      height: clamp(52px, 7vw, 72px);
+      width: auto;
+      display: block;
+      margin: 0 auto 14px;
+      filter: brightness(1.05) contrast(1.02) drop-shadow(0 2px 20px rgba(198,164,90,0.38)) drop-shadow(0 0 40px rgba(198,164,90,0.14));
+      opacity: 0.82;
+    }
     .cs-footer-text {
       font-size: 0.7rem;
       color: rgba(255,255,255,0.15);
@@ -713,7 +799,7 @@
     @media (max-width: 600px) {
       .topbar { padding: 20px 24px; }
       .topbar-badge { display: none; }
-      .logo-img { height: clamp(54px, 14vw, 72px); }
+      .logo-img { height: clamp(64px, 16vw, 84px); }
       .hero { padding-top: 56px; padding-bottom: 40px; }
       .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.32em; margin-bottom: 24px; }
       .hero-headline { font-size: clamp(3.2rem, 18vw, 5.5rem); }
@@ -863,6 +949,9 @@
   <div class="bg-smoke2" aria-hidden="true"></div>
   <div class="bg-smoke3" aria-hidden="true"></div>
   <div class="bg-smoke-haze" aria-hidden="true"></div>
+  <div class="bg-smoke-rise" aria-hidden="true"></div>
+  <div class="bg-smoke-rise2" aria-hidden="true"></div>
+  <div class="bg-smoke-rise3" aria-hidden="true"></div>
   <div class="bg-grain" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
@@ -1088,7 +1177,7 @@
 
     <!-- Footer -->
     <footer class="cs-footer">
-      <div class="cs-footer-logo">BOMAYE GYM</div>
+      <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="cs-footer-logo-img" />
       <p class="cs-footer-text">
         &copy; 2025 BOMAYE GYM MUNICH &mdash;
         <a href="/impressum.html">Impressum</a>
