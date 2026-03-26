@@ -363,8 +363,8 @@
     }
     .spots-number-big {
       font-family: var(--font-display);
-      font-size: clamp(5.5rem, 20vw, 11rem);
-      line-height: 1;
+      font-size: clamp(7rem, 26vw, 15rem);
+      line-height: 0.9;
       color: var(--gold);
       letter-spacing: 0.02em;
       text-shadow:
@@ -374,15 +374,15 @@
     }
     @keyframes counterGlow {
       0%   { text-shadow: 0 0 60px rgba(198,164,90,0.4), 0 0 120px rgba(198,164,90,0.15); }
-      100% { text-shadow: 0 0 90px rgba(198,164,90,0.6), 0 0 180px rgba(198,164,90,0.22); }
+      100% { text-shadow: 0 0 100px rgba(198,164,90,0.65), 0 0 200px rgba(198,164,90,0.25); }
     }
     .spots-label-upper {
-      font-family: var(--font-head);
-      font-size: 0.62rem;
-      letter-spacing: 0.42em;
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 3.5vw, 2.2rem);
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-top: -6px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 4px;
     }
     .spots-scarcity-line {
       display: inline-flex;
@@ -453,7 +453,7 @@
     .form-section {
       position: relative;
       z-index: 10;
-      padding: clamp(48px, 8vh, 80px) 24px clamp(72px, 12vh, 120px);
+      padding: clamp(56px, 9vh, 96px) 24px clamp(72px, 12vh, 120px);
       display: flex;
       justify-content: center;
     }
@@ -463,7 +463,7 @@
       max-width: 580px;
       background: rgba(255,255,255,0.028);
       border: 1px solid rgba(198,164,90,0.2);
-      border-radius: 6px;
+      border-radius: 8px;
       padding: clamp(48px, 6vw, 68px) clamp(40px, 6vw, 64px);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -760,7 +760,7 @@
       .form-card { padding: 36px 24px; }
       .topbar { padding: 16px 24px; }
       .goal-grid { grid-template-columns: 1fr 1fr; }
-      .spots-number-big { font-size: clamp(4.5rem, 22vw, 7rem); }
+      .spots-number-big { font-size: clamp(5.5rem, 28vw, 9rem); }
     }
     @media (max-width: 360px) {
       .category-grid { gap: 8px; }
@@ -855,40 +855,44 @@
     .goal-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 12px;
+      margin-bottom: 32px;
     }
     .goal-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 9px;
-      padding: 20px 8px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 4px;
-      background: rgba(255,255,255,0.022);
-      color: rgba(255,255,255,0.38);
+      gap: 10px;
+      padding: 22px 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.42);
       font-family: var(--font-head);
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
+      font-size: 0.63rem;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
-    .goal-btn i { font-size: 1.1rem; }
+    .goal-btn i { font-size: 1.2rem; }
     .goal-btn:hover {
-      border-color: rgba(198,164,90,0.5);
-      color: rgba(255,255,255,0.85);
-      background: rgba(198,164,90,0.065);
+      border-color: rgba(198,164,90,0.52);
+      color: rgba(255,255,255,0.88);
+      background: rgba(198,164,90,0.07);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.38);
     }
     .goal-btn.active {
-      border-color: rgba(198,164,90,0.85);
+      border-color: var(--gold);
       color: var(--gold);
-      background: rgba(198,164,90,0.12);
-      box-shadow: 0 0 0 1px rgba(198,164,90,0.28), 0 8px 28px rgba(0,0,0,0.32);
+      background: rgba(198,164,90,0.14);
+      box-shadow: 0 0 0 2px rgba(198,164,90,0.22), 0 8px 28px rgba(0,0,0,0.35);
       transform: translateY(-1px);
+    }
+    .goal-btn.active i {
+      filter: drop-shadow(0 0 6px rgba(198,164,90,0.5));
     }
 
     /* ── Pricing / Early Bird Section ────────────────────────────── */
@@ -956,7 +960,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
-      align-items: start;
+      align-items: stretch;
     }
 
     /* Base card */
@@ -982,7 +986,7 @@
       border-color: rgba(198,164,90,0.38);
       background: rgba(18, 15, 9, 0.97);
       box-shadow: 0 4px 40px rgba(0,0,0,0.48), 0 0 0 1px rgba(198,164,90,0.07), inset 0 1px 0 rgba(198,164,90,0.08);
-      padding-top: 44px;
+      padding-top: 48px;
     }
     .pricing-card.is-premium:hover {
       transform: translateY(-6px);
@@ -1122,16 +1126,16 @@
     .card-cta {
       display: block;
       width: 100%;
-      min-height: 52px;
-      padding: 16px 20px;
+      min-height: 56px;
+      padding: 18px 20px;
       text-align: center;
       font-family: var(--font-head);
-      font-size: 0.66rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      border-radius: 3px;
-      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+      border-radius: 4px;
+      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
       cursor: pointer;
     }
 
@@ -1159,13 +1163,125 @@
       box-shadow: 0 8px 32px rgba(166,124,46,0.42), inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
-    /* Pricing section separator */
-    .pricing-section-sep {
+    /* ── Conversion Zone — light premium island ──────────────────── */
+    .conversion-zone {
+      position: relative;
       width: 100%;
-      max-width: 320px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.18), transparent);
-      margin: 0 auto clamp(32px, 5vh, 56px);
+    }
+    .conversion-zone::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      inset-block: 0;
+      background: linear-gradient(180deg, #EDE7DA 0%, #E5DDD0 60%, #DDD4C4 100%);
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    /* Override pricing section text for light bg */
+    .conversion-zone .pricing-section {
+      position: relative;
+      z-index: 10;
+    }
+    .conversion-zone .pricing-eyebrow-tag {
+      color: #A67C2E;
+    }
+    .conversion-zone .pricing-eyebrow-tag::before {
+      background: linear-gradient(90deg, transparent, #A67C2E);
+    }
+    .conversion-zone .pricing-eyebrow-tag::after {
+      background: linear-gradient(90deg, #A67C2E, transparent);
+    }
+    .conversion-zone .pricing-headline { color: #1A1812; }
+    .conversion-zone .pricing-sub { color: #7A7260; }
+
+    /* Cards on light background */
+    .conversion-zone .pricing-card {
+      background: #E9E2D6;
+      border: 1px solid rgba(166,124,46,0.28);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .conversion-zone .pricing-card:hover {
+      background: #EDE6DA;
+      border-color: rgba(166,124,46,0.52);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(166,124,46,0.18), inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+    .conversion-zone .pricing-card.is-premium {
+      background: #DDD4C2;
+      border-color: rgba(166,124,46,0.5);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10), 0 0 0 1px rgba(166,124,46,0.12), inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .conversion-zone .pricing-card.is-premium:hover {
+      background: #E2D9C8;
+      border-color: rgba(166,124,46,0.72);
+      box-shadow: 0 14px 56px rgba(0,0,0,0.15), 0 0 0 1px rgba(166,124,46,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .conversion-zone .early-bird-badge {
+      background: rgba(166,124,46,0.1);
+      border: 1px solid rgba(166,124,46,0.35);
+      color: #8A6420;
+    }
+    .conversion-zone .card-divider {
+      background: rgba(0,0,0,0.08);
+    }
+    .conversion-zone .card-category { color: #1A1812; }
+    .conversion-zone .card-age { color: #8A8070; }
+    .conversion-zone .card-price-label { color: #A67C2E; opacity: 1; }
+    .conversion-zone .card-price-amount { color: #1A1812; }
+    .conversion-zone .card-price-unit { color: #8A8070; }
+    .conversion-zone .card-price-regular { color: #8A8070; }
+    .conversion-zone .card-price-regular-amount {
+      color: #8A8070;
+      text-decoration-color: rgba(180,60,60,0.45);
+    }
+    .conversion-zone .card-urgency { color: #8A8070; }
+    .conversion-zone .card-cta.cta-default {
+      background: rgba(166,124,46,0.08);
+      border: 1px solid rgba(166,124,46,0.42);
+      color: #8A6420;
+    }
+    .conversion-zone .card-cta.cta-default:hover {
+      background: rgba(166,124,46,0.15);
+      border-color: rgba(166,124,46,0.68);
+      color: #7A540E;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 0 0 1px rgba(166,124,46,0.2);
+    }
+    .conversion-zone .card-cta.cta-premium {
+      box-shadow: 0 4px 20px rgba(100,70,10,0.22), inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    /* ── Form section on light bg ─────────────────────────────────── */
+    .conversion-zone .form-section {
+      position: relative;
+      z-index: 10;
+    }
+    .conversion-zone .form-card {
+      background: #1A1710;
+      border: 1px solid rgba(198,164,90,0.22);
+      box-shadow:
+        0 8px 48px rgba(0,0,0,0.32),
+        0 40px 120px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 0 0 1px rgba(0,0,0,0.6);
+    }
+
+    /* Section transition states */
+    .conv-view {
+      transition: opacity 0.32s ease, transform 0.32s ease;
+    }
+    .conv-view.is-exiting {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+    .conv-view.is-entering {
+      animation: convEnter 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes convEnter {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 860px) {
@@ -1182,7 +1298,7 @@
 
     @media (max-width: 480px) {
       .pricing-card { padding: 26px 18px 22px; }
-      .pricing-card.is-premium { padding: 40px 18px 22px; }
+      .pricing-card.is-premium { padding: 44px 18px 22px; }
       .card-price-amount { font-size: 2.2rem; }
     }
   </style>
@@ -1233,18 +1349,21 @@
         <div class="spots-label-upper">Founding Spots</div>
         <div class="spots-scarcity-line">
           <span class="spots-dot"></span>
-          <span>Nur noch wenige Plätze verfügbar</span>
+          <span>Nur für kurze Zeit verfügbar</span>
         </div>
       </div>
     </section>
 
+    <!-- Conversion Zone: Pricing → Form (state-based, no scroll) -->
+    <div class="conversion-zone" id="conversion-zone">
+
     <!-- Pricing / Early Bird Section -->
-    <section class="pricing-section" id="pricing-section" aria-label="Early Bird Preise">
+    <section class="pricing-section conv-view" id="pricing-section" aria-label="Early Bird Preise">
 
       <div class="pricing-header fade-up">
         <div class="pricing-eyebrow-tag">Founding Member</div>
-        <h2 class="pricing-headline">WÄHLE DEINEN WEG</h2>
-        <p class="pricing-sub">Werde Teil der ersten Generation von BOMAYE Athleten. Dauerhaft bessere Konditionen — ausschließlich für die Ersten.</p>
+        <h2 class="pricing-headline">DEIN EINSTIEG BEGINNT JETZT</h2>
+        <p class="pricing-sub">Werde Teil der ersten Generation von BOMAYE Athleten.</p>
       </div>
 
       <div class="pricing-grid">
@@ -1331,10 +1450,8 @@
       </div>
     </section>
 
-    <div class="pricing-section-sep" aria-hidden="true"></div>
-
-    <!-- Lead Capture Form -->
-    <section class="form-section" id="form-section">
+    <!-- Lead Capture Form (hidden until pricing CTA clicked) -->
+    <section class="form-section conv-view" id="form-section" style="display:none;">
       <div class="form-card fade-up delay-5 visible">
 
         <!-- Success state -->
@@ -1350,8 +1467,8 @@
 
         <!-- Form -->
         <form id="earlybird-form" novalidate>
-          <p class="form-title">Founding Member werden</p>
-          <p class="form-subtitle">Kostenlos. Unverbindlich. Limitiert.</p>
+          <p class="form-title">Starte deine Mitgliedschaft</p>
+          <p class="form-subtitle">In weniger als 60 Sekunden gesichert.</p>
 
           <!-- Step indicator -->
           <div class="step-indicator" aria-hidden="true">
@@ -1369,12 +1486,12 @@
             <div class="selected-plan-badge" id="selected-plan-badge">
               <span class="selected-plan-icon"><i class="fa-solid fa-bolt"></i></span>
               <span id="selected-plan-name">—</span>
-              <a href="#pricing-section" class="selected-plan-change">Plan ändern</a>
+              <a href="#" class="selected-plan-change" id="btn-change-plan">Plan ändern</a>
             </div>
 
-            <!-- Prompt shown when no plan selected -->
-            <div class="no-plan-prompt" id="no-plan-prompt">
-              <a href="#pricing-section">↑ Wähle zuerst deinen Plan</a>
+            <!-- Prompt shown when no plan selected (hidden when entering from pricing CTA) -->
+            <div class="no-plan-prompt" id="no-plan-prompt" style="display:none;">
+              <a href="#" id="no-plan-link">↑ Wähle zuerst deinen Plan</a>
             </div>
 
             <span class="category-label">Dein Ziel</span>
@@ -1493,6 +1610,8 @@
       </div>
     </section>
 
+    </div><!-- /.conversion-zone -->
+
     <!-- Features strip -->
     <div class="features" aria-label="Was dich erwartet">
       <div class="feature-item fade-up visible">
@@ -1544,15 +1663,44 @@
       if (noPlanPrompt) noPlanPrompt.style.display = 'none';
     }
 
-    // ── Pricing card CTA → auto-select category + go to step 1 ──
+    // ── State-based section switch (no scroll) ───────────────────
+    const pricingSection = document.getElementById('pricing-section');
+    const formSection    = document.getElementById('form-section');
+
+    function showFormView(cat) {
+      selectPlan(cat);
+      showStep(1);
+      // Fade out pricing
+      pricingSection.classList.add('is-exiting');
+      setTimeout(() => {
+        pricingSection.style.display = 'none';
+        pricingSection.classList.remove('is-exiting');
+        // Fade in form
+        formSection.style.display = 'flex';
+        formSection.classList.add('is-entering');
+        // Scroll conversion zone into view (top of zone, no full-page scroll)
+        const zone = document.getElementById('conversion-zone');
+        if (zone) zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 320);
+    }
+
+    function showPricingView() {
+      formSection.classList.add('is-exiting');
+      setTimeout(() => {
+        formSection.style.display = 'none';
+        formSection.classList.remove('is-exiting', 'is-entering');
+        pricingSection.style.display = '';
+        pricingSection.classList.add('is-entering');
+        const zone = document.getElementById('conversion-zone');
+        if (zone) zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => pricingSection.classList.remove('is-entering'), 400);
+      }, 320);
+    }
+
+    // ── Pricing card CTA → switch to form view ───────────────────
     document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
-        selectPlan(btn.dataset.pricingCat);
-        showStep(1);
-        const formSection = document.getElementById('form-section');
-        if (formSection) {
-          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        showFormView(btn.dataset.pricingCat);
       });
     });
 
@@ -1624,6 +1772,15 @@
     });
 
     document.getElementById('step3-back').addEventListener('click', () => showStep(2));
+
+    // ── "Plan ändern" → back to pricing view ─────────────────────
+    const btnChangePlan = document.getElementById('btn-change-plan');
+    if (btnChangePlan) {
+      btnChangePlan.addEventListener('click', e => {
+        e.preventDefault();
+        showPricingView();
+      });
+    }
 
     // ── Form submit ───────────────────────────────────────────────
     const form      = document.getElementById('earlybird-form');
