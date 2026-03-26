@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, phone, category } = req.body ?? {};
+  const { firstName, lastName, email, phone, category, dob, goal, street, postalCode, city } = req.body ?? {};
 
   // ── Validation ───────────────────────────────────────────────
   const errors = {};
@@ -49,11 +49,16 @@ export default async function handler(req, res) {
 
   // ── Build lead object ────────────────────────────────────────
   const lead = {
-    firstName: firstName.trim(),
-    lastName:  lastName.trim(),
-    email:     email.trim().toLowerCase(),
-    phone:     phone?.trim() ?? '',
-    category:  normalizedCategory,
+    firstName:  firstName.trim(),
+    lastName:   lastName.trim(),
+    email:      email.trim().toLowerCase(),
+    phone:      phone?.trim() ?? '',
+    category:   normalizedCategory,
+    dob:        dob?.trim() ?? '',
+    goal:       goal?.trim() ?? '',
+    street:     street?.trim() ?? '',
+    postalCode: postalCode?.trim() ?? '',
+    city:       city?.trim() ?? '',
     submittedAt: new Date().toISOString(),
     source: 'coming-soon',
   };
@@ -147,13 +152,18 @@ function buildEmailHtml(lead) {
         <tr>
           <td style="padding:32px;">
             <table cellpadding="0" cellspacing="0" width="100%">
-              ${row('First Name',  lead.firstName)}
-              ${row('Last Name',   lead.lastName)}
-              ${row('Email',       `<a href="mailto:${lead.email}" style="color:#C6A45A;">${lead.email}</a>`)}
-              ${row('Phone',       lead.phone || '—')}
-              ${row('Category',    lead.category)}
-              ${row('Submitted',   formattedTime)}
-              ${row('Source',      lead.source)}
+              ${row('Vorname',       lead.firstName)}
+              ${row('Nachname',     lead.lastName)}
+              ${row('E-Mail',       `<a href="mailto:${lead.email}" style="color:#C6A45A;">${lead.email}</a>`)}
+              ${row('Telefon',      lead.phone || '—')}
+              ${row('Kategorie',    lead.category)}
+              ${row('Geburtsdatum', lead.dob || '—')}
+              ${row('Ziel',         lead.goal || '—')}
+              ${row('Straße',       lead.street || '—')}
+              ${row('PLZ',          lead.postalCode || '—')}
+              ${row('Stadt',        lead.city || '—')}
+              ${row('Eingereicht',  formattedTime)}
+              ${row('Quelle',       lead.source)}
             </table>
           </td>
         </tr>

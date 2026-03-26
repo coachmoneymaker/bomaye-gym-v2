@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>BOMAYE GYM MUNICH — Coming Soon</title>
-  <meta name="description" content="Münchens neues Premium-Boxgym öffnet bald. Sichere dir jetzt deinen Early-Bird-Vorteil." />
+  <meta name="robots" content="index, follow" />
+  <title>BOMAYE GYM München — Premium Boxgym | Early Bird sichern</title>
+  <meta name="description" content="Münchens neues Premium-Boxgym für Kids, Jugend und Erwachsene. Sichere dir jetzt deinen Early-Bird-Platz als Founding Member — limitiert." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -129,6 +129,23 @@
       will-change: transform;
       filter: blur(3px);
     }
+    .bg-smoke3 {
+      position: fixed; inset: -15%; z-index: 2; pointer-events: none;
+      width: 130%; height: 130%;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 80%, rgba(198,164,90,0.018) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 30% at 80% 20%, rgba(255,255,255,0.008) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 25% at 15% 70%, rgba(198,164,90,0.012) 0%, transparent 50%);
+      animation: smokeFloat3 52s ease-in-out infinite alternate;
+      will-change: transform;
+      filter: blur(4px);
+    }
+    @keyframes smokeFloat3 {
+      0%   { transform: translate(0,0) scale(1); }
+      30%  { transform: translate(14px,-10px) scale(1.02); }
+      60%  { transform: translate(-10px, 16px) scale(0.98); }
+      100% { transform: translate(6px, -8px) scale(1.015); }
+    }
     @keyframes smokeFloat {
       0%   { transform: translate(0,0) scale(1); }
       33%  { transform: translate(-18px, 10px) scale(1.025); }
@@ -181,26 +198,14 @@
     }
     .logo-lockup {
       display: flex;
-      flex-direction: column;
+      align-items: center;
       line-height: 1;
     }
-    .logo-name {
-      font-family: var(--font-display);
-      font-size: clamp(1.7rem, 3.5vw, 2.3rem);
-      letter-spacing: 0.2em;
-      background: linear-gradient(to bottom, #e8cc7a 0%, #c6a45a 50%, #a67c2e 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 1px 8px rgba(198,164,90,0.2));
-    }
-    .logo-city {
-      font-family: var(--font-head);
-      font-size: 0.55rem;
-      letter-spacing: 0.5em;
-      color: rgba(255,255,255,0.28);
-      text-transform: uppercase;
-      margin-top: 4px;
+    .logo-img {
+      height: clamp(36px, 5vw, 52px);
+      width: auto;
+      display: block;
+      filter: brightness(1.08) contrast(1.02) drop-shadow(0 1px 10px rgba(198,164,90,0.22));
     }
     .topbar-badge {
       font-family: var(--font-head);
@@ -270,17 +275,23 @@
     .hero-headline .line-gold {
       display: block;
       background: linear-gradient(
-        to bottom,
-        #f0dc9a 0%,
-        #d4b060 25%,
-        #b08530 50%,
-        #c8a04e 72%,
-        #e8cc7a 100%
+        160deg,
+        #f8e8a8 0%,
+        #e0c060 18%,
+        #c8960a 36%,
+        #a07020 50%,
+        #c09838 62%,
+        #e0c060 76%,
+        #f0d880 88%,
+        #c8a040 100%
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 3px 14px rgba(0,0,0,0.75)) drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+      filter:
+        drop-shadow(0 4px 20px rgba(0,0,0,0.85))
+        drop-shadow(0 1px 0 rgba(255,220,100,0.15))
+        drop-shadow(0 2px 4px rgba(0,0,0,0.6));
       margin-top: 4px;
     }
 
@@ -656,6 +667,129 @@
       .category-grid { gap: 8px; }
       .cat-btn { padding: 18px 6px; font-size: 0.62rem; }
     }
+
+    /* ── Multi-step form ─────────────────────────────────────────── */
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(198,164,90,0.3);
+      background: rgba(198,164,90,0.05);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.04em;
+      color: rgba(198,164,90,0.45);
+      flex-shrink: 0;
+      transition: all 0.35s ease;
+    }
+    .step-dot.active {
+      border-color: var(--gold);
+      background: rgba(198,164,90,0.14);
+      color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(198,164,90,0.1);
+    }
+    .step-dot.done {
+      border-color: rgba(198,164,90,0.6);
+      background: rgba(198,164,90,0.1);
+      color: rgba(198,164,90,0.7);
+    }
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(198,164,90,0.15);
+      margin: 0 8px;
+    }
+    .step-line.done { background: rgba(198,164,90,0.45); }
+
+    .step-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn-back {
+      flex: 0 0 auto;
+      padding: 18px 24px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px;
+      color: rgba(255,255,255,0.4);
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
+
+    .btn-next {
+      flex: 1;
+      padding: 18px 24px;
+      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
+      color: #080808;
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease;
+      box-shadow: 0 4px 20px rgba(166,124,46,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(166,124,46,0.38), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    /* Goal selector — same style as category */
+    .goal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .goal-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.02);
+      color: rgba(255,255,255,0.38);
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .goal-btn i { font-size: 1.1rem; }
+    .goal-btn:hover {
+      border-color: rgba(198,164,90,0.5);
+      color: rgba(255,255,255,0.82);
+      background: rgba(198,164,90,0.055);
+      transform: translateY(-2px);
+    }
+    .goal-btn.active {
+      border-color: rgba(198,164,90,0.8);
+      color: var(--gold);
+      background: rgba(198,164,90,0.1);
+      box-shadow: 0 0 0 1px rgba(198,164,90,0.22), 0 6px 24px rgba(0,0,0,0.28);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
@@ -666,6 +800,7 @@
   <div class="bg-lines" aria-hidden="true"></div>
   <div class="bg-smoke" aria-hidden="true"></div>
   <div class="bg-smoke2" aria-hidden="true"></div>
+  <div class="bg-smoke3" aria-hidden="true"></div>
   <div class="bg-grain" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
@@ -675,15 +810,14 @@
     <!-- Top bar -->
     <header class="topbar">
       <div class="logo-lockup">
-        <span class="logo-name">BOMAYE GYM</span>
-        <span class="logo-city">Munich</span>
+        <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="logo-img" />
       </div>
       <div class="topbar-badge">Early Access</div>
     </header>
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-eyebrow fade-up visible">München · Premium Boxing</div>
+      <div class="hero-eyebrow fade-up visible">MÜNCHENS NEUES PREMIUM-BOXGYM</div>
 
       <h1 class="hero-headline fade-up delay-1 visible">
         <span class="line-white">IT'S NOT A GYM.</span>
@@ -702,7 +836,7 @@
 
       <div class="spots-bar fade-up delay-4 visible">
         <span class="spots-dot"></span>
-        Founding Spots — Limitiert
+        <span id="spots-count">Founding Spots — Limitiert</span>
       </div>
     </section>
 
@@ -713,10 +847,11 @@
         <!-- Success state -->
         <div class="form-success" id="form-success" role="alert" aria-live="polite">
           <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="form-success-title">Du bist dabei!</div>
+          <div class="form-success-title">Du bist dabei.</div>
           <p class="form-success-msg">
-            Wir melden uns bei dir, sobald es losgehen kann.<br />
-            Dein Early-Bird-Vorteil ist gesichert.
+            Dein Founding-Member-Platz ist gesichert.<br />
+            Wir melden uns, sobald die Türen öffnen.<br /><br />
+            <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM München.</strong>
           </p>
         </div>
 
@@ -725,105 +860,141 @@
           <p class="form-title">Founding Member werden</p>
           <p class="form-subtitle">Kostenlos. Unverbindlich. Limitiert.</p>
 
-          <!-- Category selector -->
-          <span class="category-label">Für wen meldest du dich an?</span>
-          <div class="category-grid" role="group" aria-label="Kategorie auswählen">
-            <button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
-              <i class="fa-solid fa-child"></i>
-              Kids
-              <span class="cat-age">4 – 12 Jahre</span>
-            </button>
-            <button type="button" class="cat-btn" data-cat="youth" aria-pressed="false">
-              <i class="fa-solid fa-person-running"></i>
-              Jugend
-              <span class="cat-age">13 – 17 Jahre</span>
-            </button>
-            <button type="button" class="cat-btn" data-cat="adults" aria-pressed="false">
-              <i class="fa-solid fa-dumbbell"></i>
-              Erwachsene
-              <span class="cat-age">18+ Jahre</span>
-            </button>
+          <!-- Step indicator -->
+          <div class="step-indicator" aria-hidden="true">
+            <div class="step-dot active" id="dot-1">1</div>
+            <div class="step-line" id="line-12"></div>
+            <div class="step-dot" id="dot-2">2</div>
+            <div class="step-line" id="line-23"></div>
+            <div class="step-dot" id="dot-3">3</div>
           </div>
 
-          <!-- Name row -->
-          <div class="field-row">
-            <div class="form-group">
-              <label class="field-label" for="cs-firstname">Vorname</label>
-              <input
-                class="field-input"
-                type="text"
-                id="cs-firstname"
-                name="firstname"
-                placeholder="Max"
-                autocomplete="given-name"
-                required
-              />
+          <!-- ── Step 1: Category ── -->
+          <div class="form-step active" id="step-1">
+            <span class="category-label">Für wen meldest du dich an?</span>
+            <div class="category-grid" role="group" aria-label="Kategorie auswählen">
+              <button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
+                <i class="fa-solid fa-child"></i>
+                Kids
+                <span class="cat-age">4 – 12 Jahre</span>
+              </button>
+              <button type="button" class="cat-btn" data-cat="youth" aria-pressed="false">
+                <i class="fa-solid fa-person-running"></i>
+                Jugend
+                <span class="cat-age">13 – 17 Jahre</span>
+              </button>
+              <button type="button" class="cat-btn" data-cat="adults" aria-pressed="false">
+                <i class="fa-solid fa-dumbbell"></i>
+                Erwachsene
+                <span class="cat-age">18+ Jahre</span>
+              </button>
             </div>
-            <div class="form-group">
-              <label class="field-label" for="cs-lastname">Nachname</label>
-              <input
-                class="field-input"
-                type="text"
-                id="cs-lastname"
-                name="lastname"
-                placeholder="Mustermann"
-                autocomplete="family-name"
-              />
-            </div>
-          </div>
 
-          <!-- Email -->
-          <div class="form-group">
-            <label class="field-label" for="cs-email">E-Mail-Adresse *</label>
-            <input
-              class="field-input"
-              type="email"
-              id="cs-email"
-              name="email"
-              placeholder="deine@email.de"
-              autocomplete="email"
-              required
-            />
-          </div>
-
-          <!-- Phone + DOB row -->
-          <div class="field-row">
-            <div class="form-group">
-              <label class="field-label" for="cs-phone">Telefon <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
-              <input
-                class="field-input"
-                type="tel"
-                id="cs-phone"
-                name="phone"
-                placeholder="+49 89 …"
-                autocomplete="tel"
-              />
+            <span class="category-label" style="margin-top:4px;">Dein Ziel</span>
+            <div class="goal-grid" role="group" aria-label="Ziel auswählen">
+              <button type="button" class="goal-btn" data-goal="fitness" aria-pressed="false">
+                <i class="fa-solid fa-heart-pulse"></i>Fitness
+              </button>
+              <button type="button" class="goal-btn" data-goal="boxen" aria-pressed="false">
+                <i class="fa-solid fa-boxing-glove"></i>Boxen lernen
+              </button>
+              <button type="button" class="goal-btn" data-goal="wettkampf" aria-pressed="false">
+                <i class="fa-solid fa-trophy"></i>Wettkampf
+              </button>
+              <button type="button" class="goal-btn" data-goal="abnehmen" aria-pressed="false">
+                <i class="fa-solid fa-fire"></i>Abnehmen
+              </button>
             </div>
-            <div class="form-group">
-              <label class="field-label" for="cs-dob">Geburtsdatum</label>
-              <input
-                class="field-input"
-                type="date"
-                id="cs-dob"
-                name="dob"
-                autocomplete="bday"
-              />
+
+            <input type="hidden" name="category" id="cs-category" value="" />
+            <input type="hidden" name="goal" id="cs-goal" value="" />
+
+            <div class="step-nav">
+              <button type="button" class="btn-next" id="step1-next">
+                Weiter <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
+              </button>
             </div>
           </div>
 
-          <!-- Hidden category -->
-          <input type="hidden" name="category" id="cs-category" value="" />
+          <!-- ── Step 2: Personal info ── -->
+          <div class="form-step" id="step-2">
+            <div class="field-row">
+              <div class="form-group">
+                <label class="field-label" for="cs-firstname">Vorname *</label>
+                <input class="field-input" type="text" id="cs-firstname" name="firstname"
+                  placeholder="Max" autocomplete="given-name" required />
+              </div>
+              <div class="form-group">
+                <label class="field-label" for="cs-lastname">Nachname *</label>
+                <input class="field-input" type="text" id="cs-lastname" name="lastname"
+                  placeholder="Mustermann" autocomplete="family-name" required />
+              </div>
+            </div>
 
-          <!-- Submit -->
-          <button type="submit" class="submit-btn">
-            <i class="fa-solid fa-bolt"></i>
-            Early-Bird-Platz sichern
-          </button>
+            <div class="form-group">
+              <label class="field-label" for="cs-email">E-Mail-Adresse *</label>
+              <input class="field-input" type="email" id="cs-email" name="email"
+                placeholder="deine@email.de" autocomplete="email" required />
+            </div>
 
-          <p class="form-note">
-            <i class="fa-solid fa-lock"></i>
-            Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
-          </p>
+            <div class="field-row">
+              <div class="form-group">
+                <label class="field-label" for="cs-phone">Telefon <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
+                <input class="field-input" type="tel" id="cs-phone" name="phone"
+                  placeholder="+49 89 …" autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label class="field-label" for="cs-dob">Geburtsdatum</label>
+                <input class="field-input" type="date" id="cs-dob" name="dob" autocomplete="bday" />
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn-back" id="step2-back">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button type="button" class="btn-next" id="step2-next">
+                Weiter <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Step 3: Address + submit ── -->
+          <div class="form-step" id="step-3">
+            <div class="form-group">
+              <label class="field-label" for="cs-street">Straße &amp; Hausnummer <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
+              <input class="field-input" type="text" id="cs-street" name="street"
+                placeholder="Musterstraße 12" autocomplete="street-address" />
+            </div>
+
+            <div class="field-row">
+              <div class="form-group">
+                <label class="field-label" for="cs-plz">Postleitzahl</label>
+                <input class="field-input" type="text" id="cs-plz" name="postalCode"
+                  placeholder="80639" autocomplete="postal-code" inputmode="numeric" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label class="field-label" for="cs-city">Stadt</label>
+                <input class="field-input" type="text" id="cs-city" name="city"
+                  placeholder="München" autocomplete="address-level2" />
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn-back" id="step3-back">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button type="submit" class="btn-next submit-btn" style="padding:20px 24px;">
+                <i class="fa-solid fa-bolt"></i>
+                Early-Bird-Platz sichern
+              </button>
+            </div>
+
+            <p class="form-note" style="margin-top:14px;">
+              <i class="fa-solid fa-lock"></i>
+              Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM München.
+            </p>
+          </div>
         </form>
 
       </div>
@@ -866,82 +1037,109 @@
 
   <script>
     // ── Category toggle ──────────────────────────────────────────
-    const catBtns = document.querySelectorAll('.cat-btn');
+    const catBtns  = document.querySelectorAll('.cat-btn');
     const catHidden = document.getElementById('cs-category');
-
     catBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        catBtns.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed', 'false');
-        });
+        catBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
         btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('aria-pressed','true');
         catHidden.value = btn.dataset.cat;
       });
     });
 
-    // ── Form submit ──────────────────────────────────────────────
-    const form      = document.getElementById('earlybird-form');
-    const successEl = document.getElementById('form-success');
-    const submitBtn = form.querySelector('.submit-btn');
+    // ── Goal toggle ───────────────────────────────────────────────
+    const goalBtns  = document.querySelectorAll('.goal-btn');
+    const goalHidden = document.getElementById('cs-goal');
+    goalBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        goalBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed','true');
+        goalHidden.value = btn.dataset.goal;
+      });
+    });
 
-    function showFieldError(msg) {
-      let errEl = form.querySelector('.form-error-msg');
+    // ── Multi-step navigation ─────────────────────────────────────
+    let currentStep = 1;
+
+    function showStep(n) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+      // update dots
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('dot-' + i);
+        dot.classList.remove('active','done');
+        if (i < n) dot.classList.add('done');
+        else if (i === n) dot.classList.add('active');
+      }
+      // update lines
+      document.getElementById('line-12').classList.toggle('done', n > 1);
+      document.getElementById('line-23').classList.toggle('done', n > 2);
+      currentStep = n;
+    }
+
+    function showStepError(stepId, msg) {
+      let errEl = document.getElementById(stepId).querySelector('.form-error-msg');
       if (!errEl) {
         errEl = document.createElement('p');
         errEl.className = 'form-error-msg';
-        errEl.style.cssText = 'color:#ff6b6b;font-size:.8rem;text-align:center;margin-top:8px;';
-        submitBtn.insertAdjacentElement('afterend', errEl);
+        errEl.style.cssText = 'color:#ff6b6b;font-size:.78rem;text-align:center;margin-top:10px;';
+        document.getElementById(stepId).querySelector('.step-nav').insertAdjacentElement('afterend', errEl);
       }
       errEl.textContent = msg;
     }
-
-    function clearFieldError() {
-      const errEl = form.querySelector('.form-error-msg');
-      if (errEl) errEl.remove();
+    function clearStepError(stepId) {
+      const e = document.getElementById(stepId).querySelector('.form-error-msg');
+      if (e) e.remove();
     }
+
+    document.getElementById('step1-next').addEventListener('click', () => {
+      clearStepError('step-1');
+      if (!catHidden.value) {
+        showStepError('step-1', 'Bitte wähle eine Kategorie aus.');
+        return;
+      }
+      showStep(2);
+    });
+
+    document.getElementById('step2-back').addEventListener('click', () => showStep(1));
+    document.getElementById('step2-next').addEventListener('click', () => {
+      clearStepError('step-2');
+      const fn = document.getElementById('cs-firstname').value.trim();
+      const ln = document.getElementById('cs-lastname').value.trim();
+      const em = document.getElementById('cs-email').value.trim();
+      if (!fn) { document.getElementById('cs-firstname').focus(); showStepError('step-2','Bitte Vorname eingeben.'); return; }
+      if (!ln) { document.getElementById('cs-lastname').focus();  showStepError('step-2','Bitte Nachname eingeben.'); return; }
+      if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { document.getElementById('cs-email').focus(); showStepError('step-2','Bitte gültige E-Mail eingeben.'); return; }
+      showStep(3);
+    });
+
+    document.getElementById('step3-back').addEventListener('click', () => showStep(2));
+
+    // ── Form submit ───────────────────────────────────────────────
+    const form      = document.getElementById('earlybird-form');
+    const successEl = document.getElementById('form-success');
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      clearFieldError();
+      clearStepError('step-3');
 
-      const emailEl  = form.querySelector('#cs-email');
-      const fnameEl  = form.querySelector('#cs-firstname');
-      const lnameEl  = form.querySelector('#cs-lastname');
-      const category = form.querySelector('#cs-category').value;
-
-      if (!fnameEl.value.trim()) {
-        fnameEl.focus();
-        showFieldError('Please enter your first name.');
-        return;
-      }
-      if (!lnameEl.value.trim()) {
-        lnameEl.focus();
-        showFieldError('Please enter your last name.');
-        return;
-      }
-      if (!emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
-        emailEl.focus();
-        showFieldError('Please enter a valid email address.');
-        return;
-      }
-      if (!category) {
-        form.querySelector('.category-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        showFieldError('Please select a category (Kids, Youth, or Adults).');
-        return;
-      }
-
+      const submitBtn = form.querySelector('[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.style.opacity = '0.7';
 
       const payload = {
-        firstName: fnameEl.value.trim(),
-        lastName:  lnameEl.value.trim(),
-        email:     emailEl.value.trim(),
-        phone:     form.querySelector('#cs-phone').value.trim(),
-        dob:       form.querySelector('#cs-dob').value,
-        category,
+        firstName:  document.getElementById('cs-firstname').value.trim(),
+        lastName:   document.getElementById('cs-lastname').value.trim(),
+        email:      document.getElementById('cs-email').value.trim(),
+        phone:      document.getElementById('cs-phone').value.trim(),
+        dob:        document.getElementById('cs-dob').value,
+        category:   catHidden.value,
+        goal:       goalHidden.value,
+        street:     document.getElementById('cs-street').value.trim(),
+        postalCode: document.getElementById('cs-plz').value.trim(),
+        city:       document.getElementById('cs-city').value.trim(),
       };
 
       try {
@@ -954,22 +1152,28 @@
         console.error('[lead form] fetch error (non-fatal):', err);
       }
 
-      successEl.querySelector('.form-success-title').textContent = "You're in. Early Bird secured.";
-      successEl.querySelector('.form-success-msg').innerHTML =
-        "We'll be in touch as soon as doors open.<br />Your Early Bird advantage is locked in.";
       form.style.display = 'none';
       successEl.classList.add('visible');
     });
 
-    // ── Fade-in on scroll ────────────────────────────────────────
+    // ── Live spots counter ────────────────────────────────────────
+    (async () => {
+      try {
+        const res  = await fetch('/api/spots');
+        const data = await res.json();
+        const el   = document.getElementById('spots-count');
+        if (el && typeof data.spots_left === 'number') {
+          el.textContent = data.spots_left + ' Founding Spots — Limitiert';
+        }
+      } catch (_) {}
+    })();
+
+    // ── Fade-in on scroll ─────────────────────────────────────────
     const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
     if (fadeEls.length && 'IntersectionObserver' in window) {
       const obs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            obs.unobserve(entry.target);
-          }
+          if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
         });
       }, { threshold: 0.15 });
       fadeEls.forEach(el => obs.observe(el));
