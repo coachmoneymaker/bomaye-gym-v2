@@ -28,6 +28,12 @@ const TOKEN_TTL_SEC = TOKEN_TTL_MS / 1000;
 let _kv = null;
 async function getKV() {
   if (_kv) return _kv;
+  // Must check env vars first: @vercel/kv exports a Proxy whose getter throws
+  // when env vars are missing. Without this guard, `await getKV()` triggers a
+  // thenable check (kv.then) on the Proxy, which throws and crashes the handler.
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    return null;
+  }
   try {
     const mod = await import('@vercel/kv');
     _kv = mod.kv;

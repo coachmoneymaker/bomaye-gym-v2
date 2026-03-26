@@ -2,6 +2,7 @@
   "name": "bomaye-gym-v2",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@vercel/kv": "^3.0.0",
     "resend": "^3.2.0"
