@@ -1702,8 +1702,8 @@
                   placeholder="+49 89 …" autocomplete="tel" />
               </div>
               <div class="form-group">
-                <label class="field-label" for="cs-dob">Geburtsdatum</label>
-                <input class="field-input" type="date" id="cs-dob" name="dob" autocomplete="bday" />
+                <label class="field-label" for="cs-dob">Geburtsdatum *</label>
+                <input class="field-input" type="date" id="cs-dob" name="dob" autocomplete="bday" required />
               </div>
             </div>
 
@@ -1817,6 +1817,16 @@
             </button>
             <div class="faq-inline-answer">
               <p>Du sicherst dir einen der limitierten Plätze vor der offiziellen Eröffnung – mit exklusiven Vorteilen.</p>
+            </div>
+          </div>
+
+          <div class="faq-inline-item">
+            <button class="faq-inline-btn" aria-expanded="false">
+              <span>Gibt es einen Familienrabatt?</span>
+              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
+            </button>
+            <div class="faq-inline-answer">
+              <p>Ja. Wenn sich 3 Mitglieder aus derselben Familie bzw. aus demselben Haushalt anmelden, trainiert das 4. Familienmitglied kostenlos.</p>
             </div>
           </div>
 
@@ -1971,16 +1981,63 @@
       showStep(2);
     });
 
+    // ── Set DOB date limits ──────────────────────────────────────
+    (function () {
+      const dobEl = document.getElementById('cs-dob');
+      const today = new Date();
+      const yyyy  = today.getFullYear();
+      const mm    = String(today.getMonth() + 1).padStart(2, '0');
+      const dd    = String(today.getDate()).padStart(2, '0');
+      dobEl.setAttribute('max', `${yyyy}-${mm}-${dd}`);
+      dobEl.setAttribute('min', `${yyyy - 100}-${mm}-${dd}`);
+    })();
+
+    function calcAge(dobValue) {
+      if (!dobValue) return null;
+      const dob   = new Date(dobValue);
+      const today = new Date();
+      if (isNaN(dob.getTime()) || dob >= today) return null;
+      let age = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+      return age;
+    }
+
+    function validateDob(dobValue, cat) {
+      if (!dobValue) return 'Bitte gib ein gültiges Geburtsdatum ein.';
+      const age = calcAge(dobValue);
+      if (age === null || age < 0) return 'Bitte gib ein gültiges Geburtsdatum ein.';
+      if (age > 100) return 'Bitte gib ein gültiges Geburtsdatum ein.';
+      if (cat === 'kids'  && (age < 6  || age > 9))  return 'Kids ist nur für 6 bis 9 Jahre.';
+      if (cat === 'youth' && (age < 10 || age > 17)) return 'Jugend ist nur für 10 bis 17 Jahre.';
+      if (cat === 'adults' && age < 18)               return 'Erwachsene ist erst ab 18 Jahren möglich.';
+      return null; // valid
+    }
+
     document.getElementById('step2-back').addEventListener('click', () => showStep(1));
     document.getElementById('step2-next').addEventListener('click', () => {
       clearStepError('step-2');
-      const fn = document.getElementById('cs-firstname').value.trim();
-      const ln = document.getElementById('cs-lastname').value.trim();
-      const em = document.getElementById('cs-email').value.trim();
+      const fn    = document.getElementById('cs-firstname').value.trim();
+      const ln    = document.getElementById('cs-lastname').value.trim();
+      const em    = document.getElementById('cs-email').value.trim();
+      const dobEl = document.getElementById('cs-dob');
+      clearFieldError(dobEl);
+
       if (!fn) { document.getElementById('cs-firstname').focus(); showStepError('step-2','Bitte Vorname eingeben.'); return; }
       if (!ln) { document.getElementById('cs-lastname').focus();  showStepError('step-2','Bitte Nachname eingeben.'); return; }
       if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { document.getElementById('cs-email').focus(); showStepError('step-2','Bitte gültige E-Mail eingeben.'); return; }
+
+      const dobErr = validateDob(dobEl.value, catHidden.value);
+      if (dobErr) { setFieldError(dobEl, dobErr); dobEl.focus(); return; }
+
       showStep(3);
+    });
+
+    // Live DOB validation on change
+    document.getElementById('cs-dob').addEventListener('change', function () {
+      clearFieldError(this);
+      const err = validateDob(this.value, catHidden.value);
+      if (err) setFieldError(this, err);
     });
 
     document.getElementById('step3-back').addEventListener('click', () => showStep(2));

@@ -94,6 +94,26 @@ export default async function handler(req, res) {
   if (!normalizedCategory || !['Kids', 'Youth', 'Adults'].includes(normalizedCategory))
     errors.category = 'Kategorie muss Kids, Youth oder Adults sein.';
 
+  // DOB / category age validation (optional field, but must match category if provided)
+  if (dob) {
+    const dobDate = new Date(dob);
+    const today   = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (isNaN(dobDate.getTime()) || dobDate >= today) {
+      errors.dob = 'Bitte gib ein gültiges Geburtsdatum ein.';
+    } else {
+      // Age in full years
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const monthDiff = today.getMonth() - dobDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) age--;
+
+      const cat = (normalizedCategory || '').toLowerCase();
+      if (cat === 'kids'  && (age < 6 || age > 9))   errors.dob = 'Kids ist nur für 6 bis 9 Jahre.';
+      if (cat === 'youth' && (age < 10 || age > 17))  errors.dob = 'Jugend ist nur für 10 bis 17 Jahre.';
+      if (cat === 'adults' && age < 18)                errors.dob = 'Erwachsene ist erst ab 18 Jahren möglich.';
+    }
+  }
+
   if (Object.keys(errors).length > 0)
     return res.status(400).json({ error: 'Validation failed', fields: errors });
 
@@ -180,11 +200,11 @@ export default async function handler(req, res) {
   try {
     await sendVerificationEmail(lead, verifyUrl);
   } catch (err) {
-    console.error('[LEAD] Verification email send failed:', err);
-    return res.status(200).json({
-      success: false,
-      emailError: true,
-      message: 'Bitte versuche es erneut oder kontaktiere uns.',
+    // Email failure is non-fatal: the lead is already persisted in KV.
+    // Log clearly for ops, but do not surface an error to the user.
+    console.error('[LEAD] Verification email send failed (lead saved, needs manual follow-up):', {
+      email: lead.email,
+      error: err?.message ?? err,
     });
   }
 
