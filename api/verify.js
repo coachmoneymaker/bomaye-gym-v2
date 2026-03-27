@@ -109,7 +109,7 @@ export default async function handler(req, res) {
 
   const [adminResult, confirmResult] = await Promise.allSettled([
     sendAdminEmail(lead, verifiedAt),
-    sendUserConfirmationEmail(lead),
+    sendUserConfirmationEmail(lead, siteUrl),
   ]);
 
   if (adminResult.status === 'fulfilled') {
@@ -161,7 +161,7 @@ async function sendAdminEmail(lead, verifiedAt) {
   console.log('[VERIFY] Admin email sent:', data?.id);
 }
 
-async function sendUserConfirmationEmail(lead) {
+async function sendUserConfirmationEmail(lead, siteUrl) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
@@ -175,8 +175,8 @@ async function sendUserConfirmationEmail(lead) {
     from:    'BOMAYE GYM <info@bomayegym.com>',
     to:      [lead.email],
     replyTo: 'support@bomayegym.com',
-    subject: "You're in – BOMAYE GYM Early Bird",
-    html:    buildUserConfirmationEmailHtml(lead),
+    subject: 'Dein Early Bird Platz ist gesichert — BOMAYE GYM Munich',
+    html:    buildUserConfirmationEmailHtml(lead, siteUrl),
   });
 
   // [DEBUG] Remove before go-live
@@ -190,110 +190,278 @@ async function sendUserConfirmationEmail(lead) {
   console.log('[VERIFY] User confirmation email sent:', data?.id);
 }
 
-function buildUserConfirmationEmailHtml(lead) {
+function buildUserConfirmationEmailHtml(lead, siteUrl) {
+  const logoUrl = siteUrl ? `${siteUrl}/assets/images/bomaye-logo.png` : '';
   const categoryLabel = {
-    Kids:   'Kids (6–9)',
-    Youth:  'Youth (10–17)',
-    Adults: 'Adults (18+)',
-    Family: 'Family',
+    Kids:   'Kids (6–9 Jahre)',
+    Youth:  'Jugend (10–17 Jahre)',
+    Adults: 'Erwachsene (18+)',
+    Family: 'Familie',
   }[lead.category] ?? lead.category;
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="de" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>You're in – BOMAYE GYM Early Bird</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Dein Early Bird Platz ist gesichert — BOMAYE GYM</title>
+  <!--[if mso]>
+  <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
+  <![endif]-->
 </head>
-<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:#080808;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="padding:48px 24px;">
+  <!-- Preheader -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#080808;">
+    Willkommen, ${escapeHtml(lead.firstName)}. Dein Platz bei BOMAYE GYM Munich ist offiziell gesichert.&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
+         style="background-color:#080808;">
     <tr>
-      <td align="center">
-        <table width="540" cellpadding="0" cellspacing="0" role="presentation"
-               style="background:#111111;border-radius:12px;overflow:hidden;
-                      border:1px solid rgba(198,164,90,0.15);">
+      <td align="center" style="padding:48px 16px 56px;">
 
-          <!-- Header -->
+        <table width="560" cellpadding="0" cellspacing="0" border="0" role="presentation"
+               style="width:100%;max-width:560px;">
+
+          <!-- ── LOGO ─────────────────────────────────────────────── -->
           <tr>
-            <td style="background:#0a0a0a;padding:36px 44px 32px;
-                       border-bottom:1px solid rgba(198,164,90,0.12);text-align:center;">
-              <p style="margin:0 0 10px;font-size:10px;letter-spacing:0.22em;
-                        text-transform:uppercase;color:#C6A45A;font-weight:600;">
-                BOMAYE GYM MUNICH
-              </p>
-              <h1 style="margin:0;font-size:28px;color:#ffffff;font-weight:700;
-                         letter-spacing:-0.02em;line-height:1.2;">
-                You're officially in.
-              </h1>
+            <td align="center" style="padding:0 0 36px;">
+              ${logoUrl
+                ? `<img src="${logoUrl}" alt="BOMAYE GYM" width="130" height="auto"
+                        style="display:block;width:130px;height:auto;border:0;outline:none;text-decoration:none;" />`
+                : `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;
+                             font-weight:700;letter-spacing:0.25em;color:#C6A45A;">BOMAYE GYM</p>`
+              }
             </td>
           </tr>
 
-          <!-- Body -->
+          <!-- ── CARD ──────────────────────────────────────────────── -->
           <tr>
-            <td style="padding:36px 44px 28px;">
-              <p style="margin:0 0 24px;font-size:15px;color:rgba(255,255,255,0.65);line-height:1.75;">
-                Hey ${escapeHtml(lead.firstName)},<br /><br />
-                your Early Bird spot is confirmed. We'll keep you posted on the
-                opening date, member pricing, and everything else you need to know
-                before day one.
-              </p>
+            <td style="background-color:#111111;border-radius:2px;
+                       border:1px solid rgba(198,164,90,0.16);">
 
-              <!-- Summary card -->
-              <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
-                     style="background:#0d0d0d;border:1px solid rgba(255,255,255,0.07);
-                            border-radius:8px;overflow:hidden;margin-bottom:28px;">
+              <!-- Gold accent bar -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <p style="margin:0;font-size:10px;font-weight:600;letter-spacing:0.12em;
-                              text-transform:uppercase;color:rgba(255,255,255,0.3);">Name</p>
-                    <p style="margin:5px 0 0;font-size:14px;color:#ffffff;font-weight:500;">
-                      ${escapeHtml(lead.firstName)} ${escapeHtml(lead.lastName)}
+                  <td bgcolor="#C6A45A" height="3"
+                      style="height:3px;line-height:3px;font-size:3px;
+                             background-color:#C6A45A;">&nbsp;</td>
+                </tr>
+              </table>
+
+              <!-- Hero header block -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td align="center"
+                      style="padding:52px 52px 44px;
+                             border-bottom:1px solid rgba(198,164,90,0.1);">
+
+                    <!-- Checkmark icon (inline SVG — email safe) -->
+                    <div style="margin:0 0 24px;">
+                      <table cellpadding="0" cellspacing="0" border="0" role="presentation"
+                             style="margin:0 auto;">
+                        <tr>
+                          <td bgcolor="#1a1a0d"
+                              style="width:56px;height:56px;border-radius:50%;
+                                     border:2px solid rgba(198,164,90,0.35);
+                                     background-color:#1a1a0d;text-align:center;
+                                     vertical-align:middle;line-height:56px;">
+                            <span style="font-size:22px;color:#C6A45A;line-height:56px;">&#10003;</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <!-- Eyebrow -->
+                    <p style="margin:0 0 18px;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:10px;font-weight:700;
+                              letter-spacing:0.32em;text-transform:uppercase;
+                              color:#C6A45A;">
+                      Founding Member &mdash; Bestätigt
                     </p>
+
+                    <!-- Headline -->
+                    <h1 style="margin:0;
+                               font-family:Arial,Helvetica,sans-serif;
+                               font-size:30px;font-weight:700;
+                               letter-spacing:-0.01em;line-height:1.2;
+                               color:#ffffff;">
+                      Du bist dabei.
+                    </h1>
+
                   </td>
                 </tr>
+              </table>
+
+              <!-- Body copy -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <p style="margin:0;font-size:10px;font-weight:600;letter-spacing:0.12em;
-                              text-transform:uppercase;color:rgba(255,255,255,0.3);">Category</p>
-                    <p style="margin:5px 0 0;font-size:14px;color:#ffffff;font-weight:500;">
-                      ${escapeHtml(categoryLabel)}
+                  <td style="padding:44px 52px 36px;">
+                    <p style="margin:0 0 12px;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:16px;font-weight:600;
+                              color:#ffffff;line-height:1.4;">
+                      Hallo ${escapeHtml(lead.firstName)},
                     </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:14px 20px;">
-                    <p style="margin:0;font-size:10px;font-weight:600;letter-spacing:0.12em;
-                              text-transform:uppercase;color:rgba(255,255,255,0.3);">Status</p>
-                    <p style="margin:5px 0 0;font-size:14px;font-weight:600;">
-                      <span style="color:#C6A45A;">&#10003;&nbsp; Early Bird Confirmed</span>
+                    <p style="margin:0;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:15px;font-weight:400;
+                              color:rgba(255,255,255,0.55);
+                              line-height:1.85;letter-spacing:0.01em;">
+                      dein Early Bird Platz ist offiziell gesichert. Du gehörst zu den
+                      ersten 300 Mitgliedern von BOMAYE GYM Munich — mit dauerhaft
+                      exklusiven Konditionen.<br /><br />
+                      Wir melden uns persönlich bei dir, sobald wir den Eröffnungstermin
+                      und alle Details finalisiert haben.
                     </p>
                   </td>
                 </tr>
               </table>
 
-              <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.4);line-height:1.75;">
-                Questions? Reply to this email or reach us at
-                <a href="mailto:support@bomayegym.com"
-                   style="color:#C6A45A;text-decoration:none;">support@bomayegym.com</a>.
-              </p>
+              <!-- Membership summary -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:0 52px 44px;">
+
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
+                           style="border:1px solid rgba(198,164,90,0.14);border-radius:3px;
+                                  background-color:#0d0d0d;">
+
+                      <!-- Row: Name -->
+                      <tr>
+                        <td style="padding:16px 22px;
+                                   border-bottom:1px solid rgba(255,255,255,0.05);">
+                          <p style="margin:0 0 5px;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:9px;font-weight:700;
+                                    letter-spacing:0.2em;text-transform:uppercase;
+                                    color:rgba(255,255,255,0.25);">Mitglied</p>
+                          <p style="margin:0;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:14px;font-weight:600;
+                                    color:#ffffff;">
+                            ${escapeHtml(lead.firstName)} ${escapeHtml(lead.lastName)}
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!-- Row: Category -->
+                      <tr>
+                        <td style="padding:16px 22px;
+                                   border-bottom:1px solid rgba(255,255,255,0.05);">
+                          <p style="margin:0 0 5px;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:9px;font-weight:700;
+                                    letter-spacing:0.2em;text-transform:uppercase;
+                                    color:rgba(255,255,255,0.25);">Kategorie</p>
+                          <p style="margin:0;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:14px;font-weight:600;
+                                    color:#ffffff;">
+                            ${escapeHtml(categoryLabel)}
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!-- Row: Status -->
+                      <tr>
+                        <td style="padding:16px 22px;">
+                          <p style="margin:0 0 5px;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:9px;font-weight:700;
+                                    letter-spacing:0.2em;text-transform:uppercase;
+                                    color:rgba(255,255,255,0.25);">Status</p>
+                          <p style="margin:0;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:14px;font-weight:700;
+                                    color:#C6A45A;">
+                            &#10003;&nbsp; Early Bird gesichert
+                          </p>
+                        </td>
+                      </tr>
+
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:0 52px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                      <tr>
+                        <td height="1" style="height:1px;background-color:rgba(255,255,255,0.06);
+                                              line-height:1px;font-size:1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Contact note -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:28px 52px 44px;">
+                    <p style="margin:0;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:13px;font-weight:400;
+                              color:rgba(255,255,255,0.3);
+                              line-height:1.75;letter-spacing:0.01em;">
+                      Fragen? Antworte einfach auf diese E-Mail oder schreib uns an
+                      <a href="mailto:support@bomayegym.com"
+                         style="color:#C6A45A;text-decoration:none;font-weight:500;">
+                        support@bomayegym.com
+                      </a>.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
             </td>
           </tr>
 
-          <!-- Divider -->
+          <!-- ── FOOTER ────────────────────────────────────────────── -->
           <tr>
-            <td style="padding:0 44px;">
-              <hr style="border:none;border-top:1px solid rgba(255,255,255,0.05);margin:0;" />
-            </td>
-          </tr>
+            <td align="center" style="padding:36px 48px 0;">
 
-          <!-- Footer -->
-          <tr>
-            <td style="padding:20px 44px 32px;text-align:center;">
-              <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.18);line-height:1.7;">
-                BOMAYE GYM Munich &mdash; Early Bird Programme<br />
-                You received this because you registered for an Early Bird spot.
+              <p style="margin:0 0 20px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:10px;color:rgba(198,164,90,0.25);
+                        letter-spacing:0.35em;">
+                &mdash;&nbsp;&nbsp;&#9670;&nbsp;&nbsp;&mdash;
               </p>
+
+              <p style="margin:0 0 10px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:11px;font-weight:700;
+                        letter-spacing:0.28em;text-transform:uppercase;
+                        color:rgba(198,164,90,0.35);">
+                BOMAYE GYM MUNICH
+              </p>
+
+              <p style="margin:0 0 16px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:11px;font-weight:400;
+                        color:rgba(255,255,255,0.18);
+                        letter-spacing:0.04em;line-height:1.6;">
+                Exklusiv. Limitiert. Für die ersten 300 Mitglieder.
+              </p>
+
+              <p style="margin:0;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:10px;font-weight:400;
+                        color:rgba(255,255,255,0.1);
+                        line-height:1.75;letter-spacing:0.01em;">
+                Du erhältst diese E-Mail, weil du dich erfolgreich für einen<br />
+                Early Bird Platz bei BOMAYE GYM Munich registriert hast.
+              </p>
+
             </td>
           </tr>
 
