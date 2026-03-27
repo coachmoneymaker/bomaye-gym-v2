@@ -587,7 +587,7 @@ function handleHouseholdChange(value) {
   requestAnimationFrame(() => initModalScrollFade('family-modal'));
 }
 
-function submitFamilyInquiry(e) {
+async function submitFamilyInquiry(e) {
   e.preventDefault();
   const form = e.target;
 
@@ -642,30 +642,38 @@ function submitFamilyInquiry(e) {
 
   const household = (form.querySelector('[name="household"]:checked') || {}).value || '';
   const message   = form.querySelector('[name="message"]').value.trim();
+  const street    = household === 'Nein' ? (form.querySelector('[name="address_street"]') || {}).value?.trim() || '' : '';
+  const plz       = household === 'Nein' ? (form.querySelector('[name="address_plz"]')    || {}).value?.trim() || '' : '';
+  const city      = household === 'Nein' ? (form.querySelector('[name="address_city"]')   || {}).value?.trim() || '' : '';
 
-  const lines = [
-    `Name (Kontaktperson): ${name}`,
-    `E-Mail: ${email}`,
-    `Telefon: ${phone}`,
-    `Anzahl Familienmitglieder: ${countVal}`,
-  ];
-  memberNames.forEach((n, i) => lines.push(`Familienmitglied ${i + 1}: ${n}`));
-  lines.push(`Gleicher Haushalt: ${household}`);
-  if (household === 'Nein') {
-    const street = (form.querySelector('[name="address_street"]') || {}).value || '';
-    const plz    = (form.querySelector('[name="address_plz"]')    || {}).value || '';
-    const city   = (form.querySelector('[name="address_city"]')   || {}).value || '';
-    if (street || plz || city) lines.push(`Adresse: ${street}, ${plz} ${city}`);
+  const btn      = form.querySelector('[type="submit"]');
+  const origHtml = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = 'Wird gesendet…';
+
+  try {
+    const res = await fetch('/api/contact', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        type: 'family',
+        name, email, phone,
+        count: countVal,
+        members: memberNames,
+        household, street, plz, city, message,
+      }),
+    });
+
+    if (!res.ok) throw new Error('Request failed');
+
+    form.style.display = 'none';
+    document.getElementById('fif-success').hidden = false;
+  } catch {
+    btn.disabled  = false;
+    btn.innerHTML = origHtml;
+    document.getElementById('fif-name-error').textContent =
+      'Fehler beim Senden. Bitte versuche es erneut.';
   }
-  if (message) lines.push(`Nachricht: ${message}`);
-
-  const subject = encodeURIComponent('Neue Family Membership Anfrage');
-  const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
-
-  // Show success state
-  form.style.display = 'none';
-  document.getElementById('fif-success').hidden = false;
 }
 
 /* ── Corporate Boxing Modal ───────────────────────────────── */
@@ -693,7 +701,7 @@ function closeCorporateModal() {
   if (success) success.hidden = true;
 }
 
-function submitCorporateInquiry(e) {
+async function submitCorporateInquiry(e) {
   e.preventDefault();
   const form = e.target;
 
@@ -754,29 +762,36 @@ function submitCorporateInquiry(e) {
   const event    = form.querySelector('[name="event"]').value.trim();
   const message  = form.querySelector('[name="message"]').value.trim();
 
-  const lines = [
-    `Name: ${name}`,
-    `E-Mail: ${email}`,
-    `Telefon: ${phone}`,
-    company  ? `Firma / Organisation: ${company}`          : null,
-    `Anzahl Personen: ${persons}`,
-    `Gewünschtes Datum: ${date}`,
-    `Gewünschte Uhrzeit / Zeitraum: ${time}`,
-    catering ? `Catering gewünscht: ${catering}`           : null,
-    event    ? `Art des Events / Anlass: ${event}`         : null,
-    message  ? `Nachricht / Wünsche: ${message}`           : null,
-  ].filter(Boolean);
+  const btn      = form.querySelector('[type="submit"]');
+  const origHtml = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = 'Wird gesendet…';
 
-  const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
-  const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
+  try {
+    const res = await fetch('/api/contact', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        type: 'corporate',
+        name, email, phone, company,
+        persons, date, time, catering, event, message,
+      }),
+    });
 
-  form.style.display = 'none';
-  document.getElementById('cbf-success').hidden = false;
+    if (!res.ok) throw new Error('Request failed');
+
+    form.style.display = 'none';
+    document.getElementById('cbf-success').hidden = false;
+  } catch {
+    btn.disabled  = false;
+    btn.innerHTML = origHtml;
+    document.getElementById('cbf-name-error').textContent =
+      'Fehler beim Senden. Bitte versuche es erneut.';
+  }
 }
 
 /* ── Corporate Boxing Inline Form ──────────────────────────── */
-function submitCorporateInquiryInline(e) {
+async function submitCorporateInquiryInline(e) {
   e.preventDefault();
   const form = e.target;
 
@@ -820,25 +835,31 @@ function submitCorporateInquiryInline(e) {
   const event    = form.querySelector('[name="event"]').value.trim();
   const message  = form.querySelector('[name="message"]').value.trim();
 
-  const lines = [
-    `Name: ${name}`,
-    `E-Mail: ${email}`,
-    `Telefon: ${phone}`,
-    company  ? `Firma / Organisation: ${company}`          : null,
-    `Anzahl Personen: ${persons}`,
-    `Gewünschtes Datum: ${date}`,
-    `Gewünschte Uhrzeit / Zeitraum: ${time}`,
-    catering ? `Catering gewünscht: ${catering}`           : null,
-    event    ? `Art des Events / Anlass: ${event}`         : null,
-    message  ? `Nachricht / Wünsche: ${message}`           : null,
-  ].filter(Boolean);
+  const btn      = form.querySelector('[type="submit"]');
+  const origHtml = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = 'Wird gesendet…';
 
-  const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
-  const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
+  try {
+    const res = await fetch('/api/contact', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        type: 'corporate',
+        name, email, phone, company,
+        persons, date, time, catering, event, message,
+      }),
+    });
 
-  form.style.display = 'none';
-  document.getElementById('cbi-success').hidden = false;
+    if (!res.ok) throw new Error('Request failed');
+
+    form.style.display = 'none';
+    document.getElementById('cbi-success').hidden = false;
+  } catch {
+    btn.disabled  = false;
+    btn.innerHTML = origHtml;
+    nameEl.nextElementSibling.textContent = 'Fehler beim Senden. Bitte versuche es erneut.';
+  }
 }
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
