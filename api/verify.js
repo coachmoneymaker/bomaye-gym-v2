@@ -120,117 +120,173 @@ export default async function handler(req, res) {
 // ── Email ──────────────────────────────────────────────────────────────────────
 
 async function sendAdminEmail(lead, verifiedAt) {
-  const apiKey     = process.env.RESEND_API_KEY;
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const fromEmail  = process.env.FROM_EMAIL;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!apiKey || !adminEmail || !fromEmail) {
-    console.warn('[VERIFY] Admin email env vars not configured — skipping.');
+  if (!apiKey) {
+    console.warn('[VERIFY] RESEND_API_KEY not configured — skipping admin email.');
     return;
   }
 
-  // Resend onboarding override
-  const recipient = process.env.RESEND_ACCOUNT_EMAIL || adminEmail;
-
   const resend = new Resend(apiKey);
 
-  const { error } = await resend.emails.send({
-    from:    fromEmail,
-    to:      recipient,
-    subject: `✅ Early Bird Member verified – ${lead.firstName} ${lead.lastName}`,
-    html:    buildAdminEmailHtml(lead, verifiedAt),
+  const { data, error } = await resend.emails.send({
+    from:     'BOMAYE GYM <info@bomayegym.com>',
+    to:       ['support@bomayegym.com'],
+    replyTo:  lead.email,
+    subject:  'New Early Bird Lead – BOMAYE GYM',
+    html:     buildAdminEmailHtml(lead, verifiedAt),
   });
 
   if (error) {
     console.error('[VERIFY] Resend admin email error:', JSON.stringify(error));
-    throw error;
+    throw new Error(error.message || 'Resend send failed');
   }
+
+  console.log('[VERIFY] Admin email sent:', data?.id);
 }
 
 function buildAdminEmailHtml(lead, verifiedAt) {
-  const row = (label, value) =>
-    `<tr>
-       <td style="padding:8px 16px 8px 0;color:#666;font-size:14px;white-space:nowrap;">${escapeHtml(label)}</td>
-       <td style="padding:8px 0;color:#111;font-size:14px;font-weight:600;">${value || '—'}</td>
-     </tr>`;
+  const field = (label, value) => `
+    <tr>
+      <td style="padding:14px 20px;border-bottom:1px solid #f0f0f0;vertical-align:top;">
+        <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.08em;
+                  text-transform:uppercase;color:#999999;">${escapeHtml(label)}</p>
+        <p style="margin:4px 0 0;font-size:14px;color:#1a1a1a;font-weight:500;line-height:1.5;">
+          ${value || '<span style="color:#cccccc;">—</span>'}
+        </p>
+      </td>
+    </tr>`;
 
-  const fmtTime = (iso) =>
-    new Date(iso).toLocaleString('de-DE', {
+  const fmtDate = (iso) => {
+    if (!iso) return '';
+    return new Date(iso).toLocaleString('en-GB', {
       timeZone:  'Europe/Berlin',
-      dateStyle: 'full',
-      timeStyle: 'short',
-    });
+      day:       '2-digit',
+      month:     'long',
+      year:      'numeric',
+      hour:      '2-digit',
+      minute:    '2-digit',
+    }) + ' (Berlin)';
+  };
 
-  return `
-<!DOCTYPE html>
-<html lang="de">
-<head><meta charset="UTF-8" /></head>
-<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 0;">
-    <tr><td align="center">
-      <table width="540" cellpadding="0" cellspacing="0"
-             style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>New Early Bird Lead – BOMAYE GYM</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
-        <!-- Header -->
-        <tr>
-          <td style="background:#0A0A0A;padding:24px 32px;">
-            <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#C6A45A;">
-              BOMAYE GYM MUNICH
-            </p>
-            <h1 style="margin:8px 0 0;font-size:20px;color:#ffffff;">
-              ✅ Early Bird Member verified
-            </h1>
-          </td>
-        </tr>
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="padding:48px 24px;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" role="presentation"
+               style="background:#ffffff;border-radius:12px;overflow:hidden;
+                      box-shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 24px rgba(0,0,0,0.05);">
 
-        <!-- Verified badge -->
-        <tr>
-          <td style="padding:16px 32px 0;">
-            <span style="display:inline-block;background:#e8f5e9;color:#2e7d32;
-                         font-size:12px;font-weight:700;letter-spacing:1px;
-                         text-transform:uppercase;padding:6px 14px;border-radius:20px;">
-              Status: Verifiziert
-            </span>
-          </td>
-        </tr>
+          <!-- Header -->
+          <tr>
+            <td style="background:#0a0a0a;padding:32px 40px 28px;">
+              <p style="margin:0 0 6px;font-size:10px;letter-spacing:0.2em;
+                        text-transform:uppercase;color:#C6A45A;font-weight:600;">
+                BOMAYE GYM MUNICH
+              </p>
+              <h1 style="margin:0;font-size:22px;color:#ffffff;font-weight:600;
+                         letter-spacing:-0.01em;line-height:1.3;">
+                New Early Bird Lead
+              </h1>
+              <p style="margin:10px 0 0;font-size:13px;color:rgba(255,255,255,0.4);
+                        font-weight:400;">
+                A new registration has been verified and is ready for review.
+              </p>
+            </td>
+          </tr>
 
-        <!-- Body -->
-        <tr>
-          <td style="padding:24px 32px 32px;">
-            <table cellpadding="0" cellspacing="0" width="100%">
-              ${row('Vorname',       escapeHtml(lead.firstName))}
-              ${row('Nachname',      escapeHtml(lead.lastName))}
-              ${row('E-Mail',        `<a href="mailto:${escapeHtml(lead.email)}" style="color:#C6A45A;">${escapeHtml(lead.email)}</a>`)}
-              ${row('Telefon',       escapeHtml(lead.phone))}
-              ${row('Kategorie',     escapeHtml(lead.category))}
-              ${row('Geburtsdatum',  escapeHtml(lead.dob))}
-              ${row('Ziel',          escapeHtml(lead.goal))}
-              ${row('Straße',        escapeHtml(lead.street))}
-              ${row('PLZ',           escapeHtml(lead.postalCode))}
-              ${row('Stadt',         escapeHtml(lead.city))}
-              ${Array.isArray(lead.members) && lead.members.length
-                ? row('Family Members', lead.members.map((m, i) =>
-                    escapeHtml(m) + (i === 3 ? ' <span style="color:#C6A45A;font-size:11px;">(free)</span>' : '')
-                  ).join('<br />'))
-                : ''}
-              ${row('Eingereicht',   fmtTime(lead.submittedAt))}
-              ${row('Verifiziert',   fmtTime(verifiedAt))}
-            </table>
-          </td>
-        </tr>
+          <!-- Status badge -->
+          <tr>
+            <td style="padding:20px 40px 0;">
+              <span style="display:inline-block;background:#ecfdf5;color:#065f46;
+                           font-size:11px;font-weight:700;letter-spacing:0.08em;
+                           text-transform:uppercase;padding:5px 12px;border-radius:100px;
+                           border:1px solid #a7f3d0;">
+                &#10003;&nbsp; Verified
+              </span>
+            </td>
+          </tr>
 
-        <!-- Footer -->
-        <tr>
-          <td style="background:#f9f9f9;padding:16px 32px;border-top:1px solid #eee;">
-            <p style="margin:0;font-size:12px;color:#999;">
-              Automatische Benachrichtigung — BOMAYE GYM Early Bird (verifiziert)
-            </p>
-          </td>
-        </tr>
+          <!-- Lead details -->
+          <tr>
+            <td style="padding:20px 20px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                     style="border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
 
-      </table>
-    </td></tr>
+                ${field('First Name',    escapeHtml(lead.firstName))}
+                ${field('Last Name',     escapeHtml(lead.lastName))}
+                ${field('Email',         `<a href="mailto:${escapeHtml(lead.email)}"
+                           style="color:#C6A45A;text-decoration:none;font-weight:600;">
+                           ${escapeHtml(lead.email)}</a>`)}
+                ${field('Phone',         escapeHtml(lead.phone))}
+                ${field('Category',      escapeHtml(lead.category))}
+                ${field('Date of Birth', escapeHtml(lead.dob))}
+                ${field('Goal',          escapeHtml(lead.goal))}
+                ${Array.isArray(lead.members) && lead.members.length
+                  ? field('Family Members', lead.members.map((m, i) =>
+                      escapeHtml(m) + (i === 3
+                        ? ' <span style="color:#C6A45A;font-size:11px;font-weight:600;">(free)</span>'
+                        : '')
+                    ).join('<br />'))
+                  : ''}
+                ${field('Submitted At',  fmtDate(lead.submittedAt))}
+
+                <!-- Last row: no bottom border -->
+                <tr>
+                  <td style="padding:14px 20px;vertical-align:top;">
+                    <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.08em;
+                              text-transform:uppercase;color:#999999;">Verified At</p>
+                    <p style="margin:4px 0 0;font-size:14px;color:#1a1a1a;font-weight:500;line-height:1.5;">
+                      ${escapeHtml(fmtDate(verifiedAt))}
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- Reply note -->
+          <tr>
+            <td style="padding:20px 40px;">
+              <p style="margin:0;font-size:12px;color:#999999;line-height:1.6;">
+                Reply directly to this email to contact
+                <strong style="color:#1a1a1a;">${escapeHtml(lead.firstName)} ${escapeHtml(lead.lastName)}</strong>
+                — the reply-to is set to their address.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <hr style="border:none;border-top:1px solid #f0f0f0;margin:0;" />
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px 28px;">
+              <p style="margin:0;font-size:11px;color:#bbbbbb;line-height:1.7;">
+                Automated notification &middot; BOMAYE GYM Early Bird Programme<br />
+                Sent to support@bomayegym.com &middot; Do not reply to this footer address.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
+
 </body>
 </html>`;
 }
