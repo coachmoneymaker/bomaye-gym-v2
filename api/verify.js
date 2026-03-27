@@ -104,16 +104,24 @@ export default async function handler(req, res) {
   console.log('[LEAD_VERIFIED]', JSON.stringify({ email: lead.email, verifiedAt, verifiedCount }));
 
   // ── Send admin + user confirmation emails (parallel, non-fatal) ───────────
+  console.log('[VERIFY] Admin email send start', { email: lead.email });
+  console.log('[VERIFY] User confirmation email send start', { email: lead.email });
+
   const [adminResult, confirmResult] = await Promise.allSettled([
     sendAdminEmail(lead, verifiedAt),
     sendUserConfirmationEmail(lead),
   ]);
 
-  if (adminResult.status === 'rejected') {
-    console.error('[VERIFY] Admin email failed:', adminResult.reason);
+  if (adminResult.status === 'fulfilled') {
+    console.log('[VERIFY] Admin email sent successfully', { email: lead.email });
+  } else {
+    console.error('[VERIFY] Admin email failed', { email: lead.email, error: adminResult.reason?.message ?? adminResult.reason });
   }
-  if (confirmResult.status === 'rejected') {
-    console.error('[VERIFY] User confirmation email failed:', confirmResult.reason);
+
+  if (confirmResult.status === 'fulfilled') {
+    console.log('[VERIFY] User confirmation email sent successfully', { email: lead.email });
+  } else {
+    console.error('[VERIFY] User confirmation email failed', { email: lead.email, error: confirmResult.reason?.message ?? confirmResult.reason });
   }
 
   // ── Redirect to success page ───────────────────────────────────────────────

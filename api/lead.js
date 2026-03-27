@@ -199,21 +199,23 @@ export default async function handler(req, res) {
     }
   }
 
-  console.log('[LEAD_PENDING]', JSON.stringify({ email: lead.email, category: lead.category }));
+  console.log('[LEAD_PENDING]', JSON.stringify({ email: lead.email, category: lead.category, submittedAt: lead.submittedAt }));
 
   // ── Send verification email to user ───────────────────────────────────────
   const siteUrl   = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
   const verifyUrl = `${siteUrl}/api/verify?token=${encodeURIComponent(token)}`;
 
+  console.log('[LEAD] Verification email send start', { email: lead.email });
+
   try {
     await sendVerificationEmail(lead, verifyUrl);
+    console.log('[LEAD] Verification email sent successfully', { email: lead.email });
   } catch (err) {
-    // Email failure is non-fatal: the lead is already persisted in KV.
-    // Log clearly for ops, but do not surface an error to the user.
-    console.error('[LEAD] Verification email send failed (lead saved, needs manual follow-up):', {
+    console.error('[LEAD] Verification email send failed', {
       email: lead.email,
-      error: err?.message ?? err,
+      error: err?.message ?? String(err),
     });
+    return res.status(500).json({ error: 'Failed to send verification email. Please try again.' });
   }
 
   return res.status(200).json({ success: true, pending: true });
@@ -222,27 +224,28 @@ export default async function handler(req, res) {
 // ── Emails ─────────────────────────────────────────────────────────────────────
 
 async function sendVerificationEmail(lead, verifyUrl) {
-  const apiKey    = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.FROM_EMAIL;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!apiKey || !fromEmail) {
-    console.warn('[LEAD] Email env vars not configured — skipping verification email.');
-    return;
+  if (!apiKey) {
+    console.error('[LEAD] RESEND_API_KEY not configured — cannot send verification email', { email: lead.email });
+    throw new Error('Email service not configured');
   }
 
   const resend = new Resend(apiKey);
 
-  const { error } = await resend.emails.send({
-    from:    fromEmail,
+  const { data, error } = await resend.emails.send({
+    from:    'Bomaye Gym <info@bomayegym.com>',
     to:      lead.email,
     subject: 'Bestätige deinen BOMAYE Early Bird Spot',
     html:    buildVerificationEmailHtml(lead, verifyUrl),
   });
 
   if (error) {
-    console.error('[LEAD] Resend error (verification email):', JSON.stringify(error));
-    throw error;
+    console.error('[LEAD] Resend error (verification email)', { email: lead.email, error: JSON.stringify(error) });
+    throw new Error(error.message || 'Resend send failed');
   }
+
+  console.log('[LEAD] Resend accepted verification email', { email: lead.email, messageId: data?.id });
 }
 
 function buildVerificationEmailHtml(lead, verifyUrl) {
