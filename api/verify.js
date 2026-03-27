@@ -19,6 +19,8 @@ import { parseToken } from './lead.js';
 const TOTAL_SPOTS = 300;
 
 // ── KV (optional but strongly recommended) ────────────────────────────────────
+// Only cache a successful KV instance — never cache null so that transient
+// failures on a warm lambda do not permanently disable the counter.
 let _kv = null;
 async function getKV() {
   if (_kv) return _kv;
@@ -26,13 +28,17 @@ async function getKV() {
   // when env vars are missing. Without this guard, `await getKV()` triggers a
   // thenable check (kv.then) on the Proxy, which throws and crashes the handler.
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    console.warn('[VERIFY][getKV] KV_REST_API_URL or KV_REST_API_TOKEN missing — KV disabled');
     return null;
   }
   try {
     const mod = await import('@vercel/kv');
     _kv = mod.kv;
+    console.log('[VERIFY][getKV] KV client initialised');
     return _kv;
-  } catch {
+  } catch (err) {
+    // Do NOT cache null — allow retry on next invocation
+    console.error('[VERIFY][getKV] Failed to import @vercel/kv:', err.message);
     return null;
   }
 }
@@ -93,23 +99,40 @@ export default async function handler(req, res) {
   console.log('[VERIFY] already verified: false', { email: lead.email });
 
   // ── Mark as verified in KV ─────────────────────────────────────────────────
+  console.log('[VERIFY] KV key for token (tKey):', tKey);
+  console.log('[VERIFY] KV key for counter: verified_count');
+
   let verifiedCount = null;
   if (kv) {
     try {
       // Mark this token as verified (keep entry so double-clicks show "already verified")
       await kv.set(tKey, 'verified', { ex: 48 * 3600 });
+      console.log('[VERIFY] token key set to "verified"');
+
       // Mark email as verified (prevents re-registration)
       await kv.set(`email:${lead.email}`, 'verified');
-      // Increment counter and capture result
-      const countBefore = (await kv.get('verified_count')) ?? 0;
-      console.log('[VERIFY] counter before increment:', Number(countBefore));
+      console.log('[VERIFY] email key set to "verified"');
+
+      // Read counter before increment for diagnostics
+      const rawBefore = await kv.get('verified_count');
+      const countBefore = rawBefore === null ? 0 : Number(rawBefore);
+      console.log('[VERIFY] counter before increment — raw KV value:', rawBefore, '→ numeric:', countBefore);
+
+      // Increment counter — this is the single authoritative write
       verifiedCount = await kv.incr('verified_count');
-      console.log('[VERIFY] counter after increment:', verifiedCount);
+      console.log('[VERIFY] counter after increment — kv.incr returned:', verifiedCount);
+
+      if (verifiedCount === null || verifiedCount === undefined) {
+        console.error('[VERIFY] kv.incr returned null/undefined — counter may not have incremented');
+      }
     } catch (err) {
-      console.warn('[VERIFY] KV update failed:', err.message);
+      // Surface the full error so it appears in Vercel logs
+      console.error('[VERIFY] KV update FAILED — this is why the counter is not incrementing');
+      console.error('[VERIFY] KV error message:', err.message);
+      console.error('[VERIFY] KV error stack:', err.stack);
     }
   } else {
-    console.warn('[VERIFY] KV unavailable — counter not incremented');
+    console.error('[VERIFY] KV unavailable — counter NOT incremented. Check KV_REST_API_URL and KV_REST_API_TOKEN in Vercel environment variables.');
   }
 
   const verifiedAt = new Date().toISOString();

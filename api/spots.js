@@ -13,6 +13,8 @@ import { join } from 'path';
 
 const TOTAL_SPOTS = 300;
 
+// Only cache a successful KV instance — never cache null so that transient
+// failures on a warm lambda do not permanently disable the counter.
 let _kv = null;
 async function getKV() {
   if (_kv) return _kv;
@@ -20,13 +22,17 @@ async function getKV() {
   // when env vars are missing. Without this guard, `await getKV()` triggers a
   // thenable check (kv.then) on the Proxy, which throws and crashes the handler.
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    console.warn('[SPOTS][getKV] KV_REST_API_URL or KV_REST_API_TOKEN missing — KV disabled, will fall back to JSON');
     return null;
   }
   try {
     const mod = await import('@vercel/kv');
     _kv = mod.kv;
+    console.log('[SPOTS][getKV] KV client initialised');
     return _kv;
-  } catch {
+  } catch (err) {
+    // Do NOT cache null — allow retry on next invocation
+    console.error('[SPOTS][getKV] Failed to import @vercel/kv:', err.message);
     return null;
   }
 }
@@ -43,18 +49,28 @@ export default async function handler(req, res) {
   }
 
   // Try KV first (real-time verified count)
+  console.log('[SPOTS] reading key: verified_count');
   const kv = await getKV();
   if (kv) {
     try {
-      const verified = (await kv.get('verified_count')) ?? 0;
-      const taken = Math.min(TOTAL_SPOTS, Math.max(0, Number(verified)));
+      const rawValue = await kv.get('verified_count');
+      console.log('[SPOTS] raw KV value for verified_count:', rawValue);
+
+      // null means the key doesn't exist yet (no verifications completed)
+      const verified = rawValue === null ? 0 : Number(rawValue);
+      console.log('[SPOTS] numeric verified count:', verified);
+
+      const taken = Math.min(TOTAL_SPOTS, Math.max(0, verified));
       const spotsLeft = TOTAL_SPOTS - taken;
-      console.log('[SPOTS] returning taken:', taken, '| source: kv');
+      console.log('[SPOTS] final JSON response — taken:', taken, 'spots_left:', spotsLeft, '| source: kv');
       setNoCacheHeaders(res);
       return res.status(200).json({ total: TOTAL_SPOTS, taken, spots_left: spotsLeft });
     } catch (err) {
-      console.warn('[SPOTS] KV read failed, falling back to JSON:', err.message);
+      console.error('[SPOTS] KV read FAILED — falling back to JSON:', err.message);
+      console.error('[SPOTS] KV error stack:', err.stack);
     }
+  } else {
+    console.warn('[SPOTS] KV not available — using JSON fallback. This means the counter will not reflect real verifications.');
   }
 
   // Fallback: static JSON file
