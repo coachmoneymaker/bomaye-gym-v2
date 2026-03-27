@@ -109,7 +109,7 @@ const BOMAYE_CORPORATE = {
       },
     ],
     submitLabel:    'Paket anfragen',
-    recipientEmail: 'info@bomayegym.com',
+    recipientEmail: 'support@bomayegym.com',
   },
 
   /* ── Success Message ───────────────────────────────────── */

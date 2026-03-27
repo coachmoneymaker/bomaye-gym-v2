@@ -661,7 +661,7 @@ function submitFamilyInquiry(e) {
 
   const subject = encodeURIComponent('Neue Family Membership Anfrage');
   const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
 
   // Show success state
   form.style.display = 'none';
@@ -769,7 +769,7 @@ function submitCorporateInquiry(e) {
 
   const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
   const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
 
   form.style.display = 'none';
   document.getElementById('cbf-success').hidden = false;
@@ -835,7 +835,7 @@ function submitCorporateInquiryInline(e) {
 
   const subject = encodeURIComponent('Neue Corporate Boxing Anfrage');
   const body    = encodeURIComponent(lines.join('\n'));
-  window.location.href = `mailto:info@bomayegym.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:support@bomayegym.com?subject=${subject}&body=${body}`;
 
   form.style.display = 'none';
   document.getElementById('cbi-success').hidden = false;

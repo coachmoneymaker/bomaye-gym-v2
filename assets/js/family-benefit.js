@@ -94,7 +94,7 @@ const BOMAYE_FAMILY = {
       },
     ],
     submitLabel:    'Anfrage senden',
-    recipientEmail: 'info@bomayegym.com',
+    recipientEmail: 'support@bomayegym.com',
   },
 
   /* ── Success Message ───────────────────────────────────── */
