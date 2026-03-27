@@ -150,6 +150,9 @@ async function sendAdminEmail(lead, verifiedAt) {
     html:     buildAdminEmailHtml(lead, verifiedAt),
   });
 
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][VERIFY] Resend admin email response:', JSON.stringify({ data, error }));
+
   if (error) {
     console.error('[VERIFY] Resend admin email error:', JSON.stringify(error));
     throw new Error(error.message || 'Resend send failed');
@@ -175,6 +178,9 @@ async function sendUserConfirmationEmail(lead) {
     subject: "You're in – BOMAYE GYM Early Bird",
     html:    buildUserConfirmationEmailHtml(lead),
   });
+
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][VERIFY] Resend user confirmation email response:', JSON.stringify({ data, error }));
 
   if (error) {
     console.error('[VERIFY] Resend user confirmation email error:', JSON.stringify(error));

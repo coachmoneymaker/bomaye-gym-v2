@@ -205,6 +205,10 @@ export default async function handler(req, res) {
   const siteUrl   = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
   const verifyUrl = `${siteUrl}/api/verify?token=${encodeURIComponent(token)}`;
 
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][LEAD] submitted lead.email:', lead.email);
+  console.log('[DEBUG][LEAD] generated verifyUrl:', verifyUrl);
+
   console.log('[LEAD] Verification email send start', { email: lead.email });
 
   try {
@@ -239,6 +243,9 @@ async function sendVerificationEmail(lead, verifyUrl) {
     subject: 'Bestätige deinen BOMAYE Early Bird Spot',
     html:    buildVerificationEmailHtml(lead, verifyUrl),
   });
+
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][LEAD] Resend verification email response:', JSON.stringify({ data, error }));
 
   if (error) {
     console.error('[LEAD] Resend error (verification email)', { email: lead.email, error: JSON.stringify(error) });
