@@ -2599,7 +2599,7 @@
     // ── Live spots counter ────────────────────────────────────────
     (async () => {
       try {
-        const res  = await fetch('/api/spots');
+        const res  = await fetch('/api/spots', { cache: 'no-store' });
         const data = await res.json();
         const el   = document.getElementById('spots-count');
         const taken = typeof data.taken === 'number'

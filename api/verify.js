@@ -49,6 +49,8 @@ export default async function handler(req, res) {
 
   const rawToken = req.query?.token;
 
+  console.log('[VERIFY] start', { tokenPrefix: rawToken ? rawToken.slice(0, 8) + '…' : 'none' });
+
   if (!rawToken) {
     return res.status(400).send(renderPage('error', {
       title: 'Ungültiger Link',
@@ -67,6 +69,8 @@ export default async function handler(req, res) {
   }
 
   const { lead } = payload;
+  console.log('[VERIFY] lead found', { email: lead.email });
+
   const kv = await getKV();
   const tKey = tokenKey(rawToken);
 
@@ -75,6 +79,7 @@ export default async function handler(req, res) {
     try {
       const status = await kv.get(tKey);
       if (status === 'verified') {
+        console.log('[VERIFY] already verified: true', { email: lead.email });
         return res.status(200).send(renderPage('already', {
           title: 'Bereits bestätigt',
           message: `Dein Early Bird Spot für ${escapeHtml(lead.email)} wurde bereits bestätigt.`,
@@ -85,6 +90,8 @@ export default async function handler(req, res) {
     }
   }
 
+  console.log('[VERIFY] already verified: false', { email: lead.email });
+
   // ── Mark as verified in KV ─────────────────────────────────────────────────
   let verifiedCount = null;
   if (kv) {
@@ -93,11 +100,16 @@ export default async function handler(req, res) {
       await kv.set(tKey, 'verified', { ex: 48 * 3600 });
       // Mark email as verified (prevents re-registration)
       await kv.set(`email:${lead.email}`, 'verified');
-      // Increment counter
+      // Increment counter and capture result
+      const countBefore = (await kv.get('verified_count')) ?? 0;
+      console.log('[VERIFY] counter before increment:', Number(countBefore));
       verifiedCount = await kv.incr('verified_count');
+      console.log('[VERIFY] counter after increment:', verifiedCount);
     } catch (err) {
       console.warn('[VERIFY] KV update failed:', err.message);
     }
+  } else {
+    console.warn('[VERIFY] KV unavailable — counter not incremented');
   }
 
   const verifiedAt = new Date().toISOString();

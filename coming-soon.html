@@ -1533,7 +1533,7 @@
         if (loaded) return;
         loaded = true;
         displayEl.classList.add('animate-in');
-        fetch('/api/spots')
+        fetch('/api/spots', { cache: 'no-store' })
           .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
           .then(function(data) {
             // Prefer explicit taken; fall back to total - spots_left
