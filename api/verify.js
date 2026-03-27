@@ -103,6 +103,9 @@ export default async function handler(req, res) {
   const verifiedAt = new Date().toISOString();
   console.log('[LEAD_VERIFIED]', JSON.stringify({ email: lead.email, verifiedAt, verifiedCount }));
 
+  // ── Resolve siteUrl before emails ────────────────────────────────────────
+  const siteUrl = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
+
   // ── Send admin + user confirmation emails (parallel, non-fatal) ───────────
   console.log('[VERIFY] Admin email send start', { email: lead.email });
   console.log('[VERIFY] User confirmation email send start', { email: lead.email });
@@ -125,7 +128,6 @@ export default async function handler(req, res) {
   }
 
   // ── Redirect to success page ───────────────────────────────────────────────
-  const siteUrl = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
   res.setHeader('Location', `${siteUrl}/?verified=1`);
   return res.status(302).send('');
 }
@@ -290,7 +292,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                                font-size:30px;font-weight:700;
                                letter-spacing:-0.01em;line-height:1.2;
                                color:#ffffff;">
-                      Du bist dabei.
+                      Dein Platz ist bestätigt.
                     </h1>
 
                   </td>
@@ -305,18 +307,17 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                               font-family:Arial,Helvetica,sans-serif;
                               font-size:16px;font-weight:600;
                               color:#ffffff;line-height:1.4;">
-                      Hallo ${escapeHtml(lead.firstName)},
+                      Hey ${escapeHtml(lead.firstName)},
                     </p>
                     <p style="margin:0;
                               font-family:Arial,Helvetica,sans-serif;
                               font-size:15px;font-weight:400;
                               color:rgba(255,255,255,0.55);
                               line-height:1.85;letter-spacing:0.01em;">
-                      dein Early Bird Platz ist offiziell gesichert. Du gehörst zu den
-                      ersten 300 Mitgliedern von BOMAYE GYM Munich — mit dauerhaft
-                      exklusiven Konditionen.<br /><br />
-                      Wir melden uns persönlich bei dir, sobald wir den Eröffnungstermin
-                      und alle Details finalisiert haben.
+                      dein Early Bird Platz bei BOMAYE GYM ist jetzt offiziell
+                      bestätigt.<br /><br />
+                      Wir halten dich auf dem Laufenden zu Opening, Preisen und
+                      allem, was du für deinen Start wissen musst.
                     </p>
                   </td>
                 </tr>
@@ -379,7 +380,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                                     font-family:Arial,Helvetica,sans-serif;
                                     font-size:14px;font-weight:700;
                                     color:#C6A45A;">
-                            &#10003;&nbsp; Early Bird gesichert
+                            &#10003;&nbsp; Early Bird Platz bestätigt
                           </p>
                         </td>
                       </tr>
@@ -413,7 +414,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                               font-size:13px;font-weight:400;
                               color:rgba(255,255,255,0.3);
                               line-height:1.75;letter-spacing:0.01em;">
-                      Fragen? Antworte einfach auf diese E-Mail oder schreib uns an
+                      Fragen? Antworte einfach auf diese E-Mail oder schreibe uns an
                       <a href="mailto:support@bomayegym.com"
                          style="color:#C6A45A;text-decoration:none;font-weight:500;">
                         support@bomayegym.com

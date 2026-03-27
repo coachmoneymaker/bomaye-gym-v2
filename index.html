@@ -361,39 +361,64 @@
       gap: 2px;
       margin-top: 48px;
     }
+    .spots-counter-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0;
+      line-height: 0.9;
+    }
     .spots-number-big {
       font-family: var(--font-display);
-      font-size: clamp(7rem, 26vw, 15rem);
+      font-size: clamp(5.5rem, 20vw, 12rem);
       line-height: 0.9;
       color: var(--gold);
       letter-spacing: 0.02em;
       text-shadow:
-        0 0 60px rgba(198,164,90,0.4),
-        0 0 120px rgba(198,164,90,0.15);
+        0 0 50px rgba(198,164,90,0.35),
+        0 0 100px rgba(198,164,90,0.12),
+        0 4px 40px rgba(0,0,0,0.9);
       animation: counterGlow 3.2s ease-in-out infinite alternate;
     }
+    .spots-counter-sep {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 9vw, 6rem);
+      color: rgba(198,164,90,0.28);
+      padding: 0 clamp(6px, 1.5vw, 16px);
+      align-self: baseline;
+      line-height: 0.9;
+    }
+    .spots-number-total {
+      font-family: var(--font-display);
+      font-size: clamp(5.5rem, 20vw, 12rem);
+      line-height: 0.9;
+      color: rgba(198,164,90,0.28);
+      letter-spacing: 0.02em;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.7);
+    }
     @keyframes counterGlow {
-      0%   { text-shadow: 0 0 60px rgba(198,164,90,0.4), 0 0 120px rgba(198,164,90,0.15); }
-      100% { text-shadow: 0 0 100px rgba(198,164,90,0.65), 0 0 200px rgba(198,164,90,0.25); }
+      0%   { text-shadow: 0 0 50px rgba(198,164,90,0.35), 0 0 100px rgba(198,164,90,0.12), 0 4px 40px rgba(0,0,0,0.9); }
+      100% { text-shadow: 0 0 80px rgba(198,164,90,0.55), 0 0 160px rgba(198,164,90,0.22), 0 4px 40px rgba(0,0,0,0.9); }
     }
     .spots-label-upper {
-      font-family: var(--font-display);
-      font-size: clamp(1.2rem, 3.5vw, 2.2rem);
-      letter-spacing: 0.22em;
+      font-family: var(--font-head);
+      font-size: clamp(0.58rem, 1.5vw, 0.78rem);
+      letter-spacing: 0.42em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      margin-top: 4px;
+      color: var(--gold);
+      margin-top: 18px;
+      opacity: 0.85;
     }
     .spots-scarcity-line {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 12px;
       font-family: var(--font-head);
       font-size: 0.58rem;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(198,164,90,0.6);
+      color: rgba(255,255,255,0.22);
     }
     .spots-dot {
       width: 6px;
@@ -1803,12 +1828,16 @@
         <i class="gold-divider-icon fa-solid fa-boxing-glove"></i>
       </div>
 
-      <div class="spots-counter-hero fade-up delay-4 visible">
-        <div class="spots-number-big" id="spots-count">300</div>
-        <div class="spots-label-upper">Early Bird Plätze</div>
+      <div class="spots-counter-hero fade-up delay-4 visible" aria-live="polite" aria-label="Vergebene Early Bird Plätze">
+        <div class="spots-counter-row">
+          <span class="spots-number-big" id="spots-count">0</span>
+          <span class="spots-counter-sep" aria-hidden="true">/</span>
+          <span class="spots-number-total">300</span>
+        </div>
+        <div class="spots-label-upper">EARLY BIRD PLÄTZE VERGEBEN</div>
         <div class="spots-scarcity-line">
           <span class="spots-dot"></span>
-          <span>Nur für kurze Zeit verfügbar</span>
+          <span>Begrenzt auf 300 Mitglieder</span>
         </div>
       </div>
     </section>
@@ -2573,16 +2602,20 @@
         const res  = await fetch('/api/spots');
         const data = await res.json();
         const el   = document.getElementById('spots-count');
-        if (el && typeof data.spots_left === 'number') {
-          // Animate count down from 300 to actual value
-          const from = 300;
-          const to   = data.spots_left;
-          const dur  = 1600;
-          const t0   = performance.now();
+        const taken = typeof data.taken === 'number'
+          ? data.taken
+          : (typeof data.spots_left === 'number' ? 300 - data.spots_left : 0);
+        const clamped = Math.max(0, Math.min(300, taken));
+        if (el && clamped > 0) {
+          // Animate count up from 0 to actual taken value (~800ms)
+          const dur = 800;
+          const t0  = performance.now();
           (function tick(now) {
             const p = Math.min((now - t0) / dur, 1);
-            el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)));
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(clamped * eased);
             if (p < 1) requestAnimationFrame(tick);
+            else el.textContent = clamped;
           })(performance.now());
         }
       } catch (_) {}

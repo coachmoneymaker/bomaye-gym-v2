@@ -1486,9 +1486,9 @@
         console.error('[lead form] fetch error (non-fatal):', err);
       }
 
-      successEl.querySelector('.form-success-title').textContent = "You're almost in.";
+      successEl.querySelector('.form-success-title').textContent = "Fast geschafft.";
       successEl.querySelector('.form-success-msg').innerHTML =
-        "Confirm your email to secure your spot.<br /><span style=\"display:block;margin-top:12px;font-size:.8rem;color:rgba(255,255,255,0.35);\">Check your inbox — we just sent you a confirmation link.</span>";
+        "Bestätige deine E-Mail, um deinen Early Bird Platz zu sichern.<br /><span style=\"display:block;margin-top:12px;font-size:.8rem;color:rgba(255,255,255,0.35);\">Wir haben dir einen Bestätigungslink geschickt — prüfe auch deinen Spam-Ordner.</span>";
       form.style.display = 'none';
       successEl.classList.add('visible');
     });
@@ -1541,7 +1541,7 @@
               ? data.taken
               : (typeof data.spots_left === 'number' ? 300 - data.spots_left : 0);
             taken = Math.max(0, Math.min(300, taken));
-            var duration = taken > 0 ? 1800 : 600;
+            var duration = taken > 0 ? 800 : 0;
             animateCount(0, taken, duration);
           })
           .catch(function() {
