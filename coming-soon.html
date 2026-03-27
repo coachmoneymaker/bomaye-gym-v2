@@ -649,35 +649,95 @@
       letter-spacing: 0.01em;
     }
 
-    /* Counter */
+    /* ── Early Bird Counter ──────────────────────────────────── */
     .eb-counter {
       margin-bottom: 60px;
     }
-    .eb-counter-number {
-      font-family: var(--font-display);
-      font-size: clamp(6rem, 18vw, 13rem);
-      line-height: 0.82;
-      color: #fff;
-      letter-spacing: -0.01em;
-      text-shadow:
-        0 0 100px rgba(255,255,255,0.06),
-        0 4px 60px rgba(0,0,0,0.8);
-      display: block;
+
+    /* Number display row: "87 / 300" */
+    .eb-counter-display {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0;
+      line-height: 0.88;
     }
+
+    /* The "taken" animated number */
+    .eb-taken-number {
+      font-family: var(--font-display);
+      font-size: clamp(5.5rem, 17vw, 12rem);
+      letter-spacing: -0.01em;
+      color: var(--gold);
+      text-shadow:
+        0 0 50px rgba(198,164,90,0.3),
+        0 0 100px rgba(198,164,90,0.12),
+        0 4px 40px rgba(0,0,0,0.9);
+      animation: ebGlowPulse 4s ease-in-out infinite;
+    }
+
+    /* The " / " separator */
+    .eb-counter-slash {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7rem);
+      letter-spacing: 0;
+      color: rgba(198,164,90,0.28);
+      padding: 0 clamp(8px, 2vw, 20px);
+      align-self: baseline;
+    }
+
+    /* The static "300" total */
+    .eb-counter-total {
+      font-family: var(--font-display);
+      font-size: clamp(5.5rem, 17vw, 12rem);
+      letter-spacing: -0.01em;
+      color: rgba(198,164,90,0.32);
+      text-shadow: 0 4px 40px rgba(0,0,0,0.7);
+    }
+
+    /* "EARLY BIRD PLÄTZE VERGEBEN" */
     .eb-counter-label {
       font-family: var(--font-head);
-      font-size: clamp(0.7rem, 1.8vw, 0.88rem);
-      letter-spacing: 0.35em;
+      font-size: clamp(0.6rem, 1.6vw, 0.8rem);
+      letter-spacing: 0.42em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-top: 12px;
+      margin-top: 18px;
       display: block;
+      opacity: 0.85;
     }
+
+    /* "Begrenzt auf 300 Mitglieder" */
+    .eb-counter-limit {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      margin-top: 12px;
+    }
+
+    @keyframes ebGlowPulse {
+      0%, 100% {
+        text-shadow:
+          0 0 50px rgba(198,164,90,0.30),
+          0 0 100px rgba(198,164,90,0.12),
+          0 4px 40px rgba(0,0,0,0.9);
+      }
+      50% {
+        text-shadow:
+          0 0 70px rgba(198,164,90,0.45),
+          0 0 130px rgba(198,164,90,0.18),
+          0 4px 40px rgba(0,0,0,0.9);
+      }
+    }
+
     @keyframes ebCounterIn {
       from { opacity: 0; transform: translateY(14px) scale(0.96); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .eb-counter-number.animate-in {
+    .eb-counter-display.animate-in {
       animation: ebCounterIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
@@ -756,18 +816,11 @@
       .eb-text { margin-bottom: 52px; }
       .eb-counter { margin-bottom: 44px; }
       .eb-cta-btn { padding: 18px 36px; width: 100%; justify-content: center; }
+      .eb-taken-number,
+      .eb-counter-total { font-size: clamp(4rem, 20vw, 7rem); }
+      .eb-counter-slash { font-size: clamp(2rem, 11vw, 4rem); }
     }
 
-    /* ── Urgency counter line ─────────────────────────────────── */
-    .eb-counter-urgency {
-      display: block;
-      font-family: var(--font-head);
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-top: 14px;
-    }
 
     /* ── Founding note wider ─────────────────────────────────── */
     .eb-founding-note {
@@ -1050,10 +1103,14 @@
         Die ersten 300 Mitglieder erhalten exklusive Konditionen<br>und priorisierten Zugang.
       </p>
 
-      <div class="eb-counter fade-up delay-4" aria-live="polite" aria-label="Verfügbare Plätze">
-        <span class="eb-counter-number" id="eb-spots-number">300</span>
-        <span class="eb-counter-label">Early Bird Plätze</span>
-        <span class="eb-counter-urgency">Nur solange Plätze verfügbar sind.</span>
+      <div class="eb-counter fade-up delay-4" aria-live="polite" aria-label="Vergebene Early Bird Plätze">
+        <div class="eb-counter-display" id="eb-counter-display">
+          <span class="eb-taken-number" id="eb-spots-taken">0</span>
+          <span class="eb-counter-slash" aria-hidden="true">/</span>
+          <span class="eb-counter-total">300</span>
+        </div>
+        <span class="eb-counter-label">Early Bird Plätze vergeben</span>
+        <span class="eb-counter-limit">Begrenzt auf 300 Mitglieder</span>
       </div>
 
       <div class="eb-divider fade-up delay-4" aria-hidden="true">
@@ -1451,17 +1508,18 @@
 
     // ── Early Bird counter ────────────────────────────────────────
     (function() {
-      const numEl = document.getElementById('eb-spots-number');
-      if (!numEl) return;
+      var displayEl = document.getElementById('eb-counter-display');
+      var numEl     = document.getElementById('eb-spots-taken');
+      if (!displayEl || !numEl) return;
 
       function animateCount(from, to, duration) {
         var startTime = null;
         var range = to - from;
         function step(timestamp) {
           if (!startTime) startTime = timestamp;
-          var elapsed = timestamp - startTime;
+          var elapsed  = timestamp - startTime;
           var progress = Math.min(elapsed / duration, 1);
-          // Ease-out cubic for smooth deceleration
+          // Ease-out cubic
           var eased = 1 - Math.pow(1 - progress, 3);
           numEl.textContent = Math.round(from + range * eased);
           if (progress < 1) requestAnimationFrame(step);
@@ -1474,17 +1532,21 @@
       function loadAndAnimate() {
         if (loaded) return;
         loaded = true;
-        numEl.classList.add('animate-in');
+        displayEl.classList.add('animate-in');
         fetch('/api/spots')
-          .then(function(res) { return res.ok ? res.json() : Promise.reject(); })
+          .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
           .then(function(data) {
-            var target = (typeof data.spots_left === 'number') ? data.spots_left : 300;
-            target = Math.max(0, Math.min(300, target));
-            animateCount(0, target, 1600);
+            // Prefer explicit taken; fall back to total - spots_left
+            var taken = typeof data.taken === 'number'
+              ? data.taken
+              : (typeof data.spots_left === 'number' ? 300 - data.spots_left : 0);
+            taken = Math.max(0, Math.min(300, taken));
+            var duration = taken > 0 ? 1800 : 600;
+            animateCount(0, taken, duration);
           })
           .catch(function() {
-            // Fallback: animate to 300 (no KV available)
-            animateCount(0, 300, 1200);
+            // No data available — show 0 honestly
+            numEl.textContent = '0';
           });
       }
 
@@ -1497,8 +1559,8 @@
               obs.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.25 });
-        obs.observe(numEl);
+        }, { threshold: 0.2 });
+        obs.observe(displayEl);
       } else {
         loadAndAnimate();
       }

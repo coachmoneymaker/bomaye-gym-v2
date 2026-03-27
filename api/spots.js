@@ -5,7 +5,7 @@ import { join } from 'path';
  * /api/spots — Returns real early-bird spot availability
  *
  * GET /api/spots
- * Returns: { spots_left: number, total: number }
+ * Returns: { total: number, taken: number, spots_left: number }
  *
  * Counter is driven by verified_count in Vercel KV.
  * Falls back to /data/earlybird.json if KV is not configured.
@@ -41,9 +41,10 @@ export default async function handler(req, res) {
   if (kv) {
     try {
       const verified = (await kv.get('verified_count')) ?? 0;
-      const spotsLeft = Math.max(0, TOTAL_SPOTS - Number(verified));
+      const taken = Math.min(TOTAL_SPOTS, Math.max(0, Number(verified)));
+      const spotsLeft = TOTAL_SPOTS - taken;
       res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
-      return res.status(200).json({ spots_left: spotsLeft, total: TOTAL_SPOTS });
+      return res.status(200).json({ total: TOTAL_SPOTS, taken, spots_left: spotsLeft });
     } catch (err) {
       console.warn('[SPOTS] KV read failed, falling back to JSON:', err.message);
     }
@@ -54,13 +55,16 @@ export default async function handler(req, res) {
     const filePath = join(process.cwd(), 'data', 'earlybird.json');
     const raw  = readFileSync(filePath, 'utf-8');
     const data = JSON.parse(raw);
+    const taken = data.taken ?? (TOTAL_SPOTS - (data.spots_left ?? TOTAL_SPOTS));
+    const spotsLeft = TOTAL_SPOTS - taken;
     res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     return res.status(200).json({
-      spots_left: data.spots_left ?? TOTAL_SPOTS,
-      total:      data.total      ?? TOTAL_SPOTS,
+      total:      data.total ?? TOTAL_SPOTS,
+      taken:      Math.max(0, taken),
+      spots_left: Math.max(0, spotsLeft),
     });
   } catch (err) {
     console.error('[SPOTS] Failed to read earlybird.json:', err);
-    return res.status(200).json({ spots_left: TOTAL_SPOTS, total: TOTAL_SPOTS });
+    return res.status(200).json({ total: TOTAL_SPOTS, taken: 0, spots_left: TOTAL_SPOTS });
   }
 }

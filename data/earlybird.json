@@ -1,5 +1,6 @@
 {
-  "spots_left": 300,
   "total": 300,
-  "note": "Update spots_left to reflect current availability. This file is served as-is."
+  "taken": 0,
+  "spots_left": 300,
+  "note": "Fallback only — real count comes from Vercel KV (verified_count key). Update taken/spots_left only if KV is unavailable."
 }
