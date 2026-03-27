@@ -31,6 +31,12 @@ async function getKV() {
   }
 }
 
+function setNoCacheHeaders(res) {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -44,7 +50,7 @@ export default async function handler(req, res) {
       const taken = Math.min(TOTAL_SPOTS, Math.max(0, Number(verified)));
       const spotsLeft = TOTAL_SPOTS - taken;
       console.log('[SPOTS] returning taken:', taken, '| source: kv');
-      res.setHeader('Cache-Control', 'no-store');
+      setNoCacheHeaders(res);
       return res.status(200).json({ total: TOTAL_SPOTS, taken, spots_left: spotsLeft });
     } catch (err) {
       console.warn('[SPOTS] KV read failed, falling back to JSON:', err.message);
@@ -59,7 +65,7 @@ export default async function handler(req, res) {
     const taken = data.taken ?? (TOTAL_SPOTS - (data.spots_left ?? TOTAL_SPOTS));
     const spotsLeft = TOTAL_SPOTS - taken;
     console.log('[SPOTS] returning taken:', Math.max(0, taken), '| source: json-fallback');
-    res.setHeader('Cache-Control', 'no-store');
+    setNoCacheHeaders(res);
     return res.status(200).json({
       total:      data.total ?? TOTAL_SPOTS,
       taken:      Math.max(0, taken),
@@ -68,7 +74,7 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error('[SPOTS] Failed to read earlybird.json:', err);
     console.log('[SPOTS] returning taken: 0 | source: hardcoded-fallback');
-    res.setHeader('Cache-Control', 'no-store');
+    setNoCacheHeaders(res);
     return res.status(200).json({ total: TOTAL_SPOTS, taken: 0, spots_left: TOTAL_SPOTS });
   }
 }
