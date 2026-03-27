@@ -139,7 +139,7 @@ export default async function handler(req, res) {
   console.log('[LEAD_VERIFIED]', JSON.stringify({ email: lead.email, verifiedAt, verifiedCount }));
 
   // ── Resolve siteUrl before emails ────────────────────────────────────────
-  const siteUrl = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
+  const siteUrl = (process.env.SITE_URL || 'https://www.bomayegym.com').replace(/\/$/, '');
 
   // ── Send admin + user confirmation emails (parallel, non-fatal) ───────────
   console.log('[VERIFY] Admin email send start', { email: lead.email });

@@ -202,7 +202,7 @@ export default async function handler(req, res) {
   console.log('[LEAD_PENDING]', JSON.stringify({ email: lead.email, category: lead.category, submittedAt: lead.submittedAt }));
 
   // ── Send verification email to user ───────────────────────────────────────
-  const siteUrl   = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
+  const siteUrl   = (process.env.SITE_URL || 'https://www.bomayegym.com').replace(/\/$/, '');
   const verifyUrl = `${siteUrl}/api/verify?token=${encodeURIComponent(token)}`;
 
   // [DEBUG] Remove before go-live
