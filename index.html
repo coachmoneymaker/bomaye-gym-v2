@@ -1877,8 +1877,8 @@
             </div>
           </div>
           <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="kids">
-            Early Bird Zugang sichern
+          <button type="button" class="card-cta cta-default" data-pricing-cat="kids" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true'">
+            Jetzt Mitglied werden
           </button>
         </div>
 
@@ -1903,8 +1903,8 @@
             </div>
           </div>
           <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="youth">
-            Early Bird Zugang sichern
+          <button type="button" class="card-cta cta-default" data-pricing-cat="youth" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true'">
+            Jetzt Mitglied werden
           </button>
         </div>
 
@@ -1930,8 +1930,8 @@
             </div>
           </div>
           <div class="card-urgency">Exklusiver Early Bird Preis. Dauerhaft. Solange Plätze verfügbar.</div>
-          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults">
-            Early Bird Zugang sichern
+          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'">
+            Jetzt Mitglied werden
           </button>
         </div>
 
@@ -2380,9 +2380,15 @@
     }
 
     // ── Pricing card CTA → switch to form view ───────────────────
+    const checkoutUrls = {
+      kids:   'https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true',
+      youth:  'https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true',
+      adults: 'https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'
+    };
     document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
-        showFormView(btn.dataset.pricingCat);
+        const url = checkoutUrls[btn.dataset.pricingCat];
+        if (url) window.location.href = url;
       });
     });
 
