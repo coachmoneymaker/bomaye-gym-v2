@@ -1786,38 +1786,41 @@
       .fam-cat-btn { font-size: 0.5rem; padding: 8px 3px; }
     }
 
-    /* ── Bsport subscription widget section ─────────────────────── */
-    .widget-section {
+    /* ── Embedded checkout section ───────────────────────────────── */
+    #checkout-section {
       display: none;
-      padding: 64px 20px 80px;
       background: #0f0f0f;
     }
-    .widget-section.is-visible {
+    #checkout-section.is-visible {
       display: block;
     }
-    .widget-section-header {
-      text-align: center;
-      margin-bottom: 36px;
+    #checkout-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 120px;
+      background: #0f0f0f;
     }
-    .widget-section-header h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      color: #fff;
-      letter-spacing: 0.05em;
-      margin: 0 0 10px;
+    #checkout-loader.is-hidden {
+      display: none;
     }
-    .widget-section-header p {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
-      margin: 0;
+    .checkout-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(198,164,90,0.15);
+      border-top-color: #C6A45A;
+      border-radius: 50%;
+      animation: checkout-spin 0.8s linear infinite;
     }
-    .widget-section-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(198,164,90,0.2);
-      background: #111;
+    @keyframes checkout-spin { to { transform: rotate(360deg); } }
+    #checkout-frame {
+      display: block;
+      width: 100%;
+      height: 820px;
+      border: 0;
+    }
+    @media (max-width: 768px) {
+      #checkout-frame { height: 100svh; }
     }
   </style>
 </head>
@@ -1983,50 +1986,17 @@
 
     </section>
 
-    <!-- Bsport Subscription Widget (revealed when any pricing CTA is clicked) -->
-    <section class="widget-section" id="widget-section" aria-label="Mitgliedschaft abschließen">
-      <div class="widget-section-header fade-up">
-        <h2>MITGLIEDSCHAFT ABSCHLIESSEN</h2>
-        <p>Wähle dein Paket und starte direkt durch.</p>
+    <!-- Embedded checkout (revealed when a pricing CTA is clicked) -->
+    <section id="checkout-section" aria-label="Mitgliedschaft abschließen">
+      <div id="checkout-loader" aria-hidden="true">
+        <div class="checkout-spinner"></div>
       </div>
-      <div class="widget-section-inner">
-        <div style="overflow:hidden !important; position:relative; padding-top:125vh;">
-          <iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;"
-                  frameborder="0"
-                  allowfullscreen
-                  srcdoc='
-                    <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
-                    <script id="bsport-widget-mount">
-                        function MountBsportWidget(config, repeat=1) {
-                            if (repeat > 50) { return }
-                            if (!window.BsportWidget) {
-                                return setTimeout(() => {
-                                    MountBsportWidget(config,repeat+1)
-                                }, 100 * repeat || 1)
-                            }
-                            BsportWidget.mount(config)
-                        }
-                    </script>
-                    <script>
-                        MountBsportWidget({
-                                "parentElement": "bsport-widget-608946",
-                                "companyId": 5473,
-                                "franchiseId": null,
-                                "dialogMode": 3,
-                                "widgetType": "subscription",
-                                "showFab": false,
-                                "fullScreenPopup": false,
-                                "styles":undefined,
-                                "config": {
-                                    "subscription": {}
-                                }
-                            })
-                    </script>
-                    <div id="bsport-widget-608946"></div>
-                  '>
-          </iframe>
-        </div>
-      </div>
+      <iframe
+        id="checkout-frame"
+        title="Mitgliedschaft abschließen"
+        allow="payment"
+        allowpaymentrequest>
+      </iframe>
     </section>
 
     <!-- Lead Capture Form (hidden until pricing CTA clicked) -->
@@ -2459,14 +2429,31 @@
       }, 320);
     }
 
-    // ── Pricing card CTA → reveal embedded subscription widget ───
+    // ── Pricing card CTA → open checkout inline ──────────────────
+    const checkoutUrls = {
+      kids:   'https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true',
+      youth:  'https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true',
+      adults: 'https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'
+    };
     document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const widgetSection = document.getElementById('widget-section');
-        if (widgetSection) {
-          widgetSection.classList.add('is-visible');
-          widgetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        const url     = checkoutUrls[btn.dataset.pricingCat];
+        const section = document.getElementById('checkout-section');
+        const frame   = document.getElementById('checkout-frame');
+        const loader  = document.getElementById('checkout-loader');
+        if (!url || !section || !frame) return;
+        // Show loader, hide previous frame content
+        frame.style.display = 'none';
+        if (loader) { loader.classList.remove('is-hidden'); }
+        // Set src and reveal section
+        frame.src = url;
+        section.classList.add('is-visible');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Hide loader once iframe has loaded
+        frame.onload = () => {
+          frame.style.display = 'block';
+          if (loader) loader.classList.add('is-hidden');
+        };
       });
     });
 
