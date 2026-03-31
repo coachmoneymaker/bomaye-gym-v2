@@ -368,7 +368,7 @@ async function initEarlyBirdFOMO() {
     numEl.textContent = spotsLeft;
     const io = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
-        animateCounter(numEl, total, spotsLeft, 1600);
+        animateCounter(numEl, 0, spotsLeft, 1600);
         io.disconnect();
       }
     }, { threshold: 0.4 });

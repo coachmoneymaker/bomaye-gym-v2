@@ -145,7 +145,16 @@ const BOMAYE = {
    The rest of the site reads ONLY from getEarlyBirdSpotsLeft().
 ───────────────────────────────────────────────────────────── */
 async function getEarlyBirdSpotsLeft() {
-  // MODE S — Sanity CMS (highest priority when available)
+  // MODE A — dynamic JSON is authoritative (update /data/earlybird.json on your server)
+  try {
+    const res = await fetch('/data/earlybird.json', { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.spots_left === 'number') return data.spots_left;
+    }
+  } catch (_) { /* fall through */ }
+
+  // MODE S — Sanity CMS fallback
   if (typeof window.sanityFetch === 'function') {
     try {
       const data = await window.sanityFetch(
@@ -156,15 +165,6 @@ async function getEarlyBirdSpotsLeft() {
       }
     } catch (_) { /* fall through */ }
   }
-
-  // MODE A — dynamic JSON (update /data/earlybird.json on your server)
-  try {
-    const res = await fetch('/data/earlybird.json', { cache: 'no-cache' });
-    if (res.ok) {
-      const data = await res.json();
-      if (typeof data.spots_left === 'number') return data.spots_left;
-    }
-  } catch (_) { /* fall through */ }
 
   // MODE B — manual fallback: change BOMAYE.earlyBird.remaining in this file
   return BOMAYE.earlyBird.remaining;
