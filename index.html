@@ -2,3162 +2,1591 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Bomaye Gym München – Boxgym &amp; Boxtraining in München</title>
+  <meta name="description" content="Bomaye Gym München – modernes Boxgym für Anfänger, Fitnesssportler und Wettkämpfer. Professionelles Boxtraining und Personal Training im Pineapple Park München." />
   <meta name="robots" content="index, follow" />
-  <title>BOMAYE GYM MUNICH — Premium Boxgym | Early Bird sichern</title>
-  <meta name="description" content="Munich's new premium boxing gym for Kids, Youth and Adults. Sichere dir jetzt deinen Early-Bird-Platz als Early Bird Member — limitiert." />
+  <meta name="theme-color" content="#080808" />
 
-  <!-- Fonts -->
+  <!-- Open Graph -->
+  <meta property="og:title" content="Bomaye Gym München – Boxgym &amp; Boxtraining in München" />
+  <meta property="og:description" content="Bomaye Gym München – modernes Boxgym für Anfänger, Fitnesssportler und Wettkämpfer. Professionelles Boxtraining und Personal Training im Pineapple Park München." />
+  <meta property="og:image" content="https://www.bomayegym.com/assets/images/community.webp" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/community.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Bsport: early connection warm-up before user clicks -->
+  <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="preconnect" href="https://cdn.bsport.io" crossorigin />
+  <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
+
+  <!-- Fonts: preconnect + async (swap avoids FOIT) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-
-  <style>
-    /* ── Reset & Base ────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    body {
-      background: #0f0f0f;
-      color: #fff;
-      font-family: 'DM Sans', system-ui, sans-serif;
-      font-size: 18px;
-      line-height: 1.7;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-    }
-    img { display: block; max-width: 100%; height: auto; }
-    a { color: inherit; text-decoration: none; }
-    ul { list-style: none; }
-    button { cursor: pointer; border: none; background: none; font-family: inherit; }
-
-    /* ── Design Tokens ───────────────────────────────────────────── */
-    :root {
-      --gold:       #C6A45A;
-      --gold-dark:  #A67C2E;
-      --gold-light: #d4b472;
-      --ink:        #080808;
-      --ink2:       #111111;
-      --smoke:      #1a1a1a;
-      --border:     rgba(198,164,90,0.22);
-      --muted:      rgba(255,255,255,0.5);
-      --font-display: 'Bebas Neue', 'Oswald', sans-serif;
-      --font-head:    'Oswald', sans-serif;
-      --font-body:    'DM Sans', system-ui, sans-serif;
-      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* ── Page layout ─────────────────────────────────────────────── */
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    /* ── Fixed background layers ─────────────────────────────────── */
-    .bg-base {
-      position: fixed; inset: 0; z-index: 0;
-      background: #141414;
-    }
-
-    /* Cinematic vignette — clean depth, not heavy */
-    .bg-vignette {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none;
-      background:
-        radial-gradient(ellipse 75% 75% at 50% 50%, transparent 22%, rgba(0,0,0,0.52) 100%),
-        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 100%);
-    }
-
-    /* Gold crown glow at top — slightly boosted */
-    .bg-glow {
-      position: fixed;
-      top: -25%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 140%;
-      max-width: 1600px;
-      height: 900px;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 70% 65% at 50% 0%, rgba(198,164,90,0.28) 0%, rgba(198,164,90,0.10) 45%, transparent 72%),
-        radial-gradient(ellipse 45% 40% at 50% 0%, rgba(220,180,90,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 30% 25% at 50% 0%, rgba(240,200,100,0.13) 0%, transparent 40%);
-    }
-
-    /* Subtle vertical lines grid */
-    .bg-lines {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none;
-      background-image:
-        repeating-linear-gradient(
-          90deg,
-          rgba(198,164,90,0.025) 0px,
-          rgba(198,164,90,0.025) 1px,
-          transparent 1px,
-          transparent 100px
-        );
-    }
-
-
-    /* Subtle center glow behind headline */
-    .bg-hero-glow {
-      position: fixed;
-      top: 28%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: min(900px, 110vw);
-      height: 600px;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 65% 60% at 50% 50%, rgba(198,164,90,0.10) 0%, rgba(198,164,90,0.032) 55%, transparent 78%),
-        radial-gradient(ellipse 40% 35% at 50% 50%, rgba(220,180,90,0.06) 0%, transparent 60%);
-      filter: blur(48px);
-    }
-
-    /* Particle canvas */
-    #particle-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Fine grain texture overlay */
-    .bg-grain {
-      position: fixed; inset: 0; z-index: 3; pointer-events: none;
-      opacity: 0.16;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-    }
-
-    /* Oversized watermark logo behind hero */
-    .bg-watermark {
-      position: fixed;
-      top: 48%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      pointer-events: none;
-      font-family: var(--font-display);
-      font-size: clamp(18vw, 24vw, 340px);
-      letter-spacing: 0.10em;
-      color: rgba(198,164,90,0.048);
-      white-space: nowrap;
-      user-select: none;
-      line-height: 1;
-      filter: blur(3px);
-      -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 60%, transparent 82%);
-      mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.3) 60%, transparent 82%);
-      animation: watermarkBreath 18s ease-in-out infinite alternate;
-    }
-    @keyframes watermarkBreath {
-      0%   { opacity: 0.85; filter: blur(3px); }
-      50%  { opacity: 1;    filter: blur(2px); }
-      100% { opacity: 0.7;  filter: blur(4px); }
-    }
-
-    /* ── Top bar ─────────────────────────────────────────────────── */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 22px 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid rgba(198,164,90,0.08);
-      background: rgba(8,8,8,0.82);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-    }
-    .logo-lockup {
-      display: flex;
-      align-items: center;
-      line-height: 1;
-    }
-    .logo-img {
-      height: clamp(92px, 11vw, 132px);
-      width: auto;
-      display: block;
-      filter: brightness(1.1) contrast(1.04) drop-shadow(0 2px 28px rgba(198,164,90,0.52)) drop-shadow(0 0 56px rgba(198,164,90,0.22));
-      transition: filter 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1);
-    }
-    .logo-img:hover {
-      filter: brightness(1.2) contrast(1.03) drop-shadow(0 4px 36px rgba(198,164,90,0.72)) drop-shadow(0 0 64px rgba(198,164,90,0.28));
-      transform: scale(1.05);
-    }
-    .logo-img:active {
-      transform: scale(1.02);
-      filter: brightness(1.12) contrast(1.03) drop-shadow(0 2px 20px rgba(198,164,90,0.52));
-      transition-duration: 0.1s;
-    }
-    .topbar-badge {
-      position: absolute;
-      right: 64px;
-      font-family: var(--font-head);
-      font-size: 0.55rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(198,164,90,0.3);
-      padding: 7px 16px;
-      border-radius: 2px;
-      background: rgba(198,164,90,0.05);
-    }
-
-    /* ── Hero ────────────────────────────────────────────────────── */
-    .hero {
-      position: relative;
-      z-index: 10;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: clamp(72px, 12vh, 120px) 24px clamp(48px, 7vh, 80px);
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      font-family: var(--font-head);
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.38em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 32px;
-      opacity: 0.9;
-    }
-    .hero-eyebrow::before,
-    .hero-eyebrow::after {
-      content: '';
-      display: block;
-      width: 36px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold));
-      opacity: 0.5;
-    }
-    .hero-eyebrow::after {
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
-    /* Main headline — "IT'S NOT A GYM." / "IT'S PASSION." */
-    .hero-headline {
-      font-family: var(--font-display);
-      font-size: clamp(3.8rem, 12vw, 10rem);
-      line-height: 0.88;
-      letter-spacing: 0.03em;
-      color: #fff;
-      margin-bottom: 0;
-      position: relative;
-    }
-    .hero-headline::before {
-      content: '';
-      position: absolute;
-      inset: -18% -12%;
-      background:
-        radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,0.72) 0%, transparent 75%),
-        radial-gradient(ellipse 55% 50% at 50% 50%, rgba(0,0,0,0.45) 0%, transparent 60%);
-      z-index: -1;
-      pointer-events: none;
-    }
-    .hero-headline .line-white {
-      display: block;
-      color: #fff;
-      text-shadow:
-        0 4px 32px rgba(0,0,0,0.98),
-        0 8px 64px rgba(0,0,0,0.75),
-        0 1px 0 rgba(255,255,255,0.12),
-        0 -1px 0 rgba(255,255,255,0.04);
-    }
-    .hero-headline .line-gold {
-      display: block;
-      background: linear-gradient(
-        152deg,
-        #f7eecc 0%,
-        #e8c85a 12%,
-        #c8961a 28%,
-        #9a6c10 42%,
-        #b88420 54%,
-        #d4aa3c 66%,
-        #f0da80 80%,
-        #ddb840 90%,
-        #b88828 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter:
-        drop-shadow(0 6px 36px rgba(0,0,0,0.98))
-        drop-shadow(0 3px 8px rgba(0,0,0,0.85))
-        drop-shadow(0 0 60px rgba(180,140,30,0.32))
-        drop-shadow(0 0 120px rgba(160,120,20,0.18));
-      margin-top: 6px;
-    }
-
-    .hero-sub {
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 2.6vw, 2rem);
-      letter-spacing: 0.32em;
-      color: rgba(255,255,255,0.35);
-      margin-top: 32px;
-      margin-bottom: 0;
-    }
-
-    .hero-desc {
-      font-size: clamp(0.88rem, 1.6vw, 1rem);
-      color: rgba(255,255,255,0.48);
-      max-width: 460px;
-      margin: 36px auto 0;
-      line-height: 1.85;
-      letter-spacing: 0.015em;
-    }
-    .hero-desc strong { color: rgba(255,255,255,0.88); font-weight: 500; }
-
-    /* ── Gold divider ────────────────────────────────────────────── */
-    .gold-divider {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin: 40px auto 0;
-      width: 280px;
-    }
-    .gold-divider::before,
-    .gold-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.65), transparent);
-      box-shadow: 0 0 8px rgba(198,164,90,0.2);
-    }
-    .gold-divider-icon {
-      color: rgba(198,164,90,0.8);
-      font-size: 0.8rem;
-      filter: drop-shadow(0 0 6px rgba(198,164,90,0.4));
-    }
-
-    /* ── Big spots counter (hero) ────────────────────────────────── */
-    .spots-counter-hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      margin-top: 48px;
-    }
-    .spots-counter-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 0;
-      line-height: 0.9;
-    }
-    .spots-number-big {
-      font-family: var(--font-display);
-      font-size: clamp(5.5rem, 20vw, 12rem);
-      line-height: 0.9;
-      color: var(--gold);
-      letter-spacing: 0.02em;
-      text-shadow:
-        0 0 50px rgba(198,164,90,0.35),
-        0 0 100px rgba(198,164,90,0.12),
-        0 4px 40px rgba(0,0,0,0.9);
-      animation: counterGlow 3.2s ease-in-out infinite alternate;
-    }
-    .spots-counter-sep {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 9vw, 6rem);
-      color: rgba(198,164,90,0.28);
-      padding: 0 clamp(6px, 1.5vw, 16px);
-      align-self: baseline;
-      line-height: 0.9;
-    }
-    .spots-number-total {
-      font-family: var(--font-display);
-      font-size: clamp(5.5rem, 20vw, 12rem);
-      line-height: 0.9;
-      color: rgba(198,164,90,0.28);
-      letter-spacing: 0.02em;
-      text-shadow: 0 4px 40px rgba(0,0,0,0.7);
-    }
-    @keyframes counterGlow {
-      0%   { text-shadow: 0 0 50px rgba(198,164,90,0.35), 0 0 100px rgba(198,164,90,0.12), 0 4px 40px rgba(0,0,0,0.9); }
-      100% { text-shadow: 0 0 80px rgba(198,164,90,0.55), 0 0 160px rgba(198,164,90,0.22), 0 4px 40px rgba(0,0,0,0.9); }
-    }
-    .spots-label-upper {
-      font-family: var(--font-head);
-      font-size: clamp(0.58rem, 1.5vw, 0.78rem);
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-top: 18px;
-      opacity: 0.85;
-    }
-    .spots-scarcity-line {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 12px;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.22);
-    }
-    .spots-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 8px rgba(198,164,90,0.6);
-      animation: pulse 2.4s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(198,164,90,0.6); }
-      50%       { opacity: 0.3; box-shadow: 0 0 3px rgba(198,164,90,0.2); }
-    }
-
-    /* ── Selected plan badge in form ─────────────────────────────── */
-    .selected-plan-badge {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      background: rgba(198,164,90,0.07);
-      border: 1px solid rgba(198,164,90,0.28);
-      border-radius: 3px;
-      padding: 10px 16px;
-      margin-bottom: 28px;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    .selected-plan-badge.visible { display: flex; }
-    .selected-plan-icon { font-size: 0.75rem; opacity: 0.85; }
-    .selected-plan-change {
-      color: rgba(255,255,255,0.28);
-      margin-left: auto;
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      text-decoration: underline;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .selected-plan-change:hover { color: rgba(255,255,255,0.55); }
-    .no-plan-prompt {
-      text-align: center;
-      padding: 12px 0 20px;
-      color: rgba(255,255,255,0.32);
-      font-size: 0.78rem;
-      line-height: 1.6;
-    }
-    .no-plan-prompt a {
-      color: rgba(198,164,90,0.75);
-      text-decoration: underline;
-    }
-
-    /* ── Form section ────────────────────────────────────────────── */
-    .form-section {
-      position: relative;
-      z-index: 10;
-      padding: clamp(56px, 9vh, 96px) 24px clamp(72px, 12vh, 120px);
-      display: flex;
-      justify-content: center;
-    }
-
-    .form-card {
-      width: 100%;
-      max-width: 580px;
-      background: rgba(255,255,255,0.028);
-      border: 1px solid rgba(198,164,90,0.2);
-      border-radius: 8px;
-      padding: clamp(48px, 6vw, 68px) clamp(40px, 6vw, 64px);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.5),
-        0 40px 120px rgba(0,0,0,0.65),
-        inset 0 1px 0 rgba(255,255,255,0.045),
-        0 0 100px rgba(198,164,90,0.06);
-    }
-
-    .form-title {
-      font-family: var(--font-head);
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-    .form-subtitle {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 36px;
-      line-height: 1.65;
-    }
-
-    /* Category selector */
-    .category-label {
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: rgba(198,164,90,0.65);
-      margin-bottom: 16px;
-      display: block;
-    }
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    .cat-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 24px 10px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 4px;
-      background: rgba(255,255,255,0.02);
-      color: rgba(255,255,255,0.38);
-      font-family: var(--font-head);
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .cat-btn i { font-size: 1.3rem; }
-    .cat-btn:hover {
-      border-color: rgba(198,164,90,0.5);
-      color: rgba(255,255,255,0.82);
-      background: rgba(198,164,90,0.055);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-    }
-    .cat-btn.active {
-      border-color: rgba(198,164,90,0.8);
-      color: var(--gold);
-      background: rgba(198,164,90,0.1);
-      box-shadow: 0 0 0 1px rgba(198,164,90,0.25), 0 8px 32px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
-    }
-    .cat-age {
-      font-size: 0.55rem;
-      letter-spacing: 0.06em;
-      margin-top: -5px;
-      color: inherit;
-      opacity: 0.55;
-      font-family: var(--font-body);
-      font-weight: 400;
-    }
-
-    /* Form fields */
-    .form-group { margin-bottom: 20px; }
-    .field-label {
-      display: block;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.38);
-      margin-bottom: 10px;
-    }
-    .field-input {
-      width: 100%;
-      background: rgba(255,255,255,0.038);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 3px;
-      color: #fff;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      padding: 16px 20px;
-      outline: none;
-      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-      -webkit-appearance: none;
-    }
-    .field-input::placeholder { color: rgba(255,255,255,0.25); }
-    .field-input:focus {
-      border-color: rgba(198,164,90,0.5);
-      background: rgba(255,255,255,0.058);
-      box-shadow: 0 0 0 3px rgba(198,164,90,0.09), 0 0 0 1px rgba(198,164,90,0.25);
-    }
-    .field-input.field-error {
-      border-color: rgba(255,80,80,0.7);
-      background: rgba(255,60,60,0.04);
-      box-shadow: 0 0 0 3px rgba(255,60,60,0.08), 0 0 0 1px rgba(255,80,80,0.35);
-    }
-    .field-hint-error {
-      font-size: 0.72rem;
-      color: #ff6b6b;
-      margin-top: 5px;
-      letter-spacing: 0.01em;
-    }
-    .field-input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.6) sepia(1) saturate(0.8) hue-rotate(0deg);
-      opacity: 0.5;
-      cursor: pointer;
-    }
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    /* Submit */
-    .submit-btn {
-      width: 100%;
-      margin-top: 8px;
-      padding: 22px 24px;
-      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
-      color: #080808;
-      font-family: var(--font-head);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      border-radius: 3px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease;
-      box-shadow:
-        0 4px 24px rgba(166,124,46,0.32),
-        inset 0 1px 0 rgba(255,255,255,0.18),
-        inset 0 -1px 0 rgba(0,0,0,0.15);
-    }
-    .submit-btn:hover {
-      transform: translateY(-3px);
-      box-shadow:
-        0 10px 40px rgba(166,124,46,0.4),
-        inset 0 1px 0 rgba(255,255,255,0.18),
-        inset 0 -1px 0 rgba(0,0,0,0.15);
-    }
-    .submit-btn:active {
-      transform: translateY(-1px);
-      box-shadow: 0 3px 14px rgba(166,124,46,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-
-    .form-note {
-      text-align: center;
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.22);
-      margin-top: 16px;
-      line-height: 1.5;
-    }
-    .form-note i { color: rgba(198,164,90,0.6); margin-right: 5px; }
-
-    /* ── Success state ───────────────────────────────────────────── */
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 32px 0;
-    }
-    .form-success.visible { display: block; }
-    .form-success-logo {
-      display: block;
-      margin: 0 auto 28px;
-      height: clamp(100px, 22vw, 140px);
-      width: auto;
-      opacity: 0.92;
-      filter: brightness(1.05);
-    }
-    .form-success-icon {
-      font-size: 3rem;
-      color: var(--gold);
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 24px rgba(198,164,90,0.4));
-    }
-    .form-success-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 6vw, 2.8rem);
-      letter-spacing: 0.06em;
-      color: #fff;
-      margin-bottom: 14px;
-      line-height: 1;
-    }
-    .form-success-msg {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-
-    /* ── Features strip ──────────────────────────────────────────── */
-    .features {
-      position: relative;
-      z-index: 10;
-      border-top: 1px solid rgba(198,164,90,0.08);
-      border-bottom: 1px solid rgba(198,164,90,0.08);
-      padding: clamp(48px, 7vh, 72px) 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 36px 24px;
-      max-width: 900px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .feature-item { text-align: center; }
-    .feature-icon {
-      font-size: 1.5rem;
-      color: rgba(198,164,90,0.7);
-      margin-bottom: 14px;
-    }
-    .feature-name {
-      font-family: var(--font-head);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 6px;
-    }
-    .feature-desc {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.35);
-      line-height: 1.55;
-    }
-
-    /* ── Footer ──────────────────────────────────────────────────── */
-    .cs-footer {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 36px 24px;
-      border-top: 1px solid rgba(198,164,90,0.06);
-    }
-    .cs-footer-logo {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      letter-spacing: 0.25em;
-      color: rgba(198,164,90,0.5);
-      margin-bottom: 8px;
-    }
-    .cs-footer-logo-img {
-      height: clamp(92px, 11vw, 132px);
-      width: auto;
-      display: block;
-      margin: 0 auto 16px;
-      filter: brightness(1.08) contrast(1.03) drop-shadow(0 2px 24px rgba(198,164,90,0.42)) drop-shadow(0 0 48px rgba(198,164,90,0.18));
-      opacity: 0.88;
-    }
-    .cs-footer-text {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.15);
-      letter-spacing: 0.08em;
-    }
-    .cs-footer-text a {
-      color: rgba(198,164,90,0.4);
-      text-decoration: underline;
-    }
-
-    /* ── Fade-in animation ───────────────────────────────────────── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
-    }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.22s; }
-    .delay-3 { transition-delay: 0.36s; }
-    .delay-4 { transition-delay: 0.5s; }
-    .delay-5 { transition-delay: 0.65s; }
-    .delay-6 { transition-delay: 0.8s; }
-
-    /* ── Responsive ──────────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      .topbar { padding: 16px 24px; }
-      .topbar-badge { right: 24px; }
-      .topbar-badge { display: none; }
-      .logo-img { height: clamp(72px, 17vw, 92px); }
-      .hero { padding-top: 56px; padding-bottom: 40px; }
-      .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.32em; margin-bottom: 24px; }
-      .hero-headline { font-size: clamp(3.2rem, 18vw, 5.5rem); }
-      .hero-sub { font-size: clamp(0.88rem, 5vw, 1.3rem); letter-spacing: 0.24em; }
-      .hero-desc { font-size: clamp(0.82rem, 4vw, 0.95rem); max-width: 90%; }
-      .field-row { grid-template-columns: 1fr; }
-      .features { grid-template-columns: 1fr 1fr; gap: 28px; }
-      .form-card { padding: 36px 24px; }
-      .topbar { padding: 16px 24px; }
-      .goal-grid { grid-template-columns: 1fr 1fr; }
-      .spots-number-big { font-size: clamp(5.5rem, 28vw, 9rem); }
-    }
-    @media (max-width: 360px) {
-      .category-grid { gap: 8px; }
-      .cat-btn { padding: 18px 6px; font-size: 0.62rem; }
-      .goal-grid { gap: 8px; }
-      .goal-btn { padding: 20px 6px 18px; font-size: 0.56rem; }
-    }
-
-    /* ── Multi-step form ─────────────────────────────────────────── */
-    .form-step { display: none; }
-    .form-step.active { display: block; }
-
-    .step-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 32px;
-    }
-    .step-dot {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 1px solid rgba(198,164,90,0.3);
-      background: rgba(198,164,90,0.05);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.04em;
-      color: rgba(198,164,90,0.45);
-      flex-shrink: 0;
-      transition: all 0.35s ease;
-    }
-    .step-dot.active {
-      border-color: var(--gold);
-      background: rgba(198,164,90,0.14);
-      color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(198,164,90,0.1);
-    }
-    .step-dot.done {
-      border-color: rgba(198,164,90,0.6);
-      background: rgba(198,164,90,0.1);
-      color: rgba(198,164,90,0.7);
-    }
-    .step-line {
-      flex: 1;
-      height: 1px;
-      background: rgba(198,164,90,0.15);
-      margin: 0 8px;
-    }
-    .step-line.done { background: rgba(198,164,90,0.45); }
-
-    .step-nav {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .btn-back {
-      flex: 0 0 auto;
-      padding: 18px 24px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 3px;
-      color: rgba(255,255,255,0.4);
-      font-family: var(--font-head);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
-
-    .btn-next {
-      flex: 1;
-      padding: 18px 24px;
-      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
-      color: #080808;
-      font-family: var(--font-head);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      border-radius: 3px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease;
-      box-shadow: 0 4px 20px rgba(166,124,46,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
-    }
-    .btn-next:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(166,124,46,0.38), inset 0 1px 0 rgba(255,255,255,0.18);
-    }
-
-    /* Goal section header */
-    .goal-section-header {
-      margin-bottom: 20px;
-    }
-    .goal-section-title {
-      font-family: var(--font-head);
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-    .goal-section-sub {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.38);
-      line-height: 1.55;
-    }
-
-    /* Goal selector */
-    .goal-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 32px;
-    }
-    .goal-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 26px 10px 22px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 6px;
-      background: rgba(255,255,255,0.03);
-      color: rgba(255,255,255,0.42);
-      font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-    .goal-btn i { font-size: 1.35rem; }
-    .goal-btn:hover {
-      border-color: rgba(198,164,90,0.55);
-      color: rgba(255,255,255,0.9);
-      background: rgba(198,164,90,0.07);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.38);
-    }
-    .goal-btn.active {
-      border-color: var(--gold);
-      border-width: 2px;
-      color: var(--gold);
-      background: rgba(198,164,90,0.13);
-      box-shadow: 0 0 0 3px rgba(198,164,90,0.18), 0 0 18px rgba(198,164,90,0.22), 0 8px 28px rgba(0,0,0,0.35);
-      transform: translateY(-2px);
-    }
-    .goal-btn.active i {
-      filter: drop-shadow(0 0 8px rgba(198,164,90,0.65));
-    }
-
-    /* ── Pricing / Early Bird Section ────────────────────────────── */
-    .pricing-section {
-      position: relative;
-      z-index: 10;
-      padding: clamp(48px, 8vh, 88px) 24px clamp(56px, 9vh, 96px);
-      max-width: 1120px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .pricing-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: clamp(36px, 5vh, 60px);
-    }
-
-    .pricing-eyebrow-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      font-weight: 500;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 18px;
-      opacity: 0.9;
-    }
-    .pricing-eyebrow-tag::before,
-    .pricing-eyebrow-tag::after {
-      content: '';
-      display: block;
-      width: 30px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold));
-      opacity: 0.5;
-    }
-    .pricing-eyebrow-tag::after {
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
-    .pricing-headline {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 6vw, 3.4rem);
-      letter-spacing: 0.05em;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 14px;
-    }
-
-    .pricing-sub {
-      font-size: clamp(0.82rem, 2vw, 0.92rem);
-      color: rgba(255,255,255,0.42);
-      letter-spacing: 0.02em;
-      max-width: 500px;
-      line-height: 1.65;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    /* Base card */
-    .pricing-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: rgba(14, 13, 11, 0.92);
-      border: 1px solid rgba(198,164,90,0.16);
-      border-radius: 8px;
-      padding: 32px 26px 28px;
-      transition: transform 0.38s cubic-bezier(0.16,1,0.3,1), border-color 0.38s ease, box-shadow 0.38s ease;
-      box-shadow: 0 2px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.025);
-    }
-    .pricing-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(198,164,90,0.34);
-      box-shadow: 0 10px 48px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.04);
-    }
-
-    /* Premium card (adults) */
-    .pricing-card.is-premium {
-      border-color: rgba(198,164,90,0.38);
-      background: rgba(18, 15, 9, 0.97);
-      box-shadow: 0 4px 40px rgba(0,0,0,0.48), 0 0 0 1px rgba(198,164,90,0.07), inset 0 1px 0 rgba(198,164,90,0.08);
-      padding-top: 48px;
-    }
-    .pricing-card.is-premium:hover {
-      transform: translateY(-6px);
-      border-color: rgba(198,164,90,0.62);
-      box-shadow: 0 14px 60px rgba(0,0,0,0.58), 0 0 0 1px rgba(198,164,90,0.14), inset 0 1px 0 rgba(198,164,90,0.1);
-    }
-
-    /* Subtle "recommended" ribbon on premium card */
-    .card-premium-badge {
-      position: absolute;
-      top: -1px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-head);
-      font-size: 0.5rem;
-      font-weight: 600;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      color: #0a0a0a;
-      background: linear-gradient(to right, #c8a050, #d4b472, #c8a050);
-      padding: 5px 18px 5px;
-      border-radius: 0 0 4px 4px;
-      white-space: nowrap;
-    }
-
-    /* Early Bird badge on each card */
-    .early-bird-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-head);
-      font-size: 0.5rem;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(198,164,90,0.28);
-      background: rgba(198,164,90,0.06);
-      padding: 4px 11px;
-      border-radius: 2px;
-      margin-bottom: 18px;
-      width: fit-content;
-    }
-    .early-bird-badge i { font-size: 0.6rem; }
-
-    .card-category {
-      font-family: var(--font-display);
-      font-size: clamp(1.25rem, 2.5vw, 1.65rem);
-      letter-spacing: 0.06em;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 5px;
-    }
-
-    .card-age {
-      font-size: 0.68rem;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.14em;
-      font-family: var(--font-head);
-      font-weight: 400;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
-
-    .card-divider {
-      width: 100%;
-      height: 1px;
-      background: rgba(198,164,90,0.1);
-      margin-bottom: 22px;
-    }
-
-    .card-pricing {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-    }
-
-    .card-price-label {
-      font-family: var(--font-head);
-      font-size: 0.5rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 7px;
-      opacity: 0.75;
-    }
-
-    .card-price-main {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-      margin-bottom: 10px;
-    }
-
-    .card-price-amount {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4.5vw, 2.8rem);
-      letter-spacing: 0.02em;
-      color: #fff;
-      line-height: 1;
-    }
-
-    .card-price-unit {
-      font-family: var(--font-head);
-      font-size: 0.65rem;
-      font-weight: 400;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.08em;
-    }
-
-    .card-price-regular {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.74rem;
-      color: rgba(255,255,255,0.32);
-      margin-bottom: 16px;
-    }
-
-    .card-price-regular-amount {
-      text-decoration: line-through;
-      text-decoration-color: rgba(200,80,80,0.45);
-      color: rgba(255,255,255,0.28);
-    }
-
-    .card-urgency {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.32);
-      letter-spacing: 0.03em;
-      line-height: 1.55;
-      margin-bottom: 22px;
-      font-style: italic;
-    }
-
-    /* CTA buttons */
-    .card-cta {
-      display: block;
-      width: 100%;
-      min-height: 56px;
-      padding: 18px 20px;
-      text-align: center;
-      font-family: var(--font-head);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      border-radius: 4px;
-      transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
-      cursor: pointer;
-    }
-
-    .card-cta.cta-default {
-      background: rgba(198,164,90,0.06);
-      border: 1px solid rgba(198,164,90,0.38);
-      color: rgba(198,164,90,0.85);
-    }
-    .card-cta.cta-default:hover {
-      background: rgba(198,164,90,0.12);
-      border-color: rgba(198,164,90,0.7);
-      color: var(--gold-light);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 0 1px rgba(198,164,90,0.2);
-    }
-
-    .card-cta.cta-premium {
-      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
-      border: none;
-      color: #080808;
-      box-shadow: 0 4px 20px rgba(166,124,46,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
-    }
-    .card-cta.cta-premium:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(166,124,46,0.42), inset 0 1px 0 rgba(255,255,255,0.18);
-    }
-
-    /* ── Conversion Zone — light premium island ──────────────────── */
-    .conversion-zone {
-      position: relative;
-      width: 100%;
-    }
-    .conversion-zone::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100vw;
-      inset-block: 0;
-      background: linear-gradient(180deg, #EDE7DA 0%, #E5DDD0 60%, #DDD4C4 100%);
-      z-index: 8;
-      pointer-events: none;
-    }
-
-    /* Override pricing section text for light bg */
-    .conversion-zone .pricing-section {
-      position: relative;
-      z-index: 10;
-    }
-    .conversion-zone .pricing-eyebrow-tag {
-      color: #A67C2E;
-    }
-    .conversion-zone .pricing-eyebrow-tag::before {
-      background: linear-gradient(90deg, transparent, #A67C2E);
-    }
-    .conversion-zone .pricing-eyebrow-tag::after {
-      background: linear-gradient(90deg, #A67C2E, transparent);
-    }
-    .conversion-zone .pricing-headline { color: #1A1812; }
-    .conversion-zone .pricing-sub { color: #7A7260; }
-
-    /* Cards on light background */
-    .conversion-zone .pricing-card {
-      background: #E9E2D6;
-      border: 1px solid rgba(166,124,46,0.28);
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    .conversion-zone .pricing-card:hover {
-      background: #EDE6DA;
-      border-color: rgba(166,124,46,0.52);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(166,124,46,0.18), inset 0 1px 0 rgba(255,255,255,0.55);
-    }
-    .conversion-zone .pricing-card.is-premium {
-      background: #DDD4C2;
-      border-color: rgba(166,124,46,0.5);
-      box-shadow: 0 4px 32px rgba(0,0,0,0.10), 0 0 0 1px rgba(166,124,46,0.12), inset 0 1px 0 rgba(255,255,255,0.45);
-    }
-    .conversion-zone .pricing-card.is-premium:hover {
-      background: #E2D9C8;
-      border-color: rgba(166,124,46,0.72);
-      box-shadow: 0 14px 56px rgba(0,0,0,0.15), 0 0 0 1px rgba(166,124,46,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    .conversion-zone .early-bird-badge {
-      background: rgba(166,124,46,0.1);
-      border: 1px solid rgba(166,124,46,0.35);
-      color: #8A6420;
-    }
-    .conversion-zone .card-divider {
-      background: rgba(0,0,0,0.08);
-    }
-    .conversion-zone .card-category { color: #1A1812; }
-    .conversion-zone .card-age { color: #8A8070; }
-    .conversion-zone .card-price-label { color: #A67C2E; opacity: 1; }
-    .conversion-zone .card-price-amount { color: #1A1812; }
-    .conversion-zone .card-price-unit { color: #8A8070; }
-    .conversion-zone .card-price-regular { color: #8A8070; }
-    .conversion-zone .card-price-regular-amount {
-      color: #8A8070;
-      text-decoration-color: rgba(180,60,60,0.45);
-    }
-    .conversion-zone .card-urgency { color: #8A8070; }
-    .conversion-zone .card-cta.cta-default {
-      background: rgba(166,124,46,0.08);
-      border: 1px solid rgba(166,124,46,0.42);
-      color: #8A6420;
-    }
-    .conversion-zone .card-cta.cta-default:hover {
-      background: rgba(166,124,46,0.15);
-      border-color: rgba(166,124,46,0.68);
-      color: #7A540E;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 0 0 1px rgba(166,124,46,0.2);
-    }
-    .conversion-zone .card-cta.cta-premium {
-      box-shadow: 0 4px 20px rgba(100,70,10,0.22), inset 0 1px 0 rgba(255,255,255,0.22);
-    }
-    .conversion-zone .family-access-btn {
-      box-shadow: 0 4px 20px rgba(100,70,10,0.28), inset 0 1px 0 rgba(255,255,255,0.22);
-    }
-    .conversion-zone .family-access-btn:hover {
-      box-shadow: 0 8px 32px rgba(100,70,10,0.38), 0 0 0 1px rgba(166,124,46,0.3), inset 0 1px 0 rgba(255,255,255,0.22);
-    }
-    .conversion-zone .family-cta-note {
-      color: #7A6030;
-    }
-    .conversion-zone .family-cta-sub {
-      color: rgba(122,96,48,0.6);
-    }
-
-    /* ── Form section on light bg ─────────────────────────────────── */
-    .conversion-zone .form-section {
-      position: relative;
-      z-index: 10;
-    }
-    .conversion-zone .form-card {
-      background: #1A1710;
-      border: 1px solid rgba(198,164,90,0.22);
-      box-shadow:
-        0 8px 48px rgba(0,0,0,0.32),
-        0 40px 120px rgba(0,0,0,0.22),
-        inset 0 1px 0 rgba(255,255,255,0.04),
-        0 0 0 1px rgba(0,0,0,0.6);
-    }
-
-    /* Section transition states */
-    .conv-view {
-      transition: opacity 0.32s ease, transform 0.32s ease;
-    }
-    .conv-view.is-exiting {
-      opacity: 0;
-      transform: translateY(-8px);
-      pointer-events: none;
-    }
-    .conv-view.is-entering {
-      animation: convEnter 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
-    }
-    @keyframes convEnter {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 860px) {
-      .pricing-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        max-width: 440px;
-        margin: 0 auto;
-      }
-      .pricing-card.is-premium {
-        order: -1;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .pricing-card { padding: 26px 18px 22px; }
-      .pricing-card.is-premium { padding: 44px 18px 22px; }
-      .card-price-amount { font-size: 2.2rem; }
-    }
-
-    /* ── FAQ Inline Section ───────────────────────────────────────── */
-    .faq-inline-section {
-      padding: clamp(48px, 7vh, 72px) 24px clamp(56px, 8vh, 88px);
-      max-width: 680px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .faq-inline-header {
-      text-align: center;
-      margin-bottom: clamp(28px, 4vh, 44px);
-    }
-    .faq-inline-eyebrow {
-      display: inline-block;
-      font-family: var(--font-head);
-      font-size: 0.55rem;
-      letter-spacing: 0.38em;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.8;
-      margin-bottom: 12px;
-    }
-    .faq-inline-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      letter-spacing: 0.05em;
-      color: #fff;
-      font-weight: 400;
-    }
-    .faq-inline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .faq-inline-item {
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      border-radius: 4px;
-      transition: background 0.2s ease;
-    }
-    .faq-inline-item:first-child {
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    .faq-inline-item.active {
-      background: rgba(198,164,90,0.04);
-    }
-    .faq-inline-btn {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 18px 4px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: rgba(255,255,255,0.78);
-      font-family: var(--font-body);
-      font-size: 0.88rem;
-      font-weight: 500;
-      text-align: left;
-      transition: color 0.2s ease;
-    }
-    .faq-inline-btn:hover { color: #fff; }
-    .faq-inline-btn[aria-expanded="true"] { color: var(--gold); }
-    .faq-inline-chevron {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.3);
-      flex-shrink: 0;
-      transition: transform 0.28s cubic-bezier(0.16,1,0.3,1), color 0.2s ease;
-    }
-    .faq-inline-btn[aria-expanded="true"] .faq-inline-chevron {
-      transform: rotate(180deg);
-      color: var(--gold);
-    }
-    .faq-inline-answer {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 4px;
-      transition: max-height 0.32s cubic-bezier(0.16,1,0.3,1), padding 0.32s ease;
-    }
-    .faq-inline-answer.open {
-      max-height: 500px;
-      padding: 0 4px 18px;
-    }
-    .faq-inline-answer p {
-      font-size: 0.83rem;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.7;
-    }
-
-    /* ── Family Access CTA ───────────────────────────────────────── */
-    .family-cta-row {
-      text-align: center;
-      margin-top: 48px;
-      padding-bottom: 4px;
-    }
-    .family-access-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 18px 44px;
-      background: linear-gradient(to bottom, #d4b472 0%, #c6a45a 45%, #a67c2e 100%);
-      border: none;
-      color: #080808;
-      font-family: var(--font-head);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      border-radius: 4px;
-      cursor: pointer;
-      transition:
-        box-shadow 0.28s cubic-bezier(0.16,1,0.3,1),
-        filter 0.28s ease,
-        transform 0.28s cubic-bezier(0.16,1,0.3,1);
-      box-shadow:
-        0 4px 20px rgba(166,124,46,0.38),
-        inset 0 1px 0 rgba(255,255,255,0.18);
-    }
-    .family-access-btn:hover {
-      filter: brightness(1.08);
-      box-shadow:
-        0 8px 36px rgba(198,164,90,0.55),
-        0 0 0 1px rgba(198,164,90,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.18);
-      transform: translateY(-2px);
-    }
-    .family-access-btn:active {
-      transform: translateY(0);
-      filter: brightness(0.96);
-      box-shadow: 0 2px 12px rgba(166,124,46,0.28);
-    }
-    .family-cta-note {
-      margin-top: 14px;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: rgba(198,164,90,0.85);
-      font-family: var(--font-head);
-    }
-    .family-cta-sub {
-      margin-top: 6px;
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      text-transform: none;
-      color: rgba(198,164,90,0.5);
-      font-family: var(--font-head);
-    }
-
-    /* ── Family Modal Overlay ────────────────────────────────────── */
-    .family-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      background: rgba(0,0,0,0);
-      backdrop-filter: blur(0px);
-      -webkit-backdrop-filter: blur(0px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      pointer-events: none;
-      transition:
-        background 0.32s ease,
-        backdrop-filter 0.32s ease;
-    }
-    .family-overlay.open {
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      pointer-events: all;
-    }
-    .family-modal {
-      width: 100%;
-      max-width: 540px;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: #111111;
-      border: 1px solid rgba(198,164,90,0.18);
-      border-radius: 8px;
-      padding: clamp(32px,5vw,48px) clamp(24px,5vw,44px);
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.5),
-        0 32px 80px rgba(0,0,0,0.7),
-        0 0 60px rgba(198,164,90,0.05);
-      opacity: 0;
-      transform: translateY(32px) scale(0.97);
-      transition:
-        opacity 0.4s cubic-bezier(0.16,1,0.3,1),
-        transform 0.4s cubic-bezier(0.16,1,0.3,1);
-      position: relative;
-    }
-    .family-overlay.open .family-modal {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    .family-modal-close {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.25);
-      font-size: 1rem;
-      cursor: pointer;
-      padding: 6px 8px;
-      transition: color 0.2s;
-      line-height: 1;
-    }
-    .family-modal-close:hover { color: rgba(255,255,255,0.65); }
-    .family-modal-eyebrow {
-      font-family: var(--font-head);
-      font-size: 0.55rem;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: rgba(198,164,90,0.75);
-      margin-bottom: 10px;
-    }
-    .family-modal-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.7rem,5vw,2.4rem);
-      letter-spacing: 0.04em;
-      color: #fff;
-      line-height: 0.95;
-      margin-bottom: 10px;
-    }
-    .family-modal-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
-    .family-modal-notice {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.7rem;
-      color: rgba(198,164,90,0.6);
-      background: rgba(198,164,90,0.05);
-      border: 1px solid rgba(198,164,90,0.14);
-      border-radius: 3px;
-      padding: 7px 12px;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-    .family-divider {
-      height: 1px;
-      background: rgba(198,164,90,0.1);
-      margin: 22px 0;
-    }
-    .family-section-label {
-      font-family: var(--font-head);
-      font-size: 0.56rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: rgba(198,164,90,0.6);
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    /* Member blocks */
-    @keyframes famMemberIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fam-member-block {
-      border: 1px solid rgba(198,164,90,0.1);
-      border-radius: 6px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-      background: rgba(255,255,255,0.015);
-      position: relative;
-      animation: famMemberIn 0.25s cubic-bezier(0.16,1,0.3,1);
-    }
-    .fam-member-block.is-free {
-      border-color: rgba(198,164,90,0.32);
-      background: rgba(198,164,90,0.03);
-    }
-    .fam-member-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .fam-member-num {
-      font-family: var(--font-display);
-      font-size: 0.92rem;
-      color: rgba(198,164,90,0.3);
-      min-width: 18px;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-    .fam-member-block.is-free .fam-member-num { color: var(--gold); }
-    .fam-free-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-family: var(--font-head);
-      font-size: 0.46rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(198,164,90,0.4);
-      border-radius: 2px;
-      padding: 4px 8px;
-      white-space: nowrap;
-      background: rgba(198,164,90,0.08);
-    }
-    .fam-remove-btn {
-      margin-left: auto;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.18);
-      font-size: 0.72rem;
-      cursor: pointer;
-      padding: 3px 5px;
-      transition: color 0.2s;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-    .fam-remove-btn:hover { color: rgba(255,80,80,0.65); }
-
-    /* Category pill selectors */
-    .fam-cat-label {
-      font-family: var(--font-head);
-      font-size: 0.5rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.22);
-      margin-top: 10px;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .fam-cat-group {
-      display: flex;
-      gap: 6px;
-    }
-    .fam-cat-btn {
-      flex: 1;
-      padding: 9px 6px;
-      background: transparent;
-      border: 1px solid rgba(198,164,90,0.16);
-      border-radius: 3px;
-      color: rgba(255,255,255,0.38);
-      font-family: var(--font-head);
-      font-size: 0.56rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, color 0.2s;
-      text-align: center;
-      line-height: 1.3;
-    }
-    .fam-cat-btn:hover {
-      border-color: rgba(198,164,90,0.38);
-      color: rgba(255,255,255,0.65);
-    }
-    .fam-cat-btn.active {
-      border-color: var(--gold);
-      background: rgba(198,164,90,0.1);
-      color: var(--gold-light);
-    }
-    .fam-cat-btn:focus-visible {
-      outline: 2px solid rgba(198,164,90,0.5);
-      outline-offset: 1px;
-    }
-
-    /* Add member button */
-    .fam-add-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 13px;
-      background: transparent;
-      border: 1px dashed rgba(198,164,90,0.22);
-      border-radius: 6px;
-      color: rgba(198,164,90,0.5);
-      font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.22s, color 0.22s, background 0.22s;
-      margin-bottom: 22px;
-    }
-    .fam-add-btn:hover {
-      border-color: rgba(198,164,90,0.5);
-      color: rgba(198,164,90,0.85);
-      background: rgba(198,164,90,0.04);
-    }
-
-    /* Field error state */
-    .fam-field-error { border-color: rgba(255,100,100,0.5) !important; }
-    .fam-err-text {
-      color: #ff6b6b;
-      font-size: 0.7rem;
-      margin-top: 4px;
-      display: block;
-    }
-
-    @media (max-width: 600px) {
-      .family-modal { padding: 28px 20px; }
-      .family-access-btn { padding: 15px 28px; width: 100%; justify-content: center; }
-      .fam-cat-btn { font-size: 0.5rem; padding: 8px 3px; }
-    }
-
-    /* ── Embedded checkout section ───────────────────────────────── */
-    #checkout-section {
-      display: none;
-      background: #0f0f0f;
-    }
-    #checkout-section.is-visible {
-      display: block;
-    }
-    #checkout-loader {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 120px;
-      background: #0f0f0f;
-    }
-    #checkout-loader.is-hidden {
-      display: none;
-    }
-    .checkout-spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid rgba(198,164,90,0.15);
-      border-top-color: #C6A45A;
-      border-radius: 50%;
-      animation: checkout-spin 0.8s linear infinite;
-    }
-    @keyframes checkout-spin { to { transform: rotate(360deg); } }
-    #checkout-frame {
-      display: block;
-      width: 100%;
-      height: 820px;
-      border: 0;
-    }
-    @media (max-width: 768px) {
-      #checkout-frame { height: 100svh; }
-    }
-  </style>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome: async to unblock render -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ExerciseGym",
+    "name": "BOMAYE GYM MUNICH",
+    "description": "It's not a gym. It's passion. Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer.",
+    "url": "https://www.bomayegym.com",
+    "email": "info@bomayegym.com",
+    "telephone": "+4917621932243",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
+      "addressLocality": "Munich",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1408, "longitude": 11.5358 },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+    ],
+    "priceRange": "€€"
+  }
+  </script>
 </head>
+
 <body>
 
-  <!-- Background stack -->
-  <div class="bg-base" aria-hidden="true"></div>
-  <div class="bg-glow" aria-hidden="true"></div>
-  <div class="bg-hero-glow" aria-hidden="true"></div>
-  <div class="bg-lines" aria-hidden="true"></div>
-  <canvas id="particle-canvas" aria-hidden="true"></canvas>
-  <div class="bg-grain" aria-hidden="true"></div>
-  <div class="bg-vignette" aria-hidden="true"></div>
-  <div class="bg-watermark" aria-hidden="true">BOMAYE</div>
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
 
-  <div class="page">
+<!-- ═══════ PRELOADER ═══════ -->
+<div id="preloader" aria-hidden="true">
+  <div class="loader-logo">BOMAYE</div>
+  <div class="loader-line" id="loader-line"></div>
+  <div class="loader-sub">MUNICH · PINEAPPLE PARK</div>
+</div>
+<script>if(sessionStorage.getItem('introShown')){var _p=document.getElementById('preloader');if(_p)_p.style.display='none';}</script>
 
-    <!-- Top bar -->
-    <header class="topbar">
-      <div class="logo-lockup">
-        <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="logo-img" />
-      </div>
-      <div class="topbar-badge">Early Access</div>
-    </header>
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
 
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-eyebrow fade-up visible">MÜNCHENS NEUES PREMIUM-BOXGYM</div>
+    <button class="back-btn" type="button" onclick="history.back()" aria-label="Zurück">
+      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+    </button>
 
-      <h1 class="hero-headline fade-up delay-1 visible">
-        <span class="line-white">IT'S NOT A GYM.</span>
-        <span class="line-gold">IT'S PASSION.</span>
-      </h1>
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <button class="nav-link" onclick="nav('home')" type="button">HOME</button>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ÜBER UNS</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <button class="btn btn--gold btn--sm" onclick="nav('home','pricing')" type="button">MITGLIED WERDEN</button>
+    </nav>
 
-      <p class="hero-sub fade-up delay-2 visible">Coming Soon — Munich</p>
+    <button class="burger" onclick="toggleMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
 
-      <p class="hero-desc fade-up delay-3 visible">
-        <strong>Nur für die Ersten.</strong> Early Bird Members erhalten exklusive Konditionen — dauerhaft.
-      </p>
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
+  <button class="mn-item" onclick="mobileNav('home')" type="button" style="--mn-i:0">HOME</button>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:3">ÜBER UNS</a>
+  <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
+  <button class="btn btn--gold mn-cta" onclick="mobileNav('home','pricing')" type="button" style="--mn-i:5">
+    MITGLIED WERDEN
+  </button>
+</div>
 
-      <div class="gold-divider fade-up delay-3 visible" aria-hidden="true">
-        <i class="gold-divider-icon fa-solid fa-boxing-glove"></i>
-      </div>
 
-      <div class="spots-counter-hero fade-up delay-4 visible" aria-live="polite" aria-label="Vergebene Early Bird Plätze">
-        <div class="spots-counter-row">
-          <span class="spots-number-big" id="spots-count">0</span>
-          <span class="spots-counter-sep" aria-hidden="true">/</span>
-          <span class="spots-number-total">300</span>
-        </div>
-        <div class="spots-label-upper">EARLY BIRD PLÄTZE VERGEBEN</div>
-        <div class="spots-scarcity-line">
-          <span class="spots-dot"></span>
-          <span>Begrenzt auf 300 Mitglieder</span>
-        </div>
-      </div>
-    </section>
 
-    <!-- Conversion Zone: Pricing → Form (state-based, no scroll) -->
-    <div class="conversion-zone" id="conversion-zone">
-
-    <!-- Pricing / Early Bird Section -->
-    <section class="pricing-section conv-view" id="pricing-section" aria-label="Early Bird Preise">
-
-      <div class="pricing-header fade-up">
-        <div class="pricing-eyebrow-tag">Early Bird Member</div>
-        <h2 class="pricing-headline">DEIN EINSTIEG BEGINNT JETZT</h2>
-        <p class="pricing-sub">Werde Teil der ersten Generation von BOMAYE Athleten.</p>
-      </div>
-
-      <div class="pricing-grid">
-
-        <!-- BOMAYE KIDS -->
-        <div class="pricing-card fade-up delay-1">
-          <div class="early-bird-badge">
-            <i class="fa-solid fa-bolt"></i>
-            Early Bird
-          </div>
-          <div class="card-category">BOMAYE KIDS</div>
-          <div class="card-age">6 – 9 Jahre</div>
-          <div class="card-divider"></div>
-          <div class="card-pricing">
-            <div class="card-price-label">Early Bird Preis</div>
-            <div class="card-price-main">
-              <span class="card-price-amount">13,90 €</span>
-              <span class="card-price-unit">/ Woche</span>
-            </div>
-            <div class="card-price-regular">
-              <span>Danach:</span>
-              <span class="card-price-regular-amount">16,90 € / Woche</span>
-            </div>
-          </div>
-          <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="kids">
-            Jetzt Mitglied werden
-          </button>
-        </div>
-
-        <!-- BOMAYE YOUTH -->
-        <div class="pricing-card fade-up delay-2">
-          <div class="early-bird-badge">
-            <i class="fa-solid fa-bolt"></i>
-            Early Bird
-          </div>
-          <div class="card-category">BOMAYE YOUTH</div>
-          <div class="card-age">10 – 17 Jahre</div>
-          <div class="card-divider"></div>
-          <div class="card-pricing">
-            <div class="card-price-label">Early Bird Preis</div>
-            <div class="card-price-main">
-              <span class="card-price-amount">15,90 €</span>
-              <span class="card-price-unit">/ Woche</span>
-            </div>
-            <div class="card-price-regular">
-              <span>Danach:</span>
-              <span class="card-price-regular-amount">18,90 € / Woche</span>
-            </div>
-          </div>
-          <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="youth">
-            Jetzt Mitglied werden
-          </button>
-        </div>
-
-        <!-- BOMAYE UNLIMITED — highlighted premium card -->
-        <div class="pricing-card is-premium fade-up delay-3">
-          <div class="card-premium-badge">Empfohlen</div>
-          <div class="early-bird-badge">
-            <i class="fa-solid fa-bolt"></i>
-            Early Bird
-          </div>
-          <div class="card-category">BOMAYE UNLIMITED</div>
-          <div class="card-age">18+ Jahre</div>
-          <div class="card-divider"></div>
-          <div class="card-pricing">
-            <div class="card-price-label">Early Bird Preis</div>
-            <div class="card-price-main">
-              <span class="card-price-amount">18,90 €</span>
-              <span class="card-price-unit">/ Woche</span>
-            </div>
-            <div class="card-price-regular">
-              <span>Danach:</span>
-              <span class="card-price-regular-amount">21,90 € / Woche</span>
-            </div>
-          </div>
-          <div class="card-urgency">Exklusiver Early Bird Preis. Dauerhaft. Solange Plätze verfügbar.</div>
-          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults">
-            Jetzt Mitglied werden
-          </button>
-        </div>
-
-      </div>
-
-      <!-- Family Access CTA -->
-      <div class="family-cta-row fade-up">
-        <button type="button" class="family-access-btn" id="family-access-btn">
-          <i class="fa-solid fa-users" aria-hidden="true"></i>
-          Train together &amp; save
-        </button>
-        <p class="family-cta-note">Bis zu 4 Familienmitglieder im Early Bird Preis enthalten.</p>
-        <p class="family-cta-sub">Gültig für Familien aus demselben Haushalt.</p>
-      </div>
-
-    </section>
-
-    <!-- Embedded checkout (revealed when a pricing CTA is clicked) -->
-    <section id="checkout-section" aria-label="Mitgliedschaft abschließen">
-      <div id="checkout-loader" aria-hidden="true">
-        <div class="checkout-spinner"></div>
-      </div>
-      <iframe
-        id="checkout-frame"
-        title="Mitgliedschaft abschließen"
-        allow="payment"
-        allowpaymentrequest>
-      </iframe>
-    </section>
-
-    <!-- Lead Capture Form (hidden until pricing CTA clicked) -->
-    <section class="form-section conv-view" id="form-section" style="display:none;">
-      <div class="form-card fade-up delay-5 visible">
-
-        <!-- Success state: two sub-states -->
-        <div class="form-success" id="form-success" role="alert" aria-live="polite">
-          <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="form-success-logo" />
-
-          <!-- Pending: shown immediately after form submit -->
-          <div id="success-pending">
-            <div class="form-success-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
-            <div class="form-success-title">E-Mail bestätigen.</div>
-            <p class="form-success-msg">
-              Wir haben dir eine Bestätigungs-E-Mail geschickt.<br />
-              Klicke den Link darin, um deinen Early Bird Spot zu sichern.<br /><br />
-              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Bitte prüfe auch deinen Spam-Ordner.</strong>
-            </p>
-          </div>
-
-          <!-- Verified: shown after email confirmation (?verified=1) -->
-          <div id="success-verified" style="display:none;">
-            <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-            <div class="form-success-title">Du bist dabei.</div>
-            <p class="form-success-msg">
-              Dein Early Bird Platz ist gesichert.<br />
-              Wir melden uns, sobald die Türen öffnen.<br /><br />
-              <strong style="color:rgba(255,255,255,0.75);font-weight:500;">Willkommen in der Familie. — BOMAYE GYM Munich.</strong>
-            </p>
-          </div>
-        </div>
-
-        <!-- Form -->
-        <form id="earlybird-form" novalidate>
-          <p class="form-title">Starte deine Mitgliedschaft</p>
-          <p class="form-subtitle">In weniger als 60 Sekunden gesichert.</p>
-
-          <!-- Step indicator -->
-          <div class="step-indicator" aria-hidden="true">
-            <div class="step-dot active" id="dot-1">1</div>
-            <div class="step-line" id="line-12"></div>
-            <div class="step-dot" id="dot-2">2</div>
-            <div class="step-line" id="line-23"></div>
-            <div class="step-dot" id="dot-3">3</div>
-          </div>
-
-          <!-- ── Step 1: Goal selection ── -->
-          <div class="form-step active" id="step-1">
-
-            <!-- Selected plan badge (shown after pricing card click) -->
-            <div class="selected-plan-badge" id="selected-plan-badge">
-              <span class="selected-plan-icon"><i class="fa-solid fa-bolt"></i></span>
-              <span id="selected-plan-name">—</span>
-              <a href="#" class="selected-plan-change" id="btn-change-plan">Plan ändern</a>
-            </div>
-
-            <!-- Prompt shown when no plan selected (hidden when entering from pricing CTA) -->
-            <div class="no-plan-prompt" id="no-plan-prompt" style="display:none;">
-              <a href="#" id="no-plan-link">↑ Wähle zuerst deinen Plan</a>
-            </div>
-
-            <div class="goal-section-header">
-              <p class="goal-section-title">Was ist dein Hauptziel?</p>
-              <p class="goal-section-sub">Wir nutzen das, um dich bestmöglich einzuordnen. Du kannst trotzdem alle Kurse nutzen.</p>
-            </div>
-            <div class="goal-grid" role="group" aria-label="Ziel auswählen">
-              <button type="button" class="goal-btn" data-goal="boxen" aria-pressed="false">
-                <i class="fa-solid fa-boxing-glove"></i>Boxen lernen
-              </button>
-              <button type="button" class="goal-btn" data-goal="kickboxen" aria-pressed="false">
-                <i class="fa-solid fa-hand-fist"></i>Kickboxen lernen
-              </button>
-              <button type="button" class="goal-btn" data-goal="fitness" aria-pressed="false">
-                <i class="fa-solid fa-heart-pulse"></i>Fitter werden
-              </button>
-              <button type="button" class="goal-btn" data-goal="abnehmen" aria-pressed="false">
-                <i class="fa-solid fa-fire"></i>Gewicht verlieren
-              </button>
-              <button type="button" class="goal-btn" data-goal="kraft" aria-pressed="false">
-                <i class="fa-solid fa-dumbbell"></i>Kraft &amp; Athletik
-              </button>
-              <button type="button" class="goal-btn" data-goal="wettkampf" aria-pressed="false">
-                <i class="fa-solid fa-trophy"></i>Wettkämpfe bestreiten
-              </button>
-            </div>
-
-            <input type="hidden" name="category" id="cs-category" value="" />
-            <input type="hidden" name="goal" id="cs-goal" value="" />
-
-            <div class="step-nav">
-              <button type="button" class="btn-next" id="step1-next">
-                Weiter <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- ── Step 2: Personal info ── -->
-          <div class="form-step" id="step-2">
-            <div class="field-row">
-              <div class="form-group">
-                <label class="field-label" for="cs-firstname">Vorname *</label>
-                <input class="field-input" type="text" id="cs-firstname" name="firstname"
-                  placeholder="Max" autocomplete="given-name" required />
-              </div>
-              <div class="form-group">
-                <label class="field-label" for="cs-lastname">Nachname *</label>
-                <input class="field-input" type="text" id="cs-lastname" name="lastname"
-                  placeholder="Mustermann" autocomplete="family-name" required />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="field-label" for="cs-email">E-Mail-Adresse *</label>
-              <input class="field-input" type="email" id="cs-email" name="email"
-                placeholder="deine@email.de" autocomplete="email" required />
-            </div>
-
-            <div class="field-row">
-              <div class="form-group">
-                <label class="field-label" for="cs-phone">Telefon <span style="opacity:.35;font-size:.85em;">(opt.)</span></label>
-                <input class="field-input" type="tel" id="cs-phone" name="phone"
-                  placeholder="+49 89 …" autocomplete="tel" />
-              </div>
-              <div class="form-group">
-                <label class="field-label" for="cs-dob">Geburtsdatum *</label>
-                <input class="field-input" type="date" id="cs-dob" name="dob" autocomplete="bday" required />
-              </div>
-            </div>
-
-            <div class="step-nav">
-              <button type="button" class="btn-back" id="step2-back">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-              <button type="button" class="btn-next" id="step2-next">
-                Weiter <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- ── Step 3: Address + submit ── -->
-          <div class="form-step" id="step-3">
-            <div class="form-group">
-              <label class="field-label" for="cs-street">Straße &amp; Hausnummer *</label>
-              <input class="field-input" type="text" id="cs-street" name="street"
-                placeholder="Musterstraße 12" autocomplete="street-address" required />
-            </div>
-
-            <div class="field-row">
-              <div class="form-group">
-                <label class="field-label" for="cs-plz">PLZ *</label>
-                <input class="field-input" type="text" id="cs-plz" name="postalCode"
-                  placeholder="80639" autocomplete="postal-code" inputmode="numeric" maxlength="5" required />
-              </div>
-              <div class="form-group">
-                <label class="field-label" for="cs-city">Stadt *</label>
-                <input class="field-input" type="text" id="cs-city" name="city"
-                  placeholder="Munich" autocomplete="address-level2" required />
-              </div>
-            </div>
-
-            <div class="step-nav">
-              <button type="button" class="btn-back" id="step3-back">
-                <i class="fa-solid fa-arrow-left"></i>
-              </button>
-              <button type="submit" class="btn-next submit-btn" style="padding:20px 24px;">
-                <i class="fa-solid fa-bolt"></i>
-                Early Bird Zugang sichern
-              </button>
-            </div>
-
-            <p class="form-note" style="margin-top:14px;">
-              <i class="fa-solid fa-lock"></i>
-              Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM Munich.
-            </p>
-          </div>
-        </form>
-
-      </div>
-    </section>
-
-    </div><!-- /.conversion-zone -->
-
-    <!-- FAQ Section -->
-    <section class="faq-inline-section" id="faq-inline" aria-label="Häufige Fragen">
-      <div class="faq-inline-inner">
-        <div class="faq-inline-header">
-          <span class="faq-inline-eyebrow">Support</span>
-          <h2 class="faq-inline-title">Häufige Fragen</h2>
-        </div>
-        <div class="faq-inline-list">
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Wann startet das Gym?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Die Eröffnung ist für 2026 geplant. Als Early Bird wirst du rechtzeitig informiert.</p>
-            </div>
-          </div>
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Kann ich alle Kurse nutzen?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Ja. Mit deiner Mitgliedschaft hast du Zugriff auf das gesamte Kursangebot.</p>
-            </div>
-          </div>
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Wie läuft das mit Wettkämpfen?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Wir wählen unsere Wettkämpfer gezielt aus. Wenn du Potenzial zeigst und regelmäßig trainierst, kannst du Teil unserer Wettkampfgruppe werden. Aktive Wettkämpfer erhalten Sonderkonditionen.</p>
-              <p style="margin-top:10px;"><strong style="color:rgba(255,255,255,0.75);">Wichtig:</strong> Unentschuldigtes Fehlen kann zum Ausschluss aus der Wettkampfgruppe führen.</p>
-            </div>
-          </div>
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Ich bin bereits Wettkämpfer – was jetzt?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Sprich uns direkt an. Wir finden eine individuelle Lösung für dich.</p>
-            </div>
-          </div>
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Was ist der Early Bird Platz?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Du sicherst dir einen der limitierten Plätze vor der offiziellen Eröffnung – mit exklusiven Vorteilen.</p>
-            </div>
-          </div>
-
-          <div class="faq-inline-item">
-            <button class="faq-inline-btn" aria-expanded="false">
-              <span>Gibt es einen Familienrabatt?</span>
-              <i class="fa-solid fa-chevron-down faq-inline-chevron"></i>
-            </button>
-            <div class="faq-inline-answer">
-              <p>Ja. Wenn sich 3 Mitglieder aus derselben Familie bzw. aus demselben Haushalt anmelden, trainiert das 4. Familienmitglied kostenlos.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Features strip -->
-    <div class="features" aria-label="Was dich erwartet">
-      <div class="feature-item fade-up visible">
-        <div class="feature-icon"><i class="fa-solid fa-boxing-glove"></i></div>
-        <div class="feature-name">Premium Boxtraining</div>
-        <div class="feature-desc">Professionelle Trainer, kleine Gruppen, maximale Qualität.</div>
-      </div>
-      <div class="feature-item fade-up delay-1 visible">
-        <div class="feature-icon"><i class="fa-solid fa-child-reaching"></i></div>
-        <div class="feature-name">Kids &amp; Jugend</div>
-        <div class="feature-desc">Altersgerechte Programme ab 4 Jahren — Charakter, Disziplin, Spaß.</div>
-      </div>
-      <div class="feature-item fade-up delay-2 visible">
-        <div class="feature-icon"><i class="fa-solid fa-trophy"></i></div>
-        <div class="feature-name">Early-Bird-Vorteile</div>
-        <div class="feature-desc">Sonderkonditionen und Prioritätszugang für die ersten Mitglieder.</div>
-      </div>
-      <div class="feature-item fade-up delay-3 visible">
-        <div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
-        <div class="feature-name">Munich</div>
-        <div class="feature-desc">Zentrale Lage — bald mehr Details zu Adresse und Eröffnung.</div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="cs-footer">
-      <img src="/assets/images/bomaye-logo.png" alt="BOMAYE GYM" class="cs-footer-logo-img" />
-      <p class="cs-footer-text">
-        &copy; 2025 BOMAYE GYM MUNICH &mdash;
-        <a href="/impressum.html">Impressum</a>
-      </p>
-    </footer>
-
-  </div><!-- /.page -->
-
-  <!-- ── Family Access Modal ──────────────────────────────────────── -->
-  <div class="family-overlay" id="family-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="family-modal-title">
-    <div class="family-modal">
-      <button type="button" class="family-modal-close" id="family-modal-close" aria-label="Modal schließen">
-        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+<!-- ═══════ FAMILY MEMBERSHIP MODAL ═══════ -->
+<div id="family-modal" role="dialog" aria-label="Family Membership" aria-modal="true">
+  <div class="modal-card-wrapper">
+    <div class="family-modal-card">
+      <button class="family-modal-close" onclick="closeFamilyModal()" type="button" aria-label="Schließen">
+        <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <p class="family-modal-eyebrow">Early Bird — Family Access</p>
-      <h2 class="family-modal-title" id="family-modal-title">TRAIN<br>TOGETHER</h2>
-      <p class="family-modal-sub">
-        3 Familienmitglieder anmelden — das 4. trainiert kostenlos.<br />
-        Ein Early-Bird-Preis. Dauerhaft gesichert.
-      </p>
-      <p class="family-modal-notice">
-        <i class="fa-solid fa-house" aria-hidden="true"></i>
-        Nur gültig für Familienmitglieder aus demselben Haushalt.
-      </p>
-
-      <!-- Success state -->
-      <div id="family-success" style="display:none; text-align:center; padding:16px 0 8px;">
-        <div style="font-size:2.6rem; color:var(--gold); margin-bottom:18px; filter:drop-shadow(0 0 20px rgba(198,164,90,0.4));">
-          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-        </div>
-        <div style="font-family:var(--font-display); font-size:1.9rem; letter-spacing:0.05em; color:#fff; margin-bottom:12px; line-height:1;">
-          Fast geschafft.
-        </div>
-        <p style="font-size:0.88rem; color:var(--muted); line-height:1.8;">
-          Bestätige deine E-Mail, um den Family-Zugang zu sichern.<br />
-          <span style="display:block; margin-top:10px; font-size:0.76rem; color:rgba(255,255,255,0.28);">
-            Prüfe dein Postfach — wir haben dir einen Bestätigungslink gesendet.
-          </span>
-        </p>
+      <div class="family-modal-header">
+        <span class="family-label">COMMUNITY BENEFIT</span>
+        <h2 class="family-headline" id="family-modal-title">FAMILY MEMBERSHIP</h2>
+        <p class="family-sub">Train together. Grow together.</p>
       </div>
 
-      <!-- Form -->
-      <form id="family-form" novalidate>
+      <div class="family-modal-body">
+        <p class="family-desc" id="family-modal-support">Wenn 3 Familienmitglieder eine aktive Mitgliedschaft bei Bomaye Gym haben, trainiert jede weitere Person aus derselben Familie kostenfrei.</p>
+        <ul class="family-bullets" id="family-modal-bullets">
+          <li><i class="fa-solid fa-check"></i> Eltern &amp; Kinder</li>
+          <li><i class="fa-solid fa-check"></i> Geschwister</li>
+          <li><i class="fa-solid fa-check"></i> Gleicher Haushalt</li>
+        </ul>
+      </div>
 
-        <!-- Main registrant -->
-        <span class="family-section-label">Kontaktperson</span>
+      <div class="fif-success" id="fif-success" hidden>
+        <p class="fif-success-icon">✅</p>
+        <h3 class="fif-success-title" id="fif-success-title">Anfrage gesendet</h3>
+        <p class="fif-success-text" id="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+      </div>
 
-        <div class="field-row" style="margin-bottom:14px;">
-          <div class="form-group">
-            <label class="field-label" for="fam-firstname">Vorname *</label>
-            <input class="field-input" type="text" id="fam-firstname" autocomplete="given-name" placeholder="Max" />
+      <form class="family-inquiry-form" id="family-inquiry-form" onsubmit="submitFamilyInquiry(event)" novalidate>
+
+        <!-- 1. Anzahl Familienmitglieder -->
+        <div class="fif-field">
+          <label for="fif-count">Anzahl Familienmitglieder <span class="fif-required">*</span></label>
+          <select id="fif-count" name="count" onchange="updateFamilyMemberFields()">
+            <option value="">Bitte wählen</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6+</option>
+          </select>
+        </div>
+
+        <!-- 2. Dynamische Namen-Felder -->
+        <div id="fif-member-names" class="fif-member-names"></div>
+
+        <!-- 3. Kontaktdaten -->
+        <div class="fif-row">
+          <div class="fif-field">
+            <label for="fif-name">Dein Name <span class="fif-required">*</span></label>
+            <input type="text" id="fif-name" name="name" placeholder="Dein Name">
+            <span class="fif-error" id="fif-name-error" aria-live="polite"></span>
           </div>
-          <div class="form-group">
-            <label class="field-label" for="fam-lastname">Nachname *</label>
-            <input class="field-input" type="text" id="fam-lastname" autocomplete="family-name" placeholder="Mustermann" />
+          <div class="fif-field">
+            <label for="fif-email">E-Mail <span class="fif-required">*</span></label>
+            <input type="email" id="fif-email" name="email" placeholder="deine@email.de">
+            <span class="fif-error" id="fif-email-error" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="fif-field">
+          <label for="fif-phone">Telefon <span class="fif-required">*</span></label>
+          <input type="tel" id="fif-phone" name="phone" placeholder="0176 000 000">
+          <span class="fif-error" id="fif-phone-error" aria-live="polite"></span>
+        </div>
+
+        <!-- 4. Gleicher Haushalt -->
+        <div class="fif-field fif-field--radio">
+          <label>Gleicher Haushalt?</label>
+          <div class="fif-radio-group" role="radiogroup" aria-label="Gleicher Haushalt">
+            <label class="fif-radio-card">
+              <input type="radio" name="household" value="Ja" required onchange="handleHouseholdChange(this.value)">
+              <span class="fif-radio-card__box">
+                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                <span class="fif-radio-card__text">Ja</span>
+              </span>
+            </label>
+            <label class="fif-radio-card">
+              <input type="radio" name="household" value="Nein" onchange="handleHouseholdChange(this.value)">
+              <span class="fif-radio-card__box">
+                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                <span class="fif-radio-card__text">Nein</span>
+              </span>
+            </label>
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="field-label" for="fam-email">E-Mail *</label>
-          <input class="field-input" type="email" id="fam-email" autocomplete="email" placeholder="deine@email.de" />
+        <!-- 5. Adresse (nur bei Nein) -->
+        <div id="fif-address-section" class="fif-address-section" hidden>
+          <p class="fif-address-label">Adresse der Familienmitglieder</p>
+          <div class="fif-field">
+            <label for="fif-street">Straße &amp; Hausnummer</label>
+            <input type="text" id="fif-street" name="address_street" placeholder="Musterstraße 1">
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="fif-plz">PLZ</label>
+              <input type="text" id="fif-plz" name="address_plz" placeholder="80639">
+            </div>
+            <div class="fif-field">
+              <label for="fif-city">Stadt</label>
+              <input type="text" id="fif-city" name="address_city" placeholder="München">
+            </div>
+          </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:6px;">
-          <label class="field-label" for="fam-phone">Telefon <span style="opacity:.4;font-size:.85em;">(optional)</span></label>
-          <input class="field-input" type="tel" id="fam-phone" autocomplete="tel" placeholder="+49 89 …" />
+        <!-- 6. Nachricht -->
+        <div class="fif-field">
+          <label for="fif-message">Nachricht (optional)</label>
+          <textarea id="fif-message" name="message" rows="3" placeholder="Weitere Informationen..."></textarea>
         </div>
 
-        <div class="family-divider"></div>
-
-        <!-- Family members (rendered by JS) -->
-        <span class="family-section-label">Familienmitglieder</span>
-        <div id="fam-members-list"></div>
-
-        <!-- Add member button -->
-        <button type="button" class="fam-add-btn" id="fam-add-btn">
-          <i class="fa-solid fa-plus" aria-hidden="true"></i>
-          Weiteres Mitglied hinzufügen
+        <button type="submit" class="btn btn--gold btn--full">
+          <i class="fa-solid fa-paper-plane"></i> FAMILIENPLATZ ANFRAGEN
         </button>
-
-        <!-- Global form error -->
-        <p id="family-form-error" class="fam-err-text" style="text-align:center; display:none;"></p>
-
-        <button type="submit" class="submit-btn" id="family-submit-btn">
-          <i class="fa-solid fa-users" aria-hidden="true"></i>
-          Family Access sichern
-        </button>
-
-        <p class="form-note" style="margin-top:14px;">
-          <i class="fa-solid fa-lock"></i>
-          Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
-        </p>
-
+        <p class="fif-trust">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+        <p class="fif-pflichtfelder">* Pflichtfelder</p>
       </form>
+    </div>
+    <div class="modal-scroll-fade" aria-hidden="true">
+      <span class="modal-scroll-fade__hint"><i class="fa-solid fa-chevron-down"></i> Weitere Felder unten</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CORPORATE BOXING MODAL ═══════ -->
+<div id="corporate-modal" role="dialog" aria-label="Corporate Boxing Anfrage" aria-modal="true">
+  <div class="modal-card-wrapper">
+  <div class="family-modal-card">
+    <button class="family-modal-close" onclick="closeCorporateModal()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="family-modal-header">
+      <span class="family-label">TEAMBUILDING</span>
+      <h2 class="family-headline" id="corporate-modal-title">CORPORATE BOXING</h2>
+      <p class="family-sub" id="corporate-modal-support">Stärke dein Team im Boxring.</p>
+    </div>
+
+    <div id="cbf-success" hidden>
+      <p class="fif-success-icon">✅</p>
+      <h3 class="fif-success-title" id="cbf-success-title">Anfrage gesendet</h3>
+      <p class="fif-success-text" id="cbf-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+    </div>
+
+    <form class="family-inquiry-form" id="corporate-inquiry-form" onsubmit="submitCorporateInquiry(event)" novalidate>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-name">Name <span class="fif-required">*</span></label>
+          <input type="text" id="cbf-name" name="name" placeholder="Dein Name">
+          <span class="fif-error" id="cbf-name-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-email">E-Mail <span class="fif-required">*</span></label>
+          <input type="email" id="cbf-email" name="email" placeholder="deine@email.de">
+          <span class="fif-error" id="cbf-email-error" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-phone">Telefon <span class="fif-required">*</span></label>
+          <input type="tel" id="cbf-phone" name="phone" placeholder="0176 000 000">
+          <span class="fif-error" id="cbf-phone-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-company">Firma / Organisation</label>
+          <input type="text" id="cbf-company" name="company" placeholder="Dein Unternehmen">
+        </div>
+      </div>
+      <div class="fif-row">
+        <div class="fif-field">
+          <label for="cbf-persons">Anzahl Personen <span class="fif-required">*</span></label>
+          <select id="cbf-persons" name="persons">
+            <option value="">Bitte wählen</option>
+            <option value="5–10 Personen">5–10 Personen</option>
+            <option value="11–20 Personen">11–20 Personen</option>
+            <option value="21–50 Personen">21–50 Personen</option>
+            <option value="50+ Personen">50+ Personen</option>
+          </select>
+          <span class="fif-error" id="cbf-persons-error" aria-live="polite"></span>
+        </div>
+        <div class="fif-field">
+          <label for="cbf-date">Gewünschtes Datum <span class="fif-required">*</span></label>
+          <input type="date" id="cbf-date" name="date">
+          <span class="fif-error" id="cbf-date-error" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="fif-field">
+        <label for="cbf-time">Gewünschte Uhrzeit / Zeitraum <span class="fif-required">*</span></label>
+        <input type="text" id="cbf-time" name="time" placeholder="z.B. 18:00–20:00 Uhr">
+        <span class="fif-error" id="cbf-time-error" aria-live="polite"></span>
+      </div>
+      <div class="fif-field fif-field--radio">
+        <label>Catering gewünscht?</label>
+        <div class="fif-radio-group" role="radiogroup" aria-label="Catering gewünscht">
+          <label class="fif-radio-card">
+            <input type="radio" name="catering" value="Ja">
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Ja</span>
+            </span>
+          </label>
+          <label class="fif-radio-card">
+            <input type="radio" name="catering" value="Nein">
+            <span class="fif-radio-card__box">
+              <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+              <span class="fif-radio-card__text">Nein</span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="fif-field">
+        <label for="cbf-event">Art des Events / Anlass</label>
+        <input type="text" id="cbf-event" name="event" placeholder="z.B. Teambuilding, Firmenfeier, Incentive …">
+      </div>
+      <div class="fif-field">
+        <label for="cbf-message">Nachricht / Wünsche</label>
+        <textarea id="cbf-message" name="message" rows="3" placeholder="Weitere Informationen, spezielle Wünsche …"></textarea>
+      </div>
+      <button type="submit" class="btn btn--gold btn--full">
+        <i class="fa-solid fa-paper-plane"></i> CORPORATE ANFRAGE SENDEN
+      </button>
+      <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
+      <p class="fif-pflichtfelder">* Pflichtfelder</p>
+    </form>
+  </div>
+  <div class="modal-scroll-fade" aria-hidden="true">
+    <span class="modal-scroll-fade__hint"><i class="fa-solid fa-chevron-down"></i> Weitere Felder unten</span>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" class="booking-modal" role="dialog" aria-modal="true" aria-label="Mitgliedschaft buchen">
+  <div class="booking-modal-overlay" onclick="closeBookingModal()"></div>
+  <div class="booking-modal-card">
+    <button class="booking-modal-close" onclick="closeBookingModal()" aria-label="Schließen" type="button">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="booking-modal-header">
+      <i class="fa-solid fa-bolt booking-modal-header-icon"></i>
+      <span class="booking-modal-title">MITGLIEDSCHAFT SICHERN</span>
+    </div>
+    <div class="booking-modal-body">
+      <div id="booking-modal-loading" class="booking-modal-loading">
+        <div class="booking-modal-spinner"></div>
+        <p class="booking-modal-loading-text">Mitgliedschaft wird geladen…</p>
+      </div>
+      <iframe id="booking-iframe" src="" width="100%" height="700" style="border:none;visibility:hidden;" title="Mitgliedschaft buchen"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     HOME VIEW
+══════════════════════════════════════════════════════════ -->
+<div id="view-home" class="view active">
+
+  <!-- Announcement bar — shown/hidden + text controlled by Sanity -->
+  <div id="sanity-announcement-bar" style="display:none;background:var(--gold);color:#080808;text-align:center;padding:0.55rem 1rem;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2px;" role="alert">
+    <span id="sanity-announcement-text"></span>
+  </div>
+
+  <!-- SEO heading – visually hidden, preserves hero branding -->
+  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Boxgym München – Boxtraining für Anfänger und Fortgeschrittene</h1>
+
+  <!-- ── HERO ── -->
+  <section id="hero" aria-label="Hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
+        <i class="fa-solid fa-circle-dot"></i>
+        <span>THE SPIRIT OF 1974 · MUNICH</span>
+        <i class="fa-solid fa-circle-dot"></i>
+      </a>
+      <h2 class="hero-h1">
+        IT'S NOT A GYM.<br>
+        <span class="shimmer">IT'S PASSION.</span>
+      </h2>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Nur 300 Plätze. Danach wird es teurer.</p>
+      <p class="hero-brand-tagline">BECOME BOMAYE.</p>
+      <div class="hero-ctas">
+        <button class="btn btn--gold btn--hero-primary" onclick="nav('home','pricing')" type="button">
+          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+        </button>
+        <a href="#dna" onclick="event.preventDefault();nav('home','dna');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
+          <i class="fa-solid fa-circle-play"></i> WARUM BOMAYE
+        </a>
+      </div>
+      <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">Landestrainer</span>
+          <span class="hero-cred-sub">Bayerischer Box Verband</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">DBV A Trainer Lizenz</span>
+          <span class="hero-cred-sub">Deutscher Box Verband</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">20+ Jahre Erfahrung</span>
+          <span class="hero-cred-sub">Wettkampf und Leistungssport</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">Zahle ab Opening</span>
+          <span class="hero-cred-sub">Dein Preis bleibt dauerhaft</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-hint-line"></div>
+    </div>
+  </section>
+
+  <!-- ── DNA / PHILOSOPHY TEASER ── -->
+  <section id="dna" class="sec--smoke">
+    <div class="container">
+      <div class="dna-inner">
+        <div class="dna-text reveal">
+          <span class="tag tag--light">AUTHORITY</span>
+          <h2 style="margin-top:1.2rem;">BUILT BY EXPERIENCE.<br><span class="gold">PROVEN IN THE RING.</span></h2>
+          <p>Jahre im Coaching. Athleten auf nationalem Niveau. Echte Kämpfer. Echte Ergebnisse.<br><br><strong style="color:var(--white);">Jetzt an einem Ort.</strong></p>
+          <div style="margin-top:2rem;">
+            <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+              MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- Right column: logo brand visual — desktop only -->
+        <div class="dna-visual reveal delay-2" aria-hidden="true">
+          <img src="/assets/images/bomaye-logo.png" alt="" class="dna-visual-logo"
+               loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+          <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
+          <div class="dna-visual-sub">GYM MUNICH</div>
+          <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.4);"></div>
+          <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.5);">EST. 2026 · PINEAPPLE PARK</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DIFFERENTIATOR ── -->
+  <div class="diff-block">
+    <div class="container">
+      <div class="diff-inner">
+        <div class="diff-card reveal">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-fist-raised"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>DEIN START BEGINNT HIER.</strong>
+            <span>Du meldest dich nicht einfach an. Du wirst Teil davon.</span>
+          </div>
+        </div>
+        <div class="diff-card reveal delay-1">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>DISZIPLIN. RESPEKT. KAMPF.</strong>
+            <span>Hier beginnt dein Weg.</span>
+          </div>
+        </div>
+        <div class="diff-card reveal delay-2">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>REAL FIGHTERS. REAL RESULTS.</strong>
+            <span>Coached by champions. Trained for life.</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script>
-    // ── Category hidden field ────────────────────────────────────
-    const catHidden = document.getElementById('cs-category');
-    const planBadge = document.getElementById('selected-plan-badge');
-    const planNameEl = document.getElementById('selected-plan-name');
-    const noPlanPrompt = document.getElementById('no-plan-prompt');
+  <!-- ── TRAINING DISCIPLINES — stacked sticky scroll ── -->
+  <section id="disciplines">
+    <!-- Section intro -->
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--dark">KURSE</span>
+        <h2 style="margin-top:1rem;">TRAIN LIKE A <span class="gold">FIGHTER.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Drei Disziplinen. Ein Ziel: besser werden.</p>
+      </div>
+    </div>
 
-    const PLAN_NAMES = { kids: 'BOMAYE KIDS', youth: 'BOMAYE YOUTH', adults: 'BOMAYE UNLIMITED' };
+    <!-- Stacked sticky panels -->
+    <div class="disc-stack" id="disc-stack">
 
-    function selectPlan(cat) {
-      catHidden.value = cat;
-      if (planNameEl) planNameEl.textContent = PLAN_NAMES[cat] || cat;
-      if (planBadge) planBadge.classList.add('visible');
-      if (noPlanPrompt) noPlanPrompt.style.display = 'none';
+      <a class="disc-panel disc-panel--clickable" href="/kurse#boxing" aria-label="Boxing Kurs ansehen" style="text-decoration:none;color:inherit;display:block;">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">01 / 03</span>
+          <h3 class="disc-panel__title">BOXING</h3>
+          <p class="disc-panel__desc">Technik, Sparring und echtes Boxtraining für alle Levels — von Anfänger bis Wettkämpfer.</p>
+        </div>
+      </a>
+
+      <a class="disc-panel disc-panel--clickable" href="/kurse#kickboxing" aria-label="Kickboxing Kurs ansehen" style="text-decoration:none;color:inherit;display:block;">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">02 / 03</span>
+          <h3 class="disc-panel__title">KICKBOXING</h3>
+          <p class="disc-panel__desc">Technik, Fitness und Ausdauertraining — gecoacht von einem echten Kickbox-Weltmeister.</p>
+        </div>
+      </a>
+
+      <a class="disc-panel disc-panel--clickable" href="/kurse#strength" aria-label="Strength & Conditioning Kurs ansehen" style="text-decoration:none;color:inherit;display:block;">
+        <div class="disc-panel__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+        <div class="disc-panel__content">
+          <span class="disc-panel__kicker">03 / 03</span>
+          <h3 class="disc-panel__title">STRENGTH &amp; CONDITIONING</h3>
+          <p class="disc-panel__desc">Kraft, Athletik und Explosivität — gezielt entwickelt für Kämpfer auf jedem Level.</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Post-stack CTA -->
+    <div class="container">
+      <div class="disciplines-cta reveal" style="text-align:center;">
+        <a href="/kurse" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-dumbbell"></i> ALLE KURSE
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EARLY BIRD ── -->
+  <section id="early-bird">
+    <div class="container">
+      <div class="early-bird-inner reveal">
+        <div>
+          <div class="spots-badge">
+            <span class="spots-dot"></span>
+            <span id="spots-badge-text">Early Bird — noch 300 Plätze</span>
+          </div>
+          <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD — LIMITIERT</span>
+          <h2 style="margin:1.25rem 0;">NUR 300 PLÄTZE.<br><span class="gold">WENN SIE WEG SIND, IST DER PREIS HÖHER.</span></h2>
+          <p id="sanity-eb-subtext" style="margin-bottom:1.5rem;">Wenn sie weg sind, ist der Preis höher. <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong></p>
+          <div class="eb-checklist">
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Dein Preis bleibt für immer gleich</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zugang vor offizieller Eröffnung</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze – kein Nachschub</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zahle erst ab Opening</span></div>
+          </div>
+          <button id="sanity-eb-cta" onclick="nav('home','pricing')" class="btn btn--gold" type="button">
+            <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+          </button>
+        </div>
+        <div class="eb-card">
+          <div class="eb-card-label">NOCH VERFÜGBAR</div>
+          <div class="eb-card-number" id="eb-remaining">300</div>
+          <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN NOCH VERFÜGBAR</div>
+
+          <!-- Progress bar -->
+          <div class="eb-progress" aria-label="Auslastungsanzeige">
+            <div class="eb-progress-bar">
+              <div class="eb-progress-fill" id="eb-progress-fill" style="width:0%"></div>
+            </div>
+            <div class="eb-progress-meta">
+              <span>0 BELEGT</span>
+              <span id="eb-progress-pct">0% BELEGT</span>
+              <span>300 GESAMT</span>
+            </div>
+          </div>
+
+          <div class="eb-prices">
+            <div class="eb-price-item">
+              <div class="eb-price-age">KIDS</div>
+              <div class="eb-price-amount">14,90€</div>
+              <div class="eb-price-unit">/WOCHE</div>
+            </div>
+            <div class="eb-price-item">
+              <div class="eb-price-age">JUGEND</div>
+              <div class="eb-price-amount">15,90€</div>
+              <div class="eb-price-unit">/WOCHE</div>
+            </div>
+            <div class="eb-price-item">
+              <div class="eb-price-age">AB 18</div>
+              <div class="eb-price-amount">18,90€</div>
+              <div class="eb-price-unit">/WOCHE</div>
+            </div>
+          </div>
+          <div class="eb-notice">↑ DANACH STEIGT DER PREIS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ── MEMBERSHIP PLANS ── -->
+  <section id="pricing" class="membership-section">
+    <div class="container">
+
+      <!-- Section header -->
+      <div class="sec-header reveal">
+        <span class="tag tag--gold" id="sanity-membership-badge">MEMBERSHIP</span>
+        <h2 style="margin-top:1rem;color:#fff;">CHOOSE YOUR <span class="gold">PLAN.</span></h2>
+        <p id="sanity-membership-subtext" style="color:rgba(255,255,255,0.6);margin-top:0.75rem;font-size:0.85rem;font-family:var(--font-head);letter-spacing:2px;">
+          Early Bird Preis dauerhaft gesichert.<br>Sichere dir jetzt deinen Platz vor dem Opening.
+        </p>
+        <p style="color:rgba(255,255,255,0.35);margin-top:0.6rem;font-size:0.72rem;font-family:var(--font-head);letter-spacing:1.5px;">Only 300 spots available. Once full, registration closes.</p>
+      </div>
+
+      <!-- Age group tabs -->
+      <div class="membership-tabs reveal" role="tablist" aria-label="Altersgruppe wählen">
+        <button class="mtab active" data-group="kids" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">KIDS</span>
+          <span class="mtab-age">6–9</span>
+        </button>
+        <button class="mtab" data-group="youth" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">YOUTH</span>
+          <span class="mtab-age">10–17</span>
+        </button>
+        <button class="mtab" data-group="unlimited" role="tab" type="button" onclick="selectMembershipTab(this)">
+          <span class="mtab-label">UNLIMITED</span>
+          <span class="mtab-age">18+</span>
+        </button>
+      </div>
+
+      <!-- Plan panels (one per tab) -->
+      <div class="plan-panels reveal">
+
+        <!-- KIDS PANEL -->
+        <div class="plan-panel active" id="panel-kids">
+          <div class="plan-card" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-child"></i></div>
+            <div class="plan-card-name">BOMAYE KIDS</div>
+            <div class="plan-card-age">6–9 Jahre</div>
+            <div class="plan-card-original-price">Regulär nach Early Bird: <s>17,90€ /Woche</s></div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">13,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">LESS THAN A NIGHT OUT.</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Spielerisches Training mit Struktur</li>
+              <li><i class="fa-solid fa-check"></i> Förderung von Bewegung &amp; Koordination</li>
+              <li><i class="fa-solid fa-check"></i> Disziplin &amp; Selbstbewusstsein</li>
+              <li><i class="fa-solid fa-check"></i> Sicheres Umfeld</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
+        <!-- YOUTH PANEL -->
+        <div class="plan-panel" id="panel-youth">
+          <div class="plan-card" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-child-reaching"></i></div>
+            <div class="plan-card-name">BOMAYE YOUTH</div>
+            <div class="plan-card-age">10–17 Jahre</div>
+            <div class="plan-card-original-price">Regulär nach Early Bird: <s>18,90€ /Woche</s></div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">15,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">LESS THAN A NIGHT OUT.</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Strukturierte Trainings für Technik &amp; Disziplin</li>
+              <li><i class="fa-solid fa-check"></i> Förderung von Selbstvertrauen</li>
+              <li><i class="fa-solid fa-check"></i> Einstieg ins echte Boxtraining</li>
+              <li><i class="fa-solid fa-check"></i> Community &amp; Teamgefühl</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
+        <!-- UNLIMITED PANEL -->
+        <div class="plan-panel" id="panel-unlimited">
+          <div class="plan-card plan-card--featured" role="button" tabindex="0"
+               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')">
+            <div class="plan-card-badge">EARLY BIRD</div>
+            <div class="plan-card-icon"><i class="fa-solid fa-infinity"></i></div>
+            <div class="plan-card-name">BOMAYE UNLIMITED</div>
+            <div class="plan-card-age">18+ Jahre</div>
+            <div class="plan-card-original-price">Regulär nach Early Bird: <s>21,90€ /Woche</s></div>
+            <div class="plan-card-price">
+              <span class="price-from">ab</span>
+              <span class="price-value">18,90€</span>
+              <span class="price-unit">/Woche</span>
+            </div>
+            <div class="plan-card-duration">LESS THAN A NIGHT OUT.</div>
+            <ul class="plan-card-features">
+              <li><i class="fa-solid fa-check"></i> Unlimited access to all classes</li>
+              <li><i class="fa-solid fa-check"></i> Boxing, Kickboxing &amp; Conditioning</li>
+              <li><i class="fa-solid fa-check"></i> Train like a fighter – every day</li>
+              <li><i class="fa-solid fa-check"></i> Flexible Trainingszeiten</li>
+            </ul>
+            <div class="plan-card-cta">
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+            </div>
+            <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Trust badges — conversion boosters -->
+      <div class="membership-trust reveal">
+        <div class="trust-badge"><i class="fa-solid fa-shield-check"></i><span>Lifetime Preisgarantie</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Zahle erst ab Opening</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-lock"></i><span>Sichere Buchung via Bsport</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-fire"></i><span>Limitiert auf 300 Mitglieder</span></div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="sec--faq-white">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv" id="sanity-faq-badge">FAQ</span>
+        <h2 style="margin-top:1rem;color:var(--ink);">HÄUFIGE <span class="gold-dark">FRAGEN.</span></h2>
+      </div>
+      <div class="faq-list faq-list--light">
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Brauche ich Vorerfahrung? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Nein — überhaupt nicht. Bei Bomaye holen wir dich genau dort ab, wo du stehst. Anfänger sind herzlich willkommen. Wähle einfach deine Mitgliedschaft und starte direkt mit dem Training.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90€/Woche · Jugend Boxing ab 15,90€/Woche · Erwachsene Kurse ab 18,90€/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was muss ich mitbringen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz).</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie und zahlt erst ab Opening.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es Parkplätze? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Im Pineapple Park Areal gibt es Parkmöglichkeiten. Das Gym ist auch optimal mit dem ÖPNV erreichbar — S-Bahn Hirschgarten, nur 5 Minuten zu Fuß.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es spezielle Programme für Frauen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Unser Women's Boxing Programm ist ein exklusiver Safe Space für Frauen — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Kein Vorwissen nötig.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Gibt es Rabatte für aktive Wettkämpfer? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Ja. Aktive Wettkämpfer im Vereinssport können unter bestimmten Voraussetzungen von einem ermäßigten Mitgliedsbeitrag profitieren. Sprich uns direkt an — wir finden gemeinsam eine faire Lösung.</div></div>
+        </div>
+      </div>
+      <div class="faq-cta reveal" style="text-align:center;margin-top:2.5rem;">
+        <a href="/faq" id="sanity-faq-cta" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-circle-question"></i> ALLE FAQ ANSEHEN
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LOCATION ── -->
+  <section id="location" style="padding:0;">
+    <div class="location-wrap">
+      <div class="location-info">
+        <span class="tag tag--dark">HOMEBASE</span>
+        <h2 style="margin-top:1.2rem;">PINEAPPLE<br><span class="gold">PARK.</span></h2>
+        <div class="location-detail" style="margin-top:2rem;">
+          <i class="fa-solid fa-location-dot"></i>
+          <div class="location-detail-text">
+            <strong>Adresse</strong>
+            <a href="https://www.google.com/maps/search/?api=1&query=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen" target="_blank" rel="noopener" class="location-address-link">
+              <span>Wilhelm-Hale-Straße 44<br>Tiefhof Pineapple Park<br>80639 München</span>
+            </a>
+          </div>
+        </div>
+        <div class="location-detail">
+          <i class="fa-solid fa-clock"></i>
+          <div class="location-detail-text">
+            <strong>Öffnungszeiten</strong>
+            <div class="hours-grid">
+              <span class="day">Mo – Fr</span><span>07:00 – 11:30 Uhr<br>16:00 – 22:30 Uhr</span>
+              <span class="day">Samstag</span><span>10:00 – 16:00 Uhr<br>(außer bei Veranstaltungen)</span>
+              <span class="day">Sonntag</span><span>Ruhetag (außer bei Veranstaltungen)</span>
+            </div>
+          </div>
+        </div>
+        <div class="location-detail">
+          <i class="fa-solid fa-train-subway"></i>
+          <div class="location-detail-text">
+            <strong>Anreise</strong>
+            <span>S-Bahn Hirschgarten (5 Min.)<br>Parkplätze im Pineapple Park Areal</span>
+          </div>
+        </div>
+        <div class="location-btns">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
+             target="_blank" rel="noopener" class="btn btn--gold btn--sm">
+            <i class="fa-solid fa-diamond-turn-right"></i> ROUTE PLANEN
+          </a>
+          <a href="tel:+4917621932243" class="btn btn--outline-dark btn--sm">
+            <i class="fa-solid fa-phone"></i> ANRUFEN
+          </a>
+          <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!"
+             target="_blank" rel="noopener" class="btn btn--outline-dark btn--sm">
+            <i class="fa-brands fa-whatsapp"></i> WHATSAPP
+          </a>
+        </div>
+      </div>
+      <div class="map-wrapper">
+        <div class="map-gate" id="map-gate">
+          <p>Durch das Laden stimmst du zu, dass Inhalte von OpenStreetMap geladen werden.</p>
+          <button onclick="loadMap()" class="btn btn--gold" type="button">KARTE LADEN</button>
+        </div>
+        <iframe id="map-frame"
+          title="Bomaye Gym Munich — Wilhelm-Hale-Straße 44, Pineapple Park"
+          src=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          aria-label="Standortkarte Bomaye Gym Munich">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" aria-label="Zur Startseite" class="footer-logo-link">
+            <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+          </a>
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><button onclick="nav('detail-olympic')" type="button">Olympic Boxing</button></li>
+            <li><button onclick="nav('detail-kickbox')" type="button">Kickboxing</button></li>
+            <li><button onclick="nav('detail-women')" type="button">Women's Boxing</button></li>
+            <li><button onclick="nav('detail-youth')" type="button">Youth Boxing</button></li>
+            <li><button onclick="nav('detail-pt')" type="button">Personal Training</button></li>
+            <li><button onclick="nav('detail-corporate')" type="button">Corporate Boxing</button></li>
+            <li><button onclick="nav('detail-exec')" type="button">Executive Boxing</button></li>
+            <li><button onclick="nav('detail-mindset')" type="button">Mind &amp; Body</button></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><button onclick="nav('home','dna')" type="button">Unsere DNA</button></li>
+            <li><a href="/coaches" style="text-decoration:none;color:inherit;">Team</a></li>
+            <li><button onclick="nav('home','pricing')" type="button">Preise</button></li>
+            <li><button onclick="nav('home','faq')" type="button">FAQ</button></li>
+            <li><button onclick="nav('home','location')" type="button">Standort</button></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:info@bomayegym.com">info@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        </div>
+      </div>
+
+      <!-- SEO footer text -->
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 0 1rem;">
+        <p id="sanity-seo-footer" style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;">Bomaye Gym München – modernes Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer.</p>
+        <p style="font-size:0.75rem;color:rgba(255,255,255,0.28);margin-top:0.5rem;letter-spacing:0.04em;"><a href="/boxgym-muenchen" style="color:inherit;text-decoration:none;">Boxgym München</a> &nbsp;·&nbsp; <a href="/boxtraining-muenchen" style="color:inherit;text-decoration:none;">Boxtraining München</a> &nbsp;·&nbsp; <a href="/boxen-lernen-muenchen" style="color:inherit;text-decoration:none;">Boxen lernen München</a> &nbsp;·&nbsp; <a href="/fitnessboxen-muenchen" style="color:inherit;text-decoration:none;">Fitnessboxen München</a> &nbsp;·&nbsp; <a href="/personal-training-boxen-muenchen" style="color:inherit;text-decoration:none;">Personal Training Boxen München</a></p>
+      </div>
+
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <span class="dot">•</span>
+        <a href="mailto:info@bomayegym.com">info@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="/impressum">IMPRESSUM</a>
+          <a href="/datenschutz">DATENSCHUTZ</a>
+          <a href="/agb">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /view-home -->
+
+<!-- ══════════════════════════════════════════════════════════
+     DETAIL VIEWS
+══════════════════════════════════════════════════════════ -->
+
+<!-- Executive Boxing -->
+<div id="view-detail-exec" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-exec.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">07:00 AM</span>
+      <h1 style="color:#fff;">EXECUTIVE<br>BOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">PERFORMANCE BEFORE OFFICE.</p>
+      <p class="detail-desc">Das Büro wartet. Der Ring nicht. Unser Executive Boxing Programm startet täglich um 07:00 Uhr — bevor München aufwacht. Eine Stunde intensive Arbeit, die dich klarer, fokussierter und belastbarer macht als jedes Meeting.</p>
+      <p class="detail-desc">Geführt von Weltklasse-Trainern in einer kleinen, diskreten Gruppe. Unter Gleichgesinnten: Führungskräfte, Unternehmer und Leistungsträger.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Tägliche Sessions um 07:00 Uhr</li>
+        <li><i class="fa-solid fa-check-circle"></i> Kleine Gruppen (max. 8 Teilnehmer)</li>
+        <li><i class="fa-solid fa-check-circle"></i> Professionelle Trainer-Betreuung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Premium-Ausrüstung gestellt</li>
+        <li><i class="fa-solid fa-check-circle"></i> Flexible Buchung via Bsport</li>
+        <li><i class="fa-solid fa-check-circle"></i> Netzwerk mit Gleichgesinnten</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Führungskräfte</span>
+        <span class="target-tag">Selbstständige</span>
+        <span class="target-tag">Alle Levels</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Women's Boxing -->
+<div id="view-detail-women" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-women.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">EMPOWERMENT</span>
+      <h1 style="color:#fff;">WOMEN'S<br>BOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">NO BOYS ALLOWED.</p>
+      <p class="detail-desc">Boxen ist längst kein reiner Männersport mehr. Unser Women's Boxing Programm ist ein exklusiver Safe Space — und gleichzeitig das härteste, ehrlichste Training, das du je geliebt hast.</p>
+      <p class="detail-desc">Kein Mitleid. Kein Mansplaining. Nur du, deine Kraft und eine Community, die dich täglich pusht.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Exklusiv für Frauen</li>
+        <li><i class="fa-solid fa-check-circle"></i> Erfahrene Trainerinnen &amp; Trainer</li>
+        <li><i class="fa-solid fa-check-circle"></i> Anfänger bis Fortgeschrittene</li>
+        <li><i class="fa-solid fa-check-circle"></i> Body &amp; Mind — ganzheitlicher Ansatz</li>
+        <li><i class="fa-solid fa-check-circle"></i> Starke Community &amp; Events</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Anfängerinnen</span>
+        <span class="target-tag">Fortgeschrittene</span>
+        <span class="target-tag">Mütter</span>
+        <span class="target-tag">Berufstätige</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">EARLY BIRD PLATZ SICHERN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Personal Training -->
+<div id="view-detail-pt" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-pt.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">1:1</span>
+      <h1 style="color:#fff;">PERSONAL<br>TRAINING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">100% FOKUS AUF DICH.</p>
+      <p class="detail-desc">Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training hast du die volle Aufmerksamkeit von Raschad oder Alfonso.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Individuelle Trainingsplanung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Detaillierte Technikanalyse</li>
+        <li><i class="fa-solid fa-check-circle"></i> Flexible Terminbuchung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Ernährungs- &amp; Lifestyle-Beratung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Fortschrittsmonitoring</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Alle Levels</span>
+        <span class="target-tag">Wettkämpfer</span>
+        <span class="target-tag">Schnelle Ergebnisse</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">TERMIN VEREINBAREN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Youth Boxing -->
+<div id="view-detail-youth" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-youth.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">U18</span>
+      <h1 style="color:#fff;">YOUTH<br>BOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">WERTE &amp; DISZIPLIN.</p>
+      <p class="detail-desc">Wir bilden nicht nur Kämpfer aus — wir bilden Charaktere. Das Bomaye Youth Squad formt Jugendliche zu selbstbewussten, disziplinierten und respektvollen Menschen.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Kids ab 6 Jahren, Jugend bis 17</li>
+        <li><i class="fa-solid fa-check-circle"></i> Erfahrene Jugend-Coaches</li>
+        <li><i class="fa-solid fa-check-circle"></i> Persönliches Mentoring inklusive</li>
+        <li><i class="fa-solid fa-check-circle"></i> Sichere und strukturierte Umgebung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Möglichkeit zum Vereinssport</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Ab 6 Jahre</span>
+        <span class="target-tag">Bis 17 Jahre</span>
+        <span class="target-tag">Anfänger</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="window.open('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true','_blank')" class="btn btn--gold" type="button">JETZT ANMELDEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Corporate Boxing -->
+<div id="view-detail-corporate" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-corp.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">TEAMBUILDING</span>
+      <h1 style="color:#fff;">CORPORATE<br>BOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">TEAMBUILDING DURCH SCHWEISS.</p>
+      <p class="detail-desc">Teams, die zusammen schwitzen, wachsen zusammen. Unser Corporate Boxing Event ist ein einzigartiges Teambuilding-Erlebnis, das Vertrauen, Kommunikation und Zusammenhalt aufbaut.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Individuelle Event-Planung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Gruppen von 5 bis 50 Personen</li>
+        <li><i class="fa-solid fa-check-circle"></i> Alle Levels willkommen</li>
+        <li><i class="fa-solid fa-check-circle"></i> Komplette Ausrüstung gestellt</li>
+        <li><i class="fa-solid fa-check-circle"></i> Optionales Catering</li>
+        <li><i class="fa-solid fa-check-circle"></i> Preis auf Anfrage</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Firmen</span>
+        <span class="target-tag">Teams</span>
+        <span class="target-tag">Events</span>
+      </div>
+      <div class="detail-ctas">
+        <a href="mailto:info@bomayegym.com" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-envelope"></i> ANFRAGE SENDEN</a>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Kickboxing -->
+<div id="view-detail-kickbox" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-kick.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <h1 style="color:#fff;">KICKBOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">DYNAMIK, KICKS, VOLLE POWER.</p>
+      <p class="detail-desc">Kickboxen auf Weltmeister-Niveau. Alfonso Fusco — Kickbox-Weltmeister und Landestrainer — vermittelt Technik, Explosivität und Ring-Intelligenz.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Weltmeister-Coach Alfonso Fusco</li>
+        <li><i class="fa-solid fa-check-circle"></i> Technik- &amp; Konditionstraining</li>
+        <li><i class="fa-solid fa-check-circle"></i> Anfänger bis Wettkämpfer</li>
+        <li><i class="fa-solid fa-check-circle"></i> Sparring auf Anfrage</li>
+        <li><i class="fa-solid fa-check-circle"></i> Wettkampfvorbereitung möglich</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Alle Levels</span>
+        <span class="target-tag">Wettkämpfer</span>
+        <span class="target-tag">Fitness</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Olympic Boxing -->
+<div id="view-detail-olympic" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-olympic.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">VEREIN</span>
+      <h1 style="color:#fff;">OLYMPIC<br>BOXING</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">WETTKAMPF AUF HÖCHSTEM NIVEAU.</p>
+      <p class="detail-desc">Die hohe Kunst des Boxens. Olympisches Boxen folgt den klassischen Regeln des Amateurboxens — Fokus auf saubere Technik, Taktik und Punkten.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Vereinsboxen (lizenzierter Verein)</li>
+        <li><i class="fa-solid fa-check-circle"></i> Wettkampftraining &amp; Turniere</li>
+        <li><i class="fa-solid fa-check-circle"></i> Klassische Boxtechnik</li>
+        <li><i class="fa-solid fa-check-circle"></i> Landestrainer Raschad Pekpassi</li>
+        <li><i class="fa-solid fa-check-circle"></i> Für Jugendliche &amp; Erwachsene</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Wettkämpfer</span>
+        <span class="target-tag">Verein</span>
+        <span class="target-tag">Fortgeschrittene</span>
+      </div>
+      <div class="detail-ctas">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- Mind & Body -->
+<div id="view-detail-mindset" class="view">
+  <div class="detail-hero-wrap">
+    <div class="detail-hero-bg" style="background-image:url('/assets/images/service-mind-v2.webp');"></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="container detail-hero-content">
+      <span class="tag tag--gold" style="margin-bottom:1rem;display:inline-block;">MENTAL</span>
+      <h1 style="color:#fff;">MIND<br>&amp; BODY</h1>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="container"><div class="detail-body-inner">
+      <p class="detail-tagline">VICTORY IS A STATE OF MIND.</p>
+      <p class="detail-desc">Mental Coaching für Champions. Der Kampf beginnt im Kopf. Unser Mind &amp; Body Programm verbindet physisches Boxtraining mit mentalem Coaching.</p>
+      <ul class="detail-features">
+        <li><i class="fa-solid fa-check-circle"></i> Mental Coaching &amp; Visualisierung</li>
+        <li><i class="fa-solid fa-check-circle"></i> Stressabbau &amp; Resilienz</li>
+        <li><i class="fa-solid fa-check-circle"></i> Atemtechniken &amp; Fokus</li>
+        <li><i class="fa-solid fa-check-circle"></i> Ganzheitlicher Ansatz</li>
+        <li><i class="fa-solid fa-check-circle"></i> Für Athleten &amp; Nicht-Athleten</li>
+      </ul>
+      <div class="target-tags">
+        <span class="target-tag">Alle Levels</span>
+        <span class="target-tag">Mental Health</span>
+        <span class="target-tag">Ganzheitlich</span>
+      </div>
+      <div class="detail-ctas">
+        <a href="mailto:info@bomayegym.com" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-envelope"></i> ANFRAGE SENDEN</a>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     WEITERE PREISE VIEW
+══════════════════════════════════════════════════════════ -->
+<div id="view-mehr-preise" class="view">
+  <div class="mehr-preise-page">
+    <div class="container">
+      <button class="legal-back" onclick="navFromMehrPreise()" type="button">
+        <i class="fa-solid fa-arrow-left"></i> ZURÜCK ZU DEN PREISEN
+      </button>
+      <span class="tag tag--dark">PREISÜBERSICHT</span>
+      <h1 style="margin:1rem 0 2.5rem;">ALLE <span class="gold">PREISE.</span></h1>
+
+      <div class="mehr-preise-table-wrap">
+        <table class="mehr-preise-table" aria-label="Vollständige Preisübersicht">
+          <thead>
+            <tr>
+              <th scope="col">MITGLIEDSCHAFT</th>
+              <th scope="col">PREIS</th>
+              <th scope="col">LAUFZEIT</th>
+              <th scope="col">INKLUSIVE</th>
+              <th scope="col">AKTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Flex</strong></td>
+              <td><span class="price-em">26,90€</span> / Woche</td>
+              <td>Monatlich kündbar</td>
+              <td>1 Kurs nach Wahl</td>
+              <td><a href="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" target="_blank">Anmelden</a></td>
+            </tr>
+            <tr>
+              <td><strong>Day Pass</strong></td>
+              <td><span class="price-em">15€</span> / Tag</td>
+              <td>Einmalig</td>
+              <td>Alle Kurse des Tages</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Training 10er Karte</strong></td>
+              <td><span class="price-em">125€</span></td>
+              <td>Flexible</td>
+              <td>10 Trainings freie Kurswahl</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Training 20er Karte</strong></td>
+              <td><span class="price-em">250€</span></td>
+              <td>Flexible</td>
+              <td>20 Trainings freie Kurswahl</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Personal Training Mitglieder</strong></td>
+              <td><span class="price-em">90€</span> / Session</td>
+              <td>Flexibel</td>
+              <td>1:1 mit Coach · Individuell</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+            </tr>
+            <tr>
+              <td><strong>Personal Training 10er Karte Mitglieder</strong></td>
+              <td><span class="price-em">1.000€</span></td>
+              <td>Flexible</td>
+              <td>10 Sessions Personal Training – 1:1 Coaching</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Personal Training Nicht-Mitglieder</strong></td>
+              <td><span class="price-em">125€</span> / Session</td>
+              <td>Flexibel</td>
+              <td>1:1 mit Coach · Individuell</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+            </tr>
+            <tr>
+              <td><strong>Personal Training 10er Karte Nicht-Mitglieder</strong></td>
+              <td><span class="price-em">1.150€</span></td>
+              <td>Flexible</td>
+              <td>10 Sessions Personal Training – 1:1 Coaching</td>
+              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Kaufen</a></td>
+            </tr>
+            <tr>
+              <td><strong>Corporate Boxing</strong></td>
+              <td><span class="price-em">Auf Anfrage</span></td>
+              <td>ab 5 Personen</td>
+              <td>Team ab 5 Personen · Catering optional</td>
+              <td><a href="#corporate-boxing-form" onclick="event.preventDefault();document.getElementById('corporate-boxing-form').scrollIntoView({behavior:'instant'})">Anfragen</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="text-align:center; margin-top:3rem; display:flex; flex-wrap:wrap; gap:1.25rem; justify-content:center; align-items:center;">
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">
+          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+        </button>
+      </div>
+
+      <!-- ── Corporate Boxing Inline Inquiry Form ── -->
+      <section id="corporate-boxing-form" style="margin-top:4rem; scroll-margin-top:5rem;">
+        <div class="family-modal-header" style="text-align:left; padding:0 0 1.5rem;">
+          <span class="family-label">TEAMBUILDING</span>
+          <h2 class="family-headline" style="font-size:clamp(1.6rem,4vw,2.4rem);">CORPORATE BOXING</h2>
+          <p class="family-sub">Stärke dein Team im Boxring. Füll das Formular aus — wir melden uns schnellstmöglich.</p>
+        </div>
+
+        <div id="cbi-success" hidden style="text-align:center; padding:2rem 0;">
+          <p class="fif-success-icon">✅</p>
+          <h3 class="fif-success-title">Anfrage gesendet</h3>
+          <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
+        </div>
+
+        <form class="family-inquiry-form" id="cbi-form" onsubmit="submitCorporateInquiryInline(event)" novalidate>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-name">Name <span class="fif-required">*</span></label>
+              <input type="text" id="cbi-name" name="name" placeholder="Dein Name">
+              <span class="fif-error" id="cbi-name-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-email">E-Mail <span class="fif-required">*</span></label>
+              <input type="email" id="cbi-email" name="email" placeholder="deine@email.de">
+              <span class="fif-error" id="cbi-email-error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-phone">Telefon <span class="fif-required">*</span></label>
+              <input type="tel" id="cbi-phone" name="phone" placeholder="0176 000 000">
+              <span class="fif-error" id="cbi-phone-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-company">Firma / Organisation</label>
+              <input type="text" id="cbi-company" name="company" placeholder="Dein Unternehmen">
+            </div>
+          </div>
+          <div class="fif-row">
+            <div class="fif-field">
+              <label for="cbi-persons">Anzahl Personen <span class="fif-required">*</span></label>
+              <select id="cbi-persons" name="persons">
+                <option value="">Bitte wählen</option>
+                <option value="5–10 Personen">5–10 Personen</option>
+                <option value="11–20 Personen">11–20 Personen</option>
+                <option value="21–50 Personen">21–50 Personen</option>
+                <option value="50+ Personen">50+ Personen</option>
+              </select>
+              <span class="fif-error" id="cbi-persons-error" aria-live="polite"></span>
+            </div>
+            <div class="fif-field">
+              <label for="cbi-date">Gewünschtes Datum <span class="fif-required">*</span></label>
+              <input type="date" id="cbi-date" name="date">
+              <span class="fif-error" id="cbi-date-error" aria-live="polite"></span>
+            </div>
+          </div>
+          <div class="fif-field">
+            <label for="cbi-time">Gewünschte Uhrzeit / Zeitraum <span class="fif-required">*</span></label>
+            <input type="text" id="cbi-time" name="time" placeholder="z.B. 18:00–20:00 Uhr">
+            <span class="fif-error" id="cbi-time-error" aria-live="polite"></span>
+          </div>
+          <div class="fif-field fif-field--radio">
+            <label>Catering gewünscht?</label>
+            <div class="fif-radio-group" role="radiogroup" aria-label="Catering gewünscht">
+              <label class="fif-radio-card">
+                <input type="radio" name="catering" value="Ja">
+                <span class="fif-radio-card__box">
+                  <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                  <span class="fif-radio-card__text">Ja</span>
+                </span>
+              </label>
+              <label class="fif-radio-card">
+                <input type="radio" name="catering" value="Nein">
+                <span class="fif-radio-card__box">
+                  <span class="fif-radio-card__check" aria-hidden="true">✓</span>
+                  <span class="fif-radio-card__text">Nein</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="fif-field">
+            <label for="cbi-event">Art des Events / Anlass</label>
+            <input type="text" id="cbi-event" name="event" placeholder="z.B. Teambuilding, Firmenfeier, Incentive …">
+          </div>
+          <div class="fif-field">
+            <label for="cbi-message">Nachricht / Wünsche</label>
+            <textarea id="cbi-message" name="message" rows="3" placeholder="Weitere Informationen, spezielle Wünsche …"></textarea>
+          </div>
+          <button type="submit" class="btn btn--gold btn--full">
+            <i class="fa-solid fa-paper-plane"></i> CORPORATE ANFRAGE SENDEN
+          </button>
+          <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
+          <p class="fif-pflichtfelder">* Pflichtfelder</p>
+        </form>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- 1. Sanity CDN client (must be first — defines window.sanityFetch) -->
+<script src="assets/js/sanity-client.js"></script>
+
+<!-- 2. Core config (contact, address, hours, early bird) -->
+<script src="assets/js/config.js"></script>
+
+<!-- 3. Content modules (static fallbacks — overridden by Sanity at runtime) -->
+<script src="assets/js/pricing.js"></script>
+<script src="assets/js/family-benefit.js"></script>
+<script src="assets/js/corporate-boxing.js"></script>
+<script src="assets/js/homepage-content.js"></script>
+
+<!-- 4. FAQ data -->
+<script src="assets/js/faq-data.js"></script>
+
+<!-- 5. Main application logic -->
+<script src="assets/js/main.js"></script>
+
+<!-- 6. Sanity loader (runs after main.js — patches globals + re-renders) -->
+<script src="assets/js/sanity-loader.js"></script>
+
+<!-- ══════════════════════════════════════════════════════════
+     BSPORT WIDGET — Membership Subscription Widget
+     Script 1: CDN loader (guards against double-load)
+     Script 2: MountBsportWidget helper with retry logic
+     Script 3: Mount the subscription widget
+══════════════════════════════════════════════════════════ -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+
+<script id="bsport-widget-mount">
+function MountBsportWidget(config, repeat=1) {
+    if (repeat > 50) { return }
+    if (!window.BsportWidget) {
+        return setTimeout(() => {
+            MountBsportWidget(config,repeat+1)
+        }, 100 * repeat || 1)
     }
+    BsportWidget.mount(config)
+}
+</script>
 
-    // ── State-based section switch (no scroll) ───────────────────
-    const pricingSection = document.getElementById('pricing-section');
-    const formSection    = document.getElementById('form-section');
+<script>
+MountBsportWidget({
+    parentElement: "bsport-widget-78464",
+    companyId: 5473,
+    dialogMode: 1,
+    widgetType: "subscription",
+    showFab: false,
+    fullScreenPopup: false
+})
+</script>
 
-    function showFormView(cat) {
-      selectPlan(cat);
-      showStep(1);
-      // Fade out pricing
-      pricingSection.classList.add('is-exiting');
-      setTimeout(() => {
-        pricingSection.style.display = 'none';
-        pricingSection.classList.remove('is-exiting');
-        // Fade in form
-        formSection.style.display = 'flex';
-        formSection.classList.add('is-entering');
-        // Scroll conversion zone into view (top of zone, no full-page scroll)
-        const zone = document.getElementById('conversion-zone');
-        if (zone) zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 320);
-    }
+<!-- ── Disc-stack: subtle scale-back on exiting card ─────────────────
+     As card N+1 rises and covers card N, card N scales 1.0→0.985 and
+     fades 1.0→0.92, reinforcing the card-deck depth feel.
 
-    function showPricingView() {
-      formSection.classList.add('is-exiting');
-      setTimeout(() => {
-        formSection.style.display = 'none';
-        formSection.classList.remove('is-exiting', 'is-entering');
-        pricingSection.style.display = '';
-        pricingSection.classList.add('is-entering');
-        const zone = document.getElementById('conversion-zone');
-        if (zone) zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => pricingSection.classList.remove('is-entering'), 400);
-      }, 320);
-    }
+     Key change from previous version: sticky offsets are now staggered
+     (navH, navH+peekH, navH+2×peekH). Progress must be calculated
+     relative to where each incoming card is "fully covering" — its own
+     sticky top position — not a flat navH for all panels.
 
-    // ── Pricing card CTA → open checkout inline ──────────────────
-    const checkoutUrls = {
-      kids:   'https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true',
-      youth:  'https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true',
-      adults: 'https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'
-    };
-    document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const url     = checkoutUrls[btn.dataset.pricingCat];
-        const section = document.getElementById('checkout-section');
-        const frame   = document.getElementById('checkout-frame');
-        const loader  = document.getElementById('checkout-loader');
-        if (!url || !section || !frame) return;
-        // Show loader, hide previous frame content
-        frame.style.display = 'none';
-        if (loader) { loader.classList.remove('is-hidden'); }
-        // Set src and reveal section
-        frame.src = url;
-        section.classList.add('is-visible');
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Hide loader once iframe has loaded
-        frame.onload = () => {
-          frame.style.display = 'block';
-          if (loader) loader.classList.add('is-hidden');
-        };
-      });
+     · desktop/tablet only (≤480px exits early — mobile = relative cards)
+     · passive rAF-gated scroll listener — zero scroll-jacking
+     · resize resets stale inline transforms
+──────────────────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+  if (window.matchMedia('(max-width: 480px)').matches) return;
+
+  var panels = document.querySelectorAll('.disc-panel');
+  if (panels.length < 2) return;
+
+  var raf = null;
+
+  function clearAll() {
+    panels.forEach(function (p) { p.style.transform = ''; p.style.opacity = ''; });
+  }
+
+  function update() {
+    raf = null;
+    var cs   = getComputedStyle(document.documentElement);
+    var navH = parseFloat(cs.getPropertyValue('--nav-h'))   || 72;
+    var peek = parseFloat(cs.getPropertyValue('--disc-peek')) || 52;
+    var viewH = window.innerHeight;
+
+    panels.forEach(function (panel, i) {
+      if (i === panels.length - 1) return; /* last card never scales back */
+
+      var nextTop = panels[i + 1].getBoundingClientRect().top;
+
+      /* Where the next card is "fully covering" this card: its own sticky top.
+         Travel distance = viewport bottom → that sticky position.            */
+      var coverAt   = navH + (i + 1) * peek;   /* next card's sticky top px   */
+      var travelDist = viewH - coverAt;         /* full travel distance         */
+
+      /* progress: 0 = next card just entered viewport bottom
+                   1 = next card has reached its sticky position (fully over)  */
+      var progress = Math.max(0, Math.min(1, (viewH - nextTop) / travelDist));
+
+      if (progress > 0) {
+        var sc = 1 - progress * 0.015; /* 1.000 → 0.985 */
+        var op = 1 - progress * 0.08;  /* 1.000 → 0.920 */
+        panel.style.transform = 'scale(' + sc.toFixed(4) + ')';
+        panel.style.opacity   = op.toFixed(4);
+      } else {
+        panel.style.transform = '';
+        panel.style.opacity   = '';
+      }
     });
+  }
 
-    // ── Goal toggle ───────────────────────────────────────────────
-    const goalBtns  = document.querySelectorAll('.goal-btn');
-    const goalHidden = document.getElementById('cs-goal');
-    goalBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        goalBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed','true');
-        goalHidden.value = btn.dataset.goal;
-      });
+  window.addEventListener('scroll', function () {
+    if (!raf) raf = requestAnimationFrame(update);
+  }, { passive: true });
+
+  window.addEventListener('resize', function () {
+    clearAll();
+    if (!raf) raf = requestAnimationFrame(update);
+  }, { passive: true });
+
+  requestAnimationFrame(update);
+}());
+</script>
+
+<script>
+/* BSport schedule fix — removes inline display:none from widget metadata.
+   MutationObserver fires whenever the widget re-renders (day change, filter).
+   Debounce (150ms) prevents CPU saturation from rapid React mutations.
+   Observing document.body catches all React re-renders that add card nodes.
+   childList-only: our style changes are attribute mutations, not childList —
+   the observer never re-fires from its own fix (no infinite loop).          */
+document.addEventListener("DOMContentLoaded", function () {
+
+  function fixSchedule() {
+    var widget = document.querySelector('[id^="bsport-widget"]');
+    if (!widget) return;
+
+    widget.querySelectorAll('*').forEach(function (el) {
+      if (el.style && el.style.display === "none") {
+        el.style.display = "";
+      }
     });
-
-    // ── Multi-step navigation ─────────────────────────────────────
-    let currentStep = 1;
-
-    function showStep(n) {
-      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step-' + n).classList.add('active');
-      // update dots
-      for (let i = 1; i <= 3; i++) {
-        const dot = document.getElementById('dot-' + i);
-        dot.classList.remove('active','done');
-        if (i < n) dot.classList.add('done');
-        else if (i === n) dot.classList.add('active');
-      }
-      // update lines
-      document.getElementById('line-12').classList.toggle('done', n > 1);
-      document.getElementById('line-23').classList.toggle('done', n > 2);
-      currentStep = n;
-    }
-
-    function showStepError(stepId, msg) {
-      let errEl = document.getElementById(stepId).querySelector('.form-error-msg');
-      if (!errEl) {
-        errEl = document.createElement('p');
-        errEl.className = 'form-error-msg';
-        errEl.style.cssText = 'color:#ff6b6b;font-size:.78rem;text-align:center;margin-top:10px;';
-        document.getElementById(stepId).querySelector('.step-nav').insertAdjacentElement('afterend', errEl);
-      }
-      errEl.textContent = msg;
-    }
-    function clearStepError(stepId) {
-      const e = document.getElementById(stepId).querySelector('.form-error-msg');
-      if (e) e.remove();
-    }
-
-    document.getElementById('step1-next').addEventListener('click', () => {
-      clearStepError('step-1');
-      if (!goalHidden.value) {
-        showStepError('step-1', 'Bitte wähle dein Ziel aus.');
-        return;
-      }
-      showStep(2);
-    });
-
-    // ── Set DOB date limits ──────────────────────────────────────
-    (function () {
-      const dobEl = document.getElementById('cs-dob');
-      const today = new Date();
-      const yyyy  = today.getFullYear();
-      const mm    = String(today.getMonth() + 1).padStart(2, '0');
-      const dd    = String(today.getDate()).padStart(2, '0');
-      dobEl.setAttribute('max', `${yyyy}-${mm}-${dd}`);
-      dobEl.setAttribute('min', `${yyyy - 100}-${mm}-${dd}`);
-    })();
-
-    function calcAge(dobValue) {
-      if (!dobValue) return null;
-      const dob   = new Date(dobValue);
-      const today = new Date();
-      if (isNaN(dob.getTime()) || dob >= today) return null;
-      let age = today.getFullYear() - dob.getFullYear();
-      const m = today.getMonth() - dob.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
-      return age;
-    }
-
-    function validateDob(dobValue, cat) {
-      if (!dobValue) return 'Bitte gib ein gültiges Geburtsdatum ein.';
-      const age = calcAge(dobValue);
-      if (age === null || age < 0) return 'Bitte gib ein gültiges Geburtsdatum ein.';
-      if (age > 100) return 'Bitte gib ein gültiges Geburtsdatum ein.';
-      if (cat === 'kids'  && (age < 6  || age > 9))  return 'Kids ist nur für 6 bis 9 Jahre.';
-      if (cat === 'youth' && (age < 10 || age > 17)) return 'Jugend ist nur für 10 bis 17 Jahre.';
-      if (cat === 'adults' && age < 18)               return 'Erwachsene ist erst ab 18 Jahren möglich.';
-      return null; // valid
-    }
-
-    document.getElementById('step2-back').addEventListener('click', () => showStep(1));
-    document.getElementById('step2-next').addEventListener('click', () => {
-      clearStepError('step-2');
-      const fn    = document.getElementById('cs-firstname').value.trim();
-      const ln    = document.getElementById('cs-lastname').value.trim();
-      const em    = document.getElementById('cs-email').value.trim();
-      const dobEl = document.getElementById('cs-dob');
-      clearFieldError(dobEl);
-
-      if (!fn) { document.getElementById('cs-firstname').focus(); showStepError('step-2','Bitte Vorname eingeben.'); return; }
-      if (!ln) { document.getElementById('cs-lastname').focus();  showStepError('step-2','Bitte Nachname eingeben.'); return; }
-      if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { document.getElementById('cs-email').focus(); showStepError('step-2','Bitte gültige E-Mail eingeben.'); return; }
-
-      const dobErr = validateDob(dobEl.value, catHidden.value);
-      if (dobErr) { setFieldError(dobEl, dobErr); dobEl.focus(); return; }
-
-      showStep(3);
-    });
-
-    // Live DOB validation on change
-    document.getElementById('cs-dob').addEventListener('change', function () {
-      clearFieldError(this);
-      const err = validateDob(this.value, catHidden.value);
-      if (err) setFieldError(this, err);
-    });
-
-    document.getElementById('step3-back').addEventListener('click', () => showStep(2));
-
-    // ── "Plan ändern" → back to pricing view ─────────────────────
-    const btnChangePlan = document.getElementById('btn-change-plan');
-    if (btnChangePlan) {
-      btnChangePlan.addEventListener('click', e => {
-        e.preventDefault();
-        showPricingView();
-      });
-    }
-
-    // ── Form submit ───────────────────────────────────────────────
-    const form      = document.getElementById('earlybird-form');
-    const successEl = document.getElementById('form-success');
-
-    function setFieldError(inputEl, msg) {
-      inputEl.classList.add('field-error');
-      let hint = inputEl.parentElement.querySelector('.field-hint-error');
-      if (!hint) {
-        hint = document.createElement('p');
-        hint.className = 'field-hint-error';
-        inputEl.insertAdjacentElement('afterend', hint);
-      }
-      hint.textContent = msg;
-    }
-    function clearFieldError(inputEl) {
-      inputEl.classList.remove('field-error');
-      const hint = inputEl.parentElement.querySelector('.field-hint-error');
-      if (hint) hint.remove();
-    }
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      clearStepError('step-3');
-
-      const streetEl = document.getElementById('cs-street');
-      const plzEl    = document.getElementById('cs-plz');
-      const cityEl   = document.getElementById('cs-city');
-      [streetEl, plzEl, cityEl].forEach(el => clearFieldError(el));
-
-      let addrError = false;
-      if (!streetEl.value.trim()) { setFieldError(streetEl, 'Bitte Straße & Hausnummer eingeben.'); addrError = true; }
-      if (!plzEl.value.trim())    { setFieldError(plzEl,    'Bitte PLZ eingeben.'); addrError = true; }
-      if (!cityEl.value.trim())   { setFieldError(cityEl,   'Bitte Stadt eingeben.'); addrError = true; }
-      if (addrError) { if (!streetEl.value.trim()) streetEl.focus(); else if (!plzEl.value.trim()) plzEl.focus(); else cityEl.focus(); return; }
-
-      const submitBtn = form.querySelector('[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.7';
-
-      const payload = {
-        firstName:  document.getElementById('cs-firstname').value.trim(),
-        lastName:   document.getElementById('cs-lastname').value.trim(),
-        email:      document.getElementById('cs-email').value.trim(),
-        phone:      document.getElementById('cs-phone').value.trim(),
-        dob:        document.getElementById('cs-dob').value,
-        category:   catHidden.value,
-        goal:       goalHidden.value,
-        street:     document.getElementById('cs-street').value.trim(),
-        postalCode: document.getElementById('cs-plz').value.trim(),
-        city:       document.getElementById('cs-city').value.trim(),
-      };
-
-      try {
-        const resp = await fetch('/api/lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        const data = await resp.json().catch(() => ({}));
-
-        if (data.emailError || (!resp.ok && !data.pending)) {
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = '';
-          showStepError('step-3', data.message || 'Bitte versuche es erneut oder kontaktiere uns.');
-          return;
-        }
-
-        if (data.duplicate) {
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = '';
-          showStepError('step-3', data.message || 'Diese E-Mail-Adresse ist bereits registriert.');
-          return;
-        }
-      } catch (err) {
-        console.error('[lead form] fetch error:', err);
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '';
-        showStepError('step-3', 'Bitte versuche es erneut oder kontaktiere uns.');
-        return;
-      }
-
-      form.style.display = 'none';
-      successEl.classList.add('visible');
-    });
-
-    // ── Live spots counter ────────────────────────────────────────
-    (async () => {
-      try {
-        const res  = await fetch('/api/spots', { cache: 'no-store' });
-        const data = await res.json();
-        const el   = document.getElementById('spots-count');
-        const taken = typeof data.taken === 'number'
-          ? data.taken
-          : (typeof data.spots_left === 'number' ? 300 - data.spots_left : 0);
-        const clamped = Math.max(0, Math.min(300, taken));
-        if (el && clamped > 0) {
-          // Animate count up from 0 to actual taken value (~800ms)
-          const dur = 800;
-          const t0  = performance.now();
-          (function tick(now) {
-            const p = Math.min((now - t0) / dur, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            el.textContent = Math.round(clamped * eased);
-            if (p < 1) requestAnimationFrame(tick);
-            else el.textContent = clamped;
-          })(performance.now());
-        }
-      } catch (_) {}
-    })();
-
-    // ── FAQ accordion ────────────────────────────────────────────
-    document.querySelectorAll('.faq-inline-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        const answer   = btn.nextElementSibling;
-        const item     = btn.closest('.faq-inline-item');
-        btn.setAttribute('aria-expanded', String(!expanded));
-        answer.classList.toggle('open', !expanded);
-        item.classList.toggle('active', !expanded);
-      });
-    });
-
-    // ── Handle ?verified=1 (email confirmation redirect) ─────────
-    if (new URLSearchParams(window.location.search).get('verified') === '1') {
-      const formSection   = document.getElementById('form-section');
-      const form          = document.getElementById('earlybird-form');
-      const successEl     = document.getElementById('form-success');
-      const pendingEl     = document.getElementById('success-pending');
-      const verifiedEl    = document.getElementById('success-verified');
-      if (formSection && form && successEl) {
-        formSection.style.display = 'flex';
-        form.style.display = 'none';
-        if (pendingEl)  pendingEl.style.display  = 'none';
-        if (verifiedEl) verifiedEl.style.display = '';
-        successEl.classList.add('visible');
-        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Clean URL
-        history.replaceState(null, '', window.location.pathname);
-      }
-    }
-
-    // ── Fade-in on scroll ─────────────────────────────────────────
-    const fadeEls = document.querySelectorAll('.fade-up:not(.visible)');
-    if (fadeEls.length && 'IntersectionObserver' in window) {
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
-        });
-      }, { threshold: 0.15 });
-      fadeEls.forEach(el => obs.observe(el));
-    } else {
-      fadeEls.forEach(el => el.classList.add('visible'));
-    }
-
-    // ── Cinematic smoke system ────────────────────────────────────
-    (function() {
-      const canvas = document.getElementById('particle-canvas');
-      if (!canvas || !canvas.getContext) return;
-      const ctx = canvas.getContext('2d');
-      const isMobile = window.matchMedia('(max-width: 600px)').matches;
-      const COUNT = isMobile ? 7 : 14;
-
-      let W, H;
-      const smokes = [];
-
-      function rand(min, max) { return min + Math.random() * (max - min); }
-
-      function resize() {
-        W = canvas.width  = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
-
-      // Slightly warm / neutral smoke tones — no grey muddy look
-      const COLORS = [
-        '225,218,208',
-        '218,212,200',
-        '222,215,204',
-        '228,220,210',
-      ];
-
-      function mkSmoke(startBelow) {
-        // Distribute mainly in lower & mid background, leave upper 30% cleaner
-        const yStart = startBelow
-          ? H + rand(20, 80)
-          : rand(H * 0.38, H + 20);
-        // Keep some negative space: cluster in bands, not full width
-        const xBand = Math.random() < 0.5
-          ? rand(W * 0.03, W * 0.45)   // left band
-          : rand(W * 0.50, W * 0.97);  // right band
-        return {
-          x:          xBand,
-          y:          yStart,
-          r:          rand(22, 55),           // starting radius
-          maxR:       rand(90, 200),          // expand to this
-          vy:         rand(0.20, 0.52),       // slow upward drift
-          vx:         rand(-0.12, 0.12),      // gentle lateral drift
-          opacity:    0,
-          peakOp:     rand(0.055, 0.13),      // visible but premium — not heavy
-          fadeInSpd:  rand(0.0007, 0.0018),
-          fadeOutSpd: rand(0.0004, 0.001),
-          expandSpd:  rand(0.12, 0.30),       // radius growth per frame
-          phase:      'in',                   // 'in' → 'out'
-          color:      COLORS[Math.floor(Math.random() * COLORS.length)],
-          wobble:     rand(0, Math.PI * 2),   // phase offset for sine wobble
-          wobbleSpd:  rand(0.006, 0.020),     // wobble frequency
-          wobbleAmp:  rand(0.25, 0.90),       // wobble width in px
-        };
-      }
-
-      function init() {
-        resize();
-        for (let i = 0; i < COUNT; i++) smokes.push(mkSmoke(false));
-      }
-
-      let raf;
-      function tick() {
-        ctx.clearRect(0, 0, W, H);
-
-        for (let i = 0; i < smokes.length; i++) {
-          const s = smokes[i];
-
-          // Movement — upward + gentle sinusoidal side drift
-          s.y -= s.vy;
-          s.wobble += s.wobbleSpd;
-          s.x += s.vx + Math.sin(s.wobble) * s.wobbleAmp;
-
-          // Expand — smoke blob grows as it rises
-          if (s.r < s.maxR) s.r += s.expandSpd;
-
-          // Opacity lifecycle: fade in, then fade out once expanded past 45% maxR
-          if (s.phase === 'in') {
-            s.opacity += s.fadeInSpd;
-            if (s.opacity >= s.peakOp) { s.opacity = s.peakOp; s.phase = 'out'; }
-          } else {
-            // Begin fading out gradually — dissolves as it expands
-            s.opacity -= s.fadeOutSpd;
-          }
-
-          // Recycle when fully off-screen or invisible
-          if (s.y + s.r < 0 || s.opacity <= 0) {
-            smokes[i] = mkSmoke(true);
-            continue;
-          }
-
-          // Draw soft volumetric smoke blob with radial gradient
-          const op = Math.max(0, Math.min(1, s.opacity));
-          const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
-          grd.addColorStop(0,    `rgba(${s.color},${op})`);
-          grd.addColorStop(0.30, `rgba(${s.color},${(op * 0.68).toFixed(4)})`);
-          grd.addColorStop(0.65, `rgba(${s.color},${(op * 0.22).toFixed(4)})`);
-          grd.addColorStop(1,    `rgba(${s.color},0)`);
-
-          ctx.save();
-          ctx.fillStyle = grd;
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-
-        raf = requestAnimationFrame(tick);
-      }
-
-      init();
-      tick();
-
-      window.addEventListener('resize', resize, { passive: true });
-
-      // Pause when tab is hidden to save resources
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) cancelAnimationFrame(raf);
-        else tick();
-      });
-    })();
-
-    // ── Family Access Modal ───────────────────────────────────────
-    (function () {
-      const overlay      = document.getElementById('family-overlay');
-      const openBtn      = document.getElementById('family-access-btn');
-      const closeBtn     = document.getElementById('family-modal-close');
-      const famForm      = document.getElementById('family-form');
-      const famSuccess   = document.getElementById('family-success');
-      const famSubmitBtn = document.getElementById('family-submit-btn');
-      const membersList  = document.getElementById('fam-members-list');
-      const addBtn       = document.getElementById('fam-add-btn');
-      const globalErrEl  = document.getElementById('family-form-error');
-      if (!overlay || !openBtn) return;
-
-      // State: array of member objects { id, name, dob, category }
-      var members = [];
-      var nextId  = 1;
-
-      // ── Age/category validation ─────────────────────────────────
-      function calcAge(dobStr) {
-        if (!dobStr) return null;
-        var dob   = new Date(dobStr);
-        var today = new Date();
-        if (isNaN(dob.getTime()) || dob >= today) return null;
-        var age = today.getFullYear() - dob.getFullYear();
-        var m   = today.getMonth() - dob.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
-        return age;
-      }
-
-      function validateMemberCatAge(dob, cat) {
-        if (!dob) return 'Bitte Geburtsdatum eingeben.';
-        var age = calcAge(dob);
-        if (age === null || age < 0) return 'Bitte gültiges Geburtsdatum eingeben.';
-        if (age > 100) return 'Bitte gültiges Geburtsdatum eingeben.';
-        if (!cat) return 'Bitte Kategorie auswählen.';
-        if (cat === 'kids'  && (age < 6  || age > 9))  return 'Bomaye Kids ist für 6–9 Jahre. Bitte Kategorie anpassen.';
-        if (cat === 'youth' && (age < 10 || age > 17)) return 'Bomaye Youth ist für 10–17 Jahre. Bitte Kategorie anpassen.';
-        if (cat === 'adults' && age < 18)               return 'Bomaye Unlimited ist erst ab 18 Jahren möglich.';
-        return null;
-      }
-
-      // ── Render members list ─────────────────────────────────────
-      function renderMembers() {
-        membersList.innerHTML = '';
-        members.forEach(function (m, idx) {
-          var isFree    = (idx === 3); // 4th member is always FREE
-          var blockDiv  = document.createElement('div');
-          var freeClass = isFree ? ' is-free' : '';
-          blockDiv.className  = 'fam-member-block' + freeClass;
-          blockDiv.dataset.id = m.id;
-
-          var freeBadge   = isFree
-            ? '<span class="fam-free-badge"><i class="fa-solid fa-bolt" aria-hidden="true"></i> KOSTENLOS</span>'
-            : '';
-          var removeBtn   = (idx >= 1)
-            ? '<button type="button" class="fam-remove-btn" data-remove="' + m.id + '" aria-label="Mitglied entfernen"><i class="fa-solid fa-xmark"></i></button>'
-            : '';
-          var catBtns = ['kids','youth','adults'].map(function(c) {
-            var labels = { kids: 'Kids<span style="display:block;font-size:.45rem;letter-spacing:.08em;opacity:.6;margin-top:2px;">6–9</span>', youth: 'Youth<span style="display:block;font-size:.45rem;letter-spacing:.08em;opacity:.6;margin-top:2px;">10–17</span>', adults: 'Unlimited<span style="display:block;font-size:.45rem;letter-spacing:.08em;opacity:.6;margin-top:2px;">18+</span>' };
-            var active  = m.category === c ? ' active' : '';
-            return '<button type="button" class="fam-cat-btn' + active + '" data-member-id="' + m.id + '" data-cat="' + c + '">' + labels[c] + '</button>';
-          }).join('');
-
-          // Set date max to today
-          var today   = new Date();
-          var maxDate = today.toISOString().split('T')[0];
-          var minDate = (today.getFullYear() - 100) + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-
-          blockDiv.innerHTML =
-            '<div class="fam-member-header">' +
-              '<span class="fam-member-num">' + (idx + 1) + '</span>' +
-              freeBadge +
-              removeBtn +
-            '</div>' +
-            '<div class="form-group" style="margin-bottom:10px;">' +
-              '<label class="field-label" for="fam-name-' + m.id + '">Vollständiger Name *</label>' +
-              '<input class="field-input" type="text" id="fam-name-' + m.id + '" value="' + escVal(m.name) + '" placeholder="Vor- und Nachname" autocomplete="off" />' +
-              '<span class="fam-err-text" id="fam-err-name-' + m.id + '" style="display:none;"></span>' +
-            '</div>' +
-            '<div class="form-group" style="margin-bottom:0;">' +
-              '<label class="field-label" for="fam-dob-' + m.id + '">Geburtsdatum *</label>' +
-              '<input class="field-input" type="date" id="fam-dob-' + m.id + '" value="' + escVal(m.dob) + '" max="' + maxDate + '" min="' + minDate + '" />' +
-              '<span class="fam-err-text" id="fam-err-dob-' + m.id + '" style="display:none;"></span>' +
-            '</div>' +
-            '<span class="fam-cat-label">Kategorie *</span>' +
-            '<div class="fam-cat-group" role="group" aria-label="Kategorie Mitglied ' + (idx+1) + '">' +
-              catBtns +
-            '</div>' +
-            '<span class="fam-err-text" id="fam-err-cat-' + m.id + '" style="display:none;"></span>';
-
-          membersList.appendChild(blockDiv);
-        });
-
-        // Bind events on newly rendered elements
-        // Name inputs
-        members.forEach(function(m) {
-          var nameEl = document.getElementById('fam-name-' + m.id);
-          if (nameEl) nameEl.addEventListener('input', function() { m.name = this.value; });
-          var dobEl  = document.getElementById('fam-dob-'  + m.id);
-          if (dobEl)  dobEl.addEventListener('change',  function() { m.dob  = this.value; });
-        });
-
-        // Category buttons
-        membersList.querySelectorAll('.fam-cat-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var mid = btn.dataset.memberId;
-            var cat = btn.dataset.cat;
-            var mem = members.find(function(x) { return String(x.id) === String(mid); });
-            if (!mem) return;
-            mem.category = cat;
-            // Update active state within this group
-            var group = btn.closest('.fam-cat-group');
-            group.querySelectorAll('.fam-cat-btn').forEach(function(b) { b.classList.remove('active'); });
-            btn.classList.add('active');
-            // Clear cat error
-            var errEl = document.getElementById('fam-err-cat-' + mid);
-            if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
-          });
-        });
-
-        // Remove buttons
-        membersList.querySelectorAll('.fam-remove-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var rid = parseInt(btn.dataset.remove);
-            members = members.filter(function(x) { return x.id !== rid; });
-            renderMembers();
-          });
-        });
-      }
-
-      function escVal(v) {
-        return (v || '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      }
-
-      function addMember() {
-        members.push({ id: nextId++, name: '', dob: '', category: '' });
-        renderMembers();
-        // Scroll to the new block
-        var last = membersList.lastElementChild;
-        if (last) last.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-
-      function resetModal() {
-        members = [];
-        nextId  = 1;
-        // Add 3 default members
-        members.push({ id: nextId++, name: '', dob: '', category: '' });
-        members.push({ id: nextId++, name: '', dob: '', category: '' });
-        members.push({ id: nextId++, name: '', dob: '', category: '' });
-        renderMembers();
-      }
-
-      // ── Open / Close ────────────────────────────────────────────
-      function openModal() {
-        resetModal();
-        overlay.classList.add('open');
-        overlay.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        // Show form, hide success
-        famForm.style.display = '';
-        famSuccess.style.display = 'none';
-        if (globalErrEl) { globalErrEl.textContent = ''; globalErrEl.style.display = 'none'; }
-        setTimeout(function () {
-          var first = overlay.querySelector('#fam-firstname');
-          if (first) first.focus();
-        }, 380);
-      }
-
-      function closeModal() {
-        overlay.classList.remove('open');
-        overlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-      }
-
-      openBtn.addEventListener('click', openModal);
-      closeBtn.addEventListener('click', closeModal);
-      addBtn.addEventListener('click', addMember);
-
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) closeModal();
-      });
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
-      });
-
-      // ── Submit ──────────────────────────────────────────────────
-      famForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        // Clear all errors
-        membersList.querySelectorAll('.fam-err-text').forEach(function(el) {
-          el.textContent = ''; el.style.display = 'none';
-        });
-        if (globalErrEl) { globalErrEl.textContent = ''; globalErrEl.style.display = 'none'; }
-
-        var fn = document.getElementById('fam-firstname').value.trim();
-        var ln = document.getElementById('fam-lastname').value.trim();
-        var em = document.getElementById('fam-email').value.trim();
-        var ph = document.getElementById('fam-phone').value.trim();
-
-        var valid = true;
-
-        function showGlobal(msg) {
-          if (globalErrEl) { globalErrEl.textContent = msg; globalErrEl.style.display = 'block'; }
-        }
-
-        if (!fn) {
-          document.getElementById('fam-firstname').focus();
-          showGlobal('Bitte Vorname eingeben.');
-          return;
-        }
-        if (!ln) {
-          document.getElementById('fam-lastname').focus();
-          showGlobal('Bitte Nachname eingeben.');
-          return;
-        }
-        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
-          document.getElementById('fam-email').focus();
-          showGlobal('Bitte gültige E-Mail-Adresse eingeben.');
-          return;
-        }
-        if (members.length < 1) {
-          showGlobal('Bitte mindestens ein Familienmitglied eintragen.');
-          return;
-        }
-
-        // Read current input values (in case user typed without triggering input event)
-        members.forEach(function(m) {
-          var nameEl = document.getElementById('fam-name-' + m.id);
-          var dobEl  = document.getElementById('fam-dob-'  + m.id);
-          if (nameEl) m.name = nameEl.value.trim();
-          if (dobEl)  m.dob  = dobEl.value;
-        });
-
-        // Validate each member
-        members.forEach(function(m, idx) {
-          if (!m.name) {
-            var el = document.getElementById('fam-name-' + m.id);
-            var err = document.getElementById('fam-err-name-' + m.id);
-            if (el) el.classList.add('fam-field-error');
-            if (err) { err.textContent = 'Bitte Namen eingeben.'; err.style.display = 'block'; }
-            valid = false;
-          }
-          var catAgeErr = validateMemberCatAge(m.dob, m.category);
-          if (catAgeErr) {
-            var dobEl  = document.getElementById('fam-dob-'  + m.id);
-            var catErr = document.getElementById('fam-err-cat-' + m.id);
-            var dobErr = document.getElementById('fam-err-dob-' + m.id);
-            // Distinguish dob vs cat error
-            if (!m.dob) {
-              if (dobEl)  dobEl.classList.add('fam-field-error');
-              if (dobErr) { dobErr.textContent = 'Bitte Geburtsdatum eingeben.'; dobErr.style.display = 'block'; }
-            } else if (!m.category) {
-              if (catErr) { catErr.textContent = 'Bitte Kategorie auswählen.'; catErr.style.display = 'block'; }
-            } else {
-              if (catErr) { catErr.textContent = catAgeErr; catErr.style.display = 'block'; }
-            }
-            valid = false;
-          }
-        });
-
-        if (!valid) return;
-
-        famSubmitBtn.disabled = true;
-        famSubmitBtn.style.opacity = '0.7';
-
-        // Build structured payload
-        var membersPayload = members.map(function(m, idx) {
-          return {
-            name:     m.name,
-            dob:      m.dob,
-            category: m.category,
-            free:     (idx === 3), // 4th member is free
-          };
-        });
-
-        var payload = {
-          firstName: fn,
-          lastName:  ln,
-          email:     em,
-          phone:     ph,
-          category:  'Family',
-          goal:      'Family Registration',
-          members:   membersPayload,
-        };
-
-        try {
-          await fetch('/api/lead', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(payload),
-          });
-        } catch (err) {
-          console.error('[family form] fetch error (non-fatal):', err);
-        }
-
-        famForm.style.display = 'none';
-        famSuccess.style.display = '';
-      });
-    })();
-  </script>
+  }
+
+  fixSchedule();
+
+  var _timer;
+  var observer = new MutationObserver(function () {
+    clearTimeout(_timer);
+    _timer = setTimeout(fixSchedule, 150);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+});
+</script>
 </body>
 </html>
