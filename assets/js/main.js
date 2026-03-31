@@ -365,7 +365,7 @@ async function initEarlyBirdFOMO() {
   // Animated counter: triggers when section scrolls into view
   const numEl = document.getElementById('eb-remaining');
   if (numEl) {
-    numEl.textContent = total;
+    numEl.textContent = spotsLeft;
     const io = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         animateCounter(numEl, total, spotsLeft, 1600);
