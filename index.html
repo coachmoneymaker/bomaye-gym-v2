@@ -47,8 +47,8 @@
     /* Section — hidden, ready to animate in */
     #bsport-widget-section {
       display: none;
-      background: linear-gradient(160deg, #080808 0%, #111 60%, #0a0a0a 100%);
-      border-top: 1px solid rgba(197,160,89,0.15);
+      background: #ffffff;
+      border-top: 1px solid rgba(197,160,89,0.18);
       position: relative;
       z-index: 101;
       opacity: 0;
@@ -63,7 +63,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(197,160,89,0.06) 0%, transparent 65%);
+      background: radial-gradient(ellipse 70% 30% at 50% 0%, rgba(197,160,89,0.04) 0%, transparent 70%);
       pointer-events: none;
     }
     /* Premium constrained container */
@@ -82,7 +82,7 @@
       margin-bottom: 2.25rem;
       background: none;
       border: none;
-      color: rgba(255,255,255,0.38);
+      color: rgba(8,8,8,0.40);
       font-family: var(--font-head);
       font-size: 0.68rem;
       letter-spacing: 2.5px;
@@ -101,9 +101,9 @@
     .bsport-widget-embed {
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(197,160,89,0.14);
-      background: rgba(255,255,255,0.02);
-      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+      border: 1px solid rgba(197,160,89,0.22);
+      background: #ffffff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 1px 0 rgba(197,160,89,0.12);
       position: relative;
     }
     .bsport-iframe-wrap { position: relative; overflow: hidden; }
@@ -125,8 +125,8 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      background: #0a0a0a;
-      color: rgba(255,255,255,0.38);
+      background: #ffffff;
+      color: rgba(8,8,8,0.38);
       font-family: var(--font-head);
       font-size: 0.78rem;
       letter-spacing: 2px;
@@ -169,6 +169,29 @@
       .bsport-widget-inner { padding: 44px 16px 52px; }
       .bsport-iframe { height: 1050px; }
       .bsport-widget-embed { border-radius: 12px; }
+    }
+    /* Early-bird urgency messaging block */
+    .eb-urgency-block {
+      margin: 1rem 0 0.25rem;
+      padding: 0.9rem 1.1rem;
+      border-left: 2px solid var(--gold);
+      background: rgba(197,160,89,0.05);
+      border-radius: 0 6px 6px 0;
+    }
+    .eb-urgency-headline {
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin: 0 0 0.3rem;
+    }
+    .eb-urgency-subline {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+      line-height: 1.5;
     }
   </style>
 
@@ -696,6 +719,10 @@
             <span id="spots-badge-text">Early Bird — noch 300 Plätze</span>
           </div>
           <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD — LIMITIERT</span>
+          <div class="eb-urgency-block">
+            <p class="eb-urgency-headline">Early Bird Plätze sind limitiert</p>
+            <p class="eb-urgency-subline">Exklusive Startkonditionen nur solange freie Plätze verfügbar sind.</p>
+          </div>
           <h2 style="margin:1.25rem 0;">NUR 300 PLÄTZE.<br><span class="gold">WENN SIE WEG SIND, IST DER PREIS HÖHER.</span></h2>
           <p id="sanity-eb-subtext" style="margin-bottom:1.5rem;">Wenn sie weg sind, ist der Preis höher. <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong></p>
           <div class="eb-checklist">
@@ -900,8 +927,8 @@
 
       <div class="bsport-widget-header">
         <span class="tag tag--gold">MITGLIEDSCHAFT</span>
-        <h2 style="margin-top:1rem;color:#fff;">DEIN WEG <span class="gold">BEGINNT HIER.</span></h2>
-        <p style="color:rgba(255,255,255,0.55);margin-top:0.75rem;font-size:0.85rem;font-family:var(--font-head);letter-spacing:2px;">
+        <h2 style="margin-top:1rem;color:#0a0a0a;">DEIN WEG <span class="gold">BEGINNT HIER.</span></h2>
+        <p style="color:rgba(8,8,8,0.52);margin-top:0.75rem;font-size:0.85rem;font-family:var(--font-head);letter-spacing:2px;">
           Wähle dein Membership und starte jetzt.
         </p>
       </div>
