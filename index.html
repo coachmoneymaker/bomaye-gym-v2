@@ -1785,6 +1785,40 @@
       .family-access-btn { padding: 15px 28px; width: 100%; justify-content: center; }
       .fam-cat-btn { font-size: 0.5rem; padding: 8px 3px; }
     }
+
+    /* ── Bsport subscription widget section ─────────────────────── */
+    .widget-section {
+      display: none;
+      padding: 64px 20px 80px;
+      background: #0f0f0f;
+    }
+    .widget-section.is-visible {
+      display: block;
+    }
+    .widget-section-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .widget-section-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: #fff;
+      letter-spacing: 0.05em;
+      margin: 0 0 10px;
+    }
+    .widget-section-header p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .widget-section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(198,164,90,0.2);
+      background: #111;
+    }
   </style>
 </head>
 <body>
@@ -1877,7 +1911,7 @@
             </div>
           </div>
           <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="kids" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true'">
+          <button type="button" class="card-cta cta-default" data-pricing-cat="kids">
             Jetzt Mitglied werden
           </button>
         </div>
@@ -1903,7 +1937,7 @@
             </div>
           </div>
           <div class="card-urgency">Early Bird Preis. Dauerhaft gesichert.</div>
-          <button type="button" class="card-cta cta-default" data-pricing-cat="youth" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true'">
+          <button type="button" class="card-cta cta-default" data-pricing-cat="youth">
             Jetzt Mitglied werden
           </button>
         </div>
@@ -1930,7 +1964,7 @@
             </div>
           </div>
           <div class="card-urgency">Exklusiver Early Bird Preis. Dauerhaft. Solange Plätze verfügbar.</div>
-          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults" onclick="window.location.href='https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'">
+          <button type="button" class="card-cta cta-premium" data-pricing-cat="adults">
             Jetzt Mitglied werden
           </button>
         </div>
@@ -1947,6 +1981,52 @@
         <p class="family-cta-sub">Gültig für Familien aus demselben Haushalt.</p>
       </div>
 
+    </section>
+
+    <!-- Bsport Subscription Widget (revealed when any pricing CTA is clicked) -->
+    <section class="widget-section" id="widget-section" aria-label="Mitgliedschaft abschließen">
+      <div class="widget-section-header fade-up">
+        <h2>MITGLIEDSCHAFT ABSCHLIESSEN</h2>
+        <p>Wähle dein Paket und starte direkt durch.</p>
+      </div>
+      <div class="widget-section-inner">
+        <div style="overflow:hidden !important; position:relative; padding-top:125vh;">
+          <iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;"
+                  frameborder="0"
+                  allowfullscreen
+                  srcdoc='
+                    <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+                    <script id="bsport-widget-mount">
+                        function MountBsportWidget(config, repeat=1) {
+                            if (repeat > 50) { return }
+                            if (!window.BsportWidget) {
+                                return setTimeout(() => {
+                                    MountBsportWidget(config,repeat+1)
+                                }, 100 * repeat || 1)
+                            }
+                            BsportWidget.mount(config)
+                        }
+                    </script>
+                    <script>
+                        MountBsportWidget({
+                                "parentElement": "bsport-widget-608946",
+                                "companyId": 5473,
+                                "franchiseId": null,
+                                "dialogMode": 3,
+                                "widgetType": "subscription",
+                                "showFab": false,
+                                "fullScreenPopup": false,
+                                "styles":undefined,
+                                "config": {
+                                    "subscription": {}
+                                }
+                            })
+                    </script>
+                    <div id="bsport-widget-608946"></div>
+                  '>
+          </iframe>
+        </div>
+      </div>
     </section>
 
     <!-- Lead Capture Form (hidden until pricing CTA clicked) -->
@@ -2379,16 +2459,14 @@
       }, 320);
     }
 
-    // ── Pricing card CTA → switch to form view ───────────────────
-    const checkoutUrls = {
-      kids:   'https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true',
-      youth:  'https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true',
-      adults: 'https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true'
-    };
+    // ── Pricing card CTA → reveal embedded subscription widget ───
     document.querySelectorAll('.card-cta[data-pricing-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const url = checkoutUrls[btn.dataset.pricingCat];
-        if (url) window.location.href = url;
+        const widgetSection = document.getElementById('widget-section');
+        if (widgetSection) {
+          widgetSection.classList.add('is-visible');
+          widgetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
