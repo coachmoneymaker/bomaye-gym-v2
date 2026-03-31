@@ -166,9 +166,17 @@
     }
     /* Mobile */
     @media (max-width: 767px) {
-      .bsport-widget-inner { padding: 44px 16px 52px; }
+      .bsport-widget-inner { padding: 24px 16px 52px; }
       .bsport-iframe { height: 1050px; }
       .bsport-widget-embed { border-radius: 12px; }
+    }
+    /* Explicit scroll-margin for all mobile breakpoints — ensures the section
+       always clears the fixed header when scrolled into view programmatically */
+    @media (max-width: 768px) {
+      #bsport-widget-section { scroll-margin-top: 168px; }
+    }
+    @media (max-width: 480px) {
+      #bsport-widget-section { scroll-margin-top: 168px; }
     }
     /* Early-bird urgency messaging block */
     .eb-urgency-block {
@@ -974,8 +982,15 @@
       });
     });
     setTimeout(function () {
-      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
+      /* Explicit scroll: read actual rendered header height so the section
+         top always clears the fixed nav on every mobile/tablet breakpoint.
+         scrollIntoView+scroll-margin-top is unreliable on iOS Safari when
+         the target element was display:none before this call. */
+      var header = document.getElementById('header');
+      var headerH = header ? header.offsetHeight : 96;
+      var secTop = sec.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: Math.max(0, secTop - headerH - 8), behavior: 'smooth' });
+    }, 120);
   }
 
   function closeBsportWidget() {
