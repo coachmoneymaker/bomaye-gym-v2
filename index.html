@@ -54,6 +54,9 @@
       opacity: 0;
       transform: translateY(24px);
       transition: opacity 0.45s ease, transform 0.45s ease;
+      /* Structural header clearance: content starts below the fixed nav
+         regardless of scroll precision — no JS timing dependency */
+      padding-top: var(--nav-h);
     }
     #bsport-widget-section.bws--visible {
       opacity: 1;
@@ -106,7 +109,7 @@
       box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 1px 0 rgba(197,160,89,0.12);
       position: relative;
     }
-    .bsport-iframe-wrap { position: relative; overflow: hidden; }
+    .bsport-iframe-wrap { position: relative; }
     /* Iframe — explicit height, no aspect-ratio padding trick */
     .bsport-iframe {
       display: block;
@@ -981,16 +984,22 @@
         if (overlay) overlay.classList.add('visible');
       });
     });
+    /* Wait for layout reflow to complete before measuring position.
+       300 ms + rAF guarantees the section is fully rendered on iOS Safari
+       before we read coordinates — avoids the stale-geometry trap at 120 ms.
+       The section now carries padding-top: var(--nav-h) as a structural
+       guarantee, so we scroll exactly to the section top edge and the
+       fixed header lands over the padding (clear zone), not over content. */
     setTimeout(function () {
-      /* Explicit scroll: read actual rendered header height so the section
-         top always clears the fixed nav on every mobile/tablet breakpoint.
-         scrollIntoView+scroll-margin-top is unreliable on iOS Safari when
-         the target element was display:none before this call. */
-      var header = document.getElementById('header');
-      var headerH = header ? header.offsetHeight : 96;
-      var secTop = sec.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: Math.max(0, secTop - headerH - 8), behavior: 'smooth' });
-    }, 120);
+      requestAnimationFrame(function () {
+        var secTop = sec.getBoundingClientRect().top +
+                     (window.pageYOffset !== undefined ? window.pageYOffset
+                                                       : (document.documentElement || document.body).scrollTop);
+        /* No headerH subtraction needed — padding-top on the section equals
+           nav-h, so landing on secTop puts content exactly below the header. */
+        window.scrollTo({ top: Math.max(0, secTop), behavior: 'smooth' });
+      });
+    }, 300);
   }
 
   function closeBsportWidget() {
