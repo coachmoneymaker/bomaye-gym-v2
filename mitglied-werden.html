@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Mitglied werden | BOMAYE GYM MÜNCHEN</title>
+  <meta name="description" content="Wähle deine Mitgliedschaft bei Bomaye Gym München. BOMAYE KIDS, YOUTH oder UNLIMITED – starte jetzt und sichere dir deinen Early Bird Preis." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mitglied werden — BOMAYE GYM MÜNCHEN" />
+  <meta property="og:description" content="Wähle deine Mitgliedschaft bei Bomaye Gym München und starte direkt." />
+  <meta property="og:image" content="https://www.bomayegym.com/assets/images/community.webp" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/mitglied-werden" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/mitglied-werden" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- bsport warm-up -->
+  <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ── Page reset / base ──────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(160deg, #141414 0%, #111111 48%, #12141a 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #fff;
+      font-family: var(--font-body);
+    }
+
+    /* ── Minimal header ─────────────────────────────────── */
+    .mw-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: 64px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(198,164,90,0.12);
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+    }
+    .mw-header-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .mw-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .mw-logo-img {
+      height: 30px;
+      width: auto;
+      display: block;
+    }
+    .mw-logo-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      color: #fff;
+      line-height: 1;
+    }
+    .mw-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .mw-back-link:hover { color: var(--gold); }
+    .mw-back-link i { font-size: 0.6rem; }
+
+    /* ── Page wrapper ────────────────────────────────────── */
+    .mw-page {
+      padding-top: 64px; /* matches header height */
+      min-height: 100vh;
+    }
+
+    /* ── Hero intro ──────────────────────────────────────── */
+    .mw-hero {
+      padding: clamp(48px, 8vw, 80px) 1.25rem clamp(32px, 5vw, 48px);
+      text-align: center;
+      position: relative;
+    }
+    .mw-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(197,160,89,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .mw-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+    .mw-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .mw-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      line-height: 1;
+      color: #fff;
+      margin: 0 0 1.25rem;
+      text-transform: uppercase;
+    }
+    .mw-headline .gold { color: var(--gold); }
+    .mw-subline {
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.5);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Plan cards section ──────────────────────────────── */
+    .mw-plans {
+      padding: clamp(32px, 6vw, 64px) 1.25rem clamp(48px, 8vw, 96px);
+    }
+    .mw-plans-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Card grid: 1 col mobile → 3 col desktop */
+    .mw-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    @media (min-width: 640px) {
+      .mw-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 900px) {
+      .mw-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Individual card */
+    .mw-card {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(198,164,90,0.18);
+      border-radius: 14px;
+      padding: clamp(28px, 5vw, 40px) clamp(20px, 4vw, 32px) clamp(24px, 4vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.22s, box-shadow 0.25s;
+    }
+    .mw-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(197,160,89,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .mw-card:hover {
+      border-color: rgba(198,164,90,0.50);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 28px rgba(198,164,90,0.08);
+    }
+    /* Featured card (Unlimited) */
+    .mw-card--featured {
+      border-color: rgba(198,164,90,0.50);
+      box-shadow: 0 0 36px rgba(198,164,90,0.12), 0 6px 24px rgba(0,0,0,0.30);
+    }
+    .mw-card--featured::before {
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(197,160,89,0.10) 0%, transparent 65%);
+    }
+
+    /* Badge */
+    .mw-card-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-family: var(--font-head);
+      font-size: 0.55rem;
+      letter-spacing: 2.5px;
+      color: #0a0a0a;
+      background: linear-gradient(135deg, #C6A45A, #d4b472);
+      border-radius: 4px;
+      padding: 3px 8px;
+      text-transform: uppercase;
+    }
+
+    /* Icon */
+    .mw-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(198,164,90,0.1);
+      border: 1px solid rgba(198,164,90,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      flex-shrink: 0;
+    }
+    .mw-card-icon i {
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+
+    /* Name / age */
+    .mw-card-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .mw-card-age {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+    }
+
+    /* Price block */
+    .mw-card-price {
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+    .mw-card-price-value {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      color: #fff;
+      line-height: 1;
+    }
+    .mw-card-price-unit {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.45);
+    }
+    .mw-card-fee {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 1.4rem;
+    }
+
+    /* Features */
+    .mw-card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      flex: 1;
+    }
+    .mw-card-features li {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.45;
+    }
+    .mw-card-features li i {
+      color: var(--gold);
+      font-size: 0.75rem;
+      margin-top: 0.18rem;
+      flex-shrink: 0;
+    }
+
+    /* CTA button */
+    .mw-card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+    }
+    .mw-card-btn--gold {
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 55%, #C6A45A 100%);
+      color: #0a0a0a;
+      box-shadow: 0 0 18px rgba(198,164,90,0.28), 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .mw-card-btn--gold:hover {
+      transform: scale(1.03);
+      filter: brightness(1.08);
+      box-shadow: 0 0 26px rgba(198,164,90,0.40), 0 6px 18px rgba(0,0,0,0.40);
+    }
+    .mw-card-btn--outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid rgba(198,164,90,0.45);
+    }
+    .mw-card-btn--outline:hover {
+      border-color: var(--gold);
+      background: rgba(198,164,90,0.07);
+    }
+    /* Security note under button */
+    .mw-card-secure {
+      text-align: center;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.28);
+      margin-top: 0.65rem;
+    }
+    .mw-card-secure i { color: rgba(198,164,90,0.5); margin-right: 0.25rem; }
+
+    /* ── Trust strip ─────────────────────────────────────── */
+    .mw-trust {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem clamp(48px, 8vw, 80px);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 2rem;
+    }
+    .mw-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.45);
+    }
+    .mw-trust-item i {
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    /* ── Footer strip ────────────────────────────────────── */
+    .mw-footer {
+      border-top: 1px solid rgba(198,164,90,0.10);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+    }
+    .mw-footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .mw-footer-links a {
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mw-footer-links a:hover { color: var(--gold); }
+    .mw-footer-copy {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    /* ── Divider line ────────────────────────────────────── */
+    .mw-divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      height: 1px;
+      background: rgba(198,164,90,0.10);
+    }
+
+    /* ── On mobile: stack Unlimited card first via order ─── */
+    @media (max-width: 639px) {
+      .mw-card--featured { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ MINIMAL HEADER ═══════ -->
+  <header class="mw-header">
+    <div class="mw-header-inner">
+      <a href="/" class="mw-logo" aria-label="Bomaye Gym Startseite">
+        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="mw-logo-img"
+             onerror="this.style.display='none'" />
+        <span class="mw-logo-text">BOMAYE</span>
+      </a>
+      <a href="/" class="mw-back-link" aria-label="Zurück zur Startseite">
+        <i class="fa-solid fa-arrow-left"></i> STARTSEITE
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════ PAGE CONTENT ═══════ -->
+  <main class="mw-page" role="main">
+
+    <!-- ── HERO INTRO ── -->
+    <section class="mw-hero" aria-label="Seiten-Einleitung">
+      <div class="mw-hero-inner">
+        <span class="mw-eyebrow">BOMAYE GYM MÜNCHEN — EST. 2026</span>
+        <h1 class="mw-headline">
+          DEINE <span class="gold">MITGLIEDSCHAFT.</span>
+        </h1>
+        <p class="mw-subline">
+          Wähle deine Mitgliedschaft und sichere dir deinen Platz.<br>
+          Der Einstieg bei BOMAYE beginnt hier.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── PLAN CARDS ── -->
+    <section class="mw-plans" aria-label="Mitgliedschaften">
+      <div class="mw-plans-inner">
+
+        <div class="mw-cards">
+
+          <!-- ── BOMAYE KIDS ── -->
+          <div class="mw-card">
+            <span class="mw-card-badge">EARLY BIRD</span>
+            <div class="mw-card-icon" aria-hidden="true">
+              <i class="fa-solid fa-child"></i>
+            </div>
+            <div class="mw-card-name">BOMAYE KIDS</div>
+            <div class="mw-card-age">6–9 JAHRE</div>
+            <div class="mw-card-price">
+              <span class="mw-card-price-value">59,60&thinsp;€</span>
+              <span class="mw-card-price-unit">/ MONAT</span>
+            </div>
+            <div class="mw-card-fee">+ 100,00 € Anmeldegebühr (einmalig)</div>
+            <ul class="mw-card-features">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Spielerisches Training mit Struktur</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Förderung von Bewegung &amp; Koordination</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Disziplin &amp; Selbstbewusstsein</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Sicheres, professionelles Umfeld</li>
+            </ul>
+            <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
+               class="mw-card-btn mw-card-btn--outline"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Jetzt für BOMAYE KIDS anmelden">
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN
+            </a>
+            <div class="mw-card-secure">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i> Sichere Buchung via Bsport
+            </div>
+          </div>
+
+          <!-- ── BOMAYE YOUTH ── -->
+          <div class="mw-card">
+            <span class="mw-card-badge">EARLY BIRD</span>
+            <div class="mw-card-icon" aria-hidden="true">
+              <i class="fa-solid fa-child-reaching"></i>
+            </div>
+            <div class="mw-card-name">BOMAYE YOUTH</div>
+            <div class="mw-card-age">10–17 JAHRE</div>
+            <div class="mw-card-price">
+              <span class="mw-card-price-value">63,60&thinsp;€</span>
+              <span class="mw-card-price-unit">/ MONAT</span>
+            </div>
+            <div class="mw-card-fee">+ 100,00 € Anmeldegebühr (einmalig)</div>
+            <ul class="mw-card-features">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Strukturiertes Training für Technik &amp; Disziplin</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Förderung von Selbstvertrauen</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Einstieg ins echte Boxtraining</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Community &amp; Teamgefühl</li>
+            </ul>
+            <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
+               class="mw-card-btn mw-card-btn--outline"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Jetzt für BOMAYE YOUTH anmelden">
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN
+            </a>
+            <div class="mw-card-secure">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i> Sichere Buchung via Bsport
+            </div>
+          </div>
+
+          <!-- ── BOMAYE UNLIMITED ── -->
+          <div class="mw-card mw-card--featured">
+            <span class="mw-card-badge">EARLY BIRD</span>
+            <div class="mw-card-icon" aria-hidden="true">
+              <i class="fa-solid fa-infinity"></i>
+            </div>
+            <div class="mw-card-name">BOMAYE UNLIMITED</div>
+            <div class="mw-card-age">18+ JAHRE</div>
+            <div class="mw-card-price">
+              <span class="mw-card-price-value">75,60&thinsp;€</span>
+              <span class="mw-card-price-unit">/ MONAT</span>
+            </div>
+            <div class="mw-card-fee">+ 100,00 € Anmeldegebühr (einmalig)</div>
+            <ul class="mw-card-features">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Unlimited access to all classes</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Boxing, Kickboxing &amp; Conditioning</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Train like a fighter — every day</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Flexible Trainingszeiten</li>
+            </ul>
+            <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
+               class="mw-card-btn mw-card-btn--gold"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Jetzt für BOMAYE UNLIMITED anmelden">
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN
+            </a>
+            <div class="mw-card-secure">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i> Sichere Buchung via Bsport
+            </div>
+          </div>
+
+        </div><!-- /.mw-cards -->
+      </div><!-- /.mw-plans-inner -->
+    </section>
+
+    <!-- ── TRUST STRIP ── -->
+    <div class="mw-trust" role="list" aria-label="Vertrauenszeichen">
+      <div class="mw-trust-item" role="listitem">
+        <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
+        <span>Lifetime Preisgarantie</span>
+      </div>
+      <div class="mw-trust-item" role="listitem">
+        <i class="fa-solid fa-clock" aria-hidden="true"></i>
+        <span>Zahle erst ab Opening</span>
+      </div>
+      <div class="mw-trust-item" role="listitem">
+        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+        <span>Sichere Buchung via Bsport</span>
+      </div>
+      <div class="mw-trust-item" role="listitem">
+        <i class="fa-solid fa-fire" aria-hidden="true"></i>
+        <span>Limitiert auf 300 Mitglieder</span>
+      </div>
+    </div>
+
+    <div class="mw-divider" aria-hidden="true"></div>
+
+    <!-- ── FOOTER ── -->
+    <footer class="mw-footer" role="contentinfo">
+      <nav class="mw-footer-links" aria-label="Rechtliches">
+        <a href="/impressum">IMPRESSUM</a>
+        <a href="/datenschutz">DATENSCHUTZ</a>
+        <a href="/agb">AGB</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+      <p class="mw-footer-copy">&copy; 2026 BOMAYE GYM MÜNCHEN — PINEAPPLE PARK</p>
+    </footer>
+
+  </main>
+
+</body>
+</html>

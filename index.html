@@ -271,7 +271,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ÜBER UNS</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <button class="btn btn--gold btn--sm" onclick="nav('home','pricing')" type="button">MITGLIED WERDEN</button>
+      <a href="/mitglied-werden" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;">MITGLIED WERDEN</a>
     </nav>
 
     <button class="burger" onclick="toggleMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
@@ -289,9 +289,9 @@
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:3">ÜBER UNS</a>
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <button class="btn btn--gold mn-cta" onclick="mobileNav('home','pricing')" type="button" style="--mn-i:5">
+  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:5;text-decoration:none;display:flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
-  </button>
+  </a>
 </div>
 
 
@@ -579,9 +579,9 @@
       <p class="hero-subtitle" id="sanity-hero-subheadline">Nur 300 Plätze. Danach wird es teurer.</p>
       <p class="hero-brand-tagline">BECOME BOMAYE.</p>
       <div class="hero-ctas">
-        <button class="btn btn--gold btn--hero-primary" onclick="nav('home','pricing')" type="button">
+        <a href="/mitglied-werden" class="btn btn--gold btn--hero-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-        </button>
+        </a>
         <a href="#dna" onclick="event.preventDefault();nav('home','dna');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
           <i class="fa-solid fa-circle-play"></i> WARUM BOMAYE
         </a>
@@ -748,9 +748,9 @@
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze – kein Nachschub</span></div>
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zahle erst ab Opening</span></div>
           </div>
-          <button id="sanity-eb-cta" onclick="nav('home','pricing')" class="btn btn--gold" type="button">
+          <a id="sanity-eb-cta" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-          </button>
+          </a>
         </div>
         <div class="eb-card">
           <div class="eb-card-label">NOCH VERFÜGBAR</div>
@@ -831,8 +831,8 @@
         <!-- KIDS PANEL -->
         <div class="plan-panel active" id="panel-kids">
           <div class="plan-card" role="button" tabindex="0"
-               onclick="openBsportWidget()"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBsportWidget()">
+               onclick="window.open('https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true','_blank','noopener')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.open('https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true','_blank','noopener')">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-child"></i></div>
             <div class="plan-card-name">BOMAYE KIDS</div>
@@ -860,8 +860,8 @@
         <!-- YOUTH PANEL -->
         <div class="plan-panel" id="panel-youth">
           <div class="plan-card" role="button" tabindex="0"
-               onclick="openBsportWidget()"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBsportWidget()">
+               onclick="window.open('https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true','_blank','noopener')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.open('https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true','_blank','noopener')">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-child-reaching"></i></div>
             <div class="plan-card-name">BOMAYE YOUTH</div>
@@ -889,8 +889,8 @@
         <!-- UNLIMITED PANEL -->
         <div class="plan-panel" id="panel-unlimited">
           <div class="plan-card plan-card--featured" role="button" tabindex="0"
-               onclick="openBsportWidget()"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBsportWidget()">
+               onclick="window.open('https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true','_blank','noopener')"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.open('https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true','_blank','noopener')">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-infinity"></i></div>
             <div class="plan-card-name">BOMAYE UNLIMITED</div>
@@ -1601,9 +1601,9 @@
       </div>
 
       <div style="text-align:center; margin-top:3rem; display:flex; flex-wrap:wrap; gap:1.25rem; justify-content:center; align-items:center;">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">
+        <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
-        </button>
+        </a>
       </div>
 
       <!-- ── Corporate Boxing Inline Inquiry Form ── -->
