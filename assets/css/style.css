@@ -220,17 +220,24 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .back-btn:hover { color: var(--white); }
 
 /* ── Mobile Nav ────────────────────────────────────────────── */
+/* Fade-in overlay — no slide, clean opacity transition */
 #mobile-nav {
   position: fixed; inset: 0; z-index: 999;
   background: rgba(6,6,6,0.97); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
-  transform: translateX(100%); transition: transform 0.5s var(--ease-expo);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
 }
-#mobile-nav.open { transform: translateX(0); }
+#mobile-nav.open {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
+}
 #mobile-nav .nav-link { font-size: 0.88rem; letter-spacing: 3px; padding: 0.85rem 2rem; }
+/* Close button: sits at the same visual position as the burger in the header */
 .mob-close {
-  position: absolute; top: 1.75rem; right: 1.75rem;
-  font-size: 1.3rem; color: rgba(255,255,255,0.45); transition: color 0.22s var(--ease-out);
+  position: absolute; top: 1.35rem; right: 1.5rem;
+  font-size: 1.2rem; line-height: 1;
+  color: rgba(255,255,255,0.38); transition: color 0.22s var(--ease-out);
 }
 .mob-close:hover { color: var(--white); }
 
@@ -1776,6 +1783,17 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   .coach-info { padding: 1.5rem; }
 
   .hero-trust { gap: 0.75rem; }
+
+  /* Mobile header: lighter glass avoids heavy GPU blur on mobile */
+  #header.scrolled {
+    background: rgba(8,8,8,0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(198,164,90,0.06), 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  /* Minimum 44×44px touch target for the burger (Apple HIG) */
+  .burger { min-width: 44px; min-height: 44px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -5357,37 +5375,33 @@ section { padding: var(--sv) 0; }
 
 
 /* ─── Part 1: Fullscreen overlay — smooth fade ──────────────── */
-/* Overrides the slide-from-right translateX approach            */
 .mobile-overlay-nav {
   /* Layout already set: position:fixed; inset:0; z-index:999; flex+center */
-  transform: none !important;          /* cancel translateX slide          */
+  transform: none !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  /* Hiding: opacity fades first, then visibility snaps hidden  */
-  transition: opacity 0.35s var(--ease-expo), visibility 0s 0.35s;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
 }
 .mobile-overlay-nav.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  /* Showing: visibility snaps visible immediately, opacity fades in */
-  transition: opacity 0.35s var(--ease-expo), visibility 0s 0s;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
 }
 
-/* index.html uses #mobile-nav without the shared class — target directly */
+/* #mobile-nav (index.html / stundenplan.html) — timing confirmed here */
 #mobile-nav {
-  transform: none !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.35s var(--ease-expo), visibility 0s 0.35s;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
 }
 #mobile-nav.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.35s var(--ease-expo), visibility 0s 0s;
+  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
 }
 
 
@@ -5397,8 +5411,8 @@ section { padding: var(--sv) 0; }
   font-family: var(--font-display) !important;
   font-size: clamp(1.9rem, 5.5vw, 2.6rem) !important;
   letter-spacing: 6px !important;
-  color: rgba(255,255,255,0.78) !important;
-  padding: 0.45rem 1.5rem !important;
+  color: rgba(255,255,255,0.72) !important;
+  padding: 0.75rem 2rem !important;
   line-height: 1.15 !important;
   text-decoration: none;
   display: block;
@@ -5407,13 +5421,13 @@ section { padding: var(--sv) 0; }
   border: none;
   cursor: pointer;
   width: 100%;
-  /* Entrance: each item starts hidden + offset                  */
+  /* Entrance: each item starts hidden + slight offset           */
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(14px);
   /* Stagger via --mn-i custom property set inline in HTML       */
   transition:
-    opacity    0.5s var(--ease-expo) calc(var(--mn-i, 0) * 80ms),
-    transform  0.5s var(--ease-expo) calc(var(--mn-i, 0) * 80ms),
+    opacity    0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
+    transform  0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
     color      0.2s !important;
 }
 
@@ -5424,13 +5438,13 @@ section { padding: var(--sv) 0; }
   transform: translateY(0);
 }
 
-/* Hover: gold + subtle nudge */
+/* Hover: gold */
 .mn-item:hover { color: var(--gold) !important; }
 
 /* Gold CTA button inside overlay */
 .mn-cta {
-  margin-top: 1.75rem !important;
-  padding: 0.9rem 2.8rem !important;
+  margin-top: 2rem !important;
+  padding: 0.85rem 2.8rem !important;
 }
 
 
