@@ -474,7 +474,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ÜBER UNS</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/#pricing" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
     </nav>
     <button class="burger" onclick="toggleKurseMenu()" aria-label="Menü" aria-expanded="false" id="kurse-burger-btn" type="button">
       <span class="burger-line"></span>
@@ -492,7 +492,7 @@
   <a href="/coaches" class="mn-item" style="--mn-i:2">COACHES</a>
   <a href="/about" class="mn-item" style="--mn-i:3">ÜBER UNS</a>
   <a href="/faq" class="mn-item" style="--mn-i:4">FAQ</a>
-  <a class="btn btn--gold mn-cta" href="/#pricing" onclick="toggleKurseMenu();" style="--mn-i:5;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleKurseMenu();" style="--mn-i:5;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
@@ -683,7 +683,7 @@
                   </div>
                 </div>
               </div>
-              <a id="detail-cta-btn" href="/#pricing" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+              <a id="detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
                 <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
               </a>
             </div>
@@ -827,7 +827,7 @@
         <h3 class="mobile-course-detail__title" id="mob-detail-title">BOXING</h3>
         <p class="mobile-course-detail__desc" id="mob-detail-desc"></p>
         <div class="mobile-course-detail__feats" id="mob-detail-feats"></div>
-        <a id="mob-detail-cta-btn" href="/#pricing" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;width:100%;justify-content:center;">
+        <a id="mob-detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;width:100%;justify-content:center;">
           <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
         </a>
       </div>
@@ -843,7 +843,7 @@
       <h2 style="margin:1.25rem 0;">BEREIT ZU <span class="gold">STARTEN?</span></h2>
       <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Kein Vertrag. Kein Druck. Einfach kommen und mitmachen.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a href="/#pricing" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+        <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
         </a>
       </div>
@@ -1099,7 +1099,7 @@ function openCourse(id) {
       ctaBtn.href = 'mailto:' + data.cta.email;
       ctaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
     } else {
-      ctaBtn.href = '/#pricing';
+      ctaBtn.href = '/mitglied-werden';
       ctaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
     }
   }
@@ -1141,7 +1141,7 @@ function openMobileCourse(id, idx) {
       mobCtaBtn.href = 'mailto:' + data.cta.email;
       mobCtaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
     } else {
-      mobCtaBtn.href = '/#pricing';
+      mobCtaBtn.href = '/mitglied-werden';
       mobCtaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
     }
   }
