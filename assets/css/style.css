@@ -1586,58 +1586,81 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 /* ══════════════════════════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════════════════════════ */
-footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4.5rem 0 2rem; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 3.5rem; }
-/* Footer brand column — centered brand mark:
-   logo emblem and BOMAYE wordmark are center-aligned as a single
-   intentional brand unit; all content in the column centers under it */
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(197,160,89,0.14);
+  padding: 6rem 0 3.5rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 2.5rem 4.5rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 0;
+}
+/* Footer brand column — centered as a deliberate brand mark */
 .footer-brand               { display: flex; flex-direction: column; align-items: center; }
 .footer-logo-link           { display: inline-block; line-height: 0; }
-.footer-brand .logo-img     { height: 44px; width: auto; display: block; }
+.footer-brand .logo-img     { height: 46px; width: auto; display: block; }
 .footer-brand .logo-text    { display: block; text-align: center; margin-top: 0.5rem;
                                margin-bottom: 1rem; font-size: 1.8rem; line-height: 1;
                                letter-spacing: 0.12em; }
-.footer-brand p             { font-size: 0.86rem; color: var(--muted);
-                               margin-bottom: 0.4rem; text-align: center; }
+.footer-brand p             { font-size: 0.84rem; color: rgba(255,255,255,0.52);
+                               margin-bottom: 0.35rem; text-align: center; }
 .footer-brand .footer-socials { justify-content: center; }
-.brand-line { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 2px; }
-.footer-socials { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.brand-line { font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; }
+.footer-socials { display: flex; gap: 0.65rem; margin-top: 1.75rem; flex-wrap: wrap; }
 .social-icon {
   width: 36px; height: 36px;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem; color: var(--muted); transition: all 0.3s;
+  font-size: 0.88rem; color: rgba(255,255,255,0.45);
+  transition: background 0.25s var(--ease-out), border-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
 }
-.social-icon:hover { background: rgba(197,160,89,0.15); border-color: var(--gold); color: var(--gold); }
-.footer-col h4 { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 3px; color: var(--muted); margin-bottom: 1.2rem; }
-.footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+.social-icon:hover { background: rgba(197,160,89,0.12); border-color: rgba(197,160,89,0.55); color: var(--gold); }
+/* Column headings — understated label style */
+.footer-col h4 {
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 3.5px;
+  color: rgba(255,255,255,0.35); margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
 .footer-links button, .footer-links a {
-  font-size: 0.86rem; color: rgba(255,255,255,0.45); text-align: left; transition: color 0.2s; display: block;
+  font-size: 0.84rem; color: rgba(255,255,255,0.50); text-align: left;
+  transition: color 0.22s var(--ease-out); display: block;
 }
-.footer-links button:hover, .footer-links a:hover { color: var(--gold); }
-.footer-contact-item { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.7rem; font-size: 0.86rem; }
-.footer-contact-item i { color: var(--gold); width: 16px; flex-shrink: 0; }
-.footer-contact-item a { color: var(--muted); transition: color 0.2s; }
-.footer-contact-item a:hover { color: var(--gold); }
+.footer-links button:hover, .footer-links a:hover { color: var(--white); }
+.footer-contact-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  margin-bottom: 0.85rem; font-size: 0.84rem;
+}
+.footer-contact-item i { color: var(--gold); width: 14px; flex-shrink: 0; margin-top: 0.2em; font-size: 0.8rem; }
+.footer-contact-item span, .footer-contact-item a { color: rgba(255,255,255,0.50); transition: color 0.22s var(--ease-out); }
+.footer-contact-item a:hover { color: var(--white); }
+/* Compact contact bar — subtle one-liner */
 .footer-contactbar {
-  text-align: center; padding: 1.25rem 0; margin-bottom: 1.75rem;
-  border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
-  font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 2px; color: var(--muted);
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.5rem;
+  text-align: center; padding: 1.5rem 0 1.25rem;
+  margin-bottom: 0;
+  border-top: none;
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(255,255,255,0.35);
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.4rem;
 }
-.footer-contactbar a { transition: color 0.2s; }
-.footer-contactbar a:hover { color: var(--gold); }
-.footer-contactbar .dot { color: var(--border); padding: 0 0.5rem; }
+.footer-contactbar a { transition: color 0.22s var(--ease-out); }
+.footer-contactbar a:hover { color: var(--white); }
+.footer-contactbar .dot { color: rgba(197,160,89,0.30); padding: 0 0.4rem; }
+/* Bottom strip — copyright + legal */
 .footer-bottom {
-  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
-  font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 2px; color: rgba(255,255,255,0.22);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+  padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06);
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px; color: rgba(255,255,255,0.28);
 }
-.footer-legal { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+.footer-legal { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-legal a {
-  font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 2px;
-  color: rgba(255,255,255,0.22); transition: color 0.2s;
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px;
+  color: rgba(255,255,255,0.28); transition: color 0.22s var(--ease-out);
 }
-.footer-legal a:hover { color: var(--gold); }
+.footer-legal a:hover { color: var(--white); }
 
 /* ══════════════════════════════════════════════════════════════
    BOOKING MODAL
@@ -1745,7 +1768,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 @media (max-width: 1100px) {
   /* services-grid 1100px handled in base section above */
   .programs-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid   { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .footer-grid   { grid-template-columns: 1fr 1fr; gap: 2.5rem 3rem; }
   .team-grid     { grid-template-columns: 1fr; }
 }
 
@@ -1800,9 +1823,15 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
    RESPONSIVE — 768px
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .footer-grid   { grid-template-columns: 1fr; gap: 2rem; }
-  .footer-bottom { flex-direction: column; text-align: center; }
-  .footer-contactbar { flex-direction: column; gap: 0.4rem; }
+  /* Footer: brand full-width top row, 2-col nav, contact full-width bottom */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.25rem 3rem;
+  }
+  .footer-grid > *:first-child { grid-column: 1 / -1; align-items: center; }
+  .footer-grid > *:last-child  { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .footer-contactbar { flex-direction: column; gap: 0.3rem; }
   .footer-contactbar .dot { display: none; }
   .dna-stats { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
   .eb-prices { gap: 1.5rem; }
@@ -1816,7 +1845,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   section { padding: clamp(48px, 5vw, 72px) 0; }
   .container { padding: 0 1.25rem; }
   .logo-img { height: 30px !important; width: auto !important; }
-  .footer-brand .logo-img { height: 40px !important; width: auto !important; }
+  .footer-brand .logo-img { height: 42px !important; width: auto !important; }
 
   .hero-h1  { font-size: clamp(2.6rem, 11vw, 4rem); }
   .hero-content { padding-top: calc(var(--nav-h) + 0.75rem); padding-bottom: 3rem; }
@@ -1840,6 +1869,7 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 
   .early-bird-inner .btn { width: 100%; }
 
+  .footer-bottom { align-items: center; text-align: center; }
   .footer-legal { flex-wrap: wrap; justify-content: center; gap: 1rem; }
 
   /* #quote and #community background-attachment:scroll moved to ≤900px block above */
@@ -2010,8 +2040,8 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
   }
 
   .logo-img { height: 30px; width: auto; }
-  .footer-brand .logo-img { height: 40px; width: auto; }
-  .footer-brand { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .footer-brand .logo-img { height: 42px; width: auto; }
+  .footer-brand { padding-top: 0.25rem; padding-bottom: 0.25rem; }
 
   .burger {
     position: static;
@@ -2428,6 +2458,12 @@ footer { background: var(--ink); border-top: 1px solid var(--border); padding: 4
 /* Pricing footer on light bg */
 #pricing .pricing-footer { border-top-color: rgba(8,8,8,0.08); }
 #pricing .pricing-footer p { color: rgba(8,8,8,0.4); }
+
+/* SEO footer text block (index.html) — override inline padding */
+footer .footer-grid + div {
+  padding-top: 1.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
 
 /* ── Family Benefit Trigger ─────────────────────────────── */
 .family-benefit-trigger {
@@ -6373,9 +6409,10 @@ section { padding: var(--sv) 0; }
 .tag, .hero-trust-item, .trust-strip-item, .diff-item span,
 .coach-title, .plan-card-security, .plan-card-duration,
 .plan-card-age, .plan-checkout-hint, .widget-header-note,
-.loader-sub, .scroll-hint, .footer-col h4, .brand-line {
+.loader-sub, .scroll-hint, .brand-line {
   opacity: 0.75;
 }
+/* .footer-col h4 removed — opacity is set directly in its base rule */
 
 /* ── Stronger section header sub-text contrast ───────────── */
 .sec-header > p {
@@ -6413,8 +6450,8 @@ section { padding: var(--sv) 0; }
 .addon-card { padding: 2rem 1.75rem; }
 .addon-price { font-size: 1.7rem; }
 
-/* ── Footer: more top padding ───────────────────────────── */
-footer { padding: 5.5rem 0 2.5rem; }
+/* ── Footer: padding defined in base FOOTER section ─────── */
+/* (consolidated — no override needed) */
 
 /* ── Quote section: bigger text ─────────────────────────── */
 .quote-text { font-size: clamp(2rem, 4vw, 3.2rem); }
