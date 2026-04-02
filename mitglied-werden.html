@@ -48,7 +48,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: #ffffff;
+      background: #0d0d0d;
       min-height: 100vh;
       color: #fff;
       font-family: var(--font-body);
@@ -57,12 +57,10 @@
     /* ── Minimal header ─────────────────────────────────── */
     .mw-header {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 200;
       height: 72px;
-      background: rgba(8,8,8,0.90);
+      background: rgba(8,8,8,0.92);
       backdrop-filter: blur(20px) saturate(1.4);
       -webkit-backdrop-filter: blur(20px) saturate(1.4);
       border-bottom: 1px solid rgba(197,160,89,0.10);
@@ -107,7 +105,7 @@
       font-family: var(--font-head);
       font-size: 0.68rem;
       letter-spacing: 2.5px;
-      color: rgba(255,255,255,0.48);
+      color: rgba(255,255,255,0.45);
       text-decoration: none;
       transition: color 0.22s ease;
       white-space: nowrap;
@@ -117,8 +115,305 @@
 
     /* ── Page wrapper ────────────────────────────────────── */
     .mw-page {
-      padding-top: 72px; /* matches header height */
+      padding-top: 72px;
       min-height: 100vh;
+    }
+
+    /* ── Intro section ───────────────────────────────────── */
+    .mw-intro {
+      background: #0d0d0d;
+      padding: clamp(60px, 8vw, 96px) 24px 0;
+      text-align: center;
+    }
+    .mw-intro-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .mw-intro-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 18px;
+    }
+    .mw-intro h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      letter-spacing: 0.1em;
+      color: #fff;
+      margin: 0 0 20px;
+      line-height: 1;
+    }
+    .mw-intro-desc {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      color: rgba(255,255,255,0.58);
+      line-height: 1.75;
+      margin: 0 0 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .mw-wichtig {
+      display: inline-flex;
+      gap: 10px;
+      background: rgba(198,164,90,0.07);
+      border: 1px solid rgba(198,164,90,0.22);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-bottom: 0;
+      max-width: 480px;
+      text-align: left;
+    }
+    .mw-wichtig-label {
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .mw-wichtig-text {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.65;
+      margin: 0;
+    }
+    .mw-wichtig-text strong {
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ── Auth gate ───────────────────────────────────────── */
+    .mw-auth-gate {
+      background: #0d0d0d;
+      padding: clamp(48px, 6vw, 72px) 24px clamp(56px, 7vw, 80px);
+      text-align: center;
+      border-bottom: 1px solid rgba(198,164,90,0.08);
+    }
+    .mw-auth-gate-inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .mw-auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .mw-auth-divider::before,
+    .mw-auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+    .mw-auth-divider-label {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      white-space: nowrap;
+    }
+    .mw-auth-headline {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      margin: 0 0 12px;
+    }
+    .mw-auth-sub {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+      margin: 0 0 36px;
+    }
+    .mw-auth-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+    .mw-auth-btn {
+      min-width: 230px;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-head);
+      font-size: 0.88rem;
+      letter-spacing: 2.5px;
+      padding: 1rem 2.4rem;
+      border-radius: 12px;
+      text-transform: uppercase;
+      transition: all 0.28s var(--ease-out, cubic-bezier(0.25,0.46,0.45,0.94));
+      white-space: nowrap;
+    }
+    .mw-btn-primary {
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+      color: #0a0a0a;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(198,164,90,0.28), 0 4px 14px rgba(0,0,0,0.40);
+    }
+    .mw-btn-primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.08);
+      box-shadow: 0 0 40px rgba(198,164,90,0.55), 0 10px 28px rgba(198,164,90,0.25);
+    }
+    .mw-btn-secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+    .mw-btn-secondary:hover {
+      background: rgba(198,164,90,0.08);
+      border-color: rgba(198,164,90,0.55);
+      color: var(--gold, #C6A45A);
+      transform: translateY(-1px);
+    }
+
+    /* ── Registration guidance ───────────────────────────── */
+    .mw-reg-guidance {
+      background: #111111;
+      border-top: 1px solid rgba(198,164,90,0.12);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .mw-reg-guidance-inner {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .mw-reg-guidance-label {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold, #C6A45A);
+      margin: 0 0 10px;
+    }
+    .mw-reg-guidance-text {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── Bsport widget wrapper (white background for widget) ── */
+    .mw-widget-shell {
+      background: #ffffff;
+    }
+    .mw-widget-shell-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding-bottom: 80px;
+    }
+
+    /* ── Post-registration confirmation ──────────────────── */
+    .mw-post-reg {
+      background: #0d0d0d;
+      padding: clamp(64px, 10vw, 100px) 24px;
+      text-align: center;
+    }
+    .mw-post-reg-inner {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .mw-post-reg-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #C6A45A 0%, #A67C2E 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: #0a0a0a;
+      font-weight: 700;
+      margin: 0 auto 28px;
+      box-shadow: 0 0 32px rgba(198,164,90,0.35);
+    }
+    .mw-post-reg-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      margin: 0 0 16px;
+    }
+    .mw-post-reg-text {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: rgba(255,255,255,0.58);
+      line-height: 1.8;
+      margin: 0 0 12px;
+    }
+    .mw-post-reg-hint {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.65;
+      margin: 0 0 40px;
+    }
+    .mw-post-reg-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-head);
+      font-size: 0.88rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 2.6rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+      color: #0a0a0a;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(198,164,90,0.28), 0 4px 14px rgba(0,0,0,0.40);
+      transition: all 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .mw-post-reg-cta:hover {
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.08);
+      box-shadow: 0 0 40px rgba(198,164,90,0.55), 0 10px 28px rgba(198,164,90,0.25);
+    }
+
+    /* ── Package-selection intro (shown above subscription widget) ── */
+    .mw-package-intro {
+      background: #0d0d0d;
+      padding: 48px 24px 0;
+      text-align: center;
+      border-bottom: 1px solid rgba(198,164,90,0.08);
+    }
+    .mw-package-intro-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      padding-bottom: 36px;
+    }
+    .mw-package-intro-label {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold, #C6A45A);
+      margin: 0 0 12px;
+    }
+    .mw-package-intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      margin: 0 0 10px;
+    }
+    .mw-package-intro-text {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.48);
+      margin: 0;
     }
 
     /* ── Footer strip ────────────────────────────────────── */
@@ -151,10 +446,14 @@
       color: rgba(255,255,255,0.18);
     }
 
+    /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 480px) {
       .mw-header { height: 64px; padding: 0 1rem; }
       .mw-page { padding-top: 64px; }
       .mw-logo-img { height: 40px; }
+      .mw-auth-buttons { flex-direction: column; align-items: center; }
+      .mw-auth-btn { width: 100%; max-width: 340px; }
+      .mw-wichtig { flex-direction: column; gap: 6px; }
     }
   </style>
 </head>
@@ -177,29 +476,124 @@
   <!-- ═══════ PAGE CONTENT ═══════ -->
   <main class="mw-page" role="main">
 
-    <!-- ── INTRO TEXT ── -->
-    <div style="max-width: 800px; margin: 0 auto; padding-top: 80px; padding-left: 24px; padding-right: 24px; text-align: center;">
-      <h1 style="font-family: inherit; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: 0.12em; color: #0d0d0d; margin: 0 0 16px;">MITGLIEDSCHAFT WÄHLEN</h1>
-      <p style="font-size: clamp(0.95rem, 2.5vw, 1.1rem); color: #444444; line-height: 1.7; margin: 0 0 32px; max-width: 520px; margin-left: auto; margin-right: auto;">Wähle deine Mitgliedschaft und sichere dir deinen Platz im BOMAYE GYM.</p>
+    <!-- ── STEP 1: INTRO ─────────────────────────────────── -->
+    <section class="mw-intro" aria-label="Mitgliedschaft">
+      <div class="mw-intro-inner">
+        <p class="mw-intro-eyebrow">BOMAYE GYM MÜNCHEN</p>
+        <h1>MITGLIEDSCHAFT WÄHLEN</h1>
+        <p class="mw-intro-desc">Wähle deine Mitgliedschaft und sichere dir deinen Platz im BOMAYE GYM.</p>
 
-      <!-- ── IMPORTANT NOTICE ── -->
-      <div style="display: inline-block; background: #f5f0e8; border-left: 3px solid #c9a84c; border-radius: 6px; padding: 14px 22px; margin-bottom: 48px; max-width: 520px; text-align: left;">
-        <p style="margin: 0; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; color: #0d0d0d; text-transform: uppercase;">WICHTIG:</p>
-        <p style="margin: 6px 0 0; font-size: 0.9rem; color: #333333; line-height: 1.6;">Bitte wähle im Buchungsprozess als Startdatum den <strong>15.04.</strong></p>
+        <div class="mw-wichtig" role="note">
+          <span class="mw-wichtig-label">WICHTIG</span>
+          <p class="mw-wichtig-text">Bitte wähle im Buchungsprozess als Startdatum den <strong>15.04.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STEP 2: AUTH GATE ─────────────────────────────── -->
+    <!--
+      Both buttons reveal the Bsport consumerSpace widget for authentication.
+      Login → after auth → subscription/package widget is revealed.
+      Register → after registration event → post-registration confirmation is shown.
+    -->
+    <section id="auth-gate" class="mw-auth-gate" aria-label="Anmeldung">
+      <div class="mw-auth-gate-inner">
+
+        <div class="mw-auth-divider">
+          <span class="mw-auth-divider-label">Schritt 2 — Anmeldung</span>
+        </div>
+
+        <h2 class="mw-auth-headline">BEREITS REGISTRIERT?</h2>
+        <p class="mw-auth-sub">Melde dich an oder erstelle ein neues Konto,<br>bevor du deine Mitgliedschaft buchst.</p>
+
+        <div class="mw-auth-buttons">
+          <button id="btn-login" class="mw-auth-btn mw-btn-primary"
+                  aria-label="Zum Login">
+            Ich habe schon ein Konto
+          </button>
+          <button id="btn-register" class="mw-auth-btn mw-btn-secondary"
+                  aria-label="Registrierung starten">
+            Ich bin neu hier
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── REGISTRATION GUIDANCE (shown with register button) ── -->
+    <div id="register-guidance" class="mw-reg-guidance" style="display:none;" aria-hidden="true">
+      <div class="mw-reg-guidance-inner">
+        <p class="mw-reg-guidance-label">Neue Mitglieder</p>
+        <p class="mw-reg-guidance-text">
+          Erstelle dein Konto und bestätige danach deine E-Mail-Adresse.<br>
+          Anschließend kehrst du zurück und wählst deine Mitgliedschaft.
+        </p>
       </div>
     </div>
 
-    <!-- ── BSPORT WIDGET AREA ── -->
-    <div style="max-width: 900px; margin: 0 auto; padding-top: 0; padding-bottom: 100px; background: #ffffff;">
+    <!-- ── BSPORT AUTH WIDGET (consumerSpace — login & registration) ── -->
+    <!--
+      This widget is lazy-mounted when the user clicks either auth button.
+      It handles both login (existing members) and registration (new members).
+      After successful login  → subscription/package widget is revealed.
+      After registration event → post-registration confirmation is shown.
+    -->
+    <div id="auth-widget-wrap" class="mw-widget-shell" style="display:none;" aria-hidden="true">
+      <div class="mw-widget-shell-inner">
+        <div id="bsport-widget-auth"></div>
+      </div>
+    </div>
 
-      <!-- WIDGET 1: Package / Subscription selector — entry point -->
-      <div id="bsport-widget-subscription-wrap">
-        <div id="bsport-widget-subscription"></div>
+    <!-- ── POST-REGISTRATION CONFIRMATION ──────────────────── -->
+    <!--
+      Shown after Bsport fires a registration/signup postMessage event.
+      Guides the new user: confirm email → return → pick package.
+      The CTA links back to /mitglied-werden for a clean restart.
+    -->
+    <div id="post-reg-state" class="mw-post-reg" style="display:none;" aria-hidden="true">
+      <div class="mw-post-reg-inner">
+
+        <div class="mw-post-reg-icon" aria-hidden="true">&#10003;</div>
+
+        <h2 class="mw-post-reg-title">KONTO ERSTELLT</h2>
+
+        <p class="mw-post-reg-text">
+          Bitte bestätige deine E-Mail-Adresse.
+        </p>
+        <p class="mw-post-reg-hint">
+          Du hast eine Bestätigungs-E-Mail erhalten.<br>
+          Klicke auf den Link in der E-Mail und kehre dann zurück,<br>
+          um deine Mitgliedschaft zu wählen.
+        </p>
+
+        <a href="/mitglied-werden" class="mw-post-reg-cta" aria-label="Zur Mitgliedschaftsauswahl">
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          Zur Mitgliedschaftsauswahl
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ── STEP 3: PACKAGE SELECTION ─────────────────────── -->
+    <!--
+      Shown only after successful authentication.
+      The subscription widget presents Kids / Youth / Unlimited.
+      The widget is pre-mounted (hidden) for fast reveal on auth completion.
+    -->
+    <div id="package-section" style="display:none;" aria-hidden="true">
+
+      <div class="mw-package-intro">
+        <div class="mw-package-intro-inner">
+          <p class="mw-package-intro-label">Schritt 3 — Mitgliedschaft</p>
+          <h2 class="mw-package-intro-title">WÄHLE DEIN PAKET</h2>
+          <p class="mw-package-intro-text">Kids · Youth · Unlimited</p>
+        </div>
       </div>
 
-      <!-- WIDGET 2: ConsumerSpace — post-auth continuation to consumerSubscription -->
-      <div id="bsport-widget-consumer-wrap" style="display:none;">
-        <div id="bsport-widget-consumer"></div>
+      <div class="mw-widget-shell">
+        <div class="mw-widget-shell-inner">
+          <div id="bsport-widget-subscription"></div>
+        </div>
       </div>
 
     </div>
@@ -218,12 +612,22 @@
   </main>
 
   <!-- ══════════════════════════════════════════════════════════
-       BSPORT WIDGETS — Two-phase membership flow
-       Phase 1 : Subscription widget  → package selection (entry point)
-       Phase 2 : ConsumerSpace widget → consumerSubscription (post-auth)
-       The postMessage listener wires the two phases together:
-       when Bsport signals a completed auth/login/register event the
-       subscription panel is hidden and the consumerSpace panel is revealed.
+       BSPORT WIDGETS — Auth-First membership flow
+       ─────────────────────────────────────────────────────────
+       FLOW:
+         1. User sees intro + two auth buttons (no widget yet)
+         2a. "Ich habe schon ein Konto" → consumerSpace widget (login)
+             → on login event → reveal subscription/package widget
+         2b. "Ich bin neu hier" → consumerSpace widget (registration)
+             → on register event → show post-registration confirmation
+             → user confirms email → returns via "Zur Mitgliedschaftsauswahl"
+         3. Subscription widget: Kids / Youth / Unlimited → checkout
+         4. User selects start date 15.04 inside Bsport checkout
+       ─────────────────────────────────────────────────────────
+       NOTE: No consumerSpace as final destination.
+             No calendar as entry point.
+             Package context is never at risk — package selection
+             always happens AFTER authentication.
   ══════════════════════════════════════════════════════════ -->
 
   <!-- 1. Load Bsport CDN (guarded against double-load) -->
@@ -252,75 +656,155 @@
     }
   </script>
 
-  <!-- 3. Mount BOTH widgets + wire post-auth transition -->
+  <!-- 3. Auth-first flow logic -->
   <script>
-    /* ── Phase 1: Package / subscription selector (entry point) ── */
-    MountBsportWidget({
-      parentElement: "bsport-widget-subscription",
-      companyId: 5473,
-      dialogMode: 3,
-      widgetType: "subscription",
-      showFab: false,
-      fullScreenPopup: false
-    });
-
-    /* ── Phase 2: ConsumerSpace — post-auth destination ── */
-    MountBsportWidget({
-      parentElement: "bsport-widget-consumer",
-      companyId: 5473,
-      dialogMode: 3,
-      widgetType: "consumerSpace",
-      hideNavigation: true,
-      showTitle: false,
-      showSubtitle: false,
-      defaultPage: "consumerSubscription",
-      showFab: false,
-      fullScreenPopup: false
-    });
-
-    /* ── Transition: switch from subscription widget to consumerSpace
-          after Bsport signals a completed login or registration.
-          We listen for postMessage events from the Bsport iframe and
-          match against the auth-related event names the SDK emits.    ── */
     (function () {
-      var _activated = false;
+      /* ── State ── */
+      var _mode      = null;   // 'login' | 'register'
+      var _authDone  = false;
+      var _authMounted = false;
+      var _subMounted  = false;
 
-      function activateConsumerWidget() {
-        if (_activated) { return; }
-        _activated = true;
-        var subWrap = document.getElementById('bsport-widget-subscription-wrap');
-        var conWrap = document.getElementById('bsport-widget-consumer-wrap');
-        if (!conWrap) { return; }
-        if (subWrap) { subWrap.style.display = 'none'; }
-        conWrap.style.display = '';
-        conWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      /* ── Pre-mount subscription widget in background (hidden container) ──
+         This way the package widget is ready the moment login completes,
+         with no visible delay for the user.                                  */
+      MountBsportWidget({
+        parentElement: "bsport-widget-subscription",
+        companyId: 5473,
+        dialogMode: 3,
+        widgetType: "subscription",
+        showFab: false,
+        fullScreenPopup: false
+      });
+      _subMounted = true;
+
+      /* ── Auth widget: lazy-mount (consumerSpace handles login + register) ── */
+      function mountAuthWidget() {
+        if (_authMounted) { return; }
+        _authMounted = true;
+        MountBsportWidget({
+          parentElement: "bsport-widget-auth",
+          companyId: 5473,
+          dialogMode: 3,
+          widgetType: "consumerSpace",
+          hideNavigation: true,
+          showTitle: false,
+          showSubtitle: false,
+          showFab: false,
+          fullScreenPopup: false
+        });
       }
 
+      /* ── Show auth widget section ── */
+      function showAuthWidget() {
+        var gate = document.getElementById('auth-gate');
+        var wrap = document.getElementById('auth-widget-wrap');
+        if (gate) { gate.setAttribute('aria-hidden', 'true'); gate.style.display = 'none'; }
+        if (wrap) {
+          wrap.removeAttribute('aria-hidden');
+          wrap.style.display = '';
+          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        mountAuthWidget();
+      }
+
+      /* ── Reveal package selection after successful login ── */
+      function showPackageSelection() {
+        var authWrap  = document.getElementById('auth-widget-wrap');
+        var regGuide  = document.getElementById('register-guidance');
+        var pkgSec    = document.getElementById('package-section');
+
+        if (authWrap) { authWrap.setAttribute('aria-hidden', 'true'); authWrap.style.display = 'none'; }
+        if (regGuide) { regGuide.setAttribute('aria-hidden', 'true'); regGuide.style.display = 'none'; }
+
+        if (pkgSec) {
+          pkgSec.removeAttribute('aria-hidden');
+          pkgSec.style.display = '';
+          pkgSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      /* ── Show post-registration confirmation ── */
+      function showPostRegState() {
+        var authWrap  = document.getElementById('auth-widget-wrap');
+        var regGuide  = document.getElementById('register-guidance');
+        var postReg   = document.getElementById('post-reg-state');
+
+        if (authWrap) { authWrap.setAttribute('aria-hidden', 'true'); authWrap.style.display = 'none'; }
+        if (regGuide) { regGuide.setAttribute('aria-hidden', 'true'); regGuide.style.display = 'none'; }
+
+        if (postReg) {
+          postReg.removeAttribute('aria-hidden');
+          postReg.style.display = '';
+          postReg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      /* ── Button: existing member ── */
+      document.getElementById('btn-login').addEventListener('click', function () {
+        _mode = 'login';
+        showAuthWidget();
+      });
+
+      /* ── Button: new member ── */
+      document.getElementById('btn-register').addEventListener('click', function () {
+        _mode = 'register';
+        var guide = document.getElementById('register-guidance');
+        if (guide) {
+          guide.removeAttribute('aria-hidden');
+          guide.style.display = '';
+        }
+        showAuthWidget();
+      });
+
+      /* ── PostMessage listener: detect Bsport auth events ──────────────
+         Bsport signals authentication via window.postMessage.
+         We detect whether it was a login or a registration and route
+         the user to the correct next state:
+           login    → package selection (subscription widget)
+           register → post-registration confirmation (email verify reminder)
+      ─────────────────────────────────────────────────────────────────── */
       window.addEventListener('message', function (evt) {
+        if (_authDone) { return; }
+
         try {
           var raw  = evt.data;
           var data = (typeof raw === 'string') ? JSON.parse(raw) : raw;
           if (!data || typeof data !== 'object') { return; }
 
-          /* Normalise: check all common field names Bsport might use */
+          /* Normalise: check all common field names Bsport may use */
           var sig = String(
             data.type   || data.event  || data.action ||
             data.name   || data.topic  || ''
           ).toLowerCase();
 
-          var isAuth = (
-            sig.indexOf('login')          !== -1 ||
-            sig.indexOf('register')       !== -1 ||
-            sig.indexOf('signup')         !== -1 ||
-            sig.indexOf('auth')           !== -1 ||
-            sig.indexOf('logged')         !== -1 ||
-            sig.indexOf('authenticated')  !== -1 ||
-            sig.indexOf('session')        !== -1
+          var isLogin = (
+            sig.indexOf('login')         !== -1 ||
+            sig.indexOf('logged')        !== -1 ||
+            sig.indexOf('authenticated') !== -1 ||
+            sig.indexOf('session')       !== -1
           );
+          var isRegister = (
+            sig.indexOf('register')  !== -1 ||
+            sig.indexOf('signup')    !== -1
+          );
+          var isAuth = isLogin || isRegister;
 
-          if (isAuth) { activateConsumerWidget(); }
+          if (!isAuth) { return; }
+
+          _authDone = true;
+
+          if (isRegister && _mode === 'register') {
+            /* New user completed registration → confirm email guidance */
+            showPostRegState();
+          } else {
+            /* Existing user logged in, or new user logged in after registration
+               edge-case: route both to package selection                       */
+            showPackageSelection();
+          }
         } catch (e) { /* ignore non-JSON or unrelated messages */ }
       });
+
     }());
   </script>
 
