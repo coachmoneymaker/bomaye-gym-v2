@@ -26,7 +26,7 @@
 
   --radius:    6px;
   --radius-lg: 12px;
-  --nav-h:     100px;
+  --nav-h:     130px;
 
   --anthracite: #1d1d1d;
   --ink-deep:   #131313;
@@ -186,7 +186,7 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 /* Logo */
 .logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; flex-shrink: 0; }
 .logo-img {
-  height: 94px; width: auto;
+  height: 120px; width: auto;
   display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -1776,7 +1776,7 @@ footer {
    RESPONSIVE — 900px (Tablet)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  :root { --nav-h: 66px; }
+  :root { --nav-h: 80px; }
   section { padding: clamp(60px, 6vw, 96px) 0; }
 
   .nav-links { display: none; }
