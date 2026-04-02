@@ -258,9 +258,8 @@
 
   <!-- ══════════════════════════════════════════════════════════
        BSPORT — Member Profile widget
-       - component: memberProfile (Mitgliederprofil)
-       - defaultPage: subscriptions (Meine Abonnements)
-       - NOT calendar, NOT bookings
+       - widgetType: memberProfile (Mitgliederprofil / Konto)
+       - NOT calendar, NOT bookings, NOT subscription sales
        - Login handled natively by the widget
   ══════════════════════════════════════════════════════════ -->
 
@@ -282,8 +281,7 @@
         companyId:       5473,
         franchiseId:     null,
         dialogMode:      3,
-        component:       'memberProfile',
-        defaultPage:     'subscriptions',
+        widgetType:      'memberProfile',
         showFab:         false,
         fullScreenPopup: false
       });

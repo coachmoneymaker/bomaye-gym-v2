@@ -305,6 +305,52 @@
       margin: 0;
     }
 
+    /* ── Bsport subscription widget: reset global site styles that bleed in ──
+       Global style.css declares p{color:rgba(255,255,255,0.7)}, huge h1-h3
+       font sizes, button{background:none}, ul{list-style:none}, etc.
+       These cascade into the Bsport widget and corrupt its native rendering.
+       The resets below undo only those specific rules within the widget
+       container — they do NOT restyle the widget, they protect the native UI. */
+    #bsport-subscription-widget h1,
+    #bsport-subscription-widget h2,
+    #bsport-subscription-widget h3,
+    #bsport-subscription-widget h4 {
+      font-family: sans-serif !important;
+      font-size: revert !important;
+      text-transform: none !important;
+      letter-spacing: normal !important;
+      line-height: normal !important;
+      color: revert !important;
+    }
+    #bsport-subscription-widget p {
+      color: revert !important;
+      font-size: revert !important;
+      line-height: revert !important;
+    }
+    #bsport-subscription-widget button,
+    #bsport-subscription-widget [role="button"] {
+      background: revert !important;
+      border: revert !important;
+      font-family: revert !important;
+      font-size: revert !important;
+      color: revert !important;
+      padding: revert !important;
+      border-radius: revert !important;
+      letter-spacing: revert !important;
+      text-transform: revert !important;
+    }
+    #bsport-subscription-widget a {
+      color: revert !important;
+      text-decoration: revert !important;
+    }
+    #bsport-subscription-widget ul {
+      list-style: revert !important;
+    }
+    #bsport-subscription-widget img {
+      display: revert !important;
+      height: revert !important;
+    }
+
     /* ── Bsport widget wrapper ───────────────────────────── */
     .mw-widget-shell {
       background: #ffffff;
