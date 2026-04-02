@@ -122,243 +122,6 @@
       min-height: 100vh;
     }
 
-    /* ── Widget section ──────────────────────────────────── */
-    .mw-widget-section {
-      padding: clamp(64px, 8vw, 100px) 0 clamp(80px, 10vw, 120px);
-    }
-    .mw-widget-inner {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-    }
-
-    /* ── Widget container: clean white card, no overflow trap ── */
-    .mw-widget-wrap {
-      width: 100%;
-      border-radius: 20px;
-      /* overflow:visible — overflow:hidden traps touch-scroll on iOS */
-      overflow: visible;
-      background: #ffffff;
-      box-shadow:
-        0 0 0 1px rgba(229,231,235,0.8),
-        0 4px 12px rgba(0,0,0,0.06),
-        0 16px 48px rgba(0,0,0,0.10);
-    }
-
-    /* ── Bsport mount point: white base, natural height growth ── */
-    #bsport-widget-mitglied {
-      width: 100%;
-      min-height: 640px;
-      display: block;
-      background: #ffffff;
-      border-radius: 20px;
-      overflow: visible;
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
-    }
-
-    /* ── Touch scrolling for any inner scroll areas bsport renders ── */
-    #bsport-widget-mitglied,
-    #bsport-widget-mitglied * {
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* ── Subscription widget: white root, readable dark text ── */
-    #bsport-widget-mitglied .cleanslate {
-      background: #ffffff !important;
-      color: #111111 !important;
-      border-radius: 20px;
-      overflow: visible !important;
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif !important;
-    }
-
-    /* Root padding for breathing room */
-    #bsport-widget-mitglied .cleanslate > * {
-      padding-left: 1.5rem !important;
-      padding-right: 1.5rem !important;
-    }
-
-    /* Primary text: strong contrast #111111 */
-    #bsport-widget-mitglied .cleanslate h1,
-    #bsport-widget-mitglied .cleanslate h2,
-    #bsport-widget-mitglied .cleanslate h3,
-    #bsport-widget-mitglied .cleanslate h4,
-    #bsport-widget-mitglied .cleanslate [class*="title"],
-    #bsport-widget-mitglied .cleanslate [class*="Title"],
-    #bsport-widget-mitglied .cleanslate [class*="name"],
-    #bsport-widget-mitglied .cleanslate [class*="Name"],
-    #bsport-widget-mitglied .cleanslate [class*="heading"],
-    #bsport-widget-mitglied .cleanslate [class*="Heading"] {
-      color: #111111 !important;
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif !important;
-    }
-
-    /* Secondary / supporting text: #374151 — clearly readable */
-    #bsport-widget-mitglied .cleanslate [class*="secondary"],
-    #bsport-widget-mitglied .cleanslate [class*="Secondary"],
-    #bsport-widget-mitglied .cleanslate [class*="subtitle"],
-    #bsport-widget-mitglied .cleanslate [class*="Subtitle"],
-    #bsport-widget-mitglied .cleanslate [class*="description"],
-    #bsport-widget-mitglied .cleanslate [class*="Description"],
-    #bsport-widget-mitglied .cleanslate [class*="muted"],
-    #bsport-widget-mitglied .cleanslate [class*="Muted"],
-    #bsport-widget-mitglied .cleanslate [class*="caption"],
-    #bsport-widget-mitglied .cleanslate [class*="Caption"],
-    #bsport-widget-mitglied .cleanslate [class*="fee"],
-    #bsport-widget-mitglied .cleanslate [class*="Fee"],
-    #bsport-widget-mitglied .cleanslate [class*="enrollment"],
-    #bsport-widget-mitglied .cleanslate [class*="Enrollment"],
-    #bsport-widget-mitglied .cleanslate [class*="registration"],
-    #bsport-widget-mitglied .cleanslate [class*="Registration"],
-    #bsport-widget-mitglied .cleanslate [class*="Anmelde"],
-    #bsport-widget-mitglied .cleanslate [class*="anmelde"],
-    #bsport-widget-mitglied .cleanslate [class*="note"],
-    #bsport-widget-mitglied .cleanslate [class*="Note"],
-    #bsport-widget-mitglied .cleanslate [class*="info"],
-    #bsport-widget-mitglied .cleanslate [class*="Info"],
-    #bsport-widget-mitglied .cleanslate [class*="detail"],
-    #bsport-widget-mitglied .cleanslate [class*="Detail"],
-    #bsport-widget-mitglied .cleanslate [class*="label"],
-    #bsport-widget-mitglied .cleanslate [class*="Label"],
-    #bsport-widget-mitglied .cleanslate p,
-    #bsport-widget-mitglied .cleanslate span {
-      color: #374151 !important;
-    }
-
-    /* Price / amount text: near-black */
-    #bsport-widget-mitglied .cleanslate [class*="price"],
-    #bsport-widget-mitglied .cleanslate [class*="Price"],
-    #bsport-widget-mitglied .cleanslate [class*="amount"],
-    #bsport-widget-mitglied .cleanslate [class*="Amount"],
-    #bsport-widget-mitglied .cleanslate [class*="cost"],
-    #bsport-widget-mitglied .cleanslate [class*="Cost"] {
-      color: #111111 !important;
-      font-weight: 600 !important;
-    }
-
-    /* ── Premium card styling ── */
-    #bsport-widget-mitglied .cleanslate [class*="card"],
-    #bsport-widget-mitglied .cleanslate [class*="Card"],
-    #bsport-widget-mitglied .cleanslate [class*="item"],
-    #bsport-widget-mitglied .cleanslate [class*="Item"],
-    #bsport-widget-mitglied .cleanslate [class*="offer"],
-    #bsport-widget-mitglied .cleanslate [class*="Offer"],
-    #bsport-widget-mitglied .cleanslate [class*="plan"],
-    #bsport-widget-mitglied .cleanslate [class*="Plan"],
-    #bsport-widget-mitglied .cleanslate [class*="subscription"],
-    #bsport-widget-mitglied .cleanslate [class*="Subscription"] {
-      background: #F9FAFB !important;
-      border: 1px solid #E5E7EB !important;
-      border-radius: 16px !important;
-      padding: 1.5rem 1.75rem !important;
-      margin-bottom: 1rem !important;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
-      transition: box-shadow 0.2s ease, transform 0.2s ease !important;
-    }
-    #bsport-widget-mitglied .cleanslate [class*="card"]:hover,
-    #bsport-widget-mitglied .cleanslate [class*="Card"]:hover,
-    #bsport-widget-mitglied .cleanslate [class*="offer"]:hover,
-    #bsport-widget-mitglied .cleanslate [class*="Offer"]:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important;
-      transform: translateY(-2px) !important;
-    }
-
-    /* ── Borders: #E5E7EB ── */
-    #bsport-widget-mitglied .cleanslate [class*="divider"],
-    #bsport-widget-mitglied .cleanslate [class*="Divider"],
-    #bsport-widget-mitglied .cleanslate [class*="separator"],
-    #bsport-widget-mitglied .cleanslate hr {
-      border-color: #E5E7EB !important;
-    }
-
-    /* ── CTA / cart icon: gold accent, prominent size ── */
-    #bsport-widget-mitglied .cleanslate [class*="cart"],
-    #bsport-widget-mitglied .cleanslate [class*="Cart"],
-    #bsport-widget-mitglied .cleanslate [class*="basket"],
-    #bsport-widget-mitglied .cleanslate [class*="Basket"],
-    #bsport-widget-mitglied .cleanslate [class*="buy"],
-    #bsport-widget-mitglied .cleanslate [class*="Buy"] {
-      color: #C6A15D !important;
-      font-size: 1.25rem !important;
-    }
-
-    /* ── CTA buttons: gold accent ── */
-    #bsport-widget-mitglied .cleanslate button[class*="primary"],
-    #bsport-widget-mitglied .cleanslate [class*="btn-primary"],
-    #bsport-widget-mitglied .cleanslate [class*="button-primary"],
-    #bsport-widget-mitglied .cleanslate [class*="cta"],
-    #bsport-widget-mitglied .cleanslate [class*="CTA"] {
-      background: #C6A15D !important;
-      border-color: #C6A15D !important;
-      color: #111111 !important;
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif !important;
-      border-radius: 10px !important;
-    }
-
-    /* ── List / scroll containers ── */
-    #bsport-widget-mitglied .cleanslate [class*="list"],
-    #bsport-widget-mitglied .cleanslate [class*="List"] {
-      background: #ffffff !important;
-      gap: 0.75rem !important;
-    }
-
-    /* Horizontal scroll bars (filter rows) — hidden scrollbar */
-    #bsport-widget-mitglied .cleanslate [class*="filter"],
-    #bsport-widget-mitglied .cleanslate [class*="Filter"],
-    #bsport-widget-mitglied .cleanslate [class*="toolbar"],
-    #bsport-widget-mitglied .cleanslate [class*="Toolbar"],
-    #bsport-widget-mitglied .cleanslate [class*="tabs"],
-    #bsport-widget-mitglied .cleanslate [class*="Tabs"],
-    #bsport-widget-mitglied .cleanslate [class*="header-row"],
-    #bsport-widget-mitglied .cleanslate [class*="nav-row"] {
-      overflow-x: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-      scrollbar-width: none !important;
-    }
-    #bsport-widget-mitglied .cleanslate [class*="filter"]::-webkit-scrollbar,
-    #bsport-widget-mitglied .cleanslate [class*="toolbar"]::-webkit-scrollbar,
-    #bsport-widget-mitglied .cleanslate [class*="tabs"]::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Sticky header inside widget: clear our fixed nav */
-    #bsport-widget-mitglied .cleanslate [class*="sticky"],
-    #bsport-widget-mitglied .cleanslate [class*="Sticky"] {
-      top: 72px !important;
-    }
-
-    /* Touch tap targets */
-    #bsport-widget-mitglied button,
-    #bsport-widget-mitglied [role="button"],
-    #bsport-widget-mitglied input,
-    #bsport-widget-mitglied select {
-      min-height: 44px;
-    }
-
-    /* ── Loading state — dark text on white card ────────── */
-    .mw-widget-loading {
-      min-height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1rem;
-      color: rgba(30,30,30,0.45);
-      font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 2.5px;
-      background: #ffffff;
-      border-radius: 20px;
-    }
-    .mw-widget-loading i {
-      color: var(--gold);
-      font-size: 1.5rem;
-      animation: mw-spin 1s linear infinite;
-    }
-    @keyframes mw-spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
     /* ── Footer strip ────────────────────────────────────── */
     .mw-footer {
       border-top: 1px solid rgba(198,164,90,0.10);
@@ -388,65 +151,11 @@
       color: rgba(255,255,255,0.18);
     }
 
-    /* ── Mobile adjustments ─────────────────────────────── */
-    @media (max-width: 768px) {
-      .mw-widget-inner { padding: 0 1rem; }
-      .mw-widget-section { padding: clamp(48px, 6vw, 72px) 0 clamp(56px, 8vw, 80px); }
-      #bsport-widget-mitglied { min-height: 560px; }
-      /* Reduce card padding on tablet */
-      #bsport-widget-mitglied .cleanslate [class*="card"],
-      #bsport-widget-mitglied .cleanslate [class*="Card"],
-      #bsport-widget-mitglied .cleanslate [class*="offer"],
-      #bsport-widget-mitglied .cleanslate [class*="Offer"] {
-        padding: 1.25rem 1.25rem !important;
-      }
-    }
-
     @media (max-width: 480px) {
       .mw-header { height: 64px; padding: 0 1rem; }
       .mw-page { padding-top: 64px; }
       .mw-logo-img { height: 40px; }
-      .mw-widget-inner { padding: 0 0.75rem; }
-      .mw-widget-section { padding: 40px 0 56px; }
-      .mw-widget-wrap { border-radius: 16px; }
-      #bsport-widget-mitglied {
-        min-height: 500px;
-        border-radius: 16px;
-      }
-      /* Remove inner padding override on mobile — no horizontal overflow */
-      #bsport-widget-mitglied .cleanslate > * {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-      }
-      #bsport-widget-mitglied .cleanslate [class*="card"],
-      #bsport-widget-mitglied .cleanslate [class*="Card"],
-      #bsport-widget-mitglied .cleanslate [class*="offer"],
-      #bsport-widget-mitglied .cleanslate [class*="Offer"] {
-        padding: 1rem 1rem !important;
-        border-radius: 12px !important;
-        margin-bottom: 0.75rem !important;
-      }
-      /* Sticky widget header: clear the shorter mobile nav */
-      #bsport-widget-mitglied .cleanslate [class*="sticky"],
-      #bsport-widget-mitglied .cleanslate [class*="Sticky"] {
-        top: 64px !important;
-      }
     }
-
-    /* ── Prevent the page from locking scroll when finger starts inside widget ──
-       overscroll-behavior:none is set only on inner scrollable containers,
-       NOT on the widget root, so the outer page always scrolls normally.    ── */
-    #bsport-widget-mitglied .cleanslate [class*="scroll"],
-    #bsport-widget-mitglied .cleanslate [class*="Scroll"],
-    #bsport-widget-mitglied .cleanslate [class*="overflow"],
-    #bsport-widget-mitglied .cleanslate [class*="list-wrap"],
-    #bsport-widget-mitglied .cleanslate [class*="ListWrap"] {
-      overscroll-behavior-y: contain;
-    }
-
-    /* ── Prevent horizontal scrolling at page level ── */
-    body { overflow-x: hidden; }
-    .mw-page { overflow-x: hidden; }
   </style>
 </head>
 <body>
@@ -469,22 +178,9 @@
   <main class="mw-page" role="main">
 
     <!-- ── BSPORT REGISTRATION / LOGIN WIDGET ── -->
-    <section class="mw-widget-section" aria-label="Mitgliedschaft Anmeldung">
-      <div class="mw-widget-inner">
-        <div class="mw-widget-wrap">
-
-          <!-- Loading indicator shown until bsport mounts -->
-          <div class="mw-widget-loading" id="mw-widget-loading" aria-live="polite" aria-label="Wird geladen">
-            <i class="fa-solid fa-circle-notch" aria-hidden="true"></i>
-            <span>WIRD GELADEN …</span>
-          </div>
-
-          <!-- bsport mounts here -->
-          <div id="bsport-widget-mitglied"></div>
-
-        </div>
-      </div>
-    </section>
+    <div style="max-width: 800px; margin: 0 auto; padding-top: 100px; padding-bottom: 100px;">
+      <div id="bsport-widget-mitglied"></div>
+    </div>
 
     <!-- ── FOOTER ── -->
     <footer class="mw-footer" role="contentinfo">
@@ -527,9 +223,6 @@
         return setTimeout(function(){ MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
       }
       BsportWidget.mount(config);
-      /* Hide the loading spinner once widget is mounted */
-      var loader = document.getElementById("mw-widget-loading");
-      if (loader) { loader.style.display = "none"; }
     }
   </script>
 
