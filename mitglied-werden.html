@@ -528,7 +528,7 @@
 
       <div class="mw-widget-shell">
         <div class="mw-widget-shell-inner">
-          <div id="bsport-subscription"></div>
+          <div id="bsport-widget-136002"></div>
         </div>
       </div>
 
@@ -547,13 +547,31 @@
 
   </main>
 
-  <script src="https://cdn.bsport.io/scripts/widget.js"></script>
+  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+
+  <script id="bsport-widget-mount">
+    function MountBsportWidget(config, repeat) {
+      repeat = repeat || 1;
+      if (repeat > 50) { return; }
+      if (!window.BsportWidget) {
+        return setTimeout(function() { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+      }
+      BsportWidget.mount(config);
+    }
+  </script>
 
   <script>
-    BsportWidget.mount({
-      parentElement: "bsport-subscription",
-      companyId: 5473,
-      widgetType: "subscription"
+    MountBsportWidget({
+      "parentElement": "bsport-widget-136002",
+      "companyId": 5473,
+      "franchiseId": null,
+      "dialogMode": 3,
+      "widgetType": "subscription",
+      "showFab": false,
+      "fullScreenPopup": false,
+      "config": {
+        "subscription": {}
+      }
     });
   </script>
 

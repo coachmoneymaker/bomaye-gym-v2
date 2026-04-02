@@ -229,7 +229,7 @@
     <!-- ── MEMBER PROFILE WIDGET ─────────────────────────── -->
     <div class="mw-widget-shell">
       <div class="mw-widget-shell-inner">
-        <div id="bsport-account"></div>
+        <div id="bsport-widget-703094"></div>
       </div>
     </div>
 
@@ -246,13 +246,38 @@
 
   </main>
 
-  <script src="https://cdn.bsport.io/scripts/widget.js"></script>
+  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+
+  <script id="bsport-widget-mount">
+    function MountBsportWidget(config, repeat) {
+      repeat = repeat || 1;
+      if (repeat > 50) { return; }
+      if (!window.BsportWidget) {
+        return setTimeout(function() { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+      }
+      BsportWidget.mount(config);
+    }
+  </script>
 
   <script>
-    BsportWidget.mount({
-      parentElement: "bsport-account",
-      companyId: 5473,
-      widgetType: "account"
+    MountBsportWidget({
+      "parentElement": "bsport-widget-703094",
+      "companyId": 5473,
+      "franchiseId": null,
+      "dialogMode": 3,
+      "widgetType": "consumerSpace",
+      "showFab": false,
+      "fullScreenPopup": false,
+      "config": {
+        "consumerSpace": {
+          "loginSubtitle": "",
+          "loginTitle": "",
+          "showSubtitle": true,
+          "showTitle": true,
+          "hideNavigation": false,
+          "defaultPage": "consumerProfile"
+        }
+      }
     });
   </script>
 
