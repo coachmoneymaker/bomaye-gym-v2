@@ -819,6 +819,37 @@
       .mw-plan--featured { padding: 40px 24px 36px; }
       .mw-pricing-trust { gap: 6px 20px; }
     }
+
+    /* ── Safari mobile fixes ─────────────────────────────────────────────────
+       BUG 1 (VERSENDEN submit button dead): The global style.css sets
+       body { overflow-x: hidden } which makes Safari treat <body> as a BFC
+       scroll container. When Bsport renders its registration flow, Safari's
+       hit-testing coordinates become offset by the scroll amount — taps on
+       the submit button dispatch to the wrong DOM element.
+       BUG 2 (unnatural scroll): The same body-scroll-container makes Safari
+       scroll the body element instead of the viewport, causing the
+       non-native scroll feel on mobile.
+       Fix: move the overflow-x clip to <html> (which clips without creating
+       a body scroll container), restore body to visible, and give the body
+       an explicit touch-action so Safari never second-guesses scroll vs tap.
+    ─────────────────────────────────────────────────────────────────────── */
+    html {
+      overflow-x: hidden;           /* clip horizontal bleed at the root */
+    }
+    body {
+      overflow-x: visible;          /* undo the body BFC that breaks Safari fixed overlays */
+      touch-action: pan-y;          /* explicit vertical-only pan — removes 300 ms tap delay */
+    }
+
+    /* Fast-tap on every interactive element inside the Bsport subscription
+       widget so Safari fires click immediately without the 300 ms heuristic */
+    #bsport-widget-136002 button,
+    #bsport-widget-136002 [role="button"],
+    #bsport-widget-136002 input,
+    #bsport-widget-136002 select,
+    #bsport-widget-136002 a {
+      touch-action: manipulation;
+    }
   </style>
 </head>
 <body>
