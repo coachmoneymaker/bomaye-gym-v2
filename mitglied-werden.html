@@ -322,14 +322,14 @@
 
     /* ── Widget containers: ensure render space ─────────── */
     #bsport-widget-auth,
-    #bsport-widget-subscription {
+    #bsport-subscription-widget {
       min-height: 480px;
       position: relative;
       z-index: 1;
       pointer-events: auto;
     }
     #bsport-widget-auth iframe,
-    #bsport-widget-subscription iframe {
+    #bsport-subscription-widget iframe {
       pointer-events: auto !important;
     }
 
@@ -521,12 +521,12 @@
         <p class="mw-auth-sub">Melde dich an oder erstelle ein neues Konto,<br>bevor du deine Mitgliedschaft buchst.</p>
 
         <div class="mw-auth-buttons">
-          <!-- LOGIN: opens consumerSpace in login mode -->
+          <!-- LOGIN: opens auth widget in login mode -->
           <button id="btn-login" class="mw-auth-btn mw-btn-primary"
                   aria-label="Zum Login">
             Ich habe schon ein Konto
           </button>
-          <!-- REGISTER: opens consumerSpace in register mode -->
+          <!-- REGISTER: opens auth widget in register mode -->
           <button id="btn-register" class="mw-auth-btn mw-btn-secondary"
                   aria-label="Registrierung starten">
             Ich bin neu hier
@@ -548,8 +548,8 @@
     </div>
 
     <!-- ── BSPORT AUTH WIDGET ──
-         Lazy-mounted on button click.
-         Login button  → defaultPage: 'login'
+         Lazy-mounted on button click (widgetType: 'auth').
+         Login button    → defaultPage: 'login'
          Register button → defaultPage: 'register'
     ── -->
     <div id="auth-widget-wrap" class="mw-widget-shell" style="display:none;" aria-hidden="true">
@@ -602,7 +602,7 @@
 
       <div class="mw-widget-shell">
         <div class="mw-widget-shell-inner">
-          <div id="bsport-widget-subscription"></div>
+          <div id="bsport-subscription-widget"></div>
         </div>
       </div>
 
@@ -625,32 +625,21 @@
        BSPORT WIDGETS — Auth-first membership flow
        ──────────────────────────────────────────────────────────
        STATE 1  Auth Gate visible, no widget mounted
-       STATE 2  Login clicked  → consumerSpace(defaultPage:'login')
-       STATE 3  Register clicked → consumerSpace(defaultPage:'register')
+       STATE 2  Login clicked  → auth widget (defaultPage:'login')
+       STATE 3  Register clicked → auth widget (defaultPage:'register')
        STATE 4  Login success  → hide auth widget, mount + show subscription
        STATE 5  Register success → hide auth widget, show confirmation UI
                 CTA → href="/mitglied-werden" (clean reload)
        ─────────────────────────────────────────────────────────
        RULES:
-         - consumerSpace mounted ONCE, with correct defaultPage
+         - auth widget mounted ONCE, with correct defaultPage
          - subscription widget mounted ONCE, ONLY after login success
          - NO iframes, NO srcdoc
          - ONE instance of each widget
   ══════════════════════════════════════════════════════════ -->
 
-  <!-- 1. Load Bsport CDN (guarded against double-load) -->
-  <script id="insert-bsport-widget-cdn">
-    !function(b,s,p){
-      typeof window.BsportWidget==="undefined" &&
-      !document.getElementById("bsport-widget-cdn") &&
-      (function(){
-        var m=b.createElement(s);
-        m.id="bsport-widget-cdn";
-        m.src=p;
-        b.getElementsByTagName("head")[0].appendChild(m);
-      })();
-    }(document,"script","https://cdn.bsport.io/scripts/widget.js");
-  </script>
+  <!-- 1. Bsport CDN (loaded once, direct) -->
+  <script src="https://cdn.bsport.io/scripts/widget.js"></script>
 
   <!-- 2. Mount helper with retry logic -->
   <script id="bsport-widget-mount">
@@ -671,23 +660,25 @@
       /* ── State ──────────────────────────────────────────── */
       var _mode        = null;    // 'login' | 'register'
       var _authDone    = false;   // prevents duplicate event handling
-      var _authMounted = false;   // consumerSpace mounted once only
+      var _authMounted = false;   // auth widget mounted once only
       var _subMounted  = false;   // subscription widget mounted once only
 
-      /* ── Mount consumerSpace with explicit defaultPage ──── */
+      /* ── Mount auth widget with explicit defaultPage ──── */
       function mountAuthWidget(defaultPage) {
         if (_authMounted) { return; }
         _authMounted = true;
 
+        /* Clear container before mount */
+        var authEl = document.getElementById('bsport-widget-auth');
+        if (authEl) { authEl.innerHTML = ''; }
+
         MountBsportWidget({
           parentElement:   'bsport-widget-auth',
           companyId:       5473,
+          franchiseId:     null,
           dialogMode:      3,
-          widgetType:      'consumerSpace',
+          widgetType:      'auth',
           defaultPage:     defaultPage,   // 'login' | 'register'
-          hideNavigation:  true,
-          showTitle:       false,
-          showSubtitle:    false,
           showFab:         false,
           fullScreenPopup: false
         });
@@ -733,12 +724,17 @@
         if (!_subMounted) {
           _subMounted = true;
           MountBsportWidget({
-            parentElement:   'bsport-widget-subscription',
+            parentElement:   'bsport-subscription-widget',
             companyId:       5473,
+            franchiseId:     null,
             dialogMode:      3,
             widgetType:      'subscription',
             showFab:         false,
-            fullScreenPopup: false
+            fullScreenPopup: false,
+            styles:          undefined,
+            config: {
+              subscription: {}
+            }
           });
         }
       }
