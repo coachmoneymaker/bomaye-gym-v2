@@ -128,6 +128,7 @@
     .mw-intro-inner {
       max-width: 720px;
       margin: 0 auto;
+      padding-bottom: clamp(40px, 6vw, 64px);
     }
     .mw-intro-eyebrow {
       font-family: var(--font-head);
@@ -163,7 +164,6 @@
       border-left: 3px solid var(--gold);
       border-radius: 8px;
       padding: 14px 20px;
-      margin-bottom: 0;
       max-width: 480px;
       text-align: left;
     }
@@ -193,7 +193,7 @@
       background: #0d0d0d;
       padding: clamp(48px, 6vw, 72px) 24px clamp(56px, 7vw, 80px);
       text-align: center;
-      border-bottom: 1px solid rgba(198,164,90,0.08);
+      border-top: 1px solid rgba(198,164,90,0.08);
     }
     .mw-auth-gate-inner {
       max-width: 640px;
@@ -252,6 +252,8 @@
       text-transform: uppercase;
       transition: all 0.28s var(--ease-out, cubic-bezier(0.25,0.46,0.45,0.94));
       white-space: nowrap;
+      position: relative;
+      z-index: 1;
     }
     .mw-btn-primary {
       background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
@@ -303,14 +305,32 @@
       margin: 0;
     }
 
-    /* ── Bsport widget wrapper (white background for widget) ── */
+    /* ── Bsport widget wrapper ───────────────────────────── */
     .mw-widget-shell {
       background: #ffffff;
+      position: relative;
+      z-index: 1;
     }
     .mw-widget-shell-inner {
       max-width: 900px;
       margin: 0 auto;
       padding-bottom: 80px;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    /* ── Widget containers: ensure render space ─────────── */
+    #bsport-widget-auth,
+    #bsport-widget-subscription {
+      min-height: 480px;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto;
+    }
+    #bsport-widget-auth iframe,
+    #bsport-widget-subscription iframe {
+      pointer-events: auto !important;
     }
 
     /* ── Post-registration confirmation ──────────────────── */
@@ -382,12 +402,11 @@
       box-shadow: 0 0 40px rgba(198,164,90,0.55), 0 10px 28px rgba(198,164,90,0.25);
     }
 
-    /* ── Package-selection intro (shown above subscription widget) ── */
+    /* ── Package-selection intro ─────────────────────────── */
     .mw-package-intro {
       background: #0d0d0d;
-      padding: 48px 24px 0;
+      padding: clamp(48px, 6vw, 72px) 24px 0;
       text-align: center;
-      border-bottom: 1px solid rgba(198,164,90,0.08);
     }
     .mw-package-intro-inner {
       max-width: 640px;
@@ -491,11 +510,6 @@
     </section>
 
     <!-- ── STEP 2: AUTH GATE ─────────────────────────────── -->
-    <!--
-      Both buttons reveal the Bsport consumerSpace widget for authentication.
-      Login → after auth → subscription/package widget is revealed.
-      Register → after registration event → post-registration confirmation is shown.
-    -->
     <section id="auth-gate" class="mw-auth-gate" aria-label="Anmeldung">
       <div class="mw-auth-gate-inner">
 
@@ -507,10 +521,12 @@
         <p class="mw-auth-sub">Melde dich an oder erstelle ein neues Konto,<br>bevor du deine Mitgliedschaft buchst.</p>
 
         <div class="mw-auth-buttons">
+          <!-- LOGIN: opens consumerSpace in login mode -->
           <button id="btn-login" class="mw-auth-btn mw-btn-primary"
                   aria-label="Zum Login">
             Ich habe schon ein Konto
           </button>
+          <!-- REGISTER: opens consumerSpace in register mode -->
           <button id="btn-register" class="mw-auth-btn mw-btn-secondary"
                   aria-label="Registrierung starten">
             Ich bin neu hier
@@ -531,25 +547,21 @@
       </div>
     </div>
 
-    <!-- ── BSPORT AUTH WIDGET (consumerSpace — login & registration) ── -->
-    <!--
-      This widget is lazy-mounted when the user clicks either auth button.
-      It handles both login (existing members) and registration (new members).
-      After successful login  → subscription/package widget is revealed.
-      After registration event → post-registration confirmation is shown.
-    -->
+    <!-- ── BSPORT AUTH WIDGET ──
+         Lazy-mounted on button click.
+         Login button  → defaultPage: 'login'
+         Register button → defaultPage: 'register'
+    ── -->
     <div id="auth-widget-wrap" class="mw-widget-shell" style="display:none;" aria-hidden="true">
       <div class="mw-widget-shell-inner">
         <div id="bsport-widget-auth"></div>
       </div>
     </div>
 
-    <!-- ── POST-REGISTRATION CONFIRMATION ──────────────────── -->
-    <!--
-      Shown after Bsport fires a registration/signup postMessage event.
-      Guides the new user: confirm email → return → pick package.
-      The CTA links back to /mitglied-werden for a clean restart.
-    -->
+    <!-- ── POST-REGISTRATION CONFIRMATION ──
+         Shown after Bsport fires a registration/signup postMessage.
+         Auth widget is fully hidden. CTA reloads page clean.
+    ── -->
     <div id="post-reg-state" class="mw-post-reg" style="display:none;" aria-hidden="true">
       <div class="mw-post-reg-inner">
 
@@ -574,12 +586,10 @@
       </div>
     </div>
 
-    <!-- ── STEP 3: PACKAGE SELECTION ─────────────────────── -->
-    <!--
-      Shown only after successful authentication.
-      The subscription widget presents Kids / Youth / Unlimited.
-      The widget is pre-mounted (hidden) for fast reveal on auth completion.
-    -->
+    <!-- ── STEP 3: PACKAGE SELECTION ──
+         Revealed only after successful login.
+         Subscription widget is mounted HERE (lazily), never pre-mounted.
+    ── -->
     <div id="package-section" style="display:none;" aria-hidden="true">
 
       <div class="mw-package-intro">
@@ -612,22 +622,20 @@
   </main>
 
   <!-- ══════════════════════════════════════════════════════════
-       BSPORT WIDGETS — Auth-First membership flow
+       BSPORT WIDGETS — Auth-first membership flow
+       ──────────────────────────────────────────────────────────
+       STATE 1  Auth Gate visible, no widget mounted
+       STATE 2  Login clicked  → consumerSpace(defaultPage:'login')
+       STATE 3  Register clicked → consumerSpace(defaultPage:'register')
+       STATE 4  Login success  → hide auth widget, mount + show subscription
+       STATE 5  Register success → hide auth widget, show confirmation UI
+                CTA → href="/mitglied-werden" (clean reload)
        ─────────────────────────────────────────────────────────
-       FLOW:
-         1. User sees intro + two auth buttons (no widget yet)
-         2a. "Ich habe schon ein Konto" → consumerSpace widget (login)
-             → on login event → reveal subscription/package widget
-         2b. "Ich bin neu hier" → consumerSpace widget (registration)
-             → on register event → show post-registration confirmation
-             → user confirms email → returns via "Zur Mitgliedschaftsauswahl"
-         3. Subscription widget: Kids / Youth / Unlimited → checkout
-         4. User selects start date 15.04 inside Bsport checkout
-       ─────────────────────────────────────────────────────────
-       NOTE: No consumerSpace as final destination.
-             No calendar as entry point.
-             Package context is never at risk — package selection
-             always happens AFTER authentication.
+       RULES:
+         - consumerSpace mounted ONCE, with correct defaultPage
+         - subscription widget mounted ONCE, ONLY after login success
+         - NO iframes, NO srcdoc
+         - ONE instance of each widget
   ══════════════════════════════════════════════════════════ -->
 
   <!-- 1. Load Bsport CDN (guarded against double-load) -->
@@ -659,150 +667,176 @@
   <!-- 3. Auth-first flow logic -->
   <script>
     (function () {
-      /* ── State ── */
-      var _mode      = null;   // 'login' | 'register'
-      var _authDone  = false;
-      var _authMounted = false;
-      var _subMounted  = false;
 
-      /* ── Pre-mount subscription widget in background (hidden container) ──
-         This way the package widget is ready the moment login completes,
-         with no visible delay for the user.                                  */
-      MountBsportWidget({
-        parentElement: "bsport-widget-subscription",
-        companyId: 5473,
-        dialogMode: 3,
-        widgetType: "subscription",
-        showFab: false,
-        fullScreenPopup: false
-      });
-      _subMounted = true;
+      /* ── State ──────────────────────────────────────────── */
+      var _mode        = null;    // 'login' | 'register'
+      var _authDone    = false;   // prevents duplicate event handling
+      var _authMounted = false;   // consumerSpace mounted once only
+      var _subMounted  = false;   // subscription widget mounted once only
 
-      /* ── Auth widget: lazy-mount (consumerSpace handles login + register) ── */
-      function mountAuthWidget() {
+      /* ── Mount consumerSpace with explicit defaultPage ──── */
+      function mountAuthWidget(defaultPage) {
         if (_authMounted) { return; }
         _authMounted = true;
+
         MountBsportWidget({
-          parentElement: "bsport-widget-auth",
-          companyId: 5473,
-          dialogMode: 3,
-          widgetType: "consumerSpace",
-          hideNavigation: true,
-          showTitle: false,
-          showSubtitle: false,
-          showFab: false,
+          parentElement:   'bsport-widget-auth',
+          companyId:       5473,
+          dialogMode:      3,
+          widgetType:      'consumerSpace',
+          defaultPage:     defaultPage,   // 'login' | 'register'
+          hideNavigation:  true,
+          showTitle:       false,
+          showSubtitle:    false,
+          showFab:         false,
           fullScreenPopup: false
         });
       }
 
-      /* ── Show auth widget section ── */
-      function showAuthWidget() {
+      /* ── Show the auth widget shell, hide the gate ──────── */
+      function showAuthWidget(defaultPage) {
         var gate = document.getElementById('auth-gate');
         var wrap = document.getElementById('auth-widget-wrap');
-        if (gate) { gate.setAttribute('aria-hidden', 'true'); gate.style.display = 'none'; }
+
+        if (gate) { gate.style.display = 'none'; gate.setAttribute('aria-hidden', 'true'); }
+
         if (wrap) {
-          wrap.removeAttribute('aria-hidden');
           wrap.style.display = '';
-          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          wrap.removeAttribute('aria-hidden');
+          setTimeout(function(){ wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
         }
-        mountAuthWidget();
+
+        mountAuthWidget(defaultPage);
       }
 
-      /* ── Reveal package selection after successful login ── */
+      /* ── STATE 4: login success → show subscription widget ─ */
       function showPackageSelection() {
-        var authWrap  = document.getElementById('auth-widget-wrap');
-        var regGuide  = document.getElementById('register-guidance');
-        var pkgSec    = document.getElementById('package-section');
+        /* Hide auth widget entirely */
+        var authWrap = document.getElementById('auth-widget-wrap');
+        var regGuide = document.getElementById('register-guidance');
+        if (authWrap) { authWrap.style.display = 'none'; authWrap.setAttribute('aria-hidden', 'true'); }
+        if (regGuide) { regGuide.style.display = 'none'; regGuide.setAttribute('aria-hidden', 'true'); }
 
-        if (authWrap) { authWrap.setAttribute('aria-hidden', 'true'); authWrap.style.display = 'none'; }
-        if (regGuide) { regGuide.setAttribute('aria-hidden', 'true'); regGuide.style.display = 'none'; }
-
+        /* Reveal package section */
+        var pkgSec = document.getElementById('package-section');
         if (pkgSec) {
-          pkgSec.removeAttribute('aria-hidden');
           pkgSec.style.display = '';
-          pkgSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          pkgSec.removeAttribute('aria-hidden');
+          setTimeout(function(){ pkgSec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+        }
+
+        /* Mount subscription widget NOW (container is visible, renders correctly) */
+        if (!_subMounted) {
+          _subMounted = true;
+          MountBsportWidget({
+            parentElement:   'bsport-widget-subscription',
+            companyId:       5473,
+            dialogMode:      3,
+            widgetType:      'subscription',
+            showFab:         false,
+            fullScreenPopup: false
+          });
         }
       }
 
-      /* ── Show post-registration confirmation ── */
+      /* ── STATE 5: register success → confirmation UI ──────── */
       function showPostRegState() {
-        var authWrap  = document.getElementById('auth-widget-wrap');
-        var regGuide  = document.getElementById('register-guidance');
-        var postReg   = document.getElementById('post-reg-state');
+        /* Hide auth widget entirely */
+        var authWrap = document.getElementById('auth-widget-wrap');
+        var regGuide = document.getElementById('register-guidance');
+        if (authWrap) { authWrap.style.display = 'none'; authWrap.setAttribute('aria-hidden', 'true'); }
+        if (regGuide) { regGuide.style.display = 'none'; regGuide.setAttribute('aria-hidden', 'true'); }
 
-        if (authWrap) { authWrap.setAttribute('aria-hidden', 'true'); authWrap.style.display = 'none'; }
-        if (regGuide) { regGuide.setAttribute('aria-hidden', 'true'); regGuide.style.display = 'none'; }
-
+        /* Show confirmation */
+        var postReg = document.getElementById('post-reg-state');
         if (postReg) {
-          postReg.removeAttribute('aria-hidden');
           postReg.style.display = '';
-          postReg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          postReg.removeAttribute('aria-hidden');
+          setTimeout(function(){ postReg.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
         }
       }
 
-      /* ── Button: existing member ── */
+      /* ── Button: LOGIN ──────────────────────────────────── */
       document.getElementById('btn-login').addEventListener('click', function () {
         _mode = 'login';
-        showAuthWidget();
+        showAuthWidget('login');
       });
 
-      /* ── Button: new member ── */
+      /* ── Button: REGISTER ───────────────────────────────── */
       document.getElementById('btn-register').addEventListener('click', function () {
         _mode = 'register';
         var guide = document.getElementById('register-guidance');
-        if (guide) {
-          guide.removeAttribute('aria-hidden');
-          guide.style.display = '';
-        }
-        showAuthWidget();
+        if (guide) { guide.style.display = ''; guide.removeAttribute('aria-hidden'); }
+        showAuthWidget('register');
       });
 
-      /* ── PostMessage listener: detect Bsport auth events ──────────────
-         Bsport signals authentication via window.postMessage.
-         We detect whether it was a login or a registration and route
-         the user to the correct next state:
-           login    → package selection (subscription widget)
-           register → post-registration confirmation (email verify reminder)
-      ─────────────────────────────────────────────────────────────────── */
+      /* ── PostMessage: detect Bsport auth events ─────────────
+         Bsport signals auth state changes via window.postMessage.
+         We collect all known field names and signal patterns,
+         then route to the correct next state.
+      ─────────────────────────────────────────────────────── */
       window.addEventListener('message', function (evt) {
         if (_authDone) { return; }
+
+        /* Only process messages from bsport domains */
+        if (evt.origin && evt.origin.indexOf('bsport.io') === -1 &&
+            evt.origin !== window.location.origin) {
+          /* Allow same-origin for local dev, block all other origins */
+          if (evt.origin !== '' && evt.origin.indexOf('localhost') === -1 &&
+              evt.origin.indexOf('127.0.0.1') === -1) {
+            return;
+          }
+        }
 
         try {
           var raw  = evt.data;
           var data = (typeof raw === 'string') ? JSON.parse(raw) : raw;
           if (!data || typeof data !== 'object') { return; }
 
-          /* Normalise: check all common field names Bsport may use */
-          var sig = String(
-            data.type   || data.event  || data.action ||
-            data.name   || data.topic  || ''
-          ).toLowerCase();
+          /* Collect signal from all known Bsport message shapes */
+          var sig = [
+            data.type, data.event, data.action, data.name, data.topic,
+            data.message, data.status,
+            data.payload && data.payload.type,
+            data.payload && data.payload.event,
+            data.payload && data.payload.action,
+            data.payload && data.payload.status
+          ].filter(Boolean).join(' ').toLowerCase();
+
+          if (!sig) { return; }
 
           var isLogin = (
-            sig.indexOf('login')         !== -1 ||
-            sig.indexOf('logged')        !== -1 ||
-            sig.indexOf('authenticated') !== -1 ||
-            sig.indexOf('session')       !== -1
+            sig.indexOf('login')          !== -1 ||
+            sig.indexOf('logged_in')      !== -1 ||
+            sig.indexOf('logged-in')      !== -1 ||
+            sig.indexOf('authenticated')  !== -1 ||
+            sig.indexOf('session_start')  !== -1 ||
+            sig.indexOf('sign_in')        !== -1 ||
+            sig.indexOf('signin')         !== -1
           );
+
           var isRegister = (
-            sig.indexOf('register')  !== -1 ||
-            sig.indexOf('signup')    !== -1
+            sig.indexOf('register')       !== -1 ||
+            sig.indexOf('registration')   !== -1 ||
+            sig.indexOf('signup')         !== -1 ||
+            sig.indexOf('sign_up')        !== -1 ||
+            sig.indexOf('account_created') !== -1 ||
+            sig.indexOf('user_created')   !== -1
           );
-          var isAuth = isLogin || isRegister;
 
-          if (!isAuth) { return; }
+          /* Must be an auth event */
+          if (!isLogin && !isRegister) { return; }
 
+          /* Lock — process exactly once */
           _authDone = true;
 
           if (isRegister && _mode === 'register') {
-            /* New user completed registration → confirm email guidance */
             showPostRegState();
           } else {
-            /* Existing user logged in, or new user logged in after registration
-               edge-case: route both to package selection                       */
             showPackageSelection();
           }
-        } catch (e) { /* ignore non-JSON or unrelated messages */ }
+
+        } catch (e) { /* ignore non-JSON / unrelated messages */ }
       });
 
     }());
