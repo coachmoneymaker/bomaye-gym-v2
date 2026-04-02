@@ -6916,3 +6916,29 @@ section { padding: var(--sv) 0; }
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BSPORT WIDGET — white background fix
+   Scoped to the widget root and its internal containers so the
+   global dark theme is not affected.
+══════════════════════════════════════════════════════════════ */
+#bsport-widget-172485,
+#bsport-widget-172485 .cleanslate,
+#bsport-widget-172485 [class*="wrap"],
+#bsport-widget-172485 [class*="Wrap"],
+#bsport-widget-172485 [class*="container"],
+#bsport-widget-172485 [class*="Container"],
+#bsport-widget-172485 [class*="inner"],
+#bsport-widget-172485 [class*="Inner"],
+#bsport-widget-172485 [class*="panel"],
+#bsport-widget-172485 [class*="Panel"] {
+  background-color: #ffffff !important;
+}
+
+/* Clean card look inside the schedule widget */
+#bsport-widget-172485 .cleanslate [class*="card"],
+#bsport-widget-172485 .cleanslate [class*="Card"] {
+  background-color: #ffffff !important;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
