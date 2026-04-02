@@ -452,7 +452,362 @@
       color: rgba(255,255,255,0.18);
     }
 
+    /* ── Pricing section ────────────────────────────────── */
+    .mw-pricing {
+      background: #080808;
+      padding: clamp(72px, 10vw, 112px) 24px clamp(80px, 11vw, 120px);
+      position: relative;
+      overflow: hidden;
+    }
+    .mw-pricing::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.35), transparent);
+    }
+    .mw-pricing::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.18), transparent);
+    }
+    .mw-pricing-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .mw-pricing-header {
+      text-align: center;
+      margin-bottom: clamp(48px, 7vw, 72px);
+    }
+    .mw-pricing-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold, #C6A45A);
+      margin: 0 0 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mw-pricing-eyebrow::before,
+    .mw-pricing-eyebrow::after {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: rgba(198,164,90,0.5);
+    }
+    .mw-pricing-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+      letter-spacing: 0.1em;
+      color: #fff;
+      margin: 0 0 16px;
+      line-height: 1;
+    }
+    .mw-pricing-sub {
+      font-family: var(--font-body);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      color: rgba(255,255,255,0.42);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    /* ── Pricing grid ────────────────────────────────────── */
+    .mw-pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.12fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── Pricing card base ───────────────────────────────── */
+    .mw-plan {
+      background: #111111;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 36px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .mw-plan:hover {
+      transform: translateY(-4px);
+    }
+
+    /* ── Featured / primary card ─────────────────────────── */
+    .mw-plan--featured {
+      background: #141414;
+      border-color: rgba(198,164,90,0.38);
+      box-shadow:
+        0 0 0 1px rgba(198,164,90,0.12),
+        0 0 60px rgba(198,164,90,0.08),
+        0 24px 64px rgba(0,0,0,0.7);
+      padding: 44px 32px 40px;
+    }
+    .mw-plan--featured:hover {
+      border-color: rgba(198,164,90,0.58);
+      box-shadow:
+        0 0 0 1px rgba(198,164,90,0.22),
+        0 0 80px rgba(198,164,90,0.14),
+        0 28px 72px rgba(0,0,0,0.75);
+    }
+
+    /* ── Badge ───────────────────────────────────────────── */
+    .mw-plan-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 100px;
+      font-weight: 700;
+    }
+    .mw-plan-badge--gold {
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+      color: #0a0a0a;
+    }
+    .mw-plan-badge--subtle {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ── Plan tag / category ─────────────────────────────── */
+    .mw-plan-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.32);
+      margin: 0 0 10px;
+    }
+    .mw-plan--featured .mw-plan-tag {
+      color: rgba(198,164,90,0.65);
+    }
+
+    /* ── Plan name ───────────────────────────────────────── */
+    .mw-plan-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      margin: 0 0 6px;
+      line-height: 1;
+    }
+    .mw-plan-audience {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.35);
+      margin: 0 0 28px;
+    }
+
+    /* ── Divider ─────────────────────────────────────────── */
+    .mw-plan-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin: 0 0 28px;
+    }
+    .mw-plan--featured .mw-plan-divider {
+      background: rgba(198,164,90,0.18);
+    }
+
+    /* ── Price block ─────────────────────────────────────── */
+    .mw-plan-price-block {
+      margin-bottom: 6px;
+    }
+    .mw-plan-anchor {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.28);
+      text-decoration: line-through;
+      margin: 0 0 4px;
+    }
+    .mw-plan-weekly {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 0 0 4px;
+    }
+    .mw-plan-weekly-amount {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.2rem);
+      letter-spacing: 0.02em;
+      color: var(--gold, #C6A45A);
+      line-height: 1;
+    }
+    .mw-plan--featured .mw-plan-weekly-amount {
+      font-size: clamp(2.8rem, 5.5vw, 3.8rem);
+    }
+    .mw-plan-weekly-unit {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+    }
+    .mw-plan-monthly {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.28);
+      margin: 0 0 24px;
+    }
+
+    /* ── Early bird tag ──────────────────────────────────── */
+    .mw-plan-earlybird {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(198,164,90,0.1);
+      border: 1px solid rgba(198,164,90,0.25);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 2.5px;
+      color: rgba(198,164,90,0.85);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .mw-plan-earlybird i { font-size: 0.55rem; }
+
+    /* ── Features list ───────────────────────────────────── */
+    .mw-plan-features {
+      list-style: none;
+      margin: 0 0 32px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .mw-plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.45;
+    }
+    .mw-plan--featured .mw-plan-features li {
+      color: rgba(255,255,255,0.68);
+    }
+    .mw-plan-features li i {
+      color: var(--gold, #C6A45A);
+      font-size: 0.7rem;
+      margin-top: 3px;
+      flex-shrink: 0;
+      opacity: 0.75;
+    }
+    .mw-plan--featured .mw-plan-features li i {
+      opacity: 1;
+    }
+
+    /* ── Plan CTA ────────────────────────────────────────── */
+    .mw-plan-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: all 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
+      text-decoration: none;
+    }
+    .mw-plan-cta--gold {
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+      color: #0a0a0a;
+      box-shadow: 0 0 24px rgba(198,164,90,0.32), 0 4px 16px rgba(0,0,0,0.45);
+    }
+    .mw-plan-cta--gold:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.08);
+      box-shadow: 0 0 48px rgba(198,164,90,0.55), 0 10px 28px rgba(198,164,90,0.25);
+    }
+    .mw-plan-cta--outline {
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .mw-plan-cta--outline:hover {
+      border-color: rgba(198,164,90,0.45);
+      color: rgba(198,164,90,0.9);
+      background: rgba(198,164,90,0.05);
+      transform: translateY(-1px);
+    }
+
+    /* ── Pricing trust strip ─────────────────────────────── */
+    .mw-pricing-trust {
+      margin-top: clamp(40px, 6vw, 56px);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 32px;
+    }
+    .mw-pricing-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .mw-pricing-trust-item i {
+      color: rgba(198,164,90,0.55);
+      font-size: 0.7rem;
+    }
+
+    /* ── Existing member link ────────────────────────────── */
+    .mw-member-link {
+      text-align: center;
+      padding: clamp(20px, 3vw, 28px) 24px;
+      background: #080808;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .mw-member-link p {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.28);
+      margin: 0;
+    }
+    .mw-member-link a {
+      color: rgba(198,164,90,0.75);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .mw-member-link a:hover {
+      color: var(--gold, #C6A45A);
+    }
+
     /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .mw-pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .mw-plan--featured {
+        order: -1;
+      }
+    }
     @media (max-width: 480px) {
       .mw-header { height: 64px; padding: 0 1rem; }
       .mw-page { padding-top: 64px; }
@@ -460,6 +815,9 @@
       .mw-auth-buttons { flex-direction: column; align-items: center; }
       .mw-auth-btn { width: 100%; max-width: 340px; }
       .mw-wichtig { flex-direction: column; gap: 6px; }
+      .mw-plan { padding: 32px 22px 28px; }
+      .mw-plan--featured { padding: 40px 24px 36px; }
+      .mw-pricing-trust { gap: 6px 20px; }
     }
   </style>
 </head>
@@ -496,33 +854,177 @@
       </div>
     </section>
 
-    <!-- ── CTA BUTTONS ───────────────────────────────────── -->
-    <section class="mw-auth-gate" aria-label="Anmeldung">
-      <div class="mw-auth-gate-inner">
-        <div class="mw-auth-buttons">
-          <!-- New member: scroll to subscription widget -->
-          <button class="mw-auth-btn mw-btn-secondary"
-                  onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
-                  type="button">
-            Ich bin neu hier
-          </button>
-          <!-- Existing member: go to account page -->
-          <a href="/mitgliederbereich" class="mw-auth-btn mw-btn-primary"
-             style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
-            Ich habe schon ein Konto
-          </a>
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ── PREMIUM PRICING SECTION ───────────────────────── -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <section class="mw-pricing" aria-label="Mitgliedschaftspakete">
+      <div class="mw-pricing-inner">
+
+        <!-- Header -->
+        <div class="mw-pricing-header">
+          <p class="mw-pricing-eyebrow">Early Bird Preise</p>
+          <h2 class="mw-pricing-title">DEIN PAKET</h2>
+          <p class="mw-pricing-sub">
+            Sichere dir jetzt deinen Early Bird Preis — bevor das Gym öffnet.
+          </p>
         </div>
+
+        <!-- Pricing grid -->
+        <div class="mw-pricing-grid">
+
+          <!-- ── KIDS ──────────────────────────────────────── -->
+          <div class="mw-plan" role="article" aria-label="Kids Mitgliedschaft">
+            <span class="mw-plan-badge mw-plan-badge--subtle">FÜR KIDS</span>
+
+            <p class="mw-plan-tag">Kids Boxing</p>
+            <h3 class="mw-plan-name">KIDS</h3>
+            <p class="mw-plan-audience">6 – 9 Jahre</p>
+
+            <div class="mw-plan-divider"></div>
+
+            <div class="mw-plan-price-block">
+              <p class="mw-plan-anchor">Regulär 17,90 € / Woche</p>
+              <div class="mw-plan-weekly">
+                <span class="mw-plan-weekly-amount">14,90 €</span>
+                <span class="mw-plan-weekly-unit">/ Woche</span>
+              </div>
+              <p class="mw-plan-monthly">ca. 64,57 € / Monat · 12-Monats-Vertrag</p>
+            </div>
+
+            <div class="mw-plan-earlybird">
+              <i class="fa-solid fa-bolt"></i>
+              Early Bird — spare 13 % dauerhaft
+            </div>
+
+            <ul class="mw-plan-features">
+              <li><i class="fa-solid fa-check"></i> Kursplan speziell für Kinder</li>
+              <li><i class="fa-solid fa-check"></i> Strukturiertes Training mit echten Coaches</li>
+              <li><i class="fa-solid fa-check"></i> Sicheres, geführtes Boxen lernen</li>
+              <li><i class="fa-solid fa-check"></i> Kleingruppen für individuelle Förderung</li>
+            </ul>
+
+            <button class="mw-plan-cta mw-plan-cta--outline"
+                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    type="button"
+                    aria-label="Kids Paket auswählen">
+              <i class="fa-solid fa-arrow-down"></i>
+              Platz sichern
+            </button>
+          </div>
+
+          <!-- ── UNLIMITED (featured) ──────────────────────── -->
+          <div class="mw-plan mw-plan--featured" role="article" aria-label="Unlimited Mitgliedschaft — Empfohlen">
+            <span class="mw-plan-badge mw-plan-badge--gold">MOST POPULAR</span>
+
+            <p class="mw-plan-tag">Erwachsene</p>
+            <h3 class="mw-plan-name">UNLIMITED</h3>
+            <p class="mw-plan-audience">18+ Jahre · Alle Programme</p>
+
+            <div class="mw-plan-divider"></div>
+
+            <div class="mw-plan-price-block">
+              <p class="mw-plan-anchor">Regulär 22,90 € / Woche</p>
+              <div class="mw-plan-weekly">
+                <span class="mw-plan-weekly-amount">18,90 €</span>
+                <span class="mw-plan-weekly-unit">/ Woche</span>
+              </div>
+              <p class="mw-plan-monthly">ca. 81,90 € / Monat · 12-Monats-Vertrag</p>
+            </div>
+
+            <div class="mw-plan-earlybird">
+              <i class="fa-solid fa-bolt"></i>
+              Early Bird — spare 17 % dauerhaft
+            </div>
+
+            <ul class="mw-plan-features">
+              <li><i class="fa-solid fa-check"></i> Unbegrenzter Zugang zu allen Kursen</li>
+              <li><i class="fa-solid fa-check"></i> Olympic Boxing, Kickboxing, Frauenkurs & mehr</li>
+              <li><i class="fa-solid fa-check"></i> Trainiere mit echter Struktur & echten Coaches</li>
+              <li><i class="fa-solid fa-check"></i> Stärkstes Community-Erlebnis in München</li>
+              <li><i class="fa-solid fa-check"></i> Early Bird Preis bleibt dauerhaft gesichert</li>
+            </ul>
+
+            <button class="mw-plan-cta mw-plan-cta--gold"
+                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    type="button"
+                    aria-label="Unlimited Paket auswählen">
+              Jetzt Early Bird sichern
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- ── YOUTH ─────────────────────────────────────── -->
+          <div class="mw-plan" role="article" aria-label="Youth Mitgliedschaft">
+            <span class="mw-plan-badge mw-plan-badge--subtle">FÜR JUGENDLICHE</span>
+
+            <p class="mw-plan-tag">Youth Boxing</p>
+            <h3 class="mw-plan-name">YOUTH</h3>
+            <p class="mw-plan-audience">10 – 17 Jahre</p>
+
+            <div class="mw-plan-divider"></div>
+
+            <div class="mw-plan-price-block">
+              <p class="mw-plan-anchor">Regulär 18,90 € / Woche</p>
+              <div class="mw-plan-weekly">
+                <span class="mw-plan-weekly-amount">15,90 €</span>
+                <span class="mw-plan-weekly-unit">/ Woche</span>
+              </div>
+              <p class="mw-plan-monthly">ca. 68,90 € / Monat · 12-Monats-Vertrag</p>
+            </div>
+
+            <div class="mw-plan-earlybird">
+              <i class="fa-solid fa-bolt"></i>
+              Early Bird — spare 16 % dauerhaft
+            </div>
+
+            <ul class="mw-plan-features">
+              <li><i class="fa-solid fa-check"></i> Kursplan für Jugendliche</li>
+              <li><i class="fa-solid fa-check"></i> Echte Technik, echter Sport</li>
+              <li><i class="fa-solid fa-check"></i> Disziplin und Fokus durch Boxen</li>
+              <li><i class="fa-solid fa-check"></i> Starke Community von Anfang an</li>
+            </ul>
+
+            <button class="mw-plan-cta mw-plan-cta--outline"
+                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    type="button"
+                    aria-label="Youth Paket auswählen">
+              <i class="fa-solid fa-arrow-down"></i>
+              Platz sichern
+            </button>
+          </div>
+
+        </div>
+        <!-- /grid -->
+
+        <!-- Trust strip -->
+        <div class="mw-pricing-trust" role="list" aria-label="Vertrauenssignale">
+          <span class="mw-pricing-trust-item" role="listitem">
+            <i class="fa-solid fa-shield-halved"></i> Keine versteckten Kosten
+          </span>
+          <span class="mw-pricing-trust-item" role="listitem">
+            <i class="fa-solid fa-clock-rotate-left"></i> Early Bird Preis bleibt dauerhaft
+          </span>
+          <span class="mw-pricing-trust-item" role="listitem">
+            <i class="fa-solid fa-map-pin"></i> Bomaye Gym München — Pineapple Park
+          </span>
+        </div>
+
       </div>
     </section>
+
+    <!-- Existing member link -->
+    <div class="mw-member-link">
+      <p>Du hast bereits ein Konto? <a href="/mitgliederbereich">Zum Mitgliederbereich &rarr;</a></p>
+    </div>
 
     <!-- ── SUBSCRIPTION WIDGET ───────────────────────────── -->
     <div id="subscription-section">
 
       <div class="mw-package-intro">
         <div class="mw-package-intro-inner">
-          <p class="mw-package-intro-label">Mitgliedschaft</p>
-          <h2 class="mw-package-intro-title">WÄHLE DEIN PAKET</h2>
-          <p class="mw-package-intro-text">Kids · Youth · Unlimited</p>
+          <p class="mw-package-intro-label">Anmeldung &amp; Buchung</p>
+          <h2 class="mw-package-intro-title">PAKET WÄHLEN &amp; STARTEN</h2>
+          <p class="mw-package-intro-text">Wähle dein Paket direkt unten und schließe deine Anmeldung ab.</p>
         </div>
       </div>
 
