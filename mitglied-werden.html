@@ -238,13 +238,14 @@
     }
   </script>
 
-  <!-- 3. Mount the subscription / registration flow -->
+  <!-- 3. Mount the consumer/member profile flow -->
   <script>
     MountBsportWidget({
       parentElement: "bsport-widget-mitglied",
       companyId: 5473,
       dialogMode: 1,
-      widgetType: "subscription",
+      widgetType: "consumerSpace",
+      defaultPage: "consumerProfile",
       showFab: false,
       fullScreenPopup: false
     });
