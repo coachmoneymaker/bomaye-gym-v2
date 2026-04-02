@@ -159,6 +159,11 @@
       z-index: 1;
       pointer-events: auto;
     }
+    /* Reserve space before the Bsport consumer-space widget loads
+       to prevent layout jump (CLS) when the widget renders */
+    #bsport-widget-703094 {
+      min-height: 520px;
+    }
 
     /* ── Footer strip ────────────────────────────────────── */
     .mw-footer {
@@ -246,7 +251,7 @@
 
   </main>
 
-  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
   <script id="bsport-widget-mount">
     function MountBsportWidget(config, repeat) {

@@ -38,7 +38,7 @@
 
 /* ── Reset ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
   background: linear-gradient(160deg, #141414 0%, #111111 48%, #12141a 100%);
   background-attachment: fixed;
@@ -46,7 +46,8 @@ body {
   font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.7;
-  overflow-x: hidden;
+  overflow-x: visible; /* clip handled by html to avoid iOS Safari scroll-container BFC */
+  touch-action: pan-y; /* explicit vertical pan — removes 300ms tap delay on iOS Safari */
   -webkit-font-smoothing: antialiased;
 }
 img { display: block; max-width: 100%; height: auto; }
@@ -521,7 +522,7 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .stat-num { font-family: var(--font-display); font-size: 2.8rem; color: var(--gold); line-height: 1; }
 .stat-lbl {
   font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2px;
-  color: #3A3A3A; margin-top: 0.35rem; text-transform: uppercase;
+  color: rgba(255,255,255,0.42); margin-top: 0.35rem; text-transform: uppercase;
 }
 .dna-visual {
   background: linear-gradient(140deg, #1a1a1a, #0a0a0a);
@@ -2155,10 +2156,6 @@ footer {
     scroll-snap-stop: normal;
   }
 }
-/* Testimonials dots — white dots on dark section */
-#testimonials .slider-dot        { background: rgba(255,255,255,0.22); }
-#testimonials .slider-dot.active { background: var(--gold); }
-
 /* ══════════════════════════════════════════════════════════════
    PRICING — MEMBERSHIP CARD (NEW LAYOUT)
 ══════════════════════════════════════════════════════════════ */

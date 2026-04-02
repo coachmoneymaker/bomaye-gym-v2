@@ -319,6 +319,11 @@
       z-index: 1;
       pointer-events: auto;
     }
+    /* Reserve space before the Bsport subscription widget loads
+       to prevent layout jump (CLS) when the widget renders */
+    #bsport-widget-136002 {
+      min-height: 520px;
+    }
 
     /* ── Post-registration confirmation ──────────────────── */
     .mw-post-reg {
@@ -935,7 +940,7 @@
             </ul>
 
             <button class="mw-plan-cta mw-plan-cta--outline"
-                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Kids Paket auswählen">
               <i class="fa-solid fa-arrow-down"></i>
@@ -976,7 +981,7 @@
             </ul>
 
             <button class="mw-plan-cta mw-plan-cta--gold"
-                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Unlimited Paket auswählen">
               Jetzt Early Bird sichern
@@ -1016,7 +1021,7 @@
             </ul>
 
             <button class="mw-plan-cta mw-plan-cta--outline"
-                    onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                    onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Youth Paket auswählen">
               <i class="fa-solid fa-arrow-down"></i>
@@ -1080,7 +1085,21 @@
 
   </main>
 
-  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+  <script>
+    /* Scroll to subscription section accounting for fixed 72px header.
+       Native scrollIntoView() does not offset for fixed headers and is
+       unreliable on iOS Safari < 15.4. This manual version is both
+       reliable and header-aware. */
+    function scrollToSubscription() {
+      var el = document.getElementById('subscription-section');
+      if (!el) return;
+      var headerH = document.querySelector('.mw-header') ? document.querySelector('.mw-header').offsetHeight : 72;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - headerH;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+  </script>
+
+  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
   <script id="bsport-widget-mount">
     function MountBsportWidget(config, repeat) {

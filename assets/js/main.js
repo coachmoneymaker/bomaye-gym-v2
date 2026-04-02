@@ -376,8 +376,11 @@ function setupSliderDots(sliderId, dotsId) {
     });
   });
 
+  // Remove previous scroll handler before adding a new one to prevent listener leak on resize
+  if (slider._dotScrollHandler) slider.removeEventListener('scroll', slider._dotScrollHandler);
+
   let ticking = false;
-  slider.addEventListener('scroll', () => {
+  slider._dotScrollHandler = () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
@@ -392,7 +395,8 @@ function setupSliderDots(sliderId, dotsId) {
       );
       ticking = false;
     });
-  }, { passive: true });
+  };
+  slider.addEventListener('scroll', slider._dotScrollHandler, { passive: true });
 }
 
 /* ── Enrollment info panel toggle ──────────────────────────── */
