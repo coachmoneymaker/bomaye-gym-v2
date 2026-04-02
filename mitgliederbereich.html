@@ -160,16 +160,6 @@
       pointer-events: auto;
     }
 
-    #bsport-member-profile {
-      min-height: 600px;
-      position: relative;
-      z-index: 1;
-      pointer-events: auto;
-    }
-    #bsport-member-profile iframe {
-      pointer-events: auto !important;
-    }
-
     /* ── Footer strip ────────────────────────────────────── */
     .mw-footer {
       background: #080808;
@@ -239,7 +229,7 @@
     <!-- ── MEMBER PROFILE WIDGET ─────────────────────────── -->
     <div class="mw-widget-shell">
       <div class="mw-widget-shell-inner">
-        <div id="bsport-member-profile"></div>
+        <div id="bsport-account"></div>
       </div>
     </div>
 
@@ -256,36 +246,14 @@
 
   </main>
 
-  <!-- ══════════════════════════════════════════════════════════
-       BSPORT — Member Profile widget
-       - widgetType: memberProfile (Mitgliederprofil / Konto)
-       - NOT calendar, NOT bookings, NOT subscription sales
-       - Login handled natively by the widget
-  ══════════════════════════════════════════════════════════ -->
-
   <script src="https://cdn.bsport.io/scripts/widget.js"></script>
 
   <script>
-    (function () {
-      function MountBsportWidget(config, repeat) {
-        repeat = repeat || 1;
-        if (repeat > 50) { return; }
-        if (!window.BsportWidget) {
-          return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
-        }
-        BsportWidget.mount(config);
-      }
-
-      MountBsportWidget({
-        parentElement:   'bsport-member-profile',
-        companyId:       5473,
-        franchiseId:     null,
-        dialogMode:      3,
-        widgetType:      'memberProfile',
-        showFab:         false,
-        fullScreenPopup: false
-      });
-    }());
+    BsportWidget.mount({
+      parentElement: "bsport-account",
+      companyId: 5473,
+      widgetType: "account"
+    });
   </script>
 
 </body>
