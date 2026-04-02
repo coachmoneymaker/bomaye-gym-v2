@@ -189,9 +189,19 @@
       </div>
     </div>
 
-    <!-- ── BSPORT REGISTRATION / LOGIN WIDGET ── -->
-    <div style="max-width: 800px; margin: 0 auto; padding-top: 0; padding-bottom: 100px; background: #ffffff;">
-      <div id="bsport-widget-mitglied"></div>
+    <!-- ── BSPORT WIDGET AREA ── -->
+    <div style="max-width: 900px; margin: 0 auto; padding-top: 0; padding-bottom: 100px; background: #ffffff;">
+
+      <!-- WIDGET 1: Package / Subscription selector — entry point -->
+      <div id="bsport-widget-subscription-wrap">
+        <div id="bsport-widget-subscription"></div>
+      </div>
+
+      <!-- WIDGET 2: ConsumerSpace — post-auth continuation to consumerSubscription -->
+      <div id="bsport-widget-consumer-wrap" style="display:none;">
+        <div id="bsport-widget-consumer"></div>
+      </div>
+
     </div>
 
     <!-- ── FOOTER ── -->
@@ -208,11 +218,15 @@
   </main>
 
   <!-- ══════════════════════════════════════════════════════════
-       BSPORT WIDGET — Subscription / Registration / Login Flow
-       Loads inline on the page so the user stays on bomayegym.com
+       BSPORT WIDGETS — Two-phase membership flow
+       Phase 1 : Subscription widget  → package selection (entry point)
+       Phase 2 : ConsumerSpace widget → consumerSubscription (post-auth)
+       The postMessage listener wires the two phases together:
+       when Bsport signals a completed auth/login/register event the
+       subscription panel is hidden and the consumerSpace panel is revealed.
   ══════════════════════════════════════════════════════════ -->
 
-  <!-- 1. Load bsport CDN (guarded against double-load) -->
+  <!-- 1. Load Bsport CDN (guarded against double-load) -->
   <script id="insert-bsport-widget-cdn">
     !function(b,s,p){
       typeof window.BsportWidget==="undefined" &&
@@ -238,17 +252,76 @@
     }
   </script>
 
-  <!-- 3. Mount the consumer/member profile flow -->
+  <!-- 3. Mount BOTH widgets + wire post-auth transition -->
   <script>
+    /* ── Phase 1: Package / subscription selector (entry point) ── */
     MountBsportWidget({
-      parentElement: "bsport-widget-mitglied",
+      parentElement: "bsport-widget-subscription",
       companyId: 5473,
-      dialogMode: 1,
-      widgetType: "consumerSpace",
-      defaultPage: "consumerProfile",
+      dialogMode: 3,
+      widgetType: "subscription",
       showFab: false,
       fullScreenPopup: false
     });
+
+    /* ── Phase 2: ConsumerSpace — post-auth destination ── */
+    MountBsportWidget({
+      parentElement: "bsport-widget-consumer",
+      companyId: 5473,
+      dialogMode: 3,
+      widgetType: "consumerSpace",
+      hideNavigation: true,
+      showTitle: false,
+      showSubtitle: false,
+      defaultPage: "consumerSubscription",
+      showFab: false,
+      fullScreenPopup: false
+    });
+
+    /* ── Transition: switch from subscription widget to consumerSpace
+          after Bsport signals a completed login or registration.
+          We listen for postMessage events from the Bsport iframe and
+          match against the auth-related event names the SDK emits.    ── */
+    (function () {
+      var _activated = false;
+
+      function activateConsumerWidget() {
+        if (_activated) { return; }
+        _activated = true;
+        var subWrap = document.getElementById('bsport-widget-subscription-wrap');
+        var conWrap = document.getElementById('bsport-widget-consumer-wrap');
+        if (!conWrap) { return; }
+        if (subWrap) { subWrap.style.display = 'none'; }
+        conWrap.style.display = '';
+        conWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      window.addEventListener('message', function (evt) {
+        try {
+          var raw  = evt.data;
+          var data = (typeof raw === 'string') ? JSON.parse(raw) : raw;
+          if (!data || typeof data !== 'object') { return; }
+
+          /* Normalise: check all common field names Bsport might use */
+          var sig = String(
+            data.type   || data.event  || data.action ||
+            data.name   || data.topic  || ''
+          ).toLowerCase();
+
+          var isAuth = (
+            sig.indexOf('login')          !== -1 ||
+            sig.indexOf('register')       !== -1 ||
+            sig.indexOf('signup')         !== -1 ||
+            sig.indexOf('auth')           !== -1 ||
+            sig.indexOf('logged')         !== -1 ||
+            sig.indexOf('authenticated')  !== -1 ||
+            sig.indexOf('session')        !== -1
+          );
+
+          if (isAuth) { activateConsumerWidget(); }
+        } catch (e) { /* ignore non-JSON or unrelated messages */ }
+      });
+    }());
   </script>
 
 </body>
