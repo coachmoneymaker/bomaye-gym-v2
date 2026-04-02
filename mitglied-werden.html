@@ -121,7 +121,7 @@
 
     /* ── Intro section ───────────────────────────────────── */
     .mw-intro {
-      background: #0d0d0d;
+      background: #ffffff;
       padding: clamp(60px, 8vw, 96px) 24px 0;
       text-align: center;
     }
@@ -142,14 +142,14 @@
       font-family: var(--font-display);
       font-size: clamp(2.4rem, 7vw, 4rem);
       letter-spacing: 0.1em;
-      color: #fff;
+      color: #0a0a0a;
       margin: 0 0 20px;
       line-height: 1;
     }
     .mw-intro-desc {
       font-family: var(--font-body);
       font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-      color: rgba(255,255,255,0.58);
+      color: rgba(0,0,0,0.55);
       line-height: 1.75;
       margin: 0 0 40px;
       max-width: 480px;
@@ -180,20 +180,20 @@
     .mw-wichtig-text {
       font-family: var(--font-body);
       font-size: 0.88rem;
-      color: rgba(255,255,255,0.65);
+      color: rgba(0,0,0,0.62);
       line-height: 1.65;
       margin: 0;
     }
     .mw-wichtig-text strong {
-      color: rgba(255,255,255,0.9);
+      color: rgba(0,0,0,0.88);
     }
 
     /* ── Auth gate ───────────────────────────────────────── */
     .mw-auth-gate {
-      background: #0d0d0d;
+      background: #ffffff;
       padding: clamp(48px, 6vw, 72px) 24px clamp(56px, 7vw, 80px);
       text-align: center;
-      border-top: 1px solid rgba(198,164,90,0.08);
+      border-top: 1px solid rgba(0,0,0,0.07);
     }
     .mw-auth-gate-inner {
       max-width: 640px;
@@ -210,27 +210,27 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.1);
     }
     .mw-auth-divider-label {
       font-family: var(--font-head);
       font-size: 0.65rem;
       letter-spacing: 3.5px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.28);
+      color: rgba(0,0,0,0.35);
       white-space: nowrap;
     }
     .mw-auth-headline {
       font-family: var(--font-display);
       font-size: clamp(1.6rem, 4vw, 2.2rem);
       letter-spacing: 0.08em;
-      color: #fff;
+      color: #0a0a0a;
       margin: 0 0 12px;
     }
     .mw-auth-sub {
       font-family: var(--font-body);
       font-size: 0.9rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(0,0,0,0.48);
       line-height: 1.65;
       margin: 0 0 36px;
     }
@@ -268,8 +268,8 @@
     }
     .mw-btn-secondary {
       background: transparent;
-      color: rgba(255,255,255,0.82);
-      border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(0,0,0,0.72);
+      border: 1px solid rgba(0,0,0,0.2);
     }
     .mw-btn-secondary:hover {
       background: rgba(198,164,90,0.08);
@@ -280,8 +280,8 @@
 
     /* ── Registration guidance ───────────────────────────── */
     .mw-reg-guidance {
-      background: #111111;
-      border-top: 1px solid rgba(198,164,90,0.12);
+      background: #f5f4f1;
+      border-top: 1px solid rgba(0,0,0,0.07);
       padding: 28px 24px;
       text-align: center;
     }
@@ -300,7 +300,7 @@
     .mw-reg-guidance-text {
       font-family: var(--font-body);
       font-size: 0.88rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(0,0,0,0.55);
       line-height: 1.7;
       margin: 0;
     }
@@ -404,7 +404,7 @@
 
     /* ── Package-selection intro ─────────────────────────── */
     .mw-package-intro {
-      background: #0d0d0d;
+      background: #ffffff;
       padding: clamp(48px, 6vw, 72px) 24px 0;
       text-align: center;
     }
@@ -425,13 +425,13 @@
       font-family: var(--font-display);
       font-size: clamp(1.8rem, 4vw, 2.5rem);
       letter-spacing: 0.08em;
-      color: #fff;
+      color: #0a0a0a;
       margin: 0 0 10px;
     }
     .mw-package-intro-text {
       font-family: var(--font-body);
       font-size: 0.9rem;
-      color: rgba(255,255,255,0.48);
+      color: rgba(0,0,0,0.48);
       margin: 0;
     }
 
@@ -698,12 +698,16 @@
         var gate = document.getElementById('auth-gate');
         var wrap = document.getElementById('auth-widget-wrap');
 
+        /* Capture scroll position BEFORE DOM changes to prevent jump */
+        var savedY = window.scrollY || window.pageYOffset;
+
         if (gate) { gate.style.display = 'none'; gate.setAttribute('aria-hidden', 'true'); }
 
         if (wrap) {
           wrap.style.display = '';
           wrap.removeAttribute('aria-hidden');
-          setTimeout(function(){ wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+          /* Restore scroll immediately so layout shift is invisible */
+          window.scrollTo({ top: savedY, behavior: 'instant' });
         }
 
         mountAuthWidget(defaultPage);
@@ -722,7 +726,7 @@
         if (pkgSec) {
           pkgSec.style.display = '';
           pkgSec.removeAttribute('aria-hidden');
-          setTimeout(function(){ pkgSec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+          setTimeout(function(){ pkgSec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
         }
 
         /* Mount subscription widget NOW (container is visible, renders correctly) */
@@ -752,7 +756,7 @@
         if (postReg) {
           postReg.style.display = '';
           postReg.removeAttribute('aria-hidden');
-          setTimeout(function(){ postReg.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+          setTimeout(function(){ postReg.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
         }
       }
 
@@ -777,6 +781,9 @@
       ─────────────────────────────────────────────────────── */
       window.addEventListener('message', function (evt) {
         if (_authDone) { return; }
+
+        /* Only process messages after the user has clicked a button and the auth widget is mounted */
+        if (!_mode || !_authMounted) { return; }
 
         /* Only process messages from bsport domains */
         if (evt.origin && evt.origin.indexOf('bsport.io') === -1 &&
