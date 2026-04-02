@@ -6739,3 +6739,363 @@ section { padding: var(--sv) 0; }
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BECOME BOMAYE — IDENTITY MANIFESTO SECTION
+   Premium conversion section between disciplines and early-bird.
+   Deep black · cinematic typography · identity pillars · CTA
+   Benchmark: Apple product pages / Nike brand sections
+══════════════════════════════════════════════════════════════ */
+
+.manifesto-section {
+  position: relative;
+  padding: clamp(96px, 11vw, 160px) 0;
+  overflow: hidden;
+  background: #080808;
+}
+
+/* Ambient gold atmosphere — radial glow creates depth without a box */
+.manifesto-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 25%, rgba(197,160,89,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 8% 88%, rgba(197,160,89,0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 92% 80%, rgba(197,160,89,0.04) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Top-edge gold hairline — cinematic section opener */
+.manifesto-section::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(197,160,89,0.0) 10%,
+    rgba(197,160,89,0.5) 35%,
+    rgba(197,160,89,0.5) 65%,
+    rgba(197,160,89,0.0) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.manifesto-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+/* ── Kicker / eyebrow row ── */
+.manifesto-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.75rem;
+}
+.manifesto-line {
+  flex: 1;
+  max-width: 96px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197,160,89,0.6));
+}
+.manifesto-line--right {
+  background: linear-gradient(270deg, transparent, rgba(197,160,89,0.6));
+}
+.manifesto-label {
+  font-family: var(--font-head);
+  font-size: 0.58rem;
+  letter-spacing: 6px;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Main headline ── */
+.manifesto-headline {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8.5vw, 6.25rem);
+  line-height: 1.0;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* ── Sub copy ── */
+.manifesto-sub {
+  font-family: var(--font-body);
+  font-size: clamp(0.97rem, 1.8vw, 1.15rem);
+  color: rgba(255,255,255,0.58);
+  line-height: 1.8;
+  max-width: 540px;
+  margin: 0 auto 4rem;
+}
+
+/* ── Identity pillars row ── */
+.manifesto-pillars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+  padding: 2.75rem 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.manifesto-pillar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1 1 160px;
+  padding: 1.25rem 2rem;
+  transition: transform 0.3s var(--ease-out);
+}
+.manifesto-pillar:hover { transform: translateY(-4px); }
+.manifesto-pillar i {
+  font-size: 1.75rem;
+  color: var(--gold);
+  filter: drop-shadow(0 0 12px rgba(197,160,89,0.35));
+}
+.manifesto-pillar strong {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 3.5px;
+  color: var(--white);
+  text-transform: uppercase;
+}
+.manifesto-pillar span {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.02em;
+}
+.manifesto-pillar-div {
+  width: 1px;
+  height: 64px;
+  background: rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+/* ── CTA cluster ── */
+.manifesto-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+.manifesto-cta {
+  font-size: 1rem !important;
+  padding: 1.05rem 2.8rem !important;
+  letter-spacing: 3px !important;
+  box-shadow:
+    0 0 48px rgba(198,164,90,0.38),
+    0 10px 28px rgba(0,0,0,0.45) !important;
+  animation: manifesto-cta-pulse 3.2s ease-in-out infinite;
+}
+@keyframes manifesto-cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 48px rgba(198,164,90,0.38), 0 10px 28px rgba(0,0,0,0.45);
+  }
+  50% {
+    box-shadow: 0 0 80px rgba(198,164,90,0.65), 0 14px 38px rgba(0,0,0,0.50);
+  }
+}
+.manifesto-cta:hover {
+  animation: none !important;
+}
+.manifesto-cta-note {
+  font-family: var(--font-head);
+  font-size: 0.58rem;
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.25);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .manifesto-pillar-div { display: none; }
+  .manifesto-pillars { padding: 2rem 0; margin-bottom: 3rem; }
+  .manifesto-pillar { flex: 0 0 50%; padding: 0.85rem 1rem; }
+  .manifesto-headline { margin-bottom: 1.5rem; }
+  .manifesto-sub { margin-bottom: 3rem; }
+}
+@media (max-width: 480px) {
+  .manifesto-pillar { flex: 0 0 100%; padding: 0.75rem 1.25rem; }
+  .manifesto-headline { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  .manifesto-cta { width: 100%; justify-content: center; }
+}
+@media (min-width: 769px) {
+  .manifesto-headline {
+    font-size: clamp(3.5rem, 7.5vw, 6.25rem);
+    line-height: 0.98;
+  }
+}
+@media (min-width: 1200px) {
+  .manifesto-inner { max-width: 900px; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   PRE-FOOTER CTA BAR
+   Final conversion push — sits between last content and footer.
+   Minimal, powerful, unmissable.
+══════════════════════════════════════════════════════════════ */
+
+.pre-footer-cta {
+  background: linear-gradient(135deg, #0d0b07 0%, #12100a 55%, #0a0906 100%);
+  border-top: 1px solid rgba(197,160,89,0.28);
+  padding: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle gold ambient radial */
+.pre-footer-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 80% at 30% 50%,
+    rgba(197,160,89,0.06) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+.pf-cta-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.pf-cta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.pf-cta-text strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.8vw, 1.75rem);
+  color: var(--white);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.pf-cta-text span {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.02em;
+}
+.pf-cta-btn {
+  flex-shrink: 0;
+  font-size: 0.88rem !important;
+  padding: 0.9rem 2rem !important;
+  letter-spacing: 2.5px !important;
+}
+@media (max-width: 768px) {
+  .pf-cta-inner { flex-direction: column; align-items: flex-start; }
+  .pf-cta-btn { width: 100%; justify-content: center; }
+}
+/* Footer: remove top border redundancy when pre-footer bar is present */
+.pre-footer-cta + footer {
+  border-top: none;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   EARLY BIRD — URGENCY BLOCK (missing CSS)
+══════════════════════════════════════════════════════════════ */
+
+.eb-urgency-block {
+  margin: 1.1rem 0;
+}
+.eb-urgency-headline {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+.eb-urgency-subline {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.36);
+  margin-top: 0.2rem;
+  line-height: 1.55;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   HERO PRIMARY CTA — ATTENTION PULSE
+   Subtle glow pulse on primary CTA. Stops on hover.
+══════════════════════════════════════════════════════════════ */
+
+.btn--hero-primary.btn--gold {
+  animation: hero-cta-glow 3.5s ease-in-out infinite;
+}
+.btn--hero-primary.btn--gold:hover {
+  animation: none;
+}
+@keyframes hero-cta-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(198,164,90,0.30), 0 4px 14px rgba(0,0,0,0.40);
+  }
+  50% {
+    box-shadow: 0 0 52px rgba(198,164,90,0.58), 0 8px 24px rgba(198,164,90,0.25), 0 4px 14px rgba(0,0,0,0.40);
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION FLOW — GOLD HAIRLINE SEPARATORS
+   Creates visual rhythm between adjacent dark sections
+══════════════════════════════════════════════════════════════ */
+
+#dna        { border-top: 1px solid rgba(197,160,89,0.10); }
+#disciplines { border-top: 1px solid rgba(255,255,255,0.04); }
+#early-bird  { border-top: 1px solid rgba(197,160,89,0.18); }
+#faq.sec--faq-white { border-top: 1px solid rgba(0,0,0,0.08) !important; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   DNA SECTION — TYPOGRAPHY & CTA REFINEMENT
+══════════════════════════════════════════════════════════════ */
+
+.dna-text p { line-height: 2.0; }
+
+.dna-text .btn--outline-gold {
+  border-color: rgba(198,164,90,0.65);
+}
+.dna-text .btn--outline-gold:hover {
+  background: rgba(197,160,89,0.12);
+  border-color: var(--gold-light);
+  color: var(--gold-light);
+  transform: translateX(4px);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   HERO CREDENTIALS — TOP SEPARATOR
+══════════════════════════════════════════════════════════════ */
+
+.hero-credentials {
+  border-top: 1px solid rgba(255,255,255,0.09);
+  padding-top: 1.75rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL — PREMIUM EASING
+══════════════════════════════════════════════════════════════ */
+
+.reveal {
+  transition:
+    opacity 0.68s cubic-bezier(0.22,1,0.36,1),
+    transform 0.68s cubic-bezier(0.22,1,0.36,1);
+}
+
