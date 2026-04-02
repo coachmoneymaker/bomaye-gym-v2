@@ -101,7 +101,8 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ÜBER UNS</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <button class="btn btn--gold btn--sm" onclick="nav('home','pricing')" type="button">MITGLIED WERDEN</button>
+      <a class="nav-link" href="/mitgliederbereich" style="text-decoration:none;">LOGIN / MEIN KONTO</a>
+      <a href="/mitglied-werden" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;">MITGLIED WERDEN</a>
     </nav>
 
     <button class="burger" onclick="toggleMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
@@ -119,9 +120,10 @@
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:3">ÜBER UNS</a>
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <button class="btn btn--gold mn-cta" onclick="mobileNav('home','pricing')" type="button" style="--mn-i:5">
+  <a class="mn-item" href="/mitgliederbereich" style="--mn-i:5;text-decoration:none;">LOGIN / MEIN KONTO</a>
+  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:6;text-decoration:none;display:flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
-  </button>
+  </a>
 </div>
 
 
@@ -358,26 +360,6 @@
   </div>
 </div>
 
-<!-- ═══════ BOOKING MODAL ═══════ -->
-<div id="booking-modal" class="booking-modal" role="dialog" aria-modal="true" aria-label="Mitgliedschaft buchen">
-  <div class="booking-modal-overlay" onclick="closeBookingModal()"></div>
-  <div class="booking-modal-card">
-    <button class="booking-modal-close" onclick="closeBookingModal()" aria-label="Schließen" type="button">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <div class="booking-modal-header">
-      <i class="fa-solid fa-bolt booking-modal-header-icon"></i>
-      <span class="booking-modal-title">MITGLIEDSCHAFT SICHERN</span>
-    </div>
-    <div class="booking-modal-body">
-      <div id="booking-modal-loading" class="booking-modal-loading">
-        <div class="booking-modal-spinner"></div>
-        <p class="booking-modal-loading-text">Mitgliedschaft wird geladen…</p>
-      </div>
-      <iframe id="booking-iframe" src="" width="100%" height="700" style="border:none;visibility:hidden;" title="Mitgliedschaft buchen"></iframe>
-    </div>
-  </div>
-</div>
 
 <!-- ══════════════════════════════════════════════════════════
      HOME VIEW
@@ -656,8 +638,8 @@
         <!-- KIDS PANEL -->
         <div class="plan-panel active" id="panel-kids">
           <div class="plan-card" role="button" tabindex="0"
-               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44946?force=true')">
+               onclick="window.location.href='/mitglied-werden'"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.location.href='/mitglied-werden'">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-child"></i></div>
             <div class="plan-card-name">BOMAYE KIDS</div>
@@ -685,8 +667,8 @@
         <!-- YOUTH PANEL -->
         <div class="plan-panel" id="panel-youth">
           <div class="plan-card" role="button" tabindex="0"
-               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true')">
+               onclick="window.location.href='/mitglied-werden'"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.location.href='/mitglied-werden'">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-child-reaching"></i></div>
             <div class="plan-card-name">BOMAYE YOUTH</div>
@@ -714,8 +696,8 @@
         <!-- UNLIMITED PANEL -->
         <div class="plan-panel" id="panel-unlimited">
           <div class="plan-card plan-card--featured" role="button" tabindex="0"
-               onclick="openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')"
-               onkeydown="if(event.key==='Enter'||event.key===' ')openBookingModal('https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true')">
+               onclick="window.location.href='/mitglied-werden'"
+               onkeydown="if(event.key==='Enter'||event.key===' ')window.location.href='/mitglied-werden'">
             <div class="plan-card-badge">EARLY BIRD</div>
             <div class="plan-card-icon"><i class="fa-solid fa-infinity"></i></div>
             <div class="plan-card-name">BOMAYE UNLIMITED</div>
@@ -1266,49 +1248,49 @@
               <td><span class="price-em">15€</span> / Tag</td>
               <td>Einmalig</td>
               <td>Alle Kurse des Tages</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Kaufen</a></td>
             </tr>
             <tr>
               <td><strong>Training 10er Karte</strong></td>
               <td><span class="price-em">125€</span></td>
               <td>Flexible</td>
               <td>10 Trainings freie Kurswahl</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Kaufen</a></td>
             </tr>
             <tr>
               <td><strong>Training 20er Karte</strong></td>
               <td><span class="price-em">250€</span></td>
               <td>Flexible</td>
               <td>20 Trainings freie Kurswahl</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking()">Kaufen</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Kaufen</a></td>
             </tr>
             <tr>
               <td><strong>Personal Training Mitglieder</strong></td>
               <td><span class="price-em">90€</span> / Session</td>
               <td>Flexibel</td>
               <td>1:1 mit Coach · Individuell</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Termin</a></td>
             </tr>
             <tr>
               <td><strong>Personal Training 10er Karte Mitglieder</strong></td>
               <td><span class="price-em">1.000€</span></td>
               <td>Flexible</td>
               <td>10 Sessions Personal Training – 1:1 Coaching</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Kaufen</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Kaufen</a></td>
             </tr>
             <tr>
               <td><strong>Personal Training Nicht-Mitglieder</strong></td>
               <td><span class="price-em">125€</span> / Session</td>
               <td>Flexibel</td>
               <td>1:1 mit Coach · Individuell</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Termin</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Termin</a></td>
             </tr>
             <tr>
               <td><strong>Personal Training 10er Karte Nicht-Mitglieder</strong></td>
               <td><span class="price-em">1.150€</span></td>
               <td>Flexible</td>
               <td>10 Sessions Personal Training – 1:1 Coaching</td>
-              <td><a href="#" onclick="event.preventDefault(); openBooking('Personal Training')">Kaufen</a></td>
+              <td><a href="#" onclick="window.location.href='/mitglied-werden'">Kaufen</a></td>
             </tr>
             <tr>
               <td><strong>Corporate Boxing</strong></td>

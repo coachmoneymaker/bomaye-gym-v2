@@ -495,7 +495,7 @@
   <!-- ═══════ PAGE CONTENT ═══════ -->
   <main class="mw-page" role="main">
 
-    <!-- ── STEP 1: INTRO ─────────────────────────────────── -->
+    <!-- ── INTRO ─────────────────────────────────────────── -->
     <section class="mw-intro" aria-label="Mitgliedschaft">
       <div class="mw-intro-inner">
         <p class="mw-intro-eyebrow">BOMAYE GYM MÜNCHEN</p>
@@ -509,92 +509,31 @@
       </div>
     </section>
 
-    <!-- ── STEP 2: AUTH GATE ─────────────────────────────── -->
-    <section id="auth-gate" class="mw-auth-gate" aria-label="Anmeldung">
+    <!-- ── CTA BUTTONS ───────────────────────────────────── -->
+    <section class="mw-auth-gate" aria-label="Anmeldung">
       <div class="mw-auth-gate-inner">
-
-        <div class="mw-auth-divider">
-          <span class="mw-auth-divider-label">Schritt 2 — Anmeldung</span>
-        </div>
-
-        <h2 class="mw-auth-headline">BEREITS REGISTRIERT?</h2>
-        <p class="mw-auth-sub">Melde dich an oder erstelle ein neues Konto,<br>bevor du deine Mitgliedschaft buchst.</p>
-
         <div class="mw-auth-buttons">
-          <!-- LOGIN: opens auth widget in login mode -->
-          <button id="btn-login" class="mw-auth-btn mw-btn-primary"
-                  aria-label="Zum Login">
-            Ich habe schon ein Konto
-          </button>
-          <!-- REGISTER: opens auth widget in register mode -->
-          <button id="btn-register" class="mw-auth-btn mw-btn-secondary"
-                  aria-label="Registrierung starten">
+          <!-- New member: scroll to subscription widget -->
+          <button class="mw-auth-btn mw-btn-secondary"
+                  onclick="document.getElementById('subscription-section').scrollIntoView({behavior:'smooth'})"
+                  type="button">
             Ich bin neu hier
           </button>
+          <!-- Existing member: go to account page -->
+          <a href="/mitgliederbereich" class="mw-auth-btn mw-btn-primary"
+             style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+            Ich habe schon ein Konto
+          </a>
         </div>
-
       </div>
     </section>
 
-    <!-- ── REGISTRATION GUIDANCE (shown with register button) ── -->
-    <div id="register-guidance" class="mw-reg-guidance" style="display:none;" aria-hidden="true">
-      <div class="mw-reg-guidance-inner">
-        <p class="mw-reg-guidance-label">Neue Mitglieder</p>
-        <p class="mw-reg-guidance-text">
-          Erstelle dein Konto und bestätige danach deine E-Mail-Adresse.<br>
-          Anschließend kehrst du zurück und wählst deine Mitgliedschaft.
-        </p>
-      </div>
-    </div>
-
-    <!-- ── BSPORT AUTH WIDGET ──
-         Lazy-mounted on button click (widgetType: 'auth').
-         Login button    → defaultPage: 'login'
-         Register button → defaultPage: 'register'
-    ── -->
-    <div id="auth-widget-wrap" class="mw-widget-shell" style="display:none;" aria-hidden="true">
-      <div class="mw-widget-shell-inner">
-        <div id="bsport-widget-auth"></div>
-      </div>
-    </div>
-
-    <!-- ── POST-REGISTRATION CONFIRMATION ──
-         Shown after Bsport fires a registration/signup postMessage.
-         Auth widget is fully hidden. CTA reloads page clean.
-    ── -->
-    <div id="post-reg-state" class="mw-post-reg" style="display:none;" aria-hidden="true">
-      <div class="mw-post-reg-inner">
-
-        <div class="mw-post-reg-icon" aria-hidden="true">&#10003;</div>
-
-        <h2 class="mw-post-reg-title">KONTO ERSTELLT</h2>
-
-        <p class="mw-post-reg-text">
-          Bitte bestätige deine E-Mail-Adresse.
-        </p>
-        <p class="mw-post-reg-hint">
-          Du hast eine Bestätigungs-E-Mail erhalten.<br>
-          Klicke auf den Link in der E-Mail und kehre dann zurück,<br>
-          um deine Mitgliedschaft zu wählen.
-        </p>
-
-        <a href="/mitglied-werden" class="mw-post-reg-cta" aria-label="Zur Mitgliedschaftsauswahl">
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          Zur Mitgliedschaftsauswahl
-        </a>
-
-      </div>
-    </div>
-
-    <!-- ── STEP 3: PACKAGE SELECTION ──
-         Revealed only after successful login.
-         Subscription widget is mounted HERE (lazily), never pre-mounted.
-    ── -->
-    <div id="package-section" style="display:none;" aria-hidden="true">
+    <!-- ── SUBSCRIPTION WIDGET ───────────────────────────── -->
+    <div id="subscription-section">
 
       <div class="mw-package-intro">
         <div class="mw-package-intro-inner">
-          <p class="mw-package-intro-label">Schritt 3 — Mitgliedschaft</p>
+          <p class="mw-package-intro-label">Mitgliedschaft</p>
           <h2 class="mw-package-intro-title">WÄHLE DEIN PAKET</h2>
           <p class="mw-package-intro-text">Kids · Youth · Unlimited</p>
         </div>
@@ -622,226 +561,36 @@
   </main>
 
   <!-- ══════════════════════════════════════════════════════════
-       BSPORT WIDGETS — Auth-first membership flow
-       ──────────────────────────────────────────────────────────
-       STATE 1  Auth Gate visible, no widget mounted
-       STATE 2  Login clicked  → auth widget (defaultPage:'login')
-       STATE 3  Register clicked → auth widget (defaultPage:'register')
-       STATE 4  Login success  → hide auth widget, mount + show subscription
-       STATE 5  Register success → hide auth widget, show confirmation UI
-                CTA → href="/mitglied-werden" (clean reload)
-       ─────────────────────────────────────────────────────────
-       RULES:
-         - auth widget mounted ONCE, with correct defaultPage
-         - subscription widget mounted ONCE, ONLY after login success
-         - NO iframes, NO srcdoc
-         - ONE instance of each widget
+       BSPORT — Subscription widget (direct mount, no auth gate)
+       - widgetType: subscription
+       - dialogMode: 3 (compatibility mode)
+       - showFab: false (no floating button)
+       - fullScreenPopup: false (no popup)
+       - Login/register handled natively inside the widget
   ══════════════════════════════════════════════════════════ -->
 
-  <!-- 1. Bsport CDN (loaded once, direct) -->
   <script src="https://cdn.bsport.io/scripts/widget.js"></script>
 
-  <!-- 2. Mount helper with retry logic -->
-  <script id="bsport-widget-mount">
-    function MountBsportWidget(config, repeat) {
-      repeat = repeat || 1;
-      if (repeat > 50) { return; }
-      if (!window.BsportWidget) {
-        return setTimeout(function(){ MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
-      }
-      BsportWidget.mount(config);
-    }
-  </script>
-
-  <!-- 3. Auth-first flow logic -->
   <script>
     (function () {
-
-      /* ── State ──────────────────────────────────────────── */
-      var _mode        = null;    // 'login' | 'register'
-      var _authDone    = false;   // prevents duplicate event handling
-      var _authMounted = false;   // auth widget mounted once only
-      var _subMounted  = false;   // subscription widget mounted once only
-
-      /* ── Mount auth widget with explicit defaultPage ──── */
-      function mountAuthWidget(defaultPage) {
-        if (_authMounted) { return; }
-        _authMounted = true;
-
-        /* Clear container before mount */
-        var authEl = document.getElementById('bsport-widget-auth');
-        if (authEl) { authEl.innerHTML = ''; }
-
-        MountBsportWidget({
-          parentElement:   'bsport-widget-auth',
-          companyId:       5473,
-          franchiseId:     null,
-          dialogMode:      3,
-          widgetType:      'auth',
-          defaultPage:     defaultPage,   // 'login' | 'register'
-          showFab:         false,
-          fullScreenPopup: false
-        });
+      function MountBsportWidget(config, repeat) {
+        repeat = repeat || 1;
+        if (repeat > 50) { return; }
+        if (!window.BsportWidget) {
+          return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+        }
+        BsportWidget.mount(config);
       }
 
-      /* ── Show the auth widget shell, hide the gate ──────── */
-      function showAuthWidget(defaultPage) {
-        var gate = document.getElementById('auth-gate');
-        var wrap = document.getElementById('auth-widget-wrap');
-
-        /* Capture scroll position BEFORE DOM changes to prevent jump */
-        var savedY = window.scrollY || window.pageYOffset;
-
-        if (gate) { gate.style.display = 'none'; gate.setAttribute('aria-hidden', 'true'); }
-
-        if (wrap) {
-          wrap.style.display = '';
-          wrap.removeAttribute('aria-hidden');
-          /* Restore scroll immediately so layout shift is invisible */
-          window.scrollTo({ top: savedY, behavior: 'instant' });
-        }
-
-        mountAuthWidget(defaultPage);
-      }
-
-      /* ── STATE 4: login success → show subscription widget ─ */
-      function showPackageSelection() {
-        /* Hide auth widget entirely */
-        var authWrap = document.getElementById('auth-widget-wrap');
-        var regGuide = document.getElementById('register-guidance');
-        if (authWrap) { authWrap.style.display = 'none'; authWrap.setAttribute('aria-hidden', 'true'); }
-        if (regGuide) { regGuide.style.display = 'none'; regGuide.setAttribute('aria-hidden', 'true'); }
-
-        /* Reveal package section */
-        var pkgSec = document.getElementById('package-section');
-        if (pkgSec) {
-          pkgSec.style.display = '';
-          pkgSec.removeAttribute('aria-hidden');
-          setTimeout(function(){ pkgSec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
-        }
-
-        /* Mount subscription widget NOW (container is visible, renders correctly) */
-        if (!_subMounted) {
-          _subMounted = true;
-          MountBsportWidget({
-            parentElement:   'bsport-subscription-widget',
-            companyId:       5473,
-            franchiseId:     null,
-            dialogMode:      3,
-            widgetType:      'subscription',
-            showFab:         false,
-            fullScreenPopup: false,
-            styles:          undefined,
-            config: {
-              subscription: {}
-            }
-          });
-        }
-      }
-
-      /* ── STATE 5: register success → confirmation UI ──────── */
-      function showPostRegState() {
-        /* Hide auth widget entirely */
-        var authWrap = document.getElementById('auth-widget-wrap');
-        var regGuide = document.getElementById('register-guidance');
-        if (authWrap) { authWrap.style.display = 'none'; authWrap.setAttribute('aria-hidden', 'true'); }
-        if (regGuide) { regGuide.style.display = 'none'; regGuide.setAttribute('aria-hidden', 'true'); }
-
-        /* Show confirmation */
-        var postReg = document.getElementById('post-reg-state');
-        if (postReg) {
-          postReg.style.display = '';
-          postReg.removeAttribute('aria-hidden');
-          setTimeout(function(){ postReg.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
-        }
-      }
-
-      /* ── Button: LOGIN ──────────────────────────────────── */
-      document.getElementById('btn-login').addEventListener('click', function () {
-        _mode = 'login';
-        showAuthWidget('login');
+      MountBsportWidget({
+        parentElement:   'bsport-subscription-widget',
+        companyId:       5473,
+        franchiseId:     null,
+        dialogMode:      3,
+        widgetType:      'subscription',
+        showFab:         false,
+        fullScreenPopup: false
       });
-
-      /* ── Button: REGISTER ───────────────────────────────── */
-      document.getElementById('btn-register').addEventListener('click', function () {
-        _mode = 'register';
-        var guide = document.getElementById('register-guidance');
-        if (guide) { guide.style.display = ''; guide.removeAttribute('aria-hidden'); }
-        showAuthWidget('register');
-      });
-
-      /* ── PostMessage: detect Bsport auth events ─────────────
-         Bsport signals auth state changes via window.postMessage.
-         We collect all known field names and signal patterns,
-         then route to the correct next state.
-      ─────────────────────────────────────────────────────── */
-      window.addEventListener('message', function (evt) {
-        if (_authDone) { return; }
-
-        /* Only process messages after the user has clicked a button and the auth widget is mounted */
-        if (!_mode || !_authMounted) { return; }
-
-        /* Only process messages from bsport domains */
-        if (evt.origin && evt.origin.indexOf('bsport.io') === -1 &&
-            evt.origin !== window.location.origin) {
-          /* Allow same-origin for local dev, block all other origins */
-          if (evt.origin !== '' && evt.origin.indexOf('localhost') === -1 &&
-              evt.origin.indexOf('127.0.0.1') === -1) {
-            return;
-          }
-        }
-
-        try {
-          var raw  = evt.data;
-          var data = (typeof raw === 'string') ? JSON.parse(raw) : raw;
-          if (!data || typeof data !== 'object') { return; }
-
-          /* Collect signal from all known Bsport message shapes */
-          var sig = [
-            data.type, data.event, data.action, data.name, data.topic,
-            data.message, data.status,
-            data.payload && data.payload.type,
-            data.payload && data.payload.event,
-            data.payload && data.payload.action,
-            data.payload && data.payload.status
-          ].filter(Boolean).join(' ').toLowerCase();
-
-          if (!sig) { return; }
-
-          var isLogin = (
-            sig.indexOf('login')          !== -1 ||
-            sig.indexOf('logged_in')      !== -1 ||
-            sig.indexOf('logged-in')      !== -1 ||
-            sig.indexOf('authenticated')  !== -1 ||
-            sig.indexOf('session_start')  !== -1 ||
-            sig.indexOf('sign_in')        !== -1 ||
-            sig.indexOf('signin')         !== -1
-          );
-
-          var isRegister = (
-            sig.indexOf('register')       !== -1 ||
-            sig.indexOf('registration')   !== -1 ||
-            sig.indexOf('signup')         !== -1 ||
-            sig.indexOf('sign_up')        !== -1 ||
-            sig.indexOf('account_created') !== -1 ||
-            sig.indexOf('user_created')   !== -1
-          );
-
-          /* Must be an auth event */
-          if (!isLogin && !isRegister) { return; }
-
-          /* Lock — process exactly once */
-          _authDone = true;
-
-          if (isRegister && _mode === 'register') {
-            showPostRegState();
-          } else {
-            showPackageSelection();
-          }
-
-        } catch (e) { /* ignore non-JSON / unrelated messages */ }
-      });
-
     }());
   </script>
 

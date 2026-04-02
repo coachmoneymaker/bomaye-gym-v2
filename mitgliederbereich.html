@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Mein Konto | BOMAYE GYM MÜNCHEN</title>
+  <meta name="description" content="Dein BOMAYE GYM Konto — Abonnements, Buchungen und Profilverwaltung." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/mitgliederbereich" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- bsport warm-up -->
+  <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="preconnect" href="https://cdn.bsport.io" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0d0d0d;
+      min-height: 100vh;
+      color: #fff;
+      font-family: var(--font-body);
+    }
+
+    /* ── Minimal header ─────────────────────────────────── */
+    .mw-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 72px;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid rgba(197,160,89,0.10);
+      box-shadow: 0 1px 0 rgba(198,164,90,0.05), 0 8px 32px rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+    }
+    .mw-header-inner {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .mw-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .mw-logo-img {
+      height: 56px;
+      width: auto;
+      display: block;
+    }
+    .mw-logo-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      color: #fff;
+      line-height: 1;
+    }
+    .mw-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 2.5px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.22s ease;
+      white-space: nowrap;
+    }
+    .mw-back-link:hover { color: var(--white); }
+    .mw-back-link i { font-size: 0.6rem; }
+
+    /* ── Page wrapper ────────────────────────────────────── */
+    .mw-page {
+      padding-top: 72px;
+      min-height: 100vh;
+    }
+
+    /* ── Page intro ─────────────────────────────────────── */
+    .mw-intro {
+      background: #ffffff;
+      padding: clamp(48px, 7vw, 80px) 24px 0;
+      text-align: center;
+    }
+    .mw-intro-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      padding-bottom: clamp(32px, 5vw, 48px);
+    }
+    .mw-intro-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 14px;
+    }
+    .mw-intro h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      letter-spacing: 0.1em;
+      color: #0a0a0a;
+      margin: 0 0 14px;
+      line-height: 1;
+    }
+    .mw-intro-desc {
+      font-family: var(--font-body);
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
+      color: rgba(0,0,0,0.5);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── Widget container ───────────────────────────────── */
+    .mw-widget-shell {
+      background: #ffffff;
+      position: relative;
+      z-index: 1;
+    }
+    .mw-widget-shell-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding-bottom: 80px;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    #bsport-member-profile {
+      min-height: 600px;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto;
+    }
+    #bsport-member-profile iframe {
+      pointer-events: auto !important;
+    }
+
+    /* ── Footer strip ────────────────────────────────────── */
+    .mw-footer {
+      background: #080808;
+      border-top: 1px solid rgba(198,164,90,0.10);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+    }
+    .mw-footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .mw-footer-links a {
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mw-footer-links a:hover { color: var(--gold); }
+    .mw-footer-copy {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .mw-header { height: 64px; padding: 0 1rem; }
+      .mw-page { padding-top: 64px; }
+      .mw-logo-img { height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ MINIMAL HEADER ═══════ -->
+  <header class="mw-header">
+    <div class="mw-header-inner">
+      <a href="/" class="mw-logo" aria-label="Bomaye Gym Startseite">
+        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="mw-logo-img"
+             onerror="this.style.display='none'" />
+        <span class="mw-logo-text">BOMAYE</span>
+      </a>
+      <a href="/" class="mw-back-link" aria-label="Zurück zur Startseite">
+        <i class="fa-solid fa-arrow-left"></i> STARTSEITE
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════ PAGE CONTENT ═══════ -->
+  <main class="mw-page" role="main">
+
+    <!-- ── PAGE INTRO ────────────────────────────────────── -->
+    <section class="mw-intro" aria-label="Mitgliederbereich">
+      <div class="mw-intro-inner">
+        <p class="mw-intro-eyebrow">BOMAYE GYM MÜNCHEN</p>
+        <h1>MEIN KONTO</h1>
+        <p class="mw-intro-desc">Verwalte deine Mitgliedschaft, Abonnements und Buchungen.</p>
+      </div>
+    </section>
+
+    <!-- ── MEMBER PROFILE WIDGET ─────────────────────────── -->
+    <div class="mw-widget-shell">
+      <div class="mw-widget-shell-inner">
+        <div id="bsport-member-profile"></div>
+      </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer class="mw-footer" role="contentinfo">
+      <nav class="mw-footer-links" aria-label="Rechtliches">
+        <a href="/impressum">IMPRESSUM</a>
+        <a href="/datenschutz">DATENSCHUTZ</a>
+        <a href="/agb">AGB</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+      <p class="mw-footer-copy">&copy; 2026 BOMAYE GYM MÜNCHEN — PINEAPPLE PARK</p>
+    </footer>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════
+       BSPORT — Member Profile widget
+       - component: memberProfile (Mitgliederprofil)
+       - defaultPage: subscriptions (Meine Abonnements)
+       - NOT calendar, NOT bookings
+       - Login handled natively by the widget
+  ══════════════════════════════════════════════════════════ -->
+
+  <script src="https://cdn.bsport.io/scripts/widget.js"></script>
+
+  <script>
+    (function () {
+      function MountBsportWidget(config, repeat) {
+        repeat = repeat || 1;
+        if (repeat > 50) { return; }
+        if (!window.BsportWidget) {
+          return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+        }
+        BsportWidget.mount(config);
+      }
+
+      MountBsportWidget({
+        parentElement:   'bsport-member-profile',
+        companyId:       5473,
+        franchiseId:     null,
+        dialogMode:      3,
+        component:       'memberProfile',
+        defaultPage:     'subscriptions',
+        showFab:         false,
+        fullScreenPopup: false
+      });
+    }());
+  </script>
+
+</body>
+</html>

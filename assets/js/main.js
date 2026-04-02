@@ -6,7 +6,7 @@
 /* ── Body scroll lock (iOS-compatible) ─────────────────────────
    Plain overflow:hidden does NOT prevent background scroll on iOS
    Safari. The position:fixed + negative-top technique does.
-   Both openBooking() and toggleMenu() use these helpers.
+   toggleMenu() uses these helpers.
 ──────────────────────────────────────────────────────────── */
 let _scrollLockY = 0;
 let _navFromPopstate = false;
@@ -285,43 +285,6 @@ function selectMembershipTab(btn) {
   if (panel) panel.classList.add('active');
 }
 
-/* ── Booking Modal ─────────────────────────────────────────── */
-function openBookingModal(url) {
-  const modal   = document.getElementById('booking-modal');
-  const iframe  = document.getElementById('booking-iframe');
-  const loading = document.getElementById('booking-modal-loading');
-  if (!modal || !iframe) return;
-
-  if (iframe.getAttribute('data-bsport-url') !== url) {
-    // New URL — show loading state until iframe fires onload
-    if (loading) loading.style.display = 'flex';
-    iframe.style.visibility = 'hidden';
-    iframe.setAttribute('data-bsport-url', url);
-
-    iframe.onload = function () {
-      if (loading) loading.style.display = 'none';
-      iframe.style.visibility = 'visible';
-    };
-
-    iframe.src = url;
-  } else {
-    // Same URL already loaded — reveal instantly
-    if (loading) loading.style.display = 'none';
-    iframe.style.visibility = 'visible';
-  }
-
-  modal.classList.add('open');
-  lockBodyScroll();
-}
-
-function closeBookingModal() {
-  const modal = document.getElementById('booking-modal');
-  if (!modal) return;
-  modal.classList.remove('open');
-  // Intentionally NOT resetting iframe.src — keeps Bsport content warm for re-open
-  unlockBodyScroll();
-}
-
 /* ── Early Bird FOMO (async, non-blocking) ─────────────────── */
 async function initEarlyBirdFOMO() {
   if (typeof BOMAYE === 'undefined') return;
@@ -474,14 +437,6 @@ function loadMap() {
   if (gate) gate.classList.add('hidden');
 }
 
-/* ── Scroll to membership widget ──────────────────────────────
-   Smooth-scrolls to the Bsport subscription widget on the page.
-   Used by any CTA that previously called openBooking().
-──────────────────────────────────────────────────────────── */
-function scrollToWidget() {
-  nav('home', 'membership-widget-section');
-}
-
 /* Click backdrop (modal element itself, not its children) */
 document.addEventListener('click', e => {
   if (e.target.id === 'family-modal')    closeFamilyModal();
@@ -491,11 +446,9 @@ document.addEventListener('click', e => {
 /* ESC closes any open modal or mobile nav */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const bookingModal   = document.getElementById('booking-modal');
   const familyModal    = document.getElementById('family-modal');
   const corporateModal = document.getElementById('corporate-modal');
   const mobileNav      = document.getElementById('mobile-nav');
-  if (bookingModal   && bookingModal.classList.contains('open'))   { closeBookingModal();   return; }
   if (familyModal    && familyModal.classList.contains('open'))    { closeFamilyModal();    return; }
   if (corporateModal && corporateModal.classList.contains('open')) { closeCorporateModal(); return; }
   if (mobileNav      && mobileNav.classList.contains('open'))      { toggleMenu();          return; }
@@ -1100,31 +1053,3 @@ function initQuoteMobileReveal() {
   window.addEventListener('scroll', onScroll, { passive: true });
 }());
 
-/* ── Bsport iframe warm-up ─────────────────────────────────────
-   After page load, silently pre-loads the featured plan into the
-   hidden booking iframe so the first click opens near-instantly.
-   Uses a 2 s delay so it doesn't compete with critical resources.
-────────────────────────────────────────────────────────────── */
-window.addEventListener('load', function () {
-  setTimeout(function () {
-    const iframe = document.getElementById('booking-iframe');
-    if (!iframe || iframe.src) return;                 // already loaded
-
-    // Auto-discover the featured plan's URL from the DOM
-    const featuredCard = document.querySelector('.plan-card--featured[onclick]');
-    if (!featuredCard) return;
-    const match = (featuredCard.getAttribute('onclick') || '')
-      .match(/openBookingModal\('([^']+)'\)/);
-    if (!match) return;
-
-    const url     = match[1];
-    const loading = document.getElementById('booking-modal-loading');
-
-    iframe.setAttribute('data-bsport-url', url);
-    iframe.onload = function () {
-      if (loading) loading.style.display = 'none';
-      iframe.style.visibility = 'visible';
-    };
-    iframe.src = url;
-  }, 2000);
-});
