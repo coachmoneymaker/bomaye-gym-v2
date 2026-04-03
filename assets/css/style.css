@@ -7099,3 +7099,164 @@ section { padding: var(--sv) 0; }
     transform 0.68s cubic-bezier(0.22,1,0.36,1);
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   PERCEPTION ENGINEERING — DOMINANCE UPGRADES
+   Category-leading brand feel: dominant, cinematic, inevitable.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Scroll Progress Bar ── */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #A67C2E, #C6A45A, #d4b472);
+  z-index: 9999;
+  transition: width 0.08s linear;
+  pointer-events: none;
+  will-change: width;
+}
+
+/* ── Hero Overlay — Deeper, more cinematic vignette ── */
+.hero-overlay {
+  background:
+    radial-gradient(ellipse at center, transparent 18%, rgba(0,0,0,0.80) 100%),
+    linear-gradient(180deg,
+      rgba(8,8,8,0.84) 0%,
+      rgba(8,8,8,0.46) 40%,
+      rgba(8,8,8,0.92) 75%,
+      rgba(8,8,8,1.00) 100%
+    ) !important;
+}
+
+/* ── Hero H1 — Depth and authority ── */
+.hero-h1 {
+  text-shadow: 0 4px 56px rgba(0,0,0,0.95);
+}
+
+/* ── Hero Brand Tagline — Wider tracking = more commanding ── */
+.hero-brand-tagline {
+  letter-spacing: 0.22em !important;
+}
+@media (min-width: 769px) {
+  .hero-brand-tagline {
+    letter-spacing: 0.28em !important;
+    font-size: clamp(1.5rem, 3.5vw, 2.1rem) !important;
+  }
+}
+
+/* ── Hero → next section: gold hairline transition ── */
+#hero + section,
+#hero + div {
+  border-top: 1px solid rgba(197,160,89,0.10);
+}
+
+/* ── Diff Cards — Sharper hover, more contrast ── */
+.diff-card-body span {
+  color: rgba(255,255,255,0.65) !important;
+}
+.diff-card:hover {
+  border-color: rgba(197,160,89,0.42) !important;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(197,160,89,0.20) !important;
+}
+
+/* ── Manifesto Section — Maximum depth, cinematic darkness ── */
+.manifesto-section {
+  background: #050505 !important;
+}
+.manifesto-section::before {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 20%, rgba(197,160,89,0.14) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 60% at 8% 90%, rgba(197,160,89,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 55% at 92% 82%, rgba(197,160,89,0.07) 0%, transparent 65%) !important;
+}
+
+/* ── Manifesto Headline — Bigger, tighter, more aggressive ── */
+.manifesto-headline {
+  font-size: clamp(3.5rem, 10vw, 7.5rem) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.01em !important;
+  text-shadow: 0 0 120px rgba(0,0,0,1);
+  margin-bottom: 2.75rem !important;
+}
+
+/* ── Manifesto Sub — More readable, emotionally resonant ── */
+.manifesto-sub {
+  color: rgba(255,255,255,0.72) !important;
+  font-size: clamp(1.02rem, 1.9vw, 1.22rem) !important;
+  line-height: 1.95 !important;
+  max-width: 580px !important;
+}
+
+/* ── Manifesto Pillars — Elevated hover experience ── */
+.manifesto-pillar {
+  border-radius: 14px;
+  transition: transform 0.32s var(--ease-out), background 0.32s ease !important;
+}
+.manifesto-pillar:hover {
+  transform: translateY(-7px) !important;
+  background: rgba(197,160,89,0.06) !important;
+}
+.manifesto-pillar span {
+  color: rgba(255,255,255,0.58) !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 0.03em !important;
+}
+.manifesto-pillar i {
+  font-size: 2rem !important;
+  filter: drop-shadow(0 0 18px rgba(197,160,89,0.55)) !important;
+}
+.manifesto-pillar strong {
+  font-size: 0.75rem !important;
+  letter-spacing: 4.5px !important;
+}
+
+/* ── Pre-footer CTA — Dominant, commanding, inevitable ── */
+.pre-footer-cta {
+  padding: 4.5rem 0 !important;
+  border-top: 1px solid rgba(197,160,89,0.38) !important;
+  background: linear-gradient(135deg, #0a0807 0%, #0e0c08 55%, #080706 100%) !important;
+}
+.pre-footer-cta::before {
+  background: radial-gradient(
+    ellipse 80% 100% at 20% 50%,
+    rgba(197,160,89,0.09) 0%,
+    transparent 65%
+  ) !important;
+}
+.pf-cta-text strong {
+  font-size: clamp(1.5rem, 3.5vw, 2.4rem) !important;
+  letter-spacing: 0.06em !important;
+}
+.pf-cta-text span {
+  color: rgba(255,255,255,0.60) !important;
+  font-size: 0.93rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* ── Button tactile feedback ── */
+.btn--gold:active {
+  transform: translateY(0px) scale(0.96) !important;
+}
+
+/* ── Early Bird urgency headline — Gold intensity ── */
+.eb-urgency-headline {
+  color: var(--gold-light) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.025em !important;
+}
+
+/* ── Manifesto CTA note — More visible ── */
+.manifesto-cta-note {
+  color: rgba(255,255,255,0.38) !important;
+  letter-spacing: 2px !important;
+}
+
+/* ── Scroll reveal — slightly faster for snappier feel ── */
+.reveal {
+  transition:
+    opacity 0.58s cubic-bezier(0.22,1,0.36,1),
+    transform 0.58s cubic-bezier(0.22,1,0.36,1) !important;
+}
+

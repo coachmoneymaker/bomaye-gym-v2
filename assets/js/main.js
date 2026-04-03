@@ -127,9 +127,16 @@ function initPreloader() {
 function initHeader() {
   const header = document.getElementById('header');
   if (!header) return;
+  const progressBar = document.getElementById('scroll-progress');
   const onScroll = () => {
     header.classList.toggle('scrolled', window.scrollY > 10);
     updateActiveNav();
+    if (progressBar) {
+      const docEl = document.documentElement;
+      const scrolled = docEl.scrollTop || document.body.scrollTop;
+      const total = docEl.scrollHeight - docEl.clientHeight;
+      progressBar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
