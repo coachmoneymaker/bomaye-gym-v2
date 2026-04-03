@@ -1069,19 +1069,54 @@
       </div>
     </section>
 
-    <!-- Existing member notice — shown when B-Sport says "already registered" -->
-    <div class="mw-member-link">
-      <div class="mw-member-link-inner">
-        <p>Du hast bereits ein Konto bei BOMAYE GYM?</p>
-        <a href="/mitgliederbereich">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i>
-          Einloggen &amp; Mitgliedschaft verwalten
-        </a>
+    <!-- ── AUTH GATE ─────────────────────────────────────── -->
+    <section class="mw-auth-gate" id="auth-gate">
+      <div class="mw-auth-gate-inner">
+        <div class="mw-auth-divider">
+          <span class="mw-auth-divider-label">JETZT STARTEN</span>
+        </div>
+        <h2 class="mw-auth-headline">KONTO WÄHLEN</h2>
+        <p class="mw-auth-sub">Neu hier? Registriere dich. Bereits Mitglied? Melde dich an, um deine Mitgliedschaft zu buchen.</p>
+        <div class="mw-auth-buttons">
+          <button class="mw-auth-btn mw-btn-primary" onclick="mwShowRegister()" type="button">
+            Ich bin neu hier
+          </button>
+          <button class="mw-auth-btn mw-btn-secondary" onclick="mwShowLogin()" type="button">
+            Ich habe schon ein Konto
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INLINE AUTH WIDGET (consumerSpace: login or register) ─ -->
+    <div id="auth-widget-section" style="display:none;">
+      <div style="background:#ffffff;padding:0 24px 8px;">
+        <div style="max-width:640px;margin:0 auto;padding-top:32px;">
+          <button onclick="mwBackToAuthGate()" type="button"
+                  style="background:none;border:none;cursor:pointer;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2.5px;color:rgba(0,0,0,0.4);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:0;">
+            <i class="fa-solid fa-arrow-left"></i> Zurück
+          </button>
+        </div>
+      </div>
+      <div class="mw-widget-shell">
+        <div class="mw-widget-shell-inner">
+          <div id="bsport-widget-auth" style="min-height:420px;"></div>
+        </div>
       </div>
     </div>
 
-    <!-- ── SUBSCRIPTION WIDGET ───────────────────────────── -->
-    <div id="subscription-section">
+    <!-- ── POST-REGISTRATION (shown after email sent, NOT after login) ── -->
+    <div id="post-reg-section" class="mw-post-reg" style="display:none;">
+      <div class="mw-post-reg-inner">
+        <div class="mw-post-reg-icon">&#x2709;</div>
+        <h2 class="mw-post-reg-title">FAST GESCHAFFT!</h2>
+        <p class="mw-post-reg-text">Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte überprüfe dein Postfach.</p>
+        <p class="mw-post-reg-hint">Klicke auf den Link in der E-Mail, um dein Konto zu bestätigen. Danach wirst du automatisch zurück zu dieser Seite geleitet, wo du deine Mitgliedschaft abschließen kannst.</p>
+      </div>
+    </div>
+
+    <!-- ── SUBSCRIPTION WIDGET (shown after login or email confirmation) ── -->
+    <div id="subscription-section" style="display:none;">
 
       <div class="mw-package-intro">
         <div class="mw-package-intro-inner">
@@ -1112,20 +1147,6 @@
 
   </main>
 
-  <script>
-    /* Scroll to subscription section accounting for fixed 72px header.
-       Native scrollIntoView() does not offset for fixed headers and is
-       unreliable on iOS Safari < 15.4. This manual version is both
-       reliable and header-aware. */
-    function scrollToSubscription() {
-      var el = document.getElementById('subscription-section');
-      if (!el) return;
-      var headerH = document.querySelector('.mw-header') ? document.querySelector('.mw-header').offsetHeight : 72;
-      var top = el.getBoundingClientRect().top + window.pageYOffset - headerH;
-      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-    }
-  </script>
-
   <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
   <script id="bsport-widget-mount">
@@ -1140,18 +1161,216 @@
   </script>
 
   <script>
-    MountBsportWidget({
-      "parentElement": "bsport-widget-136002",
-      "companyId": 5473,
-      "franchiseId": null,
-      "dialogMode": 0,
-      "widgetType": "subscription",
-      "showFab": false,
-      "fullScreenPopup": false,
-      "config": {
-        "subscription": {}
+  /* ── /mitglied-werden page state machine ────────────────────────────────
+   *
+   * Sections (mutually visible or hidden):
+   *   #auth-gate           — default view: "Ich bin neu hier" / "Ich habe schon ein Konto"
+   *   #auth-widget-section — inline consumerSpace widget (login or register)
+   *   #post-reg-section    — "Check your email" — shown ONLY after registration, NOT after login
+   *   #subscription-section — native subscription widget — shown after login / email confirmation
+   *
+   * Bsport postMessage events handled:
+   *   registration_success / register_success / registered …   → goToPostReg()
+   *   login_success / auth_success / logged_in … (not new)     → goToSubscription()
+   *   login_success with isNewUser flag                         → goToPostReg()
+   *
+   * Page-load shortcuts:
+   *   URL hash #subscription-section or #bsport-widget-136002  → skip auth gate
+   *   URL params ?token= / ?access_token= / ?t=                → skip auth gate (email confirm)
+   *   sessionStorage bsport_auth_complete === '1'              → skip auth gate
+   * ─────────────────────────────────────────────────────────────────────── */
+  (function () {
+    'use strict';
+
+    var AUTH_MOUNTED = false;
+    var SUB_MOUNTED  = false;
+
+    /* ── DOM helpers ──────────────────────────────────── */
+    function show(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = '';
+    }
+    function hide(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
+    function smoothScroll(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var hdr = document.querySelector('.mw-header');
+      var off = (hdr ? hdr.offsetHeight : 72) + 16;
+      setTimeout(function () {
+        var top = el.getBoundingClientRect().top + window.pageYOffset - off;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }, 60);
+    }
+
+    /* ── Widget mounts (deferred — only when section is shown) ── */
+    function mountAuthWidget(defaultPage) {
+      if (AUTH_MOUNTED) return;
+      if (!document.getElementById('bsport-widget-auth')) return;
+      AUTH_MOUNTED = true;
+      MountBsportWidget({
+        "parentElement":   "bsport-widget-auth",
+        "companyId":       5473,
+        "franchiseId":     null,
+        "dialogMode":      0,
+        "widgetType":      "consumerSpace",
+        "showFab":         false,
+        "fullScreenPopup": false,
+        "config": {
+          "consumerSpace": {
+            "defaultPage":    defaultPage,
+            "hideNavigation": true,
+            "showTitle":      false,
+            "showSubtitle":   false
+          }
+        }
+      });
+    }
+
+    function mountSubscriptionWidget() {
+      if (SUB_MOUNTED) return;
+      if (!document.getElementById('bsport-widget-136002')) return;
+      SUB_MOUNTED = true;
+      MountBsportWidget({
+        "parentElement":   "bsport-widget-136002",
+        "companyId":       5473,
+        "franchiseId":     null,
+        "dialogMode":      0,
+        "widgetType":      "subscription",
+        "showFab":         false,
+        "fullScreenPopup": false,
+        "config":          { "subscription": {} }
+      });
+    }
+
+    /* ── State transitions ───────────────────────────── */
+    function goToSubscription() {
+      hide('auth-gate');
+      hide('auth-widget-section');
+      hide('post-reg-section');
+      show('subscription-section');
+      mountSubscriptionWidget();
+      smoothScroll('subscription-section');
+      try { sessionStorage.setItem('bsport_auth_complete', '1'); } catch (e) {}
+    }
+
+    function goToPostReg() {
+      hide('auth-gate');
+      hide('auth-widget-section');
+      show('post-reg-section');
+      hide('subscription-section');
+      smoothScroll('post-reg-section');
+    }
+
+    function goToAuthWidget(page) {
+      hide('auth-gate');
+      mountAuthWidget(page);
+      show('auth-widget-section');
+      smoothScroll('auth-widget-section');
+    }
+
+    /* ── Global handlers (used by onclick attributes and pricing CTAs) ── */
+    window.mwShowRegister     = function () { goToAuthWidget('register'); };
+    window.mwShowLogin        = function () { goToAuthWidget('login'); };
+    window.mwGoToSubscription = goToSubscription;
+    window.mwBackToAuthGate   = function () {
+      hide('auth-widget-section');
+      show('auth-gate');
+      smoothScroll('auth-gate');
+    };
+
+    /* scrollToSubscription() — called by pricing card CTAs.
+       If auth was already completed this session → go straight to widget.
+       Otherwise → scroll to auth gate so user picks a flow first. */
+    window.scrollToSubscription = function () {
+      var authed = false;
+      try { authed = sessionStorage.getItem('bsport_auth_complete') === '1'; } catch (e) {}
+      if (authed) {
+        goToSubscription();
+      } else {
+        smoothScroll('auth-gate');
+      }
+    };
+
+    /* ── postMessage handler ──────────────────────────
+     * CRITICAL: registration events must NEVER trigger goToSubscription().
+     * Login events must NEVER trigger goToPostReg() unless isNewUser is set.
+     * These two flows are completely separate.
+     * ─────────────────────────────────────────────── */
+    window.addEventListener('message', function (ev) {
+      if (!ev.data || typeof ev.data !== 'object') return;
+      var d    = ev.data;
+      var type = (d.type || d.event || d.action || d.name || '').toString().toLowerCase();
+
+      /* Registration events (match before login check to avoid cross-contamination) */
+      var isReg =
+        type === 'registration_success' ||
+        type === 'register_success'     ||
+        type === 'registered'           ||
+        (type.indexOf('registr') !== -1 && type.indexOf('success') !== -1) ||
+        (type.indexOf('register') !== -1 && type.indexOf('success') !== -1 && type.indexOf('login') === -1);
+
+      /* Login events — explicitly exclude any registration-containing strings */
+      var isLogin =
+        !isReg && (
+          type === 'login_success'        ||
+          type === 'bsport_login_success' ||
+          type === 'auth_success'         ||
+          type === 'user_logged_in'       ||
+          type === 'logged_in'            ||
+          (type.indexOf('login') !== -1 && type.indexOf('success') !== -1)
+        );
+
+      if (isReg) {
+        goToPostReg();
+        return;
+      }
+
+      if (isLogin) {
+        var isNew = !!(d.isNewUser || d.new_user || d.newUser || d.is_new_user);
+        if (isNew) {
+          goToPostReg();
+        } else {
+          goToSubscription();
+        }
       }
     });
+
+    /* ── Page-load initialisation ──────────────────── */
+    (function init() {
+      var hash   = window.location.hash;
+      var search = window.location.search || '';
+      var params;
+      try { params = new URLSearchParams(search); } catch (e) { params = { has: function () { return false; } }; }
+
+      /* Returning from Bsport email-confirmation redirect or mitgliederbereich login */
+      if (hash === '#subscription-section' ||
+          hash === '#bsport-widget-136002'  ||
+          params.has('token')               ||
+          params.has('access_token')        ||
+          params.has('t')) {
+        hide('auth-gate');
+        show('subscription-section');
+        mountSubscriptionWidget();
+        return;
+      }
+
+      /* Auth completed earlier in this browser session */
+      var authed = false;
+      try { authed = sessionStorage.getItem('bsport_auth_complete') === '1'; } catch (e) {}
+      if (authed) {
+        hide('auth-gate');
+        show('subscription-section');
+        mountSubscriptionWidget();
+        return;
+      }
+
+      /* Default: auth gate visible, all other sections hidden via markup style="display:none" */
+    }());
+
+  }());
   </script>
 
 </body>
