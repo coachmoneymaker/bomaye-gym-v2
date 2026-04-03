@@ -783,22 +783,43 @@
     .mw-member-link {
       text-align: center;
       padding: clamp(20px, 3vw, 28px) 24px;
-      background: #080808;
-      border-top: 1px solid rgba(255,255,255,0.04);
+      background: #f5f4f1;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .mw-member-link-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
     .mw-member-link p {
       font-family: var(--font-body);
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.28);
+      font-size: 0.9rem;
+      color: rgba(0,0,0,0.55);
       margin: 0;
     }
     .mw-member-link a {
-      color: rgba(198,164,90,0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold, #C6A45A);
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-weight: 600;
+      padding: 0.65rem 1.6rem;
+      border: 1px solid rgba(198,164,90,0.45);
+      border-radius: 8px;
+      transition: all 0.22s ease;
     }
     .mw-member-link a:hover {
+      background: rgba(198,164,90,0.08);
+      border-color: var(--gold, #C6A45A);
       color: var(--gold, #C6A45A);
     }
 
@@ -1048,9 +1069,15 @@
       </div>
     </section>
 
-    <!-- Existing member link -->
+    <!-- Existing member notice — shown when B-Sport says "already registered" -->
     <div class="mw-member-link">
-      <p>Du hast bereits ein Konto? <a href="/mitgliederbereich">Zum Mitgliederbereich &rarr;</a></p>
+      <div class="mw-member-link-inner">
+        <p>Du hast bereits ein Konto bei BOMAYE GYM?</p>
+        <a href="/mitgliederbereich">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          Einloggen &amp; Mitgliedschaft verwalten
+        </a>
+      </div>
     </div>
 
     <!-- ── SUBSCRIPTION WIDGET ───────────────────────────── -->
@@ -1117,7 +1144,7 @@
       "parentElement": "bsport-widget-136002",
       "companyId": 5473,
       "franchiseId": null,
-      "dialogMode": 3,
+      "dialogMode": 0,
       "widgetType": "subscription",
       "showFab": false,
       "fullScreenPopup": false,

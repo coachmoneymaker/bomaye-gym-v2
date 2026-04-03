@@ -238,6 +238,26 @@
       </div>
     </div>
 
+    <!-- ── NO SUBSCRIPTION CTA ───────────────────────────── -->
+    <div style="background:#f5f4f1;border-top:1px solid rgba(0,0,0,0.07);padding:clamp(32px,5vw,48px) 24px;text-align:center;">
+      <div style="max-width:520px;margin:0 auto;">
+        <p style="font-family:var(--font-head);font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold,#C6A45A);margin:0 0 10px;">Noch kein Abo?</p>
+        <p style="font-family:var(--font-body);font-size:0.9rem;color:rgba(0,0,0,0.55);margin:0 0 20px;line-height:1.7;">
+          Sichere dir jetzt deinen Early Bird Preis — dauerhaft günstiger, bevor das Gym öffnet.
+        </p>
+        <a href="/mitglied-werden"
+           style="display:inline-flex;align-items:center;gap:0.5rem;
+                  font-family:var(--font-head);font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;
+                  font-weight:700;text-decoration:none;
+                  padding:0.85rem 2rem;border-radius:10px;
+                  background:linear-gradient(135deg,#C6A45A 0%,#d4b472 52%,#A67C2E 100%);
+                  color:#0a0a0a;
+                  box-shadow:0 0 20px rgba(198,164,90,0.28),0 4px 14px rgba(0,0,0,0.18);">
+          <i class="fa-solid fa-bolt"></i> Mitgliedschaft buchen
+        </a>
+      </div>
+    </div>
+
     <!-- ── FOOTER ── -->
     <footer class="mw-footer" role="contentinfo">
       <nav class="mw-footer-links" aria-label="Rechtliches">
@@ -265,11 +285,23 @@
   </script>
 
   <script>
+    /*
+     * ROOT CAUSE FIX — White screen / empty UI (Bug #4):
+     *
+     * dialogMode: 3 caused the consumerSpace widget to render its login/welcome
+     * chrome (header "Willkommen zurück!" + footer "Abmelden") inline but pushed
+     * the main profile content into an internal popup layer that never surfaced —
+     * producing the white space seen in the screenshots.
+     *
+     * dialogMode: 0 renders the entire widget inline (full-page mode), which is
+     * the correct behaviour for a dedicated account page. All content — navigation,
+     * bookings, profile — appears directly in the container without any popup layer.
+     */
     MountBsportWidget({
       "parentElement": "bsport-widget-703094",
       "companyId": 5473,
       "franchiseId": null,
-      "dialogMode": 3,
+      "dialogMode": 0,
       "widgetType": "consumerSpace",
       "showFab": false,
       "fullScreenPopup": false,
@@ -284,6 +316,50 @@
         }
       }
     });
+  </script>
+
+  <script>
+  /*
+   * ROOT CAUSE FIX — Flow break after login (Bug #2):
+   *
+   * When a user navigates here from the membership/subscription page
+   * (/mitglied-werden) to log in, the context of their selected plan is lost.
+   * After a successful login we read 'bsport_pending_section' from
+   * sessionStorage (set by mitglied-werden.html when the user clicked on a
+   * plan) and redirect back automatically so the user can complete checkout
+   * without restarting the flow.
+   *
+   * We also deliberately do NOT redirect for new registrations (isNewUser ===
+   * true) — new users should stay on the account page to complete onboarding.
+   */
+  (function () {
+    window.addEventListener('message', function (event) {
+      if (!event.data || typeof event.data !== 'object') { return; }
+      var d    = event.data;
+      var type = (d.type || d.event || d.action || d.name || '').toString().toLowerCase();
+
+      var isLoginEvent =
+        type === 'login_success'        ||
+        type === 'bsport_login_success' ||
+        type === 'auth_success'         ||
+        type === 'user_logged_in'       ||
+        type === 'logged_in'            ||
+        (type.indexOf('login') !== -1 && type.indexOf('success') !== -1);
+
+      if (!isLoginEvent) { return; }
+
+      var isNewUser = !!(d.isNewUser || d.new_user || d.newUser || d.is_new_user);
+
+      if (!isNewUser) {
+        var pending = sessionStorage.getItem('bsport_pending_section');
+        sessionStorage.removeItem('bsport_pending_section');
+        if (pending) {
+          /* Return to the subscription page and scroll to the membership widget */
+          window.location.href = '/mitglied-werden#' + pending;
+        }
+      }
+    });
+  }());
   </script>
 
 </body>

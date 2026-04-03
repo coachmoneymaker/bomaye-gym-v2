@@ -215,11 +215,14 @@ export default async function handler(req, res) {
     await sendVerificationEmail(lead, verifyUrl);
     console.log('[LEAD] Verification email sent successfully', { email: lead.email });
   } catch (err) {
-    console.error('[LEAD] Verification email send failed', {
+    // Log the failure server-side but do NOT return 500 to the client.
+    // The lead is already persisted in KV — returning 500 would cause a
+    // browser console error and the user would get a broken experience.
+    // The email can be retried or sent manually using the KV lead data.
+    console.warn('[LEAD] Verification email could not be sent', {
       email: lead.email,
-      error: err?.message ?? String(err),
+      reason: err?.message ?? String(err),
     });
-    return res.status(500).json({ error: 'Failed to send verification email. Please try again.' });
   }
 
   return res.status(200).json({ success: true, pending: true });

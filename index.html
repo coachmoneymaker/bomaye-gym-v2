@@ -118,6 +118,9 @@
 
 <!-- ═══════ MOBILE NAV ═══════ -->
 <div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
+  <button class="mob-close" onclick="toggleMenu()" aria-label="Menü schließen" type="button">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
   <button class="mn-item" onclick="mobileNav('home')" type="button" style="--mn-i:0">HOME</button>
   <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
@@ -1376,7 +1379,7 @@
      Script 2: MountBsportWidget helper with retry logic
      Script 3: Mount the subscription widget
 ══════════════════════════════════════════════════════════ -->
-<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
 <script id="bsport-widget-mount">
 function MountBsportWidget(config, repeat=1) {
@@ -1391,14 +1394,18 @@ function MountBsportWidget(config, repeat=1) {
 </script>
 
 <script>
-MountBsportWidget({
+/* Only mount if the container div exists — prevents a console error
+   if the element is not present on this view. */
+if (document.getElementById('bsport-widget-78464')) {
+  MountBsportWidget({
     parentElement: "bsport-widget-78464",
     companyId: 5473,
     dialogMode: 1,
     widgetType: "subscription",
     showFab: false,
     fullScreenPopup: false
-})
+  });
+}
 </script>
 
 <!-- ── Disc-stack: subtle scale-back on exiting card ─────────────────
