@@ -867,13 +867,19 @@
       touch-action: pan-y;          /* explicit vertical-only pan — removes 300 ms tap delay */
     }
 
-    /* Fast-tap on every interactive element inside the Bsport subscription
-       widget so Safari fires click immediately without the 300 ms heuristic */
+    /* Fast-tap on every interactive element inside Bsport widgets so Safari
+       fires click immediately without the 300 ms heuristic.
+       Applied to both the auth widget and the subscription widget. */
     #bsport-widget-136002 button,
     #bsport-widget-136002 [role="button"],
     #bsport-widget-136002 input,
     #bsport-widget-136002 select,
-    #bsport-widget-136002 a {
+    #bsport-widget-136002 a,
+    #bsport-widget-auth button,
+    #bsport-widget-auth [role="button"],
+    #bsport-widget-auth input,
+    #bsport-widget-auth select,
+    #bsport-widget-auth a {
       touch-action: manipulation;
     }
   </style>
@@ -1275,7 +1281,18 @@
     window.mwShowRegister     = function () { goToAuthWidget('register'); };
     window.mwShowLogin        = function () { goToAuthWidget('login'); };
     window.mwGoToSubscription = goToSubscription;
-    window.mwBackToAuthGate   = function () {
+    window.mwBackToAuthGate = function () {
+      /* ROOT CAUSE 1 FIX: Reset mount state and clear the widget HTML so that
+         the user can switch between "register" and "login" freely.
+         Without this, AUTH_MOUNTED stays true and the next call to
+         mountAuthWidget() returns immediately — leaving the register form
+         in place even when the user clicks "Ich habe schon ein Konto".
+         That causes an existing user to submit the register form, which
+         triggers goToPostReg() and the false "Registrierung war erfolgreich"
+         success state. */
+      AUTH_MOUNTED = false;
+      var container = document.getElementById('bsport-widget-auth');
+      if (container) container.innerHTML = '';
       hide('auth-widget-section');
       show('auth-gate');
       smoothScroll('auth-gate');
@@ -1301,6 +1318,14 @@
      * ─────────────────────────────────────────────── */
     window.addEventListener('message', function (ev) {
       if (!ev.data || typeof ev.data !== 'object') return;
+
+      /* ROOT CAUSE 2 FIX: Only process auth-state events when the auth widget
+         section is actually visible. This prevents postMessages emitted by the
+         subscription widget during checkout/payment from accidentally triggering
+         registration or login state transitions. */
+      var authSection = document.getElementById('auth-widget-section');
+      if (!authSection || authSection.style.display === 'none') return;
+
       var d    = ev.data;
       var type = (d.type || d.event || d.action || d.name || '').toString().toLowerCase();
 
@@ -1345,15 +1370,27 @@
       var params;
       try { params = new URLSearchParams(search); } catch (e) { params = { has: function () { return false; } }; }
 
+      /* ROOT CAUSE 3 FIX: Bsport's email-confirmation redirect may use a
+         hash-based OAuth token (e.g., #access_token=...) rather than a query
+         parameter. Detect both forms so the user is never stranded at the
+         auth gate after confirming their email. */
+      var hashHasToken = (hash.indexOf('access_token') !== -1 ||
+                          hash.indexOf('token=') !== -1);
+
       /* Returning from Bsport email-confirmation redirect or mitgliederbereich login */
       if (hash === '#subscription-section' ||
           hash === '#bsport-widget-136002'  ||
           params.has('token')               ||
           params.has('access_token')        ||
-          params.has('t')) {
+          params.has('t')                   ||
+          hashHasToken) {
         hide('auth-gate');
         show('subscription-section');
         mountSubscriptionWidget();
+        /* ROOT CAUSE 4 FIX: Persist auth state so returning to this page in
+           the same session skips the auth gate even without the token in the
+           URL (e.g., after navigating away and back). */
+        try { sessionStorage.setItem('bsport_auth_complete', '1'); } catch (e) {}
         return;
       }
 
