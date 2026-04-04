@@ -255,6 +255,64 @@
       .story-brand-accent { margin-bottom: 3rem; }
       .story-stats { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     }
+
+    /* ── Experience Section ──────────────────────── */
+    .about-exp-section {
+      background: #080808;
+      padding: clamp(80px, 14vw, 140px) 24px;
+      text-align: center;
+      border-top: 1px solid rgba(212,175,55,0.1);
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+    .about-exp-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .about-exp-words {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 64px;
+    }
+    .about-exp-word {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 13vw, 10rem);
+      line-height: 0.92;
+      letter-spacing: 0.04em;
+      color: #fff;
+      display: block;
+    }
+    .about-exp-word + .about-exp-word { margin-top: 4px; }
+    .about-exp-muted { color: rgba(255,255,255,0.12); }
+    .about-exp-features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px 28px;
+    }
+    .about-exp-feat {
+      font-family: var(--font-head);
+      font-size: clamp(0.68rem, 1.6vw, 0.84rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .about-exp-feat::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+      .about-exp-features { flex-direction: column; align-items: center; }
+    }
   </style>
 </head>
 
@@ -337,26 +395,18 @@
   </section>
 
   <!-- ── Intro / Brand Identity ── -->
-  <section id="intro">
-    <div class="container">
-      <div class="intro-inner">
-        <div class="intro-text reveal">
-          <span class="tag tag--dark">THE EXPERIENCE</span>
-          <h2 style="margin-top:1.2rem;">BOXEN IN MUNICH.<br><span class="gold">AUF HÖCHSTEM NIVEAU.</span></h2>
-          <p>Bomaye Gym Munich im Pineapple Park vereint professionelles Boxtraining mit echter Community. Von Kids ab 6 Jahren bis zum Wettkämpfer — in einem der modernsten Boxgyms in München.</p>
-          <p>Professionelles Coaching, top Ausrüstung, und eine Gemeinschaft, die dich jeden Tag pusht.</p>
-          <a class="btn btn--gold" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
-          </a>
-        </div>
-        <div class="intro-brand reveal delay-2">
-          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="intro-brand-logo"
-               loading="lazy" decoding="async" style="width:240px;max-height:none;"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-          <div class="intro-brand-wordmark" style="display:none;">BOMAYE</div>
-          <div class="intro-brand-divider"></div>
-          <div class="intro-brand-tagline">IT'S NOT A GYM. IT'S PASSION.</div>
-        </div>
+  <section id="intro" class="about-exp-section">
+    <div class="about-exp-inner">
+      <div class="about-exp-words reveal">
+        <span class="about-exp-word">BOXEN.</span>
+        <span class="about-exp-word about-exp-muted">COMMUNITY.</span>
+        <span class="about-exp-word about-exp-muted">DISZIPLIN.</span>
+      </div>
+      <div class="about-exp-features reveal delay-2">
+        <span class="about-exp-feat">Top Coaches</span>
+        <span class="about-exp-feat">Moderne Ausstattung</span>
+        <span class="about-exp-feat">Pineapple Park München</span>
+        <span class="about-exp-feat">Für Anfänger &amp; Wettkämpfer</span>
       </div>
     </div>
   </section>
@@ -417,61 +467,6 @@
     </div>
   </section>
 
-  <!-- ── Warum Bomaye ── -->
-  <section id="why-bomaye" class="sec--light">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--light-inv">WARUM BOMAYE</span>
-        <h2 style="margin-top:1rem; color:var(--ink);">MEHR ALS EIN <span class="gold-dark">FITNESSSTUDIO.</span></h2>
-        <p style="color:rgba(8,8,8,0.6); max-width:600px; margin:1.25rem auto 0;">Boxen ist Charakterarbeit. Wir vermitteln Disziplin, Respekt und Selbstvertrauen – und entwickeln echten Kampfgeist.</p>
-      </div>
-      <div class="why-grid">
-        <div class="why-card reveal delay-1">
-          <div class="why-card-icon"><i class="fa-solid fa-fist-raised"></i></div>
-          <h3>ECHTES BOXTRAINING</h3>
-          <p>Für Fitness, Technik und Wettkampf. Kein Kursprogramm von der Stange — professionelles Training, das wirklich funktioniert.</p>
-        </div>
-        <div class="why-card reveal delay-2">
-          <div class="why-card-icon"><i class="fa-solid fa-users"></i></div>
-          <h3>COMMUNITY STATT FITNESSSTUDIO</h3>
-          <p>Trainiere mit Gleichgesinnten, die dich täglich pushen. Bei Bomaye kennst du jeden Namen — wir sind eine Familie.</p>
-        </div>
-        <div class="why-card reveal delay-3">
-          <div class="why-card-icon"><i class="fa-solid fa-medal"></i></div>
-          <h3>COACHING VON WETTKÄMPFERN</h3>
-          <p>Lerne von echten Kämpfern. Weltmeister als deine persönlichen Trainer — Menschen, die wissen wie sich ein Ring anfühlt.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── The Bomaye Standard ── -->
-  <section id="bomaye-standard" class="sec--standard-white">
-    <div class="container">
-      <div class="sec-header reveal">
-        <span class="tag tag--light-inv">THE BOMAYE STANDARD</span>
-        <h2 style="margin-top:1rem;color:var(--ink);">REAL BOXING.<br>REAL COACHES.<br><span class="gold-dark">REAL COMMUNITY.</span></h2>
-        <p class="standard-subtext" style="color:rgba(8,8,8,0.6);">Bomaye Gym ist kein typisches Fitnessstudio. Du trainierst in einer Umgebung, die auf Technik, Disziplin und echter Coaching-Qualität aufgebaut ist — von deiner ersten Session bis zum Wettkampf.</p>
-      </div>
-      <div class="standard-grid">
-        <div class="standard-card standard-card--light reveal">
-          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-medal" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">PROFESSIONELLES COACHING</h3>
-          <p style="color:rgba(8,8,8,0.65);">Erfahrung aus dem Wettkampfboxen und Leistungssport. Jede Einheit beinhaltet echtes technisches Feedback und strukturiertes Coaching.</p>
-        </div>
-        <div class="standard-card standard-card--light reveal delay-1">
-          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">STRUKTURIERTES TRAINING</h3>
-          <p style="color:rgba(8,8,8,0.65);">Jede Session folgt einem klaren System, das Technik, Kraft und Leistung gezielt aufbaut — von Anfänger bis Wettkämpfer.</p>
-        </div>
-        <div class="standard-card standard-card--light reveal delay-2">
-          <div class="standard-icon standard-icon--light"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
-          <h3 style="color:var(--ink);">ECHTE COMMUNITY</h3>
-          <p style="color:rgba(8,8,8,0.65);">Bomaye ist kein anonymes Gym. Du wirst Teil einer Gemeinschaft, die sich gegenseitig pusht, unterstützt und gemeinsam wächst.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ── Community ── -->
   <div id="community" role="presentation">
