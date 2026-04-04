@@ -1033,6 +1033,79 @@
       border-color: var(--gold, #C6A45A);
       color: var(--gold, #C6A45A);
     }
+
+    /* ── Pricing section: light theme override ─────────────────────── */
+    .mw-pricing {
+      background: #f7f6f2;
+    }
+    .mw-pricing::before {
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.22), transparent);
+    }
+    .mw-pricing::after {
+      background: linear-gradient(90deg, transparent, rgba(198,164,90,0.12), transparent);
+    }
+    .mw-pricing-title {
+      color: #0a0a0a;
+    }
+    .mw-pricing-sub {
+      color: rgba(0,0,0,0.48);
+    }
+    /* Regular (non-featured) cards: light surface */
+    .mw-plan:not(.mw-plan--featured) {
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.08);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .mw-plan:not(.mw-plan--featured):hover {
+      border-color: rgba(198,164,90,0.3);
+      box-shadow: 0 6px 28px rgba(0,0,0,0.09);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-tag {
+      color: rgba(0,0,0,0.35);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-name {
+      color: #0a0a0a;
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-audience {
+      color: rgba(0,0,0,0.42);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-divider {
+      background: rgba(0,0,0,0.07);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-anchor {
+      color: rgba(0,0,0,0.32);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-weekly-unit {
+      color: rgba(0,0,0,0.45);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-monthly {
+      color: rgba(0,0,0,0.38);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-features li {
+      color: rgba(0,0,0,0.58);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-badge--subtle {
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.1);
+      color: rgba(0,0,0,0.42);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-cta--outline {
+      color: rgba(0,0,0,0.6);
+      border-color: rgba(0,0,0,0.15);
+    }
+    .mw-plan:not(.mw-plan--featured) .mw-plan-cta--outline:hover {
+      border-color: rgba(198,164,90,0.5);
+      color: #8a6420;
+      background: rgba(198,164,90,0.06);
+    }
+    .mw-pricing-trust-item {
+      color: rgba(0,0,0,0.42);
+    }
+    .mw-pricing-trust-item i {
+      color: var(--gold, #C6A45A);
+      opacity: 0.75;
+    }
+
   </style>
 </head>
 <body>
@@ -1063,7 +1136,7 @@
 
         <div class="mw-wichtig" role="note">
           <span class="mw-wichtig-label">WICHTIG</span>
-          <p class="mw-wichtig-text">Bitte wähle im Buchungsprozess als Startdatum den <strong>15.04.</strong></p>
+          <p class="mw-wichtig-text">Wähle im nächsten Schritt bei <strong>„Startdatum"</strong> bzw. <strong>„Rechnungsbeginn"</strong> den <strong>15.04.2026</strong> aus.</p>
         </div>
       </div>
     </section>
