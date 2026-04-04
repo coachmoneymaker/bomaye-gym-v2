@@ -846,29 +846,34 @@
       .mw-pricing-trust { gap: 6px 20px; }
     }
 
-    /* ── Safari mobile fixes ─────────────────────────────────────────────────
-       BUG 1 (VERSENDEN submit button dead): The global style.css sets
-       body { overflow-x: hidden } which makes Safari treat <body> as a BFC
-       scroll container. When Bsport renders its registration flow, Safari's
-       hit-testing coordinates become offset by the scroll amount — taps on
-       the submit button dispatch to the wrong DOM element.
-       BUG 2 (unnatural scroll): The same body-scroll-container makes Safari
-       scroll the body element instead of the viewport, causing the
-       non-native scroll feel on mobile.
-       Fix: move the overflow-x clip to <html> (which clips without creating
-       a body scroll container), restore body to visible, and give the body
-       an explicit touch-action so Safari never second-guesses scroll vs tap.
+    /* ── Mobile & Safari fixes ───────────────────────────────────────────────
+       BUG (submit button dead on iOS): body { overflow-x: hidden } in the
+       global stylesheet makes Safari treat <body> as a BFC scroll container.
+       Hit-testing coordinates become offset by the scroll amount — taps fire
+       on the wrong element. Fix: clip at <html> instead, restore body to
+       visible, and set an explicit touch-action to remove the 300 ms delay.
     ─────────────────────────────────────────────────────────────────────── */
     html {
-      overflow-x: hidden;           /* clip horizontal bleed at the root */
+      overflow-x: hidden;           /* clip at root — no BFC scroll container on body */
     }
     body {
-      overflow-x: visible;          /* undo the body BFC that breaks Safari fixed overlays */
-      touch-action: pan-y;          /* explicit vertical-only pan — removes 300 ms tap delay */
+      overflow-x: visible;          /* undo body BFC that breaks Safari fixed overlays */
+      touch-action: pan-y;          /* vertical-only pan: removes 300 ms tap delay globally */
+      -webkit-text-size-adjust: 100%; /* prevent iOS auto font-size bump */
     }
 
-    /* Fast-tap on every interactive element inside Bsport widgets so Safari
-       fires click immediately without the 300 ms heuristic.
+    /* Our own interactive elements: fast tap, no ghost highlight */
+    .mw-auth-btn,
+    .mw-plan-cta,
+    .mw-back-link,
+    .mw-post-reg-cta,
+    button {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+
+    /* Fast-tap on every interactive element inside Bsport widgets.
        Applied to both the auth widget and the subscription widget. */
     #bsport-widget-136002 button,
     #bsport-widget-136002 [role="button"],
@@ -881,6 +886,115 @@
     #bsport-widget-auth select,
     #bsport-widget-auth a {
       touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── Widget containers: ensure no invisible overlay blocks interaction ── */
+    .mw-widget-shell {
+      position: relative;
+      z-index: 1;
+      /* iOS Safari: allow momentum scroll inside the widget container */
+      -webkit-overflow-scrolling: touch;
+    }
+    .mw-widget-shell-inner {
+      /* Ensure the widget shell never accidentally captures pointer events */
+      isolation: isolate;
+    }
+
+    /* ── Bsport iframe sizing ───────────────────────────────────────────── */
+    /* Reserve enough vertical space so the widget doesn't collapse on mobile.
+       Bsport injects an <iframe> — it must have room to render before the
+       viewport has been scrolled to show it. */
+    #bsport-widget-136002 {
+      min-height: 520px;
+      width: 100%;
+      display: block;
+    }
+    #bsport-widget-auth {
+      min-height: 420px;
+      width: 100%;
+      display: block;
+    }
+    /* All Bsport-injected iframes: full-width, no border, block element */
+    #bsport-widget-136002 iframe,
+    #bsport-widget-auth iframe {
+      width: 100% !important;
+      max-width: 100% !important;
+      border: 0 !important;
+      display: block !important;
+      /* Allow the iframe's own content to scroll on iOS without trapping
+         the outer page scroll */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Mobile overrides ───────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      /* Give the subscription widget extra vertical room on mobile so
+         package cards and the payment form don't clip at the bottom */
+      #bsport-widget-136002 {
+        min-height: 700px;
+      }
+      #bsport-widget-auth {
+        min-height: 520px;
+      }
+      /* Remove side padding inside the widget shell on narrow screens so
+         the Bsport iframe can use full width */
+      .mw-widget-shell-inner {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      /* Ensure the subscription section intro header doesn't crowd the widget */
+      .mw-package-intro {
+        padding-bottom: 16px;
+      }
+      /* Larger tap target for the "Zurück" button */
+      #auth-widget-section > div > div > button {
+        padding: 8px 0;
+        min-height: 44px;
+      }
+    }
+
+    /* ── Prevent any fixed/absolute overlay from blocking the widget ────── */
+    /* If a Bsport dialog opens (e.g., payment iframe), it needs z-index
+       above our header (200). Bsport uses its own stacking context, but
+       ensure our shell never sits above it. */
+    #subscription-section,
+    #auth-widget-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Fallback "Continue" button (visible when auth widget is showing) ─ */
+    /* Shown below the auth widget to rescue users who see an internal
+       "email sent" screen from Bsport's widget but should proceed. */
+    .mw-auth-fallback {
+      background: #fff;
+      padding: 16px 24px 32px;
+      text-align: center;
+      display: none; /* shown via JS after a delay when auth section is visible */
+    }
+    .mw-auth-fallback-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.45);
+      background: none;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s ease;
+    }
+    .mw-auth-fallback-btn:hover,
+    .mw-auth-fallback-btn:active {
+      border-color: var(--gold, #C6A45A);
+      color: var(--gold, #C6A45A);
     }
   </style>
 </head>
@@ -1099,15 +1213,23 @@
       <div style="background:#ffffff;padding:0 24px 8px;">
         <div style="max-width:640px;margin:0 auto;padding-top:32px;">
           <button onclick="mwBackToAuthGate()" type="button"
-                  style="background:none;border:none;cursor:pointer;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2.5px;color:rgba(0,0,0,0.4);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:0;">
+                  style="background:none;border:none;cursor:pointer;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2.5px;color:rgba(0,0,0,0.4);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:0;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">
             <i class="fa-solid fa-arrow-left"></i> Zurück
           </button>
         </div>
       </div>
       <div class="mw-widget-shell">
         <div class="mw-widget-shell-inner">
-          <div id="bsport-widget-auth" style="min-height:420px;"></div>
+          <div id="bsport-widget-auth"></div>
         </div>
+      </div>
+      <!-- Fallback: appears after 8 s so a stuck user can skip past Bsport's
+           intermediate "email sent" state and reach the subscription widget. -->
+      <div class="mw-auth-fallback" id="auth-fallback-bar">
+        <button class="mw-auth-fallback-btn" onclick="window.mwGoToSubscription()" type="button">
+          <i class="fa-solid fa-arrow-right"></i>
+          Bereits angemeldet? Weiter zur Paketauswahl
+        </button>
       </div>
     </div>
 
@@ -1253,8 +1375,24 @@
       });
     }
 
+    /* ── Fallback bar timer ──────────────────────────── */
+    var FALLBACK_TIMER = null;
+    function startFallbackTimer() {
+      clearFallbackTimer();
+      FALLBACK_TIMER = setTimeout(function () {
+        var bar = document.getElementById('auth-fallback-bar');
+        if (bar) bar.style.display = 'block';
+      }, 8000); /* 8 s — enough for normal auth; rescues stuck users */
+    }
+    function clearFallbackTimer() {
+      if (FALLBACK_TIMER) { clearTimeout(FALLBACK_TIMER); FALLBACK_TIMER = null; }
+      var bar = document.getElementById('auth-fallback-bar');
+      if (bar) bar.style.display = 'none';
+    }
+
     /* ── State transitions ───────────────────────────── */
     function goToSubscription() {
+      clearFallbackTimer();
       hide('auth-gate');
       hide('auth-widget-section');
       hide('post-reg-section');
@@ -1277,6 +1415,8 @@
       mountAuthWidget(page);
       show('auth-widget-section');
       smoothScroll('auth-widget-section');
+      /* Start the fallback-bar timer so stuck users can escape */
+      startFallbackTimer();
     }
 
     /* ── Global handlers (used by onclick attributes and pricing CTAs) ── */
@@ -1284,14 +1424,9 @@
     window.mwShowLogin        = function () { goToAuthWidget('login'); };
     window.mwGoToSubscription = goToSubscription;
     window.mwBackToAuthGate = function () {
-      /* ROOT CAUSE 1 FIX: Reset mount state and clear the widget HTML so that
-         the user can switch between "register" and "login" freely.
-         Without this, AUTH_MOUNTED stays true and the next call to
-         mountAuthWidget() returns immediately — leaving the register form
-         in place even when the user clicks "Ich habe schon ein Konto".
-         That causes an existing user to submit the register form, which
-         triggers goToPostReg() and the false "Registrierung war erfolgreich"
-         success state. */
+      /* Reset mount state and clear widget HTML so the user can freely switch
+         between "register" and "login" modes without the old form persisting. */
+      clearFallbackTimer();
       AUTH_MOUNTED = false;
       var container = document.getElementById('bsport-widget-auth');
       if (container) container.innerHTML = '';
@@ -1313,55 +1448,101 @@
       }
     };
 
-    /* ── postMessage handler ──────────────────────────
-     * Both registration and login events go to goToSubscription().
-     * Email confirmation is OFF — no post-reg screen is shown.
-     * ─────────────────────────────────────────────── */
+    /* ── postMessage handler ──────────────────────────────────────────────
+     * Catches ALL Bsport auth-success events (registration + login) and
+     * transitions to the subscription widget.
+     *
+     * Email confirmation is OFF in Bsport — both reg and login go straight
+     * to subscription. No post-reg email screen is ever shown.
+     *
+     * Guard: skip if subscription section is already visible (auth already
+     * done) to prevent double-mounts during checkout postMessages.
+     * ──────────────────────────────────────────────────────────────────── */
     window.addEventListener('message', function (ev) {
-      if (!ev.data || typeof ev.data !== 'object') return;
-
-      /* ROOT CAUSE 2 FIX: Only process auth-state events when the auth widget
-         section is actually visible. This prevents postMessages emitted by the
-         subscription widget during checkout/payment from accidentally triggering
-         registration or login state transitions. */
-      var authSection = document.getElementById('auth-widget-section');
-      if (!authSection || authSection.style.display === 'none') return;
-
-      var d    = ev.data;
-      var type = (d.type || d.event || d.action || d.name || '').toString().toLowerCase();
-
-      /* Registration events (match before login check to avoid cross-contamination) */
-      var isReg =
-        type === 'registration_success' ||
-        type === 'register_success'     ||
-        type === 'registered'           ||
-        (type.indexOf('registr') !== -1 && type.indexOf('success') !== -1) ||
-        (type.indexOf('register') !== -1 && type.indexOf('success') !== -1 && type.indexOf('login') === -1);
-
-      /* Login events — explicitly exclude any registration-containing strings */
-      var isLogin =
-        !isReg && (
-          type === 'login_success'        ||
-          type === 'bsport_login_success' ||
-          type === 'auth_success'         ||
-          type === 'user_logged_in'       ||
-          type === 'logged_in'            ||
-          (type.indexOf('login') !== -1 && type.indexOf('success') !== -1)
-        );
-
-      if (isReg) {
-        /* Email confirmation is OFF — registration is immediately complete.
-           Skip post-reg screen and go directly to the subscription widget. */
-        goToSubscription();
+      /* ── Normalise: accept both string and object postMessages ── */
+      var raw = ev.data;
+      var d;
+      if (typeof raw === 'string') {
+        try { d = JSON.parse(raw); } catch (e) { d = { type: raw }; }
+      } else if (raw && typeof raw === 'object') {
+        d = raw;
+      } else {
         return;
       }
 
-      if (isLogin) {
-        /* Whether the user is new or existing, go straight to subscription.
-           Email confirmation is OFF so there is no pending confirmation step. */
+      /* ── Guard: subscription widget already showing → auth complete ── */
+      var subSection = document.getElementById('subscription-section');
+      if (subSection && subSection.style.display !== 'none') return;
+
+      /* ── Extract type string from all common Bsport event shapes ── */
+      var type = '';
+      var topFields = [d.type, d.event, d.action, d.name, d.message, d.kind, d.status];
+      for (var i = 0; i < topFields.length; i++) {
+        if (topFields[i] && typeof topFields[i] === 'string' && topFields[i].length) {
+          type = topFields[i].toLowerCase();
+          break;
+        }
+      }
+      /* Also inspect nested data / payload wrappers */
+      if (!type) {
+        var nested = d.data || d.payload || d.detail || {};
+        var nestedFields = [nested.type, nested.event, nested.action, nested.name];
+        for (var j = 0; j < nestedFields.length; j++) {
+          if (nestedFields[j] && typeof nestedFields[j] === 'string' && nestedFields[j].length) {
+            type = nestedFields[j].toLowerCase();
+            break;
+          }
+        }
+      }
+
+      /* ── Token / user presence → treat as implicit auth success ── */
+      var hasAuthPayload = !!(
+        d.token || d.access_token || d.accessToken || d.jwt || d.id_token ||
+        d.user  || d.consumer     || d.member      || d.userId || d.user_id ||
+        (d.data && (d.data.token || d.data.access_token || d.data.user || d.data.consumer))
+      );
+
+      /* ── Registration event patterns ── */
+      var isReg = type && (
+        type === 'registration_success'    ||
+        type === 'register_success'        ||
+        type === 'registered'              ||
+        type === 'signup_success'          ||
+        type === 'sign_up_success'         ||
+        type === 'create_account_success'  ||
+        type === 'account_created'         ||
+        (type.indexOf('registr')  !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1 || type.indexOf('done') !== -1)) ||
+        (type.indexOf('register') !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1) && type.indexOf('login') === -1) ||
+        (type.indexOf('signup')   !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1))
+      );
+
+      /* ── Login event patterns ── */
+      var isLogin = !isReg && type && (
+        type === 'login_success'         ||
+        type === 'bsport_login_success'  ||
+        type === 'auth_success'          ||
+        type === 'user_logged_in'        ||
+        type === 'logged_in'             ||
+        type === 'authenticated'         ||
+        type === 'sign_in_success'       ||
+        type === 'signin_success'        ||
+        type === 'consumer_logged_in'    ||
+        type === 'session_active'        ||
+        (type.indexOf('login')   !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1 || type.indexOf('done') !== -1)) ||
+        (type.indexOf('auth')    !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
+        (type.indexOf('sign_in') !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
+        (type.indexOf('logged')  !== -1)
+      );
+
+      /* ── Token-based fallback: auth payload without explicit type ── */
+      var isTokenAuth = !isReg && !isLogin && hasAuthPayload;
+
+      if (isReg || isLogin || isTokenAuth) {
+        /* Registration and login both go straight to the subscription widget.
+           Email confirmation is OFF — no intermediate "check your email" step. */
         goToSubscription();
       }
-    });
+    }, false);
 
     /* ── Page-load initialisation ──────────────────── */
     (function init() {

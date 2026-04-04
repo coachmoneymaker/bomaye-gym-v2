@@ -335,35 +335,82 @@
    */
   (function () {
     window.addEventListener('message', function (event) {
-      if (!event.data || typeof event.data !== 'object') { return; }
-      var d    = event.data;
-      var type = (d.type || d.event || d.action || d.name || '').toString().toLowerCase();
+      /* Accept both string and object postMessages from Bsport */
+      var raw = event.data;
+      var d;
+      if (typeof raw === 'string') {
+        try { d = JSON.parse(raw); } catch (e) { d = { type: raw }; }
+      } else if (raw && typeof raw === 'object') {
+        d = raw;
+      } else {
+        return;
+      }
 
-      var isLoginEvent =
-        type === 'login_success'        ||
-        type === 'bsport_login_success' ||
-        type === 'auth_success'         ||
-        type === 'user_logged_in'       ||
-        type === 'logged_in'            ||
-        (type.indexOf('login') !== -1 && type.indexOf('success') !== -1);
+      /* Extract type from all common Bsport event field names */
+      var type = '';
+      var fields = [d.type, d.event, d.action, d.name, d.message, d.kind];
+      for (var i = 0; i < fields.length; i++) {
+        if (fields[i] && typeof fields[i] === 'string' && fields[i].length) {
+          type = fields[i].toLowerCase();
+          break;
+        }
+      }
+      if (!type) {
+        var nested = d.data || d.payload || {};
+        var nf = [nested.type, nested.event, nested.action];
+        for (var j = 0; j < nf.length; j++) {
+          if (nf[j] && typeof nf[j] === 'string' && nf[j].length) {
+            type = nf[j].toLowerCase();
+            break;
+          }
+        }
+      }
 
-      if (!isLoginEvent) { return; }
+      /* Check for auth payload (token / user fields) as a fallback */
+      var hasAuthPayload = !!(
+        d.token || d.access_token || d.accessToken || d.jwt || d.id_token ||
+        d.user  || d.consumer     || d.member      || d.userId || d.user_id ||
+        (d.data && (d.data.token || d.data.access_token || d.data.user || d.data.consumer))
+      );
+
+      /* Match any login / registration / auth success event */
+      var isAuthEvent =
+        type === 'login_success'           ||
+        type === 'bsport_login_success'    ||
+        type === 'auth_success'            ||
+        type === 'user_logged_in'          ||
+        type === 'logged_in'               ||
+        type === 'authenticated'           ||
+        type === 'sign_in_success'         ||
+        type === 'signin_success'          ||
+        type === 'consumer_logged_in'      ||
+        type === 'registration_success'    ||
+        type === 'register_success'        ||
+        type === 'registered'              ||
+        type === 'signup_success'          ||
+        (type.indexOf('login')   !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
+        (type.indexOf('auth')    !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
+        (type.indexOf('registr') !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
+        (type.indexOf('logged')  !== -1) ||
+        /* Token-based fallback */
+        (!type && hasAuthPayload);
+
+      if (!isAuthEvent) { return; }
 
       var isNewUser = !!(d.isNewUser || d.new_user || d.newUser || d.is_new_user);
 
       if (!isNewUser) {
-        /* Persist auth state so /mitglied-werden skips the auth gate if the
-           user navigates there after logging in here. */
+        /* Persist auth state so /mitglied-werden skips the auth gate */
         try { sessionStorage.setItem('bsport_auth_complete', '1'); } catch (e) {}
 
         var pending = sessionStorage.getItem('bsport_pending_section');
         sessionStorage.removeItem('bsport_pending_section');
         if (pending) {
-          /* Return to the subscription page and scroll to the membership widget */
+          /* Return to the subscription page at the correct section */
           window.location.href = '/mitglied-werden#' + pending;
         }
       }
-    });
+    }, false);
   }());
   </script>
 
