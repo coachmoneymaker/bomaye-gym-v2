@@ -44,13 +44,13 @@
 
     /* ── Design Tokens ───────────────────────────────────────────── */
     :root {
-      --gold:       #C6A45A;
-      --gold-dark:  #A67C2E;
-      --gold-light: #d4b472;
-      --ink:        #080808;
+      --gold:       #d4af37;
+      --gold-dark:  #b8922e;
+      --gold-light: #e5c96a;
+      --ink:        #000000;
       --ink2:       #111111;
       --smoke:      #1a1a1a;
-      --border:     rgba(198,164,90,0.22);
+      --border:     rgba(212,175,55,0.22);
       --muted:      rgba(255,255,255,0.5);
       --font-display: 'Bebas Neue', 'Oswald', sans-serif;
       --font-head:    'Oswald', sans-serif;
@@ -1037,6 +1037,310 @@
       color: rgba(255,255,255,0.45);
       line-height: 1.75;
     }
+
+    /* ── Hero CTA ────────────────────────────────────────────── */
+    .hero-cta-wrap {
+      margin-top: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 56px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 55%, var(--gold-light) 100%);
+      color: #000;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-expo), box-shadow 0.25s var(--ease-expo);
+      box-shadow: 0 6px 40px rgba(212,175,55,0.28);
+      border: none;
+    }
+    .hero-cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 50px rgba(212,175,55,0.45);
+    }
+    @media (max-width: 600px) {
+      .hero-cta-btn { padding: 18px 36px; width: 100%; justify-content: center; }
+    }
+
+    /* ── Early Bird Restructured ─────────────────────────────── */
+    .eb-available-label {
+      font-family: var(--font-head);
+      font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 12px;
+      display: block;
+      opacity: 0.9;
+    }
+    .eb-urgency-text {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(255,255,255,0.7);
+      max-width: 480px;
+      margin: 0 auto 44px;
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+    }
+    .eb-urgency-text strong { color: #fff; font-weight: 600; }
+    .eb-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin: 0 auto 56px;
+      padding: 0;
+    }
+    .eb-bullets li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-head);
+      font-size: clamp(0.78rem, 1.8vw, 0.92rem);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+    }
+    .eb-bullets li i {
+      color: var(--gold);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .eb-payment-note {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      margin-top: 16px;
+    }
+
+    /* ── Ali, Bomaye Section ─────────────────────────────────── */
+    .ali-section {
+      position: relative;
+      z-index: 10;
+      background: #f8f5f0;
+      padding: clamp(80px, 14vh, 140px) 24px;
+    }
+    .ali-inner {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .ali-label {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: #b8922e;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .ali-headline {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.88;
+      letter-spacing: 0.03em;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    .ali-kinshasa {
+      font-family: var(--font-head);
+      font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: #b8922e;
+      margin-bottom: 56px;
+      display: block;
+    }
+    .ali-divider {
+      width: 48px;
+      height: 2px;
+      background: #b8922e;
+      margin-bottom: 44px;
+    }
+    .ali-text-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(28px, 5vw, 64px);
+      align-items: start;
+    }
+    .ali-text-block p {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+      color: #2a2a2a;
+      line-height: 1.85;
+    }
+    .ali-text-block p + p {
+      margin-top: 1.25rem;
+    }
+    .ali-gold-word {
+      color: #b8922e;
+      font-weight: 600;
+    }
+    @media (max-width: 680px) {
+      .ali-text-block { grid-template-columns: 1fr; }
+    }
+
+    /* ── Experience Section ──────────────────────────────────── */
+    .experience-section {
+      position: relative;
+      z-index: 10;
+      background: #000;
+      padding: clamp(80px, 14vh, 140px) 24px;
+      text-align: center;
+      border-top: 1px solid rgba(212,175,55,0.1);
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+    .experience-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .exp-big-words {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 72px;
+    }
+    .exp-word {
+      font-family: var(--font-display);
+      font-size: clamp(4.5rem, 14vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      color: #fff;
+      display: block;
+    }
+    .exp-word + .exp-word {
+      margin-top: 4px;
+    }
+    .exp-word-muted {
+      color: rgba(255,255,255,0.12);
+    }
+    .exp-features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 32px;
+    }
+    .exp-feature {
+      font-family: var(--font-head);
+      font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .exp-feature::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+      .exp-features { flex-direction: column; align-items: center; }
+    }
+
+    /* ── Meet the Champions Section ──────────────────────────── */
+    .champions-section {
+      position: relative;
+      z-index: 10;
+      background: #0a0a0a;
+      padding: clamp(80px, 14vh, 140px) 24px;
+    }
+    .champions-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .champions-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    .champions-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7rem);
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 0.92;
+      margin-bottom: 20px;
+    }
+    .champions-sub {
+      font-family: var(--font-head);
+      font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+    }
+    .coaches-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(28px, 5vw, 56px);
+    }
+    .coach-card {
+      border-top: 1px solid rgba(212,175,55,0.2);
+      padding-top: 36px;
+    }
+    .coach-photo-wrap {
+      position: relative;
+      margin-bottom: 28px;
+      overflow: hidden;
+      border-radius: 3px;
+    }
+    .coach-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(20%);
+    }
+    .coach-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .coach-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+    .coach-title-line {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .coach-bio {
+      font-family: var(--font-body);
+      font-size: clamp(0.88rem, 1.6vw, 0.97rem);
+      color: rgba(255,255,255,0.55);
+      line-height: 1.75;
+    }
+    .coach-bio p + p { margin-top: 0.75rem; }
+    @media (max-width: 680px) {
+      .coaches-grid { grid-template-columns: 1fr; }
+      .champions-header { margin-bottom: 52px; }
+    }
   </style>
 </head>
 <body>
@@ -1063,61 +1367,51 @@
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-eyebrow fade-up visible">Munich's new premium boxing gym</div>
-
       <h1 class="hero-headline fade-up delay-1 visible">
-        <span class="line-white">IT'S NOT A GYM.</span>
-        <span class="line-gold">IT'S PASSION.</span>
+        <span class="line-white">BOXEN IN MÜNCHEN.</span>
+        <span class="line-gold">AUF HÖCHSTEM NIVEAU.</span>
       </h1>
 
-      <p class="hero-sub fade-up delay-2 visible">Coming Soon</p>
-
-      <p class="hero-desc fade-up delay-3 visible">
-        Boxen auf <strong>Premium-Niveau</strong> — für Kids, Jugend und Erwachsene.
-        Sei dabei, bevor wir offiziell öffnen und sichere dir deinen Early-Bird-Vorteil.
+      <p class="hero-sub fade-up delay-2 visible" style="font-size:clamp(0.9rem,2.2vw,1.25rem);letter-spacing:0.1em;color:rgba(255,255,255,0.6);font-family:var(--font-head);text-transform:uppercase;">
+        Trainiere wie ein Kämpfer. Werde Teil der Bomaye Community.
       </p>
 
-      <div class="gold-divider fade-up delay-3 visible" aria-hidden="true">
-        <i class="gold-divider-icon fa-solid fa-boxing-glove"></i>
-      </div>
-
-      <div class="spots-bar fade-up delay-4 visible">
-        <span class="spots-dot"></span>
-        Begrenzte Early-Bird-Plätze verfügbar
+      <div class="hero-cta-wrap fade-up delay-3 visible">
+        <button type="button" class="hero-cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'})">
+          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+          JETZT EARLY BIRD SICHERN
+        </button>
+        <div class="spots-bar" style="margin-top:0;">
+          <span class="spots-dot"></span>
+          Begrenzte Early-Bird-Plätze verfügbar
+        </div>
       </div>
     </section>
 
     <!-- Early Bird Membership Section -->
     <section class="earlybird-section" id="earlybird-section" aria-labelledby="eb-headline">
 
-      <div class="eb-eyebrow fade-up">Early Bird</div>
+      <h2 class="eb-headline fade-up" id="eb-headline">NUR 300 PLÄTZE.</h2>
 
-      <h2 class="eb-headline fade-up delay-1" id="eb-headline">
-        EARLY BIRD<br>MEMBERSHIP
-      </h2>
+      <div class="eb-counter fade-up delay-1" aria-live="polite" aria-label="Verfügbare Early Bird Plätze">
+        <div class="eb-counter-display" id="eb-counter-display">
+          <span class="eb-taken-number" id="eb-spots-taken">225</span>
+        </div>
+        <span class="eb-available-label">NOCH VERFÜGBAR</span>
+      </div>
 
-      <p class="eb-subline fade-up delay-2">Be one of the first. Limited spots only.</p>
-
-      <p class="eb-text fade-up delay-3">
-        Sichere dir jetzt deinen Platz vor der offiziellen Eröffnung.<br />
-        Die ersten 300 Mitglieder erhalten exklusive Konditionen<br>und priorisierten Zugang.
+      <p class="eb-urgency-text fade-up delay-2">
+        Wenn sie weg sind, ist der Preis höher.<br>
+        <strong>Dauerhaft und unwiderruflich.</strong>
       </p>
 
-      <div class="eb-counter fade-up delay-4" aria-live="polite" aria-label="Vergebene Early Bird Plätze">
-        <div class="eb-counter-display" id="eb-counter-display">
-          <span class="eb-taken-number" id="eb-spots-taken">0</span>
-          <span class="eb-counter-slash" aria-hidden="true">/</span>
-          <span class="eb-counter-total">300</span>
-        </div>
-        <span class="eb-counter-label">Early Bird Plätze vergeben</span>
-        <span class="eb-counter-limit">Begrenzt auf 300 Mitglieder</span>
-      </div>
+      <ul class="eb-bullets fade-up delay-3">
+        <li><i class="fa-solid fa-check"></i> Preis bleibt für immer gleich</li>
+        <li><i class="fa-solid fa-check"></i> Zugang vor offizieller Eröffnung</li>
+        <li><i class="fa-solid fa-check"></i> Limitierte Plätze</li>
+      </ul>
 
-      <div class="eb-divider fade-up delay-4" aria-hidden="true">
-        <div class="eb-divider-dot"></div>
-      </div>
-
-      <div class="eb-cta-wrap fade-up delay-5">
+      <div class="eb-cta-wrap fade-up delay-4">
         <button
           type="button"
           class="eb-cta-btn"
@@ -1125,11 +1419,96 @@
           aria-label="Zum Anmeldeformular scrollen"
         >
           <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-          Jetzt Early Bird Platz sichern
+          JETZT EARLY BIRD SICHERN
         </button>
-        <p class="eb-founding-note">Die ersten 300 sichern sich den besten Preis dauerhaft.</p>
+        <p class="eb-payment-note">Zahle erst ab Opening</p>
       </div>
 
+    </section>
+
+    <!-- Ali, Bomaye Section -->
+    <section class="ali-section" aria-labelledby="ali-headline">
+      <div class="ali-inner">
+        <span class="ali-label fade-up">The Spirit of Bomaye</span>
+        <h2 class="ali-headline fade-up delay-1" id="ali-headline">ALI, BOMAYE!</h2>
+        <span class="ali-kinshasa fade-up delay-1">Kinshasa, 1974.</span>
+        <div class="ali-divider fade-up delay-2"></div>
+        <div class="ali-text-block fade-up delay-2">
+          <div>
+            <p>30. Oktober 1974. Kinshasa, Zaire. 60.000 Menschen skandieren einen Namen: <span class="ali-gold-word">Ali, Bomaye.</span> Ali, töte ihn.</p>
+            <p>Muhammad Ali war der Außenseiter. George Foreman galt als unbesiegbar. Was folgte, war mehr als ein Kampf — es war eine Lektion in Willenskraft, Strategie und Charakter.</p>
+          </div>
+          <div>
+            <p>Ali gewann nicht durch rohe Kraft. Er gewann durch <span class="ali-gold-word">Intelligenz, Disziplin und den unbedingten Glauben</span> an sich selbst.</p>
+            <p>Dieser Geist lebt in Bomaye Gym Munich. Jeder Schlag, jede Session, jede Community-Mitglied trägt dieses Erbe weiter.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience-section" aria-labelledby="exp-headline">
+      <div class="experience-inner">
+        <div class="exp-big-words fade-up">
+          <span class="exp-word" id="exp-headline">BOXEN.</span>
+          <span class="exp-word exp-word-muted">COMMUNITY.</span>
+          <span class="exp-word exp-word-muted">DISZIPLIN.</span>
+        </div>
+        <div class="exp-features fade-up delay-2">
+          <span class="exp-feature">Top Coaches</span>
+          <span class="exp-feature">Moderne Ausstattung</span>
+          <span class="exp-feature">Pineapple Park München</span>
+          <span class="exp-feature">Für Anfänger &amp; Wettkämpfer</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meet the Champions Section -->
+    <section class="champions-section" aria-labelledby="champions-headline">
+      <div class="champions-inner">
+        <div class="champions-header fade-up">
+          <h2 class="champions-headline" id="champions-headline">MEET THE CHAMPIONS.</h2>
+          <p class="champions-sub">
+            Trainiert von echten Profis.<br>
+            Direkt aus dem Ring.
+          </p>
+        </div>
+        <div class="coaches-grid">
+
+          <!-- Alfonso Fusco -->
+          <div class="coach-card fade-up delay-1">
+            <div class="coach-photo-wrap">
+              <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Landestrainer & Kickbox Weltmeister" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </div>
+            <h3 class="coach-name">ALFONSO FUSCO</h3>
+            <div class="coach-titles">
+              <span class="coach-title-line">Landestrainer (BABV)</span>
+              <span class="coach-title-line">Kickbox Weltmeister</span>
+            </div>
+            <div class="coach-bio">
+              <p>Experte für Technik, Taktik und Ringintelligenz.</p>
+              <p>Coacht vom Anfänger bis zum Wettkämpfer.</p>
+            </div>
+          </div>
+
+          <!-- Raschad Pekpassi -->
+          <div class="coach-card fade-up delay-2">
+            <div class="coach-photo-wrap">
+              <img src="/assets/images/coach-raschad.webp" alt="Raschad Pekpassi — Head Coach & Founder" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </div>
+            <h3 class="coach-name">RASCHAD PEKPASSI</h3>
+            <div class="coach-titles">
+              <span class="coach-title-line">Head Coach &amp; Founder</span>
+              <span class="coach-title-line">Landestrainer BABV · 20+ Jahre</span>
+            </div>
+            <div class="coach-bio">
+              <p>Olympisches Boxen auf Wettkampfniveau.</p>
+              <p>Formt Charakter und Leistung — für jedes Level.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </section>
 
     <!-- Lead Capture Form -->
@@ -1307,33 +1686,6 @@
         <div class="feature-desc">Zentrale Lage — bald mehr Details zu Adresse und Eröffnung.</div>
       </div>
     </div>
-
-    <!-- Warum BOMAYE? Trust Section -->
-    <section class="trust-section" aria-labelledby="trust-headline">
-      <div class="trust-inner">
-        <div class="section-eyebrow fade-up">Unser Versprechen</div>
-        <h2 class="section-headline fade-up delay-1" id="trust-headline">Warum BOMAYE?</h2>
-        <p class="trust-subtext fade-up delay-2">Kein gewöhnliches Fitnessstudio. Sondern ein Ort, an dem Disziplin, Stärke und Gemeinschaft aufgebaut werden.</p>
-        <div class="trust-grid fade-up delay-3">
-          <div class="trust-pillar">
-            <div class="trust-icon"><i class="fa-solid fa-medal"></i></div>
-            <p class="trust-pillar-text">Professionelle Trainer aus dem Leistungssport</p>
-          </div>
-          <div class="trust-pillar">
-            <div class="trust-icon"><i class="fa-solid fa-users"></i></div>
-            <p class="trust-pillar-text">Kleine Gruppen für maximale Qualität</p>
-          </div>
-          <div class="trust-pillar">
-            <div class="trust-icon"><i class="fa-solid fa-layer-group"></i></div>
-            <p class="trust-pillar-text">Strukturierte Programme für jedes Level</p>
-          </div>
-          <div class="trust-pillar">
-            <div class="trust-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <p class="trust-pillar-text">Fokus auf echte Entwicklung, nicht nur Training</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- FAQ Section -->
     <section class="faq-section" aria-labelledby="faq-headline">
@@ -1536,17 +1888,17 @@
         fetch('/api/spots', { cache: 'no-store' })
           .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
           .then(function(data) {
-            // Prefer explicit taken; fall back to total - spots_left
-            var taken = typeof data.taken === 'number'
-              ? data.taken
-              : (typeof data.spots_left === 'number' ? 300 - data.spots_left : 0);
-            taken = Math.max(0, Math.min(300, taken));
-            var duration = taken > 0 ? 800 : 0;
-            animateCount(0, taken, duration);
+            // Show available (spots_left); fall back to 300 - taken
+            var available = typeof data.spots_left === 'number'
+              ? data.spots_left
+              : (typeof data.taken === 'number' ? 300 - data.taken : 225);
+            available = Math.max(0, Math.min(300, available));
+            var duration = 800;
+            animateCount(300, available, duration);
           })
           .catch(function() {
-            // No data available — show 0 honestly
-            numEl.textContent = '0';
+            // Fallback: show 225 as default available
+            numEl.textContent = '225';
           });
       }
 
