@@ -521,16 +521,12 @@
       </div>
 
       <h2 class="manifesto-headline">
-        NICHT NUR <span class="shimmer">FITTER.</span><br>
-        STÄRKER. SCHÄRFER.<br>
-        UNAUFHALTBAR.
+        BOXEN IN MÜNCHEN.<br>
+        AUF HÖCHSTEM NIVEAU.
       </h2>
 
       <p class="manifesto-sub">
-        Bomaye ist mehr als ein Kurs.<br>
-        Es ist ein Ort, an dem du stärker wirst – körperlich und mental.<br><br>
-        Egal ob du neu startest oder weiterkommen willst:<br>
-        Hier findest du Struktur, Training und eine Community, die dich trägt.
+        Trainiere wie ein Kämpfer. Werde Teil der Bomaye Community.
       </p>
 
       <div class="manifesto-cta-wrap">
@@ -546,35 +542,16 @@
   <!-- ── EARLY BIRD ── -->
   <section id="early-bird">
     <div class="container">
-      <div class="early-bird-inner reveal">
-        <div>
-          <div class="spots-badge">
-            <span class="spots-dot"></span>
-            <span id="spots-badge-text">Early Bird — noch 225 Plätze</span>
-          </div>
-          <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD — LIMITIERT</span>
-          <div class="eb-urgency-block">
-            <p class="eb-urgency-headline">Early Bird Plätze sind limitiert</p>
-            <p class="eb-urgency-subline">Exklusive Startkonditionen nur solange freie Plätze verfügbar sind.</p>
-          </div>
-          <h2 style="margin:1.25rem 0;">NUR 300 PLÄTZE.<br><span class="gold">WENN SIE WEG SIND, IST DER PREIS HÖHER.</span></h2>
-          <p id="sanity-eb-subtext" style="margin-bottom:1.5rem;">Wenn sie weg sind, ist der Preis höher. <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong></p>
-          <div class="eb-checklist">
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Dein Preis bleibt für immer gleich</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zugang vor offizieller Eröffnung</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze – kein Nachschub</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zahle erst ab Opening</span></div>
-          </div>
-          <a id="sanity-eb-cta" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-          </a>
-        </div>
-        <div class="eb-card">
+      <div class="early-bird-inner--stacked reveal">
+
+        <!-- STEP 1: Headline -->
+        <h2 class="eb-stacked-headline">NUR 300 PLÄTZE.</h2>
+
+        <!-- STEP 2: Counter directly below headline -->
+        <div class="eb-counter-block">
           <div class="eb-card-label">NOCH VERFÜGBAR</div>
           <div class="eb-card-number" id="eb-remaining">225</div>
-          <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN NOCH VERFÜGBAR</div>
-
-          <!-- Progress bar -->
+          <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN</div>
           <div class="eb-progress" aria-label="Auslastungsanzeige">
             <div class="eb-progress-bar">
               <div class="eb-progress-fill" id="eb-progress-fill" style="width:25%"></div>
@@ -585,27 +562,32 @@
               <span>300 GESAMT</span>
             </div>
           </div>
-          <p style="font-family:var(--font-head);font-size:0.72rem;letter-spacing:1.5px;color:rgba(255,255,255,0.5);text-align:center;margin:0.75rem 0 0;">Early Bird Plätze sind limitiert. Danach steigt der Preis.</p>
-
-          <div class="eb-prices">
-            <div class="eb-price-item">
-              <div class="eb-price-age">KIDS</div>
-              <div class="eb-price-amount">14,90€</div>
-              <div class="eb-price-unit">/WOCHE</div>
-            </div>
-            <div class="eb-price-item">
-              <div class="eb-price-age">JUGEND</div>
-              <div class="eb-price-amount">15,90€</div>
-              <div class="eb-price-unit">/WOCHE</div>
-            </div>
-            <div class="eb-price-item">
-              <div class="eb-price-age">AB 18</div>
-              <div class="eb-price-amount">18,90€</div>
-              <div class="eb-price-unit">/WOCHE</div>
-            </div>
-          </div>
-          <div class="eb-notice">↑ DANACH STEIGT DER PREIS</div>
         </div>
+
+        <!-- STEP 3: Urgency text -->
+        <p class="eb-urgency-short" id="sanity-eb-subtext">
+          Wenn sie weg sind, ist der Preis höher.<br>
+          <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong>
+        </p>
+
+        <!-- STEP 4: Bullet points -->
+        <div class="eb-checklist eb-checklist--centered">
+          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Preis bleibt für immer gleich</span></div>
+          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zugang vor offizieller Eröffnung</span></div>
+          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze</span></div>
+        </div>
+
+        <!-- STEP 5: CTA -->
+        <a id="sanity-eb-cta" href="/mitglied-werden" class="btn btn--gold eb-stacked-cta" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+        </a>
+
+        <!-- Hidden badge for JS compatibility -->
+        <div style="display:none;">
+          <span id="spots-badge-text">Early Bird — noch 225 Plätze</span>
+          <span id="sanity-eb-badge"></span>
+        </div>
+
       </div>
     </div>
   </section>
