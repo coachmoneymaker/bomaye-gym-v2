@@ -929,10 +929,12 @@
 
     /* ── Mobile overrides ───────────────────────────────────────────────── */
     @media (max-width: 768px) {
-      /* Give the subscription widget extra vertical room on mobile so
-         package cards and the payment form don't clip at the bottom */
+      /* ROOT CAUSE FIX (Bug 5 — mobile blank area / checkout clipping):
+         700 px was not enough vertical space for the full Bsport checkout
+         flow (package list → date picker → payment form) on small screens.
+         900 px gives the multi-step flow room to render without cropping. */
       #bsport-widget-136002 {
-        min-height: 700px;
+        min-height: 900px;
       }
       #bsport-widget-auth {
         min-height: 520px;
@@ -962,6 +964,41 @@
     #auth-widget-section {
       position: relative;
       z-index: 1;
+    }
+
+    /* ── ROOT CAUSE FIX (Bug 3 — mobile touch / horizontal swipe blocked) ──
+     * body { touch-action: pan-y } in the global CSS and this page's <style>
+     * only restricts gestures on elements in the PARENT document. Touches
+     * that START inside an iframe are handled by the iframe's own document.
+     * However, to be safe we set touch-action: auto on the wrapper divs so
+     * the browser does not apply any additional gesture filtering to the
+     * widget containers themselves.
+     *
+     * overscroll-behavior: contain prevents the page from scrolling when
+     * the user reaches the edge of the widget (iOS "rubber-band" effect),
+     * which was causing the page to scroll away from the widget during
+     * interaction (e.g., navigating between date-picker steps).
+     * ──────────────────────────────────────────────────────────────────── */
+    .mw-widget-shell {
+      touch-action: auto;
+      overscroll-behavior: contain;
+    }
+    .mw-widget-shell-inner {
+      touch-action: auto;
+    }
+    #bsport-widget-136002,
+    #bsport-widget-auth {
+      touch-action: auto;
+    }
+
+    /* ── Subscription loading placeholder ──────────────────────────────── */
+    #sub-widget-loading {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-family: var(--font-body, 'DM Sans', system-ui, sans-serif);
+      font-size: 0.88rem;
+      color: rgba(0,0,0,0.4);
+      margin: 0;
     }
 
     /* ── Fallback "Continue" button (visible when auth widget is showing) ─ */
@@ -1021,12 +1058,12 @@
     <section class="mw-intro" aria-label="Mitgliedschaft">
       <div class="mw-intro-inner">
         <p class="mw-intro-eyebrow">BOMAYE GYM MÜNCHEN</p>
-        <h1>CHOOSE YOUR LEVEL</h1>
-        <p class="mw-intro-desc">Start now and secure your spot.</p>
+        <h1>MITGLIEDSCHAFT WÄHLEN</h1>
+        <p class="mw-intro-desc">Wähle deine Mitgliedschaft und sichere dir deinen Platz im BOMAYE GYM.</p>
 
         <div class="mw-wichtig" role="note">
-          <span class="mw-wichtig-label">NOTE</span>
-          <p class="mw-wichtig-text">Choose <strong>April 15</strong> as your start date for optimal billing.</p>
+          <span class="mw-wichtig-label">WICHTIG</span>
+          <p class="mw-wichtig-text">Bitte wähle im Buchungsprozess als Startdatum den <strong>15.04.</strong></p>
         </div>
       </div>
     </section>
@@ -1039,10 +1076,10 @@
 
         <!-- Header -->
         <div class="mw-pricing-header">
-          <p class="mw-pricing-eyebrow">Early Bird</p>
-          <h2 class="mw-pricing-title">CHOOSE YOUR LEVEL</h2>
+          <p class="mw-pricing-eyebrow">Early Bird Preise</p>
+          <h2 class="mw-pricing-title">DEIN PAKET</h2>
           <p class="mw-pricing-sub">
-            Start now and secure your spot.
+            Sichere dir jetzt deinen Early Bird Preis — bevor das Gym öffnet.
           </p>
         </div>
 
@@ -1084,7 +1121,8 @@
                     onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Kids Paket auswählen">
-              Start now
+              <i class="fa-solid fa-arrow-down"></i>
+              Platz sichern
             </button>
           </div>
 
@@ -1124,7 +1162,8 @@
                     onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Unlimited Paket auswählen">
-              Start now
+              Jetzt Early Bird sichern
+              <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
 
@@ -1163,7 +1202,8 @@
                     onclick="scrollToSubscription()"
                     type="button"
                     aria-label="Youth Paket auswählen">
-              Start now
+              <i class="fa-solid fa-arrow-down"></i>
+              Platz sichern
             </button>
           </div>
 
@@ -1253,7 +1293,12 @@
 
       <div class="mw-widget-shell">
         <div class="mw-widget-shell-inner">
-          <div id="bsport-widget-136002"></div>
+          <!-- Loading placeholder: visible for ~450 ms while Bsport widget
+               initialises. Hidden by JS before BsportWidget.mount() is
+               called. If Bsport replaces innerHTML it disappears automatically. -->
+          <div id="bsport-widget-136002">
+            <p id="sub-widget-loading">Mitgliedschaft wird geladen…</p>
+          </div>
         </div>
       </div>
 
@@ -1326,10 +1371,14 @@
       if (!el) return;
       var hdr = document.querySelector('.mw-header');
       var off = (hdr ? hdr.offsetHeight : 72) + 16;
+      /* 150 ms gives the browser time to finish re-flow after a display
+         change (e.g. showing subscription-section) before measuring
+         getBoundingClientRect. 60 ms was too short on mobile and caused
+         scroll-position miscalculations / jumps. */
       setTimeout(function () {
         var top = el.getBoundingClientRect().top + window.pageYOffset - off;
         window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-      }, 60);
+      }, 150);
     }
 
     /* ── Widget mounts (deferred — only when section is shown) ── */
@@ -1356,20 +1405,44 @@
       });
     }
 
-    function mountSubscriptionWidget() {
+    function mountSubscriptionWidget(immediate) {
       if (SUB_MOUNTED) return;
       if (!document.getElementById('bsport-widget-136002')) return;
       SUB_MOUNTED = true;
-      MountBsportWidget({
-        "parentElement":   "bsport-widget-136002",
-        "companyId":       5473,
-        "franchiseId":     null,
-        "dialogMode":      0,
-        "widgetType":      "subscription",
-        "showFab":         false,
-        "fullScreenPopup": false,
-        "config":          { "subscription": {} }
-      });
+      /* ROOT CAUSE FIX (Bugs 1 & 2 — login loop / booking flow blocked):
+       *
+       * The consumerSpace auth widget writes the Bsport session cookie inside
+       * its iframe. That write is asynchronous: the cookie exists in the
+       * browser's jar but may not yet be visible to a NEW iframe (the
+       * subscription widget) that starts loading in the same tick.
+       *
+       * Without a delay the subscription widget initialises before the
+       * session cookie is readable → shows its own login/register form →
+       * user attempts to register again → Bsport replies "already registered"
+       * → user is stuck in a loop and can never reach the date picker or
+       * payment step.
+       *
+       * 450 ms is long enough for the cookie to settle while remaining
+       * imperceptible. When mounting on page-load (immediate === true) the
+       * session was established in a previous navigation — no race, no delay.
+       */
+      var delay = immediate ? 0 : 450;
+      setTimeout(function () {
+        /* Hide the inline loading placeholder (if present) before the widget
+           renders so it doesn't flash under the iframe. */
+        var loadingEl = document.getElementById('sub-widget-loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        MountBsportWidget({
+          "parentElement":   "bsport-widget-136002",
+          "companyId":       5473,
+          "franchiseId":     null,
+          "dialogMode":      0,
+          "widgetType":      "subscription",
+          "showFab":         false,
+          "fullScreenPopup": false,
+          "config":          { "subscription": {} }
+        });
+      }, delay);
     }
 
     /* ── Fallback bar timer ──────────────────────────── */
@@ -1390,11 +1463,21 @@
     /* ── State transitions ───────────────────────────── */
     function goToSubscription() {
       clearFallbackTimer();
+      /* ROOT CAUSE FIX (Bug 3 — mobile interference / blank area):
+       * Destroy the consumerSpace auth widget's iframe before mounting the
+       * subscription widget. The hidden iframe was still running its JS,
+       * potentially competing for Bsport's session slot and firing resize /
+       * state postMessages that triggered unnecessary re-layout on mobile.
+       * Clearing the container releases those resources immediately. */
+      var authContainer = document.getElementById('bsport-widget-auth');
+      if (authContainer) authContainer.innerHTML = '';
+      AUTH_MOUNTED = false;
+
       hide('auth-gate');
       hide('auth-widget-section');
       hide('post-reg-section');
       show('subscription-section');
-      mountSubscriptionWidget();
+      mountSubscriptionWidget(false); /* false = apply 450 ms session delay */
       smoothScroll('subscription-section');
       try { sessionStorage.setItem('bsport_auth_complete', '1'); } catch (e) {}
     }
@@ -1564,7 +1647,9 @@
           hashHasToken) {
         hide('auth-gate');
         show('subscription-section');
-        mountSubscriptionWidget();
+        /* immediate = true: session was established in a previous navigation;
+           no need to wait for cookie propagation. */
+        mountSubscriptionWidget(true);
         /* ROOT CAUSE 4 FIX: Persist auth state so returning to this page in
            the same session skips the auth gate even without the token in the
            URL (e.g., after navigating away and back). */
@@ -1578,7 +1663,7 @@
       if (authed) {
         hide('auth-gate');
         show('subscription-section');
-        mountSubscriptionWidget();
+        mountSubscriptionWidget(true); /* immediate — session already valid */
         return;
       }
 

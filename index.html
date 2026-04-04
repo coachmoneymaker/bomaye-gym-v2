@@ -385,15 +385,42 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
+      <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
+        <i class="fa-solid fa-circle-dot"></i>
+        <span>THE SPIRIT OF 1974 · MUNICH</span>
+        <i class="fa-solid fa-circle-dot"></i>
+      </a>
       <h2 class="hero-h1">
-        TRAIN LIKE A FIGHTER.<br>
-        <span class="shimmer">NO MATTER WHERE YOU START.</span>
+        IT'S NOT A GYM.<br>
+        <span class="shimmer">IT'S PASSION.</span>
       </h2>
-      <p class="hero-subtitle" id="sanity-hero-subheadline">Boxing, fitness, and community. From beginners to competitors.</p>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Nur 300 Plätze. Danach wird es teurer.</p>
+      <p class="hero-brand-tagline">BECOME BOMAYE.</p>
       <div class="hero-ctas">
         <a href="/mitglied-werden" class="btn btn--gold btn--hero-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          START NOW
+          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
         </a>
+        <a href="#dna" onclick="event.preventDefault();nav('home','dna');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
+          <i class="fa-solid fa-circle-play"></i> WARUM BOMAYE
+        </a>
+      </div>
+      <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">Landestrainer</span>
+          <span class="hero-cred-sub">Bayerischer Box Verband</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">DBV A Trainer Lizenz</span>
+          <span class="hero-cred-sub">Deutscher Box Verband</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">20+ Jahre Erfahrung</span>
+          <span class="hero-cred-sub">Wettkampf und Leistungssport</span>
+        </div>
+        <div class="hero-cred-item">
+          <span class="hero-cred-label">Zahle ab Opening</span>
+          <span class="hero-cred-sub">Dein Preis bleibt dauerhaft</span>
+        </div>
       </div>
     </div>
     <div class="scroll-hint" aria-hidden="true">
@@ -401,58 +428,67 @@
     </div>
   </section>
 
-  <!-- ── MINI HOOK ── -->
-  <section id="hook" class="sec--hook" aria-label="Hook">
+  <!-- ── DNA / PHILOSOPHY TEASER ── -->
+  <section id="dna" class="sec--smoke">
     <div class="container">
-      <div class="hook-inner reveal">
-        <p class="hook-line">Not a typical gym.</p>
-        <p class="hook-line hook-line--accent">Real training with structure.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TARGET GROUP ── -->
-  <section id="dna" class="sec--target" aria-label="For everyone">
-    <div class="container">
-      <div class="target-inner reveal">
-        <p class="target-intro">No matter if you want to:</p>
-        <ul class="target-list">
-          <li class="target-item">– get fitter</li>
-          <li class="target-item">– learn boxing</li>
-          <li class="target-item">– push your limits</li>
-          <li class="target-item">– or compete</li>
-        </ul>
-        <p class="target-close">You'll find your level here.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SERVICES ── -->
-  <section id="services" class="sec--services" aria-label="What you get">
-    <div class="container">
-      <div class="services-inner reveal">
-        <p class="services-label">WHAT YOU GET</p>
-        <div class="services-grid">
-          <div class="service-item">
-            <span class="service-dash">–</span>
-            <span class="service-text">structured technique training</span>
+      <div class="dna-inner">
+        <div class="dna-text reveal">
+          <h2 style="margin-top:0;">MEHR ALS EIN<br><span class="gold">FITNESSSTUDIO.</span></h2>
+          <p>Boxen ist keine Sportart. Es ist Charakterarbeit.<br>Wir geben keine Motivation — wir bauen Disziplin,<br>Respekt und echten Kampfgeist.<br>Wer das ernst nimmt, ist hier richtig.</p>
+          <div style="margin-top:2rem;">
+            <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+              MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
+            </a>
           </div>
-          <div class="service-item">
-            <span class="service-dash">–</span>
-            <span class="service-text">intense workouts</span>
-          </div>
-          <div class="service-item">
-            <span class="service-dash">–</span>
-            <span class="service-text">clear progression</span>
-          </div>
-          <div class="service-item">
-            <span class="service-dash">–</span>
-            <span class="service-text">real coaching that improves you</span>
-          </div>
+        </div>
+        <!-- Right column: logo brand visual — desktop only -->
+        <div class="dna-visual reveal delay-2" aria-hidden="true">
+          <img src="/assets/images/bomaye-logo.png" alt="" class="dna-visual-logo"
+               loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+          <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
+          <div class="dna-visual-sub">GYM MUNICH</div>
+          <div style="margin:1.5rem auto;width:40px;height:1px;background:rgba(197,160,89,0.4);"></div>
+          <div style="font-family:var(--font-head);font-size:0.58rem;letter-spacing:3px;color:rgba(197,160,89,0.5);">EST. 2026 · PINEAPPLE PARK</div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ── DIFFERENTIATOR ── -->
+  <div class="diff-block">
+    <div class="container">
+      <div class="diff-inner">
+        <div class="diff-card reveal">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-fist-raised"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>ECHTES BOXTRAINING</strong>
+            <span>Vergiss alles, was du über Training weißt. Hier wird nicht gespielt — hier wird gearbeitet.</span>
+          </div>
+        </div>
+        <div class="diff-card reveal delay-1">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>DISZIPLIN & CHARAKTER</strong>
+            <span>Keine Selfies. Kein Ego. Nur die Arbeit, die wirklich etwas verändert.</span>
+          </div>
+        </div>
+        <div class="diff-card reveal delay-2">
+          <div class="diff-card-icon">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <div class="diff-card-body">
+            <strong>ECHTE TRAINER</strong>
+            <span>Trainer, die selbst gekämpft haben. Die wissen, was es wirklich braucht.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ── TRAINING DISCIPLINES — stacked sticky scroll ── -->
   <section id="disciplines">
@@ -460,8 +496,8 @@
     <div class="container">
       <div class="sec-header reveal">
         <span class="tag tag--dark">KURSE</span>
-        <h2 style="margin-top:1rem;">OUR <span class="gold">PROGRAMS.</span></h2>
-        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Three disciplines. One goal: getting better.</p>
+        <h2 style="margin-top:1rem;">TRAIN LIKE A <span class="gold">FIGHTER.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Drei Disziplinen. Ein Ziel: besser werden.</p>
       </div>
     </div>
 
@@ -507,32 +543,55 @@
     </div>
   </section>
 
-  <!-- ── TEAM ── -->
-  <section id="team" class="sec--team" aria-label="Coaches">
-    <div class="container">
-      <div class="team-inner reveal">
-        <p class="team-eyebrow">YOUR COACHES</p>
-        <h2 class="team-headline">Experience from the ring.<br>For your training.</h2>
-        <p class="team-text">
-          You will be trained by Raschad Pekpassi and Alfonso Fusco.<br>
-          Two coaches with real boxing experience, working with both beginners and competitive athletes.
-        </p>
-        <a href="/coaches" class="btn btn--outline-light team-cta" style="text-decoration:none;">
-          Meet the coaches
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- ── BECOME BOMAYE — Identity Manifesto ── -->
+  <section id="manifesto" class="manifesto-section">
+    <div class="container manifesto-inner reveal">
 
-  <!-- ── IDENTITY ── -->
-  <section id="identity" class="sec--identity" aria-label="Our approach">
-    <div class="container">
-      <div class="identity-inner reveal">
-        <p class="identity-line">This is not about being perfect.</p>
-        <p class="identity-line identity-line--accent">It's about getting better.</p>
-        <div class="identity-divider" aria-hidden="true"></div>
-        <p class="identity-sub">Step by step.<br>With structure.</p>
+      <div class="manifesto-kicker">
+        <span class="manifesto-line"></span>
+        <span class="manifesto-label">THE BOMBER WAY</span>
+        <span class="manifesto-line manifesto-line--right"></span>
       </div>
+
+      <h2 class="manifesto-headline">
+        NICHT NUR <span class="shimmer">FITTER.</span><br>
+        STÄRKER. SCHÄRFER.<br>
+        UNAUFHALTBAR.
+      </h2>
+
+      <p class="manifesto-sub">
+        Bomaye ist kein Fitnesskurs. Es ist eine Entscheidung, die man einmal trifft —<br>
+        und die einen für immer verändert. Wer hier einsteigt,<br>
+        kommt nicht mehr zurück. Und will es auch nicht.
+      </p>
+
+      <div class="manifesto-pillars">
+        <div class="manifesto-pillar">
+          <i class="fa-solid fa-fist-raised" aria-hidden="true"></i>
+          <strong>KÖRPER</strong>
+          <span>Gebaut für den Kampf</span>
+        </div>
+        <div class="manifesto-pillar-div" aria-hidden="true"></div>
+        <div class="manifesto-pillar">
+          <i class="fa-solid fa-brain" aria-hidden="true"></i>
+          <strong>GEIST</strong>
+          <span>Geschärft durch echte Arbeit</span>
+        </div>
+        <div class="manifesto-pillar-div" aria-hidden="true"></div>
+        <div class="manifesto-pillar">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          <strong>COMMUNITY</strong>
+          <span>Krieger formen Krieger</span>
+        </div>
+      </div>
+
+      <div class="manifesto-cta-wrap">
+        <a href="/mitglied-werden" class="btn btn--gold manifesto-cta" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+        </a>
+        <p class="manifesto-cta-note">225 von 300 Plätzen vergeben &nbsp;·&nbsp; Danach steigt der Preis — dauerhaft</p>
+      </div>
+
     </div>
   </section>
 
@@ -726,25 +785,16 @@
     </div>
   </section>
 
-  <!-- ── FINAL PUSH ── -->
-  <section id="final-push" class="sec--final-push" aria-label="Start today">
-    <div class="container">
-      <div class="final-push-inner reveal">
-        <p class="final-push-line">You don't need to be ready.</p>
-        <p class="final-push-line final-push-line--accent">You just need to start.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── FINAL CTA ── -->
-  <div class="pre-footer-cta" role="complementary" aria-label="Ready to start">
+  <!-- ── PRE-FOOTER CTA BAR ── -->
+  <div class="pre-footer-cta" role="complementary" aria-label="Mitglied werden">
     <div class="container">
       <div class="pf-cta-inner">
         <div class="pf-cta-text">
-          <strong>READY TO START?</strong>
+          <strong>ES GIBT KEIN MORGEN.</strong>
+          <span>Wer wartet, zahlt mehr. Für immer. Sichere deinen Early Bird Preis — jetzt, nicht später.</span>
         </div>
         <a href="/mitglied-werden" class="btn btn--gold pf-cta-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;">
-          SECURE YOUR SPOT
+          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
         </a>
       </div>
     </div>
