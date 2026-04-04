@@ -1176,9 +1176,11 @@
    *   #subscription-section — native subscription widget — shown after login / email confirmation
    *
    * Bsport postMessage events handled:
-   *   registration_success / register_success / registered …   → goToPostReg()
-   *   login_success / auth_success / logged_in … (not new)     → goToSubscription()
-   *   login_success with isNewUser flag                         → goToPostReg()
+   *   registration_success / register_success / registered …   → goToSubscription()
+   *   login_success / auth_success / logged_in … (any user)    → goToSubscription()
+   *
+   * NOTE: Email confirmation is OFF in Bsport — registration completes immediately.
+   *       goToPostReg() is never called. post-reg-section remains in DOM but hidden.
    *
    * Page-load shortcuts:
    *   URL hash #subscription-section or #bsport-widget-136002  → skip auth gate
@@ -1312,9 +1314,8 @@
     };
 
     /* ── postMessage handler ──────────────────────────
-     * CRITICAL: registration events must NEVER trigger goToSubscription().
-     * Login events must NEVER trigger goToPostReg() unless isNewUser is set.
-     * These two flows are completely separate.
+     * Both registration and login events go to goToSubscription().
+     * Email confirmation is OFF — no post-reg screen is shown.
      * ─────────────────────────────────────────────── */
     window.addEventListener('message', function (ev) {
       if (!ev.data || typeof ev.data !== 'object') return;
@@ -1349,17 +1350,16 @@
         );
 
       if (isReg) {
-        goToPostReg();
+        /* Email confirmation is OFF — registration is immediately complete.
+           Skip post-reg screen and go directly to the subscription widget. */
+        goToSubscription();
         return;
       }
 
       if (isLogin) {
-        var isNew = !!(d.isNewUser || d.new_user || d.newUser || d.is_new_user);
-        if (isNew) {
-          goToPostReg();
-        } else {
-          goToSubscription();
-        }
+        /* Whether the user is new or existing, go straight to subscription.
+           Email confirmation is OFF so there is no pending confirmation step. */
+        goToSubscription();
       }
     });
 
