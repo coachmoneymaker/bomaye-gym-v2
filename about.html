@@ -267,11 +267,25 @@
       display: block;
       font-family: var(--font-display);
       font-size: clamp(2.4rem, 6.5vw, 4.6rem);
-      color: #c9a227;
+      color: #1a1208;
       line-height: 1.0;
       letter-spacing: 0.01em;
       text-transform: uppercase;
       margin-bottom: clamp(4rem, 6.5vw, 6.5rem);
+    }
+
+    .hs-accent-bomaye {
+      background: linear-gradient(
+        160deg,
+        #8b6514 0%,
+        #c6a45a 28%,
+        #dfc87a 50%,
+        #c6a45a 72%,
+        #a67c2e 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hs-note {
@@ -591,7 +605,7 @@
     ════════════════════════════════ -->
     <div class="hs-b4">
       <div class="hs-inner">
-        <span class="hs-accent hs-reveal" style="--d:0">UND GENAU DAS IST<br>BOMAYE MÜNCHEN.</span>
+        <span class="hs-accent hs-reveal" style="--d:0">UND GENAU DAS IST<br><span class="hs-accent-bomaye">BOMAYE MÜNCHEN.</span></span>
         <span class="hs-note hs-reveal" style="--d:1">Dieses Gefühl bringen wir nach München.</span>
         <span class="hs-punch hs-reveal" style="--d:2">In jedes Training.</span>
         <span class="hs-punch hs-reveal" style="--d:3">In jede Runde.</span>
