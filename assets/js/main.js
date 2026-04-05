@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
   runReveal();
   initEarlyBirdFOMO(); // async — does not block rendering
   initAutoCarousels();
-  initQuoteMobileReveal();
 });
 
 /* ── Android / WebP image fallback ──────────────────────────
@@ -979,29 +978,6 @@ function autoSlider(sliderId, intervalMs, maxWidth, scrollDuration) {
     }, 200);
   });
 }
-
-/* ══════════════════════════════════════════════════════════════
-   QUOTE SECTION — MOBILE SCROLL REVEAL
-   On mobile (no hover/parallax), triggers a premium
-   fade + scale animation via IntersectionObserver when
-   the section scrolls into view.
-══════════════════════════════════════════════════════════════ */
-function initQuoteMobileReveal() {
-  const quote = document.getElementById('quote');
-  if (!quote) return;
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        quote.classList.add('quote-visible');
-        io.unobserve(quote);
-      }
-    });
-  }, { threshold: 0.25 });
-
-  io.observe(quote);
-}
-
 
 /* ══════════════════════════════════════════════════════════════
    FLOATING SOCIAL PROOF NOTIFICATIONS

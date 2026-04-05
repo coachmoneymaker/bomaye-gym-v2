@@ -74,13 +74,6 @@
       margin: 0 auto;
     }
 
-    /* Quote — standalone page: make visible immediately (SPA scroll observer absent) */
-    #quote .quote-l1,
-    #quote .quote-l2 {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
     /* Nav active state */
     .nav-link-active { color: var(--gold) !important; }
 
@@ -376,7 +369,10 @@
     }
 
     .hs-kicker-gold {
-      color: #c9a227;
+      background: linear-gradient(135deg, #8f6b1f, #d4af37, #f5d77a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     /* ── Reveal animation: fade + 18px lift ── */
@@ -547,14 +543,6 @@
     </div>
   </section>
 
-  <!-- ── Quote ── -->
-  <div id="quote" role="blockquote">
-    <div class="container">
-      <p class="quote-text"><span class="quote-l1">"DON'T COUNT THE DAYS,</span><br><span class="quote-l2 shimmer">MAKE THE DAYS COUNT."</span></p>
-      <p class="quote-source">— MUHAMMAD ALI · KINSHASA, 1974</p>
-    </div>
-  </div>
-
   <!-- ══════════════════════════════════════════════════════════
        ALI, BOMAYE — HERITAGE SECTION
        Full rebuild. New structure. Light cream. Premium editorial.
@@ -605,7 +593,6 @@
     ════════════════════════════════ -->
     <div class="hs-b4">
       <div class="hs-inner">
-        <span class="hs-accent hs-reveal" style="--d:0">UND GENAU DAS IST<br><span class="hs-accent-bomaye">BOMAYE MÜNCHEN.</span></span>
         <span class="hs-note hs-reveal" style="--d:1">Dieses Gefühl bringen wir nach München.</span>
         <span class="hs-punch hs-reveal" style="--d:2">In jedes Training.</span>
         <span class="hs-punch hs-reveal" style="--d:3">In jede Runde.</span>

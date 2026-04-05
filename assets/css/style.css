@@ -489,26 +489,6 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QUOTE
-══════════════════════════════════════════════════════════════ */
-#quote {
-  padding: clamp(56px, 7vw, 96px) 0;
-  background-image: url('../images/quote-bg.webp');
-  background-size: cover; background-position: center;
-  position: relative;
-}
-#quote::before { content: ''; position: absolute; inset: 0; background: rgba(8,8,8,0.86); }
-#quote .container { position: relative; text-align: center; }
-.quote-text {
-  font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-  line-height: 1.25; color: var(--white); letter-spacing: 0.02em;
-}
-.quote-source {
-  margin-top: 1.5rem; font-family: var(--font-head); font-size: 0.66rem;
-  letter-spacing: 3px; color: var(--muted);
-}
-
-/* ══════════════════════════════════════════════════════════════
    DNA PHILOSOPHY
 ══════════════════════════════════════════════════════════════ */
 #dna { background: var(--smoke); }
@@ -1939,7 +1919,6 @@ footer {
   .footer-bottom { align-items: center; text-align: center; }
   .footer-legal { flex-wrap: wrap; justify-content: center; gap: 1rem; }
 
-  /* #quote and #community background-attachment:scroll moved to ≤900px block above */
 }
 
 /* ── Mobile logo sizing ─────────────────────────────────────── */
@@ -1951,7 +1930,7 @@ footer {
 
   /* Disable fixed backgrounds on touch devices — iOS Safari never supported
      background-attachment:fixed on non-viewport elements; causes blur/jank */
-  #quote, #community { background-attachment: scroll; }
+  #community { background-attachment: scroll; }
 }
 
 @media (max-width: 480px) {
@@ -3346,7 +3325,6 @@ footer .footer-grid + div {
 .diff-block { position: relative; }
 
 /* Bottom fade-out on image-backed sections so they melt into next */
-#quote::after,
 #community::after {
   content: '';
   position: absolute;
@@ -3450,29 +3428,6 @@ footer .footer-grid + div {
     font-size: 0.52rem !important;
     padding: 0.55rem 0.2rem !important;
     letter-spacing: 0 !important;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   QUOTE SECTION — MOBILE SCROLL REVEAL ANIMATION
-   Desktop uses background-attachment:fixed (parallax).
-   Mobile uses an IntersectionObserver-driven class 'in-view'
-   that triggers a premium fade + subtle scale reveal.
-══════════════════════════════════════════════════════════════ */
-#quote .container { transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo); }
-
-@media (max-width: 768px) {
-  #quote .container {
-    opacity: 0;
-    transform: scale(0.97) translateY(16px);
-  }
-  #quote.quote-visible .container {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  /* Add a subtle gold glow line that appears below the quote */
-  #quote.quote-visible::after {
-    opacity: 0.7;
   }
 }
 
@@ -3738,23 +3693,6 @@ footer .footer-grid + div {
   box-shadow: 0 16px 48px rgba(0,0,0,0.38);
 }
 
-/* ── Quote: shimmer-style animation matching hero ── */
-#quote .quote-text {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1.15;
-  letter-spacing: 2px;
-  color: #fff;
-  text-align: center;
-}
-#quote .quote-text .gold {
-  background: linear-gradient(90deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-light) 70%, var(--gold-dark) 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer-move 3s linear infinite;
-}
 
 /* ── Bomaye Standard: white section ── */
 .sec--standard-white {
@@ -4421,93 +4359,6 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QUOTE SECTION — premium hero-matched text treatment
-══════════════════════════════════════════════════════════════ */
-#quote { position: relative; overflow: hidden; }
-#quote::before { background: rgba(8,8,8,0.88) !important; }
-
-/* Decorative oversized opening mark */
-#quote .container::before {
-  content: '\201C';
-  position: absolute;
-  top: -2.5rem; left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-display);
-  font-size: clamp(8rem, 20vw, 16rem);
-  line-height: 1;
-  color: rgba(197,160,89,0.06);
-  pointer-events: none;
-  z-index: 0;
-  letter-spacing: -0.05em;
-}
-#quote .container { position: relative; z-index: 1; }
-
-/* Hero-scale text */
-#quote .quote-text {
-  font-size: clamp(2.2rem, 6.5vw, 4.5rem) !important;
-  letter-spacing: 0.04em !important;
-  line-height: 1.15 !important;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Per-line initial hidden state */
-.quote-l1,
-.quote-l2 {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
-}
-
-/* Staggered reveal triggered by quote-visible (all devices) */
-#quote.quote-visible .quote-l1 {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0s;
-}
-#quote.quote-visible .quote-l2 {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0.28s;
-}
-
-/* Shimmer override for quote-l2 — brighter, wider sweep than default */
-#quote .quote-l2.shimmer {
-  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 35%, #e8c97a 55%, var(--gold) 70%, var(--gold-dark) 100%);
-  background-size: 300% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s linear infinite;
-}
-
-/* Source attribution */
-.quote-source {
-  margin-top: 2.5rem !important;
-  font-size: 0.8rem;
-  letter-spacing: 4px;
-  color: rgba(255,255,255,0.4);
-  text-transform: uppercase;
-}
-
-/* Mobile: keep subtle scale reveal, let per-line opacity handle fade */
-@media (max-width: 768px) {
-  #quote .container {
-    opacity: 1 !important;
-    transform: scale(0.97);
-    transition: transform 0.9s var(--ease-expo) !important;
-  }
-  #quote.quote-visible .container {
-    transform: scale(1);
-  }
-}
-@media (max-width: 600px) {
-  #quote .quote-text { font-size: clamp(1.75rem, 8vw, 2.8rem) !important; }
-  #quote .container::before { font-size: 8rem; top: -1.5rem; }
-}
-
-/* ══════════════════════════════════════════════════════════════
    CONTRAST FIXES — ensure readability across all sections
 ══════════════════════════════════════════════════════════════ */
 /* Disciplines: card text is readable on dark photo background */
@@ -4556,10 +4407,6 @@ body {
 
   /* Why-bomaye: single column with better spacing */
   .why-grid { grid-template-columns: 1fr !important; gap: 1rem; }
-
-  /* Quote: cinematic but compact on mobile */
-  #quote { padding: 4rem 0; }
-  #quote .container { padding: 0 1.25rem; }
 
   /* CTA bars: full-width stacked */
   .sp-cta-bar .btn,
@@ -4664,13 +4511,6 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).
 /* ── Community section: flex child centering ── */
 #community .container {
   width: 100%;
-}
-
-/* ── Quote section: remove fixed attachment (mobile jank fix) ── */
-@supports (background-attachment: fixed) {
-  @media (min-width: 769px) {
-    #quote { background-attachment: fixed; }
-  }
 }
 
 /* ── Mobile section height constraints ── */
@@ -4992,19 +4832,10 @@ section { padding: var(--sv) 0; }
   padding-top:    var(--sv)   !important;
   padding-bottom: var(--sv)   !important;
 }
-#quote {
-  padding-top:    var(--sv)   !important;
-  padding-bottom: var(--sv)   !important;
-}
-
 @media (max-width: 900px) {
   #schedule,
   .sec--faq-white,
   .sec--standard-white {
-    padding-top:    var(--sv-m) !important;
-    padding-bottom: var(--sv-m) !important;
-  }
-  #quote {
     padding-top:    var(--sv-m) !important;
     padding-bottom: var(--sv-m) !important;
   }
@@ -5013,10 +4844,6 @@ section { padding: var(--sv) 0; }
   #schedule,
   .sec--faq-white,
   .sec--standard-white {
-    padding-top:    var(--sv-s) !important;
-    padding-bottom: var(--sv-s) !important;
-  }
-  #quote {
     padding-top:    var(--sv-s) !important;
     padding-bottom: var(--sv-s) !important;
   }
@@ -6315,9 +6142,6 @@ section { padding: var(--sv) 0; }
 
 /* ── Footer: padding defined in base FOOTER section ─────── */
 /* (consolidated — no override needed) */
-
-/* ── Quote section: bigger text ─────────────────────────── */
-.quote-text { font-size: clamp(2rem, 4vw, 3.2rem); }
 
 /* ── Community section: more impressive h2 ───────────────── */
 #community h2 { font-size: clamp(3rem, 7vw, 6rem); }
