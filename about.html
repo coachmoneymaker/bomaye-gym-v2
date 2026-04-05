@@ -130,108 +130,114 @@
       position: relative;
       z-index: 1;
       width: 1px;
-      height: clamp(64px, 9vw, 104px);
+      height: clamp(80px, 11vw, 128px);
       margin: 0 auto;
       background: linear-gradient(to bottom,
         transparent 0%,
-        #d4af37 30%,
-        #d4af37 70%,
+        #c9a227 28%,
+        #c9a227 72%,
         transparent 100%
       );
+      opacity: 0.7;
     }
 
     /* ── Thin horizontal gold rule — within blocks ── */
     .hs-rule {
-      width: 40px;
+      width: 32px;
       height: 1px;
-      background: #d4af37;
-      margin: 0 auto 3rem;
+      background: #c9a227;
+      margin: 0 auto 2.75rem;
       border: none;
+      opacity: 0.8;
     }
 
     /* ════════════════════════════════════
        BLOCK 1 — INTRO
     ════════════════════════════════════ */
     .hs-b1 {
-      padding-top: clamp(100px, 15vw, 180px);
-      padding-bottom: clamp(72px, 10vw, 128px);
+      padding-top: clamp(132px, 18vw, 212px);
+      padding-bottom: clamp(80px, 10vw, 132px);
     }
 
     .hs-label {
       display: block;
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.6em;
+      font-size: 0.58rem;
+      letter-spacing: 0.65em;
       text-transform: uppercase;
-      color: #d4af37;
-      margin-bottom: 2rem;
+      color: #c9a227;
+      margin-bottom: 2.25rem;
     }
 
     .hs-headline {
       font-family: var(--font-display);
       font-size: clamp(5.5rem, 18vw, 13rem);
-      color: #111111;
-      line-height: 0.86;
-      letter-spacing: 0.01em;
+      color: #0d0d0d;
+      line-height: 0.84;
+      letter-spacing: -0.005em;
       text-transform: uppercase;
-      margin: 0 0 2.25rem;
+      margin: 0 0 2.5rem;
     }
 
     .hs-sub {
       display: block;
       font-family: var(--font-head);
-      font-size: 0.62rem;
-      letter-spacing: 0.5em;
+      font-size: 0.6rem;
+      letter-spacing: 0.55em;
       text-transform: uppercase;
-      color: #999;
+      color: #aaa;
     }
 
     /* ════════════════════════════════════
        BLOCK 2 — EMOTIONAL LINES
     ════════════════════════════════════ */
     .hs-b2 {
-      padding-top: clamp(80px, 11vw, 136px);
-      padding-bottom: clamp(80px, 11vw, 136px);
+      padding-top: clamp(96px, 13vw, 164px);
+      padding-bottom: clamp(80px, 10vw, 128px);
     }
 
     .hs-impact {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(2rem, 5.5vw, 3.75rem);
-      color: #111111;
-      line-height: 1.08;
-      letter-spacing: 0.02em;
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      color: #0d0d0d;
+      line-height: 1.06;
+      letter-spacing: 0.015em;
       text-transform: uppercase;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
-    .hs-impact:last-child { margin-bottom: 0; }
+    .hs-impact:last-child {
+      margin-bottom: 0;
+      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+      color: #111;
+    }
 
     /* ════════════════════════════════════
        BLOCK 3 — MEANING
     ════════════════════════════════════ */
     .hs-b3 {
-      padding-top: clamp(80px, 11vw, 136px);
-      padding-bottom: clamp(80px, 11vw, 136px);
+      padding-top: clamp(68px, 9vw, 108px);
+      padding-bottom: clamp(88px, 12vw, 152px);
     }
 
     .hs-block-title {
       display: block;
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.55em;
+      font-size: 0.58rem;
+      letter-spacing: 0.6em;
       text-transform: uppercase;
-      color: #d4af37;
-      margin-bottom: 3rem;
+      color: #c9a227;
+      margin-bottom: 2.75rem;
     }
 
     .hs-text {
       display: block;
       font-family: var(--font-body);
-      font-size: clamp(1.05rem, 2vw, 1.18rem);
-      color: #2a2a2a;
-      line-height: 1.9;
-      margin-bottom: 1.1rem;
+      font-size: clamp(1rem, 1.9vw, 1.15rem);
+      color: #3a3a3a;
+      line-height: 1.95;
+      margin-bottom: 1rem;
     }
 
     .hs-text:last-child { margin-bottom: 0; }
@@ -239,130 +245,134 @@
     .hs-text-emphasis {
       display: block;
       font-family: var(--font-body);
-      font-size: clamp(1.05rem, 2vw, 1.18rem);
-      color: #111;
+      font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+      color: #0d0d0d;
       font-weight: 600;
-      line-height: 1.9;
-      margin-bottom: 1.1rem;
+      line-height: 1.85;
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+      letter-spacing: 0.01em;
     }
 
     /* ════════════════════════════════════
        BLOCK 4 — BRAND CONNECTION
     ════════════════════════════════════ */
     .hs-b4 {
-      padding-top: clamp(80px, 11vw, 136px);
-      padding-bottom: clamp(80px, 11vw, 136px);
-      background: rgba(212, 175, 55, 0.04);
+      padding-top: clamp(96px, 13vw, 168px);
+      padding-bottom: clamp(104px, 14vw, 176px);
+      background: rgba(212, 175, 55, 0.05);
     }
 
     .hs-accent {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(2.2rem, 6vw, 4.2rem);
-      color: #d4af37;
-      line-height: 1.0;
-      letter-spacing: 0.015em;
+      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+      color: #c9a227;
+      line-height: 0.98;
+      letter-spacing: 0.01em;
       text-transform: uppercase;
-      margin-bottom: clamp(3rem, 5vw, 5rem);
+      margin-bottom: clamp(3.5rem, 5.5vw, 5.5rem);
     }
 
     .hs-note {
       display: block;
       font-family: var(--font-body);
       font-size: clamp(1rem, 1.9vw, 1.1rem);
-      color: #2a2a2a;
-      line-height: 1.9;
+      color: #3a3a3a;
+      line-height: 1.95;
       font-style: italic;
-      margin-bottom: 1.1rem;
+      margin-bottom: 1.25rem;
     }
 
     .hs-punch {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(1.6rem, 4.2vw, 3rem);
-      color: #111111;
-      line-height: 1.15;
-      letter-spacing: 0.015em;
+      font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+      color: #0d0d0d;
+      line-height: 1.12;
+      letter-spacing: 0.008em;
       text-transform: uppercase;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
 
     .hs-note-wide {
       display: block;
       font-family: var(--font-body);
-      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
-      color: #555;
-      line-height: 1.9;
+      font-size: clamp(0.92rem, 1.75vw, 1.02rem);
+      color: #666;
+      line-height: 1.95;
       font-style: italic;
-      margin-top: 2rem;
+      margin-top: 2.25rem;
       margin-bottom: 0.4rem;
     }
 
     .hs-punch-final {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(1.6rem, 4.2vw, 3rem);
-      color: #111111;
-      line-height: 1.15;
-      letter-spacing: 0.015em;
+      font-size: clamp(1.7rem, 4.4vw, 3.1rem);
+      color: #0d0d0d;
+      line-height: 1.12;
+      letter-spacing: 0.008em;
       text-transform: uppercase;
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
     }
 
     /* ════════════════════════════════════
        BLOCK 5 — CLOSING
     ════════════════════════════════════ */
     .hs-b5 {
-      padding-top: clamp(80px, 11vw, 136px);
-      padding-bottom: clamp(100px, 15vw, 180px);
+      padding-top: clamp(96px, 13vw, 164px);
+      padding-bottom: clamp(136px, 19vw, 220px);
     }
 
     .hs-close-title {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(2rem, 5.5vw, 4rem);
-      color: #111111;
+      font-size: clamp(2.2rem, 6vw, 4.4rem);
+      color: #0d0d0d;
       line-height: 1.0;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.015em;
       text-transform: uppercase;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
 
     .hs-caption {
       display: block;
       font-family: var(--font-body);
-      font-size: clamp(1.05rem, 2.1vw, 1.25rem);
-      color: #2a2a2a;
+      font-size: clamp(1.05rem, 2.1vw, 1.22rem);
+      color: #555;
       line-height: 1.85;
       font-style: italic;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.005em;
     }
 
     .hs-caption:last-of-type { margin-bottom: 0; }
 
+    /* ── WOW MOMENT: Das ist Bomaye. ── */
     .hs-kicker {
       display: block;
       font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 6rem);
-      color: #111111;
-      line-height: 1.0;
-      letter-spacing: 0.02em;
+      font-size: clamp(4.5rem, 12vw, 9rem);
+      color: #0d0d0d;
+      line-height: 0.95;
+      letter-spacing: 0.005em;
       text-transform: uppercase;
-      margin-top: 2.5rem;
+      margin-top: 5rem;
     }
 
     .hs-kicker-gold {
-      color: #d4af37;
+      color: #c9a227;
     }
 
-    /* ── Reveal animation: fade + 22px lift ── */
+    /* ── Reveal animation: fade + 18px lift ── */
     .hs-reveal {
       opacity: 0;
-      transform: translateY(22px);
+      transform: translateY(18px);
       transition:
-        opacity  0.9s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-      transition-delay: calc(var(--d, 0) * 0.14s);
+        opacity  1s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: calc(var(--d, 0) * 0.12s);
     }
 
     .hs-reveal.is-visible {
@@ -372,14 +382,16 @@
 
     /* ── Mobile ── */
     @media (max-width: 600px) {
-      .hs-b1 { padding-top: 88px; padding-bottom: 60px; }
-      .hs-b2,
-      .hs-b3,
-      .hs-b4 { padding-top: 64px; padding-bottom: 64px; }
-      .hs-b5 { padding-top: 64px; padding-bottom: 96px; }
+      .hs-b1 { padding-top: 112px; padding-bottom: 64px; }
+      .hs-b2 { padding-top: 80px; padding-bottom: 68px; }
+      .hs-b3 { padding-top: 64px; padding-bottom: 80px; }
+      .hs-b4 { padding-top: 76px; padding-bottom: 84px; }
+      .hs-b5 { padding-top: 80px; padding-bottom: 112px; }
       .hs-headline { font-size: clamp(4.5rem, 22vw, 6rem); }
-      .hs-accent   { margin-bottom: 2.5rem; }
-      .hs-kicker   { font-size: clamp(3rem, 18vw, 4.5rem); }
+      .hs-accent   { font-size: clamp(2rem, 15vw, 3rem); margin-bottom: 2.5rem; }
+      .hs-kicker   { font-size: clamp(3.5rem, 21vw, 5.5rem); margin-top: 3.5rem; }
+      .hs-impact   { font-size: clamp(2rem, 12vw, 3.2rem); }
+      .hs-impact:last-child { font-size: clamp(2.2rem, 13vw, 3.5rem); }
     }
 
     /* ── Experience Section ──────────────────────── */
@@ -558,8 +570,6 @@
         <span class="hs-impact hs-reveal" style="--d:2">Ein Ruf, der alles verändert.</span>
       </div>
     </div>
-
-    <div class="hs-thread hs-reveal" style="--d:0" aria-hidden="true"></div>
 
     <!-- ════════════════════════════════
          BLOCK 3 · MEANING
