@@ -91,8 +91,8 @@
        STORY SECTION — ALI BOMAYE (DNA)
     ════════════════════════════════════════════════ */
 
-    /* Override global dark background for this section */
-    #dna { background: transparent !important; }
+    /* Override global dark background — MUST be explicit cream, not transparent */
+    #dna { background: #f8f5f0 !important; }
 
     .story-section {
       background: #f8f5f0;
@@ -100,25 +100,35 @@
       overflow: hidden;
     }
 
-    /* Grain texture — premium film feel */
+    /* Grain texture — subtle paper feel */
     .story-grain {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 0;
-      opacity: 1;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
       background-repeat: repeat;
       background-size: 200px 200px;
     }
 
     .story-entry,
     .story-narrative,
-    .story-brand { position: relative; z-index: 1; }
+    .story-brand,
+    .story-ending { position: relative; z-index: 1; }
+
+    /* Gold divider line */
+    .story-gold-rule {
+      position: relative;
+      z-index: 1;
+      width: 1px;
+      height: clamp(48px, 7vw, 80px);
+      background: linear-gradient(to bottom, transparent, #d4af37, transparent);
+      margin: 0 auto;
+    }
 
     /* ── BLOCK 1: Entry ── */
     .story-entry {
-      padding: clamp(80px, 13vw, 160px) 0 clamp(50px, 7vw, 100px);
+      padding: clamp(88px, 13vw, 160px) 0 clamp(56px, 7vw, 100px);
       text-align: center;
     }
 
@@ -126,7 +136,7 @@
       font-family: var(--font-head);
       font-size: 0.68rem;
       letter-spacing: 5px;
-      color: rgba(10,10,10,0.38);
+      color: #888;
       text-transform: uppercase;
       margin-bottom: 1.75rem;
     }
@@ -134,7 +144,7 @@
     .story-headline {
       font-family: var(--font-display);
       font-size: clamp(4.5rem, 16vw, 11rem);
-      color: #0a0a0a;
+      color: #111;
       line-height: 0.92;
       letter-spacing: 0.01em;
       margin: 0;
@@ -143,7 +153,7 @@
 
     /* ── BLOCK 2: Narrative ── */
     .story-narrative {
-      padding: clamp(56px, 8vw, 110px) 0;
+      padding: clamp(64px, 9vw, 120px) 0;
       text-align: center;
     }
 
@@ -154,9 +164,9 @@
     .story-line {
       font-family: var(--font-display);
       font-size: clamp(1.7rem, 4.5vw, 3rem);
-      color: #0a0a0a;
-      line-height: 1.1;
-      margin: 0 0 0.35rem;
+      color: #111;
+      line-height: 1.15;
+      margin: 0 0 0.6rem;
       letter-spacing: 0.015em;
       text-transform: uppercase;
     }
@@ -164,33 +174,34 @@
     .story-sep {
       width: 36px;
       height: 1px;
-      background: rgba(197,160,89,0.6);
-      margin: 3rem auto;
+      background: #d4af37;
+      margin: 3.5rem auto;
+      opacity: 0.7;
     }
 
     .story-body {
       font-family: var(--font-body);
       font-size: clamp(1rem, 1.9vw, 1.15rem);
-      color: rgba(10,10,10,0.58);
-      line-height: 1.85;
+      color: #333;
+      line-height: 1.9;
       max-width: 560px;
-      margin: 0 auto 1.1rem;
+      margin: 0 auto 1.6rem;
     }
 
     /* ── BLOCK 3: Brand connection ── */
     .story-brand {
-      padding: clamp(56px, 8vw, 110px) 0 clamp(80px, 12vw, 140px);
+      padding: clamp(64px, 9vw, 120px) 0;
       text-align: center;
-      border-top: 1px solid rgba(10,10,10,0.08);
-      background: rgba(10,10,10,0.025);
+      border-top: 1px solid rgba(212,175,55,0.25);
+      background: rgba(212,175,55,0.03);
     }
 
     .story-brand-line {
       font-family: var(--font-display);
       font-size: clamp(1.9rem, 5vw, 3.5rem);
-      color: #0a0a0a;
-      line-height: 1.05;
-      margin: 0 0 0.3rem;
+      color: #111;
+      line-height: 1.1;
+      margin: 0 0 0.4rem;
       letter-spacing: 0.015em;
       text-transform: uppercase;
     }
@@ -227,9 +238,39 @@
       font-family: var(--font-head);
       font-size: 0.6rem;
       letter-spacing: 2px;
-      color: rgba(10,10,10,0.42);
+      color: #777;
       text-transform: uppercase;
       margin-top: 0.4rem;
+    }
+
+    /* ── BLOCK 4: Ending ── */
+    .story-ending {
+      padding: clamp(72px, 10vw, 130px) 0 clamp(88px, 13vw, 160px);
+      text-align: center;
+      border-top: 1px solid rgba(212,175,55,0.25);
+    }
+
+    .story-ending-line {
+      font-family: var(--font-body);
+      font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+      color: #333;
+      line-height: 1.8;
+      margin: 0 0 0.15rem;
+      font-style: italic;
+    }
+
+    .story-ending-kicker {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      color: #111;
+      line-height: 1.0;
+      margin: 2rem 0 0;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .story-ending-kicker span {
+      color: #d4af37;
     }
 
     /* ── Scroll-reveal for story elements ── */
@@ -238,7 +279,7 @@
       transform: translateY(18px);
       transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-      transition-delay: calc(var(--stagger, 0) * 0.11s);
+      transition-delay: calc(var(--stagger, 0) * 0.12s);
     }
 
     .story-reveal.visible {
@@ -246,14 +287,17 @@
       transform: translateY(0);
     }
 
-    /* Mobile tweaks */
+    /* Mobile */
     @media (max-width: 600px) {
-      .story-entry { padding: 64px 0 48px; }
-      .story-narrative { padding: 48px 0; }
-      .story-brand { padding: 48px 0 72px; }
+      .story-entry { padding: 72px 0 52px; }
+      .story-narrative { padding: 56px 0; }
+      .story-brand { padding: 56px 0 64px; }
+      .story-ending { padding: 56px 0 80px; }
       .story-headline { font-size: clamp(3.5rem, 18vw, 5rem); }
       .story-brand-accent { margin-bottom: 3rem; }
       .story-stats { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+      .story-body { font-size: 1rem; }
+      .story-ending-line { font-size: 1.05rem; }
     }
 
     /* ── Experience Section ──────────────────────── */
@@ -414,6 +458,8 @@
       </div>
     </div>
 
+    <div class="story-gold-rule story-reveal" style="--stagger:0" aria-hidden="true"></div>
+
     <!-- BLOCK 2: Scroll narrative — progressive lines -->
     <div class="story-narrative">
       <div class="container story-container">
@@ -421,8 +467,8 @@
         <p class="story-line story-reveal" style="--stagger:1">Tausende Stimmen.</p>
         <p class="story-line story-reveal" style="--stagger:2">Ein Moment, der Geschichte schreibt.</p>
         <div class="story-sep story-reveal" style="--stagger:3" aria-hidden="true"></div>
-        <p class="story-body story-reveal" style="--stagger:4">Der "Rumble in the Jungle":<br>Als 60.000 Menschen "Bomaye" riefen,<br>war es kein Aufruf zur Gewalt.</p>
-        <p class="story-body story-reveal" style="--stagger:5" style="margin-top:1.5rem;">Es war ein Zeichen.<br>Für Unterstützung.<br>Für Zusammenhalt.<br>Für Stärke.</p>
+        <p class="story-body story-reveal" style="--stagger:4">Der "Rumble in the Jungle" — als 60.000 Menschen "Bomaye" riefen,<br>war es kein Aufruf zur Gewalt.</p>
+        <p class="story-body story-reveal" style="--stagger:5">Es war ein Zeichen für Unterstützung.<br>Für Zusammenhalt. Für Stärke.</p>
       </div>
     </div>
 
@@ -436,6 +482,16 @@
         <p class="story-brand-line story-reveal" style="--stagger:4">Es ist Identität.</p>
       </div>
     </div>
+
+    <!-- BLOCK 4: Emotional ending -->
+    <div class="story-ending">
+      <div class="container story-container">
+        <p class="story-ending-line story-reveal" style="--stagger:0">Das ist mehr als ein Moment.</p>
+        <p class="story-ending-line story-reveal" style="--stagger:1">Es ist ein Gefühl.</p>
+        <p class="story-ending-kicker story-reveal" style="--stagger:2">Das ist <span>Bomaye.</span></p>
+      </div>
+    </div>
+
   </section>
 
 
