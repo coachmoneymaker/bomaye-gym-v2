@@ -1395,7 +1395,7 @@
 
       <div class="eb-counter fade-up delay-1" aria-live="polite" aria-label="Verfügbare Early Bird Plätze">
         <div class="eb-counter-display" id="eb-counter-display">
-          <span class="eb-taken-number" id="eb-spots-taken">225</span>
+          <span class="eb-taken-number" id="eb-spots-taken">180</span>
         </div>
         <span class="eb-available-label">NOCH VERFÜGBAR</span>
       </div>
@@ -1891,14 +1891,14 @@
             // Show available (spots_left); fall back to 300 - taken
             var available = typeof data.spots_left === 'number'
               ? data.spots_left
-              : (typeof data.taken === 'number' ? 300 - data.taken : 225);
+              : (typeof data.taken === 'number' ? 300 - data.taken : 180);
             available = Math.max(0, Math.min(300, available));
             var duration = 800;
             animateCount(300, available, duration);
           })
           .catch(function() {
-            // Fallback: show 225 as default available
-            numEl.textContent = '225';
+            // Fallback: show 180 as default available
+            numEl.textContent = '180';
           });
       }
 

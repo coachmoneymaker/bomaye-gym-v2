@@ -16,7 +16,7 @@ const BOMAYE = {
   ─────────────────────────────────────────────────────────── */
   earlyBird: {
     total:     300,    // ← Edit: total spots ever offered
-    remaining: 225,    // ← Edit: current remaining spots
+    remaining: 180,    // ← Edit: current remaining spots
   },
 
   /* ── Contact ─────────────────────────────────────────────── */
