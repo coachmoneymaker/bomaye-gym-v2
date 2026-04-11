@@ -362,7 +362,7 @@
     <div class="ab-origin-body">
       <p class="ab-reveal" data-delay="0">Kinshasa, 1974. <span style="color:#C9A84C;font-weight:600">Muhammad Ali</span> betritt den Ring gegen <span style="color:#C9A84C;font-weight:600">George Foreman</span> — den schwersten Kampf seiner Karriere. Foreman gilt als unschlagbar. Ali als erledigt.</p>
       <p class="ab-reveal" data-delay="150">Doch <span style="color:#C9A84C;font-weight:600">60.000 Menschen</span> im Stade du 20 Mai rufen seinen Namen. Immer wieder. Lauter. <span style="color:#C9A84C;font-weight:700;font-style:italic">Bomaye.</span></p>
-      <p class="ab-reveal" data-delay="300">Im Lingala bedeutet das wörtlich: Töte ihn. Aber wer dort stand, wer diese Energie spürte, weiß: Es bedeutete viel mehr. Es bedeutete — <span style="color:#C9A84C;font-weight:600">Wir glauben an dich.</span> Wir stehen hinter dir. Du bist nicht allein.</p>
+      <p class="ab-reveal" data-delay="300">Im Lingala bedeutet das wörtlich: Töte ihn. Aber wer dort stand, wer diese Energie spürte, weiß: Es bedeutete viel mehr. Es bedeutete — <span style="color:#C9A84C;font-weight:600">wir glauben an dich.</span> Wir stehen hinter dir. Du bist nicht allein.</p>
       <p class="ab-reveal" data-delay="450"><span style="color:#C9A84C;font-weight:700">Ali gewann.</span> Nicht weil er der Stärkste war. Sondern weil er wusste, dass hinter ihm eine ganze Stadt stand.</p>
       <p class="ab-reveal" data-delay="600">Genau dieses Gefühl bringen wir nach <span style="color:#C9A84C;font-weight:600">München</span>. In jeden Ring. In jede Runde. In jeden Menschen der zu uns kommt — egal ob Anfänger oder Wettkämpfer.</p>
     </div>
@@ -692,15 +692,18 @@
       overflow: hidden;
       margin-bottom: 0;
       position: relative;
+      background: #F0EBE1;
     }
     .ab-coach-photo-wrap img {
       width: 100%;
-      height: 280px;
-      object-fit: cover;
+      height: 380px;
+      object-fit: contain;
+      object-position: center center;
       display: block;
+      background: #F0EBE1;
     }
     @media (max-width: 640px) {
-      .ab-coach-photo-wrap img { height: 220px; }
+      .ab-coach-photo-wrap img { height: 300px; }
     }
     .ab-coach-info { padding-top: 28px; }
     .ab-coach-name {
@@ -797,8 +800,7 @@
         <div class="ab-coach-photo-wrap">
           <img src="/assets/images/coach-raschad.webp"
                alt="Raschad Pekpassi — Head Coach &amp; Founder, Bomaye Gym Munich"
-               loading="eager" decoding="async"
-               style="object-position: center 20%;" />
+               loading="eager" decoding="async" />
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">RASCHAD PEKPASSI</h3>
@@ -825,8 +827,7 @@
         <div class="ab-coach-photo-wrap">
           <img src="/assets/images/coach-alfonso.webp"
                alt="Alfonso Fusco — Landestrainer BABV &amp; Kickbox-Weltmeister, Bomaye Gym Munich"
-               loading="eager" decoding="async"
-               style="object-position: center 15%;" />
+               loading="eager" decoding="async" />
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
@@ -961,20 +962,24 @@
       align-items: center;
       justify-content: center;
       background: #C9A84C;
-      color: #000;
+      color: #000000;
       font-family: var(--font-head);
-      font-size: 0.9rem;
-      letter-spacing: 0.1em;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
       font-weight: 700;
-      padding: 16px 40px;
+      padding: 0.65rem 1.4rem;
       text-decoration: none;
       border: none;
-      border-radius: 0;
-      transition: filter 0.2s ease, transform 0.2s ease;
+      border-radius: 10px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 0 20px rgba(198,164,90,0.30), 0 4px 14px rgba(0,0,0,0.40);
+      transition: all 0.28s ease;
     }
     .ab-btn-primary:hover {
-      filter: brightness(1.1);
-      transform: scale(1.02);
+      transform: translateY(-2px) scale(1.04);
+      filter: brightness(1.08);
+      box-shadow: 0 0 40px rgba(198,164,90,0.65), 0 10px 32px rgba(198,164,90,0.32);
     }
     .ab-btn-secondary {
       display: inline-flex;
@@ -983,14 +988,16 @@
       background: transparent;
       color: #C9A84C;
       font-family: var(--font-head);
-      font-size: 0.9rem;
-      letter-spacing: 0.1em;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
       font-weight: 700;
-      padding: 16px 40px;
+      padding: 0.65rem 1.4rem;
       text-decoration: none;
       border: 1.5px solid #C9A84C;
-      border-radius: 0;
-      transition: background 0.2s ease;
+      border-radius: 10px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: background 0.28s ease;
     }
     .ab-btn-secondary:hover {
       background: rgba(201,168,76,0.08);
@@ -1056,6 +1063,17 @@
           <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         </div>
       </div>
+      <!-- SEO footer links — visually minimal, kept for SEO value -->
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding:1.5rem 0 0.5rem;">
+        <p style="font-size:0.7rem;color:rgba(245,240,232,0.2);line-height:1.7;letter-spacing:normal;margin:0;">
+          <a href="/boxgym-muenchen" style="color:inherit;text-decoration:none;">Boxgym München</a> &nbsp;·&nbsp;
+          <a href="/boxtraining-muenchen" style="color:inherit;text-decoration:none;">Boxtraining München</a> &nbsp;·&nbsp;
+          <a href="/boxen-lernen-muenchen" style="color:inherit;text-decoration:none;">Boxen lernen München</a> &nbsp;·&nbsp;
+          <a href="/fitnessboxen-muenchen" style="color:inherit;text-decoration:none;">Fitnessboxen München</a> &nbsp;·&nbsp;
+          <a href="/personal-training-boxen-muenchen" style="color:inherit;text-decoration:none;">Personal Training Boxen München</a>
+        </p>
+      </div>
+
       <div class="footer-contactbar">
         <a href="tel:+4917621932243">0176 2193 2243</a>
         <span class="dot">•</span>
