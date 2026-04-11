@@ -19,9 +19,19 @@
       return;
     }
 
-    // InitiateCheckout: direct bsport booking links / buttons
-    if (href.indexOf('backoffice.bsport.io') !== -1 ||
-        onclick.indexOf('backoffice.bsport.io') !== -1) {
+    // InitiateCheckout: direct bsport booking links
+    // Prevent default so the pixel event fires before opening the new tab
+    if (href.indexOf('backoffice.bsport.io') !== -1) {
+      e.preventDefault();
+      fbq('track', 'InitiateCheckout');
+      setTimeout(function () {
+        window.open(href, '_blank');
+      }, 200);
+      return;
+    }
+
+    // InitiateCheckout: bsport buttons (onclick-based, navigation cannot be delayed)
+    if (onclick.indexOf('backoffice.bsport.io') !== -1) {
       fbq('track', 'InitiateCheckout');
     }
   });
