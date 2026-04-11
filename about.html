@@ -172,6 +172,7 @@
     /* ── Chapter 1: Hero ── */
     .ab-hero {
       background: #0A0A08;
+      background-image: radial-gradient(ellipse at 50% 40%, rgba(40,35,25,0.85) 0%, rgba(10,10,8,1) 70%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -339,12 +340,16 @@
     }
     .ab-origin-body p {
       font-family: var(--font-body);
-      font-size: 1.1rem;
-      color: rgba(245,240,232,0.75);
-      line-height: 1.9;
-      margin-bottom: 1.4em;
+      font-size: 1.15rem;
+      color: rgba(245,240,232,0.82);
+      line-height: 2.0;
+      letter-spacing: 0.01em;
+      margin-bottom: 28px;
     }
     .ab-origin-body p:last-child { margin-bottom: 0; }
+    @media (max-width: 480px) {
+      .ab-origin-body p { font-size: 1rem; }
+    }
   </style>
 
   <section class="ab-origin" aria-label="The Origin — Kinshasa 1974">
@@ -355,11 +360,11 @@
     <span class="ab-origin-line ab-origin-line--gold  ab-reveal" data-delay="400">EIN RUF.</span>
 
     <div class="ab-origin-body">
-      <p class="ab-reveal" data-delay="0">Kinshasa, 1974. Muhammad Ali betritt den Ring gegen George Foreman — den schwersten Kampf seiner Karriere. Foreman gilt als unschlagbar. Ali als erledigt.</p>
-      <p class="ab-reveal" data-delay="150">Doch 60.000 Menschen im Stade du 20 Mai rufen seinen Namen. Immer wieder. Lauter. Bomaye.</p>
-      <p class="ab-reveal" data-delay="300">Im Lingala bedeutet das wörtlich: Töte ihn. Aber wer dort stand, wer diese Energie spürte, weiß: Es bedeutete viel mehr. Es bedeutete — wir glauben an dich. Wir stehen hinter dir. Du bist nicht allein.</p>
-      <p class="ab-reveal" data-delay="450">Ali gewann. Nicht weil er der Stärkste war. Sondern weil er wusste, dass hinter ihm eine ganze Stadt stand.</p>
-      <p class="ab-reveal" data-delay="600">Genau dieses Gefühl bringen wir nach München. In jeden Ring. In jede Runde. In jeden Menschen der zu uns kommt — egal ob Anfänger oder Wettkämpfer.</p>
+      <p class="ab-reveal" data-delay="0">Kinshasa, 1974. <span style="color:#C9A84C;font-weight:600">Muhammad Ali</span> betritt den Ring gegen <span style="color:#C9A84C;font-weight:600">George Foreman</span> — den schwersten Kampf seiner Karriere. Foreman gilt als unschlagbar. Ali als erledigt.</p>
+      <p class="ab-reveal" data-delay="150">Doch <span style="color:#C9A84C;font-weight:600">60.000 Menschen</span> im Stade du 20 Mai rufen seinen Namen. Immer wieder. Lauter. <span style="color:#C9A84C;font-weight:700;font-style:italic">Bomaye.</span></p>
+      <p class="ab-reveal" data-delay="300">Im Lingala bedeutet das wörtlich: Töte ihn. Aber wer dort stand, wer diese Energie spürte, weiß: Es bedeutete viel mehr. Es bedeutete — <span style="color:#C9A84C;font-weight:600">Wir glauben an dich.</span> Wir stehen hinter dir. Du bist nicht allein.</p>
+      <p class="ab-reveal" data-delay="450"><span style="color:#C9A84C;font-weight:700">Ali gewann.</span> Nicht weil er der Stärkste war. Sondern weil er wusste, dass hinter ihm eine ganze Stadt stand.</p>
+      <p class="ab-reveal" data-delay="600">Genau dieses Gefühl bringen wir nach <span style="color:#C9A84C;font-weight:600">München</span>. In jeden Ring. In jede Runde. In jeden Menschen der zu uns kommt — egal ob Anfänger oder Wettkämpfer.</p>
     </div>
   </section>
 
@@ -690,14 +695,12 @@
     }
     .ab-coach-photo-wrap img {
       width: 100%;
-      height: 420px;
+      height: 280px;
       object-fit: cover;
       display: block;
     }
     @media (max-width: 640px) {
-      .ab-coach-photo-wrap img { height: 300px; }
-      .ab-coaches-grid > div:nth-child(1) .ab-coach-photo-wrap img { object-position: center 30%; }
-      .ab-coaches-grid > div:nth-child(2) .ab-coach-photo-wrap img { object-position: center 25%; }
+      .ab-coach-photo-wrap img { height: 220px; }
     }
     .ab-coach-info { padding-top: 28px; }
     .ab-coach-name {
@@ -748,30 +751,40 @@
     .ab-coach-bio:last-of-type { margin-bottom: 0; }
     .ab-coach-socials {
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      gap: 24px;
+      margin-top: 16px;
     }
     .ab-coach-social-btn {
       display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      background: transparent;
-      border: 1px solid rgba(201,168,76,0.4);
+      gap: 8px;
+      background: none;
+      border: none;
       text-decoration: none;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    .ab-coach-social-btn:hover {
-      border-color: #C9A84C;
-      background: rgba(201,168,76,0.08);
+      padding: 0;
+      transition: color 0.2s ease;
     }
     .ab-coach-social-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       fill: #C9A84C;
       flex-shrink: 0;
+      transition: fill 0.2s ease;
+    }
+    .ab-coach-social-btn::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: rgba(201,168,76,0.3);
+      transition: background 0.2s ease;
+    }
+    .ab-coach-social-btn:hover svg {
+      fill: #f0d080;
+    }
+    .ab-coach-social-btn:hover::after {
+      background: #C9A84C;
     }
   </style>
 
@@ -785,7 +798,7 @@
           <img src="/assets/images/coach-raschad.webp"
                alt="Raschad Pekpassi — Head Coach &amp; Founder, Bomaye Gym Munich"
                loading="eager" decoding="async"
-               style="object-position: center 30%;" />
+               style="object-position: center 20%;" />
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">RASCHAD PEKPASSI</h3>
@@ -813,7 +826,7 @@
           <img src="/assets/images/coach-alfonso.webp"
                alt="Alfonso Fusco — Landestrainer BABV &amp; Kickbox-Weltmeister, Bomaye Gym Munich"
                loading="eager" decoding="async"
-               style="object-position: center 25%;" />
+               style="object-position: center 15%;" />
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
@@ -950,10 +963,10 @@
       background: #C9A84C;
       color: #000;
       font-family: var(--font-head);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
       font-weight: 700;
-      padding: 16px 36px;
+      padding: 16px 40px;
       text-decoration: none;
       border: none;
       border-radius: 0;
@@ -968,20 +981,19 @@
       align-items: center;
       justify-content: center;
       background: transparent;
-      color: #0A0A08;
+      color: #C9A84C;
       font-family: var(--font-head);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
       font-weight: 700;
-      padding: 16px 36px;
+      padding: 16px 40px;
       text-decoration: none;
-      border: 1.5px solid #0A0A08;
+      border: 1.5px solid #C9A84C;
       border-radius: 0;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: background 0.2s ease;
     }
     .ab-btn-secondary:hover {
-      background: #0A0A08;
-      color: #F5F0E8;
+      background: rgba(201,168,76,0.08);
     }
   </style>
 
