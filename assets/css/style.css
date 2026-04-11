@@ -7292,3 +7292,95 @@ section { padding: var(--sv) 0; }
   transform: scaleY(1);
 }
 
+/* ── FIX 1: Hide ZURÜCK back-btn on mobile ── */
+@media (max-width: 767px) {
+  .back-btn,
+  .back-btn.visible {
+    display: none !important;
+  }
+}
+
+/* ── FAQ REDESIGN: Remove IMP 4 gold ::before line ── */
+.faq-item::before {
+  display: none !important;
+}
+
+/* ── FAQ REDESIGN: Cream background override ── */
+#faq.sec--faq-white {
+  background: #F5F0E8 !important;
+}
+
+/* ── FAQ REDESIGN: Items — gold separators, no card ── */
+.faq-list--light .faq-item {
+  background: none !important;
+  border-bottom: 1px solid rgba(201,168,76,0.25) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.faq-list--light .faq-item:first-child {
+  border-top: 1px solid rgba(201,168,76,0.25) !important;
+}
+
+/* ── FAQ REDESIGN: Question row ── */
+.faq-list--light .faq-q--light {
+  padding: 28px 0 !important;
+  font-family: var(--font-body) !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+  color: #1a1a1a !important;
+  min-height: 48px;
+}
+.faq-list--light .faq-icon {
+  display: none !important;
+}
+.faq-list--light .faq-q--light::after {
+  content: '→';
+  color: #C9A84C;
+  font-size: 18px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  line-height: 1;
+}
+.faq-list--light .faq-q--light[aria-expanded="true"]::after {
+  transform: rotate(90deg);
+}
+.faq-list--light .faq-q--light[aria-expanded="true"] {
+  color: #C9A84C !important;
+}
+
+/* ── FAQ REDESIGN: Answer panel ── */
+.faq-list--light .faq-a {
+  transition: max-height 0.3s ease !important;
+}
+.faq-list--light .faq-a-inner {
+  padding: 0 0 20px !important;
+  color: #444444 !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.faq-list--light .faq-item:has(.faq-q--light[aria-expanded="true"]) .faq-a-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── FAQ REDESIGN: Mobile adjustments ── */
+@media (max-width: 768px) {
+  .faq-list--light .faq-q--light {
+    padding: 20px 0 !important;
+    font-size: 15px !important;
+  }
+  .faq-list--light .faq-a-inner {
+    font-size: 14px !important;
+  }
+}
+
