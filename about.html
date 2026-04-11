@@ -295,17 +295,19 @@
     }
     @media (max-width: 640px) {
       .ab-coaches-grid { grid-template-columns: 1fr; }
+      .ab-coach-photo-wrap img { height: 260px; }
     }
     .ab-coach-photo-wrap {
       position: relative;
-      border-radius: 4px;
+      border-radius: 0;
       overflow: hidden;
       margin-bottom: 1.5rem;
     }
     .ab-coach-photo-wrap img {
       width: 100%;
-      aspect-ratio: 3/4;
+      height: 320px;
       object-fit: cover;
+      object-position: center top;
       display: block;
     }
     .ab-coach-name {
@@ -435,6 +437,7 @@
       .ab-cta-btns .btn { width: 100%; max-width: 320px; }
     }
   </style>
+  <noscript><style>.ab-reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
 </head>
 
 <body>
@@ -586,7 +589,7 @@
           <div class="ab-coach-photo-wrap">
             <img src="/assets/images/coach-raschad.webp"
                  alt="Raschad Pekpassi — Head Coach &amp; Founder, Bomaye Gym Munich"
-                 loading="lazy" decoding="async" />
+                 loading="eager" decoding="async" />
           </div>
           <h3 class="ab-coach-name">RASCHAD PEKPASSI</h3>
           <div class="ab-coach-title">HEAD COACH &amp; FOUNDER</div>
@@ -602,7 +605,7 @@
           <div class="ab-coach-photo-wrap">
             <img src="/assets/images/coach-alfonso.webp"
                  alt="Alfonso Fusco — Landestrainer BABV &amp; Kickbox-Weltmeister, Bomaye Gym Munich"
-                 loading="lazy" decoding="async" />
+                 loading="eager" decoding="async" />
           </div>
           <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
           <div class="ab-coach-title">LANDESTRAINER (BABV)</div>
