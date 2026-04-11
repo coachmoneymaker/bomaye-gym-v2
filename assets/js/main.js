@@ -1040,3 +1040,51 @@ function autoSlider(sliderId, intervalMs, maxWidth, scrollDuration) {
   window.addEventListener('scroll', onScroll, { passive: true });
 }());
 
+/* ══════════════════════════════════════════════════════════════
+   IMP 1: HERO CONTENT PARALLAX
+   Hero text/content moves at 0.3× scroll speed on desktop.
+   Disabled completely on mobile (< 768px) — no rAF, no transform.
+   Uses requestAnimationFrame for 60fps smoothness, zero flicker.
+══════════════════════════════════════════════════════════════ */
+(function initHeroContentParallax() {
+  var hero    = document.getElementById('hero');
+  var content = hero ? hero.querySelector('.hero-content') : null;
+  if (!hero || !content) return;
+
+  // Honour prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var FACTOR  = 0.3;
+  var ticking = false;
+
+  function apply() {
+    // Mobile guard — reset and exit
+    if (window.innerWidth < 768) {
+      content.style.transform = '';
+      ticking = false;
+      return;
+    }
+    var y = window.scrollY;
+    var heroH = hero.offsetHeight;
+    // Apply only while hero is still (partially) in the viewport
+    if (y <= heroH) {
+      content.style.transform = 'translateY(' + (y * FACTOR).toFixed(2) + 'px)';
+    } else {
+      content.style.transform = '';
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(apply);
+    }
+  }, { passive: true });
+
+  // Resize: disable on mobile, reset transform
+  window.addEventListener('resize', function () {
+    if (window.innerWidth < 768) content.style.transform = '';
+  }, { passive: true });
+}());
+

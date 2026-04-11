@@ -7150,3 +7150,145 @@ section { padding: var(--sv) 0; }
     transform 0.58s cubic-bezier(0.22,1,0.36,1) !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   HOMEPAGE IMPROVEMENTS — I1 Parallax · I2 Brand Moment
+                          · I3 Card Hover · I4 FAQ Marker
+══════════════════════════════════════════════════════════════ */
+
+/* ── IMP 1: Hero content parallax — promote to GPU layer ── */
+.hero-content {
+  will-change: transform;
+}
+
+/* ── IMP 2: Logo brand moment ── */
+.dna-brand-moment {
+  background: #0A0A08 !important;
+  padding-top: 120px !important;
+  padding-bottom: 120px !important;
+  border-color: rgba(201,168,76,0.18) !important;
+}
+
+/* Brand moment: 0.6s ease fade-in (overrides the global reveal timing) */
+.dna-brand-moment.reveal {
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease !important;
+}
+
+/* Make brand moment visible on mobile (overrides display:none from 768px rule) */
+@media (max-width: 768px) {
+  .dna-brand-moment {
+    display: flex !important;
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+    margin-top: 2rem;
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* Gold accent lines (top and bottom) */
+.dna-brand-line {
+  width: 80px;
+  height: 1px;
+  background: #C9A84C;
+  margin-left: auto;
+  margin-right: auto;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.dna-brand-line--top    { margin-bottom: 2.5rem; }
+.dna-brand-line--bottom { margin-top: 2rem; }
+
+/* Upgraded brand tagline: gold, small-caps, wide tracking */
+.dna-brand-tagline {
+  font-family: var(--font-head);
+  font-size: 0.62rem;
+  letter-spacing: 5px;
+  color: #C9A84C;
+  font-variant: small-caps;
+  text-transform: uppercase;
+  margin-top: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── IMP 3: Training cards hover effects ── */
+
+/* Correct stacking inside disc-panel for the gold tint overlay */
+.disc-panel__bg      { z-index: 0; }
+.disc-panel__content { z-index: 2; }
+
+/* Hover states: pointer devices only (no effect on touch) */
+@media (hover: hover) {
+  .disc-panel--clickable {
+    border-bottom: 2px solid transparent;
+    transition:
+      transform 0.3s ease,
+      border-bottom-color 0.3s ease;
+  }
+
+  /* Gold tint overlay — sits between bg (z:0) and content (z:2) */
+  .disc-panel--clickable::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(201,168,76,0);
+    z-index: 1;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+
+  /* Hover: lift + gold border + gold tint */
+  .disc-panel--clickable:hover {
+    transform: translateY(-4px);
+    border-bottom-color: #C9A84C;
+  }
+  .disc-panel--clickable:hover::before {
+    background: rgba(201,168,76,0.03);
+  }
+
+  /* Kicker number turns gold on hover */
+  .disc-panel__kicker {
+    transition: color 0.3s ease;
+  }
+  .disc-panel--clickable:hover .disc-panel__kicker {
+    color: #C9A84C;
+  }
+}
+
+/* Mobile: tap feedback only — brief scale-down on touch */
+@media (hover: none) {
+  .disc-panel--clickable:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* ── IMP 4: FAQ gold left-border marker ── */
+
+/* Ensure relative positioning for the ::before pseudo-element */
+.faq-item {
+  position: relative;
+}
+
+/* Gold line: hidden (scaleY 0) by default, grows to full height when item is open */
+.faq-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #C9A84C;
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+/* Active/open state: full-height gold line */
+.faq-item:has(.faq-q[aria-expanded="true"])::before {
+  transform: scaleY(1);
+}
+
