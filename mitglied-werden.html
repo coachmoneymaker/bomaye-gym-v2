@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
-    /* ── Base reset ─────────────────────────────────────────── */
+    /* ── Reset ─────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
 
     body {
@@ -52,7 +52,7 @@
       font-family: var(--font-body);
     }
 
-    /* ── Minimal header ─────────────────────────────────────── */
+    /* ── Header ─────────────────────────────────────────────────── */
     .mw-header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -111,232 +111,311 @@
     .mw-back-link:hover { color: #F5F0E8; }
     .mw-back-link i { font-size: 0.6rem; }
 
-    /* ── Page wrapper ────────────────────────────────────────── */
+    /* ── Page wrapper ──────────────────────────────────────────── */
     .mw-page {
       padding-top: 72px;
       min-height: 100vh;
     }
-
-    /* ── Reveal animation ────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+    @media (max-width: 767px) {
+      .mw-page { padding-bottom: 72px; }
     }
+
+    /* ── Reveal animation ─────────────────────────────────────── */
+    @keyframes mwFadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal { opacity: 0; }
+
     .reveal.visible {
-      opacity: 1;
-      transform: none;
+      animation: mwFadeUp 0.6s ease both;
     }
-    .reveal.delay-1 { transition-delay: 0.15s; }
-    .reveal.delay-2 { transition-delay: 0.30s; }
 
-    /* ── SECTION 1: HERO ─────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal         { opacity: 1; }
+      .reveal.visible { animation: none; }
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SECTION 1 — HERO
+    ════════════════════════════════════════════════════════════ */
     .mw-hero {
+      position: relative;
       background: #0A0A08;
-      padding: clamp(72px, 11vw, 130px) 24px clamp(56px, 9vw, 100px);
+      padding: 80px 20px 60px;
       text-align: center;
+      overflow: hidden;
+    }
+    /* Noise overlay */
+    .mw-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
     }
     .mw-hero-inner {
+      position: relative;
+      z-index: 1;
       max-width: 680px;
       margin: 0 auto;
     }
     .mw-hero-label {
       font-family: var(--font-head);
-      font-size: 0.62rem;
-      letter-spacing: 6px;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
+      font-variant: small-caps;
       color: #C9A84C;
-      margin: 0 0 1.25rem;
+      margin: 0 0 16px;
     }
     .mw-hero-h1 {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 10vw, 7rem);
+      font-size: 2.4rem;
       color: #F5F0E8;
       text-transform: uppercase;
       line-height: 0.95;
       letter-spacing: 0.02em;
-      margin: 0 0 1.5rem;
+      margin: 0 0 20px;
+      font-weight: bold;
     }
     .mw-hero-sub {
       font-family: var(--font-body);
-      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-      color: rgba(245,240,232,0.52);
+      font-size: 1rem;
+      color: rgba(245,240,232,0.6);
       line-height: 1.75;
-      margin: 0 auto 1.25rem;
+      margin: 0 auto 24px;
       max-width: 480px;
     }
-    .mw-hero-spots {
+    .mw-hero-proof {
       font-family: var(--font-body);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: #C9A84C;
-      font-weight: 600;
       margin: 0;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    @media (min-width: 768px) {
+      .mw-hero {
+        padding: 100px 24px 80px;
+      }
+      .mw-hero-h1 {
+        font-size: 4rem;
+      }
     }
 
-    /* ── SECTION 2: PACKAGE CARDS ────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       SECTION 2 — PACKAGE CARDS
+    ════════════════════════════════════════════════════════════ */
     .mw-cards {
-      background: #0A0A08;
-      padding: clamp(8px, 2vw, 16px) 24px clamp(72px, 11vw, 112px);
+      background: #F5F0E8;
+      padding: 60px 16px;
+      scroll-margin-top: 72px;
     }
     .mw-cards-inner {
       max-width: 1100px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 20px;
     }
+
+    /* Mobile order: UNLIMITED=1, KIDS=2, YOUTH=3 */
+    .mw-card--kids    { order: 2; }
+    .mw-card--popular { order: 1; }
+    .mw-card--youth   { order: 3; }
+
     @media (min-width: 900px) {
+      .mw-cards {
+        padding: 80px 32px;
+      }
       .mw-cards-inner {
+        display: grid;
         grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
         align-items: stretch;
       }
+      /* Desktop order: KIDS=1, UNLIMITED=2, YOUTH=3 (natural DOM order) */
+      .mw-card--kids    { order: 1; }
+      .mw-card--popular { order: 2; }
+      .mw-card--youth   { order: 3; }
     }
 
     /* Card base */
     .mw-card {
-      background: #111110;
-      border: 1px solid rgba(245,240,232,0.08);
-      border-radius: 16px;
-      padding: clamp(24px, 4vw, 36px) clamp(20px, 3.5vw, 30px);
+      background: #0A0A08;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 3px;
+      padding: 32px 24px;
       display: flex;
       flex-direction: column;
       position: relative;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    @media (min-width: 900px) {
+      .mw-card { padding: 40px 32px; }
+    }
+    @media (hover: hover) {
+      .mw-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 64px rgba(0,0,0,0.2);
+      }
+    }
+
+    /* UNLIMITED overrides */
     .mw-card--popular {
-      border-color: #C9A84C;
+      border: 1.5px solid #C9A84C;
+      box-shadow: 0 8px 48px rgba(201,168,76,0.12);
+    }
+    @media (hover: hover) {
+      .mw-card--popular:hover {
+        box-shadow: 0 16px 64px rgba(201,168,76,0.2);
+      }
+    }
+
+    /* Stagger delays — mobile (visual order: UNLIMITED, KIDS, YOUTH) */
+    .mw-card--popular.visible { animation-delay: 0ms; }
+    .mw-card--kids.visible    { animation-delay: 150ms; }
+    .mw-card--youth.visible   { animation-delay: 300ms; }
+
+    @media (min-width: 900px) {
+      /* Desktop (visual order: KIDS, UNLIMITED, YOUTH) */
+      .mw-card--kids.visible    { animation-delay: 0ms; }
+      .mw-card--popular.visible { animation-delay: 150ms; }
+      .mw-card--youth.visible   { animation-delay: 300ms; }
     }
 
     /* Most Popular badge */
     .mw-popular-badge {
-      display: inline-block;
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #C9A84C;
-      color: #0A0A08;
+      color: #000;
       font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 2.5px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 999px;
-      margin: 0 0 18px;
-      align-self: flex-start;
+      font-variant: small-caps;
+      padding: 6px 20px;
+      border-radius: 2px;
+      white-space: nowrap;
     }
 
-    /* Card top label */
+    /* Card content */
     .mw-card-label {
       font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 4px;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
+      font-variant: small-caps;
       color: #C9A84C;
-      margin: 0 0 8px;
+      margin: 0;
     }
-
-    /* Package name */
     .mw-card-name {
       font-family: var(--font-display);
-      font-size: clamp(2.4rem, 6vw, 3rem);
+      font-size: 2.2rem;
       color: #F5F0E8;
       text-transform: uppercase;
       line-height: 0.95;
       letter-spacing: 0.02em;
-      margin: 0 0 8px;
+      margin: 8px 0 0;
+      font-weight: bold;
     }
-
-    /* Age range */
+    @media (min-width: 900px) {
+      .mw-card-name { font-size: 2.8rem; }
+    }
     .mw-card-age {
       font-family: var(--font-body);
-      font-size: 0.88rem;
-      color: rgba(245,240,232,0.42);
-      margin: 0 0 20px;
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.45);
+      margin: 4px 0 0;
     }
-
-    /* Gold divider */
     .mw-card-divider {
       height: 1px;
-      background: rgba(201,168,76,0.25);
+      background: rgba(201,168,76,0.15);
       border: none;
-      margin: 0 0 20px;
+      margin: 24px 0;
     }
-
-    /* Crossed-out regular price */
     .mw-card-reg-price {
       font-family: var(--font-body);
-      font-size: 0.82rem;
-      color: rgba(245,240,232,0.32);
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.3);
       text-decoration: line-through;
-      margin: 0 0 6px;
+      margin: 0;
     }
-
-    /* Early Bird price */
     .mw-card-price-row {
       display: flex;
       align-items: baseline;
-      gap: 6px;
-      margin: 0 0 4px;
+      gap: 8px;
+      margin: 4px 0 0;
       line-height: 1;
     }
     .mw-card-price {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 4.2rem);
+      font-size: 2.6rem;
       color: #C9A84C;
       line-height: 1;
+      font-weight: bold;
+    }
+    @media (min-width: 900px) {
+      .mw-card-price { font-size: 3.2rem; }
     }
     .mw-card-price-unit {
       font-family: var(--font-body);
-      font-size: 0.88rem;
-      color: rgba(245,240,232,0.42);
+      font-size: 1rem;
+      color: rgba(245,240,232,0.5);
+      align-self: flex-end;
+      margin-left: 8px;
+      margin-bottom: 4px;
     }
-
-    /* Monthly equivalent */
     .mw-card-monthly {
       font-family: var(--font-body);
-      font-size: 0.78rem;
-      color: rgba(245,240,232,0.32);
-      margin: 0 0 16px;
-      line-height: 1.5;
+      font-size: 0.8rem;
+      color: rgba(245,240,232,0.35);
+      margin: 6px 0 0;
     }
-
-    /* Savings badge */
     .mw-card-savings {
       display: inline-block;
-      background: rgba(201,168,76,0.15);
+      background: rgba(201,168,76,0.1);
       color: #C9A84C;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 1px;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 4px;
-      border: 1px solid rgba(201,168,76,0.3);
-      margin: 0 0 24px;
-      align-self: flex-start;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border: 1px solid rgba(201,168,76,0.25);
+      margin: 12px 0 0;
+      border-radius: 0;
     }
-
-    /* Feature list */
     .mw-card-features {
       list-style: none;
       padding: 0;
-      margin: 0 0 28px;
+      margin: 24px 0 0;
       flex: 1;
     }
     .mw-card-features li {
       font-family: var(--font-body);
-      font-size: 0.88rem;
-      color: rgba(245,240,232,0.78);
-      padding: 5px 0;
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.75);
       display: flex;
       align-items: flex-start;
-      gap: 9px;
-      line-height: 1.5;
+      gap: 10px;
+      line-height: 1.6;
+      margin-bottom: 10px;
     }
+    .mw-card-features li:last-child { margin-bottom: 0; }
     .mw-card-features li::before {
       content: '✓';
       color: #C9A84C;
       font-weight: 700;
       flex-shrink: 0;
-      margin-top: 0;
+      line-height: 1.6;
     }
 
     /* CTA button */
@@ -344,33 +423,42 @@
       display: block;
       width: 100%;
       background: #C9A84C;
-      color: #0A0A08;
+      color: #000;
       font-family: var(--font-head);
-      font-size: 0.72rem;
-      letter-spacing: 2.5px;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: bold;
       text-align: center;
-      padding: 15px 20px;
-      border-radius: 8px;
+      padding: 16px;
+      border-radius: 0;
       text-decoration: none;
-      transition: background 0.2s ease, transform 0.15s ease;
-      margin-top: auto;
+      transition: filter 0.2s ease, transform 0.2s ease;
+      margin-top: 28px;
     }
     @media (hover: hover) {
       .mw-card-btn:hover {
-        background: #d4b862;
-        transform: translateY(-2px);
+        filter: brightness(1.1);
+        transform: scale(1.01);
       }
     }
-    .mw-card-btn:active {
-      transform: translateY(0);
+    .mw-card-btn:active { transform: scale(0.99); }
+
+    /* Scarcity line */
+    .mw-card-scarcity {
+      margin: 12px 0 0;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(245,240,232,0.4);
     }
 
-    /* ── SECTION 3: TRUST BAR ────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       SECTION 3 — TRUST BAR
+    ════════════════════════════════════════════════════════════ */
     .mw-trust {
       background: #111110;
-      padding: clamp(28px, 5vw, 44px) 24px;
+      padding: 32px 24px;
       border-top: 1px solid rgba(201,168,76,0.1);
       border-bottom: 1px solid rgba(201,168,76,0.1);
     }
@@ -380,66 +468,84 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
       text-align: center;
     }
     @media (min-width: 640px) {
       .mw-trust-inner {
         flex-direction: row;
         justify-content: center;
-        gap: 0;
+        gap: 48px;
       }
       .mw-trust-item + .mw-trust-item {
         border-left: 1px solid rgba(201,168,76,0.12);
+        padding-left: 48px;
       }
     }
     .mw-trust-item {
       font-family: var(--font-body);
       font-size: 0.85rem;
-      color: rgba(245,240,232,0.42);
-      padding: 0 clamp(20px, 4vw, 40px);
-      white-space: nowrap;
+      color: rgba(245,240,232,0.65);
     }
 
-    /* ── SECTION 4: IMPORTANT NOTE ───────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       SECTION 4 — WICHTIGER HINWEIS
+    ════════════════════════════════════════════════════════════ */
     .mw-note {
-      background: #0A0A08;
-      padding: clamp(56px, 9vw, 88px) 24px;
+      background: #F5F0E8;
+      padding: 60px 24px;
       text-align: center;
-      border-top: 1px solid rgba(201,168,76,0.07);
     }
     .mw-note-inner {
-      max-width: 600px;
+      max-width: 560px;
       margin: 0 auto;
     }
-    .mw-note-icon {
-      color: #C9A84C;
-      font-size: 1.6rem;
-      margin-bottom: 16px;
+    .mw-note-box {
+      border: 1.5px solid #C9A84C;
+      border-radius: 3px;
+      padding: 32px;
+      background: transparent;
+    }
+    .mw-note-icon-circle {
+      width: 36px;
+      height: 36px;
+      background: #C9A84C;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-family: var(--font-body);
       line-height: 1;
     }
     .mw-note-title {
       font-family: var(--font-head);
-      font-size: 0.8rem;
-      letter-spacing: 3px;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #F5F0E8;
-      margin: 0 0 14px;
+      font-variant: small-caps;
+      color: #0A0A08;
+      font-weight: bold;
+      margin: 0 0 12px;
     }
     .mw-note-text {
       font-family: var(--font-body);
       font-size: 0.95rem;
-      color: rgba(245,240,232,0.48);
-      line-height: 1.78;
+      color: #444;
+      line-height: 1.7;
       margin: 0;
     }
 
-    /* ── SECTION 5: FINAL CTA ────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       SECTION 5 — FINAL CTA
+    ════════════════════════════════════════════════════════════ */
     .mw-final-cta {
       background: #0A0A08;
-      padding: clamp(56px, 9vw, 96px) 24px clamp(64px, 10vw, 104px);
+      padding: 80px 24px;
       text-align: center;
-      border-top: 1px solid rgba(201,168,76,0.07);
     }
     .mw-final-cta-inner {
       max-width: 540px;
@@ -447,17 +553,21 @@
     }
     .mw-final-cta-h2 {
       font-family: var(--font-display);
-      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-size: 1.8rem;
       color: #F5F0E8;
       text-transform: uppercase;
       line-height: 0.95;
       letter-spacing: 0.02em;
       margin: 0 0 12px;
+      font-weight: bold;
+    }
+    @media (min-width: 768px) {
+      .mw-final-cta-h2 { font-size: 2.5rem; }
     }
     .mw-final-cta-sub {
       font-family: var(--font-body);
       font-size: 0.95rem;
-      color: rgba(245,240,232,0.42);
+      color: rgba(245,240,232,0.55);
       margin: 0 0 32px;
     }
     .mw-final-cta-btns {
@@ -477,37 +587,99 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-head);
-      font-size: 0.72rem;
-      letter-spacing: 2.5px;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 14px 28px;
-      border-radius: 8px;
+      padding: 14px 32px;
+      border-radius: 0;
       text-decoration: none;
-      transition: all 0.25s ease;
+      transition: background 0.25s ease, filter 0.25s ease;
       white-space: nowrap;
-      min-width: 160px;
       cursor: pointer;
     }
     .mw-btn--outline {
       background: transparent;
-      color: rgba(245,240,232,0.75);
-      border: 1px solid rgba(245,240,232,0.3);
+      color: #F5F0E8;
+      border: 1.5px solid rgba(245,240,232,0.4);
     }
     .mw-btn--outline:hover {
-      border-color: #F5F0E8;
-      color: #F5F0E8;
+      background: rgba(245,240,232,0.08);
     }
     .mw-btn--gold {
       background: #C9A84C;
-      color: #0A0A08;
-      border: 1px solid transparent;
-      font-weight: 700;
+      color: #000;
+      border: none;
+      font-weight: bold;
     }
     .mw-btn--gold:hover {
-      background: #d4b862;
+      filter: brightness(1.1);
     }
 
-    /* ── Footer strip ────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════
+       STICKY MOBILE CTA BAR
+    ════════════════════════════════════════════════════════════ */
+    .mw-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 999;
+      background: rgba(10,10,8,0.97);
+      border-top: 1px solid rgba(201,168,76,0.3);
+      padding: 12px 16px;
+      align-items: center;
+      justify-content: space-between;
+      transform: translateY(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .mw-sticky-bar.hidden {
+      transform: translateY(100%);
+      pointer-events: none;
+    }
+    @media (max-width: 767px) {
+      .mw-sticky-bar { display: flex; }
+    }
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      @media (max-width: 767px) {
+        .mw-sticky-bar {
+          padding-bottom: calc(12px + env(safe-area-inset-bottom));
+        }
+      }
+    }
+    .mw-sticky-bar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .mw-sticky-bar-title {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      color: #C9A84C;
+      font-weight: bold;
+      line-height: 1;
+    }
+    .mw-sticky-bar-sub {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      color: rgba(245,240,232,0.5);
+      line-height: 1;
+    }
+    .mw-sticky-bar-btn {
+      background: #C9A84C;
+      color: #000;
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-radius: 0;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: filter 0.2s ease;
+    }
+    .mw-sticky-bar-btn:hover { filter: brightness(1.1); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
     .mw-footer {
       background: #080808;
       border-top: 1px solid rgba(201,168,76,0.10);
@@ -538,11 +710,12 @@
       margin: 0;
     }
 
-    /* ── Mobile overflow guard ───────────────────────────────── */
+    /* ── Small phone guard ──────────────────────────────────── */
     @media (max-width: 375px) {
-      .mw-card-name { font-size: 2.1rem; }
-      .mw-card-price { font-size: 2.7rem; }
+      .mw-card-name  { font-size: 1.9rem; }
+      .mw-card-price { font-size: 2.2rem; }
       .mw-trust-item { white-space: normal; }
+      .mw-popular-badge { font-size: 0.65rem; padding: 5px 14px; }
     }
   </style>
 </head>
@@ -573,18 +746,18 @@
         <p class="mw-hero-label">Early Bird</p>
         <h1 class="mw-hero-h1">Wähle dein Paket.</h1>
         <p class="mw-hero-sub">Sichere dir jetzt deinen Early Bird Preis — dauerhaft und unwiderruflich.</p>
-        <p class="mw-hero-spots">🔒 Nur noch 180 Plätze verfügbar</p>
+        <p class="mw-hero-proof">🔥 Bereits 120 Founding Members — noch 180 Early Bird Plätze verfügbar</p>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
          SECTION 2 — THREE PACKAGE CARDS
     ══════════════════════════════════════════════ -->
-    <section class="mw-cards" aria-label="Mitgliedschaftspakete">
+    <section class="mw-cards" id="packages" aria-label="Mitgliedschaftspakete">
       <div class="mw-cards-inner">
 
-        <!-- CARD 1: KIDS -->
-        <article class="mw-card reveal" aria-label="Kids Paket">
+        <!-- CARD: KIDS — DOM pos 1, desktop col 1, mobile col 2 -->
+        <article class="mw-card mw-card--kids reveal" aria-label="Kids Paket">
           <p class="mw-card-label">Für Kids</p>
           <h2 class="mw-card-name">Kids</h2>
           <p class="mw-card-age">6 – 9 Jahre</p>
@@ -604,11 +777,12 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">Kids Platz sichern</a>
+             class="mw-card-btn">KIDS PLATZ SICHERN</a>
+          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
         </article>
 
-        <!-- CARD 2: UNLIMITED (MOST POPULAR) -->
-        <article class="mw-card mw-card--popular reveal delay-1" aria-label="Unlimited Paket — Most Popular">
+        <!-- CARD: UNLIMITED — DOM pos 2, desktop col 2, mobile col 1 -->
+        <article class="mw-card mw-card--popular reveal" aria-label="Unlimited Paket — Most Popular">
           <span class="mw-popular-badge" aria-label="Beliebtestes Paket">Most Popular</span>
           <p class="mw-card-label">Erwachsene</p>
           <h2 class="mw-card-name">Unlimited</h2>
@@ -630,11 +804,12 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">Jetzt Early Bird sichern</a>
+             class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
+          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
         </article>
 
-        <!-- CARD 3: YOUTH -->
-        <article class="mw-card reveal delay-2" aria-label="Youth Paket">
+        <!-- CARD: YOUTH — DOM pos 3, desktop col 3, mobile col 3 -->
+        <article class="mw-card mw-card--youth reveal" aria-label="Youth Paket">
           <p class="mw-card-label">Für Jugendliche</p>
           <h2 class="mw-card-name">Youth</h2>
           <p class="mw-card-age">10 – 17 Jahre</p>
@@ -654,7 +829,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">Youth Platz sichern</a>
+             class="mw-card-btn">YOUTH PLATZ SICHERN</a>
+          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
         </article>
 
       </div>
@@ -672,20 +848,20 @@
     </section>
 
     <!-- ══════════════════════════════════════════════
-         SECTION 4 — IMPORTANT NOTE
+         SECTION 4 — WICHTIGER HINWEIS
     ══════════════════════════════════════════════ -->
     <section class="mw-note" aria-label="Wichtiger Hinweis">
       <div class="mw-note-inner reveal">
-        <div class="mw-note-icon" aria-hidden="true">
-          <i class="fa-solid fa-circle-info"></i>
+        <div class="mw-note-box">
+          <div class="mw-note-icon-circle" aria-hidden="true">!</div>
+          <h2 class="mw-note-title">Wichtiger Hinweis</h2>
+          <p class="mw-note-text">Im nächsten Schritt setze dein Startdatum auf den 15. April 2026 — den offiziellen Opening-Tag von Bomaye Gym Munich.</p>
         </div>
-        <h2 class="mw-note-title">Wichtiger Hinweis</h2>
-        <p class="mw-note-text">Im nächsten Schritt setze dein Startdatum auf den 15. April 2026 — den offiziellen Opening-Tag von Bomaye Gym Munich.</p>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         SECTION 5 — FINAL CTA
+         SECTION 5 — FINAL CTA (NOCH FRAGEN)
     ══════════════════════════════════════════════ -->
     <section class="mw-final-cta" aria-label="Kontakt">
       <div class="mw-final-cta-inner reveal">
@@ -700,7 +876,7 @@
       </div>
     </section>
 
-    <!-- ── FOOTER ── -->
+    <!-- ── Footer ── -->
     <footer class="mw-footer" role="contentinfo">
       <nav class="mw-footer-links" aria-label="Rechtliches">
         <a href="/impressum">IMPRESSUM</a>
@@ -713,42 +889,65 @@
 
   </main>
 
-  <!-- ── Scroll reveal animation ── -->
+  <!-- ═══════ STICKY MOBILE CTA BAR ═══════ -->
+  <div class="mw-sticky-bar" id="mw-sticky-bar" role="complementary" aria-label="Schnell-Buchung">
+    <div class="mw-sticky-bar-left">
+      <span class="mw-sticky-bar-title">Early Bird</span>
+      <span class="mw-sticky-bar-sub">Noch 180 Plätze</span>
+    </div>
+    <a href="/mitglied-werden#packages" class="mw-sticky-bar-btn">JETZT SICHERN</a>
+  </div>
+
   <script>
     (function () {
       'use strict';
-      var els = document.querySelectorAll('.reveal');
-      if (!els.length) return;
 
-      /* Fallback: no IntersectionObserver support — show all immediately */
-      if (!('IntersectionObserver' in window)) {
-        for (var i = 0; i < els.length; i++) {
-          els[i].classList.add('visible');
-        }
-        return;
-      }
-
-      /* Respect prefers-reduced-motion */
       var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced) {
-        for (var j = 0; j < els.length; j++) {
-          els[j].classList.add('visible');
+      var hasIO = 'IntersectionObserver' in window;
+
+      /* ── Scroll reveal ──────────────────────────────────────── */
+      var revealEls = document.querySelectorAll('.reveal');
+
+      if (!revealEls.length) { /* nothing to do */ }
+      else if (!hasIO || prefersReduced) {
+        for (var i = 0; i < revealEls.length; i++) {
+          revealEls[i].classList.add('visible');
+          revealEls[i].style.opacity = '1';
         }
-        return;
+      } else {
+        var revealIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealIO.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+        for (var k = 0; k < revealEls.length; k++) {
+          revealIO.observe(revealEls[k]);
+        }
       }
 
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      /* ── Sticky bar: hide after user scrolls past cards section ── */
+      var stickyBar    = document.getElementById('mw-sticky-bar');
+      var cardsSection = document.getElementById('packages');
 
-      for (var k = 0; k < els.length; k++) {
-        io.observe(els[k]);
+      if (stickyBar && cardsSection && hasIO) {
+        var stickyIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            /* boundingClientRect.bottom < 0 means element is above viewport */
+            if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
+              stickyBar.classList.add('hidden');
+            } else {
+              stickyBar.classList.remove('hidden');
+            }
+          });
+        }, { threshold: 0 });
+
+        stickyIO.observe(cardsSection);
       }
+
     }());
   </script>
 
