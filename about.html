@@ -35,439 +35,411 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
-    /* ── Page hero ──────────────────────────────── */
-    .aboutp-hero {
-      background: var(--ink);
-      padding: clamp(100px, 14vw, 160px) 0 clamp(48px, 7vw, 80px);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .aboutp-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .aboutp-hero-tag {
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 4px;
-      color: var(--gold);
-      margin-bottom: 1.25rem;
-    }
-    .aboutp-hero-h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.4rem, 7vw, 5rem);
-      color: #fff;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-bottom: 0.75rem;
-    }
-    .aboutp-hero-h1 span { color: var(--gold); }
-    .aboutp-hero-sub {
-      font-family: var(--font-body);
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.45);
-      max-width: 480px;
-      margin: 0 auto;
+    /* ══════════════════════════════════════════════════════
+       ABOUT PAGE — scoped styles
+       Palette: dark #0A0A08 | cream #F5F0E8 | gold #C9A84C
+    ══════════════════════════════════════════════════════ */
+
+    :root {
+      --ab-dark:  #0A0A08;
+      --ab-cream: #F5F0E8;
+      --ab-gold:  #C9A84C;
     }
 
-    /* Nav active state */
-    .nav-link-active { color: var(--gold) !important; }
+    /* Active nav link */
+    .nav-link-active { color: var(--ab-gold) !important; }
 
-    /* ── Inline page nav links ──────────────────── */
-    #header .nav-link[href] { display: inline-flex; align-items: center; }
-
-    /* ════════════════════════════════════════════════════════════
-       HERITAGE SECTION — ALI, BOMAYE
-       Full rebuild. New classes. Light cream. Premium editorial.
-    ════════════════════════════════════════════════════════════ */
-
-    /* ── Section shell ── */
-    #dna {
-      background: #f8f5f0;
-      position: relative;
-    }
-
-    .hs-wrap {
-      background: #f8f5f0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Paper grain — very subtle, adds premium texture */
-    .hs-paper {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 180px 180px;
-    }
-
-    /* ── Shared inner container ── */
-    .hs-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-      padding-left: clamp(28px, 7vw, 56px);
-      padding-right: clamp(28px, 7vw, 56px);
-      text-align: center;
-    }
-
-    /* ── Vertical gold thread — connector between blocks ── */
-    .hs-thread {
-      position: relative;
-      z-index: 1;
-      width: 1px;
-      height: clamp(80px, 11vw, 128px);
-      margin: 0 auto;
-      background: linear-gradient(to bottom,
-        transparent 0%,
-        #c9a227 28%,
-        #c9a227 72%,
-        transparent 100%
-      );
-      opacity: 0.7;
-    }
-
-    /* ── Thin horizontal gold rule — within blocks ── */
-    .hs-rule {
-      width: 32px;
-      height: 1px;
-      background: #c9a227;
-      margin: 0 auto 2.75rem;
-      border: none;
-      opacity: 0.8;
-    }
-
-    /* ════════════════════════════════════
-       BLOCK 1 — INTRO
-    ════════════════════════════════════ */
-    .hs-b1 {
-      padding-top: clamp(148px, 20vw, 240px);
-      padding-bottom: clamp(80px, 10vw, 132px);
-    }
-
-    .hs-label {
-      display: block;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.65em;
-      text-transform: uppercase;
-      color: #c9a227;
-      margin-bottom: 2.75rem;
-    }
-
-    .hs-headline {
-      font-family: var(--font-display);
-      font-size: clamp(5.5rem, 18vw, 13rem);
-      color: #0d0d0d;
-      line-height: 0.84;
-      letter-spacing: -0.005em;
-      text-transform: uppercase;
-      margin: 0 0 3.25rem;
-    }
-
-    .hs-sub {
-      display: block;
-      font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 0.55em;
-      text-transform: uppercase;
-      color: #aaa;
-    }
-
-    /* ════════════════════════════════════
-       BLOCK 2 — EMOTIONAL LINES
-    ════════════════════════════════════ */
-    .hs-b2 {
-      padding-top: clamp(112px, 15vw, 184px);
-      padding-bottom: clamp(80px, 10vw, 128px);
-    }
-
-    .hs-impact {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 6vw, 4.2rem);
-      color: #0d0d0d;
-      line-height: 1.06;
-      letter-spacing: 0.015em;
-      text-transform: uppercase;
-      margin-bottom: 0.85rem;
-    }
-
-    .hs-impact:last-child {
-      margin-bottom: 0;
-      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
-      color: #111;
-    }
-
-    /* ════════════════════════════════════
-       BLOCK 3 — MEANING
-    ════════════════════════════════════ */
-    .hs-b3 {
-      padding-top: clamp(80px, 11vw, 128px);
-      padding-bottom: clamp(88px, 12vw, 152px);
-    }
-
-    .hs-block-title {
-      display: block;
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 0.6em;
-      text-transform: uppercase;
-      color: #c9a227;
-      margin-bottom: 2.75rem;
-    }
-
-    .hs-text {
-      display: block;
-      font-family: var(--font-body);
-      font-size: clamp(1rem, 1.9vw, 1.15rem);
-      color: #3a3a3a;
-      line-height: 2.0;
-      margin-bottom: 0.55rem;
-    }
-
-    .hs-text:last-child { margin-bottom: 0; }
-
-    .hs-text-emphasis {
-      display: block;
-      font-family: var(--font-body);
-      font-size: clamp(1.22rem, 2.4vw, 1.45rem);
-      color: #0d0d0d;
-      font-weight: 600;
-      line-height: 1.7;
-      margin-top: 1.75rem;
-      margin-bottom: 0;
-      letter-spacing: 0.01em;
-    }
-
-    /* ════════════════════════════════════
-       BLOCK 4 — BRAND CONNECTION
-    ════════════════════════════════════ */
-    .hs-b4 {
-      padding-top: clamp(112px, 15vw, 192px);
-      padding-bottom: clamp(104px, 14vw, 176px);
-      background: rgba(212, 175, 55, 0.05);
-    }
-
-    .hs-accent {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
-      color: #1a1208;
-      line-height: 1.0;
-      letter-spacing: 0.01em;
-      text-transform: uppercase;
-      margin-bottom: clamp(4rem, 6.5vw, 6.5rem);
-    }
-
-    .hs-accent-bomaye {
-      background: linear-gradient(
-        160deg,
-        #8b6514 0%,
-        #c6a45a 28%,
-        #dfc87a 50%,
-        #c6a45a 72%,
-        #a67c2e 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hs-note {
-      display: block;
-      font-family: var(--font-body);
-      font-size: clamp(1rem, 1.9vw, 1.1rem);
-      color: #3a3a3a;
-      line-height: 1.95;
-      font-style: italic;
-      margin-bottom: 1.25rem;
-    }
-
-    .hs-punch {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(1.7rem, 4.4vw, 3.1rem);
-      color: #0d0d0d;
-      line-height: 1.12;
-      letter-spacing: 0.008em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    .hs-note-wide {
-      display: block;
-      font-family: var(--font-body);
-      font-size: clamp(0.92rem, 1.75vw, 1.02rem);
-      color: #666;
-      line-height: 2.0;
-      font-style: italic;
-      margin-top: 3rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .hs-punch-final {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(1.7rem, 4.4vw, 3.1rem);
-      color: #0d0d0d;
-      line-height: 1.12;
-      letter-spacing: 0.008em;
-      text-transform: uppercase;
-      margin-top: 0.25rem;
-    }
-
-    /* ════════════════════════════════════
-       BLOCK 5 — CLOSING
-    ════════════════════════════════════ */
-    .hs-b5 {
-      padding-top: clamp(112px, 15vw, 184px);
-      padding-bottom: clamp(160px, 22vw, 264px);
-    }
-
-    .hs-close-title {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 6vw, 4.4rem);
-      color: #0d0d0d;
-      line-height: 1.0;
-      letter-spacing: 0.015em;
-      text-transform: uppercase;
-      margin-bottom: 3rem;
-    }
-
-    .hs-caption {
-      display: block;
-      font-family: var(--font-body);
-      font-size: clamp(1.05rem, 2.1vw, 1.22rem);
-      color: #555;
-      line-height: 1.85;
-      font-style: italic;
-      margin-bottom: 0.45rem;
-      letter-spacing: 0.005em;
-    }
-
-    .hs-caption:last-of-type { margin-bottom: 0; }
-
-    /* ── WOW MOMENT: Das ist Bomaye. ── */
-    .hs-kicker {
-      display: block;
-      font-family: var(--font-display);
-      font-size: clamp(5.2rem, 13.5vw, 10.5rem);
-      color: #0d0d0d;
-      line-height: 0.95;
-      letter-spacing: 0.005em;
-      text-transform: uppercase;
-      margin-top: 7rem;
-    }
-
-    .hs-kicker-gold {
-      background: linear-gradient(135deg, #8f6b1f, #d4af37, #f5d77a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ── Reveal animation: fade + 18px lift ── */
-    .hs-reveal {
+    /* ── Scroll-reveal base ── */
+    .ab-reveal {
       opacity: 0;
-      transform: translateY(18px);
-      transition:
-        opacity  1s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-      transition-delay: calc(var(--d, 0) * 0.12s);
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
-
-    .hs-reveal.is-visible {
+    .ab-reveal.ab-visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ── Mobile ── */
-    @media (max-width: 600px) {
-      .hs-b1 { padding-top: 124px; padding-bottom: 72px; }
-      .hs-b2 { padding-top: 92px;  padding-bottom: 72px; }
-      .hs-b3 { padding-top: 72px;  padding-bottom: 88px; }
-      .hs-b4 { padding-top: 84px;  padding-bottom: 92px; }
-      .hs-b5 { padding-top: 92px;  padding-bottom: 132px; }
-      .hs-headline { font-size: clamp(4.5rem, 22vw, 6rem); margin: 0 0 2.5rem; }
-      .hs-accent   { font-size: clamp(2rem, 15vw, 3rem); margin-bottom: 3rem; }
-      .hs-kicker   { font-size: clamp(4rem, 22vw, 6.5rem); margin-top: 5rem; }
-      .hs-impact   { font-size: clamp(2rem, 12vw, 3.2rem); }
-      .hs-impact:last-child { font-size: clamp(2.2rem, 13vw, 3.5rem); }
-      .hs-text-emphasis { font-size: clamp(1.12rem, 4.5vw, 1.28rem); margin-top: 1.25rem; }
+    /* ══════════════════════════
+       S1 — HERO
+    ══════════════════════════ */
+    .ab-hero {
+      background: var(--ab-dark);
+      padding: clamp(130px, 17vw, 210px) 0 clamp(64px, 9vw, 104px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle gold radial glow */
+    .ab-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 50% 60%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .ab-hero-inner {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: ab-hero-fadein 0.6s ease 0.15s forwards;
+    }
+    @keyframes ab-hero-fadein { to { opacity: 1; } }
+
+    .ab-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      /* override global p color */
+      color: var(--ab-gold);
+    }
+    .ab-hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      line-height: 1.0;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin: 0 0 1rem;
+    }
+    .ab-hero-line1 { display: block; color: var(--ab-cream); }
+    .ab-hero-line2 { display: block; color: var(--ab-gold); }
+    .ab-hero-sub {
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: rgba(245,240,232,0.42);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
     }
 
-    /* ── Experience Section ──────────────────────── */
-    .about-exp-section {
-      background: #080808;
-      padding: clamp(80px, 14vw, 140px) 24px;
+    /* ══════════════════════════
+       S2 — THE ORIGIN
+    ══════════════════════════ */
+    .ab-origin {
+      background: var(--ab-dark);
+      padding: clamp(88px, 12vw, 140px) 0;
       text-align: center;
-      border-top: 1px solid rgba(212,175,55,0.1);
-      border-bottom: 1px solid rgba(212,175,55,0.1);
     }
-    .about-exp-inner {
-      max-width: 900px;
+    .ab-origin-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-origin-label {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 8px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      margin-bottom: clamp(48px, 7vw, 72px);
+    }
+    .ab-origin-statements {
+      margin-bottom: clamp(48px, 7vw, 80px);
+    }
+    .ab-origin-line {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 7.5vw, 5rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.08em;
+    }
+    .ab-origin-line--cream { color: var(--ab-cream); }
+    .ab-origin-line--gold  { color: var(--ab-gold); }
+    .ab-origin-body {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+      color: rgba(245,240,232,0.62);
+      line-height: 1.88;
+      max-width: 600px;
       margin: 0 auto;
     }
-    .about-exp-words {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 64px;
+
+    /* ══════════════════════════
+       S3 — THREE VALUES
+    ══════════════════════════ */
+    .ab-values {
+      background: var(--ab-cream);
+      padding: clamp(88px, 12vw, 140px) 0;
     }
-    .about-exp-word {
+    .ab-values-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-values-label {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 6px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: clamp(48px, 7vw, 72px);
+    }
+    .ab-values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(32px, 5vw, 64px);
+    }
+    @media (max-width: 768px) {
+      .ab-values-grid {
+        grid-template-columns: 1fr;
+        gap: clamp(40px, 8vw, 56px);
+      }
+    }
+    .ab-value-block { text-align: center; }
+    .ab-value-word {
+      display: block;
       font-family: var(--font-display);
-      font-size: clamp(4rem, 13vw, 10rem);
-      line-height: 0.92;
-      letter-spacing: 0.04em;
-      color: #fff;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: var(--ab-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 0.65rem;
+    }
+    .ab-value-rule {
+      width: 40px;
+      height: 1px;
+      background: var(--ab-gold);
+      margin: 0 auto 1.25rem;
+      border: none;
+    }
+    .ab-value-text {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: #3a3a3a;
+      line-height: 1.82;
+    }
+
+    /* ══════════════════════════
+       S4 — BIG QUOTE
+    ══════════════════════════ */
+    .ab-quote {
+      background: var(--ab-dark);
+      padding: clamp(96px, 14vw, 160px) 0;
+      text-align: center;
+    }
+    .ab-quote-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-quote-rule {
+      width: 60px;
+      height: 1px;
+      background: var(--ab-gold);
+      margin: 0 auto;
+      border: none;
+      opacity: 0.72;
+    }
+    .ab-quote-rule--top    { margin-bottom: clamp(40px, 5vw, 60px); }
+    .ab-quote-rule--bottom { margin-top:    clamp(40px, 5vw, 60px); }
+    .ab-quote blockquote {
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
+    }
+    .ab-quote-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 4vw, 2.8rem);
+      color: var(--ab-cream);
+      line-height: 1.25;
+      letter-spacing: 0.015em;
+      font-style: italic;
+    }
+    .ab-quote-attr {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 5px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      margin-top: 1.75rem;
+      font-style: normal;
+    }
+
+    /* ══════════════════════════
+       S5 — THE COACHES
+    ══════════════════════════ */
+    .ab-coaches {
+      background: var(--ab-cream);
+      padding: clamp(88px, 12vw, 140px) 0;
+    }
+    .ab-coaches-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-coaches-label {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 6px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: clamp(48px, 7vw, 72px);
+    }
+    .ab-coaches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(32px, 5vw, 64px);
+    }
+    @media (max-width: 640px) {
+      .ab-coaches-grid { grid-template-columns: 1fr; }
+    }
+    .ab-coach-photo-wrap {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .ab-coach-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
       display: block;
     }
-    .about-exp-word + .about-exp-word { margin-top: 4px; }
-    .about-exp-muted { color: rgba(255,255,255,0.12); }
-    .about-exp-features {
+    .ab-coach-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      color: var(--ab-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .ab-coach-title {
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+    .ab-coach-badges {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px 28px;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
     }
-    .about-exp-feat {
+    .ab-coach-badge {
       font-family: var(--font-head);
-      font-size: clamp(0.68rem, 1.6vw, 0.84rem);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-      display: flex;
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      color: var(--ab-gold);
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 0.3rem 0.7rem;
+      border-radius: 2px;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 0.3rem;
+      white-space: nowrap;
     }
-    .about-exp-feat::before {
-      content: '';
+    .ab-coach-bio {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: #3a3a3a;
+      line-height: 1.82;
+    }
+
+    /* ══════════════════════════
+       S6 — COMMUNITY STATEMENT
+    ══════════════════════════ */
+    .ab-community {
+      background: var(--ab-dark);
+      padding: clamp(96px, 14vw, 160px) 0;
+      text-align: center;
+    }
+    .ab-community-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-community-line {
       display: block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.97;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.05em;
     }
-    @media (max-width: 600px) {
-      .about-exp-features { flex-direction: column; align-items: center; }
+    .ab-community-line--cream { color: var(--ab-cream); }
+    .ab-community-line--gold  { color: var(--ab-gold); }
+    .ab-community-sub {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: rgba(245,240,232,0.38);
+      margin-top: clamp(36px, 5vw, 52px);
+      letter-spacing: 0.02em;
+    }
+
+    /* ══════════════════════════
+       S7 — FINAL CTA
+    ══════════════════════════ */
+    .ab-cta {
+      background: var(--ab-dark);
+      padding: clamp(96px, 14vw, 160px) 0;
+      text-align: center;
+      border-top: 1px solid rgba(201,168,76,0.12);
+    }
+    .ab-cta-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+    }
+    .ab-cta-label {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      color: var(--ab-gold);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .ab-cta-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 16vw, 10rem);
+      color: var(--ab-cream);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin: 0 0 1rem;
+    }
+    .ab-cta-sub {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(245,240,232,0.42);
+      line-height: 1.72;
+      margin: 0 0 2.5rem;
+    }
+    .ab-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 480px) {
+      .ab-cta-btns { flex-direction: column; align-items: center; }
+      .ab-cta-btns .btn { width: 100%; max-width: 320px; }
     }
   </style>
 </head>
 
 <body>
 
-<!-- Noise texture -->
+<!-- Noise texture overlay -->
 <div class="noise" aria-hidden="true"></div>
 
 <!-- ═══════ HEADER ═══════ -->
@@ -534,112 +506,136 @@
 <!-- ═══════ MAIN ═══════ -->
 <main>
 
-  <!-- ── Hero ── -->
-  <section class="aboutp-hero" aria-label="Über uns">
+  <!-- ══ S1: HERO ══════════════════════════════════════════════ -->
+  <section class="ab-hero" aria-label="Über uns">
     <div class="container">
-      <div class="aboutp-hero-tag">ÜBER UNS</div>
-      <h1 class="aboutp-hero-h1">ALI, BOMA YE!<br><span>UNSERE STORY.</span></h1>
-      <p class="aboutp-hero-sub">Die Philosophie und DNA hinter Bomaye Gym Munich — It's not a gym. It's passion.</p>
+      <div class="ab-hero-inner">
+        <p class="ab-hero-tag">ÜBER UNS</p>
+        <h1 class="ab-hero-h1">
+          <span class="ab-hero-line1">ALI, BOMA YE!</span>
+          <span class="ab-hero-line2">UNSERE STORY.</span>
+        </h1>
+        <p class="ab-hero-sub">Die Philosophie und DNA hinter Bomaye Gym Munich — It's not a gym. It's passion.</p>
+      </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════
-       ALI, BOMAYE — HERITAGE SECTION
-       Full rebuild. New structure. Light cream. Premium editorial.
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="dna" class="hs-wrap" aria-label="Ali, Bomaye — Unsere Story">
-    <div class="hs-paper" aria-hidden="true"></div>
-
-    <!-- ════════════════════════════════
-         BLOCK 1 · INTRO
-    ════════════════════════════════ -->
-    <div class="hs-b1">
-      <div class="hs-inner">
-        <span class="hs-label hs-reveal" style="--d:0">THE ORIGIN</span>
-        <h2 class="hs-headline hs-reveal" style="--d:1">ALI,<br>BOMAYE.</h2>
-        <span class="hs-sub hs-reveal" style="--d:2">Kinshasa, 1974</span>
+  <!-- ══ S2: THE ORIGIN ════════════════════════════════════════ -->
+  <section class="ab-origin" aria-label="The Origin — Kinshasa 1974">
+    <div class="ab-origin-inner">
+      <span class="ab-origin-label ab-reveal">KINSHASA · 1974</span>
+      <div class="ab-origin-statements">
+        <span class="ab-origin-line ab-origin-line--cream ab-reveal" data-delay="0">60.000 MENSCHEN.</span>
+        <span class="ab-origin-line ab-origin-line--cream ab-reveal" data-delay="150">EINE STIMME.</span>
+        <span class="ab-origin-line ab-origin-line--gold  ab-reveal" data-delay="300">EIN RUF.</span>
       </div>
+      <p class="ab-origin-body ab-reveal" data-delay="100">
+        Bomaye war kein Ruf der Gewalt. Es war Unterstützung. Zusammenhalt. Das Gefühl: Wir stehen hinter dir. Dieses Gefühl bringen wir nach München — in jedes Training, in jede Runde, in jeden Fortschritt.
+      </p>
     </div>
-
-    <div class="hs-thread hs-reveal" style="--d:0" aria-hidden="true"></div>
-
-    <!-- ════════════════════════════════
-         BLOCK 2 · EMOTIONAL LINES
-    ════════════════════════════════ -->
-    <div class="hs-b2">
-      <div class="hs-inner">
-        <span class="hs-impact hs-reveal" style="--d:0">60.000 Menschen.</span>
-        <span class="hs-impact hs-reveal" style="--d:1">Eine Stimme.</span>
-        <span class="hs-impact hs-reveal" style="--d:2">Ein Ruf, der alles verändert.</span>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════
-         BLOCK 3 · MEANING
-    ════════════════════════════════ -->
-    <div class="hs-b3">
-      <div class="hs-inner">
-        <span class="hs-block-title hs-reveal" style="--d:0">WAS BOMAYE WIRKLICH BEDEUTET</span>
-        <span class="hs-text hs-reveal" style="--d:2">Bomaye war kein Ruf der Gewalt.</span>
-        <span class="hs-text hs-reveal" style="--d:3">Es war Unterstützung.</span>
-        <span class="hs-text hs-reveal" style="--d:4">Es war Zusammenhalt.</span>
-        <span class="hs-text hs-reveal" style="--d:5">Es war das Gefühl:</span>
-        <span class="hs-text-emphasis hs-reveal" style="--d:6">Wir stehen hinter dir.</span>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════
-         BLOCK 4 · BRAND CONNECTION
-    ════════════════════════════════ -->
-    <div class="hs-b4">
-      <div class="hs-inner">
-        <span class="hs-note hs-reveal" style="--d:1">Dieses Gefühl bringen wir nach München.</span>
-        <span class="hs-punch hs-reveal" style="--d:2">In jedes Training.</span>
-        <span class="hs-punch hs-reveal" style="--d:3">In jede Runde.</span>
-        <span class="hs-punch hs-reveal" style="--d:4">In jeden Fortschritt.</span>
-        <span class="hs-note-wide hs-reveal" style="--d:5">Egal ob du neu beginnst, fitter werden willst<br>oder auf höchstem Niveau trainierst:</span>
-        <span class="hs-punch-final hs-reveal" style="--d:6">Hier trainierst du nicht allein.</span>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════
-         BLOCK 5 · CLOSING
-    ════════════════════════════════ -->
-    <div class="hs-b5">
-      <div class="hs-inner">
-        <span class="hs-close-title hs-reveal" style="--d:0">MEHR ALS EIN NAME.</span>
-        <hr class="hs-rule hs-reveal" style="--d:1" aria-hidden="true">
-        <span class="hs-caption hs-reveal" style="--d:2">Ein Gefühl.</span>
-        <span class="hs-caption hs-reveal" style="--d:3">Eine Haltung.</span>
-        <span class="hs-caption hs-reveal" style="--d:4">Eine Community.</span>
-        <span class="hs-kicker hs-reveal" style="--d:5">Das ist <span class="hs-kicker-gold">Bomaye.</span></span>
-      </div>
-    </div>
-
   </section>
 
+  <!-- ══ S3: THREE VALUES ══════════════════════════════════════ -->
+  <section class="ab-values" aria-label="Unsere DNA">
+    <div class="ab-values-inner">
+      <span class="ab-values-label ab-reveal">UNSERE DNA</span>
+      <div class="ab-values-grid">
 
-  <!-- ── Community ── -->
-  <div id="community" role="presentation">
-    <div class="container">
-      <h2 class="shimmer reveal">COMMUNITY FIRST.</h2>
-      <p class="reveal delay-2">COMMUNITY. ENERGY. REAL FIGHT.</p>
+        <div class="ab-value-block ab-reveal" data-delay="0">
+          <span class="ab-value-word">TECHNIK.</span>
+          <hr class="ab-value-rule" aria-hidden="true">
+          <p class="ab-value-text">Kein Fitness-Studio-Training. Echte Boxtechnik, sauber und präzise — von Coaches die selbst im Ring standen.</p>
+        </div>
+
+        <div class="ab-value-block ab-reveal" data-delay="200">
+          <span class="ab-value-word">COMMUNITY.</span>
+          <hr class="ab-value-rule" aria-hidden="true">
+          <p class="ab-value-text">Du trainierst nicht neben anderen. Du trainierst mit ihnen. Bomaye ist ein Ort wo Menschen füreinander da sind.</p>
+        </div>
+
+        <div class="ab-value-block ab-reveal" data-delay="400">
+          <span class="ab-value-word">CHARAKTER.</span>
+          <hr class="ab-value-rule" aria-hidden="true">
+          <p class="ab-value-text">Wir formen keine Mitglieder. Wir formen Menschen. Disziplin, Respekt und mentale Stärke — das ist unser echtes Produkt.</p>
+        </div>
+
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ── Bottom CTA ── -->
-  <section class="sec--dark" style="padding:clamp(48px,7vw,96px) 0;text-align:center;">
-    <div class="container">
-      <span class="tag tag--dark">DEIN NÄCHSTER SCHRITT</span>
-      <h2 style="margin:1.25rem 0;">BEREIT FÜR DEIN<br><span class="gold">NÄCHSTES LEVEL?</span></h2>
-      <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Limitierte Plätze. Sichere dir deinen jetzt.</p>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a class="btn btn--gold" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> JETZT PLATZ SICHERN
-        </a>
-        <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-users"></i> UNSERE COACHES
-        </a>
+  <!-- ══ S4: BIG QUOTE ═════════════════════════════════════════ -->
+  <section class="ab-quote" aria-label="Zitat">
+    <div class="ab-quote-inner ab-reveal">
+      <hr class="ab-quote-rule ab-quote-rule--top" aria-hidden="true">
+      <blockquote>
+        <p class="ab-quote-text">"Wir bilden keine Mitglieder aus. Wir bilden Menschen."</p>
+        <cite class="ab-quote-attr">— BOMAYE GYM MUNICH</cite>
+      </blockquote>
+      <hr class="ab-quote-rule ab-quote-rule--bottom" aria-hidden="true">
+    </div>
+  </section>
+
+  <!-- ══ S5: THE COACHES ═══════════════════════════════════════ -->
+  <section class="ab-coaches" aria-label="Die Köpfe dahinter">
+    <div class="ab-coaches-inner">
+      <span class="ab-coaches-label ab-reveal">DIE KÖPFE DAHINTER</span>
+      <div class="ab-coaches-grid">
+
+        <!-- Coach: Raschad Pekpassi -->
+        <div class="ab-reveal" data-delay="0">
+          <div class="ab-coach-photo-wrap">
+            <img src="/assets/images/coach-raschad.webp"
+                 alt="Raschad Pekpassi — Head Coach &amp; Founder, Bomaye Gym Munich"
+                 loading="lazy" decoding="async" />
+          </div>
+          <h3 class="ab-coach-name">RASCHAD PEKPASSI</h3>
+          <div class="ab-coach-title">HEAD COACH &amp; FOUNDER</div>
+          <div class="ab-coach-badges">
+            <span class="ab-coach-badge">🥊 Landestrainer BABV</span>
+            <span class="ab-coach-badge">🏆 20+ Jahre Erfahrung</span>
+          </div>
+          <p class="ab-coach-bio">Raschad ist Head Coach, Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf. Sein Ansatz: keine Abkürzungen, keine Kompromisse. Saubere Technik, taktische Intelligenz, mentale Stärke.</p>
+        </div>
+
+        <!-- Coach: Alfonso Fusco -->
+        <div class="ab-reveal" data-delay="200">
+          <div class="ab-coach-photo-wrap">
+            <img src="/assets/images/coach-alfonso.webp"
+                 alt="Alfonso Fusco — Landestrainer BABV &amp; Kickbox-Weltmeister, Bomaye Gym Munich"
+                 loading="lazy" decoding="async" />
+          </div>
+          <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
+          <div class="ab-coach-title">LANDESTRAINER (BABV)</div>
+          <div class="ab-coach-badges">
+            <span class="ab-coach-badge">🥊 Landestrainer BABV</span>
+            <span class="ab-coach-badge">🏆 Kickbox Weltmeister</span>
+          </div>
+          <p class="ab-coach-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt. Sein Fokus: was im Ring den Unterschied macht. Technik, taktisches Denken, Ringintelligenz — ohne Kompromisse.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S6: COMMUNITY STATEMENT ══════════════════════════════ -->
+  <section class="ab-community" aria-label="Community">
+    <div class="ab-community-inner">
+      <span class="ab-community-line ab-community-line--cream ab-reveal" data-delay="0">COMMUNITY.</span>
+      <span class="ab-community-line ab-community-line--gold  ab-reveal" data-delay="150">ENERGY.</span>
+      <span class="ab-community-line ab-community-line--cream ab-reveal" data-delay="300">REAL FIGHT.</span>
+      <span class="ab-community-sub ab-reveal" data-delay="450">Bomaye Gym ist mehr als ein Ort zum Trainieren. Es ist eine Haltung.</span>
+    </div>
+  </section>
+
+  <!-- ══ S7: FINAL CTA ══════════════════════════════════════════ -->
+  <section class="ab-cta" aria-label="Dein nächster Schritt">
+    <div class="ab-cta-inner">
+      <span class="ab-cta-label ab-reveal">DEIN NÄCHSTER SCHRITT</span>
+      <h2 class="ab-cta-h2 ab-reveal" data-delay="100">BEREIT?</h2>
+      <p class="ab-cta-sub ab-reveal" data-delay="200">Limitierte Early Bird Plätze. Dein Preis bleibt dauerhaft.</p>
+      <div class="ab-cta-btns ab-reveal" data-delay="300">
+        <a class="btn btn--gold" href="/mitglied-werden">JETZT PLATZ SICHERN</a>
+        <a class="btn btn--outline-light" href="/coaches">UNSERE COACHES</a>
       </div>
     </div>
   </section>
@@ -711,7 +707,7 @@
 
 <!-- ═══════ SCRIPTS ═══════ -->
 <script>
-/* ── Header scroll styling ─── */
+/* ── Header scroll styling ── */
 (function () {
   const header = document.getElementById('header');
   if (!header) return;
@@ -724,16 +720,16 @@
 let _scrollLockY = 0;
 function lockBodyScroll() {
   _scrollLockY = window.scrollY;
-  document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.top = `-${_scrollLockY}px`;
-  document.body.style.width = '100%';
+  document.body.style.overflow   = 'hidden';
+  document.body.style.position   = 'fixed';
+  document.body.style.top        = `-${_scrollLockY}px`;
+  document.body.style.width      = '100%';
 }
 function unlockBodyScroll() {
-  document.body.style.overflow = '';
-  document.body.style.position = '';
-  document.body.style.top = '';
-  document.body.style.width = '';
+  document.body.style.overflow  = '';
+  document.body.style.position  = '';
+  document.body.style.top       = '';
+  document.body.style.width     = '';
   window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
 }
 
@@ -788,31 +784,22 @@ function _waitBsport(attempt) {
 document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
 
-/* ── Scroll reveal ── */
+/* ── Scroll reveal (Intersection Observer) ── */
 (function () {
-  const els = document.querySelectorAll('.reveal');
+  const els = document.querySelectorAll('.ab-reveal');
   if (!els.length) return;
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
-  els.forEach(el => io.observe(el));
-})();
-
-/* ── Heritage section scroll reveal ── */
-(function () {
-  const els = document.querySelectorAll('.hs-reveal');
-  if (!els.length) return;
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('is-visible');
-        io.unobserve(e.target);
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var delay = parseInt(entry.target.dataset.delay || '0', 10);
+        setTimeout(function () {
+          entry.target.classList.add('ab-visible');
+        }, delay);
+        io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
-  els.forEach(el => io.observe(el));
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(function (el) { io.observe(el); });
 })();
 </script>
 
