@@ -159,12 +159,18 @@
       max-width: 600px;
       margin: 0 auto;
     }
+    .ab-origin-body p {
+      margin-bottom: 1.3em;
+    }
+    .ab-origin-body p:last-child {
+      margin-bottom: 0;
+    }
 
     /* ══════════════════════════
        S3 — THREE VALUES
     ══════════════════════════ */
     .ab-values {
-      background: var(--ab-cream);
+      background: #0A0A08;
       padding: clamp(88px, 12vw, 140px) 0;
     }
     .ab-values-inner {
@@ -193,12 +199,25 @@
         gap: clamp(40px, 8vw, 56px);
       }
     }
-    .ab-value-block { text-align: center; }
+    .ab-value-block {
+      text-align: center;
+      background: #111110;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      padding: 40px 32px;
+      border-radius: 2px;
+      transition: border-color 0.3s ease;
+    }
+    @media (max-width: 768px) {
+      .ab-value-block { padding: 28px 20px; }
+    }
+    @media (hover: hover) {
+      .ab-value-block:hover { border-color: rgba(201, 168, 76, 0.5); }
+    }
     .ab-value-word {
       display: block;
       font-family: var(--font-display);
       font-size: clamp(2rem, 4.5vw, 3.2rem);
-      color: var(--ab-dark);
+      color: var(--ab-cream);
       text-transform: uppercase;
       letter-spacing: 0.02em;
       line-height: 1;
@@ -214,7 +233,7 @@
     .ab-value-text {
       font-family: var(--font-body);
       font-size: 0.95rem;
-      color: #3a3a3a;
+      color: rgba(245, 240, 232, 0.7);
       line-height: 1.82;
     }
 
@@ -222,14 +241,28 @@
        S4 — BIG QUOTE
     ══════════════════════════ */
     .ab-quote {
-      background: var(--ab-dark);
+      background: #1a1a1a;
+      background-image: radial-gradient(ellipse at center, #2a2a2a 0%, #111111 100%);
       padding: clamp(96px, 14vw, 160px) 0;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ab-quote::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
     }
     .ab-quote-inner {
       max-width: 700px;
       margin: 0 auto;
       padding: 0 clamp(24px, 5vw, 48px);
+      position: relative;
+      z-index: 1;
     }
     .ab-quote-rule {
       width: 60px;
@@ -249,8 +282,11 @@
     }
     .ab-quote-text {
       font-family: var(--font-display);
-      font-size: clamp(1.7rem, 4vw, 2.8rem);
-      color: var(--ab-cream);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      background: linear-gradient(135deg, #F5F0E8, #C9A84C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       line-height: 1.25;
       letter-spacing: 0.015em;
       font-style: italic;
@@ -367,6 +403,34 @@
       font-size: 0.95rem;
       color: rgba(245,240,232,0.75);
       line-height: 1.82;
+    }
+    .ab-coach-socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 1.25rem;
+    }
+    .ab-coach-social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: transparent;
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 0;
+      text-decoration: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .ab-coach-social-btn:hover {
+      border-color: #C9A84C;
+      background: rgba(201, 168, 76, 0.08);
+    }
+    .ab-coach-social-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: #C9A84C;
+      flex-shrink: 0;
     }
 
     /* ══════════════════════════
@@ -565,9 +629,13 @@
         <span class="ab-origin-line ab-origin-line--cream ab-reveal" data-delay="150">EINE STIMME.</span>
         <span class="ab-origin-line ab-origin-line--gold  ab-reveal" data-delay="300">EIN RUF.</span>
       </div>
-      <p class="ab-origin-body ab-reveal" data-delay="100">
-        Bomaye war kein Ruf der Gewalt. Es war Unterstützung. Zusammenhalt. Das Gefühl: Wir stehen hinter dir. Dieses Gefühl bringen wir nach München — in jedes Training, in jede Runde, in jeden Fortschritt.
-      </p>
+      <div class="ab-origin-body ab-reveal" data-delay="100">
+        <p>Kinshasa, 1974. Muhammad Ali betritt den Ring gegen George Foreman — den schwersten Kampf seiner Karriere. Foreman gilt als unschlagbar. Ali als erledigt.</p>
+        <p>Doch 60.000 Menschen im Stade du 20 Mai rufen seinen Namen. Immer wieder. Lauter. Bomaye.</p>
+        <p>Im Lingala bedeutet das wörtlich: Töte ihn. Aber wer dort stand, wer diese Energie spürte, weiß: Es bedeutete viel mehr. Es bedeutete — wir glauben an dich. Wir stehen hinter dir. Du bist nicht allein.</p>
+        <p>Ali gewann. Nicht weil er der Stärkste war. Sondern weil er wusste, dass hinter ihm eine ganze Stadt stand.</p>
+        <p>Genau dieses Gefühl bringen wir nach München. In jeden Ring. In jede Runde. In jeden Menschen der zu uns kommt — egal ob Anfänger oder Wettkämpfer.</p>
+      </div>
     </div>
   </section>
 
@@ -631,6 +699,14 @@
             <span class="ab-coach-badge">🏆 20+ Jahre Erfahrung</span>
           </div>
           <p class="ab-coach-bio">Raschad ist Head Coach, Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf. Sein Ansatz: keine Abkürzungen, keine Kompromisse. Saubere Technik, taktische Intelligenz, mentale Stärke.</p>
+          <div class="ab-coach-socials">
+            <a href="https://www.instagram.com/coach_raschad/" target="_blank" rel="noopener" class="ab-coach-social-btn" aria-label="Raschad auf Instagram">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@coach_raschad?lang=de-DE" target="_blank" rel="noopener" class="ab-coach-social-btn" aria-label="Raschad auf TikTok">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>
+            </a>
+          </div>
         </div>
 
         <!-- Coach: Alfonso Fusco -->
@@ -641,12 +717,20 @@
                  loading="eager" decoding="async" />
           </div>
           <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
-          <div class="ab-coach-title">LANDESTRAINER (BABV)</div>
+          <div class="ab-coach-title">CO-FOUNDER &amp; HEAD COACH</div>
           <div class="ab-coach-badges">
             <span class="ab-coach-badge">🥊 Landestrainer BABV</span>
             <span class="ab-coach-badge">🏆 Kickbox Weltmeister</span>
           </div>
           <p class="ab-coach-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt. Sein Fokus: was im Ring den Unterschied macht. Technik, taktisches Denken, Ringintelligenz — ohne Kompromisse.</p>
+          <div class="ab-coach-socials">
+            <a href="https://www.instagram.com/coach_fonsi/" target="_blank" rel="noopener" class="ab-coach-social-btn" aria-label="Alfonso auf Instagram">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@coachfonsi?lang=de-DE" target="_blank" rel="noopener" class="ab-coach-social-btn" aria-label="Alfonso auf TikTok">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>
+            </a>
+          </div>
         </div>
 
       </div>
