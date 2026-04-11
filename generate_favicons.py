@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 """
 Regenerate all favicon files from bomaye-logo.png.
-Crops transparent/whitespace padding so the logo fills ~90% of the icon space.
+Creates a 512x512 base image with:
+  - Dark background (#0A0A08)
+  - Circular gold border (#C9A84C, 8px stroke, 20px padding)
+  - Logo centered and scaled to fill 80% of the canvas
 """
 
-from PIL import Image
+from PIL import Image, ImageDraw
 import os
 
 LOGO_PATH = "assets/images/bomaye-logo.png"
 ICONS_DIR = "assets/icons"
 
-FILL_RATIO = 0.90  # logo fills 90% of icon space
+BG_COLOR = (10, 10, 8, 255)        # #0A0A08
+GOLD_COLOR = (201, 168, 76, 255)   # #C9A84C
+CIRCLE_PADDING = 20                 # px from canvas edge
+CIRCLE_STROKE = 8                   # px stroke width
+LOGO_FILL = 0.80                    # logo fills 80% of canvas
 
 
 def get_bounding_box(img):
-    """Return tight bounding box of non-transparent, non-white content."""
+    """Return tight bounding box of non-transparent content."""
     if img.mode != "RGBA":
         img = img.convert("RGBA")
 
-    r, g, b, a = img.split()
-
-    # Treat pixel as "content" if it is visible (alpha > 10)
-    # and not near-white (at least one channel below 240).
     width, height = img.size
     pixels = img.load()
 
@@ -42,24 +45,34 @@ def get_bounding_box(img):
                     max_y = y
 
     if min_x > max_x or min_y > max_y:
-        # Fallback: use getbbox on alpha channel alone
+        _, _, _, a = img.split()
         bbox = a.getbbox()
         return bbox
 
     return (min_x, min_y, max_x + 1, max_y + 1)
 
 
-def make_icon(cropped_logo, size, output_path):
+def make_base_image(cropped_logo, size):
     """
-    Place cropped_logo onto a transparent canvas of the given square size,
-    scaled so it fills FILL_RATIO of the canvas, centred.
+    Create a square canvas with dark background, gold circle border,
+    and the logo centered at LOGO_FILL of the canvas size.
     """
-    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    canvas = Image.new("RGBA", (size, size), BG_COLOR)
+    draw = ImageDraw.Draw(canvas)
 
+    # Draw circular gold border
+    half_stroke = CIRCLE_STROKE // 2
+    circle_box = [
+        CIRCLE_PADDING + half_stroke,
+        CIRCLE_PADDING + half_stroke,
+        size - CIRCLE_PADDING - half_stroke,
+        size - CIRCLE_PADDING - half_stroke,
+    ]
+    draw.ellipse(circle_box, outline=GOLD_COLOR, width=CIRCLE_STROKE)
+
+    # Scale and center the logo
     logo_w, logo_h = cropped_logo.size
-    target_dim = int(size * FILL_RATIO)
-
-    # Scale proportionally so the longer dimension equals target_dim
+    target_dim = int(size * LOGO_FILL)
     ratio = target_dim / max(logo_w, logo_h)
     new_w = int(logo_w * ratio)
     new_h = int(logo_h * ratio)
@@ -70,11 +83,21 @@ def make_icon(cropped_logo, size, output_path):
     offset_y = (size - new_h) // 2
     canvas.paste(resized, (offset_x, offset_y), resized)
 
+    return canvas
+
+
+def save_icon(base_img, size, output_path):
+    """Resize base image to target size and save."""
+    if base_img.size != (size, size):
+        img = base_img.resize((size, size), Image.LANCZOS)
+    else:
+        img = base_img
+
     ext = os.path.splitext(output_path)[1].lower()
     if ext == ".ico":
-        canvas.save(output_path, format="ICO", sizes=[(size, size)])
+        img.save(output_path, format="ICO", sizes=[(size, size)])
     else:
-        canvas.save(output_path, format="PNG", optimize=True)
+        img.save(output_path, format="PNG", optimize=True)
 
     print(f"  Saved {output_path} ({size}x{size})")
 
@@ -93,13 +116,16 @@ def main():
 
     os.makedirs(ICONS_DIR, exist_ok=True)
 
+    print("Generating 512x512 base image ...")
+    base = make_base_image(cropped, 512)
+
     print("Generating favicon files ...")
-    make_icon(cropped, 32,  os.path.join(ICONS_DIR, "favicon.ico"))
-    make_icon(cropped, 16,  os.path.join(ICONS_DIR, "favicon-16x16.png"))
-    make_icon(cropped, 32,  os.path.join(ICONS_DIR, "favicon-32x32.png"))
-    make_icon(cropped, 180, os.path.join(ICONS_DIR, "apple-touch-icon.png"))
-    make_icon(cropped, 192, os.path.join(ICONS_DIR, "android-chrome-192x192.png"))
-    make_icon(cropped, 512, os.path.join(ICONS_DIR, "android-chrome-512x512.png"))
+    save_icon(base,  32, os.path.join(ICONS_DIR, "favicon.ico"))
+    save_icon(base,  16, os.path.join(ICONS_DIR, "favicon-16x16.png"))
+    save_icon(base,  32, os.path.join(ICONS_DIR, "favicon-32x32.png"))
+    save_icon(base, 180, os.path.join(ICONS_DIR, "apple-touch-icon.png"))
+    save_icon(base, 192, os.path.join(ICONS_DIR, "android-chrome-192x192.png"))
+    save_icon(base, 512, os.path.join(ICONS_DIR, "android-chrome-512x512.png"))
 
     print("Done.")
 
