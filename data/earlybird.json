@@ -1,0 +1,6 @@
+{
+  "total": 300,
+  "taken": 120,
+  "spots_left": 180,
+  "note": "Fallback only — real count comes from Vercel KV (verified_count key). Update taken/spots_left only if KV is unavailable."
+}

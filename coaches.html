@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Coaches | BOMAYE GYM MUNICH — Landestrainer & Weltmeister</title>
+  <meta name="description" content="Deine Coaches bei Bomaye Gym Munich — Raschad Pekpassi (Landestrainer, 20+ Jahre) und Alfonso Fusco (Kickbox-Weltmeister). Trainiere mit echten Wettkämpfern." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+  <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Coaches — BOMAYE GYM MUNICH" />
+  <meta property="og:description" content="Trainiere mit Raschad Pekpassi (Landestrainer, 20+ Jahre) und Alfonso Fusco (Kickbox-Weltmeister)." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/coaches" />
+  <meta property="og:locale" content="de_DE" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/coaches" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ── Page hero ──────────────────────────────── */
+    .coachesp-hero {
+      background: var(--ink);
+      padding: clamp(130px, 16vw, 200px) 0 clamp(48px, 7vw, 80px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .coachesp-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .coachesp-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .coachesp-hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .coachesp-hero-h1 span { color: var(--gold); }
+    .coachesp-hero-sub {
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.45);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Nav active state */
+    .nav-link-active { color: var(--gold) !important; }
+
+    /* ── Coaches full page layout ── */
+    .coaches-page-section {
+      padding: clamp(48px, 8vw, 96px) 0;
+      background: #f9f7f4;  /* light background so dark text is readable */
+    }
+
+    /* Full coach card with bio */
+    .coach-card-full {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
+      padding: clamp(48px, 7vw, 80px) 0;
+      border-bottom: 1px solid rgba(8,8,8,0.1);
+    }
+    .coach-card-full:last-child { border-bottom: none; }
+    .coach-card-full.reverse { direction: rtl; }
+    .coach-card-full.reverse > * { direction: ltr; }
+
+    .coach-full-photo {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .coach-full-photo img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+    .coach-full-creds {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .coach-full-cred {
+      font-family: var(--font-head);
+      font-size: 0.5rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      background: rgba(8,8,8,0.75);
+      backdrop-filter: blur(8px);
+      padding: 0.3rem 0.65rem;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .coach-full-info h3 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #080808;
+      margin-bottom: 0.25rem;
+    }
+    .coach-full-title {
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: #b8922e;
+      margin-bottom: 0.5rem;
+    }
+    .coach-full-role {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: rgba(8,8,8,0.55);
+      margin-bottom: 1.5rem;
+    }
+    .coach-full-bio {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: #2a2a2a;
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+    .coach-full-socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Trust badges ── */
+    .coach-trust-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .coach-trust-badge {
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      background: rgba(197,160,89,0.1);
+      border: 1px solid rgba(197,160,89,0.35);
+      padding: 0.35rem 0.75rem;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+    .coach-trust-badge .badge-emoji {
+      font-style: normal;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .coach-card-full {
+        grid-template-columns: 1fr;
+        direction: ltr !important;
+      }
+      .coach-card-full.reverse > * { direction: ltr; }
+      .coach-trust-badges { gap: 0.4rem; }
+      .coach-trust-badge { font-size: 0.58rem; padding: 0.3rem 0.6rem; }
+    }
+
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+  </style>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1989119321999811');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
+
+    <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
+      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link nav-link-active" href="/coaches" aria-current="page">COACHES</a>
+      <a class="nav-link" href="/about">ABOUT US</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+    </nav>
+
+    <button class="burger" onclick="toggleCoachesMenu()" aria-label="Menü" aria-expanded="false" id="coaches-burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="coaches-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;">
+  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/coaches" aria-current="page" style="--mn-i:2;color:var(--gold)!important">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
+  <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleCoachesMenu();" style="--mn-i:5;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+    MITGLIED WERDEN
+  </a>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+  <!-- ── Hero ── -->
+  <section class="coachesp-hero" aria-label="Unsere Coaches">
+    <div class="container">
+      <div class="coachesp-hero-tag">LEADERSHIP</div>
+      <h1 class="coachesp-hero-h1">MEET THE<br><span>CHAMPIONS.</span></h1>
+      <p class="coachesp-hero-sub">Trainiert von echten Profis.<br>Direkt aus dem Ring.</p>
+    </div>
+  </section>
+
+  <!-- ── Coach Cards ── -->
+  <section class="coaches-page-section">
+    <div class="container">
+
+      <!-- Raschad -->
+      <div class="coach-card-full reveal">
+        <div class="coach-full-photo">
+          <img src="/assets/images/coach-raschad.webp?v=5" alt="Raschad Pekpassi — Head Coach &amp; Founder" loading="eager" decoding="async" />
+          <div class="coach-full-creds">
+            <span class="coach-full-cred">LANDESTRAINER</span>
+            <span class="coach-full-cred">20+ JAHRE</span>
+            <span class="coach-full-cred">FOUNDER</span>
+          </div>
+        </div>
+        <div class="coach-full-info">
+          <h3>RASCHAD PEKPASSI</h3>
+          <p class="coach-full-title">OLYMPIC BOXING · FOUNDER</p>
+          <div class="coach-trust-badges">
+            <span class="coach-trust-badge"><em class="badge-emoji">🥊</em> Landestrainer BABV</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🏆</em> 20+ Jahre Erfahrung</span>
+          </div>
+          <p class="coach-full-bio">Raschad ist Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf.</p>
+          <p class="coach-full-bio">Sein Ansatz: keine Abkürzungen, keine Kompromisse. Saubere Technik, taktische Intelligenz, mentale Stärke — ob du zum ersten Mal Handschuhe anziehst oder auf deinen nächsten Wettkampf vorbereitest.</p>
+          <div class="coach-full-socials">
+            <a href="https://www.instagram.com/bomayegym_munich_munich/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf Instagram">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf TikTok">
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alfonso -->
+      <div class="coach-card-full reverse reveal delay-1">
+        <div class="coach-full-photo">
+          <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Head Coach &amp; Founder" loading="eager" decoding="async" />
+          <div class="coach-full-creds">
+            <span class="coach-full-cred">WM-TITEL</span>
+            <span class="coach-full-cred">KICKBOXEN</span>
+            <span class="coach-full-cred">FOUNDER</span>
+          </div>
+        </div>
+        <div class="coach-full-info">
+          <h3>ALFONSO FUSCO</h3>
+          <p class="coach-full-title">KICKBOX WELTMEISTER · FOUNDER</p>
+          <div class="coach-trust-badges">
+            <span class="coach-trust-badge"><em class="badge-emoji">🥊</em> Landestrainer BABV</span>
+            <span class="coach-trust-badge"><em class="badge-emoji">🏆</em> Kickbox Weltmeister</span>
+          </div>
+          <p class="coach-full-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt.</p>
+          <p class="coach-full-bio">Sein Fokus: was im Ring den Unterschied macht. Technik, taktisches Denken, Ringintelligenz — vom ersten Training bis zum Wettkampf. Ohne Kompromisse.</p>
+          <div class="coach-full-socials">
+            <a href="https://www.instagram.com/bomayegym_munich_munich/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf Instagram">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf TikTok">
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Bottom CTA ── -->
+  <section class="sec--dark" style="padding:clamp(48px,7vw,96px) 0;text-align:center;">
+    <div class="container">
+      <span class="tag tag--dark">DEIN NÄCHSTER SCHRITT</span>
+      <h2 style="margin:1.25rem 0;">BEREIT FÜR DEIN<br><span class="gold">NÄCHSTES LEVEL?</span></h2>
+      <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Limitierte Early-Bird-Plätze. Founding Members zahlen dauerhaft weniger.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-bolt"></i> JETZT MITGLIED WERDEN
+        </a>
+        <a href="/about" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-dna"></i> UNSERE STORY
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><a href="/kurse">Olympic Boxing</a></li>
+            <li><a href="/kurse">Kickboxing</a></li>
+            <li><a href="/kurse">Women's Boxing</a></li>
+            <li><a href="/kurse">Youth Boxing</a></li>
+            <li><a href="/kurse">Personal Training</a></li>
+            <li><a href="/kurse">Corporate Boxing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Coaches</a></li>
+            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        </div>
+      </div>
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <span class="dot">•</span>
+        <a href="mailto:support@bomayegym.com">support@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="/impressum">IMPRESSUM</a>
+          <a href="/datenschutz">DATENSCHUTZ</a>
+          <a href="/agb">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<!-- Sanity CDN client -->
+<script src="/assets/js/sanity-client.js"></script>
+<!-- Sanity coaches loader — rebuilds coach cards from CMS data -->
+<script src="/assets/js/sanity-coaches-loader.js"></script>
+
+<script>
+/* ── Header scroll styling ─── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ── iOS-compatible scroll lock ── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
+/* ── Mobile nav toggle ── */
+function toggleCoachesMenu() {
+  const nav = document.getElementById('coaches-mobile-nav');
+  const btn = document.getElementById('coaches-burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+
+/* ── Booking modal ── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id  = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+<script src="/assets/js/pixel-events.js"></script>
+
+</body>
+</html>

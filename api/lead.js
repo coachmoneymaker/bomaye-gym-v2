@@ -85,6 +85,7 @@ export default async function handler(req, res) {
   const {
     firstName, lastName, email, phone,
     category, dob, goal, street, postalCode, city,
+    members,
   } = req.body ?? {};
 
   // ── Validation ─────────────────────────────────────────────────────────────
@@ -97,8 +98,8 @@ export default async function handler(req, res) {
   const normalizedCategory = category
     ? category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
     : null;
-  if (!normalizedCategory || !['Kids', 'Youth', 'Adults'].includes(normalizedCategory))
-    errors.category = 'Kategorie muss Kids, Youth oder Adults sein.';
+  if (!normalizedCategory || !['Kids', 'Youth', 'Adults', 'Family'].includes(normalizedCategory))
+    errors.category = 'Kategorie muss Kids, Youth, Adults oder Family sein.';
 
   // DOB / category age validation (optional field, but must match category if provided)
   if (dob) {
@@ -178,6 +179,7 @@ export default async function handler(req, res) {
     city:       city?.trim()       ?? '',
     submittedAt: new Date().toISOString(),
     source: 'coming-soon',
+    ...(Array.isArray(members) && members.length ? { members: members.map(m => String(m).trim()).filter(Boolean) } : {}),
   };
 
   // ── Generate signed verification token ────────────────────────────────────
@@ -197,20 +199,29 @@ export default async function handler(req, res) {
     }
   }
 
-  console.log('[LEAD_PENDING]', JSON.stringify({ email: lead.email, category: lead.category }));
+  console.log('[LEAD_PENDING]', JSON.stringify({ email: lead.email, category: lead.category, submittedAt: lead.submittedAt }));
 
   // ── Send verification email to user ───────────────────────────────────────
-  const siteUrl   = (process.env.SITE_URL || `https://${req.headers.host}`).replace(/\/$/, '');
+  const siteUrl   = (process.env.SITE_URL || 'https://www.bomayegym.com').replace(/\/$/, '');
   const verifyUrl = `${siteUrl}/api/verify?token=${encodeURIComponent(token)}`;
+
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][LEAD] submitted lead.email:', lead.email);
+  console.log('[DEBUG][LEAD] generated verifyUrl:', verifyUrl);
+
+  console.log('[LEAD] Verification email send start', { email: lead.email });
 
   try {
     await sendVerificationEmail(lead, verifyUrl);
+    console.log('[LEAD] Verification email sent successfully', { email: lead.email });
   } catch (err) {
-    // Email failure is non-fatal: the lead is already persisted in KV.
-    // Log clearly for ops, but do not surface an error to the user.
-    console.error('[LEAD] Verification email send failed (lead saved, needs manual follow-up):', {
+    // Log the failure server-side but do NOT return 500 to the client.
+    // The lead is already persisted in KV — returning 500 would cause a
+    // browser console error and the user would get a broken experience.
+    // The email can be retried or sent manually using the KV lead data.
+    console.warn('[LEAD] Verification email could not be sent', {
       email: lead.email,
-      error: err?.message ?? err,
+      reason: err?.message ?? String(err),
     });
   }
 
@@ -220,97 +231,276 @@ export default async function handler(req, res) {
 // ── Emails ─────────────────────────────────────────────────────────────────────
 
 async function sendVerificationEmail(lead, verifyUrl) {
-  const apiKey    = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.FROM_EMAIL;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!apiKey || !fromEmail) {
-    console.warn('[LEAD] Email env vars not configured — skipping verification email.');
-    return;
+  if (!apiKey) {
+    console.error('[LEAD] RESEND_API_KEY not configured — cannot send verification email', { email: lead.email });
+    throw new Error('Email service not configured');
   }
 
   const resend = new Resend(apiKey);
 
-  const { error } = await resend.emails.send({
-    from:    fromEmail,
+  const { data, error } = await resend.emails.send({
+    from:    'Bomaye Gym <info@bomayegym.com>',
     to:      lead.email,
-    subject: 'Bestätige deinen BOMAYE Founding Spot',
+    subject: 'Bestätige deinen BOMAYE Early Bird Spot',
     html:    buildVerificationEmailHtml(lead, verifyUrl),
   });
 
+  // [DEBUG] Remove before go-live
+  console.log('[DEBUG][LEAD] Resend verification email response:', JSON.stringify({ data, error }));
+
   if (error) {
-    console.error('[LEAD] Resend error (verification email):', JSON.stringify(error));
-    throw error;
+    console.error('[LEAD] Resend error (verification email)', { email: lead.email, error: JSON.stringify(error) });
+    throw new Error(error.message || 'Resend send failed');
   }
+
+  console.log('[LEAD] Resend accepted verification email', { email: lead.email, messageId: data?.id });
 }
 
 function buildVerificationEmailHtml(lead, verifyUrl) {
-  return `
-<!DOCTYPE html>
-<html lang="de">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /></head>
-<body style="margin:0;padding:0;background:#0d0d0d;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0"
-             style="background:#111111;border-radius:8px;overflow:hidden;border:1px solid rgba(198,164,90,0.12);">
+  let siteUrl = '';
+  try { siteUrl = new URL(verifyUrl).origin; } catch { /* ignore */ }
+  const logoUrl = siteUrl ? `${siteUrl}/assets/images/bomaye-logo.png` : '';
 
-        <!-- Header -->
-        <tr>
-          <td style="background:#0A0A0A;padding:28px 36px;text-align:center;border-bottom:1px solid rgba(198,164,90,0.15);">
-            <p style="margin:0 0 10px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#C6A45A;">
-              BOMAYE GYM MUNICH
-            </p>
-            <h1 style="margin:0;font-size:24px;color:#ffffff;font-weight:700;letter-spacing:0.03em;">
-              Platz bestätigen
-            </h1>
-          </td>
-        </tr>
+  return `<!DOCTYPE html>
+<html lang="de" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Bestätige deinen BOMAYE Early Bird Spot</title>
+  <!--[if mso]>
+  <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#080808;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
-        <!-- Body -->
-        <tr>
-          <td style="padding:36px;">
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.65;">
-              Hallo ${escapeHtml(lead.firstName)},<br /><br />
-              fast geschafft. Klicke auf den Button unten, um deinen
-              <strong style="color:#ffffff;">Founding-Member-Spot</strong> zu sichern.
-              Der Link ist <strong style="color:#C6A45A;">24 Stunden</strong> gültig.
-            </p>
+  <!-- Preheader (hidden preview text) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#080808;">
+    Nur noch ein Schritt — bestätige deinen Early Bird Platz bei BOMAYE GYM Munich.&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;
+  </div>
 
-            <!-- CTA -->
-            <table cellpadding="0" cellspacing="0" width="100%" style="margin:28px 0;">
-              <tr>
-                <td align="center">
-                  <a href="${verifyUrl}"
-                     style="display:inline-block;background:#C6A45A;color:#000000;
-                            text-decoration:none;font-size:14px;font-weight:700;
-                            letter-spacing:2px;text-transform:uppercase;
-                            padding:16px 40px;border-radius:4px;">
-                    Platz bestätigen
-                  </a>
-                </td>
-              </tr>
-            </table>
+  <!-- Outer wrapper -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
+         style="background-color:#080808;">
+    <tr>
+      <td align="center" style="padding:48px 16px 56px;">
 
-            <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.6;">
-              Wenn der Button nicht funktioniert, kopiere diesen Link in deinen Browser:<br />
-              <a href="${verifyUrl}" style="color:#C6A45A;word-break:break-all;">${verifyUrl}</a>
-            </p>
-          </td>
-        </tr>
+        <!-- Email container -->
+        <table width="560" cellpadding="0" cellspacing="0" border="0" role="presentation"
+               style="width:100%;max-width:560px;">
 
-        <!-- Footer -->
-        <tr>
-          <td style="background:#0A0A0A;padding:18px 36px;border-top:1px solid rgba(255,255,255,0.05);">
-            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2);text-align:center;">
-              Du erhältst diese E-Mail, weil du dich für einen Founding-Member-Spot bei BOMAYE GYM München beworben hast.
-              Wenn du das nicht warst, ignoriere diese E-Mail einfach.
-            </p>
-          </td>
-        </tr>
+          <!-- ── LOGO ──────────────────────────────────────────────── -->
+          <tr>
+            <td align="center" style="padding:0 0 36px;">
+              ${logoUrl
+                ? `<img src="${logoUrl}" alt="BOMAYE GYM" width="130" height="auto"
+                        style="display:block;width:130px;height:auto;border:0;outline:none;text-decoration:none;" />`
+                : `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;
+                             font-weight:700;letter-spacing:0.25em;color:#C6A45A;">BOMAYE GYM</p>`
+              }
+            </td>
+          </tr>
 
-      </table>
-    </td></tr>
+          <!-- ── CARD ──────────────────────────────────────────────── -->
+          <tr>
+            <td style="background-color:#111111;border-radius:2px;
+                       border:1px solid rgba(198,164,90,0.16);">
+
+              <!-- Gold accent bar -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td bgcolor="#C6A45A" height="3"
+                      style="height:3px;line-height:3px;font-size:3px;
+                             background-color:#C6A45A;">&nbsp;</td>
+                </tr>
+              </table>
+
+              <!-- Header block -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td align="center"
+                      style="padding:52px 52px 40px;
+                             border-bottom:1px solid rgba(198,164,90,0.1);">
+
+                    <!-- Eyebrow -->
+                    <p style="margin:0 0 20px;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:10px;font-weight:700;
+                              letter-spacing:0.32em;text-transform:uppercase;
+                              color:#C6A45A;">
+                      Early Bird Access &mdash; Munich
+                    </p>
+
+                    <!-- Headline -->
+                    <h1 style="margin:0;
+                               font-family:Arial,Helvetica,sans-serif;
+                               font-size:30px;font-weight:700;
+                               letter-spacing:-0.01em;line-height:1.2;
+                               color:#ffffff;">
+                      Bestätige deinen<br />Early Bird Platz.
+                    </h1>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Body copy -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:44px 52px 0;">
+                    <p style="margin:0 0 12px;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:16px;font-weight:600;
+                              color:#ffffff;line-height:1.4;">
+                      Hallo ${escapeHtml(lead.firstName)},
+                    </p>
+                    <p style="margin:0;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:15px;font-weight:400;
+                              color:rgba(255,255,255,0.55);
+                              line-height:1.85;letter-spacing:0.01em;">
+                      du bist fast dabei. Ein Klick genügt, um deinen exklusiven
+                      Early Bird Platz bei BOMAYE GYM Munich dauerhaft zu sichern.<br /><br />
+                      Der Bestätigungslink ist
+                      <span style="color:#C6A45A;font-weight:600;">24&nbsp;Stunden</span>
+                      gültig.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA button -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td align="center" style="padding:40px 52px 44px;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                      href="${verifyUrl}" style="height:58px;v-text-anchor:middle;width:340px;"
+                      arcsize="4%" strokecolor="#C6A45A" fillcolor="#C6A45A">
+                      <w:anchorlock/>
+                      <center style="color:#080808;font-family:Arial,Helvetica,sans-serif;
+                                     font-size:12px;font-weight:700;letter-spacing:0.2em;">
+                        EARLY BIRD SPOT BESTÄTIGEN
+                      </center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <!--[if !mso]><!-->
+                    <table cellpadding="0" cellspacing="0" border="0" role="presentation">
+                      <tr>
+                        <td bgcolor="#C6A45A"
+                            style="background-color:#C6A45A;border-radius:3px;">
+                          <a href="${verifyUrl}" target="_blank"
+                             style="display:inline-block;
+                                    padding:20px 52px;
+                                    font-family:Arial,Helvetica,sans-serif;
+                                    font-size:12px;font-weight:700;
+                                    letter-spacing:0.22em;text-transform:uppercase;
+                                    color:#080808;text-decoration:none;
+                                    mso-padding-alt:0;white-space:nowrap;">
+                            EARLY BIRD SPOT BESTÄTIGEN
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--<![endif]-->
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:0 52px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                      <tr>
+                        <td height="1" style="height:1px;background-color:rgba(255,255,255,0.06);
+                                              line-height:1px;font-size:1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Fallback link — de-emphasized -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                <tr>
+                  <td style="padding:22px 52px 44px;">
+                    <p style="margin:0 0 7px;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:10px;font-weight:400;
+                              color:rgba(255,255,255,0.18);
+                              letter-spacing:0.04em;line-height:1.5;">
+                      Wenn der Button nicht funktioniert, kopiere diesen Link:
+                    </p>
+                    <p style="margin:0;
+                              font-family:Arial,Helvetica,sans-serif;
+                              font-size:10px;line-height:1.6;
+                              color:rgba(255,255,255,0.14);">
+                      <a href="${verifyUrl}" target="_blank"
+                         style="color:rgba(198,164,90,0.38);text-decoration:none;
+                                word-break:break-all;word-wrap:break-word;">
+                        ${verifyUrl}
+                      </a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ── FOOTER ────────────────────────────────────────────── -->
+          <tr>
+            <td align="center" style="padding:36px 48px 0;">
+
+              <!-- Ornament -->
+              <p style="margin:0 0 20px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:10px;color:rgba(198,164,90,0.25);
+                        letter-spacing:0.35em;">
+                &mdash;&nbsp;&nbsp;&#9670;&nbsp;&nbsp;&mdash;
+              </p>
+
+              <!-- Brand name -->
+              <p style="margin:0 0 10px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:11px;font-weight:700;
+                        letter-spacing:0.28em;text-transform:uppercase;
+                        color:rgba(198,164,90,0.35);">
+                BOMAYE GYM MUNICH
+              </p>
+
+              <!-- Trust line -->
+              <p style="margin:0 0 16px;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:11px;font-weight:400;
+                        color:rgba(255,255,255,0.18);
+                        letter-spacing:0.04em;line-height:1.6;">
+                Exklusiv. Limitiert. Für die ersten 300 Mitglieder.
+              </p>
+
+              <!-- Legal -->
+              <p style="margin:0;
+                        font-family:Arial,Helvetica,sans-serif;
+                        font-size:10px;font-weight:400;
+                        color:rgba(255,255,255,0.1);
+                        line-height:1.75;letter-spacing:0.01em;">
+                Du erhältst diese E-Mail, weil du dich für einen Early Bird Spot<br />
+                bei BOMAYE GYM Munich angemeldet hast.<br />
+                Wenn du das nicht warst, ignoriere diese E-Mail einfach.
+              </p>
+
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
+
 </body>
 </html>`;
 }

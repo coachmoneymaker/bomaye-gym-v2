@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Kurse | BOMAYE GYM MUNICH — Boxing, Kickboxing, Youth & Mental</title>
+  <meta name="description" content="Alle Kurse bei Bomaye Gym Munich: Boxing, Kickboxing, Youth Boxing, Olympisches Boxen und Mental Coaching. Professionelles Training für alle Level in München." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+  <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <meta property="og:title" content="Kurse — BOMAYE GYM MUNICH" />
+  <meta property="og:description" content="Boxing, Kickboxing, Youth Boxing, Olympisches Boxen, Mental Coaching. Training für alle Level." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/kurse" />
+  <meta property="og:locale" content="de_DE" />
+  <link rel="canonical" href="https://www.bomayegym.com/kurse" />
+
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       KURSE PAGE — PAGE HERO
+    ══════════════════════════════════════════════════ */
+    .kp-hero {
+      background: var(--ink);
+      padding: clamp(130px,16vw,200px) 0 clamp(48px,7vw,80px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .kp-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(197,160,89,0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .kp-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 4px; color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .kp-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem,7vw,5rem);
+      color: #fff; text-transform: uppercase; line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .kp-hero h1 span { color: var(--gold); }
+    .kp-hero-sub {
+      font-family: var(--font-body);
+      font-size: 0.92rem; color: rgba(255,255,255,0.45);
+      max-width: 520px; margin: 0 auto;
+    }
+
+    /* ══════════════════════════════════════════════════
+       COURSE GRID SECTION
+    ══════════════════════════════════════════════════ */
+    .courses-section {
+      background: var(--ink2, #0c0c0c);
+      padding: clamp(48px,8vw,96px) 0 0;
+    }
+    .courses-section-header {
+      text-align: center;
+      padding-bottom: clamp(32px,5vw,56px);
+    }
+
+    /* ══════════════════════════════════════════════════
+       DESKTOP PREMIUM CAROUSEL — single focused card
+       RAF engine · hover-pause · click-to-detail
+    ══════════════════════════════════════════════════ */
+    .desk-carousel {
+      display: block;
+      overflow: hidden;
+      position: relative;
+      padding-bottom: clamp(24px,4vw,40px);
+    }
+    /* Soft edge fades */
+    .desk-carousel::before,
+    .desk-carousel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: clamp(24px,4vw,40px);
+      width: clamp(80px, 12vw, 200px);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .desk-carousel::before {
+      left: 0;
+      background: linear-gradient(to right, #0c0c0c 0%, transparent 100%);
+    }
+    .desk-carousel::after {
+      right: 0;
+      background: linear-gradient(to left, #0c0c0c 0%, transparent 100%);
+    }
+    .dsk-track {
+      display: flex;
+      will-change: transform;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    /* ── Desktop carousel card ── */
+    .dsk-card {
+      flex: 0 0 auto;
+      width: clamp(260px, 26vw, 400px);
+      aspect-ratio: 3/4;
+      max-height: 480px;
+      min-height: 300px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #0a0a0a;
+      transition: transform 0.6s cubic-bezier(0.22, 0.8, 0.32, 1),
+                  box-shadow 0.6s ease,
+                  opacity  0.6s ease;
+      opacity: 0.42;
+      transform: scale(0.87);
+    }
+    .dsk-card.dsk-adjacent {
+      opacity: 0.68;
+      transform: scale(0.93);
+    }
+    .dsk-card.dsk-active {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 28px 72px rgba(0,0,0,0.70);
+    }
+    .dsk-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0.65;
+      transition: opacity 0.5s ease, transform 0.65s cubic-bezier(0.22, 0.8, 0.32, 1);
+    }
+    .dsk-card.dsk-active .dsk-card__bg { opacity: 0.86; }
+    .dsk-card:hover .dsk-card__bg       { opacity: 0.92; transform: scale(1.04); }
+    .dsk-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.28) 55%, transparent 100%);
+    }
+    .dsk-card__body {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem 1.25rem;
+      z-index: 2;
+    }
+    .dsk-card__num {
+      font-family: var(--font-head);
+      font-size: 0.47rem; letter-spacing: 3px;
+      color: rgba(197,160,89,0.52);
+      margin-bottom: 0.35rem;
+    }
+    .dsk-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(0.95rem, 1.35vw, 1.45rem);
+      color: #fff; text-transform: uppercase; line-height: 1.05;
+      margin-bottom: 0.3rem;
+    }
+    .dsk-card__short {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0);
+      line-height: 1.45;
+      transition: color 0.3s ease;
+    }
+    .dsk-card.dsk-active .dsk-card__short,
+    .dsk-card:hover .dsk-card__short { color: rgba(255,255,255,0.50); }
+    /* Gold accent bar */
+    .dsk-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.22, 0.8, 0.32, 1);
+    }
+    .dsk-card.dsk-active::after { transform: scaleX(1); }
+
+    /* ── Detail panel ── */
+    .course-detail {
+      display: none;
+      background: #0a0a0a;
+      border-top: 1px solid rgba(197,160,89,0.15);
+      padding: clamp(40px,6vw,72px) 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .course-detail.visible { display: block; }
+
+    /* ── Atmospheric background layers ── */
+    .course-detail__bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(22px);
+      transform: scale(1.12); /* prevent blur edge bleed */
+      opacity: 0;
+      transition: opacity 500ms ease;
+      will-change: opacity;
+      z-index: 0;
+    }
+    .course-detail__bg-layer.is-active { opacity: 1; }
+    .course-detail__dark-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.88);
+      z-index: 1;
+    }
+    .course-detail > .container {
+      position: relative;
+      z-index: 2;
+    }
+    .course-detail__inner {
+      display: flex;
+      justify-content: center;
+    }
+    .course-detail__text {
+      color: #fff;
+      max-width: 720px;
+      width: 100%;
+    }
+    .course-detail__tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 4px; color: var(--gold);
+      display: block; margin-bottom: 1rem;
+    }
+    .course-detail__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem,4vw,3rem);
+      color: #fff; text-transform: uppercase; line-height: 1.05;
+      margin-bottom: 1.25rem;
+    }
+    .course-detail__desc {
+      font-family: var(--font-body);
+      font-size: 0.95rem; color: rgba(255,255,255,0.65);
+      line-height: 1.75; margin-bottom: 1.5rem;
+    }
+    .course-detail__feats {
+      display: flex; flex-direction: column; gap: 0.65rem;
+      margin-bottom: 2rem;
+    }
+    .course-detail__feat {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+    }
+    .course-detail__feat i { color: var(--gold); margin-top: 0.18em; flex-shrink: 0; }
+    .course-detail__feat-body { display: flex; flex-direction: column; }
+    .course-detail__feat-body strong { font-size: 0.85rem; color: rgba(255,255,255,0.9); }
+    .course-detail__feat-body span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+
+    /* ══════════════════════════════════════════════════
+       MOBILE CAROUSEL — single-card focused, continuous RAF
+    ══════════════════════════════════════════════════ */
+    .courses-carousel-wrap { display: none; }
+
+    .courses-carousel {
+      position: relative;
+      overflow: hidden;
+      display: block;
+      touch-action: pan-y pinch-zoom;
+    }
+
+    .carousel-card {
+      flex: 0 0 auto;
+      width: min(78vw, 300px);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      min-height: 420px;
+      background: #0a0a0a;
+      will-change: transform;
+    }
+    .carousel-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0.7;
+    }
+    .carousel-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.3) 60%, transparent 100%);
+    }
+    .carousel-card__body {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem;
+      z-index: 2;
+    }
+    .carousel-card__num {
+      font-family: var(--font-head);
+      font-size: 0.5rem; letter-spacing: 3px; color: rgba(197,160,89,0.65);
+      margin-bottom: 0.4rem;
+    }
+    .carousel-card__title {
+      font-family: var(--font-display);
+      font-size: 1.7rem; color: #fff; text-transform: uppercase;
+      margin-bottom: 0.4rem; line-height: 1;
+    }
+    .carousel-card__short {
+      font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .carousel-card__cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-head);
+      font-size: 0.58rem; letter-spacing: 2px; color: var(--gold);
+    }
+
+    /* Mobile dots */
+    .carousel-dots {
+      display: flex; justify-content: center; gap: 0.5rem;
+      padding: 1.5rem 0 0;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.4s ease,
+                  width     0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  border-radius 0.4s ease;
+      cursor: pointer; border: none; padding: 0;
+    }
+    .carousel-dot.active { background: var(--gold); width: 20px; border-radius: 3px; }
+
+    /* Mobile course detail (below carousel) */
+    .mobile-course-detail {
+      display: none;
+      background: #111;
+      border-top: 1px solid rgba(197,160,89,0.15);
+      padding: 2rem 1.25rem;
+      margin-top: 1.5rem;
+      border-radius: 8px;
+    }
+    .mobile-course-detail.visible { display: block; }
+    .mobile-course-detail__tag {
+      font-family: var(--font-head);
+      font-size: 0.55rem; letter-spacing: 3px; color: var(--gold);
+      display: block; margin-bottom: 0.75rem;
+    }
+    .mobile-course-detail__title {
+      font-family: var(--font-display);
+      font-size: 1.8rem; color: #fff; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .mobile-course-detail__desc {
+      font-size: 0.9rem; color: rgba(255,255,255,0.62);
+      line-height: 1.7; margin-bottom: 1.25rem;
+    }
+    .mobile-course-detail__feats {
+      display: flex; flex-direction: column; gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .mobile-course-detail__feat {
+      display: flex; align-items: flex-start; gap: 0.55rem;
+    }
+    .mobile-course-detail__feat i { color: var(--gold); margin-top: 0.18em; flex-shrink: 0; }
+    .mobile-course-detail__feat-body strong { font-size: 0.83rem; color: rgba(255,255,255,0.9); display: block; }
+    .mobile-course-detail__feat-body span { font-size: 0.76rem; color: rgba(255,255,255,0.45); }
+
+    /* ── Desktop carousel outer wrapper & arrow navigation ── */
+    .desk-carousel-outer {
+      position: relative;
+    }
+    .dsk-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(calc(-50% - clamp(12px,2vw,20px)));
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(8, 8, 8, 0.80);
+      border: 1px solid rgba(197, 160, 89, 0.22);
+      color: rgba(255, 255, 255, 0.58);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      transition: background 0.22s ease, border-color 0.22s ease,
+                  color 0.22s ease, opacity 0.22s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0.65;
+    }
+    .dsk-arrow:hover {
+      background: rgba(197, 160, 89, 0.13);
+      border-color: rgba(197, 160, 89, 0.52);
+      color: var(--gold);
+      opacity: 1;
+    }
+    .dsk-arrow:active {
+      transform: translateY(calc(-50% - clamp(12px,2vw,20px))) scale(0.92);
+    }
+    .dsk-arrow--prev { left: 14px; }
+    .dsk-arrow--next { right: 14px; }
+    .desk-carousel { cursor: grab; }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .desk-carousel  { display: none !important; }
+      .course-detail  { display: none !important; }
+      .courses-carousel-wrap { display: block; }
+      .course-detail__inner  { grid-template-columns: 1fr; }
+      .dsk-arrow { display: none !important; }
+    }
+
+    /* Nav */
+    .nav-link-active { color: var(--gold) !important; }
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+
+    /* ══════════════════════════════════════════════════
+       PREMIUM UX ENHANCEMENTS
+    ══════════════════════════════════════════════════ */
+
+    /* Feature 2: Hardware-accelerate CTA buttons */
+    .btn--gold { will-change: transform; }
+
+    /* Feature 3: Detail content entrance animations */
+    @keyframes cdFadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cdCtaGlow {
+      0%   { box-shadow: 0 0 18px rgba(197,160,89,0.28), 0 2px 10px rgba(0,0,0,0.35); }
+      50%  { box-shadow: 0 0 44px rgba(197,160,89,0.72), 0 8px 28px rgba(197,160,89,0.32); }
+      100% { box-shadow: 0 0 18px rgba(197,160,89,0.28), 0 2px 10px rgba(0,0,0,0.35); }
+    }
+    .cd-entering .course-detail__title {
+      animation: cdFadeUp 200ms ease backwards;
+    }
+    .cd-entering .course-detail__desc {
+      animation: cdFadeUp 200ms ease 20ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(1) {
+      animation: cdFadeUp 190ms ease 30ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(2) {
+      animation: cdFadeUp 190ms ease 55ms backwards;
+    }
+    .cd-entering .course-detail__feats .course-detail__feat:nth-child(3) {
+      animation: cdFadeUp 190ms ease 80ms backwards;
+    }
+    .cd-entering #detail-cta-btn {
+      animation: cdCtaGlow 500ms ease 90ms backwards;
+    }
+  </style>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1989119321999811');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+
+<body>
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
+    <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
+      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+    </a>
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link nav-link-active" href="/kurse" aria-current="page">KURSE</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ABOUT US</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+    </nav>
+    <button class="burger" onclick="toggleKurseMenu()" aria-label="Menü" aria-expanded="false" id="kurse-burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="kurse-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;">
+  <a href="/" class="mn-item" style="--mn-i:0">HOME</a>
+  <a href="/kurse" class="mn-item" aria-current="page" style="--mn-i:1;color:var(--gold)!important">KURSE</a>
+  <a href="/coaches" class="mn-item" style="--mn-i:2">COACHES</a>
+  <a href="/about" class="mn-item" style="--mn-i:3">ABOUT US</a>
+  <a href="/faq" class="mn-item" style="--mn-i:4">FAQ</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleKurseMenu();" style="--mn-i:5;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+  <!-- ── Hero ── -->
+  <section class="kp-hero" aria-label="Unsere Kurse">
+    <div class="container">
+      <div class="kp-hero-tag">TRAINING</div>
+      <h1>ECHTES BOXING.<br><span>OHNE KOMPROMISS.</span></h1>
+      <p class="kp-hero-sub">Zehn Programme. Technik, Taktik und Conditioning — strukturiertes Boxtraining von Anfänger bis Wettkämpfer.</p>
+    </div>
+  </section>
+
+  <!-- ── Courses (Desktop Marquee + Mobile Carousel) ── -->
+  <section class="courses-section">
+    <div class="container">
+      <div class="courses-section-header reveal">
+        <span class="tag tag--dark">UNSERE PROGRAMS</span>
+        <h2 style="margin-top:1rem;">WÄHLE DEIN <span class="gold">PROGRAMM.</span></h2>
+        <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Klicke auf einen Kurs für Details und Zeiten.</p>
+      </div>
+    </div>
+
+    <!-- ── DESKTOP PREMIUM CAROUSEL ── -->
+    <div class="desk-carousel-outer" id="dsk-outer">
+    <button class="dsk-arrow dsk-arrow--prev" id="dsk-prev" aria-label="Vorheriger Kurs" type="button"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+    <button class="dsk-arrow dsk-arrow--next" id="dsk-next" aria-label="Nächster Kurs" type="button"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+    <div class="desk-carousel" id="desk-carousel" aria-label="Kursauswahl">
+      <div class="dsk-track" id="dsk-track">
+
+        <div class="dsk-card" data-course="boxing">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">01 / 10</span>
+            <h3 class="dsk-card__title">BOXING</h3>
+            <p class="dsk-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="kickboxing">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">02 / 10</span>
+            <h3 class="dsk-card__title">KICKBOXING</h3>
+            <p class="dsk-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="youth">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">03 / 10</span>
+            <h3 class="dsk-card__title">YOUTH BOXING</h3>
+            <p class="dsk-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="olympic">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">04 / 10</span>
+            <h3 class="dsk-card__title">OLYMPISCHES BOXEN</h3>
+            <p class="dsk-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="mental">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">05 / 10</span>
+            <h3 class="dsk-card__title">MENTAL COACHING</h3>
+            <p class="dsk-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="firmenfitness">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">06 / 10</span>
+            <h3 class="dsk-card__title">CORPORATE BOXING</h3>
+            <p class="dsk-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="executive">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">07 / 10</span>
+            <h3 class="dsk-card__title">EXECUTIVE TRAINING</h3>
+            <p class="dsk-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="morning">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">08 / 10</span>
+            <h3 class="dsk-card__title">MORNING TRAINING</h3>
+            <p class="dsk-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="women">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">09 / 10</span>
+            <h3 class="dsk-card__title">WOMEN'S BOXING</h3>
+            <p class="dsk-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
+          </div>
+        </div>
+
+        <div class="dsk-card" data-course="strength">
+          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="dsk-card__overlay"></div>
+          <div class="dsk-card__body">
+            <span class="dsk-card__num">10 / 10</span>
+            <h3 class="dsk-card__title">STRENGTH &amp; CONDITIONING</h3>
+            <p class="dsk-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
+          </div>
+        </div>
+
+      </div><!-- /dsk-track -->
+    </div><!-- /desk-carousel -->
+    </div><!-- /desk-carousel-outer -->
+
+    <!-- ── DESKTOP DETAIL PANEL ── -->
+    <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
+      <div class="course-detail__bg-layer" id="detail-bg-a"></div>
+      <div class="course-detail__bg-layer" id="detail-bg-b"></div>
+      <div class="course-detail__dark-overlay"></div>
+      <div class="container">
+          <div class="course-detail__inner">
+            <div class="course-detail__text">
+              <span class="course-detail__tag" id="detail-tag">BOXING</span>
+              <h2 class="course-detail__title" id="detail-title">BOXING.<br><span class="gold">ECHTE TECHNIK.</span></h2>
+              <p class="course-detail__desc" id="detail-desc">
+                Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.
+              </p>
+              <div class="course-detail__feats" id="detail-feats">
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Alle Level willkommen</strong>
+                    <span>Anfänger, Fortgeschrittene und Wettkämpfer im selben Umfeld</span>
+                  </div>
+                </div>
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Technisches Einzel-Feedback</strong>
+                    <span>Kein anonymes Gruppentraining — jede Stunde mit klarem Coaching</span>
+                  </div>
+                </div>
+                <div class="course-detail__feat">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <div class="course-detail__feat-body">
+                    <strong>Sparring &amp; Wettkampf optional</strong>
+                    <span>Sicher, kontrolliert, mit Erfahrung begleitet</span>
+                  </div>
+                </div>
+              </div>
+              <a id="detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+                <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- ── MOBILE CAROUSEL ── -->
+    <div class="courses-carousel-wrap">
+      <div class="courses-carousel" id="courses-carousel" aria-label="Kurs-Karussell">
+
+        <div class="carousel-card" data-course="boxing" onclick="openMobileCourse('boxing',0)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">01 / 10</span>
+            <h3 class="carousel-card__title">BOXING</h3>
+            <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="kickboxing" onclick="openMobileCourse('kickboxing',1)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">02 / 10</span>
+            <h3 class="carousel-card__title">KICKBOXING</h3>
+            <p class="carousel-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="youth" onclick="openMobileCourse('youth',2)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">03 / 10</span>
+            <h3 class="carousel-card__title">YOUTH BOXING</h3>
+            <p class="carousel-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="olympic" onclick="openMobileCourse('olympic',3)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">04 / 10</span>
+            <h3 class="carousel-card__title">OLYMPISCHES BOXEN</h3>
+            <p class="carousel-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="mental" onclick="openMobileCourse('mental',4)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">05 / 10</span>
+            <h3 class="carousel-card__title">MENTAL COACHING</h3>
+            <p class="carousel-card__short">Mentale Stärke, Fokus und Ring-Intelligenz.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="firmenfitness" onclick="openMobileCourse('firmenfitness',5)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">06 / 10</span>
+            <h3 class="carousel-card__title">CORPORATE BOXING</h3>
+            <p class="carousel-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="executive" onclick="openMobileCourse('executive',6)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">07 / 10</span>
+            <h3 class="carousel-card__title">EXECUTIVE TRAINING</h3>
+            <p class="carousel-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="morning" onclick="openMobileCourse('morning',7)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">08 / 10</span>
+            <h3 class="carousel-card__title">MORNING TRAINING</h3>
+            <p class="carousel-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="women" onclick="openMobileCourse('women',8)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">09 / 10</span>
+            <h3 class="carousel-card__title">WOMEN'S BOXING</h3>
+            <p class="carousel-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+        <div class="carousel-card" data-course="strength" onclick="openMobileCourse('strength',9)">
+          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
+          <div class="carousel-card__overlay"></div>
+          <div class="carousel-card__body">
+            <span class="carousel-card__num">10 / 10</span>
+            <h3 class="carousel-card__title">STRENGTH & CONDITIONING</h3>
+            <p class="carousel-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
+            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+          </div>
+        </div>
+
+      </div><!-- /courses-carousel -->
+
+      <!-- Dots -->
+      <div class="carousel-dots" id="carousel-dots" aria-hidden="true">
+        <button class="carousel-dot active" onclick="scrollCarouselTo(0)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(1)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(2)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(3)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(4)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(5)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(6)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(7)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(8)"></button>
+        <button class="carousel-dot" onclick="scrollCarouselTo(9)"></button>
+      </div>
+
+      <!-- Mobile detail panel -->
+      <div id="mobile-course-detail" class="mobile-course-detail container">
+        <span class="mobile-course-detail__tag" id="mob-detail-tag">BOXING</span>
+        <h3 class="mobile-course-detail__title" id="mob-detail-title">BOXING</h3>
+        <p class="mobile-course-detail__desc" id="mob-detail-desc"></p>
+        <div class="mobile-course-detail__feats" id="mob-detail-feats"></div>
+        <a id="mob-detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;width:100%;justify-content:center;">
+          <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
+        </a>
+      </div>
+
+    </div><!-- /courses-carousel-wrap -->
+
+  </section>
+
+  <!-- ── CTA ── -->
+  <section style="background:var(--ink);padding:clamp(48px,7vw,80px) 0;text-align:center;">
+    <div class="container">
+      <span class="tag tag--dark">LIMITIERTE PLÄTZE</span>
+      <h2 style="margin:1.25rem 0;">DEIN PLATZ <span class="gold">IM RING.</span></h2>
+      <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Wir befinden uns in der Founding Phase. Kapazität ist begrenzt. Early Members sichern sich dauerhaft ihren Platz — zu ihren Konditionen.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>KURSE</h4>
+          <ul class="footer-links">
+            <li><a href="/kurse#boxing">Boxing</a></li>
+            <li><a href="/kurse#kickboxing">Kickboxing</a></li>
+            <li><a href="/kurse#youth">Youth Boxing</a></li>
+            <li><a href="/kurse#olympic">Olympisches Boxen</a></li>
+            <li><a href="/kurse#mental">Mental Coaching</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Coaches</a></li>
+            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+          <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        </div>
+      </div>
+      <div class="footer-contactbar">
+        <a href="tel:+4917621932243">0176 2193 2243</a><span class="dot">•</span>
+        <a href="mailto:support@bomayegym.com">support@bomayegym.com</a><span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+          <a href="/impressum">IMPRESSUM</a>
+          <a href="/datenschutz">DATENSCHUTZ</a>
+          <a href="/agb">AGB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+/* ─── Course data ──────────────────────────────────────────── */
+const COURSES = {
+  boxing: {
+    tag: 'BOXING',
+    title: 'BOXING.<br><span class="gold">ECHTE TECHNIK.</span>',
+    titleMob: 'BOXING',
+    img: '/assets/images/service-exec.webp',
+    imgAlt: 'Boxing Training Bomaye Gym',
+    desc: 'Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.',
+    feats: [
+      { strong: 'Alle Level willkommen', span: 'Anfänger, Fortgeschrittene und Wettkämpfer' },
+      { strong: 'Technisches Einzel-Feedback', span: 'Kein anonymes Gruppentraining' },
+      { strong: 'Sparring & Wettkampf optional', span: 'Sicher, kontrolliert, mit Erfahrung begleitet' },
+    ]
+  },
+  kickboxing: {
+    tag: 'KICKBOXING',
+    title: 'KICKBOXING.<br><span class="gold">DYNAMIK & POWER.</span>',
+    titleMob: 'KICKBOXING',
+    img: '/assets/images/service-kick.webp',
+    imgAlt: 'Kickboxing Training Bomaye Gym',
+    desc: 'Kickboxing verbindet Boxen mit Beintechnik zu einem der vollständigsten Kampfsport-Systeme. Du trainierst Koordination, Schnelligkeit und explosive Kraft — gecoacht von Alfonso Fusco, Kickbox-Weltmeister und Spezialist für Ring-Intelligenz.',
+    feats: [
+      { strong: 'Vollkontakt-Technik & Footwork', span: 'Präzise Tritte, Kombinationen, Stellungsspiel' },
+      { strong: 'Weltmeister als Coach', span: 'Direkte Linie zu einem internationalen Champion' },
+      { strong: 'Fitness & Wettkampf', span: 'Für Freizeit-Sportler und Wettkämpfer gleichermaßen' },
+    ]
+  },
+  youth: {
+    tag: 'YOUTH BOXING',
+    title: 'YOUTH BOXING.<br><span class="gold">CHARAKTER & SPORT.</span>',
+    titleMob: 'YOUTH BOXING',
+    img: '/assets/images/service-youth.webp',
+    imgAlt: 'Youth Boxing Bomaye Gym',
+    desc: 'Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt — es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.',
+    feats: [
+      { strong: 'Ab 6 Jahren', span: 'Altersgerechtes Training für Kids, Jugend und Teens' },
+      { strong: 'Disziplin & Charakter', span: 'Werte, die weit über den Boxring hinausgehen' },
+      { strong: 'Sicheres Umfeld', span: 'Professionell betreut, kein Vollkontakt für Anfänger' },
+    ]
+  },
+  olympic: {
+    tag: 'OLYMPISCHES BOXEN',
+    title: 'OLYMPISCHES BOXEN.<br><span class="gold">WETTKAMPF. NIVEAU.</span>',
+    titleMob: 'OLYMPISCHES BOXEN',
+    img: '/assets/images/service-olympic.webp',
+    imgAlt: 'Olympisches Boxen Bomaye Gym',
+    desc: 'Olympisches Boxen nach AIBA-Regeln — das Original. Unser wettkampforientiertes Programm bereitet Athleten gezielt auf Meisterschaften, Turniere und Ausscheidungskämpfe vor. Raschad Pekpassi als Landestrainer des BABV führt dich durch diesen Weg.',
+    feats: [
+      { strong: 'AIBA-konforme Technik', span: 'Training nach olympischen Wettkampfregeln' },
+      { strong: 'Wettkampfvorbereitung', span: 'Sparring, Taktik und mentale Vorbereitung' },
+      { strong: 'Landestrainer-Coaching', span: 'Direkt unter Raschad Pekpassi, BABV Landestrainer' },
+    ]
+  },
+  mental: {
+    tag: 'MENTAL COACHING',
+    title: 'MENTAL COACHING.<br><span class="gold">KOPF. FOKUS. RING.</span>',
+    titleMob: 'MENTAL COACHING',
+    img: '/assets/images/service-mind-v2.webp',
+    imgAlt: 'Mental Coaching Bomaye Gym',
+    desc: 'Der Kampf wird im Kopf gewonnen — bevor er im Ring beginnt. Unser Mental Coaching-Programm schärft Konzentration, Ring-Intelligenz und mentale Widerstandsfähigkeit. Von Alfonso Fusco entwickelt: der Ansatz, der Weltmeister formt.',
+    feats: [
+      { strong: 'Ring-Intelligenz', span: 'Taktisches Denken und Lesen des Gegners' },
+      { strong: 'Stressresistenz', span: 'Mentale Techniken aus dem Profi-Kampfsport' },
+      { strong: 'Fokus & Zielsetzung', span: 'Methoden, die auch außerhalb des Rings wirken' },
+    ],
+    cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
+  },
+  firmenfitness: {
+    tag: 'CORPORATE BOXING',
+    title: 'CORPORATE BOXING.<br><span class="gold">TEAM. POWER. GESUNDHEIT.</span>',
+    titleMob: 'CORPORATE BOXING',
+    img: '/assets/images/service-corp.webp',
+    imgAlt: 'Corporate Boxing Bomaye Gym',
+    desc: 'Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs — es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.',
+    feats: [
+      { strong: 'Ab 5 Personen', span: 'Maßgeschneiderte Einheiten auf Anfrage buchbar' },
+      { strong: 'Teambuilding durch Sport', span: 'Gemeinsam schwitzen, gemeinsam wachsen' },
+      { strong: 'Flexible Planung', span: 'Regelmäßige Einheiten oder Einzelevents möglich' },
+    ],
+    cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
+  },
+  executive: {
+    tag: 'EXECUTIVE TRAINING',
+    title: 'EXECUTIVE TRAINING.<br><span class="gold">FOKUS. STÄRKE. FÜHRUNG.</span>',
+    titleMob: 'EXECUTIVE TRAINING',
+    img: '/assets/images/service-pt.webp',
+    imgAlt: 'Executive Training Bomaye Gym',
+    desc: 'Exklusives 1-on-1 Training für Führungspersönlichkeiten und anspruchsvolle Athleten. Maximale Intensität, absolute Diskretion — individuell auf deine Ziele und deinen Zeitplan abgestimmt. Mit Raschad oder Alfonso persönlich.',
+    feats: [
+      { strong: 'Vollständig personalisiert', span: 'Trainingsplan und Ziele nach deinen Vorgaben' },
+      { strong: 'Exklusive Coaching-Zeit', span: '100% Fokus deines Trainers auf dich' },
+      { strong: 'Flexible Terminplanung', span: 'Buchbar nach Verfügbarkeit, auch früh morgens' },
+    ]
+  },
+  morning: {
+    tag: 'MORNING TRAINING',
+    title: 'MORNING TRAINING.<br><span class="gold">FRÜH. FOKUSSIERT. STARK.</span>',
+    titleMob: 'MORNING TRAINING',
+    img: '/assets/images/service-women.webp',
+    imgAlt: 'Morning Training Early Session Bomaye Gym',
+    desc: 'Early Session um 07:00 Uhr — für alle, die den Tag mit voller Energie beginnen wollen. Unser Morning Training gibt dir Struktur, Schweiß und Fokus, bevor der Rest der Welt aufwacht.',
+    feats: [
+      { strong: 'Start um 07:00 Uhr', span: 'Ideal für Berufstätige und Frühaufsteher' },
+      { strong: 'Alle Level willkommen', span: 'Motivierendes Gruppentraining in kleiner Runde' },
+      { strong: 'Energie für den ganzen Tag', span: 'Cardio, Technik und mentaler Reset am Morgen' },
+    ]
+  },
+  strength: {
+    tag: 'STRENGTH & CONDITIONING',
+    title: 'STRENGTH & CONDITIONING.<br><span class="gold">KRAFT. AUSDAUER. LEISTUNG.</span>',
+    titleMob: 'STRENGTH & CONDITIONING',
+    img: '/assets/images/service-pt.webp',
+    imgAlt: 'Strength & Conditioning Bomaye Gym',
+    desc: 'Athletische Leistung beginnt mit einer starken Basis. Unser Strength & Conditioning Programm kombiniert gezieltes Krafttraining, Ausdauerarbeit und funktionelle Bewegungsmuster — entwickelt für Boxer, Kampfsportler und alle, die ihr volles Potenzial abrufen wollen.',
+    feats: [
+      { strong: 'Funktionelles Krafttraining', span: 'Aufbau von sportartspezifischer Stärke und Power' },
+      { strong: 'Kondition & Ausdauer', span: 'Cardio-Einheiten und Intervalltraining für maximale Leistung' },
+      { strong: 'Alle Level willkommen', span: 'Skalierbare Übungen für Einsteiger und Fortgeschrittene' },
+    ]
+  },
+  women: {
+    tag: "WOMEN'S BOXING",
+    title: "WOMEN'S BOXING.<br><span class=\"gold\">POWER. STÄRKE. COMMUNITY.</span>",
+    titleMob: "WOMEN'S BOXING",
+    img: '/assets/images/service-women.webp',
+    imgAlt: "Women's Boxing Bomaye Gym",
+    desc: "Boxen ist kein Männersport. Unser Women's Boxing-Programm ist ein exklusiver Safe Space — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Egal ob Anfängerin oder mit Erfahrung: hier bist du richtig.",
+    feats: [
+      { strong: 'Nur für Frauen', span: 'Exklusiver Safe Space — vertrauensvolles Umfeld' },
+      { strong: 'Alle Level willkommen', span: 'Von der ersten Stunde bis zum Wettkampf' },
+      { strong: 'Starke Community', span: 'Gemeinsam trainieren, gemeinsam wachsen' },
+    ]
+  }
+};
+
+/* ─── Atmospheric background crossfade ────────────────────── */
+let _detailBgActive = 'a';
+function setDetailBg(imgUrl) {
+  const a = document.getElementById('detail-bg-a');
+  const b = document.getElementById('detail-bg-b');
+  if (!a || !b) return;
+  const next = _detailBgActive === 'a' ? b : a;
+  const curr = _detailBgActive === 'a' ? a : b;
+  next.style.backgroundImage = 'url(' + imgUrl + ')';
+  next.classList.add('is-active');
+  curr.classList.remove('is-active');
+  _detailBgActive = _detailBgActive === 'a' ? 'b' : 'a';
+}
+
+/* ─── Desktop: open course detail ─────────────────────────── */
+function openCourse(id) {
+  const data = COURSES[id];
+  if (!data) return;
+
+  /* Tell carousel engine to snap to this course */
+  if (window.__deskCarouselSnap) window.__deskCarouselSnap(id);
+
+  /* Update atmospheric background */
+  setDetailBg(data.img);
+
+  /* Update detail */
+  document.getElementById('detail-tag').textContent     = data.tag;
+  document.getElementById('detail-title').innerHTML     = data.title;
+  document.getElementById('detail-desc').textContent    = data.desc;
+  const detailImg = document.getElementById('detail-img');
+  if (detailImg) { detailImg.src = data.img; detailImg.alt = data.imgAlt; }
+
+  const featsEl = document.getElementById('detail-feats');
+  featsEl.innerHTML = data.feats.map(f => `
+    <div class="course-detail__feat">
+      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <div class="course-detail__feat-body">
+        <strong>${f.strong}</strong>
+        <span>${f.span}</span>
+      </div>
+    </div>`).join('');
+
+  /* Update CTA button */
+  const ctaBtn = document.getElementById('detail-cta-btn');
+  if (ctaBtn) {
+    if (data.cta && data.cta.type === 'email') {
+      ctaBtn.href = 'mailto:' + data.cta.email;
+      ctaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
+    } else {
+      ctaBtn.href = '/mitglied-werden';
+      ctaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
+    }
+  }
+
+  const panel = document.getElementById('course-detail');
+  panel.classList.add('visible');
+}
+
+/* Initialize atmospheric background with the default course */
+setDetailBg(COURSES.boxing.img);
+
+/* ─── Mobile: open course detail ──────────────────────────── */
+function openMobileCourse(id, idx) {
+  const data = COURSES[id];
+  if (!data) return;
+
+  document.querySelectorAll('.carousel-card').forEach((c, i) => {
+    c.style.opacity = i === idx ? '1' : '0.8';
+  });
+
+  document.getElementById('mob-detail-tag').textContent  = data.tag;
+  document.getElementById('mob-detail-title').textContent = data.titleMob;
+  document.getElementById('mob-detail-desc').textContent  = data.desc;
+
+  const featsEl = document.getElementById('mob-detail-feats');
+  featsEl.innerHTML = data.feats.map(f => `
+    <div class="mobile-course-detail__feat">
+      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <div class="mobile-course-detail__feat-body">
+        <strong>${f.strong}</strong>
+        <span>${f.span}</span>
+      </div>
+    </div>`).join('');
+
+  /* Update mobile CTA button */
+  const mobCtaBtn = document.getElementById('mob-detail-cta-btn');
+  if (mobCtaBtn) {
+    if (data.cta && data.cta.type === 'email') {
+      mobCtaBtn.href = 'mailto:' + data.cta.email;
+      mobCtaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
+    } else {
+      mobCtaBtn.href = '/mitglied-werden';
+      mobCtaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
+    }
+  }
+
+  const panel = document.getElementById('mobile-course-detail');
+  panel.classList.add('visible');
+  setTimeout(() => panel.scrollIntoView({ behavior: 'instant', block: 'nearest' }), 100);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESKTOP PREMIUM CAROUSEL ENGINE v1
+   — requestAnimationFrame continuous drift (no CSS animation)
+   — One dominant card centered, neighbors scaled/faded
+   — Hover to pause, resume on leave
+   — Click card → snap + open detail
+   — Seamless infinite loop via head + tail clones
+   — prefers-reduced-motion: no drift, manual-only
+══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var wrap = document.getElementById('desk-carousel');
+  if (!wrap) return;
+  if (window.innerWidth <= 768) return;
+
+  var trackEl = document.getElementById('dsk-track');
+
+  /* ── Config ─────────────────────────────────────────────── */
+  var GAP       = 20;
+  var REAL_N    = 10;
+  var CLONE_N   = 3;
+  var DRIFT_PPS = 36;   /* px/sec — calm, premium drift */
+  var SNAP_MS   = 620;
+  var SNAP_EASE = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
+  var reduced   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Card dimensions from rendered DOM ──────────────────── */
+  var CARD_W, CARD_STEP;
+  function updateSizes() {
+    var s = trackEl.querySelector('.dsk-card');
+    CARD_W    = s ? s.offsetWidth : Math.min(Math.round(window.innerWidth * 0.26), 400);
+    CARD_STEP = CARD_W + GAP;
+  }
+
+  /* ── Build cloned track for seamless loop ───────────────── */
+  var realCards = Array.from(trackEl.querySelectorAll('.dsk-card'));
+  trackEl.innerHTML = '';
+  trackEl.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
+
+  /* Prepend last CLONE_N */
+  for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
+    var cl = realCards[i].cloneNode(true);
+    cl.setAttribute('aria-hidden', 'true');
+    trackEl.appendChild(cl);
+  }
+  /* Real cards */
+  realCards.forEach(function (c) { trackEl.appendChild(c); });
+  /* Append first CLONE_N */
+  for (var j = 0; j < CLONE_N; j++) {
+    var cl2 = realCards[j].cloneNode(true);
+    cl2.setAttribute('aria-hidden', 'true');
+    trackEl.appendChild(cl2);
+  }
+
+  /* ── State ──────────────────────────────────────────────── */
+  var pos      = 0;
+  var curReal  = 0;
+  var raf      = null;
+  var paused   = false;
+  var lastTime = null;
+  var snapping = false;
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  /* translateX that centers real card [realIdx] */
+  function posForCard(realIdx) {
+    updateSizes();
+    var k = CLONE_N + realIdx;
+    return (wrap.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
+  }
+
+  /* track-position k of card nearest to viewport centre */
+  function nearestK() {
+    updateSizes();
+    var vc = wrap.offsetWidth / 2 - pos;
+    return Math.round((vc - CARD_W / 2) / CARD_STEP);
+  }
+
+  /* real card index (0–9) from track position k */
+  function kToReal(k) {
+    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
+  }
+
+  /* silent position jump for seamless loop */
+  function checkLoop() {
+    var cycle = REAL_N * CARD_STEP;
+    var k = nearestK();
+    if (k >= CLONE_N + REAL_N) { pos += cycle; }
+    else if (k < CLONE_N)      { pos -= cycle; }
+  }
+
+  /* ── Card visual hierarchy ───────────────────────────────── */
+  function updateCardVisuals() {
+    var k    = nearestK();
+    var all  = trackEl.querySelectorAll('.dsk-card');
+    all.forEach(function (card, i) {
+      var dist = Math.abs(i - k);
+      card.classList.toggle('dsk-active',   dist === 0);
+      card.classList.toggle('dsk-adjacent', dist === 1);
+    });
+  }
+
+  /* ── Snap to a real card with optional animation ─────────── */
+  function snapTo(realIdx, animate) {
+    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
+    var target = posForCard(curReal);
+    pos = target;
+    if (animate && !reduced) {
+      trackEl.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
+      snapping = true;
+      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
+    } else {
+      trackEl.style.transition = 'none';
+    }
+    trackEl.style.transform = 'translateX(' + pos + 'px)';
+    updateCardVisuals();
+  }
+
+  /* ── RAF drift tick ──────────────────────────────────────── */
+  function tick(ts) {
+    if (!paused && !snapping && !reduced) {
+      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
+      pos -= DRIFT_PPS * dt;
+      checkLoop();
+      trackEl.style.transition = 'none';
+      trackEl.style.transform  = 'translateX(' + pos + 'px)';
+      updateCardVisuals();
+    }
+    lastTime = ts;
+    raf = requestAnimationFrame(tick);
+  }
+
+  /* ── Mouse drag (desktop) ───────────────────────────────── */
+  var isDragging   = false;
+  var hasDragged   = false;
+  var dragStartX   = 0;
+  var dragStartPos = 0;
+  var hoverTimer   = null;
+  var isHovering   = false;
+  var outerEl      = document.getElementById('dsk-outer');
+
+  wrap.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    isDragging   = true;
+    hasDragged   = false;
+    dragStartX   = e.clientX;
+    dragStartPos = pos;
+    paused       = true;
+    snapping     = false;
+    clearTimeout(hoverTimer);
+    trackEl.style.transition = 'none';
+    wrap.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isDragging) return;
+    var dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 4) hasDragged = true;
+    pos = dragStartPos + dx;
+    checkLoop();
+    trackEl.style.transition = 'none';
+    trackEl.style.transform  = 'translateX(' + pos + 'px)';
+    updateCardVisuals();
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (!isDragging) return;
+    isDragging        = false;
+    wrap.style.cursor = '';
+    if (hasDragged) {
+      var k       = nearestK();
+      var realIdx = kToReal(k);
+      snapTo(realIdx, true);
+      openCourse(realCards[realIdx].dataset.course);
+    }
+    setTimeout(function () {
+      if (!isHovering) { paused = false; lastTime = null; }
+    }, 2200);
+  });
+
+  /* ── Hover: pause on enter, resume after delay on leave ──── */
+  var hoverTarget = outerEl || wrap;
+  hoverTarget.addEventListener('mouseenter', function () {
+    isHovering = true;
+    clearTimeout(hoverTimer);
+    paused   = true;
+    lastTime = null;
+  });
+  hoverTarget.addEventListener('mouseleave', function () {
+    isHovering = false;
+    if (isDragging) return;
+    hoverTimer = setTimeout(function () {
+      paused   = false;
+      lastTime = null;
+    }, 500);
+  });
+
+  /* ── Click: snap to clicked card + open detail ───────────── */
+  wrap.addEventListener('click', function (e) {
+    if (hasDragged) { hasDragged = false; return; }
+    var card = e.target.closest('.dsk-card[data-course]');
+    if (!card) return;
+    var courseId = card.dataset.course;
+    var idx = realCards.findIndex(function (c) { return c.dataset.course === courseId; });
+    if (idx >= 0) {
+      paused = true;
+      clearTimeout(hoverTimer);
+      snapTo(idx, true);
+      setTimeout(function () {
+        if (!isHovering) { paused = false; lastTime = null; }
+      }, 2200);
+    }
+    openCourse(courseId);
+  });
+
+  /* ── Arrow navigation ─────────────────────────────────────── */
+  function arrowNav(dir) {
+    paused = true;
+    clearTimeout(hoverTimer);
+    curReal = ((curReal + dir) % REAL_N + REAL_N) % REAL_N;
+    snapTo(curReal, true);
+    openCourse(realCards[curReal].dataset.course);
+    setTimeout(function () {
+      if (!isHovering) { paused = false; lastTime = null; }
+    }, 2200);
+  }
+  var prevBtn = document.getElementById('dsk-prev');
+  var nextBtn = document.getElementById('dsk-next');
+  if (prevBtn) prevBtn.addEventListener('click', function () { arrowNav(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { arrowNav(1); });
+
+  /* ── External API: openCourse triggers carousel snap ─────── */
+  window.__deskCarouselSnap = function (courseId) {
+    var idx = realCards.findIndex(function (c) { return c.dataset.course === courseId; });
+    if (idx >= 0) snapTo(idx, true);
+  };
+
+  /* ── Resize ──────────────────────────────────────────────── */
+  var rTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(rTimer);
+    rTimer = setTimeout(function () {
+      if (window.innerWidth <= 768) return;
+      updateSizes();
+      snapTo(curReal, false);
+    }, 150);
+  }, { passive: true });
+
+  /* ── Init ────────────────────────────────────────────────── */
+  updateSizes();
+  snapTo(0, false);
+  if (!reduced) raf = requestAnimationFrame(tick);
+
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM MOBILE CAROUSEL ENGINE v3
+   — requestAnimationFrame continuous drift (no setInterval gaps)
+   — One dominant card centered, next card peeks at edge
+   — Touch drag with axis detection → snap-to-nearest on release
+   — Seamless infinite loop via head + tail clones
+   — prefers-reduced-motion: no drift, manual-only
+══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var carousel = document.getElementById('courses-carousel');
+  if (!carousel) return;
+
+  /* ── Config ─────────────────────────────────────────────── */
+  var GAP        = 16;    // matches CSS gap on track
+  var REAL_N     = 10;
+  var CLONE_N    = 3;     // clones each side
+  var DRIFT_PPS  = 24;    // pixels per second — slow premium drift
+  var SNAP_MS    = 580;   // snap-to-card transition ms
+  var SNAP_EASE  = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
+  var RESUME_MS  = 2800;  // ms before resuming drift after touch
+  var reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Compute card width from rendered DOM ────────────────── */
+  var CARD_W, CARD_STEP;
+  function updateSizes() {
+    var sample = track.querySelector('.carousel-card');
+    CARD_W    = sample ? sample.offsetWidth : Math.min(Math.round(window.innerWidth * 0.78), 300);
+    CARD_STEP = CARD_W + GAP;
+  }
+
+  /* ── Build extended track ────────────────────────────────── */
+  var realCards = Array.from(carousel.querySelectorAll('.carousel-card'));
+
+  var track = document.createElement('div');
+  track.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
+
+  /* Prepend CLONE_N last cards */
+  for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
+    var cl = realCards[i].cloneNode(true);
+    cl.setAttribute('aria-hidden', 'true');
+    cl.removeAttribute('onclick');
+    track.appendChild(cl);
+  }
+  /* Real cards */
+  realCards.forEach(function (c) { track.appendChild(c); });
+  /* Append CLONE_N first cards */
+  for (var j = 0; j < CLONE_N; j++) {
+    var cl2 = realCards[j].cloneNode(true);
+    cl2.setAttribute('aria-hidden', 'true');
+    cl2.removeAttribute('onclick');
+    track.appendChild(cl2);
+  }
+
+  carousel.innerHTML = '';
+  carousel.appendChild(track);
+  carousel.style.cssText = 'overflow:hidden;position:relative;display:block;touch-action:pan-y pinch-zoom';
+
+  /* ── State ──────────────────────────────────────────────── */
+  var pos         = 0;    // current translateX (negative = scrolled left)
+  var curReal     = 0;    // real card index closest to center
+  var raf         = null;
+  var paused      = false;
+  var lastTime    = null;
+  var resumeTimer = null;
+  var snapping    = false;
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  /* translateX that centers real card [realIdx] */
+  function posForCard(realIdx) {
+    updateSizes();
+    var k = CLONE_N + realIdx;
+    return (carousel.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
+  }
+
+  /* real card index (0–9) currently nearest viewport center */
+  function nearestReal() {
+    updateSizes();
+    /* viewport center in track coords */
+    var vc = carousel.offsetWidth / 2 - pos;
+    var k  = Math.round((vc - CARD_W / 2) / CARD_STEP);
+    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
+  }
+
+  /* silent position jump to maintain seamless loop */
+  function checkLoop() {
+    var cycle = REAL_N * CARD_STEP;
+    var vc    = carousel.offsetWidth / 2 - pos;
+    var k     = Math.round((vc - CARD_W / 2) / CARD_STEP);
+    if (k >= CLONE_N + REAL_N) { pos += cycle; }
+    else if (k < CLONE_N)       { pos -= cycle; }
+  }
+
+  /* ── Dots ────────────────────────────────────────────────── */
+  function setDots(realI) {
+    document.querySelectorAll('.carousel-dot').forEach(function (d, i) {
+      d.classList.toggle('active', i === realI);
+    });
+  }
+
+  /* ── Snap to a real card with animated transition ─────────── */
+  function snapTo(realIdx, animate) {
+    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
+    var target = posForCard(curReal);
+    pos = target;
+    if (animate && !reduced) {
+      track.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
+    } else {
+      track.style.transition = 'none';
+    }
+    track.style.transform = 'translateX(' + pos + 'px)';
+    setDots(curReal);
+    if (animate && !reduced) {
+      snapping = true;
+      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
+    }
+  }
+
+  /* ── RAF drift tick ──────────────────────────────────────── */
+  function tick(ts) {
+    if (!paused && !snapping && !reduced) {
+      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
+      pos -= DRIFT_PPS * dt;
+      checkLoop();
+      track.style.transition = 'none';
+      track.style.transform  = 'translateX(' + pos + 'px)';
+      setDots(nearestReal());
+    }
+    lastTime = ts;
+    raf = requestAnimationFrame(tick);
+  }
+
+  /* ── Touch ───────────────────────────────────────────────── */
+  var t0x, t0y, tStartPos, axisSet, isHoriz;
+
+  carousel.addEventListener('touchstart', function (e) {
+    paused      = true;
+    snapping    = false;
+    lastTime    = null;
+    clearTimeout(resumeTimer);
+    t0x         = e.touches[0].clientX;
+    t0y         = e.touches[0].clientY;
+    tStartPos   = pos;
+    axisSet     = false;
+    isHoriz     = false;
+    track.style.transition = 'none';
+  }, { passive: true });
+
+  carousel.addEventListener('touchmove', function (e) {
+    var dx = e.touches[0].clientX - t0x;
+    var dy = e.touches[0].clientY - t0y;
+    if (!axisSet && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+      isHoriz = Math.abs(dx) >= Math.abs(dy);
+      axisSet  = true;
+    }
+    if (!axisSet || !isHoriz) return;
+    e.preventDefault();
+    pos = tStartPos + dx;
+    track.style.transition = 'none';
+    track.style.transform  = 'translateX(' + pos + 'px)';
+  }, { passive: false });
+
+  function onTouchEnd() {
+    if (axisSet && isHoriz) {
+      snapTo(nearestReal(), true);
+    }
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
+  }
+
+  carousel.addEventListener('touchend',    onTouchEnd, { passive: true });
+  carousel.addEventListener('touchcancel', function () {
+    snapTo(nearestReal(), true);
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
+  }, { passive: true });
+
+  /* ── Resize ──────────────────────────────────────────────── */
+  var rTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(rTimer);
+    rTimer = setTimeout(function () { updateSizes(); snapTo(curReal, false); }, 150);
+  }, { passive: true });
+
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(function () {
+      if (carousel.offsetWidth > 0) { updateSizes(); snapTo(curReal, false); }
+    }).observe(carousel);
+  }
+
+  /* ── External API (dot buttons) ─────────────────────────── */
+  window.scrollCarouselTo = function (realI) {
+    paused = true;
+    clearTimeout(resumeTimer);
+    snapTo(realI, true);
+    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
+  };
+
+  /* ── Init ────────────────────────────────────────────────── */
+  updateSizes();
+  snapTo(0, false);
+  if (!reduced) raf = requestAnimationFrame(tick);
+
+})();
+
+/* ─── Open first course by default on desktop ─────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.innerWidth > 768) openCourse('boxing');
+});
+
+/* ─── URL hash: jump to specific course ───────────────────── */
+(function () {
+  const hash = location.hash.replace('#', '');
+  if (COURSES[hash]) {
+    document.addEventListener('DOMContentLoaded', () => openCourse(hash));
+  }
+})();
+
+/* ─── Header scroll styling ───────────────────────────────── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ─── iOS-compatible scroll lock ─────────────────────────── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
+/* ─── Mobile nav toggle ────────────────────────────────────── */
+function toggleKurseMenu() {
+  const nav = document.getElementById('kurse-mobile-nav');
+  const btn = document.getElementById('kurse-burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+
+/* ─── Booking modal ────────────────────────────────────────── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ─── Scroll reveal ────────────────────────────────────────── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM UX ENHANCEMENTS
+══════════════════════════════════════════════════════════════ */
+
+/* ─── Feature 1: Atmospheric bg update during carousel drift ── */
+(function () {
+  var track = document.getElementById('dsk-track');
+  if (!track) return;
+  var lastBgId = null, bgTimer = null;
+  function tryUpdateBg() {
+    var active = track.querySelector('.dsk-card.dsk-active[data-course]');
+    if (!active) return;
+    var id = active.dataset.course;
+    if (id === lastBgId) return;
+    lastBgId = id;
+    if (COURSES[id]) setDetailBg(COURSES[id].img);
+  }
+  new MutationObserver(function () {
+    clearTimeout(bgTimer);
+    bgTimer = setTimeout(tryUpdateBg, 120);
+  }).observe(track, { subtree: true, attributes: true, attributeFilter: ['class'] });
+})();
+
+/* ─── Feature 2: Magnetic premium CTA micro-interaction ───── */
+(function () {
+  var noHover = window.matchMedia('(hover: none)').matches;
+  function addMagnetic(el) {
+    if (!el || noHover) return;
+    var LIFT = -2, SCALE = 1.04, MX = 5, MY = 3;
+    var over = false;
+    el.addEventListener('mouseenter', function () { over = true; });
+    el.addEventListener('mousemove', function (e) {
+      var r  = el.getBoundingClientRect();
+      var dx = ((e.clientX - r.left - r.width  * 0.5) / (r.width  * 0.5)) * MX;
+      var dy = ((e.clientY - r.top  - r.height * 0.5) / (r.height * 0.5)) * MY;
+      el.style.transition = 'transform 130ms ease, box-shadow 130ms ease';
+      el.style.transform  = 'translateY(' + LIFT + 'px) scale(' + SCALE + ') translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px)';
+    });
+    el.addEventListener('mouseleave', function () {
+      over = false;
+      el.style.transition = '';
+      el.style.transform  = '';
+    });
+    el.addEventListener('mousedown', function () {
+      el.style.transition = 'transform 60ms ease';
+      el.style.transform  = 'translateY(1px) scale(0.97)';
+    });
+    el.addEventListener('mouseup', function () {
+      if (!over) return;
+      el.style.transition = 'transform 180ms cubic-bezier(0.22,0.8,0.32,1)';
+      el.style.transform  = 'translateY(' + LIFT + 'px) scale(' + SCALE + ')';
+    });
+  }
+  document.querySelectorAll('.btn--gold').forEach(addMagnetic);
+})();
+
+/* ─── Feature 3: Micro content animation on course change ─── */
+(function () {
+  var _orig = openCourse;
+  openCourse = function (id) {
+    var panel = document.getElementById('course-detail');
+    if (panel) panel.classList.remove('cd-entering');
+    _orig(id);
+    if (panel) { void panel.offsetHeight; panel.classList.add('cd-entering'); }
+  };
+})();
+</script>
+
+<!-- Sanity CDN client + courses data loader -->
+<script src="/assets/js/sanity-client.js"></script>
+<script src="/assets/js/sanity-courses-loader.js"></script>
+<script src="/assets/js/pixel-events.js"></script>
+
+</body>
+</html>

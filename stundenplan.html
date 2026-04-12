@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Stundenplan | BOMAYE GYM MUNICH</title>
+  <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <meta name="description" content="Alle Kurse und Zeiten auf einen Blick. Buche jetzt deinen Platz im BOMAYE GYM MUNICH — Boxen, Kickboxen & mehr." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/stundenplan" />
+
+  <!-- Preload -->
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600&family=Oswald:wght@400;500;600;700&display=swap" /></noscript>
+
+  <!-- Font Awesome -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* ── Page shell ── */
+    body { background: #0c0c0c; }
+
+    /* ── Hero ── */
+    .sp-page-hero {
+      background: var(--ink);
+      padding: 7rem 0 3rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(197,160,89,0.15);
+    }
+    .sp-page-hero .tag { margin-bottom: 1rem; display: inline-block; }
+    .sp-page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: #fff;
+      letter-spacing: 3px;
+      margin: 0.5rem 0;
+    }
+    .sp-page-hero p {
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    /* ── CTA BAR ── */
+    .sp-cta-bar {
+      background: var(--ink);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-top: 1px solid rgba(197,160,89,0.12);
+    }
+    .sp-cta-bar h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 1.25rem;
+    }
+    .sp-cta-bar .btn { margin: 0.4rem; }
+
+    /* ── PHONE (≤480px) ── */
+    @media (max-width: 480px) {
+      .sp-page-hero { padding: 6rem 1rem 2.5rem; }
+      .sp-cta-bar .btn { width: 100%; justify-content: center; margin: 0.35rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" decoding="async" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ABOUT US</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden">MITGLIED WERDEN</a>
+    </nav>
+
+    <button class="burger" onclick="toggleMobileMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
+  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
+  <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" style="--mn-i:5;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">MITGLIED WERDEN</a>
+</div>
+
+
+<!-- ═══════ PAGE HERO ═══════ -->
+<div class="sp-page-hero">
+  <div class="container">
+    <span class="tag tag--gold">STUNDENPLAN</span>
+    <h1>DEIN <span class="shimmer">TRAINING.</span></h1>
+    <p>Alle Kurse und Zeiten auf einen Blick — buche direkt deinen Platz.</p>
+  </div>
+</div>
+
+<!-- ═══════ BSPORT CALENDAR ═══════ -->
+<section id="schedule">
+  <div class="container">
+    <div class="schedule-frame" id="schedule-section-wrap">
+      <div class="schedule-frame__widget">
+        <div id="bsport-widget-172485"></div>
+        <noscript>
+          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+        </noscript>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CTA BAR ═══════ -->
+<div class="sp-cta-bar">
+  <h2>BEREIT FÜR DEIN ERSTES <span class="gold">TRAINING?</span></h2>
+  <div>
+    <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;">
+      <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+    </a>
+    <a href="/" class="btn btn--outline-light" style="text-decoration:none;">
+      <i class="fa-solid fa-arrow-left"></i> ZURÜCK ZUR STARTSEITE
+    </a>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+        <span class="logo-text">BOMAYE</span>
+        <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
+        <p class="brand-line">Pineapple Park · 80639 München</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>KURSE</h4>
+        <ul class="footer-links">
+          <li><a href="/kurse">Boxing</a></li>
+          <li><a href="/kurse">Kickboxing</a></li>
+          <li><a href="/kurse">Women's Boxing</a></li>
+          <li><a href="/kurse">Youth Boxing</a></li>
+          <li><a href="/kurse">Personal Training</a></li>
+          <li><a href="/kurse">Corporate Boxing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>GYM</h4>
+        <ul class="footer-links">
+          <li><a href="/">Startseite</a></li>
+          <li><a href="/faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>KONTAKT</h4>
+        <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+        <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
+        <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+      <div class="footer-legal">
+        <a href="/impressum">IMPRESSUM</a>
+        <a href="/datenschutz">DATENSCHUTZ</a>
+        <a href="/agb">AGB</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+function toggleMobileMenu() {
+  const nav = document.getElementById('mobile-nav');
+  const btn = document.getElementById('burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+// Header scroll state
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+}());
+// Logo image fallback
+(function () {
+  document.querySelectorAll('.logo-img').forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) img.style.display = 'none';
+    img.addEventListener('error', function () { this.style.display = 'none'; });
+  });
+}());
+</script>
+
+<!-- Bsport CDN -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+<script id="bsport-widget-mount">
+function MountBsportWidget(config, repeat=1) {
+  if (repeat > 50) { return }
+  if (!window.BsportWidget) {
+    return setTimeout(() => { MountBsportWidget(config,repeat+1) }, 100 * repeat || 1)
+  }
+  BsportWidget.mount(config)
+}
+</script>
+<script>
+(function () {
+  var mounted = false;
+  var target  = document.getElementById('bsport-widget-172485');
+  if (!target) return;
+  function mount() {
+    if (mounted) return;
+    mounted = true;
+    MountBsportWidget({
+      "parentElement": "bsport-widget-172485",
+      "companyId": 5473,
+      "franchiseId": null,
+      "dialogMode": 1,
+      "widgetType": "calendar",
+      "showFab": false,
+      "fullScreenPopup": false,
+      "styles": undefined,
+      "config": { "calendar": {} }
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { mount(); io.disconnect(); }
+    }, { rootMargin: '400px' });
+    io.observe(target);
+  } else {
+    setTimeout(mount, 2000);
+  }
+}());
+</script>
+
+<script>
+/* BSport schedule fix — removes inline display:none from widget metadata.
+   MutationObserver fires whenever the widget re-renders (day change, filter).
+   Debounce (150ms) prevents CPU saturation from rapid React mutations.
+   Observing document.body catches all React re-renders that add card nodes.
+   childList-only: our style changes are attribute mutations, not childList —
+   the observer never re-fires from its own fix (no infinite loop).          */
+document.addEventListener("DOMContentLoaded", function () {
+
+  function fixSchedule() {
+    var widget = document.querySelector('[id^="bsport-widget"]');
+    if (!widget) return;
+
+    widget.querySelectorAll('*').forEach(function (el) {
+      if (el.style && el.style.display === "none") {
+        el.style.display = "";
+      }
+    });
+  }
+
+  fixSchedule();
+
+  var _timer;
+  var observer = new MutationObserver(function () {
+    clearTimeout(_timer);
+    _timer = setTimeout(fixSchedule, 150);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+});
+</script>
+
+</body>
+</html>
