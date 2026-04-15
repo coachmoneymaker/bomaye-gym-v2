@@ -202,6 +202,41 @@
       .sc-hero { padding: 80px 20px 60px; }
       .sc-hero-h1 { font-size: 2.4rem; }
     }
+
+    /* ══════════════════════════════════════════════
+       SECTION 2 — CALENDAR
+    ══════════════════════════════════════════════ */
+    .sc-calendar {
+      background: #F5F0E8;
+      padding: 60px 32px;
+    }
+    .sc-calendar-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .sc-calendar-label {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .sc-calendar-sub {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
+    }
+    .sc-calendar-widget {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+      .sc-calendar { padding: 40px 16px; }
+    }
   </style>
 </head>
 
@@ -273,6 +308,20 @@
          target="_blank" rel="noopener">
         Jetzt Einschreiben
       </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 2 — CALENDAR
+  ══════════════════════════════════════════════ -->
+  <section class="sc-calendar" aria-label="Stundenplan">
+    <div class="sc-calendar-header">
+      <span class="sc-calendar-label">Stundenplan</span>
+      <p class="sc-calendar-sub">Wähle deine Stunde — wir sehen uns im Ring.</p>
+    </div>
+    <div class="sc-calendar-widget">
+      <div style="overflow:hidden !important; position:relative; padding-top:125vh;"><iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;" frameborder="0" allowfullscreen srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-424753","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "calendar","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"calendar": {"coaches": [],"establishments": [],"metaActivities": [],"levels": [],"variant": null,"groupSessionByPeriod": true,"todayOnly": false,"cardMode": null}}})</script><div id="bsport-widget-424753"></div>'>
+      </iframe></div>
     </div>
   </section>
 
