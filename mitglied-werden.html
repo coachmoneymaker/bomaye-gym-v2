@@ -493,6 +493,83 @@
     }
 
     /* ════════════════════════════════════════════════════════════
+       SECTION 3 — TRIAL TRAINING
+    ════════════════════════════════════════════════════════════ */
+    .mw-trial {
+      background: #F5F0E8;
+      padding: 64px 24px;
+      text-align: center;
+    }
+    .mw-trial-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .mw-trial-label {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+    }
+    .mw-trial-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      font-weight: 700;
+      color: #0A0A08;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+      margin: 0 0 14px;
+    }
+    .mw-trial-sub {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: #333;
+      font-weight: 500;
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+    .mw-trial-body {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+    .mw-trial-btn {
+      display: block;
+      width: 100%;
+      background: #C9A84C;
+      color: #0A0A08;
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 24px;
+      border-radius: 0;
+      border: none;
+      text-align: center;
+      cursor: pointer;
+      transition: filter 0.2s, transform 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      margin-bottom: 14px;
+    }
+    .mw-trial-btn:hover  { filter: brightness(1.08); transform: translateY(-1px); }
+    .mw-trial-btn:active { transform: scale(0.99); filter: brightness(0.95); }
+    @media (min-width: 560px) {
+      .mw-trial-btn { display: inline-block; width: auto; padding: 18px 48px; }
+    }
+    .mw-trial-hint {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: #999;
+      margin: 0;
+    }
+
+    /* ════════════════════════════════════════════════════════════
        SECTION 4 — WICHTIGER HINWEIS
     ════════════════════════════════════════════════════════════ */
     .mw-note {
@@ -779,7 +856,6 @@
             <span class="mw-card-price">14,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
-          <p class="mw-card-monthly">ca. 64,57 € / Monat · 12-Monats-Vertrag</p>
           <span class="mw-card-savings">Early Bird — spare 13 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan speziell für Kinder</li>
@@ -805,7 +881,6 @@
             <span class="mw-card-price">18,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
-          <p class="mw-card-monthly">ca. 81,90 € / Monat · 12-Monats-Vertrag</p>
           <span class="mw-card-savings">Early Bird — spare 17 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Unbegrenzter Zugang zu allen Kursen</li>
@@ -831,7 +906,6 @@
             <span class="mw-card-price">15,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
-          <p class="mw-card-monthly">ca. 68,90 € / Monat · 12-Monats-Vertrag</p>
           <span class="mw-card-savings">Early Bird — spare 16 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan für Jugendliche</li>
@@ -849,13 +923,16 @@
     </section>
 
     <!-- ══════════════════════════════════════════════
-         SECTION 3 — TRUST BAR
+         SECTION 3 — TRIAL TRAINING
     ══════════════════════════════════════════════ -->
-    <section class="mw-trust" aria-label="Vertrauensmerkmale">
-      <div class="mw-trust-inner reveal">
-        <p class="mw-trust-item">🔒 Keine versteckten Kosten</p>
-        <p class="mw-trust-item">⭐ Early Bird Preis bleibt dauerhaft</p>
-        <p class="mw-trust-item">📍 Bomaye Gym München — Pineapple Park</p>
+    <section class="mw-trial" aria-label="Kostenloses Probetraining">
+      <div class="mw-trial-inner reveal">
+        <p class="mw-trial-label">Kein Risiko</p>
+        <h2 class="mw-trial-h2">Noch nicht sicher?</h2>
+        <p class="mw-trial-sub">Komm zum kostenlosen Probetraining. Kein Vertrag. Kein Druck.</p>
+        <p class="mw-trial-body">Erlebe das Bomaye Gym, unsere Coaches und die Community — bevor du dich entscheidest. Ein Training reicht, um zu wissen.</p>
+        <a href="/schedule" class="mw-trial-btn">KOSTENLOSES PROBETRAINING BUCHEN</a>
+        <p class="mw-trial-hint">Einfach Stunde aussuchen &amp; kostenlos einbuchen.</p>
       </div>
     </section>
 
