@@ -305,7 +305,25 @@
     }
 
     /* ══════════════════════════════════════════════
-       SECTION 4 — FAQ MINI
+       OPENING PARTY BANNER
+    ══════════════════════════════════════════════ */
+    .sc-party-banner {
+      background: rgba(201,168,76,0.08);
+      border-top: 1px solid rgba(201,168,76,0.25);
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+      padding: 16px 24px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      line-height: 1.6;
+    }
+    .sc-party-cream { color: #F5F0E8; }
+    .sc-party-gold  { color: #C9A84C; font-weight: 700; }
+    .sc-party-muted { color: rgba(245,240,232,0.6); }
+
+    /* ══════════════════════════════════════════════
+       SECTION 4 — FAQ
     ══════════════════════════════════════════════ */
     .sc-faq {
       background: #F5F0E8;
@@ -326,27 +344,20 @@
       text-align: center;
       margin-bottom: 32px;
     }
-    .sc-faq-item {
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-    }
-    .sc-faq-item:first-of-type {
-      border-top: 1px solid rgba(201,168,76,0.2);
-    }
-    .sc-faq-q {
+    .sc-faq-more {
       font-family: var(--font-body);
-      font-size: 1rem;
-      font-weight: 700;
-      color: #0A0A08;
-      margin: 0 0 8px;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      margin-top: 24px;
+      margin-bottom: 0;
     }
-    .sc-faq-a {
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      color: #555;
-      line-height: 1.7;
-      margin: 0;
+    .sc-faq-link {
+      color: #C9A84C;
+      text-decoration: none;
+      font-weight: 600;
     }
+    .sc-faq-link:hover { text-decoration: underline; }
   </style>
 </head>
 
@@ -410,32 +421,18 @@
   ══════════════════════════════════════════════ -->
   <section class="sc-hero" aria-label="Schedule Hero">
     <div class="sc-hero-inner">
-      <span class="sc-hero-label">Soft Opening · Ab 20. April 2026</span>
+      <span class="sc-hero-label">Pre-Opening · Ab 20. April 2026</span>
       <h1 class="sc-hero-h1">Train With Us.</h1>
       <p class="sc-hero-sub">Such dir eine Stunde aus — dein erstes Training ist kostenlos.</p>
-      <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473/calendar"
-         class="sc-hero-cta"
-         target="_blank" rel="noopener">
-        Jetzt Einschreiben
-      </a>
     </div>
   </section>
 
   <!-- ══════════════════════════════════════════════
-       SECTION 3 — REGISTRATION CTA
+       OPENING PARTY BANNER
   ══════════════════════════════════════════════ -->
-  <section class="sc-reg" aria-label="Kostenlos registrieren">
-    <div class="sc-reg-inner">
-      <span class="sc-reg-label">Kein Konto?</span>
-      <h2 class="sc-reg-h2">Kostenlos registrieren.</h2>
-      <p class="sc-reg-sub">Erstelle dein kostenloses Bsport-Konto, wähle eine Stunde im Stundenplan und komm zum Probetraining. Kein Abo. Kein Risiko.</p>
-      <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473/calendar"
-         class="sc-reg-cta"
-         target="_blank" rel="noopener">
-        Jetzt Registrieren
-      </a>
-    </div>
-  </section>
+  <div class="sc-party-banner" aria-label="Opening Party">
+    🥊 <span class="sc-party-cream">Save the Date:</span> <span class="sc-party-gold">23. Mai 2026 — Offizielle Opening Party.</span> <span class="sc-party-muted">Details folgen.</span>
+  </div>
 
   <!-- ══════════════════════════════════════════════
        SECTION 2 — CALENDAR
@@ -452,26 +449,40 @@
   </section>
 
   <!-- ══════════════════════════════════════════════
-       SECTION 4 — FAQ MINI
+       SECTION 4 — FAQ
   ══════════════════════════════════════════════ -->
   <section class="sc-faq" aria-label="Häufige Fragen">
     <div class="sc-faq-inner">
       <span class="sc-faq-label">Häufige Fragen</span>
 
-      <div class="sc-faq-item">
-        <p class="sc-faq-q">Muss ich ein Abo abschließen?</p>
-        <p class="sc-faq-a">Nein. Dein erstes Training ist komplett kostenlos. Danach entscheidest du selbst.</p>
+      <div class="faq-list faq-list--light">
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Muss ich ein Abo abschließen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Nein. Dein erstes Training ist komplett kostenlos. Danach entscheidest du selbst.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Was muss ich mitbringen? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Boxhandschuhe leihst du dir beim ersten Mal kostenlos.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Wie buche ich? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Registriere dich kostenlos, wähle eine Stunde im Stundenplan und erscheine einfach.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
+            Kann ich auch ohne Kurs frei trainieren? <i class="fa-solid fa-plus faq-icon"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Ja. Täglich von 12:00 bis 16:00 Uhr kannst du die Halle zum freien Training nutzen — ganz ohne Kurs oder Anmeldung. Komm einfach vorbei.</div></div>
+        </div>
       </div>
 
-      <div class="sc-faq-item">
-        <p class="sc-faq-q">Was muss ich mitbringen?</p>
-        <p class="sc-faq-a">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Boxhandschuhe leihst du dir beim ersten Mal kostenlos.</p>
-      </div>
-
-      <div class="sc-faq-item">
-        <p class="sc-faq-q">Wie buche ich?</p>
-        <p class="sc-faq-a">Registriere dich kostenlos, wähle eine Stunde im Stundenplan und erscheine einfach.</p>
-      </div>
+      <p class="sc-faq-more">Weitere Fragen? <a href="/faq" class="sc-faq-link">Alle FAQs ansehen →</a></p>
     </div>
   </section>
 
@@ -558,6 +569,21 @@
   function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  /* ── FAQ accordion ── */
+  window.toggleFaq = function (btn) {
+    var expanded = btn.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.faq-q').forEach(function (q) {
+      q.setAttribute('aria-expanded', 'false');
+      var a = q.nextElementSibling;
+      if (a) a.style.maxHeight = '';
+    });
+    if (!expanded) {
+      btn.setAttribute('aria-expanded', 'true');
+      var ans = btn.nextElementSibling;
+      if (ans) ans.style.maxHeight = ans.scrollHeight + 'px';
+    }
+  };
 
   /* ── Mobile nav toggle ── */
   var mobileNav = document.getElementById('schedule-mobile-nav');
