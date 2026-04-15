@@ -237,6 +237,72 @@
     @media (max-width: 768px) {
       .sc-calendar { padding: 40px 16px; }
     }
+
+    /* ══════════════════════════════════════════════
+       SECTION 3 — REGISTRATION CTA
+    ══════════════════════════════════════════════ */
+    .sc-reg {
+      background: #0A0A08;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .sc-reg-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .sc-reg-label {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .sc-reg-h2 {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #F5F0E8;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .sc-reg-sub {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(245,240,232,0.6);
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+    .sc-reg-cta {
+      display: inline-block;
+      background: #C9A84C;
+      color: #000;
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 40px;
+      border-radius: 0;
+      transition: filter 0.2s, transform 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sc-reg-cta:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .sc-reg-cta:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+    @media (max-width: 768px) {
+      .sc-reg-h2 { font-size: 1.8rem; }
+    }
   </style>
 </head>
 
@@ -307,6 +373,22 @@
          class="sc-hero-cta"
          target="_blank" rel="noopener">
         Jetzt Einschreiben
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 3 — REGISTRATION CTA
+  ══════════════════════════════════════════════ -->
+  <section class="sc-reg" aria-label="Kostenlos registrieren">
+    <div class="sc-reg-inner">
+      <span class="sc-reg-label">Kein Konto?</span>
+      <h2 class="sc-reg-h2">Kostenlos registrieren.</h2>
+      <p class="sc-reg-sub">Erstelle dein kostenloses Bsport-Konto, wähle eine Stunde im Stundenplan und komm zum Probetraining. Kein Abo. Kein Risiko.</p>
+      <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473/calendar"
+         class="sc-reg-cta"
+         target="_blank" rel="noopener">
+        Jetzt Registrieren
       </a>
     </div>
   </section>
