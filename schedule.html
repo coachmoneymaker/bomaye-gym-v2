@@ -303,6 +303,50 @@
     @media (max-width: 768px) {
       .sc-reg-h2 { font-size: 1.8rem; }
     }
+
+    /* ══════════════════════════════════════════════
+       SECTION 4 — FAQ MINI
+    ══════════════════════════════════════════════ */
+    .sc-faq {
+      background: #F5F0E8;
+      padding: 60px 24px;
+    }
+    .sc-faq-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .sc-faq-label {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      display: block;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .sc-faq-item {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .sc-faq-item:first-of-type {
+      border-top: 1px solid rgba(201,168,76,0.2);
+    }
+    .sc-faq-q {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0A0A08;
+      margin: 0 0 8px;
+    }
+    .sc-faq-a {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.7;
+      margin: 0;
+    }
   </style>
 </head>
 
@@ -404,6 +448,30 @@
     <div class="sc-calendar-widget">
       <div style="overflow:hidden !important; position:relative; padding-top:125vh;"><iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;" frameborder="0" allowfullscreen srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-424753","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "calendar","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"calendar": {"coaches": [],"establishments": [],"metaActivities": [],"levels": [],"variant": null,"groupSessionByPeriod": true,"todayOnly": false,"cardMode": null}}})</script><div id="bsport-widget-424753"></div>'>
       </iframe></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 4 — FAQ MINI
+  ══════════════════════════════════════════════ -->
+  <section class="sc-faq" aria-label="Häufige Fragen">
+    <div class="sc-faq-inner">
+      <span class="sc-faq-label">Häufige Fragen</span>
+
+      <div class="sc-faq-item">
+        <p class="sc-faq-q">Muss ich ein Abo abschließen?</p>
+        <p class="sc-faq-a">Nein. Dein erstes Training ist komplett kostenlos. Danach entscheidest du selbst.</p>
+      </div>
+
+      <div class="sc-faq-item">
+        <p class="sc-faq-q">Was muss ich mitbringen?</p>
+        <p class="sc-faq-a">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Boxhandschuhe leihst du dir beim ersten Mal kostenlos.</p>
+      </div>
+
+      <div class="sc-faq-item">
+        <p class="sc-faq-q">Wie buche ich?</p>
+        <p class="sc-faq-a">Registriere dich kostenlos, wähle eine Stunde im Stundenplan und erscheine einfach.</p>
+      </div>
     </div>
   </section>
 
