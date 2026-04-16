@@ -168,15 +168,18 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     .hero-cred-item:last-child { border-right: none; }
   }
 
-  /* ── U6: Hero section warm base background ── */
+  /* ── U6: Hero section — video background ── */
   #hero { background-color: #0A0A08; }
-  .hero-bg {
-    background-color: #0A0A08;
-    background-image: url('/assets/images/community.webp');
-    background: linear-gradient(135deg, #0A0A08 0%, #111110 40%, #0A0A08 100%);
-    background-image: url('/assets/images/community.webp');
-    background-size: cover;
-    background-position: center 30%;
+  .hero-video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video { display: none; }
   }
 
   /* ── U7: Scarcity counter pulse-glow animation ── */
@@ -264,10 +267,11 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     <nav class="nav-links" aria-label="Hauptnavigation">
       <button class="nav-link" onclick="nav('home')" type="button">HOME</button>
       <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/schedule">SCHEDULE</a>
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="nav-link" href="/mitgliederbereich" style="text-decoration:none;">LOGIN / MEIN KONTO</a>
+      <a class="nav-link" href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" target="_blank" rel="noopener" style="text-decoration:none;">MEIN KONTO</a>
       <a href="/mitglied-werden" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;">MITGLIED WERDEN</a>
     </nav>
 
@@ -288,11 +292,12 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
   </button>
   <button class="mn-item" onclick="mobileNav('home')" type="button" style="--mn-i:0">HOME</button>
   <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
-  <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
-  <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
-  <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <a class="mn-item" href="/mitgliederbereich" style="--mn-i:5;text-decoration:none;">LOGIN / MEIN KONTO</a>
-  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:6;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+  <a class="mn-item" href="/schedule" style="--mn-i:2">SCHEDULE</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:3">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:4">ABOUT US</a>
+  <a class="mn-item" href="/faq" style="--mn-i:5">FAQ</a>
+  <a class="mn-item" href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" target="_blank" rel="noopener" style="--mn-i:6;text-decoration:none;">MEIN KONTO</a>
+  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:7;text-decoration:none;display:flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
   </a>
 </div>
@@ -547,7 +552,9 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
 
   <!-- ── HERO ── -->
   <section id="hero" aria-label="Hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+    <video class="hero-video" autoplay loop muted playsinline preload="none" aria-hidden="true">
+      <source src="/assets/hero-loop.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
       <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
@@ -569,6 +576,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
           <i class="fa-solid fa-circle-play"></i> WARUM BOMAYE
         </a>
       </div>
+      <p style="order:5;margin-top:16px;font-size:0.85rem;color:rgba(245,240,232,0.7);text-align:center;">Erst testen? → <a href="/schedule" style="color:#C9A84C;text-decoration:none;font-weight:600;">Kostenloses Probetraining buchen</a></p>
       <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
         <div class="hero-cred-item">
           <span class="hero-cred-label">Landestrainer</span>
@@ -687,16 +695,16 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
         <!-- STEP 2: Counter directly below headline -->
         <div class="eb-counter-block">
           <div class="eb-card-label">NOCH VERFÜGBAR</div>
-          <div class="eb-card-number" id="eb-remaining">180</div>
+          <div class="eb-card-number" id="eb-remaining">160</div>
           <div class="eb-updated-label">Zuletzt aktualisiert: heute</div>
           <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN</div>
           <div class="eb-progress" aria-label="Auslastungsanzeige">
             <div class="eb-progress-bar">
-              <div class="eb-progress-fill" id="eb-progress-fill" style="width:40%"></div>
+              <div class="eb-progress-fill" id="eb-progress-fill" style="width:47%"></div>
             </div>
             <div class="eb-progress-meta">
-              <span>120 BELEGT</span>
-              <span id="eb-progress-pct">40% BELEGT</span>
+              <span>140 BELEGT</span>
+              <span id="eb-progress-pct">47% BELEGT</span>
               <span>300 GESAMT</span>
             </div>
           </div>
@@ -722,7 +730,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
 
         <!-- Hidden badge for JS compatibility -->
         <div style="display:none;">
-          <span id="spots-badge-text">Early Bird — noch 180 Plätze</span>
+          <span id="spots-badge-text">Early Bird — noch 160 Plätze</span>
           <span id="sanity-eb-badge"></span>
         </div>
 
@@ -761,7 +769,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich eröffnet am 15. April 2026. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie — und trainiert ab dem ersten Tag.</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich eröffnet am 20. April 2026. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie — und trainiert ab dem ersten Tag.</div></div>
         </div>
         <div class="faq-item reveal delay-1">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">

@@ -270,17 +270,12 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .hero-overlay {
   position: absolute; inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%),
-    linear-gradient(180deg,
-      rgba(8,8,8,0.72) 0%,
-      rgba(8,8,8,0.52) 42%,
-      rgba(8,8,8,0.88) 78%,
-      rgba(8,8,8,1.00) 100%
-    );
+  background: #0A0A08;
+  opacity: 0.55;
+  z-index: 1;
 }
 .hero-content {
-  position: relative; z-index: 1;
+  position: relative; z-index: 2;
   text-align: center; padding: calc(var(--nav-h) + 0.75rem) 1.5rem 4rem;
   max-width: 900px; width: 100%;
 }
@@ -373,7 +368,7 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .hero-trust-item i { color: var(--gold); }
 .trust-divider { width: 1px; height: 14px; background: rgba(255,255,255,0.2); }
 .scroll-hint {
-  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 0.52rem; letter-spacing: 3px; color: rgba(255,255,255,0.3);
   opacity: 0; will-change: opacity;
@@ -1978,7 +1973,7 @@ footer {
   .hero-brand-tagline { order: 2; margin-top: 2.8rem; margin-bottom: 2rem; font-size: clamp(1.5rem, 3.5vw, 2.15rem); letter-spacing: 0.14em; }
   .hero-subtitle      { order: 3; }
   .hero-ctas          { order: 4; }
-  .hero-credentials   { order: 5; }
+  .hero-credentials   { order: 6; }
 }
 
 /* ── 375px fine-tuning ──────────────────────────────────────── */
@@ -7008,16 +7003,10 @@ section { padding: var(--sv) 0; }
   will-change: width;
 }
 
-/* ── Hero Overlay — Deeper, more cinematic vignette ── */
+/* ── Hero Overlay — solid dark base for video background ── */
 .hero-overlay {
-  background:
-    radial-gradient(ellipse at center, transparent 18%, rgba(0,0,0,0.80) 100%),
-    linear-gradient(180deg,
-      rgba(8,8,8,0.84) 0%,
-      rgba(8,8,8,0.46) 40%,
-      rgba(8,8,8,0.92) 75%,
-      rgba(8,8,8,1.00) 100%
-    ) !important;
+  background: #0A0A08 !important;
+  opacity: 0.55 !important;
 }
 
 /* ── Hero H1 — Depth and authority ── */
