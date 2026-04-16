@@ -168,15 +168,18 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     .hero-cred-item:last-child { border-right: none; }
   }
 
-  /* ── U6: Hero section warm base background ── */
+  /* ── U6: Hero section — video background ── */
   #hero { background-color: #0A0A08; }
-  .hero-bg {
-    background-color: #0A0A08;
-    background-image: url('/assets/images/community.webp');
-    background: linear-gradient(135deg, #0A0A08 0%, #111110 40%, #0A0A08 100%);
-    background-image: url('/assets/images/community.webp');
-    background-size: cover;
-    background-position: center 30%;
+  .hero-video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video { display: none; }
   }
 
   /* ── U7: Scarcity counter pulse-glow animation ── */
@@ -549,7 +552,9 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
 
   <!-- ── HERO ── -->
   <section id="hero" aria-label="Hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+    <video class="hero-video" autoplay loop muted playsinline preload="none" aria-hidden="true">
+      <source src="/assets/videos/hero-loop.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
       <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
