@@ -566,7 +566,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
         IT'S NOT A GYM.<br>
         <span class="shimmer">IT'S PASSION.</span>
       </h2>
-      <p class="hero-subtitle" id="sanity-hero-subheadline">Nur 300 Plätze. Danach wird es teurer.</p>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Werde Founding Member. Dein Preis bleibt dauerhaft.</p>
       <p class="hero-brand-tagline">BECOME BOMAYE.</p>
       <div class="hero-ctas">
         <a href="/mitglied-werden" class="btn btn--gold btn--hero-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
@@ -588,10 +588,6 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
         <div class="hero-cred-item">
           <span class="hero-cred-label">20+ Jahre Erfahrung</span>
           <span class="hero-cred-sub">Wettkampf und Leistungssport</span>
-        </div>
-        <div class="hero-cred-item">
-          <span class="hero-cred-label">Zahle ab Opening</span>
-          <span class="hero-cred-sub">Dein Preis bleibt dauerhaft</span>
         </div>
       </div>
       <p style="order:7;margin-top:16px;font-size:0.85rem;color:rgba(245,240,232,0.7);text-align:center;">Erst testen? → <a href="/schedule" style="color:#C9A84C;text-decoration:none;font-weight:600;">Kostenloses Probetraining buchen</a></p>
@@ -767,14 +763,18 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
   </section>
 
   <!-- ── DNA / PHILOSOPHY TEASER ── -->
+  <style>
+    #dna{padding:60px 24px!important;}
+    @media(min-width:769px){#dna{padding:80px 40px!important;}}
+    @media(max-width:768px){#dna .dna-visual{display:none!important;}}
+    @media(min-width:769px){#dna .dna-visual{transform:scale(0.8);transform-origin:center center;}}
+  </style>
   <section id="dna" class="sec--smoke">
     <div class="container">
       <div class="dna-inner">
         <div class="dna-text reveal">
           <h2 style="margin-top:0;">MEHR ALS EIN<br><span class="gold">FITNESSSTUDIO.</span></h2>
-          <p>Boxen ist mehr als Training.<br>Es ist Bewegung, Fokus und ein klarer Kopf.</p>
-          <p style="margin-top:1rem;">Bei uns trainieren Anfänger, Fortgeschrittene und Wettkämpfer –<br>jeder auf seinem eigenen Level.</p>
-          <p style="margin-top:1rem;">Du brauchst keine Erfahrung.<br>Nur die Entscheidung, anzufangen.</p>
+          <p>Boxen. Fokus. Ein klarer Kopf.<br>Für Anfänger, Fortgeschrittene und Wettkämpfer.<br>Keine Erfahrung nötig — nur die Entscheidung.</p>
           <div style="margin-top:2rem;">
             <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
               MEHR ÜBER UNS <i class="fa-solid fa-arrow-right"></i>
@@ -797,6 +797,19 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
   </section>
 
   <!-- ── TRAINING DISCIPLINES — stacked sticky scroll ── -->
+  <style>
+    @media(max-width:768px){
+      #disciplines{padding:60px 20px 3rem!important;}
+      .disc-panel{height:220px!important;min-height:220px!important;}
+      .disc-panel:not(:last-child){margin-bottom:16px!important;}
+      .disc-panel__title{font-size:28px!important;}
+      .disc-panel__desc{font-size:14px!important;line-height:1.5!important;}
+    }
+    @media(min-width:769px){
+      #disciplines{padding:80px 40px 3rem!important;}
+      .disc-panel{max-height:400px!important;}
+    }
+  </style>
   <section id="disciplines">
     <!-- Section intro -->
     <div class="container">
@@ -849,57 +862,29 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <!-- ── EARLY BIRD ── -->
-  <section id="early-bird">
-    <div class="container">
-      <div class="early-bird-inner--stacked reveal">
-
-        <!-- STEP 1: Headline -->
-        <h2 class="eb-stacked-headline">NUR <span class="eb-gold-num">300</span> PLÄTZE.</h2>
-
-        <!-- STEP 2: Counter directly below headline -->
-        <div class="eb-counter-block">
-          <div class="eb-card-label">NOCH VERFÜGBAR</div>
-          <div class="eb-card-number" id="eb-remaining">160</div>
-          <div class="eb-updated-label">Zuletzt aktualisiert: heute</div>
-          <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN</div>
-          <div class="eb-progress" aria-label="Auslastungsanzeige">
-            <div class="eb-progress-bar">
-              <div class="eb-progress-fill" id="eb-progress-fill" style="width:47%"></div>
-            </div>
-            <div class="eb-progress-meta">
-              <span>140 BELEGT</span>
-              <span id="eb-progress-pct">47% BELEGT</span>
-              <span>300 GESAMT</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 3: Urgency text -->
-        <p class="eb-urgency-short" id="sanity-eb-subtext">
-          Wenn sie weg sind, ist der Preis höher.<br>
-          <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong>
-        </p>
-
-        <!-- STEP 4: Bullet points -->
-        <div class="eb-checklist eb-checklist--centered">
-          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Preis bleibt für immer gleich</span></div>
-          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zugang vor offizieller Eröffnung</span></div>
-          <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze</span></div>
-        </div>
-
-        <!-- STEP 5: CTA -->
-        <a id="sanity-eb-cta" href="/mitglied-werden" class="btn btn--gold eb-stacked-cta" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
-        </a>
-
-        <!-- Hidden badge for JS compatibility -->
-        <div style="display:none;">
-          <span id="spots-badge-text">Early Bird — noch 160 Plätze</span>
-          <span id="sanity-eb-badge"></span>
-        </div>
-
+  <!-- ── FOUNDING MEMBER ── -->
+  <section id="early-bird" style="background:#0A0A08;padding:80px 24px;text-align:center;">
+    <style>
+      @media(min-width:769px){#early-bird{padding:100px 40px!important;}}
+      #early-bird .fm-benefits{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;flex-direction:column;}
+      @media(min-width:769px){#early-bird .fm-benefits{flex-direction:row;gap:0;}}
+      #early-bird .fm-sep{display:none;margin:0 12px;color:rgba(245,240,232,0.4);}
+      @media(min-width:769px){#early-bird .fm-sep{display:inline;}}
+    </style>
+    <div style="max-width:640px;margin:0 auto;" class="reveal">
+      <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 20px;">FOUNDING MEMBER</p>
+      <h2 style="font-family:var(--font-display);font-size:clamp(36px,6vw,72px);font-weight:800;color:#F5F0E8;letter-spacing:-0.02em;line-height:1;text-transform:uppercase;margin:0 0 24px;">Werde Teil der ersten Generation.</h2>
+      <p style="font-family:var(--font-body);font-size:17px;line-height:1.6;color:rgba(245,240,232,0.75);max-width:520px;margin:0 auto 32px;">Wer jetzt startet, sichert sich den Early Bird Preis dauerhaft. Wer später kommt, zahlt mehr — für immer.</p>
+      <div class="fm-benefits" style="font-family:var(--font-body);font-size:14px;color:rgba(245,240,232,0.85);margin-bottom:40px;">
+        <span>Preis dauerhaft gesichert</span>
+        <span class="fm-sep">·</span>
+        <span>Zugang zu allen Kursen</span>
+        <span class="fm-sep">·</span>
+        <span>Founding Member Status</span>
       </div>
+      <a href="/mitglied-werden" style="display:inline-block;background:#C9A84C;color:#0A0A08;font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;padding:20px 40px;border-radius:0;transition:all 0.3s ease;" onmouseover="this.style.background='#0A0A08';this.style.color='#F5F0E8';this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(201,168,76,0.3)';" onmouseout="this.style.background='#C9A84C';this.style.color='#0A0A08';this.style.transform='';this.style.boxShadow='';">JETZT EARLY BIRD SICHERN</a>
+      <!-- Hidden IDs for JS compatibility -->
+      <div style="display:none;"><span id="eb-remaining">160</span><span id="eb-total-label"></span><span id="eb-progress-fill"></span><span id="eb-progress-pct"></span><span id="spots-badge-text"></span><span id="sanity-eb-badge"></span><span id="sanity-eb-cta"></span><span id="sanity-eb-subtext"></span></div>
     </div>
   </section>
 
@@ -1025,21 +1010,6 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
       </div>
     </div>
   </section>
-
-  <!-- ── PRE-FOOTER CTA BAR ── -->
-  <div class="pre-footer-cta" role="complementary" aria-label="Mitglied werden">
-    <div class="container">
-      <div class="pf-cta-inner reveal">
-        <div class="pf-cta-text">
-          <strong>ES GIBT KEIN MORGEN.</strong>
-          <span>Wer wartet, zahlt mehr. Für immer. Sichere deinen Early Bird Preis — jetzt, nicht später.</span>
-        </div>
-        <a href="/mitglied-werden" class="btn btn--gold pf-cta-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;">
-          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
-        </a>
-      </div>
-    </div>
-  </div>
 
   <!-- ── FOOTER ── -->
   <footer>
