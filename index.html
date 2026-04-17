@@ -612,6 +612,73 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     </div>
   </section>
 
+  <!-- ── SCHEDULE PREVIEW ── -->
+  <section id="schedule-preview" aria-label="Stundenplan" style="background:#0A0A08;padding:80px 24px;text-align:center;">
+    <style>
+      @media(min-width:901px){#schedule-preview{padding:100px 40px;}}
+      #schedule-preview .sp-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:1100px;margin:0 auto;}
+      @media(min-width:601px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:12px;}}
+      #schedule-preview .sp-day{background:#1A1A18;border:1px solid rgba(201,168,76,0.3);padding:20px 16px;}
+      #schedule-preview .sp-day-header{color:#C9A84C;text-transform:uppercase;font-weight:700;letter-spacing:0.1em;font-size:13px;margin-bottom:20px;text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,0.3);}
+      #schedule-preview .sp-card{display:block;padding:12px 8px;margin-bottom:8px;border-left:2px solid #C9A84C;background:rgba(201,168,76,0.05);text-decoration:none;transition:background 0.2s;}
+      #schedule-preview .sp-card:hover{background:rgba(201,168,76,0.15);}
+      #schedule-preview .sp-card:last-child{margin-bottom:0;}
+      #schedule-preview .sp-time{color:#C9A84C;font-weight:700;font-size:13px;margin-bottom:4px;}
+      #schedule-preview .sp-title{color:#F5F0E8;font-weight:500;font-size:13px;line-height:1.3;}
+    </style>
+    <div style="max-width:700px;margin:0 auto 48px;" class="reveal">
+      <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 16px;">STUNDENPLAN</p>
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,6vw,2.6rem);font-weight:700;color:#F5F0E8;text-transform:uppercase;line-height:1.05;letter-spacing:0.02em;margin:0 0 16px;">Wann trainierst du?</h2>
+      <p style="font-family:var(--font-body);font-size:16px;color:rgba(245,240,232,0.7);max-width:500px;margin:0 auto;">Feste Zeiten. Echte Coaches. Jede Stunde online buchbar.</p>
+    </div>
+    <div style="max-width:1100px;margin:0 auto;" class="reveal">
+      <div style="border:1px solid #C9A84C;padding:16px;margin-bottom:32px;text-align:center;">
+        <span style="font-family:var(--font-body);color:#F5F0E8;font-size:15px;">🥊 Freies Training täglich 13:00 – 16:00 Uhr</span>
+      </div>
+      <div class="sp-grid">
+        <div class="sp-day">
+          <div class="sp-day-header">Montag</div>
+          <a href="/schedule" class="sp-card"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Boxen Youth Grundtechnik (10-17)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">18:30 – 20:00</div><div class="sp-title">Boxen Adults Grundtechnik</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
+        </div>
+        <div class="sp-day">
+          <div class="sp-day-header">Dienstag</div>
+          <a href="/schedule" class="sp-card"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Kickboxen Kids (6-9)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Wettkampf Training Youth Boxen</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">18:30 – 19:30</div><div class="sp-title">Fitnessboxen</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen/Kickboxen</div></a>
+        </div>
+        <div class="sp-day">
+          <div class="sp-day-header">Mittwoch</div>
+          <a href="/schedule" class="sp-card"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Kickboxen Youth (10-17)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">18:30 – 19:30</div><div class="sp-title">Frauenboxen</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
+        </div>
+        <div class="sp-day">
+          <div class="sp-day-header">Donnerstag</div>
+          <a href="/schedule" class="sp-card"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Kickboxen Kids (6-9)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Boxen Youth Grundtechnik (10-17)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">18:30 – 20:00</div><div class="sp-title">Kickboxen Adults Grundtechnik</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen/Kickboxen</div></a>
+        </div>
+        <div class="sp-day">
+          <div class="sp-day-header">Freitag</div>
+          <a href="/schedule" class="sp-card"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Kickboxen Youth (10-17)</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">18:30 – 19:30</div><div class="sp-title">Fitnessboxen</div></a>
+          <a href="/schedule" class="sp-card"><div class="sp-time">20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
+        </div>
+      </div>
+      <p style="font-family:var(--font-body);color:rgba(245,240,232,0.5);text-align:center;margin-top:24px;font-size:13px;">Samstag &amp; Sonntag: Ruhetag</p>
+      <div style="text-align:center;margin-top:40px;">
+        <a href="/schedule" style="display:inline-block;width:100%;max-width:400px;background:#C9A84C;color:#0A0A08;font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;padding:18px 32px;border-radius:0;text-align:center;box-sizing:border-box;transition:filter 0.2s,transform 0.2s;" onmouseover="this.style.filter='brightness(1.08)'" onmouseout="this.style.filter=''">JETZT STUNDE BUCHEN</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ── DNA / PHILOSOPHY TEASER ── -->
   <section id="dna" class="sec--smoke">
     <div class="container">
