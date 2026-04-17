@@ -617,7 +617,16 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
     <style>
       @media(min-width:901px){#schedule-preview{padding:100px 40px;}}
       #schedule-preview .sp-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:1100px;margin:0 auto;}
-      @media(min-width:601px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:12px;}}
+      @media(min-width:769px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:12px;}}
+      #schedule-preview .sp-tabs{display:none;}
+      @media(max-width:768px){
+        #schedule-preview .sp-tabs{display:flex;justify-content:space-between;background:transparent;border-bottom:1px solid rgba(10,10,8,0.1);padding:0;margin-bottom:24px;}
+        #schedule-preview .sp-tab{flex:1;text-align:center;padding:14px 8px;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,8,0.4);border-bottom:2px solid transparent;border-top:0;border-left:0;border-right:0;cursor:pointer;transition:color 0.2s ease,border-color 0.2s ease;background:transparent;font-family:var(--font-head);}
+        #schedule-preview .sp-tab.active{color:#0A0A08;border-bottom:2px solid #C9A84C;}
+        #schedule-preview .sp-day{display:none;width:100%;opacity:0;transition:opacity 0.2s ease;}
+        #schedule-preview .sp-day.active{display:block;opacity:1;}
+        #schedule-preview .sp-day-header{display:none;}
+      }
       #schedule-preview .sp-day{background:#FFFFFF;border:1px solid rgba(10,10,8,0.1);box-shadow:0 2px 12px rgba(0,0,0,0.04);padding:20px 16px;}
       #schedule-preview .sp-day-header{color:#0A0A08;text-transform:uppercase;font-weight:700;letter-spacing:0.1em;font-size:13px;margin-bottom:20px;text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,0.3);}
       #schedule-preview .sp-card{display:block;padding:12px 8px;margin-bottom:8px;border-left:3px solid transparent;background:#F5F0E8;text-decoration:none;transition:background 0.2s;}
@@ -645,36 +654,43 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
       <div style="background:transparent;border:1px solid #C9A84C;padding:16px;margin-bottom:32px;text-align:center;">
         <span style="font-family:var(--font-body);color:#0A0A08;font-size:15px;">🥊 Freies Training täglich 13:00 – 16:00 Uhr</span>
       </div>
+      <div class="sp-tabs" role="tablist" aria-label="Wochentag auswählen">
+        <button class="sp-tab active" data-day="mo" type="button" aria-selected="true">Mo</button>
+        <button class="sp-tab" data-day="di" type="button" aria-selected="false">Di</button>
+        <button class="sp-tab" data-day="mi" type="button" aria-selected="false">Mi</button>
+        <button class="sp-tab" data-day="do" type="button" aria-selected="false">Do</button>
+        <button class="sp-tab" data-day="fr" type="button" aria-selected="false">Fr</button>
+      </div>
       <div class="sp-grid">
-        <div class="sp-day">
+        <div class="sp-day active" data-day="mo">
           <div class="sp-day-header">Montag</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Boxen Youth Grundtechnik (10-17)</div></a>
           <a href="/schedule" class="sp-card sp-card--adults"><div class="sp-time">18:30 – 20:00</div><div class="sp-title">Boxen Adults Grundtechnik</div></a>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">🔒 20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
         </div>
-        <div class="sp-day">
+        <div class="sp-day" data-day="di">
           <div class="sp-day-header">Dienstag</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Kickboxen Kids (6-9)</div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Wettkampf Training Youth Boxen</div></a>
           <a href="/schedule" class="sp-card sp-card--adults"><div class="sp-time">18:30 – 19:30</div><div class="sp-title">Fitnessboxen</div></a>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">🔒 20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen/Kickboxen</div></a>
         </div>
-        <div class="sp-day">
+        <div class="sp-day" data-day="mi">
           <div class="sp-day-header">Mittwoch</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Kickboxen Youth (10-17)</div></a>
           <a href="/schedule" class="sp-card sp-card--adults"><div class="sp-time">18:30 – 19:30</div><div class="sp-title">Frauenboxen</div></a>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">🔒 20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
         </div>
-        <div class="sp-day">
+        <div class="sp-day" data-day="do">
           <div class="sp-day-header">Donnerstag</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Kickboxen Kids (6-9)</div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Boxen Youth Grundtechnik (10-17)</div></a>
           <a href="/schedule" class="sp-card sp-card--adults"><div class="sp-time">18:30 – 20:00</div><div class="sp-title">Kickboxen Adults Grundtechnik</div></a>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">🔒 20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen/Kickboxen</div></a>
         </div>
-        <div class="sp-day">
+        <div class="sp-day" data-day="fr">
           <div class="sp-day-header">Freitag</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-title">Boxen Kids (6-9)</div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-title">Kickboxen Youth (10-17)</div></a>
@@ -682,6 +698,32 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">🔒 20:00 – 21:30</div><div class="sp-title">Wettkampftraining Boxen</div></a>
         </div>
       </div>
+      <script>
+        (function(){
+          var section=document.getElementById('schedule-preview');
+          if(!section)return;
+          var tabs=section.querySelectorAll('.sp-tab');
+          var days=section.querySelectorAll('.sp-day');
+          tabs.forEach(function(tab){
+            tab.addEventListener('click',function(){
+              var target=tab.getAttribute('data-day');
+              tabs.forEach(function(t){t.classList.remove('active');t.setAttribute('aria-selected','false');});
+              tab.classList.add('active');
+              tab.setAttribute('aria-selected','true');
+              days.forEach(function(d){
+                if(d.getAttribute('data-day')===target){
+                  d.style.opacity='0';
+                  d.classList.add('active');
+                  requestAnimationFrame(function(){requestAnimationFrame(function(){d.style.opacity='1';});});
+                }else{
+                  d.classList.remove('active');
+                  d.style.opacity='';
+                }
+              });
+            });
+          });
+        })();
+      </script>
       <div class="sp-legend">
         <span><span style="color:#7A9FB8;">●</span> Kids</span>
         <span><span style="color:#C9A84C;">●</span> Youth</span>
