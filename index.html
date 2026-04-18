@@ -609,11 +609,12 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
   </section>
 
   <!-- ── SCHEDULE PREVIEW ── -->
-  <section id="schedule-preview" aria-label="Stundenplan" style="background:linear-gradient(180deg,#F5F0E8 0%,#EFE9DE 100%);padding:80px 24px;text-align:center;">
+  <section id="schedule-preview" aria-label="Stundenplan" style="background:linear-gradient(180deg,#F5F0E8 0%,#EFE9DE 100%);padding:80px 20px;text-align:center;">
     <style>
-      @media(min-width:901px){#schedule-preview{padding:100px 40px;}}
-      #schedule-preview .sp-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:1100px;margin:0 auto;}
-      @media(min-width:769px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:12px;}}
+      @media(min-width:1024px){#schedule-preview{padding:100px 40px;}}
+      #schedule-preview .sp-grid{display:grid;grid-template-columns:1fr;gap:16px;width:100%;overflow:visible;}
+      @media(min-width:769px) and (max-width:1023px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:8px;}}
+      @media(min-width:1024px){#schedule-preview .sp-grid{grid-template-columns:repeat(5,1fr);gap:12px;}}
       #schedule-preview .sp-tabs{display:none;}
       @media(max-width:768px){
         #schedule-preview .sp-tabs{display:flex;justify-content:space-between;position:relative;background:transparent;border-bottom:1px solid rgba(10,10,8,0.1);padding:0;margin-bottom:24px;-webkit-tap-highlight-color:transparent;}
@@ -625,7 +626,8 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
         #schedule-preview .sp-day.active{display:block;opacity:1;transform:translateY(0);}
         #schedule-preview .sp-day-header{display:none;}
       }
-      #schedule-preview .sp-day{background:#FFFFFF;border:none;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04);padding:28px 20px;}
+      #schedule-preview .sp-day{background:#FFFFFF;border:none;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04);padding:20px 14px;}
+      @media(min-width:769px) and (max-width:1023px){#schedule-preview .sp-day{padding:16px 10px;}}
       #schedule-preview .sp-day-header{color:#0A0A08;text-transform:uppercase;font-weight:700;letter-spacing:0.1em;font-size:13px;margin-bottom:20px;text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,0.3);}
       #schedule-preview .sp-card{display:block;padding:16px 14px;margin-bottom:0;border-left:3px solid transparent;border-bottom:1px solid rgba(10,10,8,0.06);background:#FFFFFF;text-decoration:none;transition:all 0.3s ease;}
       #schedule-preview .sp-card:last-child{border-bottom:none;}
@@ -667,7 +669,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
       #schedule-preview .sp-split-half:hover{background:rgba(201,168,76,0.08);}
       #schedule-preview .sp-disc{font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#0A0A08;line-height:1.1;margin-bottom:4px;hyphens:none;word-break:keep-all;overflow-wrap:break-word;white-space:normal;}
       #schedule-preview .sp-level{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,8,0.55);line-height:1.2;hyphens:none;word-break:keep-all;}
-      @media(max-width:768px){#schedule-preview .sp-disc{font-size:14px;}#schedule-preview .sp-level{font-size:10px;}}
+      @media(max-width:1023px){#schedule-preview .sp-disc{font-size:14px;}#schedule-preview .sp-level{font-size:10px;}}
     </style>
     <div style="max-width:700px;margin:0 auto 48px;" class="reveal">
       <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 16px;">STUNDENPLAN</p>
@@ -697,7 +699,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div></a>
+              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div></div></a>
@@ -712,7 +714,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div></a>
+              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div></div></a>
@@ -750,7 +752,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div></a>
+              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div></div></a>
@@ -765,7 +767,7 @@ src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div></a>
+              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div></div></a>
