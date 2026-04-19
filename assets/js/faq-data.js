@@ -84,7 +84,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
-        a: "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Wasserflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz)."
+        a: "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Hinweis: Getränke stehen aktuell noch nicht zur Verfügung — bitte nimm deine eigene Trinkflasche mit."
       }
     ]
   },
