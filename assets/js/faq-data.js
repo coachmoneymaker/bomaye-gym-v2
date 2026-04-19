@@ -99,10 +99,6 @@ const BOMAYE_FAQ = [
         a: "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website."
       },
       {
-        q: "Wie sieht es mit Getränken aus?",
-        a: "Wasser steht zur Verfügung. Wir empfehlen dir, deine eigene Trinkflasche mitzubringen – gut hydriert trainiert es sich einfach besser."
-      },
-      {
         q: "Kann ich mit Bargeld bezahlen?",
         a: "In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter."
       }
