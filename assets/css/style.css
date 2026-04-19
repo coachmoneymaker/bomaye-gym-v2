@@ -211,8 +211,10 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .nav-link.active { color: var(--gold); }
 /* Visual breathing room between nav links and CTA button */
 .nav-links > .btn { margin-left: 0.85rem; }
+/* Space icon away from last nav-link; button already has its own margin */
+.nav-links .nav-account-icon { margin-left: 1.5rem; }
 
-/* Account icon — sits outside nav-links, always visible in header */
+/* Account icon — sits inside nav-links on desktop, hidden on mobile with nav-links */
 .nav-account-icon {
   display: inline-flex;
   align-items: center;
