@@ -1561,15 +1561,16 @@ function openMobileCourse(id, idx) {
   }
 
   /* ── Touch ───────────────────────────────────────────────── */
-  var t0x, t0y, tStartPos, axisSet, isHoriz;
+  var t0x, t0y, tStartPos, tEndX, axisSet, isHoriz;
 
   carousel.addEventListener('touchstart', function (e) {
+    if (snapping) return;        /* ignore new gesture mid-snap */
     paused      = true;
-    snapping    = false;
     lastTime    = null;
     clearTimeout(resumeTimer);
     t0x         = e.touches[0].clientX;
     t0y         = e.touches[0].clientY;
+    tEndX       = t0x;
     tStartPos   = pos;
     axisSet     = false;
     isHoriz     = false;
@@ -1584,6 +1585,7 @@ function openMobileCourse(id, idx) {
       axisSet  = true;
     }
     if (!axisSet || !isHoriz) return;
+    tEndX = e.touches[0].clientX;  /* track last horizontal position */
     e.preventDefault();
     pos = tStartPos + dx;
     track.style.transition = 'none';
@@ -1591,9 +1593,22 @@ function openMobileCourse(id, idx) {
   }, { passive: false });
 
   function onTouchEnd() {
-    if (axisSet && isHoriz) {
-      snapTo(nearestReal(), true);
+    if (!axisSet || !isHoriz) {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
+      return;
     }
+    var dx = tEndX - t0x;
+    var target;
+    if (Math.abs(dx) >= 50) {
+      /* Intent clear — advance exactly one slide in swipe direction */
+      var dir = dx < 0 ? 1 : -1;
+      target = ((curReal + dir) % REAL_N + REAL_N) % REAL_N;
+    } else {
+      /* Tiny movement — snap to nearest position */
+      target = nearestReal();
+    }
+    snapTo(target, true);
     clearTimeout(resumeTimer);
     resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   }
