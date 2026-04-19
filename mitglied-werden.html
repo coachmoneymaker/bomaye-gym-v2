@@ -790,6 +790,101 @@
       .mw-trust-item { white-space: normal; }
       .mw-popular-badge { font-size: 0.65rem; padding: 5px 14px; }
     }
+
+    /* ── Pricing card: 100€ fee disclosure ──────────────────── */
+    .mw-card-fee {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(245,240,232,0.35);
+      margin: 6px 0 0;
+      letter-spacing: 0.02em;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SECTION — FIGHTER-KIT
+    ════════════════════════════════════════════════════════════ */
+    .mw-fk {
+      background: #F5F0E8;
+      padding: 60px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(10,10,8,0.06);
+    }
+    @media (min-width: 768px) {
+      .mw-fk { padding: 100px 32px; }
+    }
+    .mw-fk-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .mw-fk-label {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      color: #C9A84C;
+      margin: 0 0 12px;
+    }
+    .mw-fk-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      font-weight: 700;
+      color: #0A0A08;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin: 0 0 18px;
+    }
+    .mw-fk-sub {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(10,10,8,0.6);
+      line-height: 1.75;
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+    .mw-fk-img-wrap {
+      margin: 0 auto 40px;
+      max-width: 520px;
+      width: 100%;
+    }
+    .mw-fk-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+    }
+    .mw-fk-items {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 32px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+    }
+    .mw-fk-items li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #0A0A08;
+    }
+    .mw-fk-dot {
+      color: #C9A84C;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mw-fk-footer {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(10,10,8,0.45);
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
   </style>
 <link rel="stylesheet" href="/assets/css/cookie-consent.css">
 </head>
@@ -840,6 +935,7 @@
             <span class="mw-card-price">14,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 13 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan speziell für Kinder</li>
@@ -864,6 +960,7 @@
             <span class="mw-card-price">18,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 17 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Unbegrenzter Zugang zu allen Kursen</li>
@@ -888,6 +985,7 @@
             <span class="mw-card-price">15,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 16 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan für Jugendliche</li>
@@ -900,6 +998,31 @@
              class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION — FIGHTER-KIT
+    ══════════════════════════════════════════════ -->
+    <section class="mw-fk" aria-label="Fighter-Kit">
+      <div class="mw-fk-inner reveal">
+        <p class="mw-fk-label">Zum Start</p>
+        <h2 class="mw-fk-h2">Dein Fighter-Kit</h2>
+        <p class="mw-fk-sub">Einmalig 100&nbsp;€ beim Einstieg. Alles was du brauchst, am ersten Tag&nbsp;— gebrandet, bereit, ready to fight.</p>
+        <div class="mw-fk-img-wrap">
+          <img src="/assets/images/fighter-kit.webp"
+               alt="Bomaye Fighter-Kit: Boxhandschuhe, Bandagen, Springseil und T-Shirt"
+               class="mw-fk-img"
+               loading="lazy"
+               decoding="async" />
+        </div>
+        <ul class="mw-fk-items">
+          <li><span class="mw-fk-dot">—</span>Boxhandschuhe</li>
+          <li><span class="mw-fk-dot">—</span>Bandagen</li>
+          <li><span class="mw-fk-dot">—</span>Springseil</li>
+          <li><span class="mw-fk-dot">—</span>Bomaye T-Shirt</li>
+        </ul>
+        <p class="mw-fk-footer">Einmalig zum Start. Für immer dein Equipment.</p>
       </div>
     </section>
 
