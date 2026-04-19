@@ -40,6 +40,12 @@
   gap: 12px;
 }
 
+/* Primary pair (Accept + Reject) — row on all viewports */
+.cb-buttons-primary {
+  display: flex;
+  gap: 12px;
+}
+
 @media(min-width: 769px) {
   #cookie-banner {
     flex-direction: row;
@@ -242,6 +248,51 @@
 }
 @media(min-width: 769px) {
   #cookie-modal { padding: 48px 40px; }
+}
+
+/* ── Mobile banner: minimal Apple-style layout ──────────── */
+@media (max-width: 768px) {
+  #cookie-banner {
+    padding: 16px;
+    max-height: 30vh;
+    overflow-y: auto;
+    gap: 0;
+  }
+  #cookie-banner .cb-title {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  #cookie-banner .cb-text {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  #cookie-banner .cb-buttons { gap: 0; }
+  #cookie-banner .cb-buttons-primary {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  #cookie-banner .cb-buttons-primary .cb-btn {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  /* Settings becomes a plain text-link on mobile */
+  #cookie-banner #cb-open-settings {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    color: rgba(245, 240, 232, 0.62);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-decoration: underline;
+    text-transform: uppercase;
+    padding: 8px;
+    text-align: center;
+  }
 }
 
 /* ── Persistent floating button ─────────────────────────── */
