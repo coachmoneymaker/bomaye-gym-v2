@@ -170,10 +170,7 @@
     0%, 100% { text-shadow: 0 0 24px rgba(201,168,76,0.22), 0 0 48px rgba(201,168,76,0.10); }
     50%       { text-shadow: 0 0 32px rgba(201,168,76,0.55), 0 0 64px rgba(201,168,76,0.28); }
   }
-  #eb-remaining {
-    animation: eb-pulse-glow 2s ease-in-out infinite;
-  }
-  .eb-updated-label {
+.eb-updated-label {
     font-family: var(--font-body);
     font-size: 0.68rem;
     color: rgba(255,255,255,0.28);
@@ -939,8 +936,6 @@
         <span>Founding Member Status</span>
       </div>
       <a href="/mitglied-werden" style="display:inline-block;background:#C9A84C;color:#0A0A08;font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;padding:20px 40px;border-radius:0;transition:all 0.3s ease;" onmouseover="this.style.background='#0A0A08';this.style.color='#F5F0E8';this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(201,168,76,0.3)';" onmouseout="this.style.background='#C9A84C';this.style.color='#0A0A08';this.style.transform='';this.style.boxShadow='';">JETZT EARLY BIRD SICHERN</a>
-      <!-- Hidden IDs for JS compatibility -->
-      <div style="display:none;"><span id="eb-remaining">160</span><span id="eb-total-label"></span><span id="eb-progress-fill"></span><span id="eb-progress-pct"></span><span id="spots-badge-text"></span><span id="sanity-eb-badge"></span><span id="sanity-eb-cta"></span><span id="sanity-eb-subtext"></span></div>
     </div>
   </section>
 
