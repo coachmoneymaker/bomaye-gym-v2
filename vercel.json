@@ -1,6 +1,13 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/alle-preise",
+      "destination": "/mitglied-werden",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/coming-soon" }
   ]
