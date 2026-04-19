@@ -56,7 +56,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
-        a: "Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90 €/Woche · Youth Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Unsere Early-Bird-Mitglieder sichern sich diesen Preis dauerhaft garantiert – auch wenn die regulären Preise später steigen."
+        a: "Aktuelle Wochenpreise (Early Bird): Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€."
       },
       {
         q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
@@ -84,7 +84,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
-        a: "Bring Sportkleidung, saubere Hallenschuhe und ein Handtuch mit. Beim ersten Training kannst du dir Boxhandschuhe kostenlos leihen. Wer regelmäßig trainiert, sollte eigene Handschuhe (10–14 Oz) und Bandagen mitbringen."
+        a: "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Wasserflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz)."
       }
     ]
   },
