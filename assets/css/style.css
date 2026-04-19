@@ -245,6 +245,8 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
   position: fixed; inset: 0; z-index: 999;
   background: rgba(6,6,6,0.97); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  padding: 72px 0 32px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
 }
@@ -5176,8 +5178,8 @@ section { padding: var(--sv) 0; }
   transform: translateY(14px);
   /* Stagger via --mn-i custom property set inline in HTML       */
   transition:
-    opacity    0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
-    transform  0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
+    opacity    0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    transform  0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
     color      0.2s !important;
 }
 
@@ -5221,8 +5223,8 @@ section { padding: var(--sv) 0; }
   opacity: 0;
   transform: translateY(12px);
   transition:
-    opacity    0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
-    transform  0.48s var(--ease-expo) calc(var(--mn-i, 0) * 70ms),
+    opacity    0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    transform  0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
     color      0.2s;
 }
 .mobile-overlay-nav.open .mn-account,
@@ -5232,6 +5234,65 @@ section { padding: var(--sv) 0; }
 }
 .mn-account:hover { color: var(--gold); }
 .mn-account i { font-size: 0.9rem; opacity: 0.85; }
+
+/* ─── Mobile nav: contact + social block (bottom) ─────────────── */
+.mn-contact-divider {
+  width: min(90%, 320px);
+  height: 1px;
+  background: rgba(245, 240, 232, 0.2);
+  margin: 28px auto 20px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms);
+}
+.mobile-overlay-nav.open .mn-contact-divider,
+#mobile-nav.open .mn-contact-divider { opacity: 1; }
+
+.mn-socials {
+  display: flex;
+  gap: 20px;
+  margin: 0 0 14px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    transform 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms);
+}
+.mobile-overlay-nav.open .mn-socials,
+#mobile-nav.open .mn-socials { opacity: 1; transform: translateY(0); }
+.mn-socials a {
+  color: rgba(245, 240, 232, 0.85);
+  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.mn-socials a:hover { color: var(--gold); }
+
+.mn-contact-text {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
+  color: rgba(245, 240, 232, 0.7);
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.6;
+  padding: 4px 12px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    transform 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    color 0.2s ease;
+}
+.mobile-overlay-nav.open .mn-contact-text,
+#mobile-nav.open .mn-contact-text { opacity: 1; transform: translateY(0); }
+a.mn-contact-text:hover { color: var(--gold); }
 
 
 /* ─── Part 5: Premium image hover effects (desktop / mouse) ──── */
@@ -5290,7 +5351,9 @@ section { padding: var(--sv) 0; }
   .burger-line                          { transition: none !important; }
   .mobile-overlay-nav,
   #mobile-nav                           { transition: none !important; }
-  .mn-item, .mn-account                 { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .mn-item, .mn-account,
+  .mn-contact-divider, .mn-socials,
+  .mn-contact-text                      { transition: none !important; opacity: 1 !important; transform: none !important; }
   .mobile-overlay-nav.open .mn-item,
   .mobile-overlay-nav.open .mn-account,
   #mobile-nav.open .mn-item,

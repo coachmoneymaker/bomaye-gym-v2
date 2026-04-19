@@ -267,10 +267,7 @@
 
 <!-- ═══════ MOBILE NAV ═══════ -->
 <div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
-  <button class="mob-close" onclick="toggleMenu()" aria-label="Menü schließen" type="button">
-    <i class="fa-solid fa-xmark"></i>
-  </button>
-  <button class="mn-item" onclick="mobileNav('home')" type="button" style="--mn-i:0">HOME</button>
+  <button class="mn-item" onclick="mobileNav('home')" type="button" aria-current="page" style="--mn-i:0;color:var(--gold)!important">HOME</button>
   <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
   <a class="mn-item" href="/schedule" style="--mn-i:2">SCHEDULE</a>
   <a class="mn-item" href="/coaches" style="--mn-i:3">COACHES</a>
@@ -281,6 +278,14 @@
   <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:7;text-decoration:none;display:flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
   </a>
+  <div class="mn-contact-divider" style="--mn-i:8"></div>
+  <div class="mn-socials" style="--mn-i:9">
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+  <span class="mn-contact-text" style="--mn-i:10">Pineapple Park · 80639 München</span>
+  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:11">support@bomayegym.com</a>
+  <a class="mn-contact-text" href="tel:+4917621932243" style="--mn-i:12">0176 2193 2243</a>
 </div>
 
 
