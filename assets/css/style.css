@@ -211,6 +211,23 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
 .nav-link.active { color: var(--gold); }
 /* Visual breathing room between nav links and CTA button */
 .nav-links > .btn { margin-left: 0.85rem; }
+
+/* Account icon — sits outside nav-links, always visible in header */
+.nav-account-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--cream, #F5F0E8);
+  text-decoration: none;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.nav-account-icon:hover { color: var(--gold); opacity: 0.9; }
+.nav-account-icon i { font-size: 1.05rem; pointer-events: none; }
+
 .burger { display: none; color: var(--white); font-size: 1.25rem; padding: 0.5rem; line-height: 1; }
 .back-btn {
   display: none; align-items: center; gap: 0.5rem;
@@ -1830,9 +1847,10 @@ footer {
     align-items: center;
     padding: 0 1.5rem;
   }
-  .logo     { grid-column: 2; justify-self: center; }
-  .back-btn { grid-column: 1; justify-self: start; }
-  .burger   { grid-column: 3; justify-self: end; }
+  .logo             { grid-column: 2; justify-self: center; }
+  .back-btn         { grid-column: 1; justify-self: start; }
+  .burger           { grid-column: 3; justify-self: end; }
+  .nav-account-icon { grid-column: 3; justify-self: start; }
 
   .intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .dna-inner   { grid-template-columns: 1fr; gap: 2rem; }
