@@ -788,6 +788,130 @@
     .ab-coach-social-btn:hover::after {
       background: #C9A84C;
     }
+
+    /* ── Coach Team subsection ── */
+    .ab-coach-team {
+      margin-top: 96px;
+      padding-bottom: 40px;
+    }
+    .ab-coach-team-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(201,168,76,0.4);
+      margin: 0 auto 56px;
+      border: none;
+    }
+    .ab-coach-team-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .ab-coach-team-eyebrow {
+      display: block;
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .ab-coach-team-headline {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: #0A0A08;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+    .ab-coach-team-sub {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(10,10,8,0.6);
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .ab-coach-team-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 640px) {
+      .ab-coach-team-grid { grid-template-columns: 1fr; gap: 40px; }
+      .ab-coach-team { margin-top: 64px; }
+    }
+    .ab-coach-team-photo {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .ab-coach-team-photo img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+    .ab-coach-team-overlay {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .ab-coach-team-cred {
+      font-family: var(--font-head);
+      font-size: 0.45rem;
+      letter-spacing: 3px;
+      color: #C9A84C;
+      background: rgba(8,8,8,0.75);
+      backdrop-filter: blur(8px);
+      padding: 0.25rem 0.55rem;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .ab-coach-team-info { padding-top: 24px; }
+    .ab-coach-team-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2vw, 1.6rem);
+      color: #0A0A08;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 6px;
+      line-height: 1;
+    }
+    .ab-coach-team-title {
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .ab-coach-team-page-creds {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin: 12px 0 24px;
+      line-height: 1.4;
+      background: none;
+      background-image: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      position: static;
+    }
+    .ab-coach-team-bio {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(10,10,8,0.75);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
   </style>
 
   <section class="ab-coaches" aria-label="Die Köpfe dahinter">
@@ -843,6 +967,58 @@
       </div>
 
     </div>
+
+    <!-- ── Coach Team ── -->
+    <div class="ab-coach-team">
+      <hr class="ab-coach-team-divider" aria-hidden="true">
+      <header class="ab-coach-team-header">
+        <span class="ab-coach-team-eyebrow">COACH TEAM</span>
+        <h2 class="ab-coach-team-headline">DIE NÄCHSTE GENERATION.</h2>
+        <p class="ab-coach-team-sub">Unsere Coaches tragen den Spirit jeden Tag in den Ring — zertifiziert, erfahren und mit klarem Fokus auf Technik.</p>
+      </header>
+      <div class="ab-coach-team-grid">
+
+        <!-- Nima -->
+        <article>
+          <div class="ab-coach-team-photo">
+            <img src="/assets/images/coach-nima.webp" alt="Nima — Kickboxing &amp; K1 Coach, Bomaye Gym Munich" loading="lazy" decoding="async" />
+            <div class="ab-coach-team-overlay">
+              <span class="ab-coach-team-cred">BABV LIZENZ</span>
+              <span class="ab-coach-team-cred">KICKBOXEN</span>
+              <span class="ab-coach-team-cred">K1</span>
+            </div>
+          </div>
+          <div class="ab-coach-team-info">
+            <h3 class="ab-coach-team-name">NIMA</h3>
+            <span class="ab-coach-team-title">KICKBOXING · COACH</span>
+            <p class="ab-coach-team-page-creds">BABV LIZENZ · AKTIVER K1-WETTKÄMPFER</p>
+            <p class="ab-coach-team-bio">Nima ist Kickbox- und K1-Coach bei Bomaye Gym mit aktiver Wettkampferfahrung. Seine Spezialität: Grundtechnik sauber, verständlich und ohne Umwege.</p>
+            <p class="ab-coach-team-bio">Sein Ansatz: klare Basics, klare Korrekturen. Ob Einsteiger oder Fortgeschrittene — bei Nima lernst du nicht irgendwie, sondern richtig.</p>
+          </div>
+        </article>
+
+        <!-- Pavlos -->
+        <article>
+          <div class="ab-coach-team-photo">
+            <img src="/assets/images/coach-pavlos.webp" alt="Pavlos — Boxing &amp; Athletik Coach, Bomaye Gym Munich" loading="lazy" decoding="async" />
+            <div class="ab-coach-team-overlay">
+              <span class="ab-coach-team-cred">BABV LIZENZ</span>
+              <span class="ab-coach-team-cred">BOXEN</span>
+              <span class="ab-coach-team-cred">ATHLETIK</span>
+            </div>
+          </div>
+          <div class="ab-coach-team-info">
+            <h3 class="ab-coach-team-name">PAVLOS</h3>
+            <span class="ab-coach-team-title">BOXING &amp; ATHLETIK · COACH</span>
+            <p class="ab-coach-team-page-creds">BABV LIZENZ · ATHLETIKTRAINER · SPORTTHERAPEUT</p>
+            <p class="ab-coach-team-bio">Pavlos verbindet langjährige Erfahrung im Boxsport mit Wissen als Athletiktrainer und Sporttherapeut. Sein Fokus: Technik und Körperkontrolle als Grundlage jedes Trainings.</p>
+            <p class="ab-coach-team-bio">Sein Ansatz: geschultes Auge für Details, klare Korrekturen, effektive Reize. Ob Einsteiger, Fortgeschrittene oder Kinder — bei Pavlos entwickelst du ein besseres Gefühl für Bewegung, Kontrolle und den eigenen Körper.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
   </section>
 
   <!-- ══════════════════════════════════════════════════
