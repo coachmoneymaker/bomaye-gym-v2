@@ -147,7 +147,7 @@
     .mw-hero {
       position: relative;
       background: #0A0A08;
-      padding: 80px 20px 60px;
+      padding: 80px 20px 40px;
       text-align: center;
       overflow: hidden;
     }
@@ -192,12 +192,12 @@
       font-size: 1rem;
       color: rgba(245,240,232,0.6);
       line-height: 1.75;
-      margin: 0 auto 24px;
+      margin: 0 auto;
       max-width: 480px;
     }
     @media (min-width: 768px) {
       .mw-hero {
-        padding: 100px 24px 80px;
+        padding: 100px 24px 60px;
       }
       .mw-hero-h1 {
         font-size: 4rem;
@@ -209,8 +209,11 @@
     ════════════════════════════════════════════════════════════ */
     .mw-cards {
       background: #F5F0E8;
-      padding: 60px 16px;
+      padding: 60px 16px 100px;
       scroll-margin-top: 72px;
+    }
+    @media (min-width: 768px) {
+      .mw-cards { padding-bottom: 60px; }
     }
     .mw-cards-inner {
       max-width: 1100px;
