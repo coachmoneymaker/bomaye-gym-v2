@@ -5133,7 +5133,7 @@ section { padding: var(--sv) 0; }
   transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 72px 0;
+  padding: calc(var(--nav-h) + 48px) 0 32px;
 }
 .mobile-overlay-nav.open {
   opacity: 1;
