@@ -53,19 +53,19 @@ export const siteSettings = defineType({
           name: 'phoneDisplay',
           title: 'Phone Number (display)',
           type: 'string',
-          description: 'Human-readable format, e.g. "0176 2193 2243"',
+          description: 'Human-readable format, e.g. "+49 173 7513627"',
         }),
         defineField({
           name: 'phoneHref',
           title: 'Phone Number (href)',
           type: 'string',
-          description: 'For tel: links, e.g. "+4917621932243"',
+          description: 'For tel: links, e.g. "+491737513627"',
         }),
         defineField({
           name: 'whatsappHref',
           title: 'WhatsApp Number (href)',
           type: 'string',
-          description: 'Digits only, e.g. "4917621932243"',
+          description: 'Digits only, e.g. "491737513627"',
         }),
         defineField({
           name: 'email',

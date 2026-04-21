@@ -21,9 +21,9 @@ const BOMAYE = {
 
   /* ── Contact ─────────────────────────────────────────────── */
   contact: {
-    phoneDisplay:  '0176 2193 2243',
-    phoneHref:     '+4917621932243',
-    whatsappHref:  '4917621932243',
+    phoneDisplay:  '+49 173 7513627',
+    phoneHref:     '+491737513627',
+    whatsappHref:  '491737513627',
     email:         'info@bomayegym.com',
     instagram:     'https://www.instagram.com/bomayegym_munich',
     youtube:       'https://www.youtube.com/@bomayegym',

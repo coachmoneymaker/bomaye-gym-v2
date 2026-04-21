@@ -112,7 +112,7 @@ const BOMAYE_FAQ = [
     items: [
       {
         q: "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
-        a: "Am schnellsten per WhatsApp unter 0176 2193 2243 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an info@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
+        a: "Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an info@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
       }
     ]
   }
