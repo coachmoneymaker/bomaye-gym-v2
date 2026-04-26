@@ -304,6 +304,70 @@
     "priceRange": "€€"
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://bomayegym.com/faq#faqpage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wo ist Bomaye Gym Munich und wie finde ich euch?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bomaye Gym Munich liegt im Pineapple Park – einer der spannendsten Locations Münchens. Die genaue Adresse und eine Routenplanung per Google Maps findest du direkt auf unserer Website. Wir sind mit dem ÖPNV (S-Bahn Hirschgarten, ca. 5 Minuten zu Fuß) und dem Auto gut erreichbar – Parkplätze im Areal sind vorhanden." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie werde ich Mitglied und starte mit dem Training?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Early-Bird-Mitglieder sichern sich den Gründerpreis dauerhaft. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen." }
+      },
+      {
+        "@type": "Question",
+        "name": "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Aktuelle Wochenpreise (Early Bird): Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€." }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Tageskarten und klassische Blockkarten bieten wir aktuell nicht als Standardprodukt an. Schau auf unserer Website vorbei oder frag direkt bei uns an – wir informieren dich über aktuelle Optionen ohne lange Bindung." }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja. Eine Pause ist in begründeten Ausnahmefällen möglich – zum Beispiel bei einer nachgewiesenen Verletzung oder einem vorübergehenden Umzug. Melde dich einfach bei unserem Team, wir finden gemeinsam eine faire Lösung." }
+      },
+      {
+        "@type": "Question",
+        "name": "Welche Trainingsangebote gibt es bei Bomaye (Boxen, Kickboxen, Strength & Conditioning)?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bomaye Gym Munich bietet Olympic Boxing, Kickboxen, Women's Boxing, Youth Boxing (Kids 6–9 und Jugend 10–17), Executive Boxing, Personal Training, Corporate Boxing und Mind & Body. Ob du Anfänger oder Wettkämpfer bist – für jedes Ziel und jeden Level ist das passende Programm dabei." }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein erster Kurs ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern." }
+      },
+      {
+        "@type": "Question",
+        "name": "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Hinweis: Getränke stehen aktuell noch nicht zur Verfügung — bitte nimm deine eigene Trinkflasche mit." }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es Umkleiden und Duschen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website." }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich mit Bargeld bezahlen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an info@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website." }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -618,6 +682,7 @@ document.addEventListener('keydown',  e => { if (e.key === 'Escape') closeBookin
   var schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    '@id': 'https://bomayegym.com/faq#faqpage',
     'mainEntity': qas
   };
   var el = document.getElementById('faq-jsonld');
