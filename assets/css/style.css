@@ -7753,3 +7753,49 @@ a.mn-contact-text:hover { color: var(--gold); }
   .doc-card { border: 1px solid #ccc; break-inside: avoid; }
 }
 
+/* ── Inline document indicator strip (u18, mitglied-werden) ── */
+.doc-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.5rem;
+  background: rgba(198,164,90,0.07);
+  border-left: 4px solid var(--gold);
+  padding: 0.7rem 1.25rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(26,26,26,0.6);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.doc-strip-label {
+  font-family: var(--font-head);
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.doc-strip-items {
+  flex: 1;
+  min-width: 0;
+}
+.doc-strip-link {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(198,164,90,0.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+.doc-strip-link:hover { border-bottom-color: var(--gold); }
+@media (max-width: 540px) {
+  .doc-strip { flex-direction: column; gap: 0.25rem; }
+}
+
