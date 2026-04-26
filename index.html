@@ -24,8 +24,8 @@
   <link rel="canonical" href="https://www.bomayegym.com/" />
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
-  <link rel="preload" href="/assets/images/community.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/hero-poster.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
   <!-- Bsport: early connection warm-up before user clicks -->
@@ -544,9 +544,17 @@
 
   <!-- ── HERO ── -->
   <section id="hero" aria-label="Hero">
-    <video class="hero-video" autoplay loop muted playsinline preload="none" aria-hidden="true">
+    <video class="hero-video" autoplay loop muted playsinline preload="none" poster="/assets/images/hero-poster.webp" aria-hidden="true">
       <source src="/assets/videos/hero-loop.mp4?v=2" type="video/mp4">
     </video>
+    <script>
+      (function(){
+        if (window.matchMedia('(max-width:768px)').matches) {
+          var v = document.querySelector('.hero-video');
+          if (v) { v.removeAttribute('autoplay'); v.setAttribute('preload','none'); }
+        }
+      })();
+    </script>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
       <a href="#dna" class="hero-eyebrow" onclick="event.preventDefault(); nav('home','dna')" aria-label="Zur Philosophy-Sektion scrollen">
