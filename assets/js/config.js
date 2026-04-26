@@ -154,18 +154,6 @@ async function getEarlyBirdSpotsLeft() {
     }
   } catch (_) { /* fall through */ }
 
-  // MODE S — Sanity CMS fallback
-  if (typeof window.sanityFetch === 'function') {
-    try {
-      const data = await window.sanityFetch(
-        '*[_type == "siteSettings"][0]{ earlyBird{ remaining } }'
-      );
-      if (data && data.earlyBird && typeof data.earlyBird.remaining === 'number') {
-        return data.earlyBird.remaining;
-      }
-    } catch (_) { /* fall through */ }
-  }
-
   // MODE B — manual fallback: change BOMAYE.earlyBird.remaining in this file
   return BOMAYE.earlyBird.remaining;
 }

@@ -386,7 +386,7 @@
 ══════════════════════════════════════════════════════════ -->
 <div id="view-home" class="view active">
 
-  <!-- Announcement bar — shown/hidden + text controlled by Sanity -->
+  <!-- Announcement bar — hidden by default; enable via inline style if needed -->
   <div id="sanity-announcement-bar" style="display:none;background:var(--gold);color:#080808;text-align:center;padding:0.55rem 1rem;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2px;" role="alert">
     <span id="sanity-announcement-text"></span>
   </div>
@@ -1404,26 +1404,20 @@
 </div>
 
 
-<!-- 1. Sanity CDN client (must be first — defines window.sanityFetch) -->
-<script src="assets/js/sanity-client.js"></script>
-
-<!-- 2. Core config (contact, address, hours, early bird) -->
+<!-- Core config (contact, address, hours, early bird) -->
 <script src="assets/js/config.js"></script>
 
-<!-- 3. Content modules (static fallbacks — overridden by Sanity at runtime) -->
+<!-- Content modules -->
 <script src="assets/js/pricing.js"></script>
 <script src="assets/js/family-benefit.js"></script>
 <script src="assets/js/corporate-boxing.js"></script>
 <script src="assets/js/homepage-content.js"></script>
 
-<!-- 4. FAQ data -->
+<!-- FAQ data -->
 <script src="assets/js/faq-data.js"></script>
 
-<!-- 5. Main application logic -->
+<!-- Main application logic -->
 <script src="assets/js/main.js"></script>
-
-<!-- 6. Sanity loader (runs after main.js — patches globals + re-renders) -->
-<script src="assets/js/sanity-loader.js"></script>
 
 <!-- ══════════════════════════════════════════════════════════
      BSPORT WIDGET — Membership Subscription Widget
