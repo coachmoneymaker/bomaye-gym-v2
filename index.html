@@ -672,6 +672,10 @@
       @media(max-width:1023px){#schedule-preview .sp-disc{font-size:14px;}#schedule-preview .sp-level{font-size:10px;}}
       #schedule-preview .sp-coach{font-family:var(--font-head);font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#C9A84C;line-height:1.2;margin-top:6px;}
       @media(max-width:1023px){#schedule-preview .sp-coach{font-size:9px;letter-spacing:0.14em;}}
+      #schedule-preview .sp-coming-soon{opacity:0.4;pointer-events:none;cursor:not-allowed;filter:grayscale(100%);position:relative;}
+      #schedule-preview .sp-coming-soon::after{content:'COMING SOON';position:absolute;top:8px;right:8px;font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.15em;color:#C9A84C;filter:grayscale(0%);opacity:1;background:rgba(10,10,8,0.85);padding:4px 8px;border:1px solid #C9A84C;z-index:2;}
+      #schedule-preview .sp-coming-soon .sp-coach{visibility:hidden;}
+      #schedule-preview .sp-coming-soon .sp-coach::before{content:'🔒';visibility:visible;display:block;text-align:center;font-size:1rem;}
     </style>
     <div style="max-width:700px;margin:0 auto 48px;" class="reveal">
       <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 16px;">STUNDENPLAN</p>
@@ -701,14 +705,14 @@
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div><div class="sp-coach">COACH RASCHAD</div></div></a>
         </div>
         <div class="sp-day" data-day="di">
           <div class="sp-day-header">Dienstag</div>
-          <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
+          <a class="sp-card sp-card--kids sp-coming-soon"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 FIGHT TEAM</div><div class="sp-level">YOUTH</div><div class="sp-coach">COACH FONSI</div></div></a>
           <div class="sp-split-card sp-split-card--adults">
             <div class="sp-time">18:30 – 19:30</div>
@@ -716,7 +720,7 @@
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div><div class="sp-coach">COACH FONSI</div></div></a>
@@ -730,14 +734,14 @@
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH RASCHAD</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></a>
             </div>
           </div>
           <div class="sp-split-card sp-split-card--adults">
             <div class="sp-time">18:30 – 19:30</div>
             <div class="sp-card-divider"></div>
             <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">WOMEN'S</div><div class="sp-coach">COACH FONSI</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">WOMEN'S</div><div class="sp-coach">COACH FONSI</div></a>
               <div class="sp-split-divider-v"></div>
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">WOMEN'S</div><div class="sp-coach">COACH PAVLOS</div></a>
             </div>
@@ -746,7 +750,7 @@
         </div>
         <div class="sp-day" data-day="do">
           <div class="sp-day-header">Donnerstag</div>
-          <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
+          <a class="sp-card sp-card--kids sp-coming-soon"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
           <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 FIGHT TEAM</div><div class="sp-level">YOUTH</div><div class="sp-coach">COACH RASCHAD</div></div></a>
           <div class="sp-split-card sp-split-card--adults">
             <div class="sp-time">18:30 – 19:30</div>
@@ -754,7 +758,7 @@
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div><div class="sp-coach">COACH FONSI</div></div></a>
@@ -762,14 +766,14 @@
         <div class="sp-day" data-day="fr">
           <div class="sp-day-header">Freitag</div>
           <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">BOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH PAVLOS</div></div></a>
-          <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></div></a>
+          <a class="sp-card sp-card--youth sp-coming-soon"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></div></a>
           <div class="sp-split-card sp-split-card--adults">
             <div class="sp-time">18:30 – 19:30</div>
             <div class="sp-card-divider"></div>
             <div class="sp-split-row">
               <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH PAVLOS</div></a>
               <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
+              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
             </div>
           </div>
           <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div><div class="sp-coach">COACH FONSI</div></div></a>
