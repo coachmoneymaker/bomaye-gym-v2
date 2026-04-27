@@ -602,7 +602,7 @@
   </section>
 
   <!-- ── SCHEDULE PREVIEW ── -->
-  <section id="schedule-preview" aria-label="Stundenplan" style="background:linear-gradient(180deg,#F5F0E8 0%,#EFE9DE 100%);padding:80px 20px;text-align:center;width:100%;max-width:100%;box-sizing:border-box;overflow-x:hidden;">
+  <section id="schedule-preview" aria-label="Stundenplan" style="background:#F5F0E8;">
     <style>
       @media(min-width:768px){#schedule-preview{padding-left:24px;padding-right:24px;}}
       @media(min-width:1024px){#schedule-preview{padding-left:32px;padding-right:32px;}}
@@ -780,179 +780,366 @@
       #schedule-preview .sched-slots>*:nth-child(3){animation-delay:0.20s;}
       #schedule-preview .sched-slots>*:nth-child(4){animation-delay:0.27s;}
     </style>
-    <div style="max-width:700px;margin:0 auto 48px;" class="reveal">
-      <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 16px;">STUNDENPLAN</p>
-      <h2 style="font-family:var(--font-display);font-size:clamp(32px,5vw,56px);font-weight:800;color:#0A0A08;text-transform:uppercase;line-height:1;letter-spacing:-0.02em;margin:0 0 16px;">Wann trainierst du?</h2>
-      <p style="font-family:var(--font-body);font-size:16px;line-height:1.6;color:rgba(10,10,8,0.7);max-width:460px;margin:0 auto;">Feste Zeiten. Echte Coaches. Jede Stunde online buchbar.</p>
+
+<div class="sched-hero">
+  <div class="sched-eyebrow">DER KALENDER</div>
+  <h2 class="sched-title">Diese<br><span class="accent">Woche.</span></h2>
+  <div class="sched-meta">
+    <div class="sched-meta-item">
+      <div class="sched-meta-num">5</div>
+      <div class="sched-meta-label">Tage</div>
     </div>
-    <div style="max-width:1280px;width:100%;margin:0 auto;padding:0;box-sizing:border-box;" class="reveal">
-      <div style="background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(201,168,76,0.4);padding:20px 24px;margin-bottom:32px;text-align:center;">
-        <span style="font-family:var(--font-body);color:#0A0A08;font-size:15px;font-weight:500;letter-spacing:0.02em;"><span style="color:#C9A84C;margin-right:12px;">●</span>Freies Training täglich · 13:00 – 16:00 Uhr</span>
+    <div class="sched-meta-item">
+      <div class="sched-meta-num">23</div>
+      <div class="sched-meta-label">Klassen</div>
+    </div>
+    <div class="sched-meta-item">
+      <div class="sched-meta-num">04</div>
+      <div class="sched-meta-label">Coaches</div>
+    </div>
+  </div>
+</div>
+
+<div class="sched-day-bar">
+  <div class="sched-day-tabs">
+    <button class="sched-day-tab active" data-day="mo">Mo</button>
+    <button class="sched-day-tab" data-day="di">Di</button>
+    <button class="sched-day-tab" data-day="mi">Mi</button>
+    <button class="sched-day-tab" data-day="do">Do</button>
+    <button class="sched-day-tab" data-day="fr">Fr</button>
+  </div>
+</div>
+
+<div class="sched-slots-wrap">
+
+  <!-- MONDAY -->
+  <div class="sched-slots" data-day="mo">
+    <a href="/schedule" class="sched-slot" data-cat="kids">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">16:00 — 17:00</div>
+        <div class="sched-slot-cat">Kids · 6–9</div>
       </div>
-      <div class="sp-tabs" role="tablist" aria-label="Wochentag auswählen">
-        <button class="sp-tab active" data-day="mo" type="button" aria-selected="true">Mo</button>
-        <button class="sp-tab" data-day="di" type="button" aria-selected="false">Di</button>
-        <button class="sp-tab" data-day="mi" type="button" aria-selected="false">Mi</button>
-        <button class="sp-tab" data-day="do" type="button" aria-selected="false">Do</button>
-        <button class="sp-tab" data-day="fr" type="button" aria-selected="false">Fr</button>
-        <span class="sp-tab-indicator" aria-hidden="true"></span>
+      <h3 class="sched-discipline">BOXING</h3>
+      <div class="sched-level">Beginner Level</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Fonsi</div>
+        <div class="sched-arrow">→</div>
       </div>
-      <div class="sp-grid">
-        <div class="sp-day active" data-day="mo">
-          <div class="sp-day-header">Montag</div>
-          <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">BOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
-          <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">BOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH RASCHAD</div></div></a>
-          <div class="sp-split-card sp-split-card--adults">
-            <div class="sp-time">18:30 – 19:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
-            </div>
-          </div>
-          <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div><div class="sp-coach">COACH RASCHAD</div></div></a>
-        </div>
-        <div class="sp-day" data-day="di">
-          <div class="sp-day-header">Dienstag</div>
-          <a class="sp-card sp-card--kids sp-coming-soon"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
-          <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 FIGHT TEAM</div><div class="sp-level">YOUTH</div><div class="sp-coach">COACH FONSI</div></div></a>
-          <div class="sp-split-card sp-split-card--adults">
-            <div class="sp-time">18:30 – 19:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
-            </div>
-          </div>
-          <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div><div class="sp-coach">COACH FONSI</div></div></a>
-        </div>
-        <div class="sp-day" data-day="mi">
-          <div class="sp-day-header">Mittwoch</div>
-          <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">BOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH RASCHAD</div></div></a>
-          <div class="sp-split-card sp-split-card--youth">
-            <div class="sp-time">17:00 – 18:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH RASCHAD</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></a>
-            </div>
-          </div>
-          <div class="sp-split-card sp-split-card--adults">
-            <div class="sp-time">18:30 – 19:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">WOMEN'S</div><div class="sp-coach">COACH FONSI</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">WOMEN'S</div><div class="sp-coach">COACH PAVLOS</div></a>
-            </div>
-          </div>
-          <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div><div class="sp-coach">COACH PAVLOS</div></div></a>
-        </div>
-        <div class="sp-day" data-day="do">
-          <div class="sp-day-header">Donnerstag</div>
-          <a class="sp-card sp-card--kids sp-coming-soon"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH FONSI</div></div></a>
-          <a href="/schedule" class="sp-card sp-card--youth"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 FIGHT TEAM</div><div class="sp-level">YOUTH</div><div class="sp-coach">COACH RASCHAD</div></div></a>
-          <div class="sp-split-card sp-split-card--adults">
-            <div class="sp-time">18:30 – 19:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH RASCHAD</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH FONSI</div></a>
-            </div>
-          </div>
-          <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 BOMAYE</div><div class="sp-level">FIGHT TEAM</div><div class="sp-coach">COACH FONSI</div></div></a>
-        </div>
-        <div class="sp-day" data-day="fr">
-          <div class="sp-day-header">Freitag</div>
-          <a href="/schedule" class="sp-card sp-card--kids"><div class="sp-time">16:00 – 17:00</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">BOXING</div><div class="sp-level">KIDS · 6-9</div><div class="sp-coach">COACH PAVLOS</div></div></a>
-          <a class="sp-card sp-card--youth sp-coming-soon"><div class="sp-time">17:00 – 18:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">KICKBOXING</div><div class="sp-level">YOUTH · 10-17</div><div class="sp-coach">COACH FONSI</div></div></a>
-          <div class="sp-split-card sp-split-card--adults">
-            <div class="sp-time">18:30 – 19:30</div>
-            <div class="sp-card-divider"></div>
-            <div class="sp-split-row">
-              <a href="/schedule" class="sp-split-half"><div class="sp-disc">BOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH PAVLOS</div></a>
-              <div class="sp-split-divider-v"></div>
-              <a class="sp-split-half sp-coming-soon"><div class="sp-disc">KICKBOXING</div><div class="sp-level">BASIC</div><div class="sp-coach">COACH NIMA</div></a>
-            </div>
-          </div>
-          <a href="/schedule" class="sp-card sp-card--wettkampf"><div class="sp-time">20:00 – 21:30</div><div class="sp-card-divider"></div><div class="sp-card-body"><div class="sp-disc">🔒 COMPETITION</div><div class="sp-level">BOXING</div><div class="sp-coach">COACH FONSI</div></div></a>
-        </div>
+    </a>
+    <a href="/schedule" class="sched-slot" data-cat="youth">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">17:00 — 18:30</div>
+        <div class="sched-slot-cat">Youth · 10–17</div>
       </div>
-      <script>
-        (function(){
-          var section=document.getElementById('schedule-preview');
-          if(!section)return;
-          var tabs=section.querySelectorAll('.sp-tab');
-          var days=section.querySelectorAll('.sp-day');
-          var indicator=section.querySelector('.sp-tab-indicator');
-          function moveIndicator(activeTab){
-            if(!indicator||!activeTab)return;
-            indicator.style.width=activeTab.offsetWidth+'px';
-            indicator.style.transform='translateX('+activeTab.offsetLeft+'px)';
-          }
-          var firstActive=section.querySelector('.sp-tab.active');
-          if(firstActive)requestAnimationFrame(function(){moveIndicator(firstActive);});
-          function switchToTab(tab){
-            var target=tab.getAttribute('data-day');
-            tabs.forEach(function(t){t.classList.remove('active');t.setAttribute('aria-selected','false');});
-            tab.classList.add('active');
-            tab.setAttribute('aria-selected','true');
-            moveIndicator(tab);
-            days.forEach(function(d){
-              if(d.getAttribute('data-day')===target){
-                d.style.opacity='0';
-                d.style.transform='translateY(8px)';
-                d.classList.add('active');
-                requestAnimationFrame(function(){requestAnimationFrame(function(){
-                  d.style.opacity='1';
-                  d.style.transform='translateY(0)';
-                });});
-              }else{
-                d.classList.remove('active');
-                d.style.opacity='';
-                d.style.transform='';
-              }
-            });
-          }
-          tabs.forEach(function(tab){
-            tab.addEventListener('click',function(){switchToTab(tab);});
-          });
-          var grid=section.querySelector('.sp-grid');
-          if(grid){
-            var _tx=0,_ty=0;
-            grid.addEventListener('touchstart',function(e){
-              _tx=e.changedTouches[0].clientX;
-              _ty=e.changedTouches[0].clientY;
-            },{passive:true});
-            grid.addEventListener('touchend',function(e){
-              var dx=e.changedTouches[0].clientX-_tx;
-              var dy=e.changedTouches[0].clientY-_ty;
-              if(Math.abs(dx)<50||Math.abs(dx)<=Math.abs(dy))return;
-              var arr=Array.prototype.slice.call(tabs);
-              var idx=arr.findIndex(function(t){return t.classList.contains('active');});
-              var next=idx+(dx<0?1:-1);
-              if(next<0||next>=arr.length)return;
-              switchToTab(arr[next]);
-            },{passive:true});
-          }
-        })();
-      </script>
-      <div class="sp-legend">
-        <span class="sp-legend-item"><span class="sp-legend-line" style="background:#7A9FB8;"></span>Kids</span>
-        <span class="sp-legend-item"><span class="sp-legend-line" style="background:#C9A84C;"></span>Youth</span>
-        <span class="sp-legend-item"><span class="sp-legend-line" style="background:#4A7C59;"></span>Adults</span>
-        <span class="sp-legend-item"><span class="sp-legend-line" style="background:#8B2635;"></span>Competition 🔒</span>
+      <h3 class="sched-discipline">BOXING</h3>
+      <div class="sched-level">All Levels</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Raschad</div>
+        <div class="sched-arrow">→</div>
       </div>
-      <p style="font-family:var(--font-body);font-size:13px;line-height:1.6;text-align:center;color:rgba(10,10,8,0.6);max-width:520px;margin:16px auto 0;">🔒 Competition Boxing, Bomaye Fight Team und Youth Fight Team nur nach Rücksprache mit den Coaches. Bitte vorher <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20interessiere%20mich%20für%20Wettkampftraining." style="color:#C9A84C;font-weight:600;text-decoration:underline;text-underline-offset:3px;">per WhatsApp melden</a>.</p>
-      <p style="font-family:var(--font-body);color:rgba(10,10,8,0.4);text-align:center;margin-top:40px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;">Samstag &amp; Sonntag: Ruhetag</p>
-      <div style="text-align:center;margin-top:40px;">
-        <a href="/schedule" style="display:inline-block;width:100%;max-width:400px;background:#C9A84C;color:#0A0A08;font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;padding:20px 40px;border-radius:0;text-align:center;box-sizing:border-box;transition:all 0.3s ease;" onmouseover="this.style.background='#0A0A08';this.style.color='#F5F0E8';this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(201,168,76,0.3)';" onmouseout="this.style.background='#C9A84C';this.style.color='#0A0A08';this.style.transform='';this.style.boxShadow='';">JETZT STUNDE BUCHEN</a>
+    </a>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Raschad</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
       </div>
     </div>
+    <a href="/schedule" class="sched-slot" data-cat="comp">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">Auf Einladung</div>
+      </div>
+      <h3 class="sched-discipline">COMPETITION</h3>
+      <div class="sched-level">Boxing</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Raschad</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="sched-slots" data-day="di" hidden>
+    <div class="sched-slot sched-coming" data-cat="kids">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">16:00 — 17:00</div>
+        <div class="sched-slot-cat">Kids · 6–9</div>
+      </div>
+      <h3 class="sched-discipline">KICKBOXING</h3>
+      <div class="sched-level">Beginner Level</div>
+      <div class="sched-coach">
+        <div class="sched-coming-badge">Coming Soon</div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="youth">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">17:00 — 18:30</div>
+        <div class="sched-slot-cat">Fight Team · Youth</div>
+      </div>
+      <h3 class="sched-discipline">FIGHT TEAM</h3>
+      <div class="sched-level">Youth</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Fonsi</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Raschad</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="comp">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">Bomaye</div>
+      </div>
+      <h3 class="sched-discipline">FIGHT TEAM</h3>
+      <div class="sched-level">Competition</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Fonsi</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="sched-slots" data-day="mi" hidden>
+    <a href="/schedule" class="sched-slot" data-cat="kids">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">16:00 — 17:00</div>
+        <div class="sched-slot-cat">Kids · 6–9</div>
+      </div>
+      <h3 class="sched-discipline">BOXING</h3>
+      <div class="sched-level">Beginner Level</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Raschad</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="youth">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">17:00 — 18:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Youth · 10–17</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Raschad</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="youth">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">17:00 — 18:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Youth</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Women's</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Pavlos</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Women's</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="comp">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">Auf Einladung</div>
+      </div>
+      <h3 class="sched-discipline">COMPETITION</h3>
+      <div class="sched-level">Boxing</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Pavlos</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- THURSDAY -->
+  <div class="sched-slots" data-day="do" hidden>
+    <div class="sched-slot sched-coming" data-cat="kids">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">16:00 — 17:00</div>
+        <div class="sched-slot-cat">Kids · 6–9</div>
+      </div>
+      <h3 class="sched-discipline">KICKBOXING</h3>
+      <div class="sched-level">Beginner Level</div>
+      <div class="sched-coach">
+        <div class="sched-coming-badge">Coming Soon</div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="youth">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">17:00 — 18:30</div>
+        <div class="sched-slot-cat">Fight Team · Youth</div>
+      </div>
+      <h3 class="sched-discipline">FIGHT TEAM</h3>
+      <div class="sched-level">Youth</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Raschad</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Raschad</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="comp">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">Bomaye</div>
+      </div>
+      <h3 class="sched-discipline">FIGHT TEAM</h3>
+      <div class="sched-level">Competition</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Fonsi</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- FRIDAY -->
+  <div class="sched-slots" data-day="fr" hidden>
+    <a href="/schedule" class="sched-slot" data-cat="kids">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">16:00 — 17:00</div>
+        <div class="sched-slot-cat">Kids · 6–9</div>
+      </div>
+      <h3 class="sched-discipline">BOXING</h3>
+      <div class="sched-level">Beginner Level</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Pavlos</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+    <div class="sched-slot sched-coming" data-cat="youth">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">17:00 — 18:30</div>
+        <div class="sched-slot-cat">Youth · 10–17</div>
+      </div>
+      <h3 class="sched-discipline">KICKBOXING</h3>
+      <div class="sched-level">All Levels</div>
+      <div class="sched-coach">
+        <div class="sched-coming-badge">Coming Soon</div>
+      </div>
+    </div>
+    <div class="sched-split">
+      <a href="/schedule" class="sched-half" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coach-name">Pavlos</div>
+        </div>
+      </a>
+      <div class="sched-half sched-coming" data-cat="adults">
+        <div class="sched-slot-top">
+          <div class="sched-slot-time">18:30 — 19:30</div>
+        </div>
+        <h3 class="sched-discipline">KICK<br>BOXING</h3>
+        <div class="sched-level">Basic</div>
+        <div class="sched-coach">
+          <div class="sched-coming-badge">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <a href="/schedule" class="sched-slot" data-cat="comp">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">Auf Einladung</div>
+      </div>
+      <h3 class="sched-discipline">COMPETITION</h3>
+      <div class="sched-level">Boxing</div>
+      <div class="sched-coach">
+        <div class="sched-coach-name">Coach Fonsi</div>
+        <div class="sched-arrow">→</div>
+      </div>
+    </a>
+  </div>
+
+</div>
+
+<div class="sched-legend">
+  <div class="sched-legend-title">ZIELGRUPPEN</div>
+  <div class="sched-legend-grid">
+    <div class="sched-legend-item" data-cat="kids"><div class="sched-legend-swatch"></div>Kids</div>
+    <div class="sched-legend-item" data-cat="youth"><div class="sched-legend-swatch"></div>Youth</div>
+    <div class="sched-legend-item" data-cat="adults"><div class="sched-legend-swatch"></div>Adults</div>
+    <div class="sched-legend-item" data-cat="comp"><div class="sched-legend-swatch"></div>Competition</div>
+  </div>
+</div>
   </section>
 
   <!-- ── DNA / PHILOSOPHY TEASER ── -->
