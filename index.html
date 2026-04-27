@@ -676,6 +676,109 @@
       #schedule-preview .sp-coming-soon::after{content:'COMING SOON';position:absolute;top:8px;right:8px;font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.15em;color:#C9A84C;filter:grayscale(0%);opacity:1;background:rgba(10,10,8,0.85);padding:4px 8px;border:1px solid #C9A84C;z-index:2;}
       #schedule-preview .sp-coming-soon .sp-coach{visibility:hidden;}
       #schedule-preview .sp-coming-soon .sp-coach::before{content:'🔒';visibility:visible;display:block;text-align:center;font-size:1rem;}
+
+      /* ============================================ */
+      /* NEW PREMIUM SCHEDULE DESIGN — V2 (additive)  */
+      /* All rules scoped to #schedule-preview        */
+      /* ============================================ */
+      #schedule-preview{--dark:#0A0A08;--cream:#F5F0E8;--cream-card:#FAF6EE;--cream-elevated:#FCF9F2;--gold:#C9A84C;--gold-deep:#A8893A;--kids:#6B8FA8;--youth:#C9A84C;--adults:#4A7C59;--comp:#8B2635;--line:rgba(10,10,8,0.08);--line-strong:rgba(10,10,8,0.15);}
+
+      /* HERO BLOCK */
+      #schedule-preview .sched-hero{padding:64px 20px 40px;}
+      #schedule-preview .sched-eyebrow{display:flex;align-items:center;gap:14px;font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.4em;color:var(--gold-deep);margin-bottom:24px;}
+      #schedule-preview .sched-eyebrow::before{content:'';width:32px;height:1px;background:var(--gold-deep);}
+      #schedule-preview .sched-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,16vw,5.5rem);line-height:0.85;letter-spacing:-0.005em;margin-bottom:28px;color:var(--dark);}
+      #schedule-preview .sched-title .accent{color:var(--gold);font-style:italic;}
+      #schedule-preview .sched-meta{display:flex;gap:20px;padding-bottom:28px;border-bottom:1px solid var(--dark);}
+      #schedule-preview .sched-meta-item{display:flex;flex-direction:column;gap:4px;}
+      #schedule-preview .sched-meta-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--dark);}
+      #schedule-preview .sched-meta-label{font-family:'Oswald',sans-serif;font-weight:400;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--dark);opacity:0.5;}
+
+      /* DAY TABS */
+      #schedule-preview .sched-day-bar{position:sticky;top:0;background:var(--cream);z-index:50;padding:16px 20px 14px;border-bottom:1px solid var(--line);}
+      #schedule-preview .sched-day-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+      #schedule-preview .sched-day-tabs::-webkit-scrollbar{display:none;}
+      #schedule-preview .sched-day-tab{flex:1 0 auto;min-width:64px;padding:14px 8px;background:transparent;border:1px solid var(--line);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.18em;color:var(--dark);opacity:0.45;cursor:pointer;transition:all 0.3s;position:relative;}
+      #schedule-preview .sched-day-tab:hover{opacity:0.7;}
+      #schedule-preview .sched-day-tab.active{opacity:1;background:var(--dark);color:var(--cream);border-color:var(--dark);}
+      #schedule-preview .sched-day-tab.active::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:6px;width:18px;height:2px;background:var(--gold);}
+
+      /* SLOT LIST CONTAINER */
+      #schedule-preview .sched-slots-wrap{position:relative;}
+      #schedule-preview .sched-slots{padding:32px 20px 32px;display:flex;flex-direction:column;gap:14px;transition:opacity 0.2s ease;}
+      #schedule-preview .sched-slots[hidden]{display:none;}
+
+      /* STANDARD SLOT */
+      #schedule-preview .sched-slot{background:var(--cream-card);color:var(--dark);padding:28px 24px 24px;position:relative;overflow:hidden;transition:all 0.3s ease;cursor:pointer;text-decoration:none;display:block;border:1px solid var(--line);box-shadow:0 1px 0 rgba(10,10,8,0.03);}
+      #schedule-preview .sched-slot:hover{background:var(--cream-elevated);border-color:var(--line-strong);transform:translateY(-1px);box-shadow:0 4px 16px rgba(10,10,8,0.06);}
+      #schedule-preview .sched-slot:active{transform:scale(0.99);}
+      #schedule-preview .sched-slot::before{content:'';position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--gold);}
+      #schedule-preview .sched-slot[data-cat="kids"]::before{background:var(--kids);}
+      #schedule-preview .sched-slot[data-cat="youth"]::before{background:var(--youth);}
+      #schedule-preview .sched-slot[data-cat="adults"]::before{background:var(--adults);}
+      #schedule-preview .sched-slot[data-cat="comp"]::before{background:var(--comp);}
+
+      /* SLOT INNER ELEMENTS */
+      #schedule-preview .sched-slot-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;}
+      #schedule-preview .sched-slot-time{font-family:'Oswald',sans-serif;font-weight:500;font-size:0.95rem;letter-spacing:0.08em;color:var(--dark);}
+      #schedule-preview .sched-slot-cat{font-family:'Bebas Neue',sans-serif;font-size:0.65rem;letter-spacing:0.32em;color:var(--dark);opacity:0.55;}
+      #schedule-preview .sched-slot[data-cat="kids"] .sched-slot-cat{color:var(--kids);opacity:1;}
+      #schedule-preview .sched-slot[data-cat="youth"] .sched-slot-cat{color:var(--gold-deep);opacity:1;}
+      #schedule-preview .sched-slot[data-cat="adults"] .sched-slot-cat{color:var(--adults);opacity:1;}
+      #schedule-preview .sched-slot[data-cat="comp"] .sched-slot-cat{color:var(--comp);opacity:1;}
+      #schedule-preview .sched-discipline{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;line-height:0.95;letter-spacing:0.005em;margin-bottom:6px;color:var(--dark);}
+      #schedule-preview .sched-level{font-family:'Oswald',sans-serif;font-weight:300;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark);opacity:0.6;margin-bottom:24px;}
+      #schedule-preview .sched-coach{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line);}
+      #schedule-preview .sched-coach-name{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.28em;color:var(--gold-deep);}
+      #schedule-preview .sched-arrow{font-family:'DM Sans',sans-serif;font-size:1.1rem;color:var(--gold-deep);transition:transform 0.3s;}
+      #schedule-preview .sched-slot:hover .sched-arrow{transform:translateX(4px);}
+
+      /* SPLIT SLOT */
+      #schedule-preview .sched-split{background:transparent;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;cursor:default;border:none;box-shadow:none;}
+      #schedule-preview .sched-split::before{display:none;}
+      #schedule-preview .sched-split:hover{transform:none;box-shadow:none;}
+      #schedule-preview .sched-half{background:var(--cream-card);padding:22px 16px 20px;position:relative;overflow:hidden;text-decoration:none;color:var(--dark);display:block;transition:all 0.3s ease;cursor:pointer;border:1px solid var(--line);}
+      #schedule-preview .sched-half:hover{background:var(--cream-elevated);transform:translateY(-1px);box-shadow:0 4px 16px rgba(10,10,8,0.06);}
+      #schedule-preview .sched-half:active{transform:scale(0.98);}
+      #schedule-preview .sched-half::before{content:'';position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--adults);}
+      #schedule-preview .sched-half[data-cat="kids"]::before{background:var(--kids);}
+      #schedule-preview .sched-half[data-cat="youth"]::before{background:var(--youth);}
+      #schedule-preview .sched-half[data-cat="adults"]::before{background:var(--adults);}
+      #schedule-preview .sched-half .sched-slot-time{font-size:0.78rem;margin-bottom:12px;display:block;}
+      #schedule-preview .sched-half .sched-discipline{font-size:1.5rem;line-height:1;margin-bottom:4px;}
+      #schedule-preview .sched-half .sched-level{font-size:0.65rem;margin-bottom:16px;}
+      #schedule-preview .sched-half .sched-coach-name{font-size:0.7rem;letter-spacing:0.22em;}
+      #schedule-preview .sched-half .sched-slot-cat{display:none;}
+      #schedule-preview .sched-half .sched-slot-top{display:block;margin-bottom:0;}
+
+      /* COMING SOON TREATMENT */
+      #schedule-preview .sched-coming{cursor:not-allowed !important;pointer-events:none;background:linear-gradient(135deg,var(--cream-card) 0%,var(--cream) 100%);position:relative;}
+      #schedule-preview .sched-coming::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,transparent,transparent 12px,rgba(201,168,76,0.05) 12px,rgba(201,168,76,0.05) 13px);pointer-events:none;}
+      #schedule-preview .sched-coming::before{background:var(--gold-deep) !important;opacity:0.4;}
+      #schedule-preview .sched-coming .sched-discipline,#schedule-preview .sched-coming .sched-level,#schedule-preview .sched-coming .sched-slot-time{color:var(--dark);opacity:0.4;}
+      #schedule-preview .sched-coming .sched-coach{border-top-color:rgba(10,10,8,0.05);padding-top:14px;}
+      #schedule-preview .sched-coming .sched-coach-name,#schedule-preview .sched-coming .sched-arrow{display:none;}
+      #schedule-preview .sched-coming-badge{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.4em;color:var(--gold-deep);padding:7px 0;border-top:1px solid var(--gold-deep);border-bottom:1px solid var(--gold-deep);text-align:center;width:100%;background:rgba(255,255,255,0.4);}
+      #schedule-preview .sched-half.sched-coming .sched-coming-badge{font-size:0.6rem;letter-spacing:0.32em;padding:6px 0;}
+
+      /* LEGEND */
+      #schedule-preview .sched-legend{padding:48px 20px 64px;border-top:1px solid var(--line);margin-top:32px;}
+      #schedule-preview .sched-legend-title{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.4em;color:var(--dark);opacity:0.5;text-align:center;margin-bottom:28px;}
+      #schedule-preview .sched-legend-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:320px;margin:0 auto;}
+      #schedule-preview .sched-legend-item{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-weight:400;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--dark);}
+      #schedule-preview .sched-legend-swatch{width:14px;height:14px;border:1px solid rgba(10,10,8,0.08);}
+      #schedule-preview .sched-legend-item[data-cat="kids"] .sched-legend-swatch{background:var(--kids);}
+      #schedule-preview .sched-legend-item[data-cat="youth"] .sched-legend-swatch{background:var(--youth);}
+      #schedule-preview .sched-legend-item[data-cat="adults"] .sched-legend-swatch{background:var(--adults);}
+      #schedule-preview .sched-legend-item[data-cat="comp"] .sched-legend-swatch{background:var(--comp);}
+
+      /* ENTRY ANIMATION */
+      @keyframes schedSlotEnter{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+      #schedule-preview .sched-slot,#schedule-preview .sched-split{animation:schedSlotEnter 0.5s ease-out backwards;}
+      #schedule-preview .sched-slots>*:nth-child(1){animation-delay:0.06s;}
+      #schedule-preview .sched-slots>*:nth-child(2){animation-delay:0.13s;}
+      #schedule-preview .sched-slots>*:nth-child(3){animation-delay:0.20s;}
+      #schedule-preview .sched-slots>*:nth-child(4){animation-delay:0.27s;}
     </style>
     <div style="max-width:700px;margin:0 auto 48px;" class="reveal">
       <p style="font-family:var(--font-head);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#C9A84C;margin:0 0 16px;">STUNDENPLAN</p>
