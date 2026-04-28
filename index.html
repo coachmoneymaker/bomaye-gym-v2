@@ -1325,6 +1325,219 @@
   </aside>
 </div>
 
+<style>
+/* ── SLOT MODAL SLIDE-OVER ── */
+
+/* Body scroll lock */
+body[data-modal-open="true"] { overflow: hidden; }
+
+/* Root overlay */
+#slot-modal {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: flex-end;
+}
+#slot-modal[aria-hidden="true"] { pointer-events: none; }
+#slot-modal[aria-hidden="false"] { pointer-events: auto; }
+
+/* Backdrop */
+.slot-modal__backdrop {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(10, 10, 8, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+#slot-modal[aria-hidden="true"] .slot-modal__backdrop { opacity: 0; }
+#slot-modal[aria-hidden="false"] .slot-modal__backdrop { opacity: 1; }
+
+/* Panel */
+.slot-modal__panel {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: #F5F0E8;
+  overflow-y: auto;
+  padding: 32px 28px;
+  box-sizing: border-box;
+  box-shadow: -16px 0 48px rgba(10,10,8,0.18);
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+#slot-modal[aria-hidden="true"] .slot-modal__panel { transform: translateX(100%); }
+#slot-modal[aria-hidden="false"] .slot-modal__panel { transform: translateX(0); }
+
+@media (min-width: 768px) {
+  .slot-modal__panel { width: 480px; padding: 48px 40px; }
+}
+
+/* Close X */
+.slot-modal__close {
+  position: absolute;
+  top: 24px; right: 24px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #0A0A08;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  padding: 0;
+}
+.slot-modal__close:hover { opacity: 1; }
+
+/* Coach block */
+.slot-modal__coach {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 24px;
+  width: 100%;
+}
+.slot-modal__coach-img {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 2px solid #C9A84C;
+  object-fit: cover;
+  object-position: center top;
+}
+.slot-modal__coach-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  color: #0A0A08;
+  text-transform: uppercase;
+}
+
+/* Divider */
+.slot-modal__divider {
+  width: 32px; height: 1px;
+  background: #C9A84C;
+  margin: 32px auto;
+  flex-shrink: 0;
+}
+
+/* Class info */
+.slot-modal__class-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.slot-modal__time {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: #0A0A08;
+}
+.slot-modal__discipline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.04em;
+  color: #0A0A08;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.slot-modal__category {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  color: #B89740;
+  text-transform: uppercase;
+}
+
+/* Description */
+.slot-modal__description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(10,10,8,0.7);
+  margin: 32px 0;
+  max-width: 360px;
+}
+
+/* CTA */
+.slot-modal__cta {
+  display: block;
+  width: 100%;
+  background: #C9A84C;
+  color: #0A0A08;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.24em;
+  padding: 20px 24px;
+  border: none;
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  margin-top: 16px;
+  box-sizing: border-box;
+}
+.slot-modal__cta:hover { background: #0A0A08; color: #F5F0E8; }
+.slot-modal__arrow {
+  display: inline-block;
+  margin-left: 12px;
+  transition: transform 0.2s ease;
+}
+.slot-modal__cta:hover .slot-modal__arrow { transform: translateX(4px); }
+
+/* Coming soon state */
+.slot-modal__coming-soon-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+  width: 100%;
+}
+.slot-modal__coming-soon-state[hidden] { display: none; }
+.slot-modal__coming-soon-badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.32em;
+  color: #B89740;
+  background: rgba(201,168,76,0.08);
+  padding: 14px 24px;
+  border: 1px solid #C9A84C;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+.slot-modal__coming-soon-note {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(10,10,8,0.55);
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Close text link */
+.slot-modal__close-text {
+  display: block;
+  margin: 32px auto 0;
+  background: transparent;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: rgba(10,10,8,0.5);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.slot-modal__close-text:hover { color: #0A0A08; }
+</style>
+
   <!-- ── DNA / PHILOSOPHY TEASER ── -->
   <style>
     #dna{padding:60px 24px!important;}
