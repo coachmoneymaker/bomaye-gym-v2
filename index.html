@@ -814,6 +814,12 @@
           box-sizing: border-box !important;
         }
       }
+
+      /* CTA — vollständiger Wochenplan */
+      #schedule-preview .sched-cta-wrap{display:flex;justify-content:center;margin:32px 0 0;}
+      #schedule-preview .sched-cta-link{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.3em;padding:18px 32px;border:1px solid #0A0A08;background:transparent;color:#0A0A08;text-decoration:none;transition:background 0.3s ease,color 0.3s ease;max-width:320px;text-align:center;}
+      #schedule-preview .sched-cta-link:hover{background:#0A0A08;color:#F5F0E8;}
+      @media(min-width:768px){#schedule-preview .sched-cta-wrap{margin-top:48px;}}
     </style>
 
 <div class="sched-hero">
@@ -1174,6 +1180,10 @@
     <div class="sched-legend-item" data-cat="adults"><div class="sched-legend-swatch"></div>Adults</div>
     <div class="sched-legend-item" data-cat="comp"><div class="sched-legend-swatch"></div>Competition</div>
   </div>
+</div>
+
+<div class="sched-cta-wrap">
+  <a href="/stundenplan" class="sched-cta-link">VOLLSTÄNDIGER WOCHENPLAN →</a>
 </div>
 
   <script>

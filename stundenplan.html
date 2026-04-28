@@ -37,24 +37,63 @@
 
     /* ── Hero ── */
     .sp-page-hero {
-      background: var(--ink);
-      padding: 7rem 0 3rem;
+      background: #F5F0E8;
+      padding: 80px 24px 60px;
       text-align: center;
-      border-bottom: 1px solid rgba(197,160,89,0.15);
+      border-bottom: 1px solid rgba(10,10,8,0.08);
     }
-    .sp-page-hero .tag { margin-bottom: 1rem; display: inline-block; }
+    .sp-page-hero .sp-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: #C9A84C;
+      margin-bottom: 24px;
+    }
+    .sp-page-hero .sp-eyebrow::before,
+    .sp-page-hero .sp-eyebrow::after { content: ''; width: 32px; height: 1px; background: #C9A84C; }
     .sp-page-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(2.5rem, 8vw, 5rem);
-      color: #fff;
+      color: #0A0A08;
       letter-spacing: 3px;
       margin: 0.5rem 0;
     }
     .sp-page-hero p {
-      color: var(--muted);
+      color: rgba(10,10,8,0.6);
       font-family: var(--font-body);
       font-size: 1rem;
       margin-top: 0.75rem;
+    }
+
+    /* ── WIDGET FRAME ── */
+    .sp-widget-frame {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #FAF6EE;
+      border: 1px solid rgba(10,10,8,0.08);
+    }
+    .sp-widget-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: #0A0A08;
+      opacity: 0.6;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .sp-widget-note {
+      font-family: 'DM Sans', sans-serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: rgba(10,10,8,0.55);
+      text-align: center;
+      max-width: 600px;
+      margin: 24px auto 0;
     }
 
     /* ── CTA BAR ── */
@@ -75,8 +114,11 @@
 
     /* ── PHONE (≤480px) ── */
     @media (max-width: 480px) {
-      .sp-page-hero { padding: 6rem 1rem 2.5rem; }
+      .sp-page-hero { padding: 60px 20px 40px; }
       .sp-cta-bar .btn { width: 100%; justify-content: center; margin: 0.35rem 0; }
+    }
+    @media (min-width: 768px) {
+      .sp-widget-frame { padding: 40px; }
     }
   </style>
   <!-- Schema.org -->
@@ -162,7 +204,7 @@
 <!-- ═══════ PAGE HERO ═══════ -->
 <div class="sp-page-hero">
   <div class="container">
-    <span class="tag tag--gold">STUNDENPLAN</span>
+    <div class="sp-eyebrow">STUNDENPLAN</div>
     <h1>DEIN <span class="shimmer">TRAINING.</span></h1>
     <p>Alle Kurse und Zeiten auf einen Blick — buche direkt deinen Platz.</p>
   </div>
@@ -171,13 +213,17 @@
 <!-- ═══════ BSPORT CALENDAR ═══════ -->
 <section id="schedule">
   <div class="container">
-    <div class="schedule-frame" id="schedule-section-wrap">
-      <div class="schedule-frame__widget">
-        <div id="bsport-widget-172485"></div>
-        <noscript>
-          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
-        </noscript>
+    <div class="sp-widget-frame">
+      <p class="sp-widget-label">VOLLSTÄNDIGER WOCHENPLAN</p>
+      <div class="schedule-frame" id="schedule-section-wrap">
+        <div class="schedule-frame__widget">
+          <div id="bsport-widget-172485"></div>
+          <noscript>
+            <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+          </noscript>
+        </div>
       </div>
+      <p class="sp-widget-note">Buchungen werden über unser Partnersystem abgewickelt.</p>
     </div>
   </div>
 </section>
