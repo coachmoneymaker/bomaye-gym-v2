@@ -2537,5 +2537,103 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 <script src="/assets/js/cookie-consent.js"></script>
+
+<script>
+(function() {
+  var modal = document.getElementById('slot-modal');
+  if (!modal) return;
+
+  var previewSection = document.getElementById('schedule-preview');
+  if (!previewSection) return;
+
+  var els = {
+    img:             modal.querySelector('.slot-modal__coach-img'),
+    coachName:       modal.querySelector('.slot-modal__coach-name'),
+    time:            modal.querySelector('.slot-modal__time'),
+    discipline:      modal.querySelector('.slot-modal__discipline'),
+    category:        modal.querySelector('.slot-modal__category'),
+    description:     modal.querySelector('.slot-modal__description'),
+    cta:             modal.querySelector('.slot-modal__cta'),
+    comingSoonState: modal.querySelector('.slot-modal__coming-soon-state')
+  };
+
+  var SLOT_COACHES = {
+    raschad: { name: 'COACH RASCHAD', img: '/assets/images/coach-raschad.webp', alt: 'Raschad Pekpassi — Head Coach & Founder' },
+    fonsi:   { name: 'COACH FONSI',   img: '/assets/images/coach-alfonso.webp', alt: 'Alfonso Fusco — Head Coach & Founder' },
+    nima:    { name: 'COACH NIMA',    img: '/assets/images/coach-nima.webp',    alt: 'Nima — Kickboxing & K1 Coach' },
+    pavlos:  { name: 'COACH PAVLOS',  img: '/assets/images/coach-pavlos.webp',  alt: 'Pavlos — Boxing & Athletik Coach' }
+  };
+
+  var SLOT_CLASS_TYPES = {
+    'boxing-kids':     { discipline: 'BOXING',      description: 'Spielerischer Einstieg ins Boxen. Koordination, Disziplin, Selbstbewusstsein — altersgerecht aufgebaut.' },
+    'boxing-youth':    { discipline: 'BOXING',      description: 'Vom Anfänger zum Wettkämpfer. Saubere Technik, Sparring, Disziplin — individuell auf dein Level.' },
+    'boxing-basic':    { discipline: 'BOXING',      description: 'Boxen für alle Levels. Technik, Kondition, echtes Training. Anfänger willkommen.' },
+    'kickboxing-kids': { discipline: 'KICKBOXING',  description: 'Spielerischer Einstieg ins Kickboxen. Technik, Bewegung, Spaß — altersgerecht aufgebaut.' },
+    'kickboxing-basic':{ discipline: 'KICKBOXING',  description: 'Kickboxen für alle Levels. Technik, Power, Kondition. Gecoacht von einem Weltmeister.' },
+    'fight-team':      { discipline: 'FIGHT TEAM',  description: 'Für Wettkämpfer mit Ambition. Sparring, Wettkampfvorbereitung, mentale Schulung. Nur auf Einladung.' },
+    'competition':     { discipline: 'COMPETITION', description: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.' }
+  };
+
+  function populate(card) {
+    var classType = card.getAttribute('data-class-type') || '';
+    var coachKey  = card.getAttribute('data-coach') || '';
+    var time      = card.getAttribute('data-time') || '';
+
+    var classData = SLOT_CLASS_TYPES[classType] || {};
+    var coachData = SLOT_COACHES[coachKey] || {};
+
+    // Category text: prefer .sched-slot-cat, fallback to .sched-level
+    var catEl = card.querySelector('.sched-slot-cat') || card.querySelector('.sched-level');
+    var categoryText = catEl ? catEl.textContent.trim() : '';
+
+    // Inject content
+    if (els.img)        { els.img.src = coachData.img || ''; els.img.alt = coachData.alt || ''; }
+    if (els.coachName)  els.coachName.textContent  = coachData.name || '';
+    if (els.time)       els.time.textContent        = time;
+    if (els.discipline) els.discipline.textContent  = classData.discipline || '';
+    if (els.category)   els.category.textContent    = categoryText;
+    if (els.description)els.description.textContent = classData.description || '';
+
+    // Coming-soon toggle
+    var isComingSoon = card.classList.contains('sched-coming');
+    if (els.cta)             els.cta.hidden             = isComingSoon;
+    if (els.comingSoonState) els.comingSoonState.hidden  = !isComingSoon;
+  }
+
+  function openModal(card) {
+    populate(card);
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.setAttribute('data-modal-open', 'true');
+  }
+
+  function closeModal() {
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.removeAttribute('data-modal-open');
+  }
+
+  // Slot click delegation on schedule section
+  previewSection.addEventListener('click', function(e) {
+    var card = e.target.closest('.sched-slot, .sched-half');
+    if (!card) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openModal(card);
+  });
+
+  // Close via [data-modal-close] targets and backdrop
+  modal.addEventListener('click', function(e) {
+    if (e.target.closest('[data-modal-close]')) {
+      closeModal();
+    }
+  });
+
+  // ESC key
+  document.addEventListener('keydown', function(e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && modal.getAttribute('aria-hidden') === 'false') {
+      closeModal();
+    }
+  });
+})();
+</script>
 </body>
 </html>
