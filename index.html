@@ -782,17 +782,17 @@
 
       /* DESKTOP LAYOUT — max-width container */
       @media (min-width: 768px) {
-        #schedule-preview .sched-hero,
-        #schedule-preview .sched-day-bar,
-        #schedule-preview .sched-day-tabs,
-        #schedule-preview .sched-slots-wrap,
-        #schedule-preview .sched-slots,
-        #schedule-preview .sched-legend {
+        #schedule-preview {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+        }
+
+        #schedule-preview > * {
           max-width: 980px !important;
+          width: calc(100% - 48px) !important;
           margin-left: auto !important;
           margin-right: auto !important;
-          width: 100%;
-          box-sizing: border-box;
+          box-sizing: border-box !important;
         }
 
         #schedule-preview .sched-day-tabs {
@@ -807,10 +807,11 @@
         }
 
         #schedule-preview .sched-slot,
-        #schedule-preview .sched-split {
-          max-width: 100%;
-          width: 100%;
-          box-sizing: border-box;
+        #schedule-preview .sched-split,
+        #schedule-preview .sched-slots > * {
+          max-width: 100% !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
         }
       }
     </style>
