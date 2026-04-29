@@ -645,15 +645,6 @@
       #schedule-preview .sp-legend{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:24px;margin:32px 0 0;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,8,0.7);}
       #schedule-preview .sp-legend-item{display:flex;align-items:center;gap:8px;}
       #schedule-preview .sp-legend-line{display:inline-block;width:12px;height:2px;flex-shrink:0;}
-      .schedule-modal{position:fixed;inset:0;z-index:9999;display:none;opacity:0;transition:opacity 0.3s ease;}
-      .schedule-modal.is-open{display:block;opacity:1;}
-      .schedule-modal__backdrop{position:absolute;inset:0;background:rgba(10,10,8,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-      .schedule-modal__container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:1200px;height:90vh;max-height:900px;background:#F5F0E8;overflow:hidden;display:flex;flex-direction:column;}
-      .schedule-modal__close{position:absolute;top:16px;right:16px;width:44px;height:44px;background:#0A0A08;color:#F5F0E8;border:none;cursor:pointer;font-size:20px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;}
-      .schedule-modal__close:hover{background:#C9A84C;color:#0A0A08;}
-      .schedule-modal__content{flex:1;overflow:auto;padding:60px 0 0 0;}
-      @media(max-width:768px){.schedule-modal__container{width:100%;height:100%;max-height:100vh;}}
-      body.modal-open{overflow:hidden;}
       #schedule-preview .sp-split-card{display:block;width:100%;max-width:100%;box-sizing:border-box;padding:16px 14px;margin-bottom:0;border-left:3px solid transparent;border-bottom:1px solid rgba(10,10,8,0.06);background:#FFFFFF;}
       #schedule-preview .sp-split-card:last-child{border-bottom:none;}
       #schedule-preview .sp-split-card--adults{border-left-color:#4A7C59;}
@@ -2512,51 +2503,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 <script src="/assets/js/pixel-events.js"></script>
 
-<!-- ── SCHEDULE MODAL ── -->
-<div id="schedule-modal" class="schedule-modal" aria-hidden="true" role="dialog" aria-label="Stunde buchen">
-  <div class="schedule-modal__backdrop" data-close="true"></div>
-  <div class="schedule-modal__container">
-    <button class="schedule-modal__close" aria-label="Schließen" data-close="true">✕</button>
-    <div class="schedule-modal__content" id="schedule-modal-content"></div>
-  </div>
-</div>
-
-<script>
-(function(){
-  var modal=document.getElementById('schedule-modal');
-  var modalContent=document.getElementById('schedule-modal-content');
-  var widgetLoaded=false;
-
-  function openModal(){
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden','false');
-    document.body.classList.add('modal-open');
-    if(!widgetLoaded){
-      modalContent.innerHTML='<div style="overflow:hidden !important;position:relative;padding-top:125vh;"><iframe style="position:absolute;overflow-x:hidden !important;height:100%;width:100%;left:0;top:0;border:0;" frameborder="0" allowfullscreen srcdoc=\'<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script><script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script><script>MountBsportWidget({"parentElement":"bsport-widget-891306","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"calendar","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"calendar":{"todayOnly":false,"cardMode":null,"variant":"time"}}})<\/script><div id="bsport-widget-891306"><\/div>\'></iframe></div>';
-      widgetLoaded=true;
-    }
-  }
-
-  function closeModal(){
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden','true');
-    document.body.classList.remove('modal-open');
-  }
-
-  document.addEventListener('click',function(e){
-    if(e.target.closest('[data-close="true"]')){closeModal();return;}
-    var scheduleLink=e.target.closest('a[href="/schedule"]');
-    if(scheduleLink&&scheduleLink.closest('#schedule-preview')){
-      e.preventDefault();
-      openModal();
-    }
-  });
-
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&modal.classList.contains('is-open'))closeModal();
-  });
-})();
-</script>
 <script src="/assets/js/cookie-consent.js"></script>
 
 <script>
