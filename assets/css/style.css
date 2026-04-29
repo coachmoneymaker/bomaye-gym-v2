@@ -1098,15 +1098,6 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
     padding: 0.6rem 1rem !important;
     gap: 0.5rem !important;
   }
-  /* Date navigation: wrap on narrow viewports */
-  #bsport-widget-172485 .cleanslate [class*="date"],
-  #bsport-widget-172485 .cleanslate [class*="Date"],
-  #bsport-widget-172485 .cleanslate [class*="nav"],
-  #bsport-widget-172485 .cleanslate [class*="Nav"] {
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-
   /* ── Mobile card field order: Activity → Time → Participants → Facility → Coach → Level ──
      The __left column is already flex-direction:column, so `order` controls vertical sequence.
      All metadata is visible (display:none removed by fixSchedule JS); these rules ensure
