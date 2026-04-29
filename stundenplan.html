@@ -392,39 +392,74 @@ function MountBsportWidget(config, repeat=1) {
 </script>
 
 <script>
-/* BSport schedule fix — removes inline display:none from widget metadata.
-   MutationObserver fires whenever the widget re-renders (day change, filter).
-   Debounce (150ms) prevents CPU saturation from rapid React mutations.
-   Observing document.body catches all React re-renders that add card nodes.
-   childList-only: our style changes are attribute mutations, not childList —
-   the observer never re-fires from its own fix (no infinite loop).          */
-document.addEventListener("DOMContentLoaded", function () {
-
+/* ── Scoped schedule fix ────────────────────────────────────────────────────
+   Only un-hides offer cards that React may have hidden during re-renders.
+   Observer is scoped to the widget element, NOT document.body, to avoid
+   interfering with Bsport's own internal display:none state (e.g. the
+   proxy-bridge iframe the modal uses). */
+(function () {
   function fixSchedule() {
-    var widget = document.querySelector('[id^="bsport-widget"]');
+    var widget = document.getElementById('bsport-widget-172485');
     if (!widget) return;
-
-    widget.querySelectorAll('*').forEach(function (el) {
-      if (el.style && el.style.display === "none") {
-        el.style.display = "";
+    widget.querySelectorAll('.bs-offer-list-item, .bs-card-offer, .bs-week__listMode__content__day').forEach(function (el) {
+      if (el.style && el.style.display === 'none') {
+        el.style.display = '';
       }
     });
   }
 
-  fixSchedule();
-
-  var _timer;
-  var observer = new MutationObserver(function () {
-    clearTimeout(_timer);
-    _timer = setTimeout(fixSchedule, 150);
+  document.addEventListener('DOMContentLoaded', function () {
+    fixSchedule();
+    var widget = document.getElementById('bsport-widget-172485');
+    if (!widget) return;
+    var _timer;
+    var observer = new MutationObserver(function () {
+      clearTimeout(_timer);
+      _timer = setTimeout(fixSchedule, 150);
+    });
+    observer.observe(widget, { childList: true, subtree: true });
   });
+}());
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+/* ── Bsport modal detector ──────────────────────────────────────────────────
+   Watches document.body's direct children for Bsport's booking modal.
+   Adds/removes body.bsport-modal-open, which CSS uses to hide #header,
+   and locks/restores body scroll while the modal is open. */
+(function () {
+  var MODAL_SEL = '.bsport-user-interaction-modal__container';
+  var BODY_CLASS = 'bsport-modal-open';
+  var _scrollY = 0;
+  var _locked = false;
 
-});
+  function lockScroll() {
+    if (_locked) return;
+    _locked = true;
+    _scrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + _scrollY + 'px';
+    document.body.style.width = '100%';
+  }
+
+  function unlockScroll() {
+    if (!_locked) return;
+    _locked = false;
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo({ top: _scrollY, behavior: 'instant' });
+  }
+
+  function check() {
+    var open = document.querySelector(MODAL_SEL) !== null;
+    document.body.classList.toggle(BODY_CLASS, open);
+    if (open) { lockScroll(); } else { unlockScroll(); }
+  }
+
+  new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
+  check();
+}());
 </script>
 
 </body>

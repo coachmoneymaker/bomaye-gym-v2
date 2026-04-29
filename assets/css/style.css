@@ -174,6 +174,12 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
   border-bottom: 1px solid rgba(197,160,89,0.11);
   box-shadow: 0 1px 0 rgba(198,164,90,0.06), 0 8px 40px rgba(0,0,0,0.55);
 }
+/* When Bsport's booking modal is open, drop the header behind it.
+   JS adds/removes .bsport-modal-open on <body> via MutationObserver. */
+body.bsport-modal-open #header {
+  z-index: -1 !important;
+  visibility: hidden;
+}
 .nav-inner {
   max-width: 1280px; margin: 0 auto; padding: 0 2.25rem;
   height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
@@ -982,28 +988,6 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
   letter-spacing: 1.5px !important;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BOOKING DETAIL VIEW
-   dialogMode:1 + fullScreenPopup:false = inline panel expansion.
-   The widget grows vertically. Must never be overflow-clipped.
-   scroll-margin-top clears the 72px fixed nav on auto-scroll.
-══════════════════════════════════════════════════════════════ */
-
-#bsport-widget-172485 .cleanslate [class*="detail"],
-#bsport-widget-172485 .cleanslate [class*="Detail"],
-#bsport-widget-172485 .cleanslate [class*="session-view"],
-#bsport-widget-172485 .cleanslate [class*="SessionView"],
-#bsport-widget-172485 .cleanslate [class*="activity-detail"],
-#bsport-widget-172485 .cleanslate [class*="ActivityDetail"],
-#bsport-widget-172485 .cleanslate [class*="booking-panel"],
-#bsport-widget-172485 .cleanslate [class*="BookingPanel"],
-#bsport-widget-172485 .cleanslate [class*="booking-view"],
-#bsport-widget-172485 .cleanslate [class*="BookingView"] {
-  width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
-  scroll-margin-top: var(--nav-h);
-}
 
 /* Detail view hero / cover image ── */
 #bsport-widget-172485 .cleanslate [class*="cover"],
@@ -1106,45 +1090,6 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
     display: none !important;
   }
 
-  /* ── Bsport booking panel: full-screen on mobile ──────────────────────────
-     Root cause: .schedule-frame { isolation:isolate } creates a stacking
-     context at z-index:auto → paints BELOW #header (z-index:1000) in root.
-     Fix: explicit z-index raises the whole context above the header so
-     Bsport's position:fixed booking panel can cover it completely. */
-  .schedule-frame {
-    z-index: 99999 !important;
-  }
-
-  /* Solid background on Bsport detail/modal elements — ensures no transparent
-     top-area lets the page header bleed through the booking panel. */
-  #bsport-widget-172485 .cleanslate [class*="detail"],
-  #bsport-widget-172485 .cleanslate [class*="Detail"],
-  #bsport-widget-172485 .cleanslate [class*="session-view"],
-  #bsport-widget-172485 .cleanslate [class*="SessionView"],
-  #bsport-widget-172485 .cleanslate [class*="activity-detail"],
-  #bsport-widget-172485 .cleanslate [class*="ActivityDetail"],
-  #bsport-widget-172485 .cleanslate [class*="booking-panel"],
-  #bsport-widget-172485 .cleanslate [class*="BookingPanel"],
-  #bsport-widget-172485 .cleanslate [class*="booking-view"],
-  #bsport-widget-172485 .cleanslate [class*="BookingView"],
-  #bsport-widget-172485 .cleanslate [class*="modal"],
-  #bsport-widget-172485 .cleanslate [class*="Modal"],
-  #bsport-widget-172485 .cleanslate [class*="dialog"],
-  #bsport-widget-172485 .cleanslate [class*="Dialog"] {
-    background-color: #ffffff !important;
-    min-height: 100dvh !important;
-  }
-
-  /* Fallback: body-level React portal dialogs (outside #bsport-widget-172485,
-     not subject to isolation:isolate — z-index works directly in root context). */
-  body > .cleanslate,
-  body > div > .cleanslate {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 99999 !important;
-    background-color: #ffffff !important;
-    overflow-y: auto !important;
-  }
 
   /* ── Mobile card field order: Activity → Time → Participants → Facility → Coach → Level ──
      The __left column is already flex-direction:column, so `order` controls vertical sequence.
@@ -6841,142 +6786,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   BSPORT MODAL — BUCHEN / primary-action button visibility fix
-   Global body { color: white } + button { background: none } makes
-   Bsport's portal footer CTA invisible (white text, no background).
-   These selectors target the confirm/submit button inside any
-   .cleanslate portal dialog appended to <body> by Bsport's widget.
-   Applies on all screen sizes; mobile z-index fix is separate below.
-══════════════════════════════════════════════════════════════ */
-/* Primary: ID-scoped selectors (widget DOM, highest specificity) */
-#bsport-widget-172485 .cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
-#bsport-widget-172485 .cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
-#bsport-widget-172485 .cleanslate [class*="action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
-#bsport-widget-172485 .cleanslate [class*="Action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
-#bsport-widget-172485 .cleanslate [class*="submit"]:not([class*="cancel"]):not([class*="Cancel"]),
-#bsport-widget-172485 .cleanslate [class*="Submit"]:not([class*="cancel"]):not([class*="Cancel"]),
-#bsport-widget-172485 .cleanslate [class*="confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
-#bsport-widget-172485 .cleanslate [class*="Confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
-#bsport-widget-172485 .cleanslate [class*="book-btn"],
-#bsport-widget-172485 .cleanslate [class*="bookBtn"],
-#bsport-widget-172485 .cleanslate [class*="book-button"],
-#bsport-widget-172485 .cleanslate [class*="bookButton"],
-#bsport-widget-172485 .cleanslate [class*="primary-btn"],
-#bsport-widget-172485 .cleanslate [class*="primaryBtn"],
-#bsport-widget-172485 .cleanslate [class*="primary-button"],
-#bsport-widget-172485 .cleanslate [class*="primaryButton"],
-/* Fallback: body-level portal dialogs (Bsport React portals appended to <body>) */
-.cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
-.cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
-.cleanslate [class*="action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
-.cleanslate [class*="Action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
-.cleanslate [class*="submit"]:not([class*="cancel"]):not([class*="Cancel"]),
-.cleanslate [class*="Submit"]:not([class*="cancel"]):not([class*="Cancel"]),
-.cleanslate [class*="confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
-.cleanslate [class*="Confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
-.cleanslate [class*="book-btn"],
-.cleanslate [class*="bookBtn"],
-.cleanslate [class*="book-button"],
-.cleanslate [class*="bookButton"],
-.cleanslate [class*="primary-btn"],
-.cleanslate [class*="primaryBtn"],
-.cleanslate [class*="primary-button"],
-.cleanslate [class*="primaryButton"] {
-  background-color: #C9A84C !important;
-  color: #0A0A08 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: inline-block !important;
-}
-
-/* Ensure text inside those buttons is also forced dark (not inherited white) */
-.cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]) *,
-.cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]) *,
-.cleanslate [class*="submit"] *,
-.cleanslate [class*="Submit"] *,
-.cleanslate [class*="confirm"] *,
-.cleanslate [class*="Confirm"] *,
-.cleanslate [class*="book-btn"] *,
-.cleanslate [class*="bookBtn"] *,
-.cleanslate [class*="primary-btn"] *,
-.cleanslate [class*="primaryBtn"] * {
-  color: #0A0A08 !important;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   BSPORT MODAL — true full-screen overlay on mobile
-   Without this the modal renders below the fixed header, causing
-   the Bomaye logo to bleed through the modal title area.
-   Our header is z-index: 9999 — modal needs z-index: 10000.
-   Mobile only: desktop layout is unaffected.
-══════════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  /* Primary: ID-scoped (widget DOM) + bare .cleanslate (body-level portals) */
-  #bsport-widget-172485 [class*="modal"],
-  #bsport-widget-172485 [class*="Modal"],
-  #bsport-widget-172485 [class*="overlay"],
-  #bsport-widget-172485 [class*="Overlay"],
-  #bsport-widget-172485 [class*="dialog"],
-  #bsport-widget-172485 [class*="Dialog"],
-  #bsport-widget-172485 [class*="popup"],
-  #bsport-widget-172485 [class*="Popup"],
-  #bsport-widget-172485 [class*="lightbox"],
-  #bsport-widget-172485 [class*="Lightbox"],
-  .cleanslate [class*="modal"],
-  .cleanslate [class*="Modal"],
-  .cleanslate [class*="overlay"],
-  .cleanslate [class*="Overlay"],
-  .cleanslate [class*="dialog"],
-  .cleanslate [class*="Dialog"],
-  .cleanslate [class*="popup"],
-  .cleanslate [class*="Popup"],
-  .cleanslate [class*="lightbox"],
-  .cleanslate [class*="Lightbox"] {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 10000 !important;
-    margin: 0 !important;
-  }
-
-  #bsport-widget-172485 [class*="modal-content"],
-  #bsport-widget-172485 [class*="modalContent"],
-  #bsport-widget-172485 [class*="modal-inner"],
-  #bsport-widget-172485 [class*="modalInner"],
-  #bsport-widget-172485 [class*="modal-body"],
-  #bsport-widget-172485 [class*="modalBody"],
-  #bsport-widget-172485 [class*="dialog-content"],
-  #bsport-widget-172485 [class*="dialogContent"],
-  #bsport-widget-172485 [class*="dialog-inner"],
-  #bsport-widget-172485 [class*="dialogInner"],
-  #bsport-widget-172485 [class*="popup-content"],
-  #bsport-widget-172485 [class*="popupContent"],
-  .cleanslate [class*="modal-content"],
-  .cleanslate [class*="modalContent"],
-  .cleanslate [class*="modal-inner"],
-  .cleanslate [class*="modalInner"],
-  .cleanslate [class*="modal-body"],
-  .cleanslate [class*="modalBody"],
-  .cleanslate [class*="dialog-content"],
-  .cleanslate [class*="dialogContent"],
-  .cleanslate [class*="dialog-inner"],
-  .cleanslate [class*="dialogInner"],
-  .cleanslate [class*="popup-content"],
-  .cleanslate [class*="popupContent"] {
-    max-height: 100vh !important;
-    overflow-y: auto !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-  }
-}
-
-
+   MANIFESTO
    Premium conversion section between disciplines and early-bird.
    Deep black · cinematic typography · identity pillars · CTA
    Benchmark: Apple product pages / Nike brand sections
