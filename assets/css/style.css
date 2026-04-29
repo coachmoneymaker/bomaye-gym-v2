@@ -1106,6 +1106,46 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
     display: none !important;
   }
 
+  /* ── Bsport booking panel: full-screen on mobile ──────────────────────────
+     Root cause: .schedule-frame { isolation:isolate } creates a stacking
+     context at z-index:auto → paints BELOW #header (z-index:1000) in root.
+     Fix: explicit z-index raises the whole context above the header so
+     Bsport's position:fixed booking panel can cover it completely. */
+  .schedule-frame {
+    z-index: 99999 !important;
+  }
+
+  /* Solid background on Bsport detail/modal elements — ensures no transparent
+     top-area lets the page header bleed through the booking panel. */
+  #bsport-widget-172485 .cleanslate [class*="detail"],
+  #bsport-widget-172485 .cleanslate [class*="Detail"],
+  #bsport-widget-172485 .cleanslate [class*="session-view"],
+  #bsport-widget-172485 .cleanslate [class*="SessionView"],
+  #bsport-widget-172485 .cleanslate [class*="activity-detail"],
+  #bsport-widget-172485 .cleanslate [class*="ActivityDetail"],
+  #bsport-widget-172485 .cleanslate [class*="booking-panel"],
+  #bsport-widget-172485 .cleanslate [class*="BookingPanel"],
+  #bsport-widget-172485 .cleanslate [class*="booking-view"],
+  #bsport-widget-172485 .cleanslate [class*="BookingView"],
+  #bsport-widget-172485 .cleanslate [class*="modal"],
+  #bsport-widget-172485 .cleanslate [class*="Modal"],
+  #bsport-widget-172485 .cleanslate [class*="dialog"],
+  #bsport-widget-172485 .cleanslate [class*="Dialog"] {
+    background-color: #ffffff !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Fallback: body-level React portal dialogs (outside #bsport-widget-172485,
+     not subject to isolation:isolate — z-index works directly in root context). */
+  body > .cleanslate,
+  body > div > .cleanslate {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99999 !important;
+    background-color: #ffffff !important;
+    overflow-y: auto !important;
+  }
+
   /* ── Mobile card field order: Activity → Time → Participants → Facility → Coach → Level ──
      The __left column is already flex-direction:column, so `order` controls vertical sequence.
      All metadata is visible (display:none removed by fixSchedule JS); these rules ensure
