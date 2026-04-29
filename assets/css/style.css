@@ -6787,6 +6787,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 #bsport-widget-172485 [class*="panel"],
 #bsport-widget-172485 [class*="Panel"] {
   background-color: #ffffff !important;
+  color: #0A0A08 !important;
 }
 
 /* Clean card look inside the schedule widget */
@@ -6805,6 +6806,24 @@ a.mn-contact-text:hover { color: var(--gold); }
    .cleanslate portal dialog appended to <body> by Bsport's widget.
    Applies on all screen sizes; mobile z-index fix is separate below.
 ══════════════════════════════════════════════════════════════ */
+/* Primary: ID-scoped selectors (widget DOM, highest specificity) */
+#bsport-widget-172485 .cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
+#bsport-widget-172485 .cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
+#bsport-widget-172485 .cleanslate [class*="action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
+#bsport-widget-172485 .cleanslate [class*="Action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
+#bsport-widget-172485 .cleanslate [class*="submit"]:not([class*="cancel"]):not([class*="Cancel"]),
+#bsport-widget-172485 .cleanslate [class*="Submit"]:not([class*="cancel"]):not([class*="Cancel"]),
+#bsport-widget-172485 .cleanslate [class*="confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
+#bsport-widget-172485 .cleanslate [class*="Confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
+#bsport-widget-172485 .cleanslate [class*="book-btn"],
+#bsport-widget-172485 .cleanslate [class*="bookBtn"],
+#bsport-widget-172485 .cleanslate [class*="book-button"],
+#bsport-widget-172485 .cleanslate [class*="bookButton"],
+#bsport-widget-172485 .cleanslate [class*="primary-btn"],
+#bsport-widget-172485 .cleanslate [class*="primaryBtn"],
+#bsport-widget-172485 .cleanslate [class*="primary-button"],
+#bsport-widget-172485 .cleanslate [class*="primaryButton"],
+/* Fallback: body-level portal dialogs (Bsport React portals appended to <body>) */
 .cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
 .cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
 .cleanslate [class*="action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
@@ -6852,6 +6871,17 @@ a.mn-contact-text:hover { color: var(--gold); }
    Mobile only: desktop layout is unaffected.
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+  /* Primary: ID-scoped (widget DOM) + bare .cleanslate (body-level portals) */
+  #bsport-widget-172485 [class*="modal"],
+  #bsport-widget-172485 [class*="Modal"],
+  #bsport-widget-172485 [class*="overlay"],
+  #bsport-widget-172485 [class*="Overlay"],
+  #bsport-widget-172485 [class*="dialog"],
+  #bsport-widget-172485 [class*="Dialog"],
+  #bsport-widget-172485 [class*="popup"],
+  #bsport-widget-172485 [class*="Popup"],
+  #bsport-widget-172485 [class*="lightbox"],
+  #bsport-widget-172485 [class*="Lightbox"],
   .cleanslate [class*="modal"],
   .cleanslate [class*="Modal"],
   .cleanslate [class*="overlay"],
@@ -6873,6 +6903,18 @@ a.mn-contact-text:hover { color: var(--gold); }
     margin: 0 !important;
   }
 
+  #bsport-widget-172485 [class*="modal-content"],
+  #bsport-widget-172485 [class*="modalContent"],
+  #bsport-widget-172485 [class*="modal-inner"],
+  #bsport-widget-172485 [class*="modalInner"],
+  #bsport-widget-172485 [class*="modal-body"],
+  #bsport-widget-172485 [class*="modalBody"],
+  #bsport-widget-172485 [class*="dialog-content"],
+  #bsport-widget-172485 [class*="dialogContent"],
+  #bsport-widget-172485 [class*="dialog-inner"],
+  #bsport-widget-172485 [class*="dialogInner"],
+  #bsport-widget-172485 [class*="popup-content"],
+  #bsport-widget-172485 [class*="popupContent"],
   .cleanslate [class*="modal-content"],
   .cleanslate [class*="modalContent"],
   .cleanslate [class*="modal-inner"],

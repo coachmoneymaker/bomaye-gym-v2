@@ -822,7 +822,11 @@
       @media(min-width:768px){#schedule-preview .sched-cta-wrap{margin-top:48px;}}
 
       /* OPEN GYM BANNER */
-      #schedule-preview .open-gym-banner{text-align:center;padding:20px 24px;margin-bottom:32px;}
+      #schedule-preview .open-gym-banner{text-align:center;padding:20px 24px;margin-bottom:32px;cursor:pointer;transition:filter 0.2s ease;position:relative;}
+      #schedule-preview .open-gym-banner:hover{filter:brightness(1.08);}
+      #schedule-preview .open-gym-banner:focus-visible{outline:2px solid #C9A84C;outline-offset:4px;}
+      #schedule-preview .open-gym-banner::after{content:'→';display:block;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.2em;color:#C9A84C;margin-top:12px;opacity:1;}
+      @media(min-width:768px){#schedule-preview .open-gym-banner::after{opacity:0;transition:opacity 0.2s ease;}#schedule-preview .open-gym-banner:hover::after{opacity:1;}}
       #schedule-preview .open-gym-eyebrow{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:0.25em;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;}
       #schedule-preview .open-gym-accent{width:40px;height:1.5px;background:#C9A84C;margin:0 auto 16px;}
       #schedule-preview .open-gym-body{font-family:'DM Sans',sans-serif;font-size:15px;letter-spacing:0.05em;color:#0A0A08;margin:0;}
@@ -852,7 +856,7 @@
   </div>
 </div>
 
-<div class="open-gym-banner">
+<div class="open-gym-banner" role="button" tabindex="0" data-class-type="open-gym" data-coach="open-gym" data-time="Mo–Fr · 13:00–17:00">
   <div class="open-gym-eyebrow">OPEN GYM</div>
   <div class="open-gym-accent"></div>
   <p class="open-gym-body">Mo–Fr · 13:00–17:00 · Drop-in jederzeit</p>
@@ -2575,10 +2579,11 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   var SLOT_COACHES = {
-    raschad: { name: 'COACH RASCHAD', img: '/assets/images/coach-raschad.webp', alt: 'Raschad Pekpassi — Head Coach & Founder' },
-    fonsi:   { name: 'COACH FONSI',   img: '/assets/images/coach-alfonso.webp', alt: 'Alfonso Fusco — Head Coach & Founder' },
-    nima:    { name: 'COACH NIMA',    img: '/assets/images/coach-nima.webp',    alt: 'Nima — Kickboxing & K1 Coach' },
-    pavlos:  { name: 'COACH PAVLOS',  img: '/assets/images/coach-pavlos.webp',  alt: 'Pavlos — Boxing & Athletik Coach' }
+    raschad:    { name: 'COACH RASCHAD', img: '/assets/images/coach-raschad.webp', alt: 'Raschad Pekpassi — Head Coach & Founder' },
+    fonsi:      { name: 'COACH FONSI',   img: '/assets/images/coach-alfonso.webp', alt: 'Alfonso Fusco — Head Coach & Founder' },
+    nima:       { name: 'COACH NIMA',    img: '/assets/images/coach-nima.webp',    alt: 'Nima — Kickboxing & K1 Coach' },
+    pavlos:     { name: 'COACH PAVLOS',  img: '/assets/images/coach-pavlos.webp',  alt: 'Pavlos — Boxing & Athletik Coach' },
+    'open-gym': { name: 'OPEN GYM',      img: '/assets/images/bomaye-logo.webp',   alt: 'Bomaye Gym — Freies Training · Drop-in' }
   };
 
   var SLOT_CLASS_TYPES = {
@@ -2588,7 +2593,8 @@ document.addEventListener("DOMContentLoaded", function () {
     'kickboxing-kids': { discipline: 'KICKBOXING',  description: 'Spielerischer Einstieg ins Kickboxen. Technik, Bewegung, Spaß — altersgerecht aufgebaut.' },
     'kickboxing-basic':{ discipline: 'KICKBOXING',  description: 'Kickboxen für alle Levels. Technik, Power, Kondition. Gecoacht von einem Weltmeister.' },
     'fight-team':      { discipline: 'FIGHT TEAM',  description: 'Für Wettkämpfer mit Ambition. Sparring, Wettkampfvorbereitung, mentale Schulung. Nur auf Einladung.' },
-    'competition':     { discipline: 'COMPETITION', description: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.' }
+    'competition':     { discipline: 'COMPETITION', description: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.' },
+    'open-gym':        { discipline: 'OPEN GYM',    description: 'In diesem Zeitraum kannst du eigenständig trainieren, an deiner Technik arbeiten oder dein Workout individuell gestalten. Das Gym steht dir zur Verfügung — ohne festes Coaching.' }
   };
 
   function populate(card) {
@@ -2628,13 +2634,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.removeAttribute('data-modal-open');
   }
 
-  // Slot click delegation on schedule section
+  // Slot click delegation on schedule section (includes Open Gym banner)
   previewSection.addEventListener('click', function(e) {
-    var card = e.target.closest('.sched-slot, .sched-half');
+    var card = e.target.closest('.sched-slot, .sched-half, .open-gym-banner');
     if (!card) return;
     e.preventDefault();
     e.stopPropagation();
     openModal(card);
+  });
+
+  // Keyboard activation for Open Gym banner (role="button")
+  previewSection.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      var banner = e.target.closest('.open-gym-banner');
+      if (!banner) return;
+      e.preventDefault();
+      openModal(banner);
+    }
   });
 
   // Close via [data-modal-close] targets and backdrop
