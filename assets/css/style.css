@@ -6844,6 +6844,54 @@ a.mn-contact-text:hover { color: var(--gold); }
   color: #0A0A08 !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BSPORT MODAL — true full-screen overlay on mobile
+   Without this the modal renders below the fixed header, causing
+   the Bomaye logo to bleed through the modal title area.
+   Our header is z-index: 9999 — modal needs z-index: 10000.
+   Mobile only: desktop layout is unaffected.
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cleanslate [class*="modal"],
+  .cleanslate [class*="Modal"],
+  .cleanslate [class*="overlay"],
+  .cleanslate [class*="Overlay"],
+  .cleanslate [class*="dialog"],
+  .cleanslate [class*="Dialog"],
+  .cleanslate [class*="popup"],
+  .cleanslate [class*="Popup"],
+  .cleanslate [class*="lightbox"],
+  .cleanslate [class*="Lightbox"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 10000 !important;
+    margin: 0 !important;
+  }
+
+  .cleanslate [class*="modal-content"],
+  .cleanslate [class*="modalContent"],
+  .cleanslate [class*="modal-inner"],
+  .cleanslate [class*="modalInner"],
+  .cleanslate [class*="modal-body"],
+  .cleanslate [class*="modalBody"],
+  .cleanslate [class*="dialog-content"],
+  .cleanslate [class*="dialogContent"],
+  .cleanslate [class*="dialog-inner"],
+  .cleanslate [class*="dialogInner"],
+  .cleanslate [class*="popup-content"],
+  .cleanslate [class*="popupContent"] {
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
 
    Premium conversion section between disciplines and early-bird.
    Deep black · cinematic typography · identity pillars · CTA
