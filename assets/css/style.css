@@ -1085,6 +1085,15 @@ p  { color: rgba(255,255,255,0.7); line-height: 1.85; font-size: 1rem; }
   }
   .schedule-frame__widget { min-height: 380px; }
   #bsport-widget-172485:empty { min-height: 380px; }
+
+  /* Remove any gold side-borders Bsport injects on its container elements —
+     full-width layout on mobile makes these appear as page-edge vertical lines. */
+  #bsport-widget-172485 .cleanslate,
+  #bsport-widget-172485 > * {
+    border-left: none !important;
+    border-right: none !important;
+  }
+
   #bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer {
     padding: 0.6rem 1rem !important;
     gap: 0.5rem !important;
