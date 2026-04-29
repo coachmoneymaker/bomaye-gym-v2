@@ -6798,7 +6798,53 @@ a.mn-contact-text:hover { color: var(--gold); }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   BECOME BOMAYE — IDENTITY MANIFESTO SECTION
+   BSPORT MODAL — BUCHEN / primary-action button visibility fix
+   Global body { color: white } + button { background: none } makes
+   Bsport's portal footer CTA invisible (white text, no background).
+   These selectors target the confirm/submit button inside any
+   .cleanslate portal dialog appended to <body> by Bsport's widget.
+   Applies on all screen sizes; mobile z-index fix is separate below.
+══════════════════════════════════════════════════════════════ */
+.cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
+.cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]),
+.cleanslate [class*="action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
+.cleanslate [class*="Action"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]),
+.cleanslate [class*="submit"]:not([class*="cancel"]):not([class*="Cancel"]),
+.cleanslate [class*="Submit"]:not([class*="cancel"]):not([class*="Cancel"]),
+.cleanslate [class*="confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
+.cleanslate [class*="Confirm"]:not([class*="cancel"]):not([class*="Cancel"]),
+.cleanslate [class*="book-btn"],
+.cleanslate [class*="bookBtn"],
+.cleanslate [class*="book-button"],
+.cleanslate [class*="bookButton"],
+.cleanslate [class*="primary-btn"],
+.cleanslate [class*="primaryBtn"],
+.cleanslate [class*="primary-button"],
+.cleanslate [class*="primaryButton"] {
+  background-color: #C9A84C !important;
+  color: #0A0A08 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+}
+
+/* Ensure text inside those buttons is also forced dark (not inherited white) */
+.cleanslate [class*="footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]) *,
+.cleanslate [class*="Footer"] button:not([class*="cancel"]):not([class*="Cancel"]):not([class*="close"]):not([class*="Close"]):not([class*="back"]):not([class*="Back"]) *,
+.cleanslate [class*="submit"] *,
+.cleanslate [class*="Submit"] *,
+.cleanslate [class*="confirm"] *,
+.cleanslate [class*="Confirm"] *,
+.cleanslate [class*="book-btn"] *,
+.cleanslate [class*="bookBtn"] *,
+.cleanslate [class*="primary-btn"] *,
+.cleanslate [class*="primaryBtn"] * {
+  color: #0A0A08 !important;
+}
+
+
    Premium conversion section between disciplines and early-bird.
    Deep black · cinematic typography · identity pillars · CTA
    Benchmark: Apple product pages / Nike brand sections
