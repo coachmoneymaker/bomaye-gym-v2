@@ -1297,6 +1297,11 @@
       // Clamp at edges (no wrap)
     }, { passive: true });
 
+    // Auto-select today's weekday on page load
+    var jsDay = new Date().getDay();
+    current = '';
+    showDay((jsDay >= 1 && jsDay <= 5) ? days[jsDay - 1] : 'mo');
+
   })();
   </script>
   </section>
