@@ -1293,16 +1293,12 @@ function MountBsportWidget(config, repeat) {
 
   var modal   = document.getElementById('bsport-sub-modal');
   var closeBtn = document.getElementById('bsport-sub-modal-close');
-  var _scrollY = 0;
 
   window.openBsportModal = function (e) {
     if (e) e.preventDefault();
     if (!modal) { return true; } // fallback: let the link open
-    _scrollY = window.scrollY;
-    document.body.style.overflow  = 'hidden';
-    document.body.style.position  = 'fixed';
-    document.body.style.top       = '-' + _scrollY + 'px';
-    document.body.style.width     = '100%';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow            = 'hidden';
     document.body.classList.add('bsport-modal-open');
     modal.classList.add('is-open');
     modal.removeAttribute('aria-hidden');
@@ -1314,11 +1310,8 @@ function MountBsportWidget(config, repeat) {
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('bsport-modal-open');
-    document.body.style.overflow  = '';
-    document.body.style.position  = '';
-    document.body.style.top       = '';
-    document.body.style.width     = '';
-    window.scrollTo({ top: _scrollY, behavior: 'instant' });
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow            = '';
   };
 
   if (closeBtn) { closeBtn.addEventListener('click', window.closeBsportModal); }
