@@ -28,9 +28,11 @@
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
-  <!-- bsport warm-up (direct checkout links) -->
+  <!-- bsport warm-up -->
   <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="preconnect" href="https://cdn.bsport.io" crossorigin />
   <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -984,7 +986,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">MITGLIED WERDEN</a>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
         </article>
 
         <!-- CARD: UNLIMITED — DOM pos 2, desktop col 2, mobile col 1 -->
@@ -1010,7 +1013,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">JETZT FOUNDING MEMBER WERDEN</a>
         </article>
 
         <!-- CARD: YOUTH — DOM pos 3, desktop col 3, mobile col 3 -->
@@ -1034,7 +1038,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">MITGLIED WERDEN</a>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
         </article>
 
       </div>
@@ -1172,5 +1177,99 @@
   </script>
 
 <script src="/assets/js/cookie-consent.js"></script>
+
+<!-- ═══════ BSPORT SUBSCRIPTION WIDGET MODAL ═══════ -->
+<div id="bsport-sub-modal"
+     role="dialog" aria-modal="true" aria-label="Mitgliedschaft wählen" aria-hidden="true"
+     style="display:none;position:fixed;inset:0;z-index:800;background:rgba(10,10,8,0.82);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="position:relative;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:64px 16px 48px;">
+    <button id="bsport-sub-modal-close"
+            aria-label="Modal schließen"
+            style="position:fixed;top:16px;right:16px;width:44px;height:44px;background:rgba(245,240,232,0.12);border:1px solid rgba(245,240,232,0.25);color:#F5F0E8;font-size:22px;line-height:1;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:801;">&#215;</button>
+    <div id="bsport-widget-342467" style="width:100%;max-width:960px;"></div>
+  </div>
+</div>
+
+<!-- BSPORT — CDN loader (guards against double-load) -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+
+<!-- BSPORT — MountBsportWidget helper with retry -->
+<script id="bsport-widget-mount">
+function MountBsportWidget(config, repeat) {
+  repeat = repeat || 1;
+  if (repeat > 50) { return; }
+  if (!window.BsportWidget) {
+    return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+  }
+  BsportWidget.mount(config);
+}
+</script>
+
+<!-- BSPORT — Mount subscription widget + modal open/close logic -->
+<script>
+(function () {
+  'use strict';
+
+  if (document.getElementById('bsport-widget-342467')) {
+    MountBsportWidget({
+      parentElement: 'bsport-widget-342467',
+      companyId: 5473,
+      franchiseId: null,
+      dialogMode: 3,
+      widgetType: 'subscription',
+      showFab: false,
+      fullScreenPopup: false,
+      styles: undefined,
+      config: { subscription: {} }
+    });
+  }
+
+  var modal   = document.getElementById('bsport-sub-modal');
+  var closeBtn = document.getElementById('bsport-sub-modal-close');
+  var _scrollY = 0;
+
+  window.openBsportModal = function (e) {
+    if (e) e.preventDefault();
+    if (!modal) { return true; } // fallback: let the link open
+    _scrollY = window.scrollY;
+    document.body.style.overflow  = 'hidden';
+    document.body.style.position  = 'fixed';
+    document.body.style.top       = '-' + _scrollY + 'px';
+    document.body.style.width     = '100%';
+    modal.style.display = 'block';
+    modal.removeAttribute('aria-hidden');
+    return false;
+  };
+
+  window.closeBsportModal = function () {
+    if (!modal) { return; }
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow  = '';
+    document.body.style.position  = '';
+    document.body.style.top       = '';
+    document.body.style.width     = '';
+    window.scrollTo({ top: _scrollY, behavior: 'instant' });
+  };
+
+  if (closeBtn) { closeBtn.addEventListener('click', window.closeBsportModal); }
+
+  // Backdrop click
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) { window.closeBsportModal(); }
+    });
+  }
+
+  // Escape key
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && modal && modal.style.display !== 'none') {
+      window.closeBsportModal();
+    }
+  });
+
+}());
+</script>
+
 </body>
 </html>
