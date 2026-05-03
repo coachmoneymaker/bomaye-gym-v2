@@ -684,70 +684,6 @@
       filter: brightness(1.1);
     }
 
-    /* ════════════════════════════════════════════════════════════
-       STICKY MOBILE CTA BAR
-    ════════════════════════════════════════════════════════════ */
-    .mw-sticky-bar {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 999;
-      background: rgba(10,10,8,0.97);
-      border-top: 1px solid rgba(201,168,76,0.3);
-      padding: 12px 16px;
-      align-items: center;
-      justify-content: space-between;
-      transform: translateY(0);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-    .mw-sticky-bar.hidden {
-      transform: translateY(100%);
-      pointer-events: none;
-    }
-    @media (max-width: 767px) {
-      .mw-sticky-bar { display: flex; }
-    }
-    @supports (padding-bottom: env(safe-area-inset-bottom)) {
-      @media (max-width: 767px) {
-        .mw-sticky-bar {
-          padding-bottom: calc(12px + env(safe-area-inset-bottom));
-        }
-      }
-    }
-    .mw-sticky-bar-left {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .mw-sticky-bar-title {
-      font-family: var(--font-head);
-      font-size: 0.8rem;
-      color: #C9A84C;
-      font-weight: bold;
-      line-height: 1;
-    }
-    .mw-sticky-bar-sub {
-      font-family: var(--font-body);
-      font-size: 0.72rem;
-      color: rgba(245,240,232,0.5);
-      line-height: 1;
-    }
-    .mw-sticky-bar-btn {
-      background: #C9A84C;
-      color: #000;
-      font-family: var(--font-head);
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 10px 20px;
-      border-radius: 0;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: filter 0.2s ease;
-    }
-    .mw-sticky-bar-btn:hover { filter: brightness(1.1); }
-
     /* ── Footer ─────────────────────────────────────────────── */
     .mw-footer {
       background: #080808;
@@ -1115,14 +1051,6 @@
 
   </main>
 
-  <!-- ═══════ STICKY MOBILE CTA BAR ═══════ -->
-  <div class="mw-sticky-bar" id="mw-sticky-bar" role="complementary" aria-label="Schnell-Buchung">
-    <div class="mw-sticky-bar-left">
-      <span class="mw-sticky-bar-title">EARLY BIRD</span>
-    </div>
-    <a href="/mitglied-werden#packages" class="mw-sticky-bar-btn">JETZT SICHERN</a>
-  </div>
-
   <script>
     (function () {
       'use strict';
@@ -1152,25 +1080,6 @@
         for (var k = 0; k < revealEls.length; k++) {
           revealIO.observe(revealEls[k]);
         }
-      }
-
-      /* ── Sticky bar: hide after user scrolls past cards section ── */
-      var stickyBar    = document.getElementById('mw-sticky-bar');
-      var cardsSection = document.getElementById('packages');
-
-      if (stickyBar && cardsSection && hasIO) {
-        var stickyIO = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            /* boundingClientRect.bottom < 0 means element is above viewport */
-            if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
-              stickyBar.classList.add('hidden');
-            } else {
-              stickyBar.classList.remove('hidden');
-            }
-          });
-        }, { threshold: 0 });
-
-        stickyIO.observe(cardsSection);
       }
 
     }());
@@ -1227,9 +1136,6 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 56px 16px 24px;
-  }
-  body.bsport-modal-open .mw-sticky-bar {
-    display: none !important;
   }
   @media (max-width: 768px) {
     .bsport-modal-overlay.is-open { padding: 0; }
