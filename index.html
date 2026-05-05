@@ -214,6 +214,236 @@
     .eb-stacked-headline { font-size: clamp(1.85rem, 9.5vw, 2.6rem); }
     .hero-h1 { line-height: 0.95; }
   }
+
+  /* ── Pricing cards (shared with /mitglied-werden) ── */
+  .mw-cards-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Mobile order: UNLIMITED=1, KIDS=2, YOUTH=3 */
+  .mw-card--kids    { order: 2; }
+  .mw-card--popular { order: 1; }
+  .mw-card--youth   { order: 3; }
+
+  @media (min-width: 900px) {
+    .mw-cards-inner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+    /* Desktop order: KIDS=1, UNLIMITED=2, YOUTH=3 (natural DOM order) */
+    .mw-card--kids    { order: 1; }
+    .mw-card--popular { order: 2; }
+    .mw-card--youth   { order: 3; }
+  }
+
+  /* Card base */
+  .mw-card {
+    background: #0A0A08;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  @media (min-width: 900px) {
+    .mw-card { padding: 32px; }
+  }
+  @media (hover: hover) {
+    .mw-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 64px rgba(0,0,0,0.2);
+    }
+  }
+
+  /* UNLIMITED overrides */
+  .mw-card--popular {
+    border: 1.5px solid #C9A84C;
+    box-shadow: 0 8px 48px rgba(201,168,76,0.12);
+  }
+  @media (hover: hover) {
+    .mw-card--popular:hover {
+      box-shadow: 0 16px 64px rgba(201,168,76,0.2);
+    }
+  }
+
+  /* Stagger delays — mobile (visual order: UNLIMITED, KIDS, YOUTH) */
+  .mw-card--popular.visible { animation-delay: 0ms; }
+  .mw-card--kids.visible    { animation-delay: 150ms; }
+  .mw-card--youth.visible   { animation-delay: 300ms; }
+
+  @media (min-width: 900px) {
+    /* Desktop (visual order: KIDS, UNLIMITED, YOUTH) */
+    .mw-card--kids.visible    { animation-delay: 0ms; }
+    .mw-card--popular.visible { animation-delay: 150ms; }
+    .mw-card--youth.visible   { animation-delay: 300ms; }
+  }
+
+  /* Most Popular badge */
+  .mw-popular-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #C9A84C;
+    color: #000;
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    padding: 6px 20px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* Card content */
+  .mw-card-label {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    color: #C9A84C;
+    margin: 0;
+  }
+  .mw-card-name {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: #F5F0E8;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin: 8px 0 0;
+    font-weight: bold;
+  }
+  @media (min-width: 900px) {
+    .mw-card-name { font-size: 2.8rem; }
+  }
+  .mw-card-age {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.45);
+    margin: 4px 0 0;
+  }
+  .mw-card-divider {
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+    border: none;
+    margin: 24px 0;
+  }
+  .mw-card-reg-price {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.3);
+    text-decoration: line-through;
+    margin: 0;
+  }
+  .mw-card-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 4px 0 0;
+    line-height: 1;
+  }
+  .mw-card-price {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    color: #C9A84C;
+    line-height: 1;
+    font-weight: bold;
+  }
+  @media (min-width: 900px) {
+    .mw-card-price { font-size: 3.2rem; }
+  }
+  .mw-card-price-unit {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: rgba(245,240,232,0.5);
+    align-self: flex-end;
+    margin-left: 8px;
+    margin-bottom: 4px;
+  }
+  .mw-card-fee {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.35);
+    margin: 6px 0 0;
+  }
+  .mw-card-savings {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    color: #C9A84C;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border: 1px solid rgba(201,168,76,0.25);
+    margin: 12px 0 0;
+    border-radius: 0;
+  }
+  .mw-card-features {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    flex: 1;
+  }
+  .mw-card-features li {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.75);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .mw-card-features li:last-child { margin-bottom: 0; }
+  .mw-card-features li::before {
+    content: '✓';
+    color: #C9A84C;
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+
+  /* CTA button */
+  .mw-card-btn {
+    display: block;
+    width: 100%;
+    background: #C9A84C;
+    color: #000;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    padding: 16px;
+    border-radius: 0;
+    text-decoration: none;
+    transition: filter 0.2s ease, transform 0.2s ease;
+    margin-top: 28px;
+  }
+  @media (hover: hover) {
+    .mw-card-btn:hover {
+      filter: brightness(1.1);
+      transform: scale(1.01);
+    }
+  }
+  .mw-card-btn:active { transform: scale(0.99); }
+
+  /* Pricing section padding */
+  #pricing { padding: 80px 24px; }
+  @media (min-width: 900px) { #pricing { padding: 100px 40px; } }
 </style>
 <link rel="stylesheet" href="/assets/css/cookie-consent.css">
 </head>
@@ -1642,6 +1872,82 @@ body[data-modal-open="true"] { overflow: hidden; }
           <i class="fa-solid fa-dumbbell"></i> ALLE PROGRAMME
         </a>
       </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section id="pricing" class="sec--smoke">
+    <div class="container">
+      <div class="sec-header reveal">
+        <span class="tag tag--light-inv">PREISE</span>
+        <h2 style="margin-top:1rem;color:var(--ink);">EINFACH. KLAR. <span class="gold-dark">FÜR DICH.</span></h2>
+      </div>
+    </div>
+    <div class="mw-cards-inner">
+      <article class="mw-card mw-card--kids reveal" aria-label="Kids Paket">
+        <p class="mw-card-label">FÜR KIDS</p>
+        <h2 class="mw-card-name">KIDS</h2>
+        <p class="mw-card-age">6 – 9 Jahre</p>
+        <hr class="mw-card-divider" />
+        <p class="mw-card-reg-price">Regulär 17,90 € / Woche</p>
+        <div class="mw-card-price-row">
+          <span class="mw-card-price">14,90 €</span>
+          <span class="mw-card-price-unit">/ Woche</span>
+        </div>
+        <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
+        <span class="mw-card-savings">Early Bird — spare 13 % dauerhaft</span>
+        <ul class="mw-card-features">
+          <li>Echte Coaches, sicheres Lernen</li>
+          <li>Disziplin durch Boxen</li>
+          <li>Strukturiertes Training für 6–9-Jährige</li>
+        </ul>
+        <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
+           target="_blank" rel="noopener noreferrer"
+           class="mw-card-btn">MITGLIED WERDEN</a>
+      </article>
+      <article class="mw-card mw-card--popular reveal" aria-label="Unlimited Paket — Most Popular">
+        <span class="mw-popular-badge" aria-label="Beliebtestes Paket">Most Popular</span>
+        <p class="mw-card-label">ERWACHSENE</p>
+        <h2 class="mw-card-name">UNLIMITED</h2>
+        <p class="mw-card-age">18+ Jahre · Alle Programme</p>
+        <hr class="mw-card-divider" />
+        <p class="mw-card-reg-price">Regulär 22,90 € / Woche</p>
+        <div class="mw-card-price-row">
+          <span class="mw-card-price">18,90 €</span>
+          <span class="mw-card-price-unit">/ Woche</span>
+        </div>
+        <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
+        <span class="mw-card-savings">Early Bird — spare 17 % dauerhaft</span>
+        <ul class="mw-card-features">
+          <li>Zugang zu allen Kursen</li>
+          <li>Olympic Boxing, Kickboxing &amp; mehr</li>
+          <li>Echte Struktur. Echte Coaches.</li>
+        </ul>
+        <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
+           target="_blank" rel="noopener noreferrer"
+           class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
+      </article>
+      <article class="mw-card mw-card--youth reveal" aria-label="Youth Paket">
+        <p class="mw-card-label">FÜR JUGENDLICHE</p>
+        <h2 class="mw-card-name">YOUTH</h2>
+        <p class="mw-card-age">10 – 17 Jahre</p>
+        <hr class="mw-card-divider" />
+        <p class="mw-card-reg-price">Regulär 18,90 € / Woche</p>
+        <div class="mw-card-price-row">
+          <span class="mw-card-price">15,90 €</span>
+          <span class="mw-card-price-unit">/ Woche</span>
+        </div>
+        <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
+        <span class="mw-card-savings">Early Bird — spare 16 % dauerhaft</span>
+        <ul class="mw-card-features">
+          <li>Disziplin und Fokus durch Boxen</li>
+          <li>Echte Technik, echter Sport</li>
+          <li>Starke Community von Anfang an</li>
+        </ul>
+        <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
+           target="_blank" rel="noopener noreferrer"
+           class="mw-card-btn">MITGLIED WERDEN</a>
+      </article>
     </div>
   </section>
 
