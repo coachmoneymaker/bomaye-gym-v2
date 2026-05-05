@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Bomaye Gym München – Boxgym &amp; Boxtraining in München</title>
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
   <meta name="description" content="Bomaye Gym München – modernes Boxgym für Anfänger, Fitnesssportler und Wettkämpfer. Professionelles Boxtraining und Personal Training im Pineapple Park München." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#080808" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Bomaye Gym München – Boxgym &amp; Boxtraining in München" />
@@ -23,8 +25,7 @@
   <link rel="canonical" href="https://www.bomayegym.com/" />
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
-  <link rel="preload" href="/assets/images/community.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
   <!-- Bsport: early connection warm-up before user clicks -->
@@ -50,12 +51,13 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ExerciseGym",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
     "name": "BOMAYE GYM MUNICH",
-    "description": "It's not a gym. It's passion. Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer.",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
     "url": "https://www.bomayegym.com",
     "email": "support@bomayegym.com",
-    "telephone": "+4917621932243",
+    "telephone": "+491737513627",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
@@ -63,7 +65,7 @@
       "postalCode": "80639",
       "addressCountry": "DE"
     },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.1408, "longitude": 11.5358 },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
@@ -73,23 +75,7 @@
   }
   </script>
 
-  <!-- Meta Pixel Code -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1989119321999811');
-  fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
+  <link rel="stylesheet" href="/assets/css/cookie-consent.css">
 </head>
 
 <body>
@@ -109,7 +95,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -123,8 +109,8 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="nav-link" href="/mitgliederbereich" style="text-decoration:none;">LOGIN / MEIN KONTO</a>
-      <a href="/mitglied-werden" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;">MITGLIED WERDEN</a>
+      <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="nav-account-icon" aria-label="Mein Konto" target="_blank" rel="noopener"><i class="fa-solid fa-user"></i></a>
+      <a href="/mitglied-werden" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;">MITGLIED WERDEN — AB 14,90€</a>
     </nav>
 
     <button class="burger" onclick="toggleMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
@@ -137,15 +123,29 @@
 
 <!-- ═══════ MOBILE NAV ═══════ -->
 <div id="mobile-nav" role="navigation" aria-label="Mobile Navigation">
-  <button class="mn-item" onclick="mobileNav('home')" type="button" style="--mn-i:0">HOME</button>
+  <button class="mn-item" onclick="mobileNav('home')" type="button" aria-current="page" style="--mn-i:0;color:var(--gold)!important">HOME</button>
   <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <a class="mn-item" href="/mitgliederbereich" style="--mn-i:5;text-decoration:none;">LOGIN / MEIN KONTO</a>
-  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:6;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <span class="mn-info-eyebrow" aria-hidden="true">Info</span>
+  <a class="mn-info-link" href="/hausordnung" style="--mn-i:5">Hausordnung</a>
+  <a class="mn-info-link" href="/downloads" style="--mn-i:6">Downloads</a>
+  <a class="mn-info-link" href="/u18" style="--mn-i:7">U18 · Minderjährige</a>
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:8"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <a href="/mitglied-werden" class="btn btn--gold mn-cta" style="--mn-i:9;text-decoration:none;display:flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
   </a>
+  <div class="mn-contact-divider" style="--mn-i:10"></div>
+  <div class="mn-socials" style="--mn-i:11">
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+  <span class="mn-contact-text" style="--mn-i:12">Pineapple Park · 80639 München</span>
+  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:13">support@bomayegym.com</a>
+  <a class="mn-contact-text" href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer" style="--mn-i:14">+49 173 7513627</a>
 </div>
 
 
@@ -388,7 +388,7 @@
 ══════════════════════════════════════════════════════════ -->
 <div id="view-home" class="view active">
 
-  <!-- Announcement bar — shown/hidden + text controlled by Sanity -->
+  <!-- Announcement bar — hidden by default; enable via inline style if needed -->
   <div id="sanity-announcement-bar" style="display:none;background:var(--gold);color:#080808;text-align:center;padding:0.55rem 1rem;font-family:var(--font-head);font-size:0.65rem;letter-spacing:2px;" role="alert">
     <span id="sanity-announcement-text"></span>
   </div>
@@ -410,14 +410,14 @@
         IT'S NOT A GYM.<br>
         <span class="shimmer">IT'S PASSION.</span>
       </h2>
-      <p class="hero-subtitle" id="sanity-hero-subheadline">Nur 300 Plätze. Danach wird es teurer.</p>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Echtes Boxen. Keine Fitness-Choreografie.<br>Geführt von zwei Landestrainern. Gecoacht von einem Weltmeister.</p>
       <p class="hero-brand-tagline">BECOME BOMAYE.</p>
       <div class="hero-ctas">
         <button class="btn btn--gold btn--hero-primary" onclick="nav('home','pricing')" type="button">
-          <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
         </button>
         <a href="#dna" onclick="event.preventDefault();nav('home','dna');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
-          <i class="fa-solid fa-circle-play"></i> WARUM BOMAYE
+          WARUM BOMAYE
         </a>
       </div>
       <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
@@ -434,7 +434,7 @@
           <span class="hero-cred-sub">Wettkampf und Leistungssport</span>
         </div>
         <div class="hero-cred-item">
-          <span class="hero-cred-label">Zahle ab Opening</span>
+          <span class="hero-cred-label">Zahle ab Trainingsstart</span>
           <span class="hero-cred-sub">Dein Preis bleibt dauerhaft</span>
         </div>
       </div>
@@ -460,7 +460,7 @@
         </div>
         <!-- Right column: logo brand visual — desktop only -->
         <div class="dna-visual reveal delay-2" aria-hidden="true">
-          <img src="/assets/images/bomaye-logo.png" alt="" class="dna-visual-logo"
+          <img src="/assets/images/bomaye-logo.webp" alt="" class="dna-visual-logo"
                loading="lazy" decoding="async"
                onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
           <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
@@ -565,40 +565,20 @@
     <div class="container">
       <div class="early-bird-inner reveal">
         <div>
-          <div class="spots-badge">
-            <span class="spots-dot"></span>
-            <span id="spots-badge-text">Early Bird — noch 300 Plätze</span>
-          </div>
-          <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD — LIMITIERT</span>
-          <h2 style="margin:1.25rem 0;">NUR 300 PLÄTZE.<br><span class="gold">WENN SIE WEG SIND, IST DER PREIS HÖHER.</span></h2>
-          <p id="sanity-eb-subtext" style="margin-bottom:1.5rem;">Wenn sie weg sind, ist der Preis höher. <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong></p>
+          <span class="tag tag--dark" id="sanity-eb-badge">⚡ EARLY BIRD</span>
+          <h2 style="margin:1.25rem 0;">FOUNDING MEMBER.<br><span class="gold">DEIN PREIS BLEIBT DAUERHAFT.</span></h2>
+          <p id="sanity-eb-subtext" style="margin-bottom:1.5rem;">Wer jetzt Mitglied wird, sichert sich den Early Bird Preis für immer. <strong style="color:var(--gold);">Dauerhaft und unwiderruflich.</strong></p>
           <div class="eb-checklist">
             <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Dein Preis bleibt für immer gleich</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zugang vor offizieller Eröffnung</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Limitierte Plätze – kein Nachschub</span></div>
-            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Zahle erst ab Opening</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Founding-Member Zugang</span></div>
+            <div class="eb-check"><i class="fa-solid fa-check-circle"></i><span>Erste Zahlung mit deinem Trainingsstart</span></div>
           </div>
           <button id="sanity-eb-cta" onclick="nav('home','pricing')" class="btn btn--gold" type="button">
-            <i class="fa-solid fa-bolt"></i> JETZT EARLY BIRD SICHERN
+            <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
           </button>
         </div>
         <div class="eb-card">
-          <div class="eb-card-label">NOCH VERFÜGBAR</div>
-          <div class="eb-card-number" id="eb-remaining">300</div>
-          <div class="eb-card-sublabel" id="eb-total-label">VON 300 PLÄTZEN NOCH VERFÜGBAR</div>
-
-          <!-- Progress bar -->
-          <div class="eb-progress" aria-label="Auslastungsanzeige">
-            <div class="eb-progress-bar">
-              <div class="eb-progress-fill" id="eb-progress-fill" style="width:0%"></div>
-            </div>
-            <div class="eb-progress-meta">
-              <span>0 BELEGT</span>
-              <span id="eb-progress-pct">0% BELEGT</span>
-              <span>300 GESAMT</span>
-            </div>
-          </div>
-
+          <div class="eb-card-label">EARLY BIRD PREISE</div>
           <div class="eb-prices">
             <div class="eb-price-item">
               <div class="eb-price-age">KIDS</div>
@@ -616,7 +596,7 @@
               <div class="eb-price-unit">/WOCHE</div>
             </div>
           </div>
-          <div class="eb-notice">↑ DANACH STEIGT DER PREIS</div>
+          <div class="eb-notice">DAUERHAFT GESICHERT</div>
         </div>
       </div>
     </div>
@@ -633,7 +613,7 @@
         <span class="tag tag--gold" id="sanity-membership-badge">MEMBERSHIP</span>
         <h2 style="margin-top:1rem;color:#111;">CHOOSE YOUR <span class="gold">PLAN.</span></h2>
         <p id="sanity-membership-subtext" style="color:rgba(0,0,0,0.6);margin-top:0.75rem;font-size:0.85rem;font-family:var(--font-head);letter-spacing:2px;">
-          Early Bird Preis dauerhaft gesichert.<br>Sichere dir jetzt deinen Platz vor dem Opening.
+          Early Bird Preis dauerhaft gesichert.<br>Sichere dir jetzt deinen Founding-Member-Platz.
         </p>
         <p style="color:rgba(0,0,0,0.4);margin-top:0.6rem;font-size:0.72rem;font-family:var(--font-head);letter-spacing:1.5px;">Only 300 spots available. Once full, registration closes.</p>
       </div>
@@ -680,7 +660,7 @@
               <li><i class="fa-solid fa-check"></i> Sicheres Umfeld</li>
             </ul>
             <div class="plan-card-cta">
-              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> MITGLIED WERDEN</span>
             </div>
             <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
           </div>
@@ -709,7 +689,7 @@
               <li><i class="fa-solid fa-check"></i> Community &amp; Teamgefühl</li>
             </ul>
             <div class="plan-card-cta">
-              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> MITGLIED WERDEN</span>
             </div>
             <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
           </div>
@@ -738,7 +718,7 @@
               <li><i class="fa-solid fa-check"></i> Flexible Trainingszeiten</li>
             </ul>
             <div class="plan-card-cta">
-              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> PLATZ SICHERN</span>
+              <span class="plan-card-cta-btn"><i class="fa-solid fa-bolt"></i> MITGLIED WERDEN</span>
             </div>
             <div class="plan-card-security"><i class="fa-solid fa-lock"></i> Sichere Buchung via Bsport</div>
           </div>
@@ -749,7 +729,7 @@
       <!-- Trust badges — conversion boosters -->
       <div class="membership-trust reveal">
         <div class="trust-badge"><i class="fa-solid fa-shield-check"></i><span>Lifetime Preisgarantie</span></div>
-        <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Zahle erst ab Opening</span></div>
+        <div class="trust-badge"><i class="fa-solid fa-clock"></i><span>Erste Zahlung erst mit Trainingsstart</span></div>
         <div class="trust-badge"><i class="fa-solid fa-lock"></i><span>Sichere Buchung via Bsport</span></div>
         <div class="trust-badge"><i class="fa-solid fa-fire"></i><span>Limitiert auf 300 Mitglieder</span></div>
       </div>
@@ -776,19 +756,19 @@
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Was kostet eine Mitgliedschaft? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90€/Woche · Jugend Boxing ab 15,90€/Woche · Erwachsene Kurse ab 18,90€/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€.</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Aktuelle Wochenpreise (Early Bird): Kids Boxing ab 14,90€/Woche · Jugend Boxing ab 15,90€/Woche · Erwachsene Kurse ab 18,90€/Woche. Hinzu kommt eine einmalige Aufnahmegebühr von 100€.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Was muss ich mitbringen? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe und ein Handtuch. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz).</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Hinweis: Getränke stehen aktuell noch nicht zur Verfügung — bitte nimm deine eigene Trinkflasche mit.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Wann öffnet Bomaye Gym? <i class="fa-solid fa-plus faq-icon"></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich eröffnet in Kürze. Wer jetzt Early-Bird Mitglied wird, sichert sich den besten Preis mit Lifetime Garantie und zahlt erst ab Opening.</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Bomaye Gym Munich ist seit dem 20. April 2026 geöffnet. Wer jetzt Mitglied wird, sichert sich den Early-Bird Preis mit Lifetime Garantie — und trainiert ab dem ersten Tag.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
@@ -855,10 +835,10 @@
              target="_blank" rel="noopener" class="btn btn--gold btn--sm">
             <i class="fa-solid fa-diamond-turn-right"></i> ROUTE PLANEN
           </a>
-          <a href="tel:+4917621932243" class="btn btn--outline-dark btn--sm">
+          <a href="tel:+491737513627" class="btn btn--outline-dark btn--sm">
             <i class="fa-solid fa-phone"></i> ANRUFEN
           </a>
-          <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!"
+          <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!"
              target="_blank" rel="noopener" class="btn btn--outline-dark btn--sm">
             <i class="fa-brands fa-whatsapp"></i> WHATSAPP
           </a>
@@ -886,7 +866,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="/" aria-label="Zur Startseite" class="footer-logo-link">
-            <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+            <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
           </a>
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
@@ -895,36 +875,33 @@
             <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>TRAINING</h4>
           <ul class="footer-links">
-            <li><button onclick="nav('detail-olympic')" type="button">Olympic Boxing</button></li>
-            <li><button onclick="nav('detail-kickbox')" type="button">Kickboxing</button></li>
-            <li><button onclick="nav('detail-women')" type="button">Women's Boxing</button></li>
-            <li><button onclick="nav('detail-youth')" type="button">Youth Boxing</button></li>
-            <li><button onclick="nav('detail-pt')" type="button">Personal Training</button></li>
-            <li><button onclick="nav('detail-corporate')" type="button">Corporate Boxing</button></li>
-            <li><button onclick="nav('detail-exec')" type="button">Executive Boxing</button></li>
-            <li><button onclick="nav('detail-mindset')" type="button">Mind &amp; Body</button></li>
+            <li><a href="/kurse">Olympic Boxing</a></li>
+            <li><a href="/kurse">Kickboxing</a></li>
+            <li><a href="/kurse">Women's Boxing</a></li>
+            <li><a href="/kurse">Youth Boxing</a></li>
+            <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>GYM</h4>
           <ul class="footer-links">
-            <li><button onclick="nav('home','dna')" type="button">Unsere DNA</button></li>
-            <li><a href="/coaches" style="text-decoration:none;color:inherit;">Team</a></li>
-            <li><button onclick="nav('home','pricing')" type="button">Preise</button></li>
-            <li><button onclick="nav('home','faq')" type="button">FAQ</button></li>
-            <li><button onclick="nav('home','location')" type="button">Standort</button></li>
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Coaches</a></li>
+            <li><a href="/mitglied-werden">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>KONTAKT</h4>
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
           <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
@@ -934,11 +911,11 @@
       <!-- SEO footer text -->
       <div style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 0 1rem;">
         <p id="sanity-seo-footer" style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;">Bomaye Gym München – modernes Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer.</p>
-        <p style="font-size:0.75rem;color:rgba(255,255,255,0.28);margin-top:0.5rem;letter-spacing:0.04em;"><a href="/boxgym-muenchen" style="color:inherit;text-decoration:none;">Boxgym München</a> &nbsp;·&nbsp; <a href="/boxtraining-muenchen" style="color:inherit;text-decoration:none;">Boxtraining München</a> &nbsp;·&nbsp; <a href="/boxen-lernen-muenchen" style="color:inherit;text-decoration:none;">Boxen lernen München</a> &nbsp;·&nbsp; <a href="/fitnessboxen-muenchen" style="color:inherit;text-decoration:none;">Fitnessboxen München</a> &nbsp;·&nbsp; <a href="/personal-training-boxen-muenchen" style="color:inherit;text-decoration:none;">Personal Training Boxen München</a></p>
+        <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;margin-top:0.75rem;">Als <a href="/about" class="footer-seo-link">Boxgym in München</a> bieten wir <a href="/boxtraining-muenchen" class="footer-seo-link">Boxtraining</a> für Einsteiger, <a href="/fitnessboxen-muenchen" class="footer-seo-link">Fitnessboxen</a> für ambitionierte Hobbysportler und <a href="/personal-training-boxen-muenchen" class="footer-seo-link">Personal Training</a> auf Wettkampfniveau – mitten in Neuhausen-Nymphenburg, 5 Minuten vom S-Bahnhof Hirschgarten.</p>
       </div>
 
       <div class="footer-contactbar">
-        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a>
         <span class="dot">•</span>
         <a href="mailto:support@bomayegym.com">support@bomayegym.com</a>
         <span class="dot">•</span>
@@ -951,6 +928,9 @@
           <a href="/impressum">IMPRESSUM</a>
           <a href="/datenschutz">DATENSCHUTZ</a>
           <a href="/agb">AGB</a>
+          <a href="/hausordnung">Hausordnung</a>
+          <a href="/downloads">Downloads</a>
+          <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
         </div>
       </div>
     </div>
@@ -991,8 +971,8 @@
         <span class="target-tag">Alle Levels</span>
       </div>
       <div class="detail-ctas">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
-        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">MITGLIED WERDEN</button>
+        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">PREISE ANSEHEN</a>
       </div>
     </div></div>
   </div>
@@ -1027,8 +1007,8 @@
         <span class="target-tag">Berufstätige</span>
       </div>
       <div class="detail-ctas">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">EARLY BIRD PLATZ SICHERN</button>
-        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">MITGLIED WERDEN</button>
+        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">PREISE ANSEHEN</a>
       </div>
     </div></div>
   </div>
@@ -1095,7 +1075,7 @@
       </div>
       <div class="detail-ctas">
         <button onclick="window.open('https://backoffice.bsport.io/checkout/5473/subscription/44945?force=true','_blank')" class="btn btn--gold" type="button">JETZT ANMELDEN</button>
-        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">PREISE ANSEHEN</a>
       </div>
     </div></div>
   </div>
@@ -1161,8 +1141,8 @@
         <span class="target-tag">Fitness</span>
       </div>
       <div class="detail-ctas">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
-        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">MITGLIED WERDEN</button>
+        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">PREISE ANSEHEN</a>
       </div>
     </div></div>
   </div>
@@ -1195,8 +1175,8 @@
         <span class="target-tag">Fortgeschrittene</span>
       </div>
       <div class="detail-ctas">
-        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">PLATZ SICHERN</button>
-        <button onclick="nav('home','pricing')" class="btn btn--outline-dark" type="button">PREISE ANSEHEN</button>
+        <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">MITGLIED WERDEN</button>
+        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">PREISE ANSEHEN</a>
       </div>
     </div></div>
   </div>
@@ -1260,13 +1240,6 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Flex</strong></td>
-              <td><span class="price-em">26,90€</span> / Woche</td>
-              <td>Monatlich kündbar</td>
-              <td>1 Kurs nach Wahl</td>
-              <td><a href="https://backoffice.bsport.io/checkout/5473/subscription/44944?force=true" target="_blank">Anmelden</a></td>
-            </tr>
-            <tr>
               <td><strong>Day Pass</strong></td>
               <td><span class="price-em">15€</span> / Tag</td>
               <td>Einmalig</td>
@@ -1328,7 +1301,7 @@
 
       <div style="text-align:center; margin-top:3rem; display:flex; flex-wrap:wrap; gap:1.25rem; justify-content:center; align-items:center;">
         <button onclick="nav('home','pricing')" class="btn btn--gold" type="button">
-          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
         </button>
       </div>
 
@@ -1433,26 +1406,20 @@
 </div>
 
 
-<!-- 1. Sanity CDN client (must be first — defines window.sanityFetch) -->
-<script src="assets/js/sanity-client.js"></script>
-
-<!-- 2. Core config (contact, address, hours, early bird) -->
+<!-- Core config (contact, address, hours, early bird) -->
 <script src="assets/js/config.js"></script>
 
-<!-- 3. Content modules (static fallbacks — overridden by Sanity at runtime) -->
+<!-- Content modules -->
 <script src="assets/js/pricing.js"></script>
 <script src="assets/js/family-benefit.js"></script>
 <script src="assets/js/corporate-boxing.js"></script>
 <script src="assets/js/homepage-content.js"></script>
 
-<!-- 4. FAQ data -->
+<!-- FAQ data -->
 <script src="assets/js/faq-data.js"></script>
 
-<!-- 5. Main application logic -->
+<!-- Main application logic -->
 <script src="assets/js/main.js"></script>
-
-<!-- 6. Sanity loader (runs after main.js — patches globals + re-renders) -->
-<script src="assets/js/sanity-loader.js"></script>
 
 <!-- ══════════════════════════════════════════════════════════
      BSPORT WIDGET — Membership Subscription Widget
@@ -1594,5 +1561,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script src="/assets/js/pixel-events.js"></script>
+<script src="/assets/js/cookie-consent.js"></script>
 </body>
 </html>

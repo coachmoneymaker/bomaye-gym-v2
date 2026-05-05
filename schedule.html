@@ -7,16 +7,18 @@
   <title>Stundenplan – Bomaye Gym München</title>
   <meta name="description" content="Stundenplan Bomaye Gym München – such dir eine Stunde aus und buche dein kostenloses Probetraining im Boxgym Pineapple Park." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#080808" />
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
 
   <link rel="canonical" href="https://www.bomayegym.com/schedule" />
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
   <!-- Bsport connections -->
@@ -38,22 +40,6 @@
   <!-- Styles -->
   <link rel="stylesheet" href="/assets/css/style.css" />
 
-  <!-- Meta Pixel -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1989119321999811');
-  fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
-  /></noscript>
 
   <style>
     /* ── Nav active state ── */
@@ -79,7 +65,7 @@
       flex-shrink: 0;
       -webkit-tap-highlight-color: transparent;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       #header .nav-inner {
         display: flex;
         align-items: center;
@@ -89,7 +75,6 @@
       }
       #header .back-btn  { display: none !important; }
       #header .logo      { flex: 0 0 auto; }
-      #header .nav-mobile-cta { display: inline-flex; }
       #header .burger    { flex: 0 0 auto; min-width: 44px; min-height: 44px; }
     }
 
@@ -359,6 +344,34 @@
     }
     .sc-faq-link:hover { text-decoration: underline; }
   </style>
+<link rel="stylesheet" href="/assets/css/cookie-consent.css">
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
+    "name": "BOMAYE GYM MUNICH",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
+    "url": "https://www.bomayegym.com",
+    "email": "support@bomayegym.com",
+    "telephone": "+491737513627",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
+      "addressLocality": "Munich",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+    ],
+    "priceRange": "€€"
+  }
+  </script>
 </head>
 
 <body>
@@ -371,7 +384,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -386,7 +399,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN — AB 14,90€</a>
     </nav>
 
     <a href="/mitglied-werden" class="nav-mobile-cta" aria-label="Mitglied werden">MITGLIED WERDEN</a>
@@ -408,9 +421,24 @@
   <a class="mn-item" href="/coaches" style="--mn-i:3">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:4">ABOUT US</a>
   <a class="mn-item" href="/faq" style="--mn-i:5">FAQ</a>
-  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleScheduleMenu();" style="--mn-i:6;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <span class="mn-info-eyebrow" aria-hidden="true">Info</span>
+  <a class="mn-info-link" href="/hausordnung" style="--mn-i:6">Hausordnung</a>
+  <a class="mn-info-link" href="/downloads" style="--mn-i:7">Downloads</a>
+  <a class="mn-info-link" href="/u18" style="--mn-i:8">U18 · Minderjährige</a>
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:9"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleScheduleMenu();" style="--mn-i:10;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
     MITGLIED WERDEN
   </a>
+  <div class="mn-contact-divider" style="--mn-i:11"></div>
+  <div class="mn-socials" style="--mn-i:12">
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+  <span class="mn-contact-text" style="--mn-i:13">Pineapple Park · 80639 München</span>
+  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:14">support@bomayegym.com</a>
+  <a class="mn-contact-text" href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer" style="--mn-i:15">+49 173 7513627</a>
 </div>
 
 <!-- ═══════ MAIN ═══════ -->
@@ -421,7 +449,7 @@
   ══════════════════════════════════════════════ -->
   <section class="sc-hero" aria-label="Schedule Hero">
     <div class="sc-hero-inner">
-      <span class="sc-hero-label">Pre-Opening · Ab 20. April 2026</span>
+      <span class="sc-hero-label">Geöffnet seit 20. April 2026</span>
       <h1 class="sc-hero-h1">Train With Us.</h1>
       <p class="sc-hero-sub">Such dir eine Stunde aus — dein erstes Training ist kostenlos.</p>
     </div>
@@ -431,7 +459,7 @@
        OPENING PARTY BANNER
   ══════════════════════════════════════════════ -->
   <div class="sc-party-banner" aria-label="Opening Party">
-    🥊 <span class="sc-party-cream">Save the Date:</span> <span class="sc-party-gold">23. Mai 2026 — Offizielle Opening Party.</span> <span class="sc-party-muted">Details folgen.</span>
+    🥊 <span class="sc-party-cream">Save the Date:</span> <span class="sc-party-gold">22. Mai 2026 — Offizielle Opening Party.</span> <span class="sc-party-muted">Details folgen.</span>
   </div>
 
   <!-- ══════════════════════════════════════════════
@@ -494,7 +522,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="/" aria-label="Zur Startseite" class="footer-logo-link">
-          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
         </a>
         <span class="logo-text">BOMAYE</span>
         <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
@@ -503,27 +531,24 @@
           <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
           <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
       </div>
       <div class="footer-col">
         <h4>TRAINING</h4>
         <ul class="footer-links">
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Olympic Boxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Kickboxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Women's Boxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Youth Boxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Personal Training</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Corporate Boxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Executive Boxing</a></li>
-          <li><a href="/kurse" style="text-decoration:none;color:inherit;">Mind &amp; Body</a></li>
+          <li><a href="/kurse">Olympic Boxing</a></li>
+          <li><a href="/kurse">Kickboxing</a></li>
+          <li><a href="/kurse">Women's Boxing</a></li>
+          <li><a href="/kurse">Youth Boxing</a></li>
+          <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>GYM</h4>
         <ul class="footer-links">
           <li><a href="/about" style="text-decoration:none;color:inherit;">Unsere DNA</a></li>
-          <li><a href="/coaches" style="text-decoration:none;color:inherit;">Team</a></li>
+          <li><a href="/coaches" style="text-decoration:none;color:inherit;">Coaches</a></li>
           <li><a href="/mitglied-werden" style="text-decoration:none;color:inherit;">Preise</a></li>
           <li><a href="/faq" style="text-decoration:none;color:inherit;">FAQ</a></li>
           <li><a href="/#location" style="text-decoration:none;color:inherit;">Standort</a></li>
@@ -532,7 +557,7 @@
       <div class="footer-col">
         <h4>KONTAKT</h4>
         <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
         <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
         <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
@@ -541,10 +566,11 @@
 
     <div style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 0 1rem;">
       <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;">Bomaye Gym München – modernes Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer.</p>
+      <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;margin-top:0.75rem;">Als <a href="/about" class="footer-seo-link">Boxgym in München</a> bieten wir <a href="/boxtraining-muenchen" class="footer-seo-link">Boxtraining</a> für Einsteiger, <a href="/fitnessboxen-muenchen" class="footer-seo-link">Fitnessboxen</a> für ambitionierte Hobbysportler und <a href="/personal-training-boxen-muenchen" class="footer-seo-link">Personal Training</a> auf Wettkampfniveau – mitten in Neuhausen-Nymphenburg, 5 Minuten vom S-Bahnhof Hirschgarten.</p>
     </div>
 
     <div class="footer-contactbar">
-      <a href="tel:+4917621932243">0176 2193 2243</a>
+      <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a>
       <span class="dot">•</span>
       <a href="mailto:support@bomayegym.com">support@bomayegym.com</a>
       <span class="dot">•</span>
@@ -557,6 +583,9 @@
         <a href="/impressum">IMPRESSUM</a>
         <a href="/datenschutz">DATENSCHUTZ</a>
         <a href="/agb">AGB</a>
+        <a href="/hausordnung">Hausordnung</a>
+        <a href="/downloads">Downloads</a>
+        <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
       </div>
     </div>
   </div>
@@ -602,5 +631,6 @@
 })();
 </script>
 <script src="/assets/js/pixel-events.js"></script>
+<script src="/assets/js/cookie-consent.js"></script>
 </body>
 </html>

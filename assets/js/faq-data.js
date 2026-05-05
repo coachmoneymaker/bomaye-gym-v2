@@ -52,15 +52,15 @@ const BOMAYE_FAQ = [
     items: [
       {
         q: "Wie werde ich Mitglied und starte mit dem Training?",
-        a: "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Early-Bird-Mitglieder sichern sich den Gründerpreis dauerhaft. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
+        a: "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
       },
       {
         q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
-        a: "Wir bieten Mitgliedschaften mit Laufzeiten von 1, 3, 6 und 12 Monaten – je länger die Laufzeit, desto günstiger der Wochenpreis. Aktuelle Wochenpreise (Early Bird, 12 Monate): Kids Boxing ab 14,90 €/Woche · Youth Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Unsere Early-Bird-Mitglieder sichern sich diesen Preis dauerhaft garantiert – auch wenn die regulären Preise später steigen."
+        a: "Wochenpreise: Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt einmalig der Fighter-Kit (100€) beim Start. Alle Details findest du auf der Mitglied-werden-Seite."
       },
       {
         q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
-        a: "Tageskarten und klassische Blockkarten bieten wir aktuell nicht als Standardprodukt an. Schau auf unserer Website vorbei oder frag direkt bei uns an – wir informieren dich über aktuelle Optionen ohne lange Bindung."
+        a: "Ja. Tageskarte 18 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr."
       },
       {
         q: "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",
@@ -84,7 +84,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
-        a: "Bring Sportkleidung, saubere Hallenschuhe und ein Handtuch mit. Beim ersten Training kannst du dir Boxhandschuhe kostenlos leihen. Wer regelmäßig trainiert, sollte eigene Handschuhe (10–14 Oz) und Bandagen mitbringen."
+        a: "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Vor Ort gibt's Wasser, Schorlen, Softdrinks und Heißgetränke."
       }
     ]
   },
@@ -97,10 +97,6 @@ const BOMAYE_FAQ = [
       {
         q: "Gibt es Umkleiden und Duschen?",
         a: "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website."
-      },
-      {
-        q: "Wie sieht es mit Getränken aus?",
-        a: "Wasser steht zur Verfügung. Wir empfehlen dir, deine eigene Trinkflasche mitzubringen – gut hydriert trainiert es sich einfach besser."
       },
       {
         q: "Kann ich mit Bargeld bezahlen?",
@@ -116,7 +112,7 @@ const BOMAYE_FAQ = [
     items: [
       {
         q: "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
-        a: "Am schnellsten per WhatsApp unter 0176 2193 2243 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an info@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
+        a: "Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an support@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
       }
     ]
   }

@@ -4,18 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Stundenplan | BOMAYE GYM MUNICH</title>
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
   <meta name="description" content="Alle Kurse und Zeiten auf einen Blick. Buche jetzt deinen Platz im BOMAYE GYM MUNICH — Boxen, Kickboxen & mehr." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#080808" />
 
   <link rel="canonical" href="https://www.bomayegym.com/stundenplan" />
 
   <!-- Preload -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
   <!-- Fonts -->
@@ -37,24 +39,55 @@
 
     /* ── Hero ── */
     .sp-page-hero {
-      background: var(--ink);
-      padding: 7rem 0 3rem;
+      background: #F5F0E8;
+      padding: 100px 24px 60px;
       text-align: center;
-      border-bottom: 1px solid rgba(197,160,89,0.15);
+      border-bottom: 1px solid rgba(10,10,8,0.08);
     }
-    .sp-page-hero .tag { margin-bottom: 1rem; display: inline-block; }
+    .sp-page-hero .sp-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: #C9A84C;
+      margin-bottom: 24px;
+    }
+    .sp-page-hero .sp-eyebrow::before,
+    .sp-page-hero .sp-eyebrow::after { content: ''; width: 32px; height: 1px; background: #C9A84C; }
     .sp-page-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(2.5rem, 8vw, 5rem);
-      color: #fff;
+      color: #0A0A08;
       letter-spacing: 3px;
       margin: 0.5rem 0;
     }
     .sp-page-hero p {
-      color: var(--muted);
+      color: rgba(10,10,8,0.6);
       font-family: var(--font-body);
       font-size: 1rem;
       margin-top: 0.75rem;
+    }
+
+    .sp-widget-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: #0A0A08;
+      opacity: 0.6;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .sp-widget-note {
+      font-family: 'DM Sans', sans-serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: rgba(10,10,8,0.55);
+      text-align: center;
+      max-width: 600px;
+      margin: 24px auto 0;
     }
 
     /* ── CTA BAR ── */
@@ -75,10 +108,61 @@
 
     /* ── PHONE (≤480px) ── */
     @media (max-width: 480px) {
-      .sp-page-hero { padding: 6rem 1rem 2.5rem; }
+      .sp-page-hero { padding: 100px 20px 40px; }
       .sp-cta-bar .btn { width: 100%; justify-content: center; margin: 0.35rem 0; }
     }
+    @media (min-width: 768px) {
+      .sp-page-hero { padding-top: 140px; }
+    }
+
+    /* ── SCHEDULE CONTAINER POLISH ── */
+    section#schedule .container {
+      padding-left: 32px;
+      padding-right: 32px;
+      padding-bottom: 80px;
+    }
+    @media (max-width: 480px) {
+      section#schedule .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+    @media (min-width: 1024px) {
+      section#schedule .container {
+        max-width: 1280px;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-bottom: 0;
+      }
+    }
   </style>
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
+    "name": "BOMAYE GYM MUNICH",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
+    "url": "https://www.bomayegym.com",
+    "email": "support@bomayegym.com",
+    "telephone": "+491737513627",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
+      "addressLocality": "Munich",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+    ],
+    "priceRange": "€€"
+  }
+  </script>
 </head>
 
 <body>
@@ -90,7 +174,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -100,7 +184,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/mitglied-werden">MITGLIED WERDEN</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden">MITGLIED WERDEN — AB 14,90€</a>
     </nav>
 
     <button class="burger" onclick="toggleMobileMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
@@ -118,14 +202,24 @@
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <a class="btn btn--gold mn-cta" href="/mitglied-werden" style="--mn-i:5;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">MITGLIED WERDEN</a>
+  <div class="mn-divider"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:5"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" style="--mn-i:6;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">MITGLIED WERDEN</a>
+  <div class="mn-contact-divider" style="--mn-i:7"></div>
+  <div class="mn-socials" style="--mn-i:8">
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+  <span class="mn-contact-text" style="--mn-i:9">Pineapple Park · 80639 München</span>
+  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:10">support@bomayegym.com</a>
+  <a class="mn-contact-text" href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer" style="--mn-i:11">+49 173 7513627</a>
 </div>
 
 
 <!-- ═══════ PAGE HERO ═══════ -->
 <div class="sp-page-hero">
   <div class="container">
-    <span class="tag tag--gold">STUNDENPLAN</span>
+    <div class="sp-eyebrow">STUNDENPLAN</div>
     <h1>DEIN <span class="shimmer">TRAINING.</span></h1>
     <p>Alle Kurse und Zeiten auf einen Blick — buche direkt deinen Platz.</p>
   </div>
@@ -135,13 +229,14 @@
 <section id="schedule">
   <div class="container">
     <div class="schedule-frame" id="schedule-section-wrap">
-      <div class="schedule-frame__widget">
-        <div id="bsport-widget-172485"></div>
-        <noscript>
-          <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
-        </noscript>
-      </div>
+        <div class="schedule-frame__widget">
+          <div id="bsport-widget-172485"></div>
+          <noscript>
+            <p style="text-align:center;color:var(--muted);padding:2rem 0;">Bitte JavaScript aktivieren um den Stundenplan zu laden.</p>
+          </noscript>
+        </div>
     </div>
+    <p class="sp-widget-note">Buchungen werden über unser Partnersystem abgewickelt.</p>
   </div>
 </section>
 
@@ -150,7 +245,7 @@
   <h2>BEREIT FÜR DEIN ERSTES <span class="gold">TRAINING?</span></h2>
   <div>
     <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;">
-      <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+      <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
     </a>
     <a href="/" class="btn btn--outline-light" style="text-decoration:none;">
       <i class="fa-solid fa-arrow-left"></i> ZURÜCK ZUR STARTSEITE
@@ -163,7 +258,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
+        <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="lazy" decoding="async" />
         <span class="logo-text">BOMAYE</span>
         <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
         <p class="brand-line">Pineapple Park · 80639 München</p>
@@ -171,7 +266,7 @@
           <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
           <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
       </div>
       <div class="footer-col">
@@ -195,7 +290,7 @@
       <div class="footer-col">
         <h4>KONTAKT</h4>
         <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
         <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
         <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
@@ -299,39 +394,74 @@ function MountBsportWidget(config, repeat=1) {
 </script>
 
 <script>
-/* BSport schedule fix — removes inline display:none from widget metadata.
-   MutationObserver fires whenever the widget re-renders (day change, filter).
-   Debounce (150ms) prevents CPU saturation from rapid React mutations.
-   Observing document.body catches all React re-renders that add card nodes.
-   childList-only: our style changes are attribute mutations, not childList —
-   the observer never re-fires from its own fix (no infinite loop).          */
-document.addEventListener("DOMContentLoaded", function () {
-
+/* ── Scoped schedule fix ────────────────────────────────────────────────────
+   Only un-hides offer cards that React may have hidden during re-renders.
+   Observer is scoped to the widget element, NOT document.body, to avoid
+   interfering with Bsport's own internal display:none state (e.g. the
+   proxy-bridge iframe the modal uses). */
+(function () {
   function fixSchedule() {
-    var widget = document.querySelector('[id^="bsport-widget"]');
+    var widget = document.getElementById('bsport-widget-172485');
     if (!widget) return;
-
-    widget.querySelectorAll('*').forEach(function (el) {
-      if (el.style && el.style.display === "none") {
-        el.style.display = "";
+    widget.querySelectorAll('.bs-offer-list-item, .bs-card-offer, .bs-week__listMode__content__day').forEach(function (el) {
+      if (el.style && el.style.display === 'none') {
+        el.style.display = '';
       }
     });
   }
 
-  fixSchedule();
-
-  var _timer;
-  var observer = new MutationObserver(function () {
-    clearTimeout(_timer);
-    _timer = setTimeout(fixSchedule, 150);
+  document.addEventListener('DOMContentLoaded', function () {
+    fixSchedule();
+    var widget = document.getElementById('bsport-widget-172485');
+    if (!widget) return;
+    var _timer;
+    var observer = new MutationObserver(function () {
+      clearTimeout(_timer);
+      _timer = setTimeout(fixSchedule, 150);
+    });
+    observer.observe(widget, { childList: true, subtree: true });
   });
+}());
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+/* ── Bsport modal detector ──────────────────────────────────────────────────
+   Watches document.body's direct children for Bsport's booking modal.
+   Adds/removes body.bsport-modal-open, which CSS uses to hide #header,
+   and locks/restores body scroll while the modal is open. */
+(function () {
+  var MODAL_SEL = '.bsport-user-interaction-modal__container';
+  var BODY_CLASS = 'bsport-modal-open';
+  var _scrollY = 0;
+  var _locked = false;
 
-});
+  function lockScroll() {
+    if (_locked) return;
+    _locked = true;
+    _scrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + _scrollY + 'px';
+    document.body.style.width = '100%';
+  }
+
+  function unlockScroll() {
+    if (!_locked) return;
+    _locked = false;
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo({ top: _scrollY, behavior: 'instant' });
+  }
+
+  function check() {
+    var open = document.querySelector(MODAL_SEL) !== null;
+    document.body.classList.toggle(BODY_CLASS, open);
+    if (open) { lockScroll(); } else { unlockScroll(); }
+  }
+
+  new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
+  check();
+}());
 </script>
 
 </body>

@@ -6,11 +6,13 @@
   <title>Mitglied werden | BOMAYE GYM MÜNCHEN</title>
   <meta name="description" content="Sichere dir jetzt deinen Early Bird Preis bei Bomaye Gym München — dauerhaft und unwiderruflich." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0A0A08" />
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Mitglied werden — BOMAYE GYM MÜNCHEN" />
@@ -23,12 +25,14 @@
   <link rel="canonical" href="https://www.bomayegym.com/mitglied-werden" />
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
-  <!-- bsport warm-up (direct checkout links) -->
+  <!-- bsport warm-up -->
   <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+  <link rel="preconnect" href="https://cdn.bsport.io" crossorigin />
   <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -121,7 +125,7 @@
       min-height: 100vh;
     }
     @media (max-width: 767px) {
-      .mw-page { padding-bottom: 72px; }
+      .mw-page { padding-bottom: 88px; }
     }
 
     /* ── Reveal animation ─────────────────────────────────────── */
@@ -147,7 +151,7 @@
     .mw-hero {
       position: relative;
       background: #0A0A08;
-      padding: 80px 20px 60px;
+      padding: 80px 20px 40px;
       text-align: center;
       overflow: hidden;
     }
@@ -192,20 +196,12 @@
       font-size: 1rem;
       color: rgba(245,240,232,0.6);
       line-height: 1.75;
-      margin: 0 auto 24px;
+      margin: 0 auto;
       max-width: 480px;
-    }
-    .mw-hero-proof {
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      color: #C9A84C;
-      margin: 0;
-      letter-spacing: 0.05em;
-      font-weight: 600;
     }
     @media (min-width: 768px) {
       .mw-hero {
-        padding: 100px 24px 80px;
+        padding: 100px 24px 60px;
       }
       .mw-hero-h1 {
         font-size: 4rem;
@@ -448,14 +444,6 @@
     }
     .mw-card-btn:active { transform: scale(0.99); }
 
-    /* Scarcity line */
-    .mw-card-scarcity {
-      margin: 12px 0 0;
-      text-align: center;
-      font-family: var(--font-body);
-      font-size: 0.78rem;
-      color: rgba(245,240,232,0.4);
-    }
 
     /* ════════════════════════════════════════════════════════════
        SECTION 3 — TRUST BAR
@@ -696,70 +684,6 @@
       filter: brightness(1.1);
     }
 
-    /* ════════════════════════════════════════════════════════════
-       STICKY MOBILE CTA BAR
-    ════════════════════════════════════════════════════════════ */
-    .mw-sticky-bar {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 999;
-      background: rgba(10,10,8,0.97);
-      border-top: 1px solid rgba(201,168,76,0.3);
-      padding: 12px 16px;
-      align-items: center;
-      justify-content: space-between;
-      transform: translateY(0);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-    .mw-sticky-bar.hidden {
-      transform: translateY(100%);
-      pointer-events: none;
-    }
-    @media (max-width: 767px) {
-      .mw-sticky-bar { display: flex; }
-    }
-    @supports (padding-bottom: env(safe-area-inset-bottom)) {
-      @media (max-width: 767px) {
-        .mw-sticky-bar {
-          padding-bottom: calc(12px + env(safe-area-inset-bottom));
-        }
-      }
-    }
-    .mw-sticky-bar-left {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .mw-sticky-bar-title {
-      font-family: var(--font-head);
-      font-size: 0.8rem;
-      color: #C9A84C;
-      font-weight: bold;
-      line-height: 1;
-    }
-    .mw-sticky-bar-sub {
-      font-family: var(--font-body);
-      font-size: 0.72rem;
-      color: rgba(245,240,232,0.5);
-      line-height: 1;
-    }
-    .mw-sticky-bar-btn {
-      background: #C9A84C;
-      color: #000;
-      font-family: var(--font-head);
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 10px 20px;
-      border-radius: 0;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: filter 0.2s ease;
-    }
-    .mw-sticky-bar-btn:hover { filter: brightness(1.1); }
-
     /* ── Footer ─────────────────────────────────────────────── */
     .mw-footer {
       background: #080808;
@@ -806,7 +730,130 @@
       .mw-trust-item { white-space: normal; }
       .mw-popular-badge { font-size: 0.65rem; padding: 5px 14px; }
     }
+
+    /* ── Pricing card: 100€ fee disclosure ──────────────────── */
+    .mw-card-fee {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(245,240,232,0.35);
+      margin: 6px 0 0;
+      letter-spacing: 0.02em;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SECTION — FIGHTER-KIT
+    ════════════════════════════════════════════════════════════ */
+    .mw-fk {
+      background: #F5F0E8;
+      padding: 60px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(10,10,8,0.06);
+    }
+    @media (min-width: 768px) {
+      .mw-fk { padding: 100px 32px; }
+    }
+    .mw-fk-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .mw-fk-label {
+      font-family: var(--font-head);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-variant: small-caps;
+      color: #C9A84C;
+      margin: 0 0 12px;
+    }
+    .mw-fk-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      font-weight: 700;
+      color: #0A0A08;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin: 0 0 18px;
+    }
+    .mw-fk-sub {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(10,10,8,0.6);
+      line-height: 1.75;
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+    .mw-fk-img-wrap {
+      margin: 0 auto 40px;
+      max-width: 520px;
+      width: 100%;
+    }
+    .mw-fk-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+    }
+    .mw-fk-items {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 32px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+    }
+    .mw-fk-items li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #0A0A08;
+    }
+    .mw-fk-dot {
+      color: #C9A84C;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mw-fk-footer {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(10,10,8,0.45);
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
   </style>
+<link rel="stylesheet" href="/assets/css/cookie-consent.css">
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
+    "name": "BOMAYE GYM MUNICH",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
+    "url": "https://www.bomayegym.com",
+    "email": "support@bomayegym.com",
+    "telephone": "+491737513627",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
+      "addressLocality": "Munich",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+    ],
+    "priceRange": "€€"
+  }
+  </script>
 </head>
 <body>
 
@@ -814,7 +861,7 @@
   <header class="mw-header">
     <div class="mw-header-inner">
       <a href="/" class="mw-logo" aria-label="Bomaye Gym Startseite">
-        <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="mw-logo-img"
+        <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="mw-logo-img"
              onerror="this.style.display='none'" />
         <span class="mw-logo-text">BOMAYE</span>
       </a>
@@ -835,7 +882,6 @@
         <p class="mw-hero-label">Early Bird</p>
         <h1 class="mw-hero-h1">Wähle dein Paket.</h1>
         <p class="mw-hero-sub">Sichere dir jetzt deinen Early Bird Preis — dauerhaft und unwiderruflich.</p>
-        <p class="mw-hero-proof">🔥 Bereits 140 Founding Members — noch 160 Early Bird Plätze verfügbar</p>
       </div>
     </section>
 
@@ -843,6 +889,16 @@
          SECTION 2 — THREE PACKAGE CARDS
     ══════════════════════════════════════════════ -->
     <section class="mw-cards" id="packages" aria-label="Mitgliedschaftspakete">
+
+      <!-- Dokumente-Hinweis -->
+      <div style="max-width:1100px;margin:0 auto 1.5rem;">
+        <div class="doc-strip" role="note" aria-label="Wichtige Dokumente">
+          <span class="doc-strip-label">Wichtige Dokumente:&nbsp;</span>
+          <span class="doc-strip-items">Hausordnung · Einverständnis · Sparring · Wettkampf · Reise</span>
+          <a href="/downloads" class="doc-strip-link">→ Zu den Downloads</a>
+        </div>
+      </div>
+
       <div class="mw-cards-inner">
 
         <!-- CARD: KIDS — DOM pos 1, desktop col 1, mobile col 2 -->
@@ -856,6 +912,7 @@
             <span class="mw-card-price">14,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 13 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan speziell für Kinder</li>
@@ -865,8 +922,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">KIDS PLATZ SICHERN</a>
-          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
         </article>
 
         <!-- CARD: UNLIMITED — DOM pos 2, desktop col 2, mobile col 1 -->
@@ -881,6 +938,7 @@
             <span class="mw-card-price">18,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 17 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Unbegrenzter Zugang zu allen Kursen</li>
@@ -891,8 +949,8 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
-          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">JETZT FOUNDING MEMBER WERDEN</a>
         </article>
 
         <!-- CARD: YOUTH — DOM pos 3, desktop col 3, mobile col 3 -->
@@ -906,6 +964,7 @@
             <span class="mw-card-price">15,90 €</span>
             <span class="mw-card-price-unit">/ Woche</span>
           </div>
+          <p class="mw-card-fee">+ 100 € einmalig · inkl. Fighter-Kit</p>
           <span class="mw-card-savings">Early Bird — spare 16 % dauerhaft</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan für Jugendliche</li>
@@ -915,10 +974,34 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn">YOUTH PLATZ SICHERN</a>
-          <p class="mw-card-scarcity">🔥 Nur noch wenige Early Bird Plätze verfügbar</p>
+             class="mw-card-btn"
+             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
         </article>
 
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION — FIGHTER-KIT
+    ══════════════════════════════════════════════ -->
+    <section class="mw-fk" aria-label="Fighter-Kit">
+      <div class="mw-fk-inner reveal">
+        <p class="mw-fk-label">Zum Start</p>
+        <h2 class="mw-fk-h2">Dein Fighter-Kit</h2>
+        <p class="mw-fk-sub">Einmalig 100&nbsp;€ beim Einstieg. Alles was du brauchst, am ersten Tag&nbsp;— gebrandet, bereit, ready to fight.</p>
+        <div class="mw-fk-img-wrap">
+          <img src="/assets/images/fighter-kit.webp"
+               alt="Bomaye Fighter-Kit: Boxhandschuhe, Bandagen, Springseil und T-Shirt"
+               class="mw-fk-img"
+               decoding="async" />
+        </div>
+        <ul class="mw-fk-items">
+          <li><span class="mw-fk-dot">—</span>Boxhandschuhe</li>
+          <li><span class="mw-fk-dot">—</span>Bandagen</li>
+          <li><span class="mw-fk-dot">—</span>Springseil</li>
+          <li><span class="mw-fk-dot">—</span>Bomaye T-Shirt</li>
+        </ul>
+        <p class="mw-fk-footer">Einmalig zum Start. Für immer dein Equipment.</p>
       </div>
     </section>
 
@@ -931,7 +1014,7 @@
         <h2 class="mw-trial-h2">Noch nicht sicher?</h2>
         <p class="mw-trial-sub">Komm zum kostenlosen Probetraining. Kein Vertrag. Kein Druck.</p>
         <p class="mw-trial-body">Erlebe das Bomaye Gym, unsere Coaches und die Community — bevor du dich entscheidest. Ein Training reicht, um zu wissen.</p>
-        <a href="/schedule" class="mw-trial-btn">KOSTENLOSES PROBETRAINING BUCHEN</a>
+        <a href="/stundenplan" class="mw-trial-btn">KOSTENLOSES PROBETRAINING BUCHEN</a>
         <p class="mw-trial-hint">Einfach Stunde aussuchen &amp; kostenlos einbuchen.</p>
       </div>
     </section>
@@ -945,7 +1028,7 @@
         <p class="mw-final-cta-sub">Wir sind für dich da.</p>
         <div class="mw-final-cta-btns">
           <a href="/faq" class="mw-btn mw-btn--outline">FAQ ansehen</a>
-          <a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!"
+          <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!"
              target="_blank" rel="noopener noreferrer"
              class="mw-btn mw-btn--gold">WhatsApp</a>
         </div>
@@ -958,21 +1041,15 @@
         <a href="/impressum">IMPRESSUM</a>
         <a href="/datenschutz">DATENSCHUTZ</a>
         <a href="/agb">AGB</a>
+        <a href="/hausordnung">Hausordnung</a>
+        <a href="/downloads">Downloads</a>
         <a href="/faq">FAQ</a>
+        <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
       </nav>
       <p class="mw-footer-copy">&copy; 2026 BOMAYE GYM MÜNCHEN — PINEAPPLE PARK</p>
     </footer>
 
   </main>
-
-  <!-- ═══════ STICKY MOBILE CTA BAR ═══════ -->
-  <div class="mw-sticky-bar" id="mw-sticky-bar" role="complementary" aria-label="Schnell-Buchung">
-    <div class="mw-sticky-bar-left">
-      <span class="mw-sticky-bar-title">Early Bird</span>
-      <span class="mw-sticky-bar-sub">Noch 160 Plätze</span>
-    </div>
-    <a href="/mitglied-werden#packages" class="mw-sticky-bar-btn">JETZT SICHERN</a>
-  </div>
 
   <script>
     (function () {
@@ -1005,27 +1082,162 @@
         }
       }
 
-      /* ── Sticky bar: hide after user scrolls past cards section ── */
-      var stickyBar    = document.getElementById('mw-sticky-bar');
-      var cardsSection = document.getElementById('packages');
-
-      if (stickyBar && cardsSection && hasIO) {
-        var stickyIO = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            /* boundingClientRect.bottom < 0 means element is above viewport */
-            if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
-              stickyBar.classList.add('hidden');
-            } else {
-              stickyBar.classList.remove('hidden');
-            }
-          });
-        }, { threshold: 0 });
-
-        stickyIO.observe(cardsSection);
-      }
-
     }());
   </script>
+
+<script src="/assets/js/cookie-consent.js"></script>
+
+<style>
+  /* ── Bsport subscription modal ─────────────────────── */
+  .bsport-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    background: rgba(10, 10, 8, 0.85);
+  }
+  .bsport-modal-overlay.is-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .bsport-modal-frame {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    max-height: calc(100vh - 48px);
+    max-height: calc(100dvh - 48px);
+    background: #F5F0E8;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .bsport-modal-close {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    width: 44px;
+    height: 44px;
+    background: #0A0A08;
+    color: #F5F0E8;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+  .bsport-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 56px 16px 24px;
+  }
+  @media (max-width: 768px) {
+    .bsport-modal-overlay.is-open { padding: 0; }
+    .bsport-modal-frame {
+      max-height: 100vh;
+      max-height: 100dvh;
+      width: 100%;
+      height: 100%;
+    }
+    .bsport-modal-close {
+      width: 48px;
+      height: 48px;
+    }
+  }
+</style>
+
+<!-- ═══════ BSPORT SUBSCRIPTION WIDGET MODAL ═══════ -->
+<div id="bsport-sub-modal" class="bsport-modal-overlay"
+     role="dialog" aria-modal="true" aria-label="Mitgliedschaft wählen" aria-hidden="true">
+  <div class="bsport-modal-frame">
+    <button id="bsport-sub-modal-close" class="bsport-modal-close" aria-label="Modal schließen">&#215;</button>
+    <div class="bsport-modal-content">
+      <div id="bsport-widget-342467"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BSPORT — CDN loader (guards against double-load) -->
+<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+
+<!-- BSPORT — MountBsportWidget helper with retry -->
+<script id="bsport-widget-mount">
+function MountBsportWidget(config, repeat) {
+  repeat = repeat || 1;
+  if (repeat > 50) { return; }
+  if (!window.BsportWidget) {
+    return setTimeout(function () { MountBsportWidget(config, repeat + 1); }, 100 * repeat || 1);
+  }
+  BsportWidget.mount(config);
+}
+</script>
+
+<!-- BSPORT — Mount subscription widget + modal open/close logic -->
+<script>
+(function () {
+  'use strict';
+
+  if (document.getElementById('bsport-widget-342467')) {
+    MountBsportWidget({
+      parentElement: 'bsport-widget-342467',
+      companyId: 5473,
+      franchiseId: null,
+      dialogMode: 3,
+      widgetType: 'subscription',
+      showFab: false,
+      fullScreenPopup: false,
+      styles: undefined,
+      config: { subscription: {} }
+    });
+  }
+
+  var modal   = document.getElementById('bsport-sub-modal');
+  var closeBtn = document.getElementById('bsport-sub-modal-close');
+
+  window.openBsportModal = function (e) {
+    if (e) e.preventDefault();
+    if (!modal) { return true; } // fallback: let the link open
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow            = 'hidden';
+    document.body.classList.add('bsport-modal-open');
+    modal.classList.add('is-open');
+    modal.removeAttribute('aria-hidden');
+    return false;
+  };
+
+  window.closeBsportModal = function () {
+    if (!modal) { return; }
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('bsport-modal-open');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow            = '';
+  };
+
+  if (closeBtn) { closeBtn.addEventListener('click', window.closeBsportModal); }
+
+  // Backdrop click
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) { window.closeBsportModal(); }
+    });
+  }
+
+  // Escape key
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && modal && modal.classList.contains('is-open')) {
+      window.closeBsportModal();
+    }
+  });
+
+}());
+</script>
 
 </body>
 </html>

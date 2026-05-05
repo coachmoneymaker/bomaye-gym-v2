@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Personal Training Boxen München | Bomaye Gym</title>
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
   <meta name="description" content="Personal Training im Boxen in München im Bomaye Gym. Individuelles Coaching für Technik, Fitness und Performance." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#080808" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Personal Training Boxen München | Bomaye Gym" />
@@ -23,7 +25,7 @@
   <link rel="canonical" href="https://www.bomayegym.com/personal-training-boxen-muenchen" />
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
   <!-- Fonts -->
@@ -39,16 +41,17 @@
   <!-- Site styles -->
   <link rel="stylesheet" href="/assets/css/style.css" />
 
-  <!-- Schema.org: LocalBusiness / ExerciseGym -->
+  <!-- Schema.org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ExerciseGym",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
     "name": "BOMAYE GYM MUNICH",
-    "description": "Personal Training im Boxen in München. Individuelles Coaching für Technik, Fitness und Performance im Bomaye Gym, Pineapple Park München.",
-    "url": "https://www.bomayegym.com/personal-training-boxen-muenchen",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
+    "url": "https://www.bomayegym.com",
     "email": "support@bomayegym.com",
-    "telephone": "+4917621932243",
+    "telephone": "+491737513627",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
@@ -56,7 +59,7 @@
       "postalCode": "80639",
       "addressCountry": "DE"
     },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.1408, "longitude": 11.5358 },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
@@ -276,7 +279,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -291,7 +294,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN — AB 14,90€</a>
     </nav>
 
     <button class="burger" onclick="togglePageMenu()" aria-label="Menü" aria-expanded="false" id="page-burger-btn" type="button">
@@ -310,13 +313,15 @@
   <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
   <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
-  <button class="btn btn--gold mn-cta" onclick="togglePageMenu(); openBooking();" type="button" style="--mn-i:5">
+  <div class="mn-divider"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:5"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <button class="btn btn--gold mn-cta" onclick="togglePageMenu(); openBooking();" type="button" style="--mn-i:6">
     MITGLIED WERDEN
   </button>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
-<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+<a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="fa-brands fa-whatsapp"></i>
 </a>
@@ -526,7 +531,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
@@ -534,7 +539,7 @@
             <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
         <div class="footer-col">
@@ -544,8 +549,7 @@
             <li><a href="/kurse">Kickboxing</a></li>
             <li><a href="/kurse">Women's Boxing</a></li>
             <li><a href="/kurse">Youth Boxing</a></li>
-            <li><a href="/kurse">Personal Training</a></li>
-            <li><a href="/kurse">Corporate Boxing</a></li>
+            <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -553,7 +557,7 @@
           <ul class="footer-links">
             <li><a href="/about">Unsere DNA</a></li>
             <li><a href="/coaches">Coaches</a></li>
-            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/mitglied-werden">Preise</a></li>
             <li><a href="/faq">FAQ</a></li>
             <li><a href="/#location">Standort</a></li>
           </ul>
@@ -561,7 +565,7 @@
         <div class="footer-col">
           <h4>KONTAKT</h4>
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
           <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
@@ -571,16 +575,10 @@
         <p style="font-size:0.8rem;color:rgba(255,255,255,0.35);line-height:1.7;">
           Bomaye Gym München – Personal Training Boxen in München. Individuelles 1:1 Coaching für Technik, Fitness und Performance im Pineapple Park, Wilhelm-Hale-Straße 44, 80639 München.
         </p>
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.25);margin-top:0.5rem;">
-          <a href="/boxgym-muenchen" style="color:inherit;">Boxgym München</a> ·
-          <a href="/boxtraining-muenchen" style="color:inherit;">Boxtraining München</a> ·
-          <a href="/boxen-lernen-muenchen" style="color:inherit;">Boxen lernen München</a> ·
-          <a href="/fitnessboxen-muenchen" style="color:inherit;">Fitnessboxen München</a> ·
-          <a href="/personal-training-boxen-muenchen" style="color:inherit;">Personal Training Boxen München</a>
-        </p>
+        <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:680px;margin-top:0.75rem;">Als <a href="/about" class="footer-seo-link">Boxgym in München</a> bieten wir <a href="/boxtraining-muenchen" class="footer-seo-link">Boxtraining</a> für Einsteiger, <a href="/fitnessboxen-muenchen" class="footer-seo-link">Fitnessboxen</a> für ambitionierte Hobbysportler und <a href="/personal-training-boxen-muenchen" class="footer-seo-link">Personal Training</a> auf Wettkampfniveau – mitten in Neuhausen-Nymphenburg, 5 Minuten vom S-Bahnhof Hirschgarten.</p>
       </div>
       <div class="footer-contactbar">
-        <a href="tel:+4917621932243">0176 2193 2243</a>
+        <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a>
         <span class="dot">•</span>
         <a href="mailto:support@bomayegym.com">support@bomayegym.com</a>
         <span class="dot">•</span>
