@@ -385,29 +385,34 @@
     /* Two-view slot */
     .pt-modal-view { display: none; }
     .pt-modal-view--active { display: block; }
-    /* Widget container */
+    /* Widget container — the ONLY scroll surface; iframe renders at full height */
     .pt-modal-body {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
+      overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
       position: relative;
       background: #F5F0E8;
     }
-    /* Bsport iframe wrapper — matches spec exactly */
-    .pt-bsport-wrap {
-      overflow: hidden !important;
-      position: relative;
-      padding-top: 125vh;
-    }
-    .pt-bsport-wrap iframe {
-      position: absolute;
-      overflow-x: hidden !important;
-      height: 100%;
+    /* Bsport iframe wrapper — no internal scroll, modal-body scrolls */
+    .pt-iframe-wrapper {
       width: 100%;
-      left: 0;
-      top: 0;
+      position: relative;
+      min-height: 600px;
+    }
+    .pt-bsport-iframe {
+      width: 100%;
+      height: 1800px; /* initial; auto-resized by JS to content height */
       border: 0;
+      display: block;
+      overflow: hidden;
+    }
+    @supports (-webkit-touch-callout: none) {
+      /* iOS: GPU-accelerate scroll layer; restrict iframe touch axis to vertical */
+      .pt-modal-body { -webkit-transform: translateZ(0); transform: translateZ(0); }
+      .pt-bsport-iframe { touch-action: pan-y; }
     }
     /* Modal footer text */
     .pt-modal-footer {
@@ -1142,12 +1147,14 @@ function _ptMountWidget() {
   if (!view) return;
 
   var wrap = document.createElement('div');
-  wrap.className = 'pt-bsport-wrap';
+  wrap.className = 'pt-iframe-wrapper';
 
   var iframe = document.createElement('iframe');
+  iframe.id = 'pt-pass-iframe';
+  iframe.className = 'pt-bsport-iframe';
   iframe.setAttribute('frameborder', '0');
   iframe.setAttribute('allowfullscreen', '');
-  iframe.style.cssText = 'position:absolute;overflow-x:hidden!important;height:100%;width:100%;left:0;top:0;border:0;';
+  iframe.setAttribute('scrolling', 'no');
 
   iframe.srcdoc = _ptBomayeWidgetCSS
     + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
@@ -1157,6 +1164,7 @@ function _ptMountWidget() {
 
   wrap.appendChild(iframe);
   view.appendChild(wrap);
+  _ptStartIframeAutoResize('pt-pass-iframe');
 }
 
 /* ── Modal: Bsport CALENDAR widget — view 2 (lazy, mounts on first tab switch) ── */
@@ -1169,12 +1177,14 @@ function _ptMountCalendarWidget() {
   if (!view) return;
 
   var wrap = document.createElement('div');
-  wrap.className = 'pt-bsport-wrap';
+  wrap.className = 'pt-iframe-wrapper';
 
   var iframe = document.createElement('iframe');
+  iframe.id = 'pt-cal-iframe';
+  iframe.className = 'pt-bsport-iframe';
   iframe.setAttribute('frameborder', '0');
   iframe.setAttribute('allowfullscreen', '');
-  iframe.style.cssText = 'position:absolute;overflow-x:hidden!important;height:100%;width:100%;left:0;top:0;border:0;';
+  iframe.setAttribute('scrolling', 'no');
 
   iframe.srcdoc = _ptBomayeWidgetCSS
     + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
@@ -1184,6 +1194,7 @@ function _ptMountCalendarWidget() {
 
   wrap.appendChild(iframe);
   view.appendChild(wrap);
+  _ptStartIframeAutoResize('pt-cal-iframe');
 }
 
 /* ── Modal: tab switcher ── */
@@ -1227,6 +1238,8 @@ var _ptUrlPoller           = null;
 
 /* Bomaye brand CSS injected into every Bsport widget srcdoc */
 var _ptBomayeWidgetCSS = '<style>'
+  + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;-webkit-overflow-scrolling:auto!important;}'
+  + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;}'
   + 'button,.MuiButton-root,[role="button"],.MuiButtonBase-root{border-radius:0!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;box-shadow:none!important;}'
   + '.MuiButton-contained,.MuiButton-containedPrimary{background-color:#C9A84C!important;color:#0A0A08!important;border:2px solid #C9A84C!important;}'
   + '.MuiButton-text,.MuiButton-outlined{color:#0A0A08!important;background:transparent!important;border:2px solid rgba(10,10,8,.2)!important;}'
@@ -1464,7 +1477,88 @@ function _ptCleanupAutoSwitch() {
   _ptStopMutationObserver();
   _ptStopClickDetection();
   _ptHideFallbackButton();
+  _ptStopIframeAutoResize('pt-pass-iframe');
+  _ptStopIframeAutoResize('pt-cal-iframe');
   _ptAutoSwitchTriggered = false;
+}
+
+/* ── Iframe auto-resize: srcdoc iframes are same-origin → can measure content ── */
+var _ptIframePollIntervals = {};
+var _ptIframeObservers     = {};
+
+function _ptResizeIframeToContent(id) {
+  var iframe = document.getElementById(id);
+  if (!iframe) return;
+  try {
+    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if (!doc || !doc.body) return;
+    var body = doc.body;
+    var html = doc.documentElement;
+    var h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    if (h > 100) {
+      var newH = h + 60;
+      if (Math.abs(parseInt(iframe.style.height || '0') - newH) > 10) {
+        iframe.style.height = newH + 'px';
+        console.log('[Bomaye] Iframe ' + id + ' resized to ' + newH + 'px');
+      }
+    }
+  } catch (e) { /* cross-origin nested iframe */ }
+}
+
+function _ptAttachIframeObserver(id) {
+  if (_ptIframeObservers[id]) return;
+  var iframe = document.getElementById(id);
+  if (!iframe || typeof MutationObserver === 'undefined') return;
+  try {
+    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if (!doc || !doc.body) return;
+    var obs = new MutationObserver(function () {
+      clearTimeout(_ptIframeObservers[id + '_t']);
+      _ptIframeObservers[id + '_t'] = setTimeout(function () { _ptResizeIframeToContent(id); }, 200);
+    });
+    obs.observe(doc.body, { childList: true, subtree: true, attributes: true, characterData: true });
+    _ptIframeObservers[id] = obs;
+  } catch (e) { /* cross-origin */ }
+}
+
+function _ptStartIframeAutoResize(id) {
+  _ptStopIframeAutoResize(id);
+  var iframe = document.getElementById(id);
+  if (!iframe) return;
+
+  iframe.addEventListener('load', function () {
+    _ptResizeIframeToContent(id);
+    _ptAttachIframeObserver(id);
+  });
+
+  /* Poll every 500ms for 30s — Bsport widget loads asynchronously */
+  var count = 0;
+  _ptIframePollIntervals[id] = setInterval(function () {
+    count++;
+    _ptResizeIframeToContent(id);
+    if (count === 1) _ptAttachIframeObserver(id); /* attach observer once doc exists */
+    if (count >= 60) _ptStopIframeAutoResize(id);
+  }, 500);
+}
+
+function _ptStopIframeAutoResize(id) {
+  if (_ptIframePollIntervals[id]) {
+    clearInterval(_ptIframePollIntervals[id]);
+    delete _ptIframePollIntervals[id];
+  }
+  if (_ptIframeObservers[id]) {
+    try { _ptIframeObservers[id].disconnect(); } catch (e) {}
+    delete _ptIframeObservers[id];
+  }
+}
+
+/* ── iOS Safari scroll fix: reinforce modal-body as sole scroll container ── */
+function _ptApplyIosScrollFix() {
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) return;
+  var modalBody = document.querySelector('.pt-modal-body');
+  if (!modalBody) return;
+  modalBody.style.webkitOverflowScrolling = 'touch';
+  modalBody.style.overflowY = 'auto';
 }
 
 /* ── Modal: open / close ── */
@@ -1475,6 +1569,7 @@ function ptOpenModal() {
   modal.classList.add('open');
   _ptLockBody();
   _ptInitAutoSwitchDetection();
+  _ptApplyIosScrollFix();
   /* Dispatch GTM-trackable event */
   modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
 }
