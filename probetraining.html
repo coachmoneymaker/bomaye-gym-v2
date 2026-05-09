@@ -400,19 +400,39 @@
     .pt-iframe-wrapper {
       width: 100%;
       position: relative;
-      min-height: 600px;
+    }
+    /* Loading skeleton — visible only while iframe height is 0 */
+    .pt-iframe-wrapper:has(iframe[style*="height: 0px"]),
+    .pt-iframe-wrapper:has(iframe[style*="height: 0"]):not(:has(iframe[style*="height: 0p"])) {
+      min-height: 200px;
+    }
+    .pt-iframe-wrapper:has(iframe[style*="height: 0px"])::before {
+      content: "Lädt\2026";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(10,10,8,0.3);
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      pointer-events: none;
     }
     .pt-bsport-iframe {
       width: 100%;
-      height: 1800px; /* initial; auto-resized by JS to content height */
+      height: 0; /* starts at 0 — JS grows it to content height immediately */
+      min-height: 0;
       border: 0;
       display: block;
       overflow: hidden;
+      -webkit-overflow-scrolling: auto;
+      pointer-events: auto;
+      touch-action: pan-y;
+      transition: height 0.15s ease-out;
     }
     @supports (-webkit-touch-callout: none) {
-      /* iOS: GPU-accelerate scroll layer; restrict iframe touch axis to vertical */
+      /* iOS: GPU-accelerate modal scroll layer */
       .pt-modal-body { -webkit-transform: translateZ(0); transform: translateZ(0); }
-      .pt-bsport-iframe { touch-action: pan-y; }
     }
     /* Modal footer text */
     .pt-modal-footer {
@@ -1238,9 +1258,16 @@ var _ptUrlPoller           = null;
 
 /* Bomaye brand CSS injected into every Bsport widget srcdoc */
 var _ptBomayeWidgetCSS = '<style>'
-  + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;-webkit-overflow-scrolling:auto!important;}'
-  + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;}'
-  + 'button,.MuiButton-root,[role="button"],.MuiButtonBase-root{border-radius:0!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;box-shadow:none!important;}'
+  /* Root: no phantom space, no internal scroll */
+  + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;}'
+  /* Widget containers */
+  + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;min-height:0!important;}'
+  /* Kill all internal scroll containers that Bsport may create */
+  + '*{overflow:visible!important;max-height:none!important;}'
+  /* Specifically override Bsport inline-style scroll containers */
+  + 'div[style*="overflow"]{overflow:visible!important;max-height:none!important;height:auto!important;}'
+  /* Bomaye brand overrides */
+  + 'button,.MuiButton-root,[role="button"],.MuiButtonBase-root{border-radius:0!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;box-shadow:none!important;overflow:hidden!important;}'
   + '.MuiButton-contained,.MuiButton-containedPrimary{background-color:#C9A84C!important;color:#0A0A08!important;border:2px solid #C9A84C!important;}'
   + '.MuiButton-text,.MuiButton-outlined{color:#0A0A08!important;background:transparent!important;border:2px solid rgba(10,10,8,.2)!important;}'
   + '.MuiCard-root,.MuiPaper-root{border-radius:0!important;box-shadow:none!important;}'
@@ -1483,82 +1510,145 @@ function _ptCleanupAutoSwitch() {
 }
 
 /* ── Iframe auto-resize: srcdoc iframes are same-origin → can measure content ── */
-var _ptIframePollIntervals = {};
-var _ptIframeObservers     = {};
 
-function _ptResizeIframeToContent(id) {
-  var iframe = document.getElementById(id);
-  if (!iframe) return;
+function _ptResizeIframeToContent(iframe) {
+  /* Accept element or id string */
+  if (typeof iframe === 'string') iframe = document.getElementById(iframe);
+  if (!iframe) return false;
+  var doc;
   try {
-    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-    if (!doc || !doc.body) return;
-    var body = doc.body;
-    var html = doc.documentElement;
-    var h = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    if (h > 100) {
-      var newH = h + 60;
-      if (Math.abs(parseInt(iframe.style.height || '0') - newH) > 10) {
-        iframe.style.height = newH + 'px';
-        console.log('[Bomaye] Iframe ' + id + ' resized to ' + newH + 'px');
-      }
+    doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+  } catch (e) { return false; }
+  if (!doc || !doc.body) return false;
+
+  var body = doc.body;
+  var html = doc.documentElement;
+
+  /* getBoundingClientRect gives the real rendered height including flex / grid children */
+  var bodyRect  = body.getBoundingClientRect().height;
+  var htmlRect  = html.getBoundingClientRect().height;
+  var contentH  = Math.max(
+    body.scrollHeight, body.offsetHeight, bodyRect,
+    html.clientHeight, html.scrollHeight, html.offsetHeight, htmlRect
+  );
+
+  /* Walk every element and find the deepest bottom edge */
+  var deepest = 0;
+  try {
+    var els = body.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) {
+      var r = els[i].getBoundingClientRect();
+      var b = r.top + r.height;
+      if (b > deepest && r.height > 0) deepest = b;
     }
-  } catch (e) { /* cross-origin nested iframe */ }
+  } catch (e) {}
+
+  var finalH = Math.max(contentH, deepest);
+  var currentH = parseInt(iframe.style.height) || 0;
+
+  if (finalH > 50 && Math.abs(finalH - currentH) > 20) {
+    iframe.style.height = finalH + 'px';
+    console.log('[Bomaye] ' + (iframe.id || 'iframe') + ' ' + currentH + 'px → ' + finalH + 'px');
+    return true;
+  }
+  return false;
 }
 
-function _ptAttachIframeObserver(id) {
-  if (_ptIframeObservers[id]) return;
-  var iframe = document.getElementById(id);
-  if (!iframe || typeof MutationObserver === 'undefined') return;
-  try {
-    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-    if (!doc || !doc.body) return;
-    var obs = new MutationObserver(function () {
-      clearTimeout(_ptIframeObservers[id + '_t']);
-      _ptIframeObservers[id + '_t'] = setTimeout(function () { _ptResizeIframeToContent(id); }, 200);
-    });
-    obs.observe(doc.body, { childList: true, subtree: true, attributes: true, characterData: true });
-    _ptIframeObservers[id] = obs;
-  } catch (e) { /* cross-origin */ }
-}
-
-function _ptStartIframeAutoResize(id) {
-  _ptStopIframeAutoResize(id);
-  var iframe = document.getElementById(id);
+function _ptStartIframeAutoResize(iframeId) {
+  _ptStopIframeAutoResize(iframeId);
+  var iframe = document.getElementById(iframeId);
   if (!iframe) return;
 
-  iframe.addEventListener('load', function () {
-    _ptResizeIframeToContent(id);
-    _ptAttachIframeObserver(id);
+  var startTime = Date.now();
+
+  function tick() {
+    if (!document.getElementById(iframeId)) return;
+    var elapsed = Date.now() - startTime;
+    _ptResizeIframeToContent(iframe);
+    var next = elapsed < 5000 ? 100 : elapsed < 15000 ? 300 : elapsed < 30000 ? 1000 : -1;
+    if (next === -1) return;
+    iframe._ptResizeTimer = setTimeout(tick, next);
+  }
+  tick();
+
+  /* Load-event bursts */
+  iframe.addEventListener('load', function onLoad() {
+    setTimeout(function () { _ptResizeIframeToContent(iframe); }, 100);
+    setTimeout(function () { _ptResizeIframeToContent(iframe); }, 500);
+    setTimeout(function () { _ptResizeIframeToContent(iframe); }, 1500);
+
+    /* ResizeObserver on iframe body — fires whenever content layout changes */
+    try {
+      var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+      if (!doc || !doc.body) return;
+
+      if (typeof ResizeObserver !== 'undefined') {
+        var ro = new ResizeObserver(function () { _ptResizeIframeToContent(iframe); });
+        ro.observe(doc.body);
+        ro.observe(doc.documentElement);
+        Array.prototype.forEach.call(doc.body.children, function (c) { try { ro.observe(c); } catch (e) {} });
+        iframe._ptResizeObserver = ro;
+      }
+
+      /* MutationObserver: re-attach ResizeObserver to new top-level children Bsport adds */
+      var mo = new MutationObserver(function () {
+        if (iframe._ptResizeObserver) {
+          Array.prototype.forEach.call(doc.body.children, function (c) {
+            try { iframe._ptResizeObserver.observe(c); } catch (e) {}
+          });
+        }
+        _ptResizeIframeToContent(iframe);
+      });
+      mo.observe(doc.body, { childList: true, subtree: true });
+      iframe._ptMutationObserver = mo;
+    } catch (e) { /* cross-origin nested resource */ }
   });
-
-  /* Poll every 500ms for 30s — Bsport widget loads asynchronously */
-  var count = 0;
-  _ptIframePollIntervals[id] = setInterval(function () {
-    count++;
-    _ptResizeIframeToContent(id);
-    if (count === 1) _ptAttachIframeObserver(id); /* attach observer once doc exists */
-    if (count >= 60) _ptStopIframeAutoResize(id);
-  }, 500);
 }
 
-function _ptStopIframeAutoResize(id) {
-  if (_ptIframePollIntervals[id]) {
-    clearInterval(_ptIframePollIntervals[id]);
-    delete _ptIframePollIntervals[id];
-  }
-  if (_ptIframeObservers[id]) {
-    try { _ptIframeObservers[id].disconnect(); } catch (e) {}
-    delete _ptIframeObservers[id];
-  }
+function _ptStopIframeAutoResize(iframeId) {
+  var iframe = document.getElementById(iframeId);
+  if (!iframe) return;
+  if (iframe._ptResizeTimer)    { clearTimeout(iframe._ptResizeTimer);          delete iframe._ptResizeTimer; }
+  if (iframe._ptResizeObserver) { iframe._ptResizeObserver.disconnect();         delete iframe._ptResizeObserver; }
+  if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect();     delete iframe._ptMutationObserver; }
 }
 
-/* ── iOS Safari scroll fix: reinforce modal-body as sole scroll container ── */
+/* ── iOS Safari: forward iframe touchmove 1:1 to modal-body scroll ── */
 function _ptApplyIosScrollFix() {
   if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) return;
   var modalBody = document.querySelector('.pt-modal-body');
   if (!modalBody) return;
   modalBody.style.webkitOverflowScrolling = 'touch';
   modalBody.style.overflowY = 'auto';
+
+  /* Attach touch-forwarding to every iframe wrapper (current + future) */
+  function attachToWrapper(wrapper) {
+    if (wrapper._ptTouchBound) return;
+    wrapper._ptTouchBound = true;
+    var lastY = 0;
+    wrapper.addEventListener('touchstart', function (e) {
+      lastY = e.touches[0].clientY;
+    }, { passive: true });
+    wrapper.addEventListener('touchmove', function (e) {
+      var delta = lastY - e.touches[0].clientY;
+      modalBody.scrollTop += delta;
+      lastY = e.touches[0].clientY;
+    }, { passive: true });
+  }
+
+  document.querySelectorAll('.pt-iframe-wrapper').forEach(attachToWrapper);
+
+  /* Also catch wrappers added later (lazy-mounted widgets) */
+  if (typeof MutationObserver !== 'undefined') {
+    var mo = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (node.classList && node.classList.contains('pt-iframe-wrapper')) attachToWrapper(node);
+        });
+      });
+    });
+    mo.observe(modalBody, { childList: true, subtree: true });
+  }
 }
 
 /* ── Modal: open / close ── */
