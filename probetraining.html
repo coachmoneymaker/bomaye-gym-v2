@@ -469,9 +469,16 @@
       transition: background 0.2s ease, transform 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      animation: ptContinuePulse 2s ease-in-out infinite;
+      /* no animation on base — only fires when .visible is added */
     }
-    .pt-continue-button.visible { display: flex; }
+    .pt-continue-button.visible {
+      display: flex;
+      animation: ptContinueFadeIn 0.3s ease-out forwards, ptContinuePulse 2s ease-in-out 0.3s infinite;
+    }
+    @keyframes ptContinueFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .pt-continue-button:hover { background: #B89940; transform: translateY(-1px); }
     .pt-continue-button:active { transform: scale(0.98); }
     .pt-continue-arrow { transition: transform 0.2s ease; display: inline-block; }
@@ -1235,6 +1242,7 @@ function ptSwitchTab(tab) {
     _ptStartDomPolling();
     _ptStartMutationObserver();
     _ptStartClickDetection();
+    _ptStartIframeDomScanning();
     _ptStartFallbackButtonTimer();
   } else {
     calView.className  = 'pt-modal-view pt-modal-view--active';
@@ -1275,10 +1283,20 @@ var _ptBomayeWidgetCSS = '<style>'
   + '.MuiChip-root{border-radius:0!important;background-color:rgba(201,168,76,.1)!important;color:#0A0A08!important;border:1px solid #C9A84C!important;}'
   + '</style>';
 
+function _ptScrollIframeToTop() {
+  try {
+    var iframe = document.getElementById('pt-pass-iframe');
+    if (iframe && iframe.contentWindow) iframe.contentWindow.scrollTo(0, 0);
+  } catch (e) { /* cross-origin nested resource — silently skip */ }
+  var modalBody = document.querySelector('.pt-modal-body');
+  if (modalBody) modalBody.scrollTop = 0;
+}
+
 function _ptTriggerAutoSwitch() {
   if (_ptAutoSwitchTriggered) return;
   _ptAutoSwitchTriggered = true;
   console.log('[Bomaye] Pass purchase confirmed — switching to calendar in 3s');
+  _ptScrollIframeToTop();
   _ptHideFallbackButton();
   _ptShowSuccessBanner();
   setTimeout(function () { ptSwitchTab('cal'); }, 3000);
@@ -1343,13 +1361,14 @@ function _ptStopUrlPolling() {
 
 /* ── DOM text polling (srcdoc iframes share parent origin → full DOM access) ── */
 var _ptDomPoller = null;
-var _ptSuccessPhrases = ['Gl\xFCckwunsch', 'Kurspass gebucht', 'Mein Kurspass', 'Einen Kurs buchen'];
+/* Lowercase phrases — matched against lowercased iframe text (case-insensitive) */
+var _ptSuccessPhrases = ['gl\xFCckwunsch', 'kurspass gebucht', 'mein kurspass', 'einen kurs buchen'];
 
 function _ptCheckIframeText(iframe) {
   try {
     var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
     if (!doc || !doc.body) return false;
-    var text = doc.body.innerText || doc.body.textContent || '';
+    var text = (doc.body.innerText || doc.body.textContent || '').toLowerCase();
     for (var i = 0; i < _ptSuccessPhrases.length; i++) {
       if (text.indexOf(_ptSuccessPhrases[i]) !== -1) return true;
     }
@@ -1377,11 +1396,56 @@ function _ptStartDomPolling() {
     } catch (e) {
       console.warn('[Bomaye] DOM polling error (non-fatal):', e);
     }
-  }, 1000);
+  }, 300);
 }
 
 function _ptStopDomPolling() {
   if (_ptDomPoller) { clearInterval(_ptDomPoller); _ptDomPoller = null; }
+}
+
+/* ── Layer 6: MutationObserver inside the pass iframe's own contentDocument ──
+   Catches Bsport React re-renders the outer MutationObserver (on .pt-modal-body)
+   can't see, because those mutations happen inside the iframe document tree.   ── */
+var _ptIframeScanObserver = null;
+
+function _ptStartIframeDomScanning() {
+  _ptStopIframeDomScanning();
+
+  function attach() {
+    var iframe = document.getElementById('pt-pass-iframe');
+    if (!iframe) return;
+    try {
+      var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+      if (!doc || !doc.body) { setTimeout(attach, 500); return; }
+      _ptIframeScanObserver = new MutationObserver(function () {
+        if (_ptAutoSwitchTriggered) return;
+        if (_ptCheckIframeText(iframe)) {
+          console.log('[Bomaye] Layer 6: success text detected via iframe contentDocument MutationObserver');
+          _ptScrollIframeToTop();
+          _ptTriggerAutoSwitch();
+        }
+      });
+      _ptIframeScanObserver.observe(doc.body, { childList: true, subtree: true, characterData: true });
+      console.log('[Bomaye] Layer 6 attached');
+    } catch (e) { /* cross-origin nested resource — silently fall back to other layers */ }
+  }
+
+  var iframe = document.getElementById('pt-pass-iframe');
+  if (!iframe) { setTimeout(attach, 1000); return; }
+
+  try {
+    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if (doc && doc.readyState === 'complete' && doc.body) {
+      attach();
+    } else {
+      iframe.addEventListener('load', attach, { once: true });
+      setTimeout(attach, 3000); /* backstop if load already fired */
+    }
+  } catch (e) { setTimeout(attach, 1000); }
+}
+
+function _ptStopIframeDomScanning() {
+  if (_ptIframeScanObserver) { _ptIframeScanObserver.disconnect(); _ptIframeScanObserver = null; }
 }
 
 /* ── Fallback button: visible after 5s if auto-detection hasn't fired ── */
@@ -1391,13 +1455,50 @@ var _ptTabAttentionTimer   = null;
 
 function _ptStartFallbackButtonTimer() {
   if (_ptFallbackButtonShown) return;
-  _ptIframeActivityTimer = setTimeout(function () { _ptShowFallbackButton(); }, 5000);
-  _ptTabAttentionTimer   = setTimeout(function () {
-    if (!_ptAutoSwitchTriggered) {
-      var calTab = document.getElementById('pt-tab-cal');
-      if (calTab) calTab.classList.add('pt-tab-attention');
+  if (_ptIframeActivityTimer) { clearTimeout(_ptIframeActivityTimer); _ptIframeActivityTimer = null; }
+  if (_ptTabAttentionTimer)   { clearTimeout(_ptTabAttentionTimer);   _ptTabAttentionTimer   = null; }
+
+  function scheduleTimers() {
+    /* 5s after iframe content loads, show button if no auto-switch yet */
+    _ptIframeActivityTimer = setTimeout(function () {
+      if (!_ptAutoSwitchTriggered) _ptShowFallbackButton();
+    }, 5000);
+    /* 8s after load, add attention pulse to calendar tab */
+    _ptTabAttentionTimer = setTimeout(function () {
+      if (!_ptAutoSwitchTriggered) {
+        var calTab = document.getElementById('pt-tab-cal');
+        if (calTab) calTab.classList.add('pt-tab-attention');
+      }
+    }, 8000);
+  }
+
+  var iframe = document.getElementById('pt-pass-iframe');
+  if (!iframe) {
+    /* Widget not yet mounted — absolute fallback from call time */
+    _ptIframeActivityTimer = setTimeout(function () {
+      if (!_ptAutoSwitchTriggered) _ptShowFallbackButton();
+    }, 12000);
+    return;
+  }
+
+  try {
+    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if (doc && doc.readyState === 'complete' && doc.body) {
+      scheduleTimers(); /* already loaded — start 5s countdown now */
+    } else {
+      /* Wait for iframe load, then start 5s countdown */
+      iframe.addEventListener('load', function onLoad() {
+        iframe.removeEventListener('load', onLoad);
+        scheduleTimers();
+      });
+      /* Hard cap: show after 12s regardless */
+      _ptIframeActivityTimer = setTimeout(function () {
+        if (!_ptAutoSwitchTriggered) _ptShowFallbackButton();
+      }, 12000);
     }
-  }, 8000);
+  } catch (e) {
+    scheduleTimers();
+  }
 }
 
 function _ptShowFallbackButton() {
@@ -1491,6 +1592,7 @@ function _ptInitAutoSwitchDetection() {
   _ptStartDomPolling();
   _ptStartMutationObserver();
   _ptStartClickDetection();
+  _ptStartIframeDomScanning();
   _ptStartFallbackButtonTimer();
 }
 
@@ -1503,6 +1605,7 @@ function _ptCleanupAutoSwitch() {
   _ptStopDomPolling();
   _ptStopMutationObserver();
   _ptStopClickDetection();
+  _ptStopIframeDomScanning();
   _ptHideFallbackButton();
   _ptStopIframeAutoResize('pt-pass-iframe');
   _ptStopIframeAutoResize('pt-cal-iframe');
