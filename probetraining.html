@@ -311,6 +311,7 @@
       background: #0A0A08;
       border-bottom: 1px solid rgba(201,168,76,0.3);
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
@@ -422,6 +423,45 @@
       text-align: center;
       line-height: 1.5;
       margin: 0;
+    }
+    /* Fallback continue button — shown after 5s if auto-detection hasn't fired */
+    .pt-continue-button {
+      display: none;
+      flex: 0 0 100%;
+      padding: 14px 20px;
+      background: #C9A84C;
+      color: #0A0A08;
+      border: none;
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.2s ease, transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      animation: ptContinuePulse 2s ease-in-out infinite;
+    }
+    .pt-continue-button.visible { display: flex; }
+    .pt-continue-button:hover { background: #B89940; transform: translateY(-1px); }
+    .pt-continue-button:active { transform: scale(0.98); }
+    .pt-continue-arrow { transition: transform 0.2s ease; display: inline-block; }
+    .pt-continue-button:hover .pt-continue-arrow { transform: translateX(4px); }
+    @keyframes ptContinuePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+      50%       { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+    }
+    /* Tab 2 attention pulse when user is stuck on tab 1 */
+    #pt-tab-cal.pt-tab-attention {
+      animation: ptTabAttention 2s ease-in-out infinite;
+    }
+    @keyframes ptTabAttention {
+      0%, 100% { color: rgba(10,10,8,0.5); }
+      50%       { color: #C9A84C; }
     }
     /* Success banner — slides down from modal top after pass purchase */
     @keyframes ptBannerSlideDown {
@@ -640,6 +680,15 @@
               aria-label="Schließen"
               type="button">
         <i class="fa-solid fa-xmark"></i>
+      </button>
+      <button id="pt-continue-button"
+              class="pt-continue-button"
+              onclick="ptSwitchTab('cal')"
+              aria-hidden="true"
+              type="button">
+        <span class="pt-continue-icon">✓</span>
+        <span class="pt-continue-text">WEITER ZU SCHRITT 2</span>
+        <span class="pt-continue-arrow">→</span>
       </button>
     </div>
 
@@ -1151,7 +1200,11 @@ function ptSwitchTab(tab) {
     tabCal.className   = 'pt-modal-tab';
     tabCal.setAttribute('aria-selected', 'false');
     _ptAutoSwitchTriggered = false;
-    _ptStartDomPolling(); /* restart polling so re-purchase can re-trigger */
+    _ptHideFallbackButton();
+    _ptStartDomPolling();
+    _ptStartMutationObserver();
+    _ptStartClickDetection();
+    _ptStartFallbackButtonTimer();
   } else {
     calView.className  = 'pt-modal-view pt-modal-view--active';
     passView.className = 'pt-modal-view';
@@ -1159,7 +1212,10 @@ function ptSwitchTab(tab) {
     tabCal.setAttribute('aria-selected', 'true');
     tabPass.className  = 'pt-modal-tab';
     tabPass.setAttribute('aria-selected', 'false');
-    _ptStopDomPolling(); /* no need to poll when user is on calendar tab */
+    _ptHideFallbackButton();
+    _ptStopDomPolling();
+    _ptStopMutationObserver();
+    _ptStopClickDetection();
     _ptMountCalendarWidget();
   }
 }
@@ -1183,6 +1239,7 @@ function _ptTriggerAutoSwitch() {
   if (_ptAutoSwitchTriggered) return;
   _ptAutoSwitchTriggered = true;
   console.log('[Bomaye] Pass purchase confirmed — switching to calendar in 3s');
+  _ptHideFallbackButton();
   _ptShowSuccessBanner();
   setTimeout(function () { ptSwitchTab('cal'); }, 3000);
 }
@@ -1287,12 +1344,114 @@ function _ptStopDomPolling() {
   if (_ptDomPoller) { clearInterval(_ptDomPoller); _ptDomPoller = null; }
 }
 
+/* ── Fallback button: visible after 5s if auto-detection hasn't fired ── */
+var _ptIframeActivityTimer = null;
+var _ptFallbackButtonShown = false;
+var _ptTabAttentionTimer   = null;
+
+function _ptStartFallbackButtonTimer() {
+  if (_ptFallbackButtonShown) return;
+  _ptIframeActivityTimer = setTimeout(function () { _ptShowFallbackButton(); }, 5000);
+  _ptTabAttentionTimer   = setTimeout(function () {
+    if (!_ptAutoSwitchTriggered) {
+      var calTab = document.getElementById('pt-tab-cal');
+      if (calTab) calTab.classList.add('pt-tab-attention');
+    }
+  }, 8000);
+}
+
+function _ptShowFallbackButton() {
+  var btn = document.getElementById('pt-continue-button');
+  if (btn && !_ptFallbackButtonShown) {
+    btn.classList.add('visible');
+    btn.setAttribute('aria-hidden', 'false');
+    _ptFallbackButtonShown = true;
+    console.log('[Bomaye] Fallback continue button shown');
+  }
+}
+
+function _ptHideFallbackButton() {
+  var btn = document.getElementById('pt-continue-button');
+  if (btn) { btn.classList.remove('visible'); btn.setAttribute('aria-hidden', 'true'); }
+  _ptFallbackButtonShown = false;
+  if (_ptIframeActivityTimer) { clearTimeout(_ptIframeActivityTimer); _ptIframeActivityTimer = null; }
+  if (_ptTabAttentionTimer)   { clearTimeout(_ptTabAttentionTimer);   _ptTabAttentionTimer   = null; }
+  var calTab = document.getElementById('pt-tab-cal');
+  if (calTab) calTab.classList.remove('pt-tab-attention');
+}
+
+/* ── MutationObserver: react to Bsport DOM changes + check iframe text ── */
+var _ptMutationObserver = null;
+
+function _ptCheckIframesRecursively(root) {
+  if (!root || !root.querySelectorAll) return;
+  var iframes = root.querySelectorAll('iframe');
+  for (var i = 0; i < iframes.length; i++) {
+    if (_ptCheckIframeText(iframes[i])) {
+      console.log('[Bomaye] Success text detected via MutationObserver + recursive iframe check');
+      _ptTriggerAutoSwitch();
+      return;
+    }
+  }
+}
+
+function _ptStartMutationObserver() {
+  _ptStopMutationObserver();
+  var modalBody = document.querySelector('.pt-modal-body');
+  if (!modalBody || typeof MutationObserver === 'undefined') return;
+  _ptMutationObserver = new MutationObserver(function () {
+    _ptCheckIframesRecursively(modalBody);
+  });
+  _ptMutationObserver.observe(modalBody, { childList: true, subtree: true, characterData: true });
+}
+
+function _ptStopMutationObserver() {
+  if (_ptMutationObserver) { _ptMutationObserver.disconnect(); _ptMutationObserver = null; }
+}
+
+/* ── Click detection: purchase button click → 6s delayed trigger ── */
+var _ptHandleModalClick = null;
+
+function _ptStartClickDetection() {
+  _ptStopClickDetection();
+  var modalBody = document.querySelector('.pt-modal-body');
+  if (!modalBody) return;
+  _ptHandleModalClick = function (e) {
+    var target = e.target;
+    if (!target) return;
+    var txt = ((target.textContent || target.innerText || '') + '').toUpperCase();
+    if (txt.indexOf('WARENKORB') !== -1 || txt.indexOf('HINZUF')    !== -1 ||
+        txt.indexOf('BEZAHLEN')  !== -1 || txt.indexOf('PURCHASE')  !== -1 ||
+        txt.indexOf('CONFIRM')   !== -1) {
+      console.log('[Bomaye] Purchase button click detected:', txt.substring(0, 60));
+      setTimeout(function () {
+        if (!_ptAutoSwitchTriggered) {
+          console.log('[Bomaye] Auto-switching after purchase click + 6s delay');
+          _ptTriggerAutoSwitch();
+        }
+      }, 6000);
+    }
+  };
+  modalBody.addEventListener('click', _ptHandleModalClick, true);
+}
+
+function _ptStopClickDetection() {
+  if (_ptHandleModalClick) {
+    var modalBody = document.querySelector('.pt-modal-body');
+    if (modalBody) modalBody.removeEventListener('click', _ptHandleModalClick, true);
+    _ptHandleModalClick = null;
+  }
+}
+
 function _ptInitAutoSwitchDetection() {
   _ptAutoSwitchTriggered = false;
   _ptBsportMsgHandler = _ptHandleBsportMessage;
   window.addEventListener('message', _ptBsportMsgHandler);
   _ptStartUrlPolling();
   _ptStartDomPolling();
+  _ptStartMutationObserver();
+  _ptStartClickDetection();
+  _ptStartFallbackButtonTimer();
 }
 
 function _ptCleanupAutoSwitch() {
@@ -1302,6 +1461,9 @@ function _ptCleanupAutoSwitch() {
   }
   _ptStopUrlPolling();
   _ptStopDomPolling();
+  _ptStopMutationObserver();
+  _ptStopClickDetection();
+  _ptHideFallbackButton();
   _ptAutoSwitchTriggered = false;
 }
 
