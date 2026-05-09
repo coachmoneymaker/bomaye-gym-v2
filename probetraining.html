@@ -308,7 +308,8 @@
     /* Modal header */
     .pt-modal-header {
       padding: 1.5rem 1.5rem 1.25rem;
-      border-bottom: 1px solid rgba(201,168,76,0.12);
+      background: #0A0A08;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -354,7 +355,8 @@
     /* Modal tab switcher */
     .pt-modal-tabs {
       display: flex;
-      border-bottom: 1px solid rgba(201,168,76,0.12);
+      background: #F5F0E8;
+      border-bottom: 1px solid rgba(10,10,8,0.1);
       flex-shrink: 0;
     }
     .pt-modal-tab {
@@ -367,7 +369,7 @@
       font-family: var(--font-head);
       font-size: 0.68rem;
       letter-spacing: 2px;
-      color: rgba(245,240,232,0.42);
+      color: rgba(10,10,8,0.5);
       text-transform: uppercase;
       cursor: pointer;
       transition: color 0.2s ease, border-color 0.2s ease;
@@ -375,10 +377,10 @@
       touch-action: manipulation;
     }
     .pt-modal-tab.active {
-      color: #C9A84C;
+      color: #0A0A08;
       border-bottom-color: #C9A84C;
     }
-    .pt-modal-tab:hover:not(.active) { color: rgba(245,240,232,0.7); }
+    .pt-modal-tab:hover:not(.active) { color: rgba(10,10,8,0.8); }
     /* Two-view slot */
     .pt-modal-view { display: none; }
     .pt-modal-view--active { display: block; }
@@ -389,6 +391,7 @@
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
       position: relative;
+      background: #F5F0E8;
     }
     /* Bsport iframe wrapper — matches spec exactly */
     .pt-bsport-wrap {
@@ -408,16 +411,36 @@
     /* Modal footer text */
     .pt-modal-footer {
       padding: 0.75rem 1.5rem;
-      border-top: 1px solid rgba(201,168,76,0.08);
+      border-top: 1px solid rgba(10,10,8,0.1);
+      background: #F5F0E8;
       flex-shrink: 0;
     }
     .pt-modal-footer p {
       font-family: var(--font-body);
       font-size: 0.7rem;
-      color: rgba(245,240,232,0.3);
+      color: rgba(10,10,8,0.6);
       text-align: center;
       line-height: 1.5;
       margin: 0;
+    }
+    /* Success banner — slides down from modal top after pass purchase */
+    @keyframes ptBannerSlideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .pt-success-banner {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      background: #C9A84C;
+      color: #0A0A08;
+      padding: 12px 20px;
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+      z-index: 100;
+      animation: ptBannerSlideDown 0.3s ease-out;
     }
     /* Mobile: full-screen modal */
     @media (max-width: 600px) {
@@ -1125,6 +1148,7 @@ function ptSwitchTab(tab) {
     tabPass.setAttribute('aria-selected', 'true');
     tabCal.className   = 'pt-modal-tab';
     tabCal.setAttribute('aria-selected', 'false');
+    _ptAutoSwitchTriggered = false; /* allow re-trigger if they re-purchase */
   } else {
     calView.className  = 'pt-modal-view pt-modal-view--active';
     passView.className = 'pt-modal-view';
@@ -1136,6 +1160,92 @@ function ptSwitchTab(tab) {
   }
 }
 
+/* ── Auto-switch to calendar tab after pass purchase ── */
+var _ptAutoSwitchTriggered = false;
+var _ptBsportMsgHandler    = null;
+var _ptUrlPoller           = null;
+
+function _ptTriggerAutoSwitch() {
+  if (_ptAutoSwitchTriggered) return;
+  _ptAutoSwitchTriggered = true;
+  console.log('[Bomaye] Pass purchase confirmed — switching to calendar in 3s');
+  _ptShowSuccessBanner();
+  setTimeout(function () { ptSwitchTab('cal'); }, 3000);
+}
+
+function _ptShowSuccessBanner() {
+  var card = document.querySelector('.pt-modal-card');
+  if (!card) return;
+  var existing = card.querySelector('.pt-success-banner');
+  if (existing) existing.remove();
+  var banner = document.createElement('div');
+  banner.className = 'pt-success-banner';
+  banner.textContent = '✓ Pass gesichert! Wähle jetzt deinen Termin...';
+  card.appendChild(banner);
+  setTimeout(function () { if (banner.parentNode) banner.remove(); }, 4000);
+}
+
+function _ptHandleBsportMessage(event) {
+  /* Accept messages from any bsport subdomain */
+  if (typeof event.origin === 'string' && event.origin.indexOf('bsport.io') === -1) return;
+  var data = event.data;
+  var hit = false;
+  if (typeof data === 'string') {
+    hit = data.indexOf('purchase_success') !== -1
+       || data.indexOf('pack_purchased')   !== -1
+       || data.indexOf('payment_success')  !== -1;
+  } else if (data && typeof data === 'object') {
+    hit = data.event  === 'purchase_success'
+       || data.event  === 'pack_purchased'
+       || data.type   === 'purchase_complete'
+       || data.status === 'success';
+  }
+  if (hit) {
+    console.log('[Bomaye] Bsport pass purchase detected via postMessage', data);
+    _ptTriggerAutoSwitch();
+  }
+}
+
+function _ptStartUrlPolling() {
+  var lastSrc = '';
+  _ptUrlPoller = setInterval(function () {
+    var iframe = document.querySelector('#pt-pass-view iframe');
+    if (!iframe) return;
+    var src = iframe.src || '';
+    if (src && src !== lastSrc) {
+      lastSrc = src;
+      if (src.indexOf('success')      !== -1 ||
+          src.indexOf('confirmation') !== -1 ||
+          src.indexOf('thank-you')    !== -1 ||
+          src.indexOf('purchased')    !== -1) {
+        console.log('[Bomaye] Bsport pass purchase detected via URL change', src);
+        _ptTriggerAutoSwitch();
+        _ptStopUrlPolling();
+      }
+    }
+  }, 1000);
+}
+
+function _ptStopUrlPolling() {
+  if (_ptUrlPoller) { clearInterval(_ptUrlPoller); _ptUrlPoller = null; }
+}
+
+function _ptInitAutoSwitchDetection() {
+  _ptAutoSwitchTriggered = false;
+  _ptBsportMsgHandler = _ptHandleBsportMessage;
+  window.addEventListener('message', _ptBsportMsgHandler);
+  _ptStartUrlPolling();
+}
+
+function _ptCleanupAutoSwitch() {
+  if (_ptBsportMsgHandler) {
+    window.removeEventListener('message', _ptBsportMsgHandler);
+    _ptBsportMsgHandler = null;
+  }
+  _ptStopUrlPolling();
+  _ptAutoSwitchTriggered = false;
+}
+
 /* ── Modal: open / close ── */
 function ptOpenModal() {
   var modal = document.getElementById('pt-booking-modal');
@@ -1143,6 +1253,7 @@ function ptOpenModal() {
   _ptMountWidget();
   modal.classList.add('open');
   _ptLockBody();
+  _ptInitAutoSwitchDetection();
   /* Dispatch GTM-trackable event */
   modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
 }
@@ -1151,6 +1262,7 @@ function ptCloseModal() {
   if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
   _ptUnlockBody();
+  _ptCleanupAutoSwitch();
 }
 
 /* Close on backdrop click */
