@@ -27,14 +27,15 @@
 
   <link rel="canonical" href="https://www.bomayegym.com/probetraining" />
 
-  <!-- Preload critical assets -->
+  <!-- Issue 1: Preload hero poster FIRST — prevents black screen -->
   <link rel="preload" href="/assets/images/hero-poster.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
-  <!-- Bsport connection warm-up -->
+  <!-- Bsport connection warm-up (modal loads on demand) -->
   <link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
   <link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+  <link rel="dns-prefetch" href="https://cdn.bsport.io" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,55 +53,100 @@
 
   <style>
     /* ══════════════════════════════════════════════════════
-       PROBETRAINING — landing page for cold Google Ads traffic
+       PROBETRAINING — landing page (cold Google Ads traffic)
+       Issues fixed: 1-black screen  2-nav  3-modal  4-WhatsApp
     ══════════════════════════════════════════════════════ */
 
-    /* ── Scrolled header ── */
-    #header.scrolled {
-      background: rgba(10,10,8,0.95) !important;
+    /* ─────────────────────────────────────────────────────
+       ISSUE 2 FIX: Stripped-down header — logo + CTA only
+    ───────────────────────────────────────────────────── */
+    #pt-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+      transition: background 380ms ease, backdrop-filter 380ms ease;
+      will-change: background;
+    }
+    #pt-header.scrolled {
+      background: rgba(10,10,8,0.95);
       backdrop-filter: blur(20px) saturate(1.5);
       -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      box-shadow: 0 1px 0 rgba(201,168,76,0.06), 0 8px 40px rgba(0,0,0,0.55);
     }
-    @media (max-width: 900px) {
-      #header.scrolled { background: rgba(10,10,8,0.97) !important; }
+    .pt-header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-
-    /* ── Mobile CTA pill in nav bar ── */
-    .nav-mobile-cta {
+    /* Logo: same visual weight as rest of site */
+    .pt-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .pt-header-logo img {
+      height: 100px;
+      width: auto;
+      display: block;
+    }
+    .pt-header-logo-text {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      line-height: 1;
       display: none;
+    }
+    .pt-header-logo-text.visible { display: block; }
+    /* Single header CTA */
+    .pt-header-cta {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #C9A84C;
-      color: #000 !important;
+      background: linear-gradient(135deg, #C6A45A 0%, #d4b472 52%, #A67C2E 100%);
+      color: #0A0A0A;
       font-family: var(--font-head);
-      font-size: 0.65rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 9px 12px;
-      border-radius: 10px;
-      text-decoration: none !important;
+      padding: 11px 20px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
       white-space: nowrap;
       flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(198,164,90,0.3), 0 4px 14px rgba(0,0,0,0.4);
+      transition: filter 0.22s ease, transform 0.22s ease;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
-    @media (max-width: 900px) {
-      .nav-mobile-cta { display: flex; }
-      .nav-links      { display: none; }
-      .burger         { display: flex; }
-      #header .back-btn { display: none !important; }
-      #header .nav-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1.25rem;
-        gap: 0.5rem;
+    .pt-header-cta:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .pt-header-cta:active { transform: scale(0.98); filter: brightness(0.95); }
+    @media (max-width: 480px) {
+      .pt-header-cta {
+        font-size: 0.65rem;
+        padding: 10px 14px;
+        letter-spacing: 1.5px;
       }
+      .pt-header-logo img { height: 80px; }
     }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 1 — HERO
-    ══════════════════════════════════════════════════════ */
+    /* ─────────────────────────────────────────────────────
+       ISSUE 1 FIX: Hero — poster + CSS fallback, no black screen
+    ───────────────────────────────────────────────────── */
     #pt-hero {
       position: relative;
       min-height: 100vh;
@@ -109,7 +155,11 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      background: #0A0A08;
+      /* CSS fallback: poster shown instantly before video or JS loads */
+      background-color: #0A0A08;
+      background-image: url('/assets/images/hero-poster.webp');
+      background-size: cover;
+      background-position: center center;
     }
     .pt-hero-video {
       position: absolute;
@@ -136,7 +186,7 @@
       width: 100%;
     }
 
-    /* Hero child reveal — hidden until #pt-hero.revealed */
+    /* Hero child elements — fade in after .revealed is added */
     .pt-eyebrow {
       display: inline-block;
       font-family: var(--font-head);
@@ -192,7 +242,6 @@
       opacity: 0;
       transition: opacity 600ms ease 320ms;
     }
-    /* Revealed state */
     #pt-hero.revealed .pt-eyebrow,
     #pt-hero.revealed .pt-h1,
     #pt-hero.revealed .pt-sub,
@@ -201,8 +250,6 @@
       opacity: 1;
       transform: none;
     }
-
-    /* Mobile: tighten hero, stack CTAs */
     @media (max-width: 600px) {
       .pt-hero-content {
         padding-top: calc(var(--nav-h) + 0.5rem);
@@ -214,9 +261,150 @@
       .pt-ctas .btn { width: 100%; }
     }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 2 — TRUST BAR
-    ══════════════════════════════════════════════════════ */
+    /* ─────────────────────────────────────────────────────
+       ISSUE 3 FIX: Bsport booking modal
+    ───────────────────────────────────────────────────── */
+    #pt-booking-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      /* Backdrop */
+      background: rgba(10,10,8,0.95);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      /* Hidden by default */
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 300ms ease-out, visibility 0s 300ms;
+    }
+    #pt-booking-modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 300ms ease-out, visibility 0s 0s;
+    }
+    .pt-modal-card {
+      position: relative;
+      background: #0A0A08;
+      border: 1px solid rgba(201,168,76,0.25);
+      width: 95%;
+      max-width: 600px;
+      max-height: calc(100dvh - 2rem);
+      display: flex;
+      flex-direction: column;
+      /* Scale-up entrance */
+      transform: scale(0.96) translateY(8px);
+      transition: transform 300ms ease-out;
+      overflow: hidden;
+    }
+    #pt-booking-modal.open .pt-modal-card {
+      transform: scale(1) translateY(0);
+    }
+    /* Modal header */
+    .pt-modal-header {
+      padding: 1.5rem 1.5rem 1.25rem;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+    .pt-modal-header-text { flex: 1; }
+    .pt-modal-eyebrow {
+      font-family: var(--font-head);
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: #C9A84C;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .pt-modal-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      color: #F5F0E8;
+      text-transform: uppercase;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+    /* Close button — min 44×44px hit area */
+    .pt-modal-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: #C9A84C;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin: -6px -6px 0 0;
+      transition: color 0.2s ease, transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .pt-modal-close:hover { color: #F5F0E8; transform: rotate(90deg); }
+    /* Widget container */
+    .pt-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    /* Bsport iframe wrapper — matches spec exactly */
+    .pt-bsport-wrap {
+      overflow: hidden !important;
+      position: relative;
+      padding-top: 125vh;
+    }
+    .pt-bsport-wrap iframe {
+      position: absolute;
+      overflow-x: hidden !important;
+      height: 100%;
+      width: 100%;
+      left: 0;
+      top: 0;
+      border: 0;
+    }
+    /* Modal footer text */
+    .pt-modal-footer {
+      padding: 0.75rem 1.5rem;
+      border-top: 1px solid rgba(201,168,76,0.08);
+      flex-shrink: 0;
+    }
+    .pt-modal-footer p {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      color: rgba(245,240,232,0.3);
+      text-align: center;
+      line-height: 1.5;
+      margin: 0;
+    }
+    /* Mobile: full-screen modal */
+    @media (max-width: 600px) {
+      #pt-booking-modal { padding: 0; align-items: flex-end; }
+      .pt-modal-card {
+        width: 100%;
+        max-width: 100%;
+        max-height: 96dvh;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        border-top: 1px solid rgba(201,168,76,0.25);
+        border-radius: 0;
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────
+       SECTIONS 2–8 + SCROLL REVEAL (unchanged from v1)
+    ───────────────────────────────────────────────────── */
     #pt-trust {
       background: #0A0A08;
       border-top: 1px solid rgba(201,168,76,0.18);
@@ -231,13 +419,8 @@
       gap: 2rem 1rem;
     }
     @media (min-width: 640px) {
-      .pt-trust-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0;
-      }
-      .pt-trust-item + .pt-trust-item {
-        border-left: 1px solid rgba(201,168,76,0.15);
-      }
+      .pt-trust-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
+      .pt-trust-item + .pt-trust-item { border-left: 1px solid rgba(201,168,76,0.15); }
     }
     .pt-trust-item { text-align: center; padding: 0 1.25rem; }
     .pt-trust-main {
@@ -256,9 +439,6 @@
       margin-top: 5px;
     }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 3 — STEPS (Was erwartet dich?)
-    ══════════════════════════════════════════════════════ */
     #pt-steps {
       background: #111111;
       border-top: 1px solid rgba(201,168,76,0.1);
@@ -271,9 +451,7 @@
       max-width: 960px;
       margin: 0 auto;
     }
-    @media (min-width: 768px) {
-      .pt-steps-grid { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
-    }
+    @media (min-width: 768px) { .pt-steps-grid { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; } }
     .pt-step-num {
       font-family: var(--font-display);
       font-size: 5rem;
@@ -292,17 +470,8 @@
       line-height: 1.05;
       margin-bottom: 0.75rem;
     }
-    .pt-step-text {
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      color: rgba(245,240,232,0.58);
-      line-height: 1.75;
-      margin: 0;
-    }
+    .pt-step-text { font-family: var(--font-body); font-size: 0.95rem; color: rgba(245,240,232,0.58); line-height: 1.75; margin: 0; }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 4 — COACHES
-    ══════════════════════════════════════════════════════ */
     #pt-coaches {
       background: #0A0A08;
       border-top: 1px solid rgba(201,168,76,0.1);
@@ -316,56 +485,23 @@
       gap: 3rem;
       align-items: center;
     }
-    @media (min-width: 768px) {
-      .pt-coaches-inner { grid-template-columns: 1fr 1fr; gap: 4rem; }
-    }
-    .pt-coach-photos {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .pt-coach-photo-wrap {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 3/4;
-    }
+    @media (min-width: 768px) { .pt-coaches-inner { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+    .pt-coach-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pt-coach-photo-wrap { position: relative; overflow: hidden; aspect-ratio: 3/4; }
     .pt-coach-photo-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-      display: block;
-      transition: transform 0.6s ease;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+      display: block; transition: transform 0.6s ease;
     }
-    @media (hover: hover) {
-      .pt-coach-photo-wrap:hover img { transform: scale(1.04); }
-    }
+    @media (hover: hover) { .pt-coach-photo-wrap:hover img { transform: scale(1.04); } }
     .pt-coach-label {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
+      position: absolute; bottom: 0; left: 0; right: 0;
       background: linear-gradient(to top, rgba(10,10,8,0.88) 0%, transparent 100%);
       padding: 2rem 0.75rem 0.75rem;
     }
-    .pt-coach-label-name {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      color: #F5F0E8;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-    .pt-coach-label-title {
-      font-family: var(--font-head);
-      font-size: 0.58rem;
-      letter-spacing: 2px;
-      color: #C9A84C;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
+    .pt-coach-label-name { font-family: var(--font-display); font-size: 1.15rem; color: #F5F0E8; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+    .pt-coach-label-title { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 2px; color: #C9A84C; text-transform: uppercase; margin-top: 4px; }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 5 — REVIEWS
-    ══════════════════════════════════════════════════════ */
     #pt-reviews {
       background: #111111;
       border-top: 1px solid rgba(201,168,76,0.1);
@@ -378,55 +514,14 @@
       max-width: 1000px;
       margin: 0 auto 2.5rem;
     }
-    @media (min-width: 768px) {
-      .pt-reviews-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    .pt-review-card {
-      background: #0A0A08;
-      border: 1px solid rgba(201,168,76,0.14);
-      padding: 1.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    .pt-review-stars {
-      color: #C9A84C;
-      font-size: 0.88rem;
-      letter-spacing: 3px;
-    }
-    .pt-review-text {
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      color: rgba(245,240,232,0.68);
-      line-height: 1.75;
-      flex: 1;
-      margin: 0;
-    }
-    .pt-review-author {
-      font-family: var(--font-head);
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(245,240,232,0.4);
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(201,168,76,0.1);
-    }
-    .pt-reviews-link {
-      display: block;
-      text-align: center;
-      font-family: var(--font-head);
-      font-size: 0.76rem;
-      letter-spacing: 2px;
-      color: #C9A84C;
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: opacity 0.2s;
-    }
+    @media (min-width: 768px) { .pt-reviews-grid { grid-template-columns: repeat(3, 1fr); } }
+    .pt-review-card { background: #0A0A08; border: 1px solid rgba(201,168,76,0.14); padding: 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
+    .pt-review-stars { color: #C9A84C; font-size: 0.88rem; letter-spacing: 3px; }
+    .pt-review-text { font-family: var(--font-body); font-size: 0.9rem; color: rgba(245,240,232,0.68); line-height: 1.75; flex: 1; margin: 0; }
+    .pt-review-author { font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,240,232,0.4); padding-top: 0.75rem; border-top: 1px solid rgba(201,168,76,0.1); }
+    .pt-reviews-link { display: block; text-align: center; font-family: var(--font-head); font-size: 0.76rem; letter-spacing: 2px; color: #C9A84C; text-decoration: none; text-transform: uppercase; transition: opacity 0.2s; }
     .pt-reviews-link:hover { opacity: 0.72; }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 6 — FINAL CTA
-    ══════════════════════════════════════════════════════ */
     #pt-final-cta {
       background: #0A0A08;
       border-top: 1px solid rgba(201,168,76,0.2);
@@ -434,22 +529,12 @@
       text-align: center;
     }
     .pt-final-cta-inner { max-width: 620px; margin: 0 auto; }
-    .pt-final-cta-reassurance {
-      font-family: var(--font-head);
-      font-size: 0.6rem;
-      letter-spacing: 2.5px;
-      color: rgba(245,240,232,0.32);
-      text-transform: uppercase;
-      margin-top: 1.5rem;
-    }
+    .pt-final-cta-reassurance { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.32); text-transform: uppercase; margin-top: 1.5rem; }
     @media (max-width: 600px) {
-      .pt-final-ctas { flex-direction: column; gap: 0.75rem; }
+      .pt-final-ctas { flex-direction: column !important; gap: 0.75rem !important; }
       .pt-final-ctas .btn { width: 100%; }
     }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 7 — PRICING TEASER
-    ══════════════════════════════════════════════════════ */
     #pt-pricing-teaser {
       background: #111111;
       border-top: 1px solid rgba(201,168,76,0.12);
@@ -458,27 +543,14 @@
     }
     .pt-pricing-teaser-inner { max-width: 560px; margin: 0 auto; }
 
-    /* ══════════════════════════════════════════════════════
-       SECTION 8 — FAQ
-    ══════════════════════════════════════════════════════ */
     #pt-faq {
       background: #0A0A08;
       border-top: 1px solid rgba(201,168,76,0.12);
       padding: clamp(72px, 8vw, 120px) 1.5rem;
     }
 
-    /* ══════════════════════════════════════════════════════
-       SCROLL REVEAL
-    ══════════════════════════════════════════════════════ */
-    .pt-reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-    .pt-reveal.pt-visible {
-      opacity: 1;
-      transform: none;
-    }
+    .pt-reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .pt-reveal.pt-visible { opacity: 1; transform: none; }
     .pt-reveal.delay-1 { transition-delay: 120ms; }
     .pt-reveal.delay-2 { transition-delay: 240ms; }
     .pt-reveal.delay-3 { transition-delay: 360ms; }
@@ -491,76 +563,77 @@
 <!-- Noise texture -->
 <div class="noise" aria-hidden="true"></div>
 
-<!-- ═══════ HEADER ═══════ -->
-<header id="header" role="banner">
-  <div class="nav-inner">
-    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" loading="eager" decoding="async" />
-      <span class="logo-text">BOMAYE</span>
-    </a>
 
-    <nav class="nav-links" aria-label="Hauptnavigation">
-      <a class="nav-link" href="/kurse">KURSE</a>
-      <a class="nav-link" href="/stundenplan">SCHEDULE</a>
-      <a class="nav-link" href="/coaches">COACHES</a>
-      <a class="nav-link" href="/about">ABOUT US</a>
-      <a class="nav-link" href="/faq">FAQ</a>
-      <a href="https://backoffice.bsport.io/customer/payment/pass/739379/?membership=5473&amp;force=true"
-         class="btn btn--gold btn--sm"
-         style="text-decoration:none;display:inline-flex;align-items:center;"
-         target="_blank" rel="noopener noreferrer"
-         data-cta="probetraining-buchen">
-        PROBETRAINING BUCHEN
-      </a>
-    </nav>
+<!-- ═══════════════════════════════════════════════════════════
+     ISSUE 3: BSPORT BOOKING MODAL (lazy-loaded widget)
+════════════════════════════════════════════════════════════ -->
+<div id="pt-booking-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-label="Probetraining buchen"
+     data-event="probetraining-modal-opened">
 
-    <a href="https://backoffice.bsport.io/customer/payment/pass/739379/?membership=5473&amp;force=true"
-       class="nav-mobile-cta"
-       aria-label="Probetraining buchen"
-       target="_blank" rel="noopener noreferrer"
-       data-cta="probetraining-buchen">
-      BUCHEN
-    </a>
+  <div class="pt-modal-card">
 
-    <button class="burger" onclick="togglePTMenu()" aria-label="Menü öffnen" aria-expanded="false" id="pt-burger-btn" type="button">
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
-    </button>
+    <div class="pt-modal-header">
+      <div class="pt-modal-header-text">
+        <p class="pt-modal-eyebrow">DEIN PROBETRAINING</p>
+        <h2 class="pt-modal-title">Wähle deinen Termin</h2>
+      </div>
+      <button class="pt-modal-close"
+              onclick="ptCloseModal()"
+              aria-label="Schließen"
+              type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="pt-modal-body" id="pt-modal-body">
+      <!-- Bsport widget iframe injected here on first open (lazy) -->
+    </div>
+
+    <div class="pt-modal-footer">
+      <p>Du wirst sicher über bsport.io abgewickelt — kostenlos, unverbindlich.</p>
+    </div>
+
   </div>
-</header>
-
-<!-- ═══════ MOBILE NAV ═══════ -->
-<div id="pt-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation">
-  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
-  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
-  <a class="mn-item" href="/stundenplan" style="--mn-i:2">SCHEDULE</a>
-  <a class="mn-item" href="/coaches" style="--mn-i:3">COACHES</a>
-  <a class="mn-item" href="/about" style="--mn-i:4">ABOUT US</a>
-  <a class="mn-item" href="/faq" style="--mn-i:5">FAQ</a>
-  <div class="mn-divider" style="margin:14px auto;"></div>
-  <a href="https://backoffice.bsport.io/customer/payment/pass/739379/?membership=5473&amp;force=true"
-     class="btn btn--gold mn-cta"
-     style="--mn-i:6;text-decoration:none;display:flex;align-items:center;justify-content:center;"
-     target="_blank" rel="noopener noreferrer"
-     data-cta="probetraining-buchen">
-    PROBETRAINING BUCHEN
-  </a>
-  <div class="mn-contact-divider" style="--mn-i:7"></div>
-  <div class="mn-socials" style="--mn-i:8">
-    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-  </div>
-  <span class="mn-contact-text" style="--mn-i:9">Pineapple Park · 80639 München</span>
-  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:10">support@bomayegym.com</a>
 </div>
 
 
 <!-- ═══════════════════════════════════════════════════════════
+     ISSUE 2: STRIPPED-DOWN HEADER — logo + single CTA only
+════════════════════════════════════════════════════════════ -->
+<header id="pt-header" role="banner">
+  <div class="pt-header-inner">
+    <a href="/probetraining" class="pt-header-logo" aria-label="Bomaye Gym — Probetraining">
+      <img src="/assets/images/bomaye-logo.webp"
+           alt="Bomaye Gym Logo"
+           width="100" height="100"
+           loading="eager" decoding="async" />
+      <span class="pt-header-logo-text">BOMAYE</span>
+    </a>
+
+    <button class="pt-header-cta"
+            onclick="ptOpenModal()"
+            type="button"
+            aria-haspopup="dialog"
+            data-cta="probetraining-buchen">
+      PROBETRAINING BUCHEN
+    </button>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════
      SECTION 1 — HERO
+     Issue 1 fix: poster= + CSS background-image fallback
 ════════════════════════════════════════════════════════════ -->
 <section id="pt-hero" aria-label="Kostenloses Probetraining — Bomaye Gym München">
-  <video class="pt-hero-video" autoplay loop muted playsinline preload="metadata" poster="/assets/images/hero-poster.webp" aria-hidden="true">
+  <video class="pt-hero-video"
+         autoplay loop muted playsinline
+         preload="metadata"
+         poster="/assets/images/hero-poster.webp"
+         aria-hidden="true">
     <source media="(max-width: 768px)" src="/assets/videos/hero-loop-mobile.mp4" type="video/mp4">
     <source src="/assets/videos/hero-loop.mp4" type="video/mp4">
   </video>
@@ -571,12 +644,13 @@
     <h1 class="pt-h1">KOMM TRAINIEREN.<br>ENTSCHEIDE DANACH.</h1>
     <p class="pt-sub">Echtes Boxtraining mit Coaches auf Weltklasse-Niveau. Ein Training reicht, um zu wissen ob Bomaye dein Spot ist.</p>
     <div class="pt-ctas">
-      <a href="https://backoffice.bsport.io/customer/payment/pass/739379/?membership=5473&amp;force=true"
-         class="btn btn--gold"
-         target="_blank" rel="noopener noreferrer"
-         data-cta="probetraining-buchen">
+      <button class="btn btn--gold"
+              onclick="ptOpenModal()"
+              type="button"
+              aria-haspopup="dialog"
+              data-cta="probetraining-buchen">
         PROBETRAINING BUCHEN
-      </a>
+      </button>
       <a href="https://wa.me/491737513627?text=Hi!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20kostenloses%20Probetraining%20bei%20Bomaye%20Gym%20M%C3%BCnchen."
          class="btn btn--outline-gold"
          target="_blank" rel="noopener noreferrer"
@@ -653,14 +727,20 @@
 
       <div class="pt-coach-photos pt-reveal">
         <div class="pt-coach-photo-wrap">
-          <img src="/assets/images/coach-raschad.webp" alt="Coach Raschad — Olympic Boxing" loading="eager" decoding="async" />
+          <img src="/assets/images/coach-raschad.webp"
+               alt="Coach Raschad — Olympic Boxing"
+               width="400" height="533"
+               loading="eager" decoding="async" />
           <div class="pt-coach-label">
             <div class="pt-coach-label-name">Raschad</div>
             <div class="pt-coach-label-title">Olympic Boxing</div>
           </div>
         </div>
         <div class="pt-coach-photo-wrap">
-          <img src="/assets/images/coach-alfonso.webp" alt="Coach Fonsi — Kickbox Weltmeister" loading="eager" decoding="async" />
+          <img src="/assets/images/coach-alfonso.webp"
+               alt="Coach Fonsi — Kickbox Weltmeister"
+               width="400" height="533"
+               loading="eager" decoding="async" />
           <div class="pt-coach-label">
             <div class="pt-coach-label-name">Fonsi</div>
             <div class="pt-coach-label-title">Kickbox Weltmeister</div>
@@ -729,12 +809,13 @@
       Komm vorbei. Ein Training. Du wirst es wissen.
     </p>
     <div class="pt-final-ctas" style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:0;">
-      <a href="https://backoffice.bsport.io/customer/payment/pass/739379/?membership=5473&amp;force=true"
-         class="btn btn--gold"
-         target="_blank" rel="noopener noreferrer"
-         data-cta="probetraining-buchen">
+      <button class="btn btn--gold"
+              onclick="ptOpenModal()"
+              type="button"
+              aria-haspopup="dialog"
+              data-cta="probetraining-buchen">
         PROBETRAINING BUCHEN
-      </a>
+      </button>
       <a href="https://wa.me/491737513627?text=Hi!%20Ich%20interessiere%20mich%20f%C3%BCr%20ein%20kostenloses%20Probetraining%20bei%20Bomaye%20Gym%20M%C3%BCnchen."
          class="btn btn--outline-gold"
          target="_blank" rel="noopener noreferrer"
@@ -885,16 +966,16 @@
 
 <!-- ═══════ SCRIPTS ═══════ -->
 <script>
-/* ── Header: add .scrolled class when user scrolls ── */
+/* ── Header: scroll styling ── */
 (function () {
-  var header = document.getElementById('header');
-  if (!header) return;
-  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  var h = document.getElementById('pt-header');
+  if (!h) return;
+  function onScroll() { h.classList.toggle('scrolled', window.scrollY > 20); }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 })();
 
-/* ── Hero: trigger entrance animation after first paint ── */
+/* ── Hero: trigger entrance animations after first paint ── */
 (function () {
   var hero = document.getElementById('pt-hero');
   if (!hero) return;
@@ -903,53 +984,95 @@
   });
 })();
 
-/* ── Scroll reveal: IntersectionObserver for .pt-reveal elements ── */
+/* ── Scroll reveal ── */
 (function () {
   var els = document.querySelectorAll('.pt-reveal');
-  if (!els.length || typeof IntersectionObserver === 'undefined') {
+  if (!els.length) return;
+  if (typeof IntersectionObserver === 'undefined') {
     els.forEach(function (el) { el.classList.add('pt-visible'); });
     return;
   }
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('pt-visible');
-        io.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.add('pt-visible'); io.unobserve(entry.target); }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   els.forEach(function (el) { io.observe(el); });
 })();
 
-/* ── Mobile nav: iOS-safe body scroll lock ── */
+/* ── Modal: iOS-safe body scroll lock ── */
 var _ptScrollY = 0;
-function ptLockBody() {
+function _ptLockBody() {
   _ptScrollY = window.scrollY;
   document.body.style.overflow = 'hidden';
   document.body.style.position = 'fixed';
   document.body.style.top      = '-' + _ptScrollY + 'px';
   document.body.style.width    = '100%';
 }
-function ptUnlockBody() {
+function _ptUnlockBody() {
   document.body.style.overflow = '';
   document.body.style.position = '';
   document.body.style.top      = '';
   document.body.style.width    = '';
   window.scrollTo({ top: _ptScrollY, behavior: 'instant' });
 }
-function togglePTMenu() {
-  var nav = document.getElementById('pt-mobile-nav');
-  var btn = document.getElementById('pt-burger-btn');
-  if (!nav) return;
-  var open = nav.classList.toggle('open');
-  if (open) { ptLockBody(); } else { ptUnlockBody(); }
-  if (btn) {
-    btn.setAttribute('aria-expanded', String(open));
-    btn.classList.toggle('open', open);
-  }
+
+/* ── Modal: Bsport widget lazy injection (once only) ── */
+var _ptWidgetMounted = false;
+function _ptMountWidget() {
+  if (_ptWidgetMounted) return;
+  _ptWidgetMounted = true;
+
+  var body = document.getElementById('pt-modal-body');
+  if (!body) return;
+
+  /* Build the iframe with the exact srcdoc from spec */
+  var wrap = document.createElement('div');
+  wrap.className = 'pt-bsport-wrap';
+
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.style.cssText = 'position:absolute;overflow-x:hidden!important;height:100%;width:100%;left:0;top:0;border:0;';
+
+  /* srcdoc exactly as provided — Bsport widget for pass 458519 */
+  iframe.srcdoc = '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
+    + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
+    + '<script>MountBsportWidget({"parentElement":"bsport-widget-458519","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"pass","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"pass":{"paymentPackCategories":[25328],"privatePassCategories":[],"hideFilters":true,"hidePaymentCombo":true,"hidePrivatePass":false}}})<\/script>'
+    + '<div id="bsport-widget-458519"></div>';
+
+  wrap.appendChild(iframe);
+  body.appendChild(wrap);
 }
 
-/* ── FAQ accordion: one open at a time ── */
+/* ── Modal: open / close ── */
+function ptOpenModal() {
+  var modal = document.getElementById('pt-booking-modal');
+  if (!modal) return;
+  _ptMountWidget();
+  modal.classList.add('open');
+  _ptLockBody();
+  /* Dispatch GTM-trackable event */
+  modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
+}
+function ptCloseModal() {
+  var modal = document.getElementById('pt-booking-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  _ptUnlockBody();
+}
+
+/* Close on backdrop click */
+document.getElementById('pt-booking-modal').addEventListener('click', function (e) {
+  if (e.target === this) ptCloseModal();
+});
+
+/* Close on Escape */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') ptCloseModal();
+});
+
+/* ── FAQ accordion ── */
 function ptToggleFaq(btn) {
   var expanded = btn.getAttribute('aria-expanded') === 'true';
   document.querySelectorAll('#pt-faq .faq-q').forEach(function (q) {
@@ -963,14 +1086,6 @@ function ptToggleFaq(btn) {
     if (answer) answer.style.maxHeight = answer.scrollHeight + 'px';
   }
 }
-
-/* ── Close mobile nav on Escape key ── */
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    var nav = document.getElementById('pt-mobile-nav');
-    if (nav && nav.classList.contains('open')) togglePTMenu();
-  }
-});
 </script>
 
 <script src="/assets/js/pixel-events.js"></script>
