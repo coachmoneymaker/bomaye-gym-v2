@@ -351,11 +351,43 @@
       touch-action: manipulation;
     }
     .pt-modal-close:hover { color: #F5F0E8; transform: rotate(90deg); }
+    /* Modal tab switcher */
+    .pt-modal-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      flex-shrink: 0;
+    }
+    .pt-modal-tab {
+      flex: 1;
+      padding: 0.9rem 1rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      color: rgba(245,240,232,0.42);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .pt-modal-tab.active {
+      color: #C9A84C;
+      border-bottom-color: #C9A84C;
+    }
+    .pt-modal-tab:hover:not(.active) { color: rgba(245,240,232,0.7); }
+    /* Two-view slot */
+    .pt-modal-view { display: none; }
+    .pt-modal-view--active { display: block; }
     /* Widget container */
     .pt-modal-body {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       position: relative;
     }
     /* Bsport iframe wrapper — matches spec exactly */
@@ -406,9 +438,9 @@
        SECTIONS 2–8 + SCROLL REVEAL (unchanged from v1)
     ───────────────────────────────────────────────────── */
     #pt-trust {
-      background: #0A0A08;
-      border-top: 1px solid rgba(201,168,76,0.18);
-      border-bottom: 1px solid rgba(201,168,76,0.18);
+      background: #F5F0E8;
+      border-top: 1px solid rgba(10,10,8,0.12);
+      border-bottom: 1px solid rgba(10,10,8,0.12);
       padding: 2.5rem 1.5rem;
     }
     .pt-trust-grid {
@@ -420,14 +452,14 @@
     }
     @media (min-width: 640px) {
       .pt-trust-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
-      .pt-trust-item + .pt-trust-item { border-left: 1px solid rgba(201,168,76,0.15); }
+      .pt-trust-item + .pt-trust-item { border-left: 1px solid rgba(10,10,8,0.12); }
     }
     .pt-trust-item { text-align: center; padding: 0 1.25rem; }
     .pt-trust-main {
       font-family: var(--font-display);
       font-size: 1.35rem;
       letter-spacing: 0.04em;
-      color: #C9A84C;
+      color: #0A0A08;
       line-height: 1.15;
     }
     .pt-trust-sub {
@@ -435,13 +467,13 @@
       font-size: 0.6rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(245,240,232,0.42);
+      color: rgba(10,10,8,0.55);
       margin-top: 5px;
     }
 
     #pt-steps {
-      background: #111111;
-      border-top: 1px solid rgba(201,168,76,0.1);
+      background: #F5F0E8;
+      border-top: 1px solid rgba(10,10,8,0.1);
       padding: clamp(72px, 8vw, 120px) 1.5rem;
     }
     .pt-steps-grid {
@@ -464,13 +496,13 @@
     .pt-step-title {
       font-family: var(--font-display);
       font-size: 1.9rem;
-      color: #F5F0E8;
+      color: #0A0A08;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       line-height: 1.05;
       margin-bottom: 0.75rem;
     }
-    .pt-step-text { font-family: var(--font-body); font-size: 0.95rem; color: rgba(245,240,232,0.58); line-height: 1.75; margin: 0; }
+    .pt-step-text { font-family: var(--font-body); font-size: 0.95rem; color: rgba(10,10,8,0.65); line-height: 1.75; margin: 0; }
 
     #pt-coaches {
       background: #0A0A08;
@@ -588,8 +620,19 @@
       </button>
     </div>
 
-    <div class="pt-modal-body" id="pt-modal-body">
-      <!-- Bsport widget iframe injected here on first open (lazy) -->
+    <div class="pt-modal-tabs" role="tablist">
+      <button class="pt-modal-tab active" id="pt-tab-pass"
+              onclick="ptSwitchTab('pass')" role="tab" aria-selected="true" type="button">
+        1. PASS HOLEN
+      </button>
+      <button class="pt-modal-tab" id="pt-tab-cal"
+              onclick="ptSwitchTab('cal')" role="tab" aria-selected="false" type="button">
+        2. KURS WÄHLEN
+      </button>
+    </div>
+    <div class="pt-modal-body">
+      <div id="pt-pass-view" class="pt-modal-view pt-modal-view--active"></div>
+      <div id="pt-cal-view" class="pt-modal-view"></div>
     </div>
 
     <div class="pt-modal-footer">
@@ -677,7 +720,7 @@
       <div class="pt-trust-sub">Coach Raschad</div>
     </div>
     <div class="pt-trust-item">
-      <div class="pt-trust-main">KICKBOX WELTMEISTER</div>
+      <div class="pt-trust-main">LANDESTRAINER</div>
       <div class="pt-trust-sub">Coach Fonsi</div>
     </div>
     <div class="pt-trust-item">
@@ -695,7 +738,7 @@
   <div class="container">
     <div class="sec-header pt-reveal">
       <span class="tag tag--dark">DEIN ERSTES TRAINING</span>
-      <h2 style="margin-top:1rem;color:#F5F0E8;">WAS ERWARTET DICH?</h2>
+      <h2 style="margin-top:1rem;color:#0A0A08;">WAS ERWARTET DICH?</h2>
     </div>
     <div class="pt-steps-grid">
       <div class="pt-reveal">
@@ -738,12 +781,12 @@
         </div>
         <div class="pt-coach-photo-wrap">
           <img src="/assets/images/coach-alfonso.webp"
-               alt="Coach Fonsi — Kickbox Weltmeister"
+               alt="Coach Fonsi — Landestrainer Boxen"
                width="400" height="533"
                loading="eager" decoding="async" />
           <div class="pt-coach-label">
             <div class="pt-coach-label-name">Fonsi</div>
-            <div class="pt-coach-label-title">Kickbox Weltmeister</div>
+            <div class="pt-coach-label-title">Landestrainer · Boxen</div>
           </div>
         </div>
       </div>
@@ -752,7 +795,7 @@
         <span class="tag tag--dark" style="margin-bottom:1.25rem;display:inline-block;">WER DICH TRAINIERT</span>
         <h2 style="color:#F5F0E8;margin-bottom:1.5rem;">ECHTE COACHES.<br>ECHTE TECHNIK.</h2>
         <p style="font-family:var(--font-body);font-size:1rem;color:rgba(245,240,232,0.68);line-height:1.8;margin:0;">
-          Bei Bomaye trainierst du nicht bei austauschbaren Trainern. Du trainierst bei einem Olympic Boxer und einem Kickbox-Weltmeister. Wir geben weiter, was wir selbst auf höchstem Niveau gelernt haben.
+          Bei Bomaye trainierst du nicht bei austauschbaren Trainern. Du trainierst bei einem Olympic Boxer und einem erfahrenen Coach. Wir geben weiter, was wir selbst auf höchstem Niveau gelernt haben.
         </p>
       </div>
 
@@ -1017,16 +1060,15 @@ function _ptUnlockBody() {
   window.scrollTo({ top: _ptScrollY, behavior: 'instant' });
 }
 
-/* ── Modal: Bsport widget lazy injection (once only) ── */
+/* ── Modal: Bsport PASS widget — view 1 (lazy) ── */
 var _ptWidgetMounted = false;
 function _ptMountWidget() {
   if (_ptWidgetMounted) return;
   _ptWidgetMounted = true;
 
-  var body = document.getElementById('pt-modal-body');
-  if (!body) return;
+  var view = document.getElementById('pt-pass-view');
+  if (!view) return;
 
-  /* Build the iframe with the exact srcdoc from spec */
   var wrap = document.createElement('div');
   wrap.className = 'pt-bsport-wrap';
 
@@ -1035,14 +1077,63 @@ function _ptMountWidget() {
   iframe.setAttribute('allowfullscreen', '');
   iframe.style.cssText = 'position:absolute;overflow-x:hidden!important;height:100%;width:100%;left:0;top:0;border:0;';
 
-  /* srcdoc exactly as provided — Bsport widget for pass 458519 */
   iframe.srcdoc = '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
     + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
     + '<script>MountBsportWidget({"parentElement":"bsport-widget-458519","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"pass","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"pass":{"paymentPackCategories":[25328],"privatePassCategories":[],"hideFilters":true,"hidePaymentCombo":true,"hidePrivatePass":false}}})<\/script>'
     + '<div id="bsport-widget-458519"></div>';
 
   wrap.appendChild(iframe);
-  body.appendChild(wrap);
+  view.appendChild(wrap);
+}
+
+/* ── Modal: Bsport CALENDAR widget — view 2 (lazy, mounts on first tab switch) ── */
+var _ptCalMounted = false;
+function _ptMountCalendarWidget() {
+  if (_ptCalMounted) return;
+  _ptCalMounted = true;
+
+  var view = document.getElementById('pt-cal-view');
+  if (!view) return;
+
+  var wrap = document.createElement('div');
+  wrap.className = 'pt-bsport-wrap';
+
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.style.cssText = 'position:absolute;overflow-x:hidden!important;height:100%;width:100%;left:0;top:0;border:0;';
+
+  iframe.srcdoc = '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
+    + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
+    + '<script>MountBsportWidget({"parentElement":"bsport-widget-880939","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"calendar","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"calendar":{"coaches":[],"establishments":[],"metaActivities":[244432,244539,244426,244420,244563,244431,245265],"levels":[],"variant":"time","groupSessionByPeriod":true,"todayOnly":false,"cardMode":false}}})<\/script>'
+    + '<div id="bsport-widget-880939"></div>';
+
+  wrap.appendChild(iframe);
+  view.appendChild(wrap);
+}
+
+/* ── Modal: tab switcher ── */
+function ptSwitchTab(tab) {
+  var passView = document.getElementById('pt-pass-view');
+  var calView  = document.getElementById('pt-cal-view');
+  var tabPass  = document.getElementById('pt-tab-pass');
+  var tabCal   = document.getElementById('pt-tab-cal');
+  if (tab === 'pass') {
+    passView.className = 'pt-modal-view pt-modal-view--active';
+    calView.className  = 'pt-modal-view';
+    tabPass.className  = 'pt-modal-tab active';
+    tabPass.setAttribute('aria-selected', 'true');
+    tabCal.className   = 'pt-modal-tab';
+    tabCal.setAttribute('aria-selected', 'false');
+  } else {
+    calView.className  = 'pt-modal-view pt-modal-view--active';
+    passView.className = 'pt-modal-view';
+    tabCal.className   = 'pt-modal-tab active';
+    tabCal.setAttribute('aria-selected', 'true');
+    tabPass.className  = 'pt-modal-tab';
+    tabPass.setAttribute('aria-selected', 'false');
+    _ptMountCalendarWidget();
+  }
 }
 
 /* ── Modal: open / close ── */
