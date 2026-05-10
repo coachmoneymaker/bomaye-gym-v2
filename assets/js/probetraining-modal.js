@@ -44,6 +44,16 @@
     + 'else if(inner){inner.scrollTop+=dy;}'
     + '}catch(err){}'
     + '},{passive:true});'
+    /* After any tap inside the iframe, wait for Bsport to render its popup,
+       then scroll the outer modal to top so the popup is fully visible */
+    + 'document.addEventListener("click",function(){'
+    + 'setTimeout(function(){'
+    + 'try{'
+    + 'var mo=window.parent.document.getElementById("pt-booking-modal");'
+    + 'if(mo&&mo.scrollTop>200)mo.scrollTo({top:0,behavior:"smooth"});'
+    + '}catch(e){}'
+    + '},400);'
+    + '});'
     + '})()\x3c/script>';
 
   /* ── Iframe auto-resize (same-origin srcdoc iframes) ── */
@@ -65,7 +75,7 @@
         if (b > deepest && r.height > 0) deepest = b;
       }
     } catch (e) {}
-    var mobileMin = window.innerWidth <= 767 ? 1600 : 0;
+    var mobileMin = window.innerWidth <= 767 ? 950 : 0;
     var finalH = Math.max(contentH, deepest, mobileMin);
     var currentH = parseInt(iframe.style.height) || 0;
     if (finalH > 50 && Math.abs(finalH - currentH) > 20) { iframe.style.height = finalH + 'px'; return true; }
