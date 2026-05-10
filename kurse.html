@@ -263,16 +263,12 @@
     .course-detail__feat-body span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
 
     /* ══════════════════════════════════════════════════
-       MOBILE CAROUSEL — single-card focused, continuous RAF
+       MOBILE CAROUSEL — CSS scroll-snap (native, no RAF)
     ══════════════════════════════════════════════════ */
     .courses-carousel-wrap { display: none; }
 
-    .courses-carousel {
-      position: relative;
-      overflow: hidden;
-      display: block;
-      touch-action: pan-y pinch-zoom;
-    }
+    /* Base: minimal (element hidden on desktop via wrap) */
+    .courses-carousel { position: relative; }
 
     .carousel-card {
       flex: 0 0 auto;
@@ -418,6 +414,30 @@
       .courses-carousel-wrap { display: block; }
       .course-detail__inner  { grid-template-columns: 1fr; }
       .dsk-arrow { display: none !important; }
+
+      /* ── Scroll-snap carousel ── */
+      .courses-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        padding: 0 6vw;
+        gap: 12px;
+        box-sizing: border-box;
+      }
+      .courses-carousel::-webkit-scrollbar { display: none; }
+
+      /* Cards: fixed-size, centered snap target */
+      .carousel-card {
+        flex: 0 0 88vw;
+        width: 88vw;
+        min-height: unset;
+        height: 280px;
+        scroll-snap-align: center;
+        border-radius: 6px;
+      }
     }
 
     /* Nav */
@@ -1330,225 +1350,39 @@ function openMobileCourse(id, idx) {
 
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   PREMIUM MOBILE CAROUSEL ENGINE v3
-   — requestAnimationFrame continuous drift (no setInterval gaps)
-   — One dominant card centered, next card peeks at edge
-   — Touch drag with axis detection → snap-to-nearest on release
-   — Seamless infinite loop via head + tail clones
-   — prefers-reduced-motion: no drift, manual-only
-══════════════════════════════════════════════════════════════ */
+/* ── Mobile carousel: CSS scroll-snap dot updater ── */
 (function () {
   'use strict';
 
   var carousel = document.getElementById('courses-carousel');
   if (!carousel) return;
+  /* Only run on mobile — desktop carousel is a separate engine */
+  if (window.innerWidth > 768) return;
 
-  /* ── Config ─────────────────────────────────────────────── */
-  var GAP        = 16;    // matches CSS gap on track
-  var REAL_N     = 6;
-  var CLONE_N    = 3;     // clones each side
-  var DRIFT_PPS  = 24;    // pixels per second — slow premium drift
-  var SNAP_MS    = 580;   // snap-to-card transition ms
-  var SNAP_EASE  = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
-  var RESUME_MS  = 2800;  // ms before resuming drift after touch
-  var reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+  var dots  = Array.from(document.querySelectorAll('.carousel-dot'));
 
-  /* ── Compute card width from rendered DOM ────────────────── */
-  var CARD_W, CARD_STEP;
-  function updateSizes() {
-    var sample = track.querySelector('.carousel-card');
-    CARD_W    = sample ? sample.offsetWidth : Math.min(Math.round(window.innerWidth * 0.78), 300);
-    CARD_STEP = CARD_W + GAP;
+  function activateDot(i) {
+    dots.forEach(function (d, j) { d.classList.toggle('active', j === i); });
   }
 
-  /* ── Build extended track ────────────────────────────────── */
-  var realCards = Array.from(carousel.querySelectorAll('.carousel-card'));
-
-  var track = document.createElement('div');
-  track.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
-
-  /* Prepend CLONE_N last cards */
-  for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
-    var cl = realCards[i].cloneNode(true);
-    cl.setAttribute('aria-hidden', 'true');
-    cl.removeAttribute('onclick');
-    track.appendChild(cl);
-  }
-  /* Real cards */
-  realCards.forEach(function (c) { track.appendChild(c); });
-  /* Append CLONE_N first cards */
-  for (var j = 0; j < CLONE_N; j++) {
-    var cl2 = realCards[j].cloneNode(true);
-    cl2.setAttribute('aria-hidden', 'true');
-    cl2.removeAttribute('onclick');
-    track.appendChild(cl2);
-  }
-
-  carousel.innerHTML = '';
-  carousel.appendChild(track);
-  carousel.style.cssText = 'overflow:hidden;position:relative;display:block;touch-action:pan-y pinch-zoom';
-
-  /* ── State ──────────────────────────────────────────────── */
-  var pos         = 0;    // current translateX (negative = scrolled left)
-  var curReal     = 0;    // real card index closest to center
-  var raf         = null;
-  var paused      = false;
-  var lastTime    = null;
-  var resumeTimer = null;
-  var snapping    = false;
-
-  /* ── Helpers ─────────────────────────────────────────────── */
-  /* translateX that centers real card [realIdx] */
-  function posForCard(realIdx) {
-    updateSizes();
-    var k = CLONE_N + realIdx;
-    return (carousel.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
-  }
-
-  /* real card index (0–9) currently nearest viewport center */
-  function nearestReal() {
-    updateSizes();
-    /* viewport center in track coords */
-    var vc = carousel.offsetWidth / 2 - pos;
-    var k  = Math.round((vc - CARD_W / 2) / CARD_STEP);
-    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
-  }
-
-  /* silent position jump to maintain seamless loop */
-  function checkLoop() {
-    var cycle = REAL_N * CARD_STEP;
-    var vc    = carousel.offsetWidth / 2 - pos;
-    var k     = Math.round((vc - CARD_W / 2) / CARD_STEP);
-    if (k >= CLONE_N + REAL_N) { pos += cycle; }
-    else if (k < CLONE_N)       { pos -= cycle; }
-  }
-
-  /* ── Dots ────────────────────────────────────────────────── */
-  function setDots(realI) {
-    document.querySelectorAll('.carousel-dot').forEach(function (d, i) {
-      d.classList.toggle('active', i === realI);
+  /* Update active dot on scroll — find card whose centre is closest to viewport centre */
+  carousel.addEventListener('scroll', function () {
+    var center = carousel.scrollLeft + carousel.offsetWidth / 2;
+    var nearest = 0, minDist = Infinity;
+    cards.forEach(function (c, i) {
+      var dist = Math.abs((c.offsetLeft + c.offsetWidth / 2) - center);
+      if (dist < minDist) { minDist = dist; nearest = i; }
     });
-  }
-
-  /* ── Snap to a real card with animated transition ─────────── */
-  function snapTo(realIdx, animate) {
-    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
-    var target = posForCard(curReal);
-    pos = target;
-    if (animate && !reduced) {
-      track.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
-    } else {
-      track.style.transition = 'none';
-    }
-    track.style.transform = 'translateX(' + pos + 'px)';
-    setDots(curReal);
-    if (animate && !reduced) {
-      snapping = true;
-      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
-    }
-  }
-
-  /* ── RAF drift tick ──────────────────────────────────────── */
-  function tick(ts) {
-    if (!paused && !snapping && !reduced) {
-      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
-      pos -= DRIFT_PPS * dt;
-      checkLoop();
-      track.style.transition = 'none';
-      track.style.transform  = 'translateX(' + pos + 'px)';
-      setDots(nearestReal());
-    }
-    lastTime = ts;
-    raf = requestAnimationFrame(tick);
-  }
-
-  /* ── Touch ───────────────────────────────────────────────── */
-  var t0x, t0y, tStartPos, tEndX, axisSet, isHoriz;
-
-  carousel.addEventListener('touchstart', function (e) {
-    if (snapping) return;        /* ignore new gesture mid-snap */
-    paused      = true;
-    lastTime    = null;
-    clearTimeout(resumeTimer);
-    t0x         = e.touches[0].clientX;
-    t0y         = e.touches[0].clientY;
-    tEndX       = t0x;
-    tStartPos   = pos;
-    axisSet     = false;
-    isHoriz     = false;
-    track.style.transition = 'none';
+    activateDot(nearest);
   }, { passive: true });
 
-  carousel.addEventListener('touchmove', function (e) {
-    var dx = e.touches[0].clientX - t0x;
-    var dy = e.touches[0].clientY - t0y;
-    if (!axisSet && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
-      isHoriz = Math.abs(dx) >= Math.abs(dy);
-      axisSet  = true;
+  /* Dot buttons → smooth scroll to card */
+  window.scrollCarouselTo = function (i) {
+    if (cards[i]) {
+      cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
-    if (!axisSet || !isHoriz) return;
-    tEndX = e.touches[0].clientX;  /* track last horizontal position */
-    e.preventDefault();
-    pos = tStartPos + dx;
-    track.style.transition = 'none';
-    track.style.transform  = 'translateX(' + pos + 'px)';
-  }, { passive: false });
-
-  function onTouchEnd() {
-    if (!axisSet || !isHoriz) {
-      clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
-      return;
-    }
-    var dx = tEndX - t0x;
-    var target;
-    if (Math.abs(dx) >= 50) {
-      /* Intent clear — advance exactly one slide in swipe direction */
-      var dir = dx < 0 ? 1 : -1;
-      target = ((curReal + dir) % REAL_N + REAL_N) % REAL_N;
-    } else {
-      /* Tiny movement — snap to nearest position */
-      target = nearestReal();
-    }
-    snapTo(target, true);
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
-  }
-
-  carousel.addEventListener('touchend',    onTouchEnd, { passive: true });
-  carousel.addEventListener('touchcancel', function () {
-    snapTo(nearestReal(), true);
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
-  }, { passive: true });
-
-  /* ── Resize ──────────────────────────────────────────────── */
-  var rTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(rTimer);
-    rTimer = setTimeout(function () { updateSizes(); snapTo(curReal, false); }, 150);
-  }, { passive: true });
-
-  if (typeof ResizeObserver !== 'undefined') {
-    new ResizeObserver(function () {
-      if (carousel.offsetWidth > 0) { updateSizes(); snapTo(curReal, false); }
-    }).observe(carousel);
-  }
-
-  /* ── External API (dot buttons) ─────────────────────────── */
-  window.scrollCarouselTo = function (realI) {
-    paused = true;
-    clearTimeout(resumeTimer);
-    snapTo(realI, true);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   };
-
-  /* ── Init ────────────────────────────────────────────────── */
-  updateSizes();
-  snapTo(0, false);
-  if (!reduced) raf = requestAnimationFrame(tick);
-
 })();
 
 /* ─── Open first course by default on desktop ─────────────── */
