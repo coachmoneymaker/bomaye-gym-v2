@@ -20,7 +20,7 @@
 
   /* ── Bomaye brand CSS injected into Bsport srcdoc iframes ── */
   var _ptBomayeWidgetCSS = '<style>'
-    + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;}'
+    + 'html,body{margin:0!important;padding:0!important;overflow:hidden!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;touch-action:pan-y!important;}'
     + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;min-height:0!important;}'
     + '*{overflow:visible!important;max-height:none!important;}'
     + 'div[style*="overflow"]{overflow:visible!important;max-height:none!important;height:auto!important;}'
@@ -30,7 +30,16 @@
     + '.MuiCard-root,.MuiPaper-root{border-radius:0!important;box-shadow:none!important;}'
     + '.MuiInputBase-root,.MuiOutlinedInput-root{border-radius:0!important;}'
     + '.MuiChip-root{border-radius:0!important;background-color:rgba(201,168,76,.1)!important;color:#0A0A08!important;border:1px solid #C9A84C!important;}'
-    + '</style>';
+    + '</style>'
+    /* Forward touch-scroll from inside the srcdoc iframe up to the parent modal body */
+    + '<script>(function(){'
+    + 'var lastY=0;'
+    + 'document.addEventListener("touchstart",function(e){lastY=e.touches[0].clientY;},{passive:true});'
+    + 'document.addEventListener("touchmove",function(e){'
+    + 'var dy=lastY-e.touches[0].clientY;lastY=e.touches[0].clientY;'
+    + 'try{var mb=window.parent.document.querySelector(".pt-modal-body");if(mb)mb.scrollTop+=dy;}catch(err){}'
+    + '},{passive:true});'
+    + '})()\x3c/script>';
 
   /* ── Iframe auto-resize (same-origin srcdoc iframes) ── */
   function _ptResizeIframeToContent(iframe) {
@@ -238,6 +247,11 @@
 
   /* ── Boot ── */
   function _ptBoot() {
+    /* Defensive reset: clear any stuck scroll-lock state from a previous page load */
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
     _ptInjectModal();
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ptCloseModal(); });
     if (window.location.search.indexOf('probetraining') !== -1) {
