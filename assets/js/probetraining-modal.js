@@ -207,6 +207,7 @@
     if (!modal) return;
     _ptMountWidget();
     _ptMountCalendarWidget();
+    _ptSetupScrollHelper();
     modal.classList.add('open');
     _ptLockBody();
     if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
@@ -224,6 +225,46 @@
     modal.classList.remove('open');
     _ptUnlockBody();
   };
+
+  /* ── Scroll-helper strip (mobile touch-trap bypass) ── */
+  window.ptDismissScrollHint = function () {
+    var hint = document.getElementById('pt-scroll-hint');
+    if (hint) hint.style.display = 'none';
+    try { localStorage.setItem('pt-hint-seen', '1'); } catch (e) {}
+  };
+
+  var _ptScrollHelperReady = false;
+  function _ptSetupScrollHelper() {
+    if (_ptScrollHelperReady) return;
+    _ptScrollHelperReady = true;
+    var strip = document.getElementById('pt-scroll-helper-strip');
+    var modal = document.getElementById('pt-booking-modal');
+    if (!strip || !modal) return;
+    try {
+      if (localStorage.getItem('pt-hint-seen') === '1') {
+        var hint = document.getElementById('pt-scroll-hint');
+        if (hint) hint.style.display = 'none';
+      }
+    } catch (e) {}
+    var _isDragging = false, _startY = 0, _startScroll = 0;
+    strip.addEventListener('touchstart', function (e) {
+      _isDragging = true;
+      _startY = e.touches[0].clientY;
+      _startScroll = modal.scrollTop;
+      e.preventDefault();
+    }, { passive: false });
+    strip.addEventListener('touchmove', function (e) {
+      if (!_isDragging) return;
+      var dy = e.touches[0].clientY - _startY;
+      modal.scrollTop = _startScroll - dy * 3;
+      e.preventDefault();
+    }, { passive: false });
+    strip.addEventListener('touchend', function () { _isDragging = false; });
+    var upArrow = strip.querySelector('.pt-scroll-helper-arrow-up');
+    var downArrow = strip.querySelector('.pt-scroll-helper-arrow-down');
+    if (upArrow) upArrow.addEventListener('click', function () { modal.scrollBy({ top: -300, behavior: 'smooth' }); });
+    if (downArrow) downArrow.addEventListener('click', function () { modal.scrollBy({ top: 300, behavior: 'smooth' }); });
+  }
 
   /* ── Modal HTML injection — runs once per page ── */
   function _ptInjectModal() {
@@ -247,6 +288,10 @@
       + '<span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>'
       + '</button>'
       + '</div>'
+      + '<div class="pt-scroll-hint" id="pt-scroll-hint">'
+      + '<span>Tipp: Am rechten Rand wischen zum Scrollen</span>'
+      + '<button onclick="ptDismissScrollHint()" aria-label="Hinweis schlie\xdfen" type="button">\xd7</button>'
+      + '</div>'
       + '<div class="pt-modal-tabs" role="tablist">'
       + '<button class="pt-modal-tab active" id="pt-tab-pass" onclick="ptSwitchTab(\'pass\')" role="tab" aria-selected="true" type="button">1. PASS HOLEN</button>'
       + '<button class="pt-modal-tab" id="pt-tab-cal" onclick="ptSwitchTab(\'cal\')" role="tab" aria-selected="false" type="button">2. KURS WÄHLEN</button>'
@@ -256,6 +301,12 @@
       + '<div id="pt-cal-view" class="pt-modal-view"></div>'
       + '</div>'
       + '<div class="pt-modal-footer"><p>Du wirst sicher über bsport.io abgewickelt — kostenlos, unverbindlich.</p></div>'
+      + '<div class="pt-scroll-helper" id="pt-scroll-helper-strip" aria-hidden="true">'
+      + '<div class="pt-scroll-helper-track">'
+      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-up">&#9650;</div>'
+      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-down">&#9660;</div>'
+      + '</div>'
+      + '</div>'
       + '</div>';
     document.body.appendChild(el);
     el.addEventListener('click', function (e) { if (e.target === this) ptCloseModal(); });
