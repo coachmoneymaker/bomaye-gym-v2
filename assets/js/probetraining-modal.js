@@ -65,7 +65,8 @@
         if (b > deepest && r.height > 0) deepest = b;
       }
     } catch (e) {}
-    var finalH = Math.max(contentH, deepest);
+    var mobileMin = window.innerWidth <= 767 ? 1600 : 0;
+    var finalH = Math.max(contentH, deepest, mobileMin);
     var currentH = parseInt(iframe.style.height) || 0;
     if (finalH > 50 && Math.abs(finalH - currentH) > 20) { iframe.style.height = finalH + 'px'; return true; }
     return false;

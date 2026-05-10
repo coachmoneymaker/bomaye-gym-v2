@@ -234,4 +234,10 @@
     padding: 5px 14px;
     margin-top: auto;
   }
+  /* Force iframe taller than any Bsport content state so iOS never
+     sees internal scroll and passes touch events to the outer modal */
+  .pt-bsport-iframe {
+    min-height: 1600px;
+    transition: none;
+  }
 }
