@@ -427,7 +427,8 @@
       overflow: hidden;
       -webkit-overflow-scrolling: auto;
       pointer-events: auto;
-      touch-action: pan-y;
+      /* touch-action intentionally omitted: default 'auto' lets iOS route
+         vertical swipes to the parent .pt-modal-body scroll container */
       transition: height 0.15s ease-out;
     }
     @supports (-webkit-touch-callout: none) {
@@ -449,70 +450,42 @@
       line-height: 1.5;
       margin: 0;
     }
-    /* Fallback continue button — shown after 5s if auto-detection hasn't fired */
+    /* ── Step-2 CTA button — always visible on Pass tab ── */
     .pt-continue-button {
-      display: none;
+      display: flex;
       flex: 0 0 100%;
-      padding: 14px 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 16px 24px;
       background: #C9A84C;
       color: #0A0A08;
       border: none;
       font-family: var(--font-head);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      /* no animation on base — only fires when .visible is added */
     }
-    .pt-continue-button.visible {
-      display: flex;
-      animation: ptContinueFadeIn 0.3s ease-out forwards, ptContinuePulse 2s ease-in-out 0.3s infinite;
-    }
-    @keyframes ptContinueFadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .pt-continue-button:hover { background: #B89940; transform: translateY(-1px); }
-    .pt-continue-button:active { transform: scale(0.98); }
-    .pt-continue-arrow { transition: transform 0.2s ease; display: inline-block; }
-    .pt-continue-button:hover .pt-continue-arrow { transform: translateX(4px); }
-    @keyframes ptContinuePulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
-      50%       { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
-    }
-    /* Tab 2 attention pulse when user is stuck on tab 1 */
-    #pt-tab-cal.pt-tab-attention {
-      animation: ptTabAttention 2s ease-in-out infinite;
-    }
-    @keyframes ptTabAttention {
-      0%, 100% { color: rgba(10,10,8,0.5); }
-      50%       { color: #C9A84C; }
-    }
-    /* Success banner — slides down from modal top after pass purchase */
-    @keyframes ptBannerSlideDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
-    }
-    .pt-success-banner {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      background: #C9A84C;
-      color: #0A0A08;
-      padding: 12px 20px;
-      font-family: var(--font-head);
-      font-size: 0.72rem;
-      letter-spacing: 1.5px;
+    .pt-continue-button:hover  { background: #B89940; }
+    .pt-continue-button:active { background: #A07830; }
+    .pt-continue-subtitle {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      text-align: center;
-      z-index: 100;
-      animation: ptBannerSlideDown 0.3s ease-out;
+      opacity: 0.7;
+      line-height: 1.2;
+    }
+    @media (max-width: 375px) {
+      .pt-continue-button     { font-size: 14px; }
+      .pt-continue-subtitle   { font-size: 10px; }
     }
     /* Mobile: full-screen modal */
     @media (max-width: 600px) {
@@ -716,11 +689,10 @@
       <button id="pt-continue-button"
               class="pt-continue-button"
               onclick="ptSwitchTab('cal')"
-              aria-hidden="true"
+              aria-label="Weiter zu Schritt 2: Kurs wählen"
               type="button">
-        <span class="pt-continue-icon">✓</span>
-        <span class="pt-continue-text">WEITER ZU SCHRITT 2</span>
-        <span class="pt-continue-arrow">→</span>
+        <span class="pt-continue-text">✓ KURS BUCHEN</span>
+        <span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>
       </button>
     </div>
 
@@ -1237,14 +1209,6 @@ function ptSwitchTab(tab) {
     tabPass.setAttribute('aria-selected', 'true');
     tabCal.className   = 'pt-modal-tab';
     tabCal.setAttribute('aria-selected', 'false');
-    _ptAutoSwitchTriggered = false;
-    _ptHideFallbackButton();
-    _ptStartDomPolling();
-    _ptStartMutationObserver();
-    _ptStartClickDetection();
-    _ptStartIframeDomScanning();
-    _ptStartHeightDropDetection();
-    _ptStartFallbackButtonTimer();
   } else {
     calView.className  = 'pt-modal-view pt-modal-view--active';
     passView.className = 'pt-modal-view';
@@ -1252,25 +1216,14 @@ function ptSwitchTab(tab) {
     tabCal.setAttribute('aria-selected', 'true');
     tabPass.className  = 'pt-modal-tab';
     tabPass.setAttribute('aria-selected', 'false');
-    _ptHideFallbackButton();
-    _ptStopDomPolling();
-    _ptStopMutationObserver();
-    _ptStopClickDetection();
     _ptMountCalendarWidget();
   }
 }
 
-/* ── Auto-switch to calendar tab after pass purchase ── */
-var _ptAutoSwitchTriggered = false;
-var _ptBsportMsgHandler    = null;
-var _ptUrlPoller           = null;
-
-/* ── Layer 7: height-drop detection state ── */
-var _ptLayer7Timer        = null;
-var _ptPassFormPeakHeight = 0;   /* highest confirmed-stable height of pass iframe */
-var _ptPeakStableStart    = 0;   /* epoch ms when current height first became "stable" */
-var _ptPeakConfirmed      = false; /* true once height has been stable ≥1500ms at >400px */
-var _ptFallbackAfterPeak  = false; /* if 8s timer already fired before peak: show on peak */
+// Removed 2026-05-10: cross-origin iframe (backoffice.bsport.io) makes all
+// auto-detection unreliable. DOM scanning, height-drop detection, postMessage,
+// URL polling, MutationObserver layers all fail silently with SecurityError.
+// Replaced with a permanently-visible manual CTA button.
 
 /* Bomaye brand CSS injected into every Bsport widget srcdoc */
 var _ptBomayeWidgetCSS = '<style>'
@@ -1291,430 +1244,6 @@ var _ptBomayeWidgetCSS = '<style>'
   + '.MuiChip-root{border-radius:0!important;background-color:rgba(201,168,76,.1)!important;color:#0A0A08!important;border:1px solid #C9A84C!important;}'
   + '</style>';
 
-function _ptScrollIframeToTop() {
-  try {
-    var iframe = document.getElementById('pt-pass-iframe');
-    if (iframe && iframe.contentWindow) iframe.contentWindow.scrollTo(0, 0);
-  } catch (e) { /* cross-origin nested resource — silently skip */ }
-  var modalBody = document.querySelector('.pt-modal-body');
-  if (modalBody) modalBody.scrollTop = 0;
-}
-
-function _ptTriggerAutoSwitch() {
-  if (_ptAutoSwitchTriggered) return;
-  _ptAutoSwitchTriggered = true;
-  console.log('[Bomaye] Pass purchase confirmed — pre-mounting calendar widget + switching in 3s');
-  /* Pre-mount calendar NOW so it loads during the 3s banner delay */
-  _ptMountCalendarWidget();
-  _ptScrollIframeToTop();
-  _ptHideFallbackButton();
-  _ptShowSuccessBanner();
-  setTimeout(function () { ptSwitchTab('cal'); }, 3000);
-}
-
-function _ptShowSuccessBanner() {
-  var card = document.querySelector('.pt-modal-card');
-  if (!card) return;
-  var existing = card.querySelector('.pt-success-banner');
-  if (existing) existing.remove();
-  var banner = document.createElement('div');
-  banner.className = 'pt-success-banner';
-  banner.textContent = '✓ Pass gesichert! Wähle jetzt deinen Termin...';
-  card.appendChild(banner);
-  setTimeout(function () { if (banner.parentNode) banner.remove(); }, 4000);
-}
-
-function _ptHandleBsportMessage(event) {
-  /* Accept messages from any bsport subdomain */
-  if (typeof event.origin === 'string' && event.origin.indexOf('bsport.io') === -1) return;
-  var data = event.data;
-  var hit = false;
-  if (typeof data === 'string') {
-    hit = data.indexOf('purchase_success') !== -1
-       || data.indexOf('pack_purchased')   !== -1
-       || data.indexOf('payment_success')  !== -1;
-  } else if (data && typeof data === 'object') {
-    hit = data.event  === 'purchase_success'
-       || data.event  === 'pack_purchased'
-       || data.type   === 'purchase_complete'
-       || data.status === 'success';
-  }
-  if (hit) {
-    console.log('[Bomaye] Bsport pass purchase detected via postMessage', data);
-    _ptTriggerAutoSwitch();
-  }
-}
-
-function _ptStartUrlPolling() {
-  var lastSrc = '';
-  _ptUrlPoller = setInterval(function () {
-    var iframe = document.querySelector('#pt-pass-view iframe');
-    if (!iframe) return;
-    var src = iframe.src || '';
-    if (src && src !== lastSrc) {
-      lastSrc = src;
-      if (src.indexOf('success')      !== -1 ||
-          src.indexOf('confirmation') !== -1 ||
-          src.indexOf('thank-you')    !== -1 ||
-          src.indexOf('purchased')    !== -1) {
-        console.log('[Bomaye] Bsport pass purchase detected via URL change', src);
-        _ptTriggerAutoSwitch();
-        _ptStopUrlPolling();
-      }
-    }
-  }, 1000);
-}
-
-function _ptStopUrlPolling() {
-  if (_ptUrlPoller) { clearInterval(_ptUrlPoller); _ptUrlPoller = null; }
-}
-
-/* ── DOM text polling (srcdoc iframes share parent origin → full DOM access) ── */
-var _ptDomPoller = null;
-/* Lowercase phrases — matched against lowercased iframe text (case-insensitive) */
-var _ptSuccessPhrases = ['gl\xFCckwunsch', 'kurspass gebucht', 'mein kurspass', 'einen kurs buchen'];
-
-function _ptCheckIframeText(iframe) {
-  try {
-    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-    if (!doc || !doc.body) return false;
-    var text = (doc.body.innerText || doc.body.textContent || '').toLowerCase();
-    for (var i = 0; i < _ptSuccessPhrases.length; i++) {
-      if (text.indexOf(_ptSuccessPhrases[i]) !== -1) return true;
-    }
-    var nested = doc.querySelectorAll('iframe');
-    for (var j = 0; j < nested.length; j++) {
-      if (_ptCheckIframeText(nested[j])) return true;
-    }
-  } catch (e) { /* cross-origin nested iframe */ }
-  return false;
-}
-
-function _ptStartDomPolling() {
-  _ptStopDomPolling();
-  _ptDomPoller = setInterval(function () {
-    try {
-      var iframes = document.querySelectorAll('#pt-pass-view iframe');
-      for (var i = 0; i < iframes.length; i++) {
-        if (_ptCheckIframeText(iframes[i])) {
-          console.log('[Bomaye] Pass purchase success DETECTED via DOM text polling');
-          _ptTriggerAutoSwitch();
-          _ptStopDomPolling();
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn('[Bomaye] DOM polling error (non-fatal):', e);
-    }
-  }, 300);
-}
-
-function _ptStopDomPolling() {
-  if (_ptDomPoller) { clearInterval(_ptDomPoller); _ptDomPoller = null; }
-}
-
-/* ── Layer 6: MutationObserver inside the pass iframe's own contentDocument ──
-   Catches Bsport React re-renders the outer MutationObserver (on .pt-modal-body)
-   can't see, because those mutations happen inside the iframe document tree.   ── */
-var _ptIframeScanObserver = null;
-
-function _ptStartIframeDomScanning() {
-  _ptStopIframeDomScanning();
-
-  function attach() {
-    var iframe = document.getElementById('pt-pass-iframe');
-    if (!iframe) return;
-    try {
-      var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-      if (!doc || !doc.body) { setTimeout(attach, 500); return; }
-      _ptIframeScanObserver = new MutationObserver(function () {
-        if (_ptAutoSwitchTriggered) return;
-        if (_ptCheckIframeText(iframe)) {
-          console.log('[Bomaye] Layer 6: success text detected via iframe contentDocument MutationObserver');
-          _ptScrollIframeToTop();
-          _ptTriggerAutoSwitch();
-        }
-      });
-      _ptIframeScanObserver.observe(doc.body, { childList: true, subtree: true, characterData: true });
-      console.log('[Bomaye] Layer 6 attached');
-    } catch (e) { /* cross-origin nested resource — silently fall back to other layers */ }
-  }
-
-  var iframe = document.getElementById('pt-pass-iframe');
-  if (!iframe) { setTimeout(attach, 1000); return; }
-
-  try {
-    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-    if (doc && doc.readyState === 'complete' && doc.body) {
-      attach();
-    } else {
-      iframe.addEventListener('load', attach, { once: true });
-      setTimeout(attach, 3000); /* backstop if load already fired */
-    }
-  } catch (e) { setTimeout(attach, 1000); }
-}
-
-function _ptStopIframeDomScanning() {
-  if (_ptIframeScanObserver) { _ptIframeScanObserver.disconnect(); _ptIframeScanObserver = null; }
-}
-
-/* ── Fallback button: visible after 5s if auto-detection hasn't fired ── */
-var _ptIframeActivityTimer = null;
-var _ptFallbackButtonShown = false;
-var _ptTabAttentionTimer   = null;
-
-function _ptStartFallbackButtonTimer() {
-  if (_ptFallbackButtonShown) return;
-  if (_ptIframeActivityTimer) { clearTimeout(_ptIframeActivityTimer); _ptIframeActivityTimer = null; }
-  if (_ptTabAttentionTimer)   { clearTimeout(_ptTabAttentionTimer);   _ptTabAttentionTimer   = null; }
-
-  function scheduleTimers() {
-    /* 8s after iframe content loads — show button only if peak height has been reached */
-    _ptIframeActivityTimer = setTimeout(function () {
-      if (_ptAutoSwitchTriggered) return;
-      if (_ptPeakConfirmed) {
-        /* Form fully loaded, no auto-switch after 8s — show fallback */
-        console.log('[Bomaye] Fallback button: 8s elapsed + peak confirmed — showing button');
-        _ptShowFallbackButton();
-      } else {
-        /* Peak not yet reached — defer to when Layer 7 confirms peak */
-        console.log('[Bomaye] Fallback button: 8s elapsed but peak not yet confirmed — deferring to peak signal');
-        _ptFallbackAfterPeak = true;
-      }
-    }, 8000);
-    /* 10s after load, add attention pulse to calendar tab */
-    _ptTabAttentionTimer = setTimeout(function () {
-      if (!_ptAutoSwitchTriggered) {
-        var calTab = document.getElementById('pt-tab-cal');
-        if (calTab) calTab.classList.add('pt-tab-attention');
-      }
-    }, 10000);
-  }
-
-  var iframe = document.getElementById('pt-pass-iframe');
-  if (!iframe) {
-    /* Widget not yet mounted — absolute fallback from call time */
-    _ptIframeActivityTimer = setTimeout(function () {
-      if (!_ptAutoSwitchTriggered) _ptShowFallbackButton();
-    }, 15000);
-    return;
-  }
-
-  try {
-    var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-    if (doc && doc.readyState === 'complete' && doc.body) {
-      scheduleTimers(); /* already loaded — start 8s countdown now */
-    } else {
-      /* Wait for iframe load, then start 8s countdown */
-      iframe.addEventListener('load', function onLoad() {
-        iframe.removeEventListener('load', onLoad);
-        scheduleTimers();
-      });
-      /* Hard cap: show after 15s regardless (catches missed load events) */
-      _ptIframeActivityTimer = setTimeout(function () {
-        if (!_ptAutoSwitchTriggered) _ptShowFallbackButton();
-      }, 15000);
-    }
-  } catch (e) {
-    scheduleTimers();
-  }
-}
-
-function _ptShowFallbackButton() {
-  var btn = document.getElementById('pt-continue-button');
-  if (btn && !_ptFallbackButtonShown) {
-    btn.classList.add('visible');
-    btn.setAttribute('aria-hidden', 'false');
-    _ptFallbackButtonShown = true;
-    console.log('[Bomaye] Fallback continue button shown');
-  }
-}
-
-function _ptHideFallbackButton() {
-  var btn = document.getElementById('pt-continue-button');
-  if (btn) { btn.classList.remove('visible'); btn.setAttribute('aria-hidden', 'true'); }
-  _ptFallbackButtonShown = false;
-  if (_ptIframeActivityTimer) { clearTimeout(_ptIframeActivityTimer); _ptIframeActivityTimer = null; }
-  if (_ptTabAttentionTimer)   { clearTimeout(_ptTabAttentionTimer);   _ptTabAttentionTimer   = null; }
-  var calTab = document.getElementById('pt-tab-cal');
-  if (calTab) calTab.classList.remove('pt-tab-attention');
-}
-
-/* ── MutationObserver: react to Bsport DOM changes + check iframe text ── */
-var _ptMutationObserver = null;
-
-function _ptCheckIframesRecursively(root) {
-  if (!root || !root.querySelectorAll) return;
-  var iframes = root.querySelectorAll('iframe');
-  for (var i = 0; i < iframes.length; i++) {
-    if (_ptCheckIframeText(iframes[i])) {
-      console.log('[Bomaye] Success text detected via MutationObserver + recursive iframe check');
-      _ptTriggerAutoSwitch();
-      return;
-    }
-  }
-}
-
-function _ptStartMutationObserver() {
-  _ptStopMutationObserver();
-  var modalBody = document.querySelector('.pt-modal-body');
-  if (!modalBody || typeof MutationObserver === 'undefined') return;
-  _ptMutationObserver = new MutationObserver(function () {
-    _ptCheckIframesRecursively(modalBody);
-  });
-  _ptMutationObserver.observe(modalBody, { childList: true, subtree: true, characterData: true });
-}
-
-function _ptStopMutationObserver() {
-  if (_ptMutationObserver) { _ptMutationObserver.disconnect(); _ptMutationObserver = null; }
-}
-
-/* ── Click detection: purchase button click → 6s delayed trigger ── */
-var _ptHandleModalClick = null;
-
-function _ptStartClickDetection() {
-  _ptStopClickDetection();
-  var modalBody = document.querySelector('.pt-modal-body');
-  if (!modalBody) return;
-  _ptHandleModalClick = function (e) {
-    var target = e.target;
-    if (!target) return;
-    var txt = ((target.textContent || target.innerText || '') + '').toUpperCase();
-    if (txt.indexOf('WARENKORB') !== -1 || txt.indexOf('HINZUF')    !== -1 ||
-        txt.indexOf('BEZAHLEN')  !== -1 || txt.indexOf('PURCHASE')  !== -1 ||
-        txt.indexOf('CONFIRM')   !== -1) {
-      console.log('[Bomaye] Purchase button click detected:', txt.substring(0, 60));
-      setTimeout(function () {
-        if (!_ptAutoSwitchTriggered) {
-          console.log('[Bomaye] Auto-switching after purchase click + 6s delay');
-          _ptTriggerAutoSwitch();
-        }
-      }, 6000);
-    }
-  };
-  modalBody.addEventListener('click', _ptHandleModalClick, true);
-}
-
-function _ptStopClickDetection() {
-  if (_ptHandleModalClick) {
-    var modalBody = document.querySelector('.pt-modal-body');
-    if (modalBody) modalBody.removeEventListener('click', _ptHandleModalClick, true);
-    _ptHandleModalClick = null;
-  }
-}
-
-/* ── Layer 7: iframe height-drop detection ──────────────────────────────────
-   Bsport renders inside a cross-origin inner iframe, so DOM text scanning
-   (Layers 3–6) silently fails with a SecurityError.  However the OUTER srcdoc
-   iframe's rendered height is readable by the auto-resize logic, because that
-   srcdoc is same-origin.  When the pass form is active the iframe grows to
-   ~445px.  After a successful purchase Bsport replaces it with a shorter
-   "Glückwunsch" success screen (~200–260px) — a >40 % height drop.
-   We treat that drop as a confirmed purchase signal.
-   ─────────────────────────────────────────────────────────────────────────── */
-function _ptStartHeightDropDetection() {
-  _ptStopHeightDropDetection();
-  _ptPassFormPeakHeight = 0;
-  _ptPeakStableStart    = 0;
-  _ptPeakConfirmed      = false;
-  _ptFallbackAfterPeak  = false;
-
-  var lastH = 0;
-
-  function tick() {
-    if (_ptAutoSwitchTriggered) return; /* already switching — stop quietly */
-
-    var iframe = document.getElementById('pt-pass-iframe');
-    if (!iframe) { _ptLayer7Timer = setTimeout(tick, 200); return; }
-
-    var currentH = parseInt(iframe.style.height) || 0;
-
-    if (!_ptPeakConfirmed) {
-      /* ── Peak detection phase ── */
-      if (currentH > 400) {
-        var delta = Math.abs(currentH - lastH);
-        if (delta > 5) {
-          /* Height is still changing — update candidate peak, reset stability clock */
-          if (currentH > _ptPassFormPeakHeight) _ptPassFormPeakHeight = currentH;
-          _ptPeakStableStart = Date.now();
-          console.log('[Bomaye Layer 7] Height growing: ' + currentH + 'px (candidate peak: ' + _ptPassFormPeakHeight + 'px)');
-        } else {
-          /* Height is stable */
-          if (_ptPeakStableStart === 0) {
-            _ptPeakStableStart = Date.now();
-            if (currentH > _ptPassFormPeakHeight) _ptPassFormPeakHeight = currentH;
-          }
-          var stableMs = Date.now() - _ptPeakStableStart;
-          if (stableMs >= 1500) {
-            /* Stable ≥1500ms at >400px — peak confirmed */
-            _ptPeakConfirmed = true;
-            _ptPassFormPeakHeight = currentH;
-            console.log('[Bomaye Layer 7] Peak confirmed: ' + _ptPassFormPeakHeight + 'px (stable ' + stableMs + 'ms)');
-            /* If fallback timer already fired and was waiting for peak, show now */
-            if (_ptFallbackAfterPeak && !_ptAutoSwitchTriggered) {
-              console.log('[Bomaye Layer 7] Peak reached after timer — showing fallback button');
-              _ptShowFallbackButton();
-              _ptFallbackAfterPeak = false;
-            }
-          }
-        }
-      } else if (currentH > 0 && currentH !== lastH) {
-        console.log('[Bomaye Layer 7] Loading: ' + currentH + 'px (waiting for >400px to start peak detection)');
-      }
-    } else {
-      /* ── Drop detection phase (peak already confirmed) ── */
-      if (currentH > 0 && currentH < _ptPassFormPeakHeight * 0.60 && currentH < 320) {
-        console.log('[Bomaye Layer 7] Height drop detected — peak: ' + _ptPassFormPeakHeight + 'px, current: ' + currentH + 'px — triggering step 2');
-        _ptTriggerAutoSwitch();
-        return; /* stop polling — auto-switch is in progress */
-      }
-    }
-
-    lastH = currentH;
-    _ptLayer7Timer = setTimeout(tick, 200);
-  }
-
-  tick();
-  console.log('[Bomaye Layer 7] Height-drop detection started');
-}
-
-function _ptStopHeightDropDetection() {
-  if (_ptLayer7Timer) { clearTimeout(_ptLayer7Timer); _ptLayer7Timer = null; }
-  _ptPassFormPeakHeight = 0;
-  _ptPeakStableStart    = 0;
-  _ptPeakConfirmed      = false;
-  _ptFallbackAfterPeak  = false;
-}
-
-function _ptInitAutoSwitchDetection() {
-  _ptAutoSwitchTriggered = false;
-  _ptBsportMsgHandler = _ptHandleBsportMessage;
-  window.addEventListener('message', _ptBsportMsgHandler);
-  _ptStartUrlPolling();
-  _ptStartDomPolling();
-  _ptStartMutationObserver();
-  _ptStartClickDetection();
-  _ptStartIframeDomScanning();
-  _ptStartHeightDropDetection();
-  _ptStartFallbackButtonTimer();
-}
-
-function _ptCleanupAutoSwitch() {
-  if (_ptBsportMsgHandler) {
-    window.removeEventListener('message', _ptBsportMsgHandler);
-    _ptBsportMsgHandler = null;
-  }
-  _ptStopUrlPolling();
-  _ptStopDomPolling();
-  _ptStopMutationObserver();
-  _ptStopClickDetection();
-  _ptStopIframeDomScanning();
-  _ptStopHeightDropDetection();
-  _ptHideFallbackButton();
-  _ptStopIframeAutoResize('pt-pass-iframe');
-  _ptStopIframeAutoResize('pt-cal-iframe');
-  _ptAutoSwitchTriggered = false;
-}
 
 /* ── Iframe auto-resize: srcdoc iframes are same-origin → can measure content ── */
 
@@ -1825,37 +1354,10 @@ function _ptApplyIosScrollFix() {
   if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) return;
   var modalBody = document.querySelector('.pt-modal-body');
   if (!modalBody) return;
+  /* Reinforce scroll on iOS — iframe has no touch-action override so
+     vertical swipes naturally bubble up to this container */
   modalBody.style.webkitOverflowScrolling = 'touch';
   modalBody.style.overflowY = 'auto';
-
-  /* Attach touch-forwarding to every iframe wrapper (current + future) */
-  function attachToWrapper(wrapper) {
-    if (wrapper._ptTouchBound) return;
-    wrapper._ptTouchBound = true;
-    var lastY = 0;
-    wrapper.addEventListener('touchstart', function (e) {
-      lastY = e.touches[0].clientY;
-    }, { passive: true });
-    wrapper.addEventListener('touchmove', function (e) {
-      var delta = lastY - e.touches[0].clientY;
-      modalBody.scrollTop += delta;
-      lastY = e.touches[0].clientY;
-    }, { passive: true });
-  }
-
-  document.querySelectorAll('.pt-iframe-wrapper').forEach(attachToWrapper);
-
-  /* Also catch wrappers added later (lazy-mounted widgets) */
-  if (typeof MutationObserver !== 'undefined') {
-    var mo = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.classList && node.classList.contains('pt-iframe-wrapper')) attachToWrapper(node);
-        });
-      });
-    });
-    mo.observe(modalBody, { childList: true, subtree: true });
-  }
 }
 
 /* ── Modal: open / close ── */
@@ -1863,9 +1365,10 @@ function ptOpenModal() {
   var modal = document.getElementById('pt-booking-modal');
   if (!modal) return;
   _ptMountWidget();
+  /* Pre-mount calendar so it loads in background while user reads pass form */
+  _ptMountCalendarWidget();
   modal.classList.add('open');
   _ptLockBody();
-  _ptInitAutoSwitchDetection();
   _ptApplyIosScrollFix();
   /* Dispatch GTM-trackable event */
   modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
@@ -1875,7 +1378,6 @@ function ptCloseModal() {
   if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
   _ptUnlockBody();
-  _ptCleanupAutoSwitch();
 }
 
 /* Close on backdrop click */
