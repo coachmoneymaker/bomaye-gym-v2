@@ -828,6 +828,10 @@
     }
   </style>
 <link rel="stylesheet" href="/assets/css/cookie-consent.css">
+<link rel="preconnect" href="https://backoffice.bsport.io" crossorigin />
+<link rel="dns-prefetch" href="https://backoffice.bsport.io" />
+<link rel="dns-prefetch" href="https://cdn.bsport.io" />
+<link rel="stylesheet" href="/assets/css/probetraining-modal.css" />
   <!-- Schema.org -->
   <script type="application/ld+json">
   {
@@ -1015,7 +1019,7 @@
         <h2 class="mw-trial-h2">Noch nicht sicher?</h2>
         <p class="mw-trial-sub">Komm zum kostenlosen Probetraining. Kein Vertrag. Kein Druck.</p>
         <p class="mw-trial-body">Erlebe das Bomaye Gym, unsere Coaches und die Community — bevor du dich entscheidest. Ein Training reicht, um zu wissen.</p>
-        <a href="/index?probetraining=1" class="mw-trial-btn">KOSTENLOSES PROBETRAINING BUCHEN</a>
+        <button type="button" class="mw-trial-btn" onclick="ptOpenModal()">KOSTENLOSES PROBETRAINING BUCHEN</button>
         <p class="mw-trial-hint">Einfach Stunde aussuchen &amp; kostenlos einbuchen.</p>
       </div>
     </section>
@@ -1087,6 +1091,7 @@
   </script>
 
 <script src="/assets/js/cookie-consent.js"></script>
+<script src="/assets/js/probetraining-modal.js"></script>
 
 <style>
   /* ── Bsport subscription modal ─────────────────────── */
