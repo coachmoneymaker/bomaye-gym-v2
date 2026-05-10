@@ -37,7 +37,12 @@
     + 'document.addEventListener("touchstart",function(e){lastY=e.touches[0].clientY;},{passive:true});'
     + 'document.addEventListener("touchmove",function(e){'
     + 'var dy=lastY-e.touches[0].clientY;lastY=e.touches[0].clientY;'
-    + 'try{var mb=window.parent.document.querySelector(".pt-modal-body");if(mb)mb.scrollTop+=dy;}catch(err){}'
+    + 'try{'
+    + 'var outer=window.parent.document.getElementById("pt-booking-modal");'
+    + 'var inner=window.parent.document.querySelector(".pt-modal-body");'
+    + 'if(outer&&outer.scrollHeight>outer.clientHeight+5){outer.scrollTop+=dy;}'
+    + 'else if(inner){inner.scrollTop+=dy;}'
+    + '}catch(err){}'
     + '},{passive:true});'
     + '})()\x3c/script>';
 

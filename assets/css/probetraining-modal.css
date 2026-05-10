@@ -193,11 +193,19 @@
   line-height: 1.2;
 }
 @media (max-width: 600px) {
-  #pt-booking-modal { padding: 0; align-items: flex-end; }
+  #pt-booking-modal {
+    padding: 0;
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
   .pt-modal-card {
     width: 100%;
     max-width: 100%;
-    max-height: 100dvh;
+    min-height: 100dvh;
+    overflow: visible;
+    background: #F5F0E8;
     border-left: none;
     border-right: none;
     border-bottom: none;
@@ -218,5 +226,12 @@
   }
   .pt-continue-subtitle { font-size: 10px; }
   .pt-modal-tab { padding: 7px 1rem; font-size: 0.63rem; }
-  .pt-modal-footer { padding: 5px 14px; }
+  .pt-modal-body {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+  .pt-modal-footer {
+    padding: 5px 14px;
+    margin-top: auto;
+  }
 }
