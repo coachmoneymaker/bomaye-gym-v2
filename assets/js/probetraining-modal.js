@@ -20,7 +20,7 @@
 
   /* ── Bomaye brand CSS injected into Bsport srcdoc iframes ── */
   var _ptBomayeWidgetCSS = '<style>'
-    + 'html,body{margin:0!important;padding:0!important;overflow:hidden!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;touch-action:pan-y!important;}'
+    + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;touch-action:pan-y!important;}'
     + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;min-height:0!important;}'
     + '*{overflow:visible!important;max-height:none!important;}'
     + 'div[style*="overflow"]{overflow:visible!important;max-height:none!important;height:auto!important;}'
