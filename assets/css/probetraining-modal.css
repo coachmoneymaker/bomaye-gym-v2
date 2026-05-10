@@ -197,11 +197,26 @@
   .pt-modal-card {
     width: 100%;
     max-width: 100%;
-    max-height: 96dvh;
+    max-height: 100dvh;
     border-left: none;
     border-right: none;
     border-bottom: none;
     border-top: 1px solid rgba(201,168,76,0.25);
     border-radius: 0;
   }
+}
+@media (max-width: 767px) {
+  .pt-modal-header {
+    padding: 10px 14px 8px;
+    gap: 0.5rem;
+  }
+  .pt-modal-eyebrow { margin-bottom: 2px; }
+  .pt-modal-title { font-size: clamp(1.35rem, 5vw, 2.2rem); }
+  .pt-continue-button {
+    padding: 10px 16px;
+    gap: 2px;
+  }
+  .pt-continue-subtitle { font-size: 10px; }
+  .pt-modal-tab { padding: 7px 1rem; font-size: 0.63rem; }
+  .pt-modal-footer { padding: 5px 14px; }
 }
