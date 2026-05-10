@@ -245,26 +245,32 @@
 .pt-scroll-helper,
 .pt-scroll-hint { display: none; }
 @media (max-width: 767px) {
-  #pt-booking-modal.open .pt-scroll-helper {
+  body.pt-modal-open .pt-scroll-helper {
     position: fixed;
-    top: 50%;
-    right: 6px;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 200px;
+    top: 35%;
+    right: 0;
+    width: 12px;
+    height: 120px;
     z-index: 10001;
-    background: rgba(10, 10, 8, 0.9);
-    border: 1px solid #C9A84C;
+    background: rgba(201, 168, 76, 0.2);
+    border-left: 2px solid #C9A84C;
+    border-top: 1px solid rgba(201, 168, 76, 0.4);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 0;
-    pointer-events: auto;
+    padding: 6px 0;
+    pointer-events: none;
     touch-action: none;
-    cursor: ns-resize;
     user-select: none;
     -webkit-user-select: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  body.pt-modal-open .pt-scroll-helper.is-visible {
+    opacity: 1;
+    pointer-events: auto;
   }
   .pt-scroll-helper-track {
     flex: 1;
@@ -273,11 +279,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 0;
+    padding: 2px 0;
   }
   .pt-scroll-helper-arrow {
     color: #C9A84C;
-    font-size: 10px;
+    font-size: 8px;
     line-height: 1;
   }
   .pt-scroll-hint {

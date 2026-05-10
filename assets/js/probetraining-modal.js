@@ -207,6 +207,7 @@
     if (!modal) return;
     _ptMountWidget();
     _ptMountCalendarWidget();
+    document.body.classList.add('pt-modal-open');
     _ptSetupScrollHelper();
     modal.classList.add('open');
     _ptLockBody();
@@ -223,6 +224,7 @@
     var modal = document.getElementById('pt-booking-modal');
     if (!modal || !modal.classList.contains('open')) return;
     modal.classList.remove('open');
+    document.body.classList.remove('pt-modal-open');
     _ptUnlockBody();
   };
 
@@ -234,18 +236,34 @@
   };
 
   var _ptScrollHelperReady = false;
+  var _ptUpdateHelperVisibility = null;
   function _ptSetupScrollHelper() {
-    if (_ptScrollHelperReady) return;
-    _ptScrollHelperReady = true;
     var strip = document.getElementById('pt-scroll-helper-strip');
     var modal = document.getElementById('pt-booking-modal');
     if (!strip || !modal) return;
+    if (_ptScrollHelperReady) {
+      if (_ptUpdateHelperVisibility) setTimeout(_ptUpdateHelperVisibility, 300);
+      return;
+    }
+    _ptScrollHelperReady = true;
     try {
       if (localStorage.getItem('pt-hint-seen') === '1') {
         var hint = document.getElementById('pt-scroll-hint');
         if (hint) hint.style.display = 'none';
       }
     } catch (e) {}
+    _ptUpdateHelperVisibility = function () {
+      var maxScroll = modal.scrollHeight - modal.clientHeight;
+      var scrollProgress = maxScroll > 0 ? modal.scrollTop / maxScroll : 0;
+      var hasMore = (maxScroll - modal.scrollTop) > 100;
+      if ((scrollProgress > 0.15 && hasMore) || scrollProgress > 0.4) {
+        strip.classList.add('is-visible');
+      } else {
+        strip.classList.remove('is-visible');
+      }
+    };
+    modal.addEventListener('scroll', _ptUpdateHelperVisibility, { passive: true });
+    setTimeout(_ptUpdateHelperVisibility, 500);
     var _isDragging = false, _startY = 0, _startScroll = 0;
     strip.addEventListener('touchstart', function (e) {
       _isDragging = true;
@@ -259,11 +277,10 @@
       modal.scrollTop = _startScroll - dy * 3;
       e.preventDefault();
     }, { passive: false });
-    strip.addEventListener('touchend', function () { _isDragging = false; });
-    var upArrow = strip.querySelector('.pt-scroll-helper-arrow-up');
-    var downArrow = strip.querySelector('.pt-scroll-helper-arrow-down');
-    if (upArrow) upArrow.addEventListener('click', function () { modal.scrollBy({ top: -300, behavior: 'smooth' }); });
-    if (downArrow) downArrow.addEventListener('click', function () { modal.scrollBy({ top: 300, behavior: 'smooth' }); });
+    strip.addEventListener('touchend', function () {
+      _isDragging = false;
+      setTimeout(_ptUpdateHelperVisibility, 200);
+    });
   }
 
   /* ── Modal HTML injection — runs once per page ── */
