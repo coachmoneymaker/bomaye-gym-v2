@@ -216,6 +216,91 @@
     .hero-h1 { line-height: 0.95; }
   }
 
+  /* ── HERO REBUILD ── */
+
+  /* Sharp-edge CTAs, tightened gap */
+  .hero-ctas .btn { border-radius: 0 !important; }
+  .hero-ctas { gap: 12px !important; }
+  @media (min-width: 769px) { .hero-ctas { gap: 16px !important; } }
+
+  /* Secondary (cream outline) button */
+  .btn--hero-secondary {
+    background: transparent !important;
+    border: 1.5px solid rgba(245,240,232,0.48) !important;
+    color: rgba(245,240,232,0.88) !important;
+    font-weight: 400 !important;
+    box-shadow: none !important;
+  }
+  .btn--hero-secondary:hover {
+    background: rgba(245,240,232,0.07) !important;
+    border-color: rgba(245,240,232,0.82) !important;
+    color: #F5F0E8 !important;
+    filter: none !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Micro-trust line */
+  .hero-micro-trust {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: rgba(245,240,232,0.65);
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0.03em;
+    opacity: 0; transform: translateY(8px);
+    will-change: opacity, transform;
+    transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  }
+  @media (min-width: 769px) {
+    .hero-micro-trust { font-size: 13px; text-align: left; }
+  }
+  #hero.hero-revealed .hero-micro-trust { opacity: 1; transform: none; transition-delay: 265ms; }
+
+  /* Tighten ctas animation so gap left by brand-tagline removal isn't felt */
+  #hero.hero-revealed .hero-ctas { transition-delay: 180ms !important; }
+
+  /* Desktop flex order for micro-trust (slot 5, between ctas=4 and credentials=6) */
+  @media (min-width: 901px) {
+    .hero-micro-trust { order: 5; }
+  }
+
+  /* Credentials v2 — single-line row with gold pipe dividers */
+  .hero-creds-v2 {
+    align-items: center !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+    margin-top: 1.75rem !important;
+  }
+  .hero-cred-v2-item {
+    font-family: var(--font-head);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.82);
+    text-transform: uppercase;
+    padding: 0 14px;
+    white-space: nowrap;
+  }
+  .hero-cred-v2-item:first-child { padding-left: 0; }
+  .hero-cred-v2-item:last-child  { padding-right: 0; }
+  .hero-cred-v2-divider {
+    display: block;
+    width: 1px;
+    height: 16px;
+    background: #C9A84C;
+    opacity: 0.55;
+    flex-shrink: 0;
+  }
+  @media (min-width: 769px) {
+    .hero-cred-v2-item { font-size: 13px; padding: 0 18px; }
+  }
+  @media (max-width: 480px) {
+    .hero-creds-v2 { flex-wrap: wrap !important; row-gap: 10px !important; }
+    .hero-cred-v2-item { font-size: 10px; letter-spacing: 0.05em; padding: 0 10px; }
+    .hero-cred-v2-divider { display: none; }
+    .hero-cred-v2-item::after { content: ' ·'; color: rgba(201,168,76,0.6); }
+    .hero-cred-v2-item:last-child::after { content: ''; }
+  }
+
   /* ── Pricing cards (shared with /mitglied-werden) ── */
   .mw-cards-inner {
     max-width: 1100px;
@@ -792,31 +877,23 @@
         IT'S NOT A GYM.<br>
         <span class="shimmer">IT'S PASSION.</span>
       </h2>
-      <p class="hero-subtitle" id="sanity-hero-subheadline">Echtes Boxen. Keine Fitness-Choreografie.<br>Geführt von zwei Landestrainern. Gecoacht von einem Weltmeister.</p>
-      <p class="hero-brand-tagline">BECOME BOMAYE.</p>
+      <p class="hero-subtitle" id="sanity-hero-subheadline">Boxen. Echt. Ohne Vorerfahrung.</p>
       <div class="hero-ctas">
-        <a href="/mitglied-werden" class="btn btn--gold btn--hero-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
+        <a href="/stundenplan" class="btn btn--gold btn--hero-primary" style="text-decoration:none;">
+          KOSTENLOSES PROBETRAINING
         </a>
-        <a href="#dna" onclick="event.preventDefault();nav('home','dna');" class="btn btn--hero-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.45);color:#fff;text-decoration:none;">
-          WARUM BOMAYE
+        <a href="/mitglied-werden" class="btn btn--hero-primary btn--hero-secondary" style="text-decoration:none;">
+          MITGLIED WERDEN
         </a>
       </div>
-      <div class="hero-credentials" aria-label="Trainer-Qualifikationen">
-        <div class="hero-cred-item">
-          <span class="hero-cred-label">Landestrainer</span>
-          <span class="hero-cred-sub">Bayerischer Box Verband</span>
-        </div>
-        <div class="hero-cred-item">
-          <span class="hero-cred-label">DBV A Trainer Lizenz</span>
-          <span class="hero-cred-sub">Deutscher Box Verband</span>
-        </div>
-        <div class="hero-cred-item">
-          <span class="hero-cred-label">20+ Jahre Erfahrung</span>
-          <span class="hero-cred-sub">Wettkampf und Leistungssport</span>
-        </div>
+      <p class="hero-micro-trust">Kein Vertrag · Kein Druck · 60 Sekunden Buchung</p>
+      <div class="hero-credentials hero-creds-v2" aria-label="Trainer-Qualifikationen">
+        <span class="hero-cred-v2-item">LANDESTRAINER BAYERN</span>
+        <span class="hero-cred-v2-divider" aria-hidden="true"></span>
+        <span class="hero-cred-v2-item">DBV A-LIZENZ</span>
+        <span class="hero-cred-v2-divider" aria-hidden="true"></span>
+        <span class="hero-cred-v2-item">20+ JAHRE WETTKAMPF</span>
       </div>
-      <p style="order:7;margin-top:16px;font-size:0.85rem;color:rgba(245,240,232,0.7);text-align:center;">Erst testen? → <a href="/stundenplan" style="color:#C9A84C;text-decoration:none;font-weight:600;">Kostenloses Probetraining buchen</a></p>
     </div>
     <div class="scroll-hint" aria-hidden="true">
       <div class="scroll-hint-line"></div>
