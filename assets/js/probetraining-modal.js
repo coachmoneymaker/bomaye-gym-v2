@@ -203,6 +203,8 @@
   };
 
   window.ptOpenModal = function () {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({event: 'ProbetrainingModalOpen'});
     var modal = document.getElementById('pt-booking-modal');
     if (!modal) return;
     _ptMountWidget();
