@@ -117,6 +117,9 @@
         });
         mo.observe(doc.body, { childList: true, subtree: true });
         iframe._ptMutationObserver = mo;
+        if (iframe.id === 'pt-pass-iframe') {
+          _ptWatchBookingConfirmation(doc);
+        }
       } catch (e) {}
     });
   }
@@ -127,6 +130,32 @@
     if (iframe._ptResizeTimer) { clearTimeout(iframe._ptResizeTimer); delete iframe._ptResizeTimer; }
     if (iframe._ptResizeObserver) { iframe._ptResizeObserver.disconnect(); delete iframe._ptResizeObserver; }
     if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect(); delete iframe._ptMutationObserver; }
+  }
+
+  /* ── Booking confirmation tracking ── */
+  var _ptBookingTracked = false;
+  function _ptWatchBookingConfirmation(doc) {
+    if (!doc || !doc.body) return;
+    var confirmObserver = new MutationObserver(function () {
+      if (_ptBookingTracked) return;
+      var text = doc.body.innerText || doc.body.textContent || '';
+      var confirmed =
+        text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 ||
+        text.indexOf('Die Buchung wurde erfolgreich') !== -1;
+      if (confirmed) {
+        _ptBookingTracked = true;
+        confirmObserver.disconnect();
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'probetraining_booking_completed',
+          booking_type: 'probetraining',
+          value: 30,
+          currency: 'EUR'
+        });
+        console.log('🎯 Probetraining booking tracked');
+      }
+    });
+    confirmObserver.observe(doc.body, { childList: true, subtree: true, characterData: true });
   }
 
   /* ── Bsport widget lazy-mounting ── */
@@ -226,6 +255,7 @@
     var modal = document.getElementById('pt-booking-modal');
     if (!modal || !modal.classList.contains('open')) return;
     modal.classList.remove('open');
+    _ptBookingTracked = false;
     document.body.classList.remove('pt-modal-open');
     _ptUnlockBody();
   };
