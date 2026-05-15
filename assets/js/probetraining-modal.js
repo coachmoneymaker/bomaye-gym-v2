@@ -129,63 +129,78 @@
     if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect(); delete iframe._ptMutationObserver; }
   }
 
-  /* ── Booking confirmation tracking (poll-based) ── */
+  /* ── Booking confirmation tracking ── */
   var _ptBookingTracked = false;
-  var _ptConfirmPollInterval = null;
-  var _ptConfirmPollCount = 0;
+  var _ptMessageListener = null;
+  var _ptDataLayerUnwatch = null;
+  var _ptTrackingTimeout = null;
 
-  function _ptStartBookingConfirmationPoll() {
-    _ptStopBookingConfirmationPoll();
-    _ptConfirmPollCount = 0;
-    _ptConfirmPollInterval = setInterval(function () {
-      _ptConfirmPollCount++;
-      if (_ptConfirmPollCount > 1800) { _ptStopBookingConfirmationPoll(); return; }
-      if (_ptBookingTracked) { _ptStopBookingConfirmationPoll(); return; }
-      var confirmed = false;
-      var foundIn = '';
-
-      function _ptCheckDoc(doc, label) {
-        if (!doc || !doc.body) return false;
-        if (doc.querySelector('.bs-status-message-with-icon__title')) { foundIn = label + ' (class)'; return true; }
-        var text = doc.body.innerText || doc.body.textContent || '';
-        if (text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 || text.indexOf('Die Buchung wurde erfolgreich') !== -1) {
-          foundIn = label + ' (text)'; return true;
-        }
-        return false;
-      }
-
-      if (_ptCheckDoc(document, 'main document')) { confirmed = true; }
-
-      if (!confirmed) {
-        var frames = document.querySelectorAll('iframe');
-        for (var i = 0; i < frames.length; i++) {
-          try {
-            var fdoc = frames[i].contentDocument || (frames[i].contentWindow && frames[i].contentWindow.document);
-            var label = 'iframe id=' + (frames[i].id || frames[i].src || i);
-            if (_ptCheckDoc(fdoc, label)) { confirmed = true; break; }
-          } catch (e) {}
-        }
-      }
-
-      console.log('🔍 Polling check, found:', confirmed, confirmed ? ('@ ' + foundIn) : '');
-      if (confirmed) {
-        _ptBookingTracked = true;
-        _ptStopBookingConfirmationPoll();
-        console.log('🎯 Found at:', foundIn);
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'probetraining_booking_completed',
-          booking_type: 'probetraining',
-          value: 30,
-          currency: 'EUR'
-        });
-        console.log('🎯 Probetraining booking tracked');
-      }
-    }, 1000);
+  function _ptFireBookingConfirmed(source) {
+    if (_ptBookingTracked) return;
+    _ptBookingTracked = true;
+    _ptStopBookingTracking();
+    console.log('🎯 Probetraining booking tracked via:', source);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'probetraining_booking_completed',
+      booking_type: 'probetraining',
+      value: 30,
+      currency: 'EUR'
+    });
   }
 
-  function _ptStopBookingConfirmationPoll() {
-    if (_ptConfirmPollInterval) { clearInterval(_ptConfirmPollInterval); _ptConfirmPollInterval = null; }
+  function _ptStopBookingTracking() {
+    if (_ptMessageListener) { window.removeEventListener('message', _ptMessageListener); _ptMessageListener = null; }
+    if (_ptDataLayerUnwatch) { _ptDataLayerUnwatch(); _ptDataLayerUnwatch = null; }
+    if (_ptTrackingTimeout) { clearTimeout(_ptTrackingTimeout); _ptTrackingTimeout = null; }
+  }
+
+  function _ptStartBookingTracking() {
+    _ptStopBookingTracking();
+    _ptBookingTracked = false;
+
+    /* ── postMessage listener: log everything, check for Bsport confirmation ── */
+    _ptMessageListener = function (e) {
+      console.log('📨 postMessage from:', e.origin, '| data:', JSON.stringify(e.data));
+      if (_ptBookingTracked) return;
+      var fromBsport = typeof e.origin === 'string' && e.origin.indexOf('bsport.io') !== -1;
+      var d = e.data;
+      var isConfirmation = false;
+      if (typeof d === 'string') {
+        isConfirmation = d.indexOf('booking') !== -1 || d.indexOf('success') !== -1 ||
+                         d.indexOf('confirmed') !== -1 || d.indexOf('Viel Spa') !== -1;
+      } else if (d && typeof d === 'object') {
+        var ds = JSON.stringify(d).toLowerCase();
+        isConfirmation = ds.indexOf('booking') !== -1 || ds.indexOf('success') !== -1 ||
+                         ds.indexOf('confirmed') !== -1 || ds.indexOf('buchung') !== -1 ||
+                         ds.indexOf('viel spa') !== -1;
+      }
+      if (fromBsport && isConfirmation) { _ptFireBookingConfirmed('postMessage:' + e.origin); }
+    };
+    window.addEventListener('message', _ptMessageListener);
+
+    /* ── dataLayer.push interceptor: log every push, catch Bsport events ── */
+    window.dataLayer = window.dataLayer || [];
+    var _origPush = window.dataLayer.push;
+    window.dataLayer.push = function () {
+      var args = Array.prototype.slice.call(arguments);
+      console.log('📊 dataLayer.push:', JSON.stringify(args[0]));
+      var result = _origPush.apply(window.dataLayer, args);
+      if (!_ptBookingTracked && args[0] && typeof args[0] === 'object') {
+        var ev = (args[0].event || '').toLowerCase();
+        var ds = JSON.stringify(args[0]).toLowerCase();
+        if (ev.indexOf('booking') !== -1 || ev.indexOf('purchase') !== -1 ||
+            ev.indexOf('conversion') !== -1 || ds.indexOf('viel spa') !== -1 ||
+            ds.indexOf('buchung wurde erfolgreich') !== -1) {
+          _ptFireBookingConfirmed('dataLayer.push:' + args[0].event);
+        }
+      }
+      return result;
+    };
+    _ptDataLayerUnwatch = function () { window.dataLayer.push = _origPush; };
+
+    /* ── auto-stop after 10 min ── */
+    _ptTrackingTimeout = setTimeout(_ptStopBookingTracking, 10 * 60 * 1000);
   }
 
   /* ── Bsport widget lazy-mounting ── */
@@ -272,7 +287,7 @@
     _ptSetupScrollHelper();
     modal.classList.add('open');
     _ptLockBody();
-    _ptStartBookingConfirmationPoll();
+    _ptStartBookingTracking();
     if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
       var mb = modal.querySelector('.pt-modal-body');
       if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
@@ -286,8 +301,7 @@
     var modal = document.getElementById('pt-booking-modal');
     if (!modal || !modal.classList.contains('open')) return;
     modal.classList.remove('open');
-    _ptStopBookingConfirmationPoll();
-    _ptBookingTracked = false;
+    _ptStopBookingTracking();
     document.body.classList.remove('pt-modal-open');
     _ptUnlockBody();
   };
