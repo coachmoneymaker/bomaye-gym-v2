@@ -117,9 +117,7 @@
         });
         mo.observe(doc.body, { childList: true, subtree: true });
         iframe._ptMutationObserver = mo;
-        if (iframe.id === 'pt-pass-iframe') {
-          _ptWatchBookingConfirmation(doc);
-        }
+        _ptWatchBookingConfirmation(doc, iframe.id);
       } catch (e) {}
     });
   }
@@ -134,9 +132,11 @@
 
   /* ── Booking confirmation tracking ── */
   var _ptBookingTracked = false;
-  function _ptWatchBookingConfirmation(doc) {
+  function _ptWatchBookingConfirmation(doc, iframeId) {
     if (!doc || !doc.body) return;
-    var confirmObserver = new MutationObserver(function () {
+    console.log('🔍 Observer attached to:', iframeId);
+    var confirmObserver = new MutationObserver(function (mutations) {
+      console.log('🔍 Mutation detected in:', iframeId, mutations.length);
       if (_ptBookingTracked) return;
       var text = doc.body.innerText || doc.body.textContent || '';
       var confirmed =
