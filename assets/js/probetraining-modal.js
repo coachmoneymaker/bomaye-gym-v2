@@ -117,7 +117,6 @@
         });
         mo.observe(doc.body, { childList: true, subtree: true });
         iframe._ptMutationObserver = mo;
-        _ptWatchBookingConfirmation(doc, iframe.id);
       } catch (e) {}
     });
   }
@@ -130,21 +129,38 @@
     if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect(); delete iframe._ptMutationObserver; }
   }
 
-  /* ── Booking confirmation tracking ── */
+  /* ── Booking confirmation tracking (poll-based) ── */
   var _ptBookingTracked = false;
-  function _ptWatchBookingConfirmation(doc, iframeId) {
-    if (!doc || !doc.body) return;
-    console.log('🔍 Observer attached to:', iframeId);
-    var confirmObserver = new MutationObserver(function (mutations) {
-      console.log('🔍 Mutation detected in:', iframeId, mutations.length);
-      if (_ptBookingTracked) return;
-      var text = doc.body.innerText || doc.body.textContent || '';
-      var confirmed =
-        text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 ||
-        text.indexOf('Die Buchung wurde erfolgreich') !== -1;
+  var _ptConfirmPollInterval = null;
+  var _ptConfirmPollCount = 0;
+
+  function _ptStartBookingConfirmationPoll() {
+    _ptStopBookingConfirmationPoll();
+    _ptConfirmPollCount = 0;
+    _ptConfirmPollInterval = setInterval(function () {
+      _ptConfirmPollCount++;
+      if (_ptConfirmPollCount > 1800) { _ptStopBookingConfirmationPoll(); return; }
+      if (_ptBookingTracked) { _ptStopBookingConfirmationPoll(); return; }
+      var iframeIds = ['pt-pass-iframe', 'pt-cal-iframe'];
+      var confirmed = false;
+      for (var i = 0; i < iframeIds.length; i++) {
+        try {
+          var el = document.getElementById(iframeIds[i]);
+          if (!el) continue;
+          var doc = el.contentDocument || (el.contentWindow && el.contentWindow.document);
+          if (!doc || !doc.body) continue;
+          var text = doc.body.innerText || doc.body.textContent || '';
+          if (text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 ||
+              text.indexOf('Die Buchung wurde erfolgreich') !== -1) {
+            confirmed = true;
+            break;
+          }
+        } catch (e) {}
+      }
+      console.log('🔍 Polling check, found:', confirmed);
       if (confirmed) {
         _ptBookingTracked = true;
-        confirmObserver.disconnect();
+        _ptStopBookingConfirmationPoll();
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           event: 'probetraining_booking_completed',
@@ -154,8 +170,11 @@
         });
         console.log('🎯 Probetraining booking tracked');
       }
-    });
-    confirmObserver.observe(doc.body, { childList: true, subtree: true, characterData: true });
+    }, 1000);
+  }
+
+  function _ptStopBookingConfirmationPoll() {
+    if (_ptConfirmPollInterval) { clearInterval(_ptConfirmPollInterval); _ptConfirmPollInterval = null; }
   }
 
   /* ── Bsport widget lazy-mounting ── */
@@ -242,6 +261,7 @@
     _ptSetupScrollHelper();
     modal.classList.add('open');
     _ptLockBody();
+    _ptStartBookingConfirmationPoll();
     if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
       var mb = modal.querySelector('.pt-modal-body');
       if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
@@ -255,6 +275,7 @@
     var modal = document.getElementById('pt-booking-modal');
     if (!modal || !modal.classList.contains('open')) return;
     modal.classList.remove('open');
+    _ptStopBookingConfirmationPoll();
     _ptBookingTracked = false;
     document.body.classList.remove('pt-modal-open');
     _ptUnlockBody();
