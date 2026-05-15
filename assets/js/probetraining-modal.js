@@ -141,26 +141,37 @@
       _ptConfirmPollCount++;
       if (_ptConfirmPollCount > 1800) { _ptStopBookingConfirmationPoll(); return; }
       if (_ptBookingTracked) { _ptStopBookingConfirmationPoll(); return; }
-      var iframeIds = ['pt-pass-iframe', 'pt-cal-iframe'];
       var confirmed = false;
-      for (var i = 0; i < iframeIds.length; i++) {
-        try {
-          var el = document.getElementById(iframeIds[i]);
-          if (!el) continue;
-          var doc = el.contentDocument || (el.contentWindow && el.contentWindow.document);
-          if (!doc || !doc.body) continue;
-          var text = doc.body.innerText || doc.body.textContent || '';
-          if (text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 ||
-              text.indexOf('Die Buchung wurde erfolgreich') !== -1) {
-            confirmed = true;
-            break;
-          }
-        } catch (e) {}
+      var foundIn = '';
+
+      function _ptCheckDoc(doc, label) {
+        if (!doc || !doc.body) return false;
+        if (doc.querySelector('.bs-status-message-with-icon__title')) { foundIn = label + ' (class)'; return true; }
+        var text = doc.body.innerText || doc.body.textContent || '';
+        if (text.indexOf('Viel Spa\xdf beim Kurs!') !== -1 || text.indexOf('Die Buchung wurde erfolgreich') !== -1) {
+          foundIn = label + ' (text)'; return true;
+        }
+        return false;
       }
-      console.log('🔍 Polling check, found:', confirmed);
+
+      if (_ptCheckDoc(document, 'main document')) { confirmed = true; }
+
+      if (!confirmed) {
+        var frames = document.querySelectorAll('iframe');
+        for (var i = 0; i < frames.length; i++) {
+          try {
+            var fdoc = frames[i].contentDocument || (frames[i].contentWindow && frames[i].contentWindow.document);
+            var label = 'iframe id=' + (frames[i].id || frames[i].src || i);
+            if (_ptCheckDoc(fdoc, label)) { confirmed = true; break; }
+          } catch (e) {}
+        }
+      }
+
+      console.log('🔍 Polling check, found:', confirmed, confirmed ? ('@ ' + foundIn) : '');
       if (confirmed) {
         _ptBookingTracked = true;
         _ptStopBookingConfirmationPoll();
+        console.log('🎯 Found at:', foundIn);
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           event: 'probetraining_booking_completed',
