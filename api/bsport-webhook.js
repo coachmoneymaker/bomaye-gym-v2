@@ -273,12 +273,11 @@ export default async function handler(req, res) {
   const kvKey = `webhook:bsport:invoice:${invoiceId}`;
   if (kv) {
     try {
-      const existing = await kv.get(kvKey);
-      if (existing) {
+      const wasSet = await kv.set(kvKey, Date.now(), { ex: 60 * 60 * 24 * 30, nx: true });
+      if (!wasSet) {
         console.log(JSON.stringify({ step: 'idempotency', duplicate: true, invoiceId }));
         return res.status(200).json({ duplicate: true, invoiceId });
       }
-      await kv.set(kvKey, Date.now(), { ex: 60 * 60 * 24 * 30 });
     } catch (err) {
       // Non-fatal — log and continue; worst case is a duplicate conversion event
       console.log(JSON.stringify({ step: 'kv', ok: false, error: err.message }));
@@ -286,7 +285,7 @@ export default async function handler(req, res) {
   }
 
   // Conversion type detection
-  const total     = obj.total ?? obj.amount_paid ?? 0;
+  const total     = Number(obj.total ?? obj.amount_paid ?? 0);
   const lineItems = obj.line_items?.data ?? [];
   const currency  = (obj.currency || 'eur').toUpperCase();
   const customer  = obj.customer ?? {};
