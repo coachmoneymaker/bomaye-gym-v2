@@ -236,6 +236,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
+  // Bsport sends multiple webhook types to the same URL.
+  // We only care about invoice-pay for conversion tracking.
+  // Gracefully skip everything else with 200 so Bsport doesn't retry.
+  const eventType = body?.event_type;
+  if (eventType && eventType !== 'invoice-pay') {
+    console.log(JSON.stringify({ step: 'filter', ok: true, skipped: true, eventType }));
+    return res.status(200).json({ ok: true, skipped: true, reason: `event-type-not-tracked: ${eventType}` });
+  }
+
   // Bsport request fingerprint validation
   const auth = validateBsportRequest(rawBody, req.headers, body);
   console.log(JSON.stringify({ step: 'auth', ok: auth.ok, mode: auth.mode, detail: auth.detail }));
