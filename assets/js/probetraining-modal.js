@@ -1,0 +1,429 @@
+(function () {
+  'use strict';
+
+  /* ── Body scroll lock ── */
+  var _ptScrollY = 0;
+  function _ptLockBody() {
+    _ptScrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + _ptScrollY + 'px';
+    document.body.style.width = '100%';
+  }
+  function _ptUnlockBody() {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo({ top: _ptScrollY, behavior: 'instant' });
+  }
+
+  /* ── Bomaye brand CSS injected into Bsport srcdoc iframes ── */
+  var _ptBomayeWidgetCSS = '<style>'
+    + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;touch-action:pan-y!important;}'
+    + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;min-height:0!important;}'
+    + '*{overflow:visible!important;max-height:none!important;}'
+    + 'div[style*="overflow"]{overflow:visible!important;max-height:none!important;height:auto!important;}'
+    + 'button,.MuiButton-root,[role="button"],.MuiButtonBase-root{border-radius:0!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;box-shadow:none!important;overflow:hidden!important;}'
+    + '.MuiButton-contained,.MuiButton-containedPrimary{background-color:#C9A84C!important;color:#0A0A08!important;border:2px solid #C9A84C!important;}'
+    + '.MuiButton-text,.MuiButton-outlined{color:#0A0A08!important;background:transparent!important;border:2px solid rgba(10,10,8,.2)!important;}'
+    + '.MuiCard-root,.MuiPaper-root{border-radius:0!important;box-shadow:none!important;}'
+    + '.MuiInputBase-root,.MuiOutlinedInput-root{border-radius:0!important;}'
+    + '.MuiChip-root{border-radius:0!important;background-color:rgba(201,168,76,.1)!important;color:#0A0A08!important;border:1px solid #C9A84C!important;}'
+    + '</style>'
+    /* Forward touch-scroll from inside the srcdoc iframe up to the parent modal body */
+    + '<script>(function(){'
+    + 'var lastY=0;'
+    + 'document.addEventListener("touchstart",function(e){lastY=e.touches[0].clientY;},{passive:true});'
+    + 'document.addEventListener("touchmove",function(e){'
+    + 'var dy=lastY-e.touches[0].clientY;lastY=e.touches[0].clientY;'
+    + 'try{'
+    + 'var outer=window.parent.document.getElementById("pt-booking-modal");'
+    + 'var inner=window.parent.document.querySelector(".pt-modal-body");'
+    + 'if(outer&&outer.scrollHeight>outer.clientHeight+5){outer.scrollTop+=dy;}'
+    + 'else if(inner){inner.scrollTop+=dy;}'
+    + '}catch(err){}'
+    + '},{passive:true});'
+    /* After any tap inside the iframe, wait for Bsport to render its popup,
+       then scroll the outer modal to top so the popup is fully visible */
+    + 'document.addEventListener("click",function(){'
+    + 'setTimeout(function(){'
+    + 'try{'
+    + 'var mo=window.parent.document.getElementById("pt-booking-modal");'
+    + 'if(mo&&mo.scrollTop>200)mo.scrollTo({top:0,behavior:"smooth"});'
+    + '}catch(e){}'
+    + '},400);'
+    + '});'
+    + '})()\x3c/script>';
+
+  /* ── Iframe auto-resize (same-origin srcdoc iframes) ── */
+  function _ptResizeIframeToContent(iframe) {
+    if (typeof iframe === 'string') iframe = document.getElementById(iframe);
+    if (!iframe) return false;
+    var doc;
+    try { doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document); } catch (e) { return false; }
+    if (!doc || !doc.body) return false;
+    var body = doc.body, html = doc.documentElement;
+    var bodyRect = body.getBoundingClientRect().height, htmlRect = html.getBoundingClientRect().height;
+    var contentH = Math.max(body.scrollHeight, body.offsetHeight, bodyRect, html.clientHeight, html.scrollHeight, html.offsetHeight, htmlRect);
+    var deepest = 0;
+    try {
+      var els = body.querySelectorAll('*');
+      for (var i = 0; i < els.length; i++) {
+        var r = els[i].getBoundingClientRect();
+        var b = r.top + r.height;
+        if (b > deepest && r.height > 0) deepest = b;
+      }
+    } catch (e) {}
+    var mobileMin = window.innerWidth <= 767 ? 950 : 0;
+    var finalH = Math.max(contentH, deepest, mobileMin);
+    var currentH = parseInt(iframe.style.height) || 0;
+    if (finalH > 50 && Math.abs(finalH - currentH) > 20) { iframe.style.height = finalH + 'px'; return true; }
+    return false;
+  }
+
+  function _ptStartIframeAutoResize(iframeId) {
+    _ptStopIframeAutoResize(iframeId);
+    var iframe = document.getElementById(iframeId);
+    if (!iframe) return;
+    var startTime = Date.now();
+    function tick() {
+      if (!document.getElementById(iframeId)) return;
+      var elapsed = Date.now() - startTime;
+      _ptResizeIframeToContent(iframe);
+      var next = elapsed < 5000 ? 100 : elapsed < 15000 ? 300 : elapsed < 30000 ? 1000 : -1;
+      if (next === -1) return;
+      iframe._ptResizeTimer = setTimeout(tick, next);
+    }
+    tick();
+    iframe.addEventListener('load', function () {
+      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 100);
+      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 500);
+      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 1500);
+      try {
+        var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (!doc || !doc.body) return;
+        if (typeof ResizeObserver !== 'undefined') {
+          var ro = new ResizeObserver(function () { _ptResizeIframeToContent(iframe); });
+          ro.observe(doc.body); ro.observe(doc.documentElement);
+          Array.prototype.forEach.call(doc.body.children, function (c) { try { ro.observe(c); } catch (e) {} });
+          iframe._ptResizeObserver = ro;
+        }
+        var mo = new MutationObserver(function () {
+          if (iframe._ptResizeObserver) {
+            Array.prototype.forEach.call(doc.body.children, function (c) { try { iframe._ptResizeObserver.observe(c); } catch (e) {} });
+          }
+          _ptResizeIframeToContent(iframe);
+        });
+        mo.observe(doc.body, { childList: true, subtree: true });
+        iframe._ptMutationObserver = mo;
+      } catch (e) {}
+    });
+  }
+
+  function _ptStopIframeAutoResize(iframeId) {
+    var iframe = document.getElementById(iframeId);
+    if (!iframe) return;
+    if (iframe._ptResizeTimer) { clearTimeout(iframe._ptResizeTimer); delete iframe._ptResizeTimer; }
+    if (iframe._ptResizeObserver) { iframe._ptResizeObserver.disconnect(); delete iframe._ptResizeObserver; }
+    if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect(); delete iframe._ptMutationObserver; }
+  }
+
+  /* ── Booking confirmation tracking ── */
+  var _ptBookingTracked = false;
+  var _ptMessageListener = null;
+  var _ptDataLayerUnwatch = null;
+  var _ptTrackingTimeout = null;
+
+  function _ptFireBookingConfirmed(source) {
+    if (_ptBookingTracked) return;
+    _ptBookingTracked = true;
+    _ptStopBookingTracking();
+    console.log('🎯 Probetraining booking tracked via:', source);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'probetraining_booking_completed',
+      booking_type: 'probetraining',
+      value: 30,
+      currency: 'EUR'
+    });
+  }
+
+  function _ptStopBookingTracking() {
+    if (_ptMessageListener) { window.removeEventListener('message', _ptMessageListener); _ptMessageListener = null; }
+    if (_ptDataLayerUnwatch) { _ptDataLayerUnwatch(); _ptDataLayerUnwatch = null; }
+    if (_ptTrackingTimeout) { clearTimeout(_ptTrackingTimeout); _ptTrackingTimeout = null; }
+  }
+
+  function _ptStartBookingTracking() {
+    _ptStopBookingTracking();
+    _ptBookingTracked = false;
+
+    /* ── postMessage listener: log everything, check for Bsport confirmation ── */
+    _ptMessageListener = function (e) {
+      console.log('📨 postMessage from:', e.origin, '| data:', JSON.stringify(e.data));
+      if (_ptBookingTracked) return;
+      var fromBsport = typeof e.origin === 'string' && e.origin.indexOf('bsport.io') !== -1;
+      var d = e.data;
+      var isConfirmation = false;
+      if (typeof d === 'string') {
+        isConfirmation = d.indexOf('booking') !== -1 || d.indexOf('success') !== -1 ||
+                         d.indexOf('confirmed') !== -1 || d.indexOf('Viel Spa') !== -1;
+      } else if (d && typeof d === 'object') {
+        var ds = JSON.stringify(d).toLowerCase();
+        isConfirmation = ds.indexOf('booking') !== -1 || ds.indexOf('success') !== -1 ||
+                         ds.indexOf('confirmed') !== -1 || ds.indexOf('buchung') !== -1 ||
+                         ds.indexOf('viel spa') !== -1;
+      }
+      if (fromBsport && isConfirmation) { _ptFireBookingConfirmed('postMessage:' + e.origin); }
+    };
+    window.addEventListener('message', _ptMessageListener);
+
+    /* ── dataLayer.push interceptor: log every push, catch Bsport events ── */
+    window.dataLayer = window.dataLayer || [];
+    var _origPush = window.dataLayer.push;
+    window.dataLayer.push = function () {
+      var args = Array.prototype.slice.call(arguments);
+      console.log('📊 dataLayer.push:', JSON.stringify(args[0]));
+      var result = _origPush.apply(window.dataLayer, args);
+      if (!_ptBookingTracked && args[0] && typeof args[0] === 'object') {
+        var ev = (args[0].event || '').toLowerCase();
+        var ds = JSON.stringify(args[0]).toLowerCase();
+        if (ev.indexOf('booking') !== -1 || ev.indexOf('purchase') !== -1 ||
+            ev.indexOf('conversion') !== -1 || ds.indexOf('viel spa') !== -1 ||
+            ds.indexOf('buchung wurde erfolgreich') !== -1) {
+          _ptFireBookingConfirmed('dataLayer.push:' + args[0].event);
+        }
+      }
+      return result;
+    };
+    _ptDataLayerUnwatch = function () { window.dataLayer.push = _origPush; };
+
+    /* ── auto-stop after 10 min ── */
+    _ptTrackingTimeout = setTimeout(_ptStopBookingTracking, 10 * 60 * 1000);
+  }
+
+  /* ── Bsport widget lazy-mounting ── */
+  var _ptWidgetMounted = false;
+  function _ptMountWidget() {
+    if (_ptWidgetMounted) return;
+    _ptWidgetMounted = true;
+    var view = document.getElementById('pt-pass-view');
+    if (!view) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'pt-iframe-wrapper';
+    var iframe = document.createElement('iframe');
+    iframe.id = 'pt-pass-iframe';
+    iframe.className = 'pt-bsport-iframe';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('scrolling', 'no');
+    iframe.srcdoc = _ptBomayeWidgetCSS
+      + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
+      + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
+      + '<script>MountBsportWidget({"parentElement":"bsport-widget-458519","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"pass","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"pass":{"paymentPackCategories":[25328],"privatePassCategories":[],"hideFilters":true,"hidePaymentCombo":true,"hidePrivatePass":false}}})<\/script>'
+      + '<div id="bsport-widget-458519"></div>';
+    wrap.appendChild(iframe);
+    view.appendChild(wrap);
+    _ptStartIframeAutoResize('pt-pass-iframe');
+  }
+
+  var _ptCalMounted = false;
+  function _ptMountCalendarWidget() {
+    if (_ptCalMounted) return;
+    _ptCalMounted = true;
+    var view = document.getElementById('pt-cal-view');
+    if (!view) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'pt-iframe-wrapper';
+    var iframe = document.createElement('iframe');
+    iframe.id = 'pt-cal-iframe';
+    iframe.className = 'pt-bsport-iframe';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('scrolling', 'no');
+    iframe.srcdoc = _ptBomayeWidgetCSS
+      + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
+      + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
+      + '<script>MountBsportWidget({"parentElement":"bsport-widget-880939","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"calendar","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"calendar":{"coaches":[],"establishments":[],"metaActivities":[244432,244539,244426,244420,244563,244431,245265],"levels":[],"variant":"time","groupSessionByPeriod":true,"todayOnly":false,"cardMode":false}}})<\/script>'
+      + '<div id="bsport-widget-880939"></div>';
+    wrap.appendChild(iframe);
+    view.appendChild(wrap);
+    _ptStartIframeAutoResize('pt-cal-iframe');
+  }
+
+  /* ── Global API (exposed for onclick= attributes) ── */
+  window.ptSwitchTab = function (tab) {
+    var passView = document.getElementById('pt-pass-view');
+    var calView  = document.getElementById('pt-cal-view');
+    var tabPass  = document.getElementById('pt-tab-pass');
+    var tabCal   = document.getElementById('pt-tab-cal');
+    if (tab === 'pass') {
+      passView.className = 'pt-modal-view pt-modal-view--active';
+      calView.className  = 'pt-modal-view';
+      tabPass.className  = 'pt-modal-tab active';
+      tabPass.setAttribute('aria-selected', 'true');
+      tabCal.className   = 'pt-modal-tab';
+      tabCal.setAttribute('aria-selected', 'false');
+    } else {
+      calView.className  = 'pt-modal-view pt-modal-view--active';
+      passView.className = 'pt-modal-view';
+      tabCal.className   = 'pt-modal-tab active';
+      tabCal.setAttribute('aria-selected', 'true');
+      tabPass.className  = 'pt-modal-tab';
+      tabPass.setAttribute('aria-selected', 'false');
+      _ptMountCalendarWidget();
+    }
+  };
+
+  window.ptOpenModal = function () {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({event: 'ProbetrainingModalOpen'});
+    var modal = document.getElementById('pt-booking-modal');
+    if (!modal) return;
+    _ptMountWidget();
+    _ptMountCalendarWidget();
+    document.body.classList.add('pt-modal-open');
+    _ptSetupScrollHelper();
+    modal.classList.add('open');
+    _ptLockBody();
+    _ptStartBookingTracking();
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      var mb = modal.querySelector('.pt-modal-body');
+      if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
+    }
+    if (window.dataLayer) dataLayer.push({ event: 'probetraining_modal_open' });
+    if (window.fbq) fbq('track', 'Lead');
+    modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
+  };
+
+  window.ptCloseModal = function () {
+    var modal = document.getElementById('pt-booking-modal');
+    if (!modal || !modal.classList.contains('open')) return;
+    modal.classList.remove('open');
+    _ptStopBookingTracking();
+    document.body.classList.remove('pt-modal-open');
+    _ptUnlockBody();
+  };
+
+  /* ── Scroll-helper strip (mobile touch-trap bypass) ── */
+  window.ptDismissScrollHint = function () {
+    var hint = document.getElementById('pt-scroll-hint');
+    if (hint) hint.style.display = 'none';
+    try { localStorage.setItem('pt-hint-seen', '1'); } catch (e) {}
+  };
+
+  var _ptScrollHelperReady = false;
+  var _ptUpdateHelperVisibility = null;
+  function _ptSetupScrollHelper() {
+    var strip = document.getElementById('pt-scroll-helper-strip');
+    var modal = document.getElementById('pt-booking-modal');
+    if (!strip || !modal) return;
+    if (_ptScrollHelperReady) {
+      if (_ptUpdateHelperVisibility) setTimeout(_ptUpdateHelperVisibility, 300);
+      return;
+    }
+    _ptScrollHelperReady = true;
+    try {
+      if (localStorage.getItem('pt-hint-seen') === '1') {
+        var hint = document.getElementById('pt-scroll-hint');
+        if (hint) hint.style.display = 'none';
+      }
+    } catch (e) {}
+    _ptUpdateHelperVisibility = function () {
+      var maxScroll = modal.scrollHeight - modal.clientHeight;
+      var scrollProgress = maxScroll > 0 ? modal.scrollTop / maxScroll : 0;
+      var hasMore = (maxScroll - modal.scrollTop) > 100;
+      if ((scrollProgress > 0.15 && hasMore) || scrollProgress > 0.4) {
+        strip.classList.add('is-visible');
+      } else {
+        strip.classList.remove('is-visible');
+      }
+    };
+    modal.addEventListener('scroll', _ptUpdateHelperVisibility, { passive: true });
+    setTimeout(_ptUpdateHelperVisibility, 500);
+    var _isDragging = false, _startY = 0, _startScroll = 0;
+    strip.addEventListener('touchstart', function (e) {
+      _isDragging = true;
+      _startY = e.touches[0].clientY;
+      _startScroll = modal.scrollTop;
+      e.preventDefault();
+    }, { passive: false });
+    strip.addEventListener('touchmove', function (e) {
+      if (!_isDragging) return;
+      var dy = e.touches[0].clientY - _startY;
+      modal.scrollTop = _startScroll - dy * 3;
+      e.preventDefault();
+    }, { passive: false });
+    strip.addEventListener('touchend', function () {
+      _isDragging = false;
+      setTimeout(_ptUpdateHelperVisibility, 200);
+    });
+  }
+
+  /* ── Modal HTML injection — runs once per page ── */
+  function _ptInjectModal() {
+    if (document.getElementById('pt-booking-modal')) return;
+    var el = document.createElement('div');
+    el.id = 'pt-booking-modal';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-label', 'Probetraining buchen');
+    el.setAttribute('data-event', 'probetraining-modal-opened');
+    el.innerHTML =
+      '<div class="pt-modal-card">'
+      + '<div class="pt-modal-header">'
+      + '<div class="pt-modal-header-text">'
+      + '<p class="pt-modal-eyebrow">DEIN PROBETRAINING</p>'
+      + '<h2 class="pt-modal-title">Wähle deinen Termin</h2>'
+      + '</div>'
+      + '<button class="pt-modal-close" onclick="ptCloseModal()" aria-label="Schließen" type="button"><i class="fa-solid fa-xmark"></i></button>'
+      + '<button id="pt-continue-button" class="pt-continue-button" onclick="ptSwitchTab(\'cal\')" aria-label="Weiter zu Schritt 2" type="button">'
+      + '<span class="pt-continue-text">✓ KURS BUCHEN</span>'
+      + '<span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>'
+      + '</button>'
+      + '</div>'
+      + '<div class="pt-scroll-hint" id="pt-scroll-hint">'
+      + '<span>Tipp: Am rechten Rand wischen zum Scrollen</span>'
+      + '<button onclick="ptDismissScrollHint()" aria-label="Hinweis schlie\xdfen" type="button">\xd7</button>'
+      + '</div>'
+      + '<div class="pt-modal-tabs" role="tablist">'
+      + '<button class="pt-modal-tab active" id="pt-tab-pass" onclick="ptSwitchTab(\'pass\')" role="tab" aria-selected="true" type="button">1. PASS HOLEN</button>'
+      + '<button class="pt-modal-tab" id="pt-tab-cal" onclick="ptSwitchTab(\'cal\')" role="tab" aria-selected="false" type="button">2. KURS WÄHLEN</button>'
+      + '</div>'
+      + '<div class="pt-modal-body">'
+      + '<div id="pt-pass-view" class="pt-modal-view pt-modal-view--active"></div>'
+      + '<div id="pt-cal-view" class="pt-modal-view"></div>'
+      + '</div>'
+      + '<div class="pt-modal-footer"><p>Du wirst sicher über bsport.io abgewickelt — kostenlos, unverbindlich.</p></div>'
+      + '<div class="pt-scroll-helper" id="pt-scroll-helper-strip" aria-hidden="true">'
+      + '<div class="pt-scroll-helper-track">'
+      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-up">&#9650;</div>'
+      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-down">&#9660;</div>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(el);
+    el.addEventListener('click', function (e) { if (e.target === this) ptCloseModal(); });
+  }
+
+  /* ── Boot ── */
+  function _ptBoot() {
+    /* Defensive reset: clear any stuck scroll-lock state from a previous page load */
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    _ptInjectModal();
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ptCloseModal(); });
+    if (window.location.search.indexOf('probetraining') !== -1) {
+      setTimeout(window.ptOpenModal, 600);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _ptBoot);
+  } else {
+    _ptBoot();
+  }
+})();

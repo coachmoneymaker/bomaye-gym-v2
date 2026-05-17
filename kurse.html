@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+  <!-- Google Ads --><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Kurse | BOMAYE GYM MUNICH — Boxing, Kickboxing, Youth & Mental</title>
   <meta name="description" content="Alle Kurse bei Bomaye Gym Munich: Boxing, Kickboxing, Youth Boxing, Olympisches Boxen und Mental Coaching. Professionelles Training für alle Level in München." />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#080808" />
+  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
   <meta property="og:title" content="Kurse — BOMAYE GYM MUNICH" />
   <meta property="og:description" content="Boxing, Kickboxing, Youth Boxing, Olympisches Boxen, Mental Coaching. Training für alle Level." />
   <meta property="og:type" content="website" />
@@ -18,7 +21,7 @@
   <meta property="og:locale" content="de_DE" />
   <link rel="canonical" href="https://www.bomayegym.com/kurse" />
 
-  <link rel="preload" href="/assets/images/bomaye-logo.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -260,16 +263,12 @@
     .course-detail__feat-body span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
 
     /* ══════════════════════════════════════════════════
-       MOBILE CAROUSEL — single-card focused, continuous RAF
+       MOBILE CAROUSEL — CSS scroll-snap (native, no RAF)
     ══════════════════════════════════════════════════ */
     .courses-carousel-wrap { display: none; }
 
-    .courses-carousel {
-      position: relative;
-      overflow: hidden;
-      display: block;
-      touch-action: pan-y pinch-zoom;
-    }
+    /* Base: minimal (element hidden on desktop via wrap) */
+    .courses-carousel { position: relative; }
 
     .carousel-card {
       flex: 0 0 auto;
@@ -415,6 +414,30 @@
       .courses-carousel-wrap { display: block; }
       .course-detail__inner  { grid-template-columns: 1fr; }
       .dsk-arrow { display: none !important; }
+
+      /* ── Scroll-snap carousel ── */
+      .courses-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        padding: 0 6vw;
+        gap: 12px;
+        box-sizing: border-box;
+      }
+      .courses-carousel::-webkit-scrollbar { display: none; }
+
+      /* Cards: fixed-size, centered snap target */
+      .carousel-card {
+        flex: 0 0 88vw;
+        width: 88vw;
+        min-height: unset;
+        height: 280px;
+        scroll-snap-align: center;
+        border-radius: 6px;
+      }
     }
 
     /* Nav */
@@ -458,24 +481,34 @@
     }
   </style>
 
-  <!-- Meta Pixel Code -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1989119321999811');
-  fbq('track', 'PageView');
-  fbq('track', 'ViewContent');
+  <link rel="stylesheet" href="/assets/css/cookie-consent.css">
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "@id": "https://bomayegym.com/#gym",
+    "name": "BOMAYE GYM MUNICH",
+    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
+    "url": "https://www.bomayegym.com",
+    "email": "support@bomayegym.com",
+    "telephone": "+491737513627",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
+      "addressLocality": "Munich",
+      "postalCode": "80639",
+      "addressCountry": "DE"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+    ],
+    "priceRange": "€€"
+  }
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1989119321999811&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
 </head>
 
 <body>
@@ -485,7 +518,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
     <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
@@ -494,11 +527,11 @@
     <nav class="nav-links" aria-label="Hauptnavigation">
       <a class="nav-link" href="/">HOME</a>
       <a class="nav-link nav-link-active" href="/kurse" aria-current="page">KURSE</a>
-      <a class="nav-link" href="/schedule">SCHEDULE</a>
+      <a class="nav-link" href="/stundenplan">SCHEDULE</a>
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN — AB 14,90€</a>
     </nav>
     <button class="burger" onclick="toggleKurseMenu()" aria-label="Menü" aria-expanded="false" id="kurse-burger-btn" type="button">
       <span class="burger-line"></span>
@@ -513,15 +546,30 @@
      style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;">
   <a href="/" class="mn-item" style="--mn-i:0">HOME</a>
   <a href="/kurse" class="mn-item" aria-current="page" style="--mn-i:1;color:var(--gold)!important">KURSE</a>
-  <a href="/schedule" class="mn-item" style="--mn-i:2">SCHEDULE</a>
+  <a href="/stundenplan" class="mn-item" style="--mn-i:2">SCHEDULE</a>
   <a href="/coaches" class="mn-item" style="--mn-i:3">COACHES</a>
   <a href="/about" class="mn-item" style="--mn-i:4">ABOUT US</a>
   <a href="/faq" class="mn-item" style="--mn-i:5">FAQ</a>
-  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleKurseMenu();" style="--mn-i:6;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <span class="mn-info-eyebrow" aria-hidden="true">Info</span>
+  <a class="mn-info-link" href="/hausordnung" style="--mn-i:6">Hausordnung</a>
+  <a class="mn-info-link" href="/downloads" style="--mn-i:7">Downloads</a>
+  <a class="mn-info-link" href="/u18" style="--mn-i:8">U18 · Minderjährige</a>
+  <div class="mn-divider" style="margin:14px auto;"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:9"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleKurseMenu();" style="--mn-i:10;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+  <div class="mn-contact-divider" style="--mn-i:11"></div>
+  <div class="mn-socials" style="--mn-i:12">
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  </div>
+  <span class="mn-contact-text" style="--mn-i:13">Pineapple Park · 80639 München</span>
+  <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:14">support@bomayegym.com</a>
+  <a class="mn-contact-text" href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer" style="--mn-i:15">+49 173 7513627</a>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
-<a href="https://wa.me/4917621932243?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+<a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="fa-brands fa-whatsapp"></i>
 </a>
@@ -547,7 +595,7 @@
     <div class="container">
       <div class="kp-hero-tag">TRAINING</div>
       <h1>TRAIN LIKE A FIGHTER.<br><span>START WHERE YOU ARE.</span></h1>
-      <p class="kp-hero-sub">Zehn Programme. Technik, Taktik und Conditioning — strukturiertes Boxtraining von Anfänger bis Wettkämpfer.</p>
+      <p class="kp-hero-sub">Sechs Programme. Vom ersten Jab bis zum Wettkampf — strukturiertes Boxtraining für jedes Level.</p>
     </div>
   </section>
 
@@ -555,7 +603,7 @@
   <section class="courses-section">
     <div class="container">
       <div class="courses-section-header reveal">
-        <span class="tag tag--dark">UNSERE PROGRAMS</span>
+        <span class="tag tag--dark">UNSERE PROGRAMME</span>
         <h2 style="margin-top:1rem;">WÄHLE DEIN <span class="gold">PROGRAMM.</span></h2>
         <p style="color:var(--muted);margin-top:0.75rem;max-width:520px;margin-left:auto;margin-right:auto;">Klicke auf einen Kurs für Details und Zeiten.</p>
       </div>
@@ -572,27 +620,18 @@
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">01 / 10</span>
+            <span class="dsk-card__num">01 / 06</span>
             <h3 class="dsk-card__title">BOXING</h3>
             <p class="dsk-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
           </div>
         </div>
 
-        <div class="dsk-card" data-course="kickboxing">
-          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
-          <div class="dsk-card__overlay"></div>
-          <div class="dsk-card__body">
-            <span class="dsk-card__num">02 / 10</span>
-            <h3 class="dsk-card__title">KICKBOXING</h3>
-            <p class="dsk-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
-          </div>
-        </div>
 
         <div class="dsk-card" data-course="youth">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">03 / 10</span>
+            <span class="dsk-card__num">02 / 06</span>
             <h3 class="dsk-card__title">YOUTH BOXING</h3>
             <p class="dsk-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren. Spaß, Disziplin, Charakter.</p>
           </div>
@@ -602,27 +641,18 @@
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">04 / 10</span>
+            <span class="dsk-card__num">03 / 06</span>
             <h3 class="dsk-card__title">OLYMPISCHES BOXEN</h3>
             <p class="dsk-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
           </div>
         </div>
 
-        <div class="dsk-card" data-course="mental">
-          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
-          <div class="dsk-card__overlay"></div>
-          <div class="dsk-card__body">
-            <span class="dsk-card__num">05 / 10</span>
-            <h3 class="dsk-card__title">MENTAL COACHING</h3>
-            <p class="dsk-card__short">Mentale Stärke, Fokus und Ring-Intelligenz für den Kopf.</p>
-          </div>
-        </div>
 
         <div class="dsk-card" data-course="firmenfitness">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">06 / 10</span>
+            <span class="dsk-card__num">04 / 06</span>
             <h3 class="dsk-card__title">CORPORATE BOXING</h3>
             <p class="dsk-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
           </div>
@@ -632,39 +662,20 @@
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">07 / 10</span>
-            <h3 class="dsk-card__title">EXECUTIVE TRAINING</h3>
-            <p class="dsk-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+            <span class="dsk-card__num">05 / 06</span>
+            <h3 class="dsk-card__title">PERSONAL TRAINING</h3>
+            <p class="dsk-card__short">1:1 Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
           </div>
         </div>
 
-        <div class="dsk-card" data-course="morning">
-          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-          <div class="dsk-card__overlay"></div>
-          <div class="dsk-card__body">
-            <span class="dsk-card__num">08 / 10</span>
-            <h3 class="dsk-card__title">MORNING TRAINING</h3>
-            <p class="dsk-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
-          </div>
-        </div>
 
         <div class="dsk-card" data-course="women">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
           <div class="dsk-card__overlay"></div>
           <div class="dsk-card__body">
-            <span class="dsk-card__num">09 / 10</span>
-            <h3 class="dsk-card__title">WOMEN'S BOXING</h3>
+            <span class="dsk-card__num">06 / 06</span>
+            <h3 class="dsk-card__title">BOMAYE QUEENS</h3>
             <p class="dsk-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-          </div>
-        </div>
-
-        <div class="dsk-card" data-course="strength">
-          <div class="dsk-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-          <div class="dsk-card__overlay"></div>
-          <div class="dsk-card__body">
-            <span class="dsk-card__num">10 / 10</span>
-            <h3 class="dsk-card__title">STRENGTH &amp; CONDITIONING</h3>
-            <p class="dsk-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
           </div>
         </div>
 
@@ -724,108 +735,67 @@
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-exec.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">01 / 10</span>
+            <span class="carousel-card__num">01 / 06</span>
             <h3 class="carousel-card__title">BOXING</h3>
             <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
 
-        <div class="carousel-card" data-course="kickboxing" onclick="openMobileCourse('kickboxing',1)">
-          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-kick.webp')"></div>
-          <div class="carousel-card__overlay"></div>
-          <div class="carousel-card__body">
-            <span class="carousel-card__num">02 / 10</span>
-            <h3 class="carousel-card__title">KICKBOXING</h3>
-            <p class="carousel-card__short">Dynamik, Power und Beinarbeit — von einem Weltmeister gecoacht.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
-          </div>
-        </div>
 
-        <div class="carousel-card" data-course="youth" onclick="openMobileCourse('youth',2)">
+        <div class="carousel-card" data-course="youth" onclick="openMobileCourse('youth',1)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-youth.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">03 / 10</span>
+            <span class="carousel-card__num">02 / 06</span>
             <h3 class="carousel-card__title">YOUTH BOXING</h3>
             <p class="carousel-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
 
-        <div class="carousel-card" data-course="olympic" onclick="openMobileCourse('olympic',3)">
+        <div class="carousel-card" data-course="olympic" onclick="openMobileCourse('olympic',2)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-olympic.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">04 / 10</span>
+            <span class="carousel-card__num">03 / 06</span>
             <h3 class="carousel-card__title">OLYMPISCHES BOXEN</h3>
             <p class="carousel-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
 
-        <div class="carousel-card" data-course="mental" onclick="openMobileCourse('mental',4)">
-          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-mind-v2.webp')"></div>
-          <div class="carousel-card__overlay"></div>
-          <div class="carousel-card__body">
-            <span class="carousel-card__num">05 / 10</span>
-            <h3 class="carousel-card__title">MENTAL COACHING</h3>
-            <p class="carousel-card__short">Mentale Stärke, Fokus und Ring-Intelligenz.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
-          </div>
-        </div>
 
-        <div class="carousel-card" data-course="firmenfitness" onclick="openMobileCourse('firmenfitness',5)">
+        <div class="carousel-card" data-course="firmenfitness" onclick="openMobileCourse('firmenfitness',3)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-corp.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">06 / 10</span>
+            <span class="carousel-card__num">04 / 06</span>
             <h3 class="carousel-card__title">CORPORATE BOXING</h3>
             <p class="carousel-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
 
-        <div class="carousel-card" data-course="executive" onclick="openMobileCourse('executive',6)">
+        <div class="carousel-card" data-course="executive" onclick="openMobileCourse('executive',4)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">07 / 10</span>
-            <h3 class="carousel-card__title">EXECUTIVE TRAINING</h3>
-            <p class="carousel-card__short">Exklusives 1-on-1 Training für Führungspersönlichkeiten.</p>
+            <span class="carousel-card__num">05 / 06</span>
+            <h3 class="carousel-card__title">PERSONAL TRAINING</h3>
+            <p class="carousel-card__short">1:1 Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
 
-        <div class="carousel-card" data-course="morning" onclick="openMobileCourse('morning',7)">
-          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
-          <div class="carousel-card__overlay"></div>
-          <div class="carousel-card__body">
-            <span class="carousel-card__num">08 / 10</span>
-            <h3 class="carousel-card__title">MORNING TRAINING</h3>
-            <p class="carousel-card__short">Early Session 07:00 — Starte energiegeladen in den Tag.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
-          </div>
-        </div>
 
-        <div class="carousel-card" data-course="women" onclick="openMobileCourse('women',8)">
+        <div class="carousel-card" data-course="women" onclick="openMobileCourse('women',5)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/service-women.webp')"></div>
           <div class="carousel-card__overlay"></div>
           <div class="carousel-card__body">
-            <span class="carousel-card__num">09 / 10</span>
-            <h3 class="carousel-card__title">WOMEN'S BOXING</h3>
+            <span class="carousel-card__num">06 / 06</span>
+            <h3 class="carousel-card__title">BOMAYE QUEENS</h3>
             <p class="carousel-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
-          </div>
-        </div>
-
-        <div class="carousel-card" data-course="strength" onclick="openMobileCourse('strength',9)">
-          <div class="carousel-card__bg" style="background-image:url('/assets/images/service-pt.webp')"></div>
-          <div class="carousel-card__overlay"></div>
-          <div class="carousel-card__body">
-            <span class="carousel-card__num">10 / 10</span>
-            <h3 class="carousel-card__title">STRENGTH & CONDITIONING</h3>
-            <p class="carousel-card__short">Kraft, Ausdauer und athletische Performance — gezielt aufgebaut.</p>
             <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
           </div>
         </div>
@@ -840,10 +810,6 @@
         <button class="carousel-dot" onclick="scrollCarouselTo(3)"></button>
         <button class="carousel-dot" onclick="scrollCarouselTo(4)"></button>
         <button class="carousel-dot" onclick="scrollCarouselTo(5)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(6)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(7)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(8)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(9)"></button>
       </div>
 
       <!-- Mobile detail panel -->
@@ -862,14 +828,14 @@
   </section>
 
   <!-- ── CTA ── -->
-  <section style="background:var(--ink);padding:clamp(48px,7vw,80px) 0;text-align:center;">
+  <section style="background:#F5F0E8;padding:clamp(48px,7vw,80px) 0;text-align:center;">
     <div class="container">
-      <span class="tag tag--dark">LIMITIERTE PLÄTZE</span>
-      <h2 style="margin:1.25rem 0;">DEIN PLATZ <span class="gold">IM RING.</span></h2>
-      <p style="color:var(--muted);max-width:480px;margin:0 auto 2rem;">Wir befinden uns in der Founding Phase. Kapazität ist begrenzt. Early Members sichern sich dauerhaft ihren Platz — zu ihren Konditionen.</p>
+      <span class="tag tag--dark">FOUNDING MEMBER</span>
+      <h2 style="margin:1.25rem 0;color:#0A0A08;">DEIN PREIS. <span class="gold">DAUERHAFT.</span></h2>
+      <p style="color:rgba(10,10,8,0.72);max-width:480px;margin:0 auto 2rem;">Wer jetzt startet, zahlt dauerhaft den Early Bird Preis. Keine Preiserhöhung, kein Jahres-Update. Unser Versprechen an die erste Generation.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> EARLY BIRD PLATZ SICHERN
+          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
         </a>
       </div>
     </div>
@@ -880,7 +846,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/assets/images/bomaye-logo.png" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" />
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
@@ -888,17 +854,18 @@
             <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/4917621932243" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>KURSE</h4>
           <ul class="footer-links">
             <li><a href="/kurse#boxing">Boxing</a></li>
-            <li><a href="/kurse#kickboxing">Kickboxing</a></li>
             <li><a href="/kurse#youth">Youth Boxing</a></li>
             <li><a href="/kurse#olympic">Olympisches Boxen</a></li>
-            <li><a href="/kurse#mental">Mental Coaching</a></li>
+            <li><a href="/kurse#queens">Bomaye Queens</a></li>
+            <li><a href="/kurse#corporate">Corporate Boxing</a></li>
+            <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -906,7 +873,7 @@
           <ul class="footer-links">
             <li><a href="/about">Unsere DNA</a></li>
             <li><a href="/coaches">Coaches</a></li>
-            <li><a href="/#pricing">Preise</a></li>
+            <li><a href="/mitglied-werden">Preise</a></li>
             <li><a href="/faq">FAQ</a></li>
             <li><a href="/#location">Standort</a></li>
           </ul>
@@ -914,14 +881,14 @@
         <div class="footer-col">
           <h4>KONTAKT</h4>
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
-          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+4917621932243">0176 2193 2243</a></div>
+          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
           <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
           <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         </div>
       </div>
       <div class="footer-contactbar">
-        <a href="tel:+4917621932243">0176 2193 2243</a><span class="dot">•</span>
+        <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a><span class="dot">•</span>
         <a href="mailto:support@bomayegym.com">support@bomayegym.com</a><span class="dot">•</span>
         <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
       </div>
@@ -931,6 +898,9 @@
           <a href="/impressum">IMPRESSUM</a>
           <a href="/datenschutz">DATENSCHUTZ</a>
           <a href="/agb">AGB</a>
+          <a href="/hausordnung">Hausordnung</a>
+          <a href="/downloads">Downloads</a>
+          <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
         </div>
       </div>
     </div>
@@ -953,19 +923,6 @@ const COURSES = {
       { strong: 'Alle Level willkommen', span: 'Anfänger, Fortgeschrittene und Wettkämpfer' },
       { strong: 'Technisches Einzel-Feedback', span: 'Kein anonymes Gruppentraining' },
       { strong: 'Sparring & Wettkampf optional', span: 'Sicher, kontrolliert, mit Erfahrung begleitet' },
-    ]
-  },
-  kickboxing: {
-    tag: 'KICKBOXING',
-    title: 'KICKBOXING.<br><span class="gold">DYNAMIK & POWER.</span>',
-    titleMob: 'KICKBOXING',
-    img: '/assets/images/service-kick.webp',
-    imgAlt: 'Kickboxing Training Bomaye Gym',
-    desc: 'Kickboxing verbindet Boxen mit Beintechnik zu einem der vollständigsten Kampfsport-Systeme. Du trainierst Koordination, Schnelligkeit und explosive Kraft — gecoacht von Alfonso Fusco, Kickbox-Weltmeister und Spezialist für Ring-Intelligenz.',
-    feats: [
-      { strong: 'Vollkontakt-Technik & Footwork', span: 'Präzise Tritte, Kombinationen, Stellungsspiel' },
-      { strong: 'Weltmeister als Coach', span: 'Direkte Linie zu einem internationalen Champion' },
-      { strong: 'Fitness & Wettkampf', span: 'Für Freizeit-Sportler und Wettkämpfer gleichermaßen' },
     ]
   },
   youth: {
@@ -994,20 +951,6 @@ const COURSES = {
       { strong: 'Landestrainer-Coaching', span: 'Direkt unter Raschad Pekpassi, BABV Landestrainer' },
     ]
   },
-  mental: {
-    tag: 'MENTAL COACHING',
-    title: 'MENTAL COACHING.<br><span class="gold">KOPF. FOKUS. RING.</span>',
-    titleMob: 'MENTAL COACHING',
-    img: '/assets/images/service-mind-v2.webp',
-    imgAlt: 'Mental Coaching Bomaye Gym',
-    desc: 'Der Kampf wird im Kopf gewonnen — bevor er im Ring beginnt. Unser Mental Coaching-Programm schärft Konzentration, Ring-Intelligenz und mentale Widerstandsfähigkeit. Von Alfonso Fusco entwickelt: der Ansatz, der Weltmeister formt.',
-    feats: [
-      { strong: 'Ring-Intelligenz', span: 'Taktisches Denken und Lesen des Gegners' },
-      { strong: 'Stressresistenz', span: 'Mentale Techniken aus dem Profi-Kampfsport' },
-      { strong: 'Fokus & Zielsetzung', span: 'Methoden, die auch außerhalb des Rings wirken' },
-    ],
-    cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
-  },
   firmenfitness: {
     tag: 'CORPORATE BOXING',
     title: 'CORPORATE BOXING.<br><span class="gold">TEAM. POWER. GESUNDHEIT.</span>',
@@ -1023,51 +966,26 @@ const COURSES = {
     cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
   },
   executive: {
-    tag: 'EXECUTIVE TRAINING',
-    title: 'EXECUTIVE TRAINING.<br><span class="gold">FOKUS. STÄRKE. FÜHRUNG.</span>',
-    titleMob: 'EXECUTIVE TRAINING',
+    tag: '1:1',
+    title: 'PERSONAL TRAINING.<br><span class="gold">1:1. FOKUS. FORTSCHRITT.</span>',
+    titleMob: 'PERSONAL TRAINING',
     img: '/assets/images/service-pt.webp',
-    imgAlt: 'Executive Training Bomaye Gym',
-    desc: 'Exklusives 1-on-1 Training für Führungspersönlichkeiten und anspruchsvolle Athleten. Maximale Intensität, absolute Diskretion — individuell auf deine Ziele und deinen Zeitplan abgestimmt. Mit Raschad oder Alfonso persönlich.',
+    imgAlt: 'Personal Training Bomaye Gym',
+    desc: 'Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.',
     feats: [
-      { strong: 'Vollständig personalisiert', span: 'Trainingsplan und Ziele nach deinen Vorgaben' },
-      { strong: 'Exklusive Coaching-Zeit', span: '100% Fokus deines Trainers auf dich' },
-      { strong: 'Flexible Terminplanung', span: 'Buchbar nach Verfügbarkeit, auch früh morgens' },
-    ]
-  },
-  morning: {
-    tag: 'MORNING TRAINING',
-    title: 'MORNING TRAINING.<br><span class="gold">FRÜH. FOKUSSIERT. STARK.</span>',
-    titleMob: 'MORNING TRAINING',
-    img: '/assets/images/service-women.webp',
-    imgAlt: 'Morning Training Early Session Bomaye Gym',
-    desc: 'Early Session um 07:00 Uhr — für alle, die den Tag mit voller Energie beginnen wollen. Unser Morning Training gibt dir Struktur, Schweiß und Fokus, bevor der Rest der Welt aufwacht.',
-    feats: [
-      { strong: 'Start um 07:00 Uhr', span: 'Ideal für Berufstätige und Frühaufsteher' },
-      { strong: 'Alle Level willkommen', span: 'Motivierendes Gruppentraining in kleiner Runde' },
-      { strong: 'Energie für den ganzen Tag', span: 'Cardio, Technik und mentaler Reset am Morgen' },
-    ]
-  },
-  strength: {
-    tag: 'STRENGTH & CONDITIONING',
-    title: 'STRENGTH & CONDITIONING.<br><span class="gold">KRAFT. AUSDAUER. LEISTUNG.</span>',
-    titleMob: 'STRENGTH & CONDITIONING',
-    img: '/assets/images/service-pt.webp',
-    imgAlt: 'Strength & Conditioning Bomaye Gym',
-    desc: 'Athletische Leistung beginnt mit einer starken Basis. Unser Strength & Conditioning Programm kombiniert gezieltes Krafttraining, Ausdauerarbeit und funktionelle Bewegungsmuster — entwickelt für Boxer, Kampfsportler und alle, die ihr volles Potenzial abrufen wollen.',
-    feats: [
-      { strong: 'Funktionelles Krafttraining', span: 'Aufbau von sportartspezifischer Stärke und Power' },
-      { strong: 'Kondition & Ausdauer', span: 'Cardio-Einheiten und Intervalltraining für maximale Leistung' },
-      { strong: 'Alle Level willkommen', span: 'Skalierbare Übungen für Einsteiger und Fortgeschrittene' },
+      { strong: 'Individuelle Trainingsplanung', span: 'Auf deine Ziele und dein Level abgestimmt' },
+      { strong: 'Detaillierte Technikanalyse', span: 'Feedback von Weltklasse-Trainern' },
+      { strong: 'Flexible Terminbuchung', span: 'Buchbar nach Verfügbarkeit' },
+      { strong: 'Auf Anfrage', span: 'Kontaktiere uns direkt' },
     ]
   },
   women: {
-    tag: "WOMEN'S BOXING",
-    title: "WOMEN'S BOXING.<br><span class=\"gold\">POWER. STÄRKE. COMMUNITY.</span>",
-    titleMob: "WOMEN'S BOXING",
+    tag: "BOMAYE QUEENS",
+    title: "BOMAYE QUEENS.<br><span class=\"gold\">POWER. STÄRKE. COMMUNITY.</span>",
+    titleMob: "BOMAYE QUEENS",
     img: '/assets/images/service-women.webp',
-    imgAlt: "Women's Boxing Bomaye Gym",
-    desc: "Boxen ist kein Männersport. Unser Women's Boxing-Programm ist ein exklusiver Safe Space — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Egal ob Anfängerin oder mit Erfahrung: hier bist du richtig.",
+    imgAlt: "Bomaye Queens Bomaye Gym",
+    desc: "Bomaye Queens ist dein exklusiver Safe Space — speziell zugeschnittenes Training, erfahrene Trainerinnen und eine starke Community. Egal ob Anfängerin oder mit Erfahrung: hier bist du richtig.",
     feats: [
       { strong: 'Nur für Frauen', span: 'Exklusiver Safe Space — vertrauensvolles Umfeld' },
       { strong: 'Alle Level willkommen', span: 'Von der ersten Stunde bis zum Wettkampf' },
@@ -1197,7 +1115,7 @@ function openMobileCourse(id, idx) {
 
   /* ── Config ─────────────────────────────────────────────── */
   var GAP       = 20;
-  var REAL_N    = 10;
+  var REAL_N    = 6;
   var CLONE_N   = 3;
   var DRIFT_PPS = 36;   /* px/sec — calm, premium drift */
   var SNAP_MS   = 620;
@@ -1432,210 +1350,39 @@ function openMobileCourse(id, idx) {
 
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   PREMIUM MOBILE CAROUSEL ENGINE v3
-   — requestAnimationFrame continuous drift (no setInterval gaps)
-   — One dominant card centered, next card peeks at edge
-   — Touch drag with axis detection → snap-to-nearest on release
-   — Seamless infinite loop via head + tail clones
-   — prefers-reduced-motion: no drift, manual-only
-══════════════════════════════════════════════════════════════ */
+/* ── Mobile carousel: CSS scroll-snap dot updater ── */
 (function () {
   'use strict';
 
   var carousel = document.getElementById('courses-carousel');
   if (!carousel) return;
+  /* Only run on mobile — desktop carousel is a separate engine */
+  if (window.innerWidth > 768) return;
 
-  /* ── Config ─────────────────────────────────────────────── */
-  var GAP        = 16;    // matches CSS gap on track
-  var REAL_N     = 10;
-  var CLONE_N    = 3;     // clones each side
-  var DRIFT_PPS  = 24;    // pixels per second — slow premium drift
-  var SNAP_MS    = 580;   // snap-to-card transition ms
-  var SNAP_EASE  = 'cubic-bezier(0.22, 0.8, 0.32, 1)';
-  var RESUME_MS  = 2800;  // ms before resuming drift after touch
-  var reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cards = Array.from(carousel.querySelectorAll('.carousel-card'));
+  var dots  = Array.from(document.querySelectorAll('.carousel-dot'));
 
-  /* ── Compute card width from rendered DOM ────────────────── */
-  var CARD_W, CARD_STEP;
-  function updateSizes() {
-    var sample = track.querySelector('.carousel-card');
-    CARD_W    = sample ? sample.offsetWidth : Math.min(Math.round(window.innerWidth * 0.78), 300);
-    CARD_STEP = CARD_W + GAP;
+  function activateDot(i) {
+    dots.forEach(function (d, j) { d.classList.toggle('active', j === i); });
   }
 
-  /* ── Build extended track ────────────────────────────────── */
-  var realCards = Array.from(carousel.querySelectorAll('.carousel-card'));
-
-  var track = document.createElement('div');
-  track.style.cssText = 'display:flex;gap:' + GAP + 'px;will-change:transform;user-select:none;-webkit-user-select:none';
-
-  /* Prepend CLONE_N last cards */
-  for (var i = REAL_N - CLONE_N; i < REAL_N; i++) {
-    var cl = realCards[i].cloneNode(true);
-    cl.setAttribute('aria-hidden', 'true');
-    cl.removeAttribute('onclick');
-    track.appendChild(cl);
-  }
-  /* Real cards */
-  realCards.forEach(function (c) { track.appendChild(c); });
-  /* Append CLONE_N first cards */
-  for (var j = 0; j < CLONE_N; j++) {
-    var cl2 = realCards[j].cloneNode(true);
-    cl2.setAttribute('aria-hidden', 'true');
-    cl2.removeAttribute('onclick');
-    track.appendChild(cl2);
-  }
-
-  carousel.innerHTML = '';
-  carousel.appendChild(track);
-  carousel.style.cssText = 'overflow:hidden;position:relative;display:block;touch-action:pan-y pinch-zoom';
-
-  /* ── State ──────────────────────────────────────────────── */
-  var pos         = 0;    // current translateX (negative = scrolled left)
-  var curReal     = 0;    // real card index closest to center
-  var raf         = null;
-  var paused      = false;
-  var lastTime    = null;
-  var resumeTimer = null;
-  var snapping    = false;
-
-  /* ── Helpers ─────────────────────────────────────────────── */
-  /* translateX that centers real card [realIdx] */
-  function posForCard(realIdx) {
-    updateSizes();
-    var k = CLONE_N + realIdx;
-    return (carousel.offsetWidth - CARD_W) / 2 - k * CARD_STEP;
-  }
-
-  /* real card index (0–9) currently nearest viewport center */
-  function nearestReal() {
-    updateSizes();
-    /* viewport center in track coords */
-    var vc = carousel.offsetWidth / 2 - pos;
-    var k  = Math.round((vc - CARD_W / 2) / CARD_STEP);
-    return ((k - CLONE_N) % REAL_N + REAL_N) % REAL_N;
-  }
-
-  /* silent position jump to maintain seamless loop */
-  function checkLoop() {
-    var cycle = REAL_N * CARD_STEP;
-    var vc    = carousel.offsetWidth / 2 - pos;
-    var k     = Math.round((vc - CARD_W / 2) / CARD_STEP);
-    if (k >= CLONE_N + REAL_N) { pos += cycle; }
-    else if (k < CLONE_N)       { pos -= cycle; }
-  }
-
-  /* ── Dots ────────────────────────────────────────────────── */
-  function setDots(realI) {
-    document.querySelectorAll('.carousel-dot').forEach(function (d, i) {
-      d.classList.toggle('active', i === realI);
+  /* Update active dot on scroll — find card whose centre is closest to viewport centre */
+  carousel.addEventListener('scroll', function () {
+    var center = carousel.scrollLeft + carousel.offsetWidth / 2;
+    var nearest = 0, minDist = Infinity;
+    cards.forEach(function (c, i) {
+      var dist = Math.abs((c.offsetLeft + c.offsetWidth / 2) - center);
+      if (dist < minDist) { minDist = dist; nearest = i; }
     });
-  }
-
-  /* ── Snap to a real card with animated transition ─────────── */
-  function snapTo(realIdx, animate) {
-    curReal = ((realIdx % REAL_N) + REAL_N) % REAL_N;
-    var target = posForCard(curReal);
-    pos = target;
-    if (animate && !reduced) {
-      track.style.transition = 'transform ' + SNAP_MS + 'ms ' + SNAP_EASE;
-    } else {
-      track.style.transition = 'none';
-    }
-    track.style.transform = 'translateX(' + pos + 'px)';
-    setDots(curReal);
-    if (animate && !reduced) {
-      snapping = true;
-      setTimeout(function () { snapping = false; }, SNAP_MS + 30);
-    }
-  }
-
-  /* ── RAF drift tick ──────────────────────────────────────── */
-  function tick(ts) {
-    if (!paused && !snapping && !reduced) {
-      var dt = lastTime ? Math.min((ts - lastTime) / 1000, 0.05) : 0;
-      pos -= DRIFT_PPS * dt;
-      checkLoop();
-      track.style.transition = 'none';
-      track.style.transform  = 'translateX(' + pos + 'px)';
-      setDots(nearestReal());
-    }
-    lastTime = ts;
-    raf = requestAnimationFrame(tick);
-  }
-
-  /* ── Touch ───────────────────────────────────────────────── */
-  var t0x, t0y, tStartPos, axisSet, isHoriz;
-
-  carousel.addEventListener('touchstart', function (e) {
-    paused      = true;
-    snapping    = false;
-    lastTime    = null;
-    clearTimeout(resumeTimer);
-    t0x         = e.touches[0].clientX;
-    t0y         = e.touches[0].clientY;
-    tStartPos   = pos;
-    axisSet     = false;
-    isHoriz     = false;
-    track.style.transition = 'none';
+    activateDot(nearest);
   }, { passive: true });
 
-  carousel.addEventListener('touchmove', function (e) {
-    var dx = e.touches[0].clientX - t0x;
-    var dy = e.touches[0].clientY - t0y;
-    if (!axisSet && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
-      isHoriz = Math.abs(dx) >= Math.abs(dy);
-      axisSet  = true;
+  /* Dot buttons → smooth scroll to card */
+  window.scrollCarouselTo = function (i) {
+    if (cards[i]) {
+      cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
-    if (!axisSet || !isHoriz) return;
-    e.preventDefault();
-    pos = tStartPos + dx;
-    track.style.transition = 'none';
-    track.style.transform  = 'translateX(' + pos + 'px)';
-  }, { passive: false });
-
-  function onTouchEnd() {
-    if (axisSet && isHoriz) {
-      snapTo(nearestReal(), true);
-    }
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
-  }
-
-  carousel.addEventListener('touchend',    onTouchEnd, { passive: true });
-  carousel.addEventListener('touchcancel', function () {
-    snapTo(nearestReal(), true);
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
-  }, { passive: true });
-
-  /* ── Resize ──────────────────────────────────────────────── */
-  var rTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(rTimer);
-    rTimer = setTimeout(function () { updateSizes(); snapTo(curReal, false); }, 150);
-  }, { passive: true });
-
-  if (typeof ResizeObserver !== 'undefined') {
-    new ResizeObserver(function () {
-      if (carousel.offsetWidth > 0) { updateSizes(); snapTo(curReal, false); }
-    }).observe(carousel);
-  }
-
-  /* ── External API (dot buttons) ─────────────────────────── */
-  window.scrollCarouselTo = function (realI) {
-    paused = true;
-    clearTimeout(resumeTimer);
-    snapTo(realI, true);
-    resumeTimer = setTimeout(function () { paused = false; lastTime = null; }, RESUME_MS);
   };
-
-  /* ── Init ────────────────────────────────────────────────── */
-  updateSizes();
-  snapTo(0, false);
-  if (!reduced) raf = requestAnimationFrame(tick);
-
 })();
 
 /* ─── Open first course by default on desktop ─────────────── */
@@ -1808,10 +1555,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking
 })();
 </script>
 
-<!-- Sanity CDN client + courses data loader -->
-<script src="/assets/js/sanity-client.js"></script>
-<script src="/assets/js/sanity-courses-loader.js"></script>
 <script src="/assets/js/pixel-events.js"></script>
 
+<script src="/assets/js/cookie-consent.js"></script>
 </body>
 </html>

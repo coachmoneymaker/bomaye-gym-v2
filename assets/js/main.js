@@ -94,6 +94,12 @@ function initPreloader() {
   const line = document.getElementById('loader-line');
   const hero = document.getElementById('hero');
 
+  // Mobile: skip preloader entirely — instant hero reveal for LCP
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    if (hero) hero.classList.add('hero-revealed');
+    return;
+  }
+
   // Repeat visit — preloader already hidden by inline script; reveal hero instantly
   if (!pre || pre.style.display === 'none') {
     if (hero) hero.classList.add('hero-revealed');

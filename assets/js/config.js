@@ -21,9 +21,9 @@ const BOMAYE = {
 
   /* ── Contact ─────────────────────────────────────────────── */
   contact: {
-    phoneDisplay:  '0176 2193 2243',
-    phoneHref:     '+4917621932243',
-    whatsappHref:  '4917621932243',
+    phoneDisplay:  '+49 173 7513627',
+    phoneHref:     '+491737513627',
+    whatsappHref:  '491737513627',
     email:         'info@bomayegym.com',
     instagram:     'https://www.instagram.com/bomayegym_munich',
     youtube:       'https://www.youtube.com/@bomayegym',
@@ -153,18 +153,6 @@ async function getEarlyBirdSpotsLeft() {
       if (typeof data.spots_left === 'number') return data.spots_left;
     }
   } catch (_) { /* fall through */ }
-
-  // MODE S — Sanity CMS fallback
-  if (typeof window.sanityFetch === 'function') {
-    try {
-      const data = await window.sanityFetch(
-        '*[_type == "siteSettings"][0]{ earlyBird{ remaining } }'
-      );
-      if (data && data.earlyBird && typeof data.earlyBird.remaining === 'number') {
-        return data.earlyBird.remaining;
-      }
-    } catch (_) { /* fall through */ }
-  }
 
   // MODE B — manual fallback: change BOMAYE.earlyBird.remaining in this file
   return BOMAYE.earlyBird.remaining;
