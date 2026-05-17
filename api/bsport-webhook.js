@@ -6,8 +6,8 @@
  * deduplicates via Vercel KV, fires server-side conversion events to
  * Meta CAPI and Google Ads, and sends an internal admin email via Resend.
  *
- * Processed events: "invoice-pay" (paid memberships) and "booking-create"
- *   (free Probetraining bookings that never generate an invoice).
+ * Processed events: "invoice-finalize" and "invoice-pay" (all invoices, paid and free).
+ * booking-create, invoice-revert, and invoice-dispute are gracefully skipped.
  *
  * Required env vars:
  *   // Unused — Bsport does not support secrets. Kept for future HMAC support.
@@ -233,13 +233,28 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
-  // Bsport sends many webhook types to the same URL.
-  // We only track invoice-pay (paid memberships) and booking-create (free Probetraining).
-  // Gracefully skip everything else with 200 so Bsport doesn't retry.
+  // Bsport sends many webhook types to the same URL. Skip known-untracked events
+  // with 200 so Bsport doesn't retry; reject unknown events the same way.
   const eventType = body?.event_type;
-  if (eventType && eventType !== 'invoice-pay' && eventType !== 'booking-create') {
-    console.log(JSON.stringify({ step: 'filter', ok: true, skipped: true, eventType }));
-    return res.status(200).json({ ok: true, skipped: true, reason: `event-type-not-tracked: ${eventType}` });
+  const TRACKED_EVENTS = ['invoice-finalize', 'invoice-pay'];
+  const SKIP_EVENTS = ['booking-create', 'invoice-revert', 'invoice-dispute'];
+
+  if (SKIP_EVENTS.includes(eventType)) {
+    console.log(JSON.stringify({
+      step: 'filter', ok: true, skipped: true, eventType
+    }));
+    return res.status(200).json({
+      ok: true, skipped: true,
+      reason: `event-type-not-tracked: ${eventType}`
+    });
+  }
+
+  if (!TRACKED_EVENTS.includes(eventType)) {
+    console.log(JSON.stringify({
+      step: 'filter', ok: true, skipped: true, eventType,
+      reason: 'unknown-event'
+    }));
+    return res.status(200).json({ ok: true, skipped: true });
   }
 
   // Bsport request fingerprint validation
@@ -249,147 +264,87 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { event_type, data } = body;
+  const { data } = body;
   const kv = await getKV();
 
-  // ── invoice-pay branch ────────────────────────────────────────────────────
-  if (event_type === 'invoice-pay') {
-    const obj = data?.object ?? {};
+  // ── Unified invoice handler (invoice-finalize + invoice-pay) ─────────────
+  const obj = data?.object ?? {};
+  const invoiceId = obj.id;
+  const status = obj.status;
+  const currency = (obj.currency || 'eur').toUpperCase();
+  const totalCents = Number(obj.total ?? 0);
+  const totalEur = totalCents / 100;
+  const lineItems = obj.line_items?.data ?? [];
+  const productName = lineItems[0]?.description ?? 'Probetraining';
 
-    // Skip unpaid invoices (draft, voided, etc.)
-    if (obj.status !== 'paid') {
-      console.log(JSON.stringify({ step: 'filter', skipped: true, reason: `status=${obj.status}` }));
-      return res.status(200).json({ skipped: true, reason: `status=${obj.status}` });
-    }
-
-    const invoiceId = obj.id ?? obj.invoice_id ?? hash(rawBody.toString('utf8'));
-    console.log(JSON.stringify({ step: 'invoice', invoiceId }));
-
-    // Idempotency — 30-day TTL so retried webhooks don't double-fire
-    if (kv) {
-      try {
-        const wasSet = await kv.set(`webhook:bsport:invoice:${invoiceId}`, Date.now(), { ex: 60 * 60 * 24 * 30, nx: true });
-        if (!wasSet) {
-          console.log(JSON.stringify({ step: 'idempotency', duplicate: true, invoiceId }));
-          return res.status(200).json({ duplicate: true, invoiceId });
-        }
-      } catch (err) {
-        console.log(JSON.stringify({ step: 'kv', ok: false, error: err.message }));
-      }
-    }
-
-    const total     = Number(obj.total ?? obj.amount_paid ?? 0);
-    const lineItems = obj.line_items?.data ?? [];
-    const currency  = (obj.currency || 'eur').toUpperCase();
-    const customer  = obj.customer ?? {};
-
-    const isProbetraining = total === 0 &&
-      lineItems.some(i => i.description?.toLowerCase().includes('probetraining'));
-    const isPurchase = total > 0;
-
-    if (!isProbetraining && !isPurchase) {
-      console.log(JSON.stringify({ step: 'filter', skipped: true, reason: 'unknown-conversion-type', invoiceId }));
-      return res.status(200).json({ skipped: true, reason: 'unknown conversion type' });
-    }
-
-    const type            = isProbetraining ? 'probetraining' : 'purchase';
-    const conversionValue = isProbetraining ? 30 : total;
-    const typeStr         = isProbetraining ? 'Probetraining' : 'Mitgliedschaft';
-    const productDesc     = lineItems.map(i => i.description || '').filter(Boolean).join(', ') || typeStr;
-    const amountStr       = total === 0 ? 'Kostenlos (0 €)' : `${total} ${currency}`;
-
-    console.log(JSON.stringify({ step: 'conversion', type, invoiceId, value: conversionValue }));
-
-    const [metaResult, googleResult, emailResult] = await Promise.allSettled([
-      sendMetaEvent({
-        eventName:   isProbetraining ? 'Lead' : 'Purchase',
-        invoiceId,
-        customer,
-        value:       conversionValue,
-        currency,
-        contentName: isProbetraining ? 'Probetraining' : undefined,
-      }),
-      sendGoogleConversion({ invoiceId, value: conversionValue, currency }),
-      sendAdminEmail({
-        customer, transactionId: invoiceId, isProbetraining,
-        typeStr, productDesc, amountStr, bookedAt: new Date(),
-      }),
-    ]);
-
-    const meta   = metaResult.status   === 'fulfilled' ? metaResult.value   : { ok: false, error: metaResult.reason?.message };
-    const google = googleResult.status === 'fulfilled' ? googleResult.value : { ok: false, error: googleResult.reason?.message };
-    const email  = emailResult.status  === 'fulfilled' ? emailResult.value  : { ok: false, error: emailResult.reason?.message };
-
-    console.log(JSON.stringify({ step: 'meta',   invoiceId, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
-    console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
-    console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
-
-    return res.status(200).json({
-      ok: true, type, invoiceId,
-      meta:   { ok: meta.ok },
-      google: { ok: google.ok },
-      email:  { ok: email.ok },
-    });
-  }
-
-  // ── booking-create branch ─────────────────────────────────────────────────
-  const booking   = data?.booking ?? {};
-  const bookingId = booking.id ?? booking.booking_id ?? hash(rawBody.toString('utf8'));
-  console.log(JSON.stringify({ step: 'booking', bookingId }));
-  console.log(JSON.stringify({ step: 'booking-debug', bookingId, fullBooking: data?.booking }));
-
-  // Idempotency — separate key namespace from invoices
-  if (kv) {
-    try {
-      const wasSet = await kv.set(`webhook:bsport:booking:${bookingId}`, Date.now(), { ex: 60 * 60 * 24 * 30, nx: true });
-      if (!wasSet) {
-        console.log(JSON.stringify({ step: 'idempotency', ok: true, duplicate: true, bookingId }));
-        return res.status(200).json({ duplicate: true, bookingId });
-      }
-    } catch (err) {
-      console.log(JSON.stringify({ step: 'kv', ok: false, error: err.message }));
-    }
-  }
-
-  // Customer — Bsport may nest under booking.customer, booking.user, or expose fields at top level
-  const bookingCustomer = booking.customer ?? booking.user ?? booking.client ?? booking.contact ?? {};
-  const firstName = bookingCustomer.first_name || bookingCustomer.firstName || booking.first_name || booking.firstName || booking.customer_first_name || '';
-  const lastName  = bookingCustomer.last_name  || bookingCustomer.lastName  || booking.last_name  || booking.lastName  || booking.customer_last_name  || '';
-  const custEmail = bookingCustomer.email      || booking.email      || booking.customer_email      || '';
-  const phone     = bookingCustomer.phone      || bookingCustomer.phone_number || booking.phone || booking.phone_number || booking.customer_phone || '';
-  const fullName  = bookingCustomer.name || bookingCustomer.full_name || booking.name || booking.full_name || `${firstName} ${lastName}`.trim() || undefined;
-
+  // obj.customer may be null for anonymous POS invoices
+  const cust = obj.customer ?? {};
   const customer = {
-    name:       fullName,
-    first_name: firstName,
-    last_name:  lastName,
-    email:      custEmail,
-    phone,
+    name:       cust.name || `${cust.first_name || ''} ${cust.last_name || ''}`.trim() || undefined,
+    first_name: cust.first_name || '',
+    last_name:  cust.last_name  || '',
+    email:      cust.email      || '',
+    phone:      cust.phone      || '',
   };
 
-  // Product name — check several possible fields Bsport may use
-  const productName = booking.name ?? booking.product?.name ?? booking.activity?.name ?? 'Probetraining';
-  const currency    = 'EUR';
+  console.log(JSON.stringify({
+    step: 'invoice', ok: true, invoiceId, eventType, status,
+    totalEur, hasCustomer: !!obj.customer
+  }));
 
-  console.log(JSON.stringify({ step: 'conversion', type: 'probetraining', bookingId, value: 30 }));
+  // Idempotency — same key for both finalize and pay on the same invoice;
+  // first event to arrive wins, second is deduped.
+  if (kv) {
+    try {
+      const wasSet = await kv.set(
+        `webhook:bsport:invoice:${invoiceId}`,
+        Date.now(),
+        { ex: 60 * 60 * 24 * 30, nx: true }
+      );
+      if (!wasSet) {
+        console.log(JSON.stringify({
+          step: 'idempotency', ok: true, duplicate: true, invoiceId
+        }));
+        return res.status(200).json({ duplicate: true, invoiceId });
+      }
+    } catch (err) {
+      console.log(JSON.stringify({
+        step: 'kv', ok: false, error: err.message
+      }));
+    }
+  }
+
+  const isProbetraining = totalEur === 0;
+  const value = isProbetraining ? 30 : totalEur;
+  const typeStr = isProbetraining ? 'Probetraining (Buchung)' : 'Mitgliedschaft';
+  const amountStr = isProbetraining ? 'Kostenlos (0 €)' : `${totalEur.toFixed(2)} ${currency}`;
+
+  console.log(JSON.stringify({
+    step: 'conversion', type: isProbetraining ? 'probetraining' : 'membership',
+    invoiceId, value
+  }));
 
   const [metaResult, googleResult, emailResult] = await Promise.allSettled([
     sendMetaEvent({
       eventName:   'Lead',
-      invoiceId:   bookingId,
+      invoiceId,
       customer,
-      value:       30,
+      value,
       currency,
       contentName: productName,
     }),
-    sendGoogleConversion({ invoiceId: bookingId, value: 30, currency }),
+    sendGoogleConversion({
+      invoiceId,
+      value,
+      currency,
+    }),
     sendAdminEmail({
       customer,
-      transactionId:   bookingId,
-      isProbetraining: true,
-      typeStr:         'Probetraining (Buchung)',
+      transactionId:   invoiceId,
+      isProbetraining,
+      typeStr,
       productDesc:     productName,
-      amountStr:       'Kostenlos',
+      amountStr,
       bookedAt:        new Date(),
     }),
   ]);
@@ -398,16 +353,11 @@ export default async function handler(req, res) {
   const google = googleResult.status === 'fulfilled' ? googleResult.value : { ok: false, error: googleResult.reason?.message };
   const email  = emailResult.status  === 'fulfilled' ? emailResult.value  : { ok: false, error: emailResult.reason?.message };
 
-  console.log(JSON.stringify({ step: 'meta',   bookingId, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
-  console.log(JSON.stringify({ step: 'google', bookingId, ok: google.ok, status: google.status }));
-  console.log(JSON.stringify({ step: 'email',  bookingId, ok: email.ok }));
+  console.log(JSON.stringify({ step: 'meta',   invoiceId, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
+  console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
+  console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
 
-  return res.status(200).json({
-    ok: true, type: 'probetraining', bookingId,
-    meta:   { ok: meta.ok },
-    google: { ok: google.ok },
-    email:  { ok: email.ok },
-  });
+  return res.status(200).json({ ok: true, invoiceId, eventType });
 }
 
 // ── Email templates ───────────────────────────────────────────────────────────
