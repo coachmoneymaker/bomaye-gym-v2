@@ -336,6 +336,7 @@ export default async function handler(req, res) {
   const booking   = data?.booking ?? {};
   const bookingId = booking.id ?? booking.booking_id ?? hash(rawBody.toString('utf8'));
   console.log(JSON.stringify({ step: 'booking', bookingId }));
+  console.log(JSON.stringify({ step: 'booking-debug', bookingId, fullBooking: data?.booking }));
 
   // Idempotency — separate key namespace from invoices
   if (kv) {
@@ -350,14 +351,20 @@ export default async function handler(req, res) {
     }
   }
 
-  // Customer — Bsport may nest under booking.customer or booking.user
-  const bookingCustomer = booking.customer ?? booking.user ?? {};
+  // Customer — Bsport may nest under booking.customer, booking.user, or expose fields at top level
+  const bookingCustomer = booking.customer ?? booking.user ?? booking.client ?? booking.contact ?? {};
+  const firstName = bookingCustomer.first_name || bookingCustomer.firstName || booking.first_name || booking.firstName || booking.customer_first_name || '';
+  const lastName  = bookingCustomer.last_name  || bookingCustomer.lastName  || booking.last_name  || booking.lastName  || booking.customer_last_name  || '';
+  const email     = bookingCustomer.email      || booking.email      || booking.customer_email      || '';
+  const phone     = bookingCustomer.phone      || bookingCustomer.phone_number || booking.phone || booking.phone_number || booking.customer_phone || '';
+  const fullName  = bookingCustomer.name || bookingCustomer.full_name || booking.name || booking.full_name || `${firstName} ${lastName}`.trim() || undefined;
+
   const customer = {
-    name:       bookingCustomer.name || `${bookingCustomer.first_name || ''} ${bookingCustomer.last_name || ''}`.trim() || undefined,
-    first_name: bookingCustomer.first_name || '',
-    last_name:  bookingCustomer.last_name  || '',
-    email:      bookingCustomer.email      || '',
-    phone:      bookingCustomer.phone      || '',
+    name:       fullName,
+    first_name: firstName,
+    last_name:  lastName,
+    email,
+    phone,
   };
 
   // Product name — check several possible fields Bsport may use
