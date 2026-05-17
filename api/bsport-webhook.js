@@ -1,14 +1,17 @@
 /**
  * /api/bsport-webhook — Vercel Serverless Function (Node.js runtime)
  *
- * Receives Bsport booking/payment webhooks, validates the HMAC signature,
+ * Receives Bsport booking/payment webhooks, authenticates via request
+ * fingerprinting (Bsport does not support HMAC or custom headers),
  * deduplicates via Vercel KV, fires server-side conversion events to
  * Meta CAPI and Google Ads, and sends an internal admin email via Resend.
  *
  * Processed event: event_type === "invoice-pay" AND data.object.status === "paid"
  *
  * Required env vars:
- *   BSPORT_WEBHOOK_SECRET    — HMAC / plain-secret for signature validation
+ *   // Unused — Bsport does not support secrets. Kept for future HMAC support.
+ *   // BSPORT_WEBHOOK_SECRET
+ *   BSPORT_STRICT            — set to "false" to skip fingerprint checks (local dev)
  *   META_PIXEL_ID            — Meta Pixel numeric ID
  *   META_ACCESS_TOKEN        — Meta Graph API system access token
  *   GOOGLE_CONVERSION_ID     — format: AW-XXXXXXXXX
@@ -20,10 +23,10 @@
  *   FROM_EMAIL               — verified Resend sender address
  */
 
-import { createHmac, createHash, timingSafeEqual } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import { Resend } from 'resend';
 
-// Disable Vercel's built-in body parser — HMAC validation needs raw bytes.
+// Keep body parser disabled so raw bytes are available for any future HMAC support.
 export const config = { api: { bodyParser: false } };
 
 // ── KV lazy-load ──────────────────────────────────────────────────────────────
@@ -60,54 +63,40 @@ function readRawBody(req) {
 }
 
 /**
- * Validate the Bsport webhook signature.
+ * Validate that a webhook request actually comes from Bsport.
  *
- * Mode A (preferred): HMAC-SHA256 over raw body.
- *   Bsport sends the digest in one of: X-Bsport-Signature, X-Hub-Signature-256,
- *   X-Webhook-Signature, X-Signature (with optional "sha256=" prefix).
+ * Bsport's webhook system does NOT support secrets, signatures, or custom
+ * headers. The only authentication signal we have is request fingerprinting:
  *
- * Mode B (fallback): plain secret in X-Webhook-Secret or Authorization: Bearer <secret>.
+ *   1. User-Agent must contain "python-requests" (Bsport's HTTP client)
+ *   2. A sentry-trace header must be present (Bsport uses Sentry internally)
+ *   3. Payload must match Bsport's schema (event_type + data.object)
  *
- * If BSPORT_WEBHOOK_SECRET is not set (local dev), validation is skipped.
+ * This is "defense in depth without a shared secret" — sufficient for a
+ * low-value-target SMB endpoint. TODO: replace with IP allowlist once
+ * Bsport support provides their static webhook egress IPs.
+ *
+ * Set BSPORT_STRICT=false in env to skip these checks (e.g. for local curl tests).
  */
-function validateSignature(rawBody, headers) {
-  const secret = process.env.BSPORT_WEBHOOK_SECRET;
-  if (!secret) return { ok: true, mode: 'no-secret-configured' };
-
-  // Mode A — HMAC-SHA256
-  const sigHeader =
-    headers['x-bsport-signature'] ||
-    headers['x-hub-signature-256'] ||
-    headers['x-webhook-signature'] ||
-    headers['x-signature'];
-
-  if (sigHeader) {
-    const received = sigHeader.replace(/^sha256=/i, '').toLowerCase();
-    const expected = createHmac('sha256', secret).update(rawBody).digest('hex');
-    if (received.length !== expected.length) {
-      return { ok: false, mode: 'hmac-length-mismatch' };
-    }
-    try {
-      const ok = timingSafeEqual(Buffer.from(received, 'hex'), Buffer.from(expected, 'hex'));
-      return { ok, mode: ok ? 'hmac' : 'hmac-mismatch' };
-    } catch {
-      return { ok: false, mode: 'hmac-error' };
-    }
+function validateBsportRequest(rawBody, headers, parsedBody) {
+  if (process.env.BSPORT_STRICT === 'false') {
+    return { ok: true, mode: 'strict-disabled' };
   }
 
-  // Mode B — plain secret
-  const bearerMatch = (headers['authorization'] || '').match(/^Bearer\s+(.+)$/i);
-  const plainHeader = headers['x-webhook-secret'] || (bearerMatch ? bearerMatch[1] : '');
-
-  if (plainHeader) {
-    const a = Buffer.from(secret);
-    const b = Buffer.from(plainHeader);
-    if (a.length !== b.length) return { ok: false, mode: 'plain-mismatch' };
-    const ok = timingSafeEqual(a, b);
-    return { ok, mode: ok ? 'plain' : 'plain-mismatch' };
+  const ua = String(headers['user-agent'] || '').toLowerCase();
+  if (!ua.includes('python-requests')) {
+    return { ok: false, mode: 'bad-user-agent', detail: ua.slice(0, 40) };
   }
 
-  return { ok: false, mode: 'no-auth-header' };
+  if (!headers['sentry-trace']) {
+    return { ok: false, mode: 'missing-sentry-trace' };
+  }
+
+  if (!parsedBody || typeof parsedBody.event_type !== 'string' || !parsedBody.data?.object) {
+    return { ok: false, mode: 'bad-schema' };
+  }
+
+  return { ok: true, mode: 'bsport-fingerprint' };
 }
 
 // ── Meta CAPI ────────────────────────────────────────────────────────────────
@@ -239,19 +228,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Could not read request body' });
   }
 
-  // Signature validation
-  const sig = validateSignature(rawBody, req.headers);
-  console.log(JSON.stringify({ step: 'signature', ok: sig.ok, mode: sig.mode }));
-  if (!sig.ok) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  // JSON parse
+  // JSON parse first — fingerprint validation needs the parsed payload
   let body;
   try {
     body = JSON.parse(rawBody.toString('utf8'));
   } catch {
     return res.status(400).json({ error: 'Invalid JSON' });
+  }
+
+  // Bsport request fingerprint validation
+  const auth = validateBsportRequest(rawBody, req.headers, body);
+  console.log(JSON.stringify({ step: 'auth', ok: auth.ok, mode: auth.mode, detail: auth.detail }));
+  if (!auth.ok) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const { event_type, data } = body;
