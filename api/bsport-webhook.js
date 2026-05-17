@@ -355,7 +355,7 @@ export default async function handler(req, res) {
   const bookingCustomer = booking.customer ?? booking.user ?? booking.client ?? booking.contact ?? {};
   const firstName = bookingCustomer.first_name || bookingCustomer.firstName || booking.first_name || booking.firstName || booking.customer_first_name || '';
   const lastName  = bookingCustomer.last_name  || bookingCustomer.lastName  || booking.last_name  || booking.lastName  || booking.customer_last_name  || '';
-  const email     = bookingCustomer.email      || booking.email      || booking.customer_email      || '';
+  const custEmail = bookingCustomer.email      || booking.email      || booking.customer_email      || '';
   const phone     = bookingCustomer.phone      || bookingCustomer.phone_number || booking.phone || booking.phone_number || booking.customer_phone || '';
   const fullName  = bookingCustomer.name || bookingCustomer.full_name || booking.name || booking.full_name || `${firstName} ${lastName}`.trim() || undefined;
 
@@ -363,7 +363,7 @@ export default async function handler(req, res) {
     name:       fullName,
     first_name: firstName,
     last_name:  lastName,
-    email,
+    email:      custEmail,
     phone,
   };
 
