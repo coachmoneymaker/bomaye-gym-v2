@@ -336,7 +336,6 @@ export default async function handler(req, res) {
   const booking   = data?.booking ?? {};
   const bookingId = booking.id ?? booking.booking_id ?? hash(rawBody.toString('utf8'));
   console.log(JSON.stringify({ step: 'booking', bookingId }));
-  console.log(JSON.stringify({ step: 'booking-debug', bookingId, fullBooking: data?.booking }));
 
   // Idempotency — separate key namespace from invoices
   if (kv) {
