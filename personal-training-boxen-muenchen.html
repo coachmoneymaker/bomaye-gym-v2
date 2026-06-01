@@ -358,6 +358,41 @@
       .pt-coach-name { font-size: 1.25rem; }
     }
 
+    /* ── Mini-bullets ───────────────────────────── */
+    .pt-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .pt-mini-card {
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+    .pt-mini-icon {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: #C9A84C;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .pt-mini-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.25rem;
+      letter-spacing: 2px;
+      margin: 0 0 0.75rem 0;
+      color: var(--ink, #0A0A08);
+    }
+    .pt-mini-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+      opacity: 0.85;
+      color: var(--ink, #0A0A08);
+    }
+    @media (max-width: 768px) {
+      .pt-mini-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+
     /* ── Smooth scroll + section offset ─────────── */
     html { scroll-behavior: smooth; }
     #pt-booking { scroll-margin-top: 80px; }
@@ -428,100 +463,33 @@
     <div class="container">
       <div class="seo-hero-tag">PERSONAL TRAINING BOXEN MÜNCHEN</div>
       <h1 class="seo-hero-h1">Personal Training<br><span>Boxen München</span></h1>
-      <p class="seo-hero-sub">
-        Im Bomaye Gym München bieten wir individuelles Personal Training im Boxen.<br>
-        Egal ob Anfänger oder Fortgeschrittener – mit einem Personal Coach erreichst du deine Ziele schneller.
-      </p>
+      <p class="seo-hero-sub">Olympic Coach. Kickbox-Weltmeister. Dein 1:1 Boxtraining.</p>
       <div class="seo-hero-btns">
         <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
         </a>
-        <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> JETZT MITGLIED WERDEN
-        </a>
       </div>
     </div>
   </section>
 
-  <!-- ── Individuelles Boxtraining ── -->
-  <section class="seo-section seo-section--smoke" aria-labelledby="individuell-h2">
+  <!-- ── Mini-bullets ── -->
+  <section class="seo-section seo-section--light">
     <div class="container">
-      <div class="seo-section-inner reveal">
-        <span class="tag tag--dark">1:1 COACHING</span>
-        <h2 id="individuell-h2" style="margin-top:1.25rem;">INDIVIDUELLES<br><span>BOXTRAINING</span></h2>
-        <p>
-          Kein Kurs kann so präzise auf dich eingehen wie ein Personal Training. Im Bomaye Gym München arbeiten wir im 1:1-Format — 100 % Aufmerksamkeit, 100 % Fokus auf deine Ziele, 100 % auf dich zugeschnittenes Programm.
-        </p>
-        <p>
-          Vor deiner ersten Einheit analysieren wir gemeinsam deine Ziele, dein Level und körperliche Voraussetzungen. Dein Coach erstellt einen individuellen Trainingsplan — und passt ihn fortlaufend an deine Entwicklung an.
-        </p>
-        <div class="seo-feature-grid">
-          <div class="seo-feature-card">
-            <div class="seo-feature-card-icon"><i class="fa-solid fa-crosshairs"></i></div>
-            <h3>ZIELGERICHTET</h3>
-            <p>Dein Training ist auf deine persönlichen Ziele ausgerichtet — kein allgemeines Programm.</p>
-          </div>
-          <div class="seo-feature-card">
-            <div class="seo-feature-card-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <h3>SCHNELLE FORTSCHRITTE</h3>
-            <p>1:1-Coaching beschleunigt deine Entwicklung im Vergleich zum Gruppentraining deutlich.</p>
-          </div>
-          <div class="seo-feature-card">
-            <div class="seo-feature-card-icon"><i class="fa-solid fa-rotate"></i></div>
-            <h3>FLEXIBEL & ANPASSBAR</h3>
-            <p>Termine nach deinem Zeitplan, Intensität nach deinem aktuellen Stand.</p>
-          </div>
+      <div class="pt-mini-grid reveal">
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">01</div>
+          <h3 class="pt-mini-title">1:1 COACHING</h3>
+          <p class="pt-mini-text">100% Aufmerksamkeit, voll auf dich abgestimmt.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Techniktraining mit Personal Coach ── -->
-  <section class="seo-section seo-section--light" aria-labelledby="technik-h2">
-    <div class="container">
-      <div class="seo-section-inner reveal">
-        <span class="tag tag--light-inv">TECHNIK</span>
-        <h2 id="technik-h2" style="margin-top:1.25rem;">TECHNIKTRAINING MIT<br><span>PERSONAL COACH</span></h2>
-        <p>
-          Technik ist das Herzstück des Boxens — und sie lässt sich am besten unter direkter Beobachtung und mit sofortigem Feedback entwickeln. Dein Personal Coach im Bomaye Gym sieht jeden deiner Bewegungsabläufe, erkennt Fehler sofort und korrigiert sie, bevor sie sich einschleifen.
-        </p>
-        <p>
-          Im Personal Training arbeiten wir detailliert an Schlagtechnik, Fußarbeit, Verteidigung und Kombinationen. Du lernst nicht nur, was du tun sollst — du verstehst auch warum. Dieses Verständnis macht den Unterschied zwischen einem Hobbysportler und einem Boxer, der wirklich weiterkommt.
-        </p>
-        <div style="margin-top:1.75rem;display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </a>
-          <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-users"></i> UNSERE COACHES
-          </a>
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">02</div>
+          <h3 class="pt-mini-title">TECHNIK &amp; ATHLETIK</h3>
+          <p class="pt-mini-text">Boxtechnik, Kondition und Mindset — alles in einem.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Fitness und Athletiktraining ── -->
-  <section class="seo-section seo-section--dark" aria-labelledby="fitness-h2">
-    <div class="container">
-      <div class="seo-section-inner reveal">
-        <span class="tag tag--dark">ATHLETIK</span>
-        <h2 id="fitness-h2" style="margin-top:1.25rem;">FITNESS UND<br><span>ATHLETIKTRAINING</span></h2>
-        <p>
-          Boxen ist ein Vollkörpersport — und dein Personal Training im Bomaye Gym berücksichtigt das. Neben der technischen Komponente arbeiten wir gezielt an deiner physischen Basis: Ausdauer, Schnellkraft, Explosivität und Core-Stabilität.
-        </p>
-        <p>
-          Dein Coach kombiniert boxspezifische Konditionsübungen mit Kraft- und Athletikelementen, die direkt auf deine Leistung im Training einzahlen. Das Ergebnis: Du wirst nicht nur technisch besser — du wirst fitter, stärker und belastbarer.
-        </p>
-        <p>
-          Egal ob du Fett abbauen, Muskeln aufbauen, deine Ausdauer steigern oder schlicht leistungsfähiger werden möchtest — Personal Training im Bomaye Gym ist ein ganzheitlicher Ansatz, der alle Aspekte deiner Fitness berücksichtigt.
-        </p>
-        <div style="margin-top:1.75rem;display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </a>
-          <a href="/kurse" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-list"></i> ALLE KURSE ANSEHEN
-          </a>
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">03</div>
+          <h3 class="pt-mini-title">FLEXIBEL</h3>
+          <p class="pt-mini-text">Termine nach deinem Zeitplan, echte Coaches.</p>
         </div>
       </div>
     </div>
@@ -538,7 +506,7 @@
       <div class="pt-coaches-grid">
         <a href="#pt-booking" class="pt-coach-card reveal">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-raschad.webp?v=6" alt="Coach Raschad Pekpassi" loading="lazy" decoding="async" />
+            <img src="/assets/images/coach-raschad.webp?v=6" alt="Coach Raschad Pekpassi" loading="eager" decoding="async" />
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">RASCHAD</h3>
@@ -547,7 +515,7 @@
         </a>
         <a href="#pt-booking" class="pt-coach-card reveal delay-1">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-alfonso.webp" alt="Coach Alfonso Fusco" loading="lazy" decoding="async" />
+            <img src="/assets/images/coach-alfonso.webp" alt="Coach Alfonso Fusco" loading="eager" decoding="async" />
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">ALFONSO</h3>
@@ -556,7 +524,7 @@
         </a>
         <a href="#pt-booking" class="pt-coach-card reveal delay-2">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-pavlos.webp?v=2" alt="Coach Pavlos" loading="lazy" decoding="async" />
+            <img src="/assets/images/coach-pavlos.webp?v=2" alt="Coach Pavlos" loading="eager" decoding="async" />
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">PAVLOS</h3>
@@ -565,7 +533,7 @@
         </a>
         <a href="#pt-booking" class="pt-coach-card reveal delay-3">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-nima.webp?v=3" alt="Coach Nima" loading="lazy" decoding="async" />
+            <img src="/assets/images/coach-nima.webp?v=3" alt="Coach Nima" loading="eager" decoding="async" />
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">NIMA</h3>
