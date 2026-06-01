@@ -292,6 +292,75 @@
     @media (max-width: 480px) {
       .pt-widget-wrapper { min-height: 1200px; }
     }
+
+    /* ── Coach section ──────────────────────────── */
+    .pt-coaches-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .pt-coach-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,168,76,0.15);
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+    }
+    .pt-coach-card:hover {
+      border-color: rgba(201,168,76,0.6);
+      transform: translateY(-4px);
+    }
+    .pt-coach-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: #0A0A08;
+    }
+    .pt-coach-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .pt-coach-card:hover .pt-coach-photo img {
+      transform: scale(1.05);
+    }
+    .pt-coach-info {
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+    .pt-coach-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin: 0;
+      color: var(--cream, #F5F0E8);
+    }
+    .pt-coach-cred {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #C9A84C;
+      text-transform: uppercase;
+    }
+    @media (max-width: 900px) {
+      .pt-coaches-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .pt-coaches-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .pt-coach-name { font-size: 1.25rem; }
+    }
+
+    /* ── Smooth scroll + section offset ─────────── */
+    html { scroll-behavior: smooth; }
+    #pt-booking { scroll-margin-top: 80px; }
   </style>
 </head>
 
@@ -340,9 +409,9 @@
   <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
   <div class="mn-divider"></div>
   <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:5"><i class="fa-solid fa-user"></i> Mein Konto</a>
-  <button class="btn btn--gold mn-cta" onclick="togglePageMenu(); openBooking();" type="button" style="--mn-i:6">
+  <a href="#pt-booking" class="btn btn--gold mn-cta" onclick="togglePageMenu();" style="--mn-i:6;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
     MITGLIED WERDEN
-  </button>
+  </a>
 </div>
 
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
@@ -350,19 +419,6 @@
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="fa-brands fa-whatsapp"></i>
 </a>
-
-<!-- ═══════ BOOKING MODAL ═══════ -->
-<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
-  <div class="modal-header">
-    <span class="modal-header-title">JETZT BUCHEN</span>
-    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div id="bsport-widget-464090"></div>
-  </div>
-</div>
 
 <!-- ═══════ MAIN ═══════ -->
 <main>
@@ -377,9 +433,9 @@
         Egal ob Anfänger oder Fortgeschrittener – mit einem Personal Coach erreichst du deine Ziele schneller.
       </p>
       <div class="seo-hero-btns">
-        <button class="btn btn--gold" onclick="openBooking()" type="button">
+        <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-        </button>
+        </a>
         <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="fa-solid fa-bolt"></i> JETZT MITGLIED WERDEN
         </a>
@@ -394,13 +450,10 @@
         <span class="tag tag--dark">1:1 COACHING</span>
         <h2 id="individuell-h2" style="margin-top:1.25rem;">INDIVIDUELLES<br><span>BOXTRAINING</span></h2>
         <p>
-          Kein Kurs kann so präzise auf dich eingehen wie ein Personal Training. Im Bomaye Gym München arbeiten wir im 1:1-Format — das bedeutet: 100 % Aufmerksamkeit, 100 % Fokus auf deine Ziele, 100 % auf dich zugeschnittenes Programm.
+          Kein Kurs kann so präzise auf dich eingehen wie ein Personal Training. Im Bomaye Gym München arbeiten wir im 1:1-Format — 100 % Aufmerksamkeit, 100 % Fokus auf deine Ziele, 100 % auf dich zugeschnittenes Programm.
         </p>
         <p>
-          Ob du schneller Fortschritte machen möchtest, gezielt an einer Schwäche arbeiten willst oder einfach das Beste aus dir herausholen möchtest — Personal Training ist der effizienteste Weg, um im Boxen wirklich voranzukommen.
-        </p>
-        <p>
-          Vor deiner ersten Einheit analysieren wir gemeinsam deine Ziele, dein aktuelles Level und eventuelle körperliche Besonderheiten. Auf dieser Basis erstellt dein Coach einen individuellen Trainingsplan, der sich mit dir weiterentwickelt.
+          Vor deiner ersten Einheit analysieren wir gemeinsam deine Ziele, dein Level und körperliche Voraussetzungen. Dein Coach erstellt einen individuellen Trainingsplan — und passt ihn fortlaufend an deine Entwicklung an.
         </p>
         <div class="seo-feature-grid">
           <div class="seo-feature-card">
@@ -419,11 +472,6 @@
             <p>Termine nach deinem Zeitplan, Intensität nach deinem aktuellen Stand.</p>
           </div>
         </div>
-        <div style="margin-top:1.75rem;">
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
-            <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </button>
-        </div>
       </div>
     </div>
   </section>
@@ -440,13 +488,10 @@
         <p>
           Im Personal Training arbeiten wir detailliert an Schlagtechnik, Fußarbeit, Verteidigung und Kombinationen. Du lernst nicht nur, was du tun sollst — du verstehst auch warum. Dieses Verständnis macht den Unterschied zwischen einem Hobbysportler und einem Boxer, der wirklich weiterkommt.
         </p>
-        <p>
-          Ob du als Anfänger eine solide Grundlage aufbauen oder als Fortgeschrittener deine Technik verfeinern möchtest — Personal Coaching bringt dich schneller ans Ziel als jede andere Trainingsform.
-        </p>
         <div style="margin-top:1.75rem;display:flex;gap:1rem;flex-wrap:wrap;">
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </button>
+          </a>
           <a href="/coaches" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <i class="fa-solid fa-users"></i> UNSERE COACHES
           </a>
@@ -471,9 +516,9 @@
           Egal ob du Fett abbauen, Muskeln aufbauen, deine Ausdauer steigern oder schlicht leistungsfähiger werden möchtest — Personal Training im Bomaye Gym ist ein ganzheitlicher Ansatz, der alle Aspekte deiner Fitness berücksichtigt.
         </p>
         <div style="margin-top:1.75rem;display:flex;gap:1rem;flex-wrap:wrap;">
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
+          <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </button>
+          </a>
           <a href="/kurse" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
             <i class="fa-solid fa-list"></i> ALLE KURSE ANSEHEN
           </a>
@@ -482,26 +527,51 @@
     </div>
   </section>
 
-  <!-- ── Personal Training Termin buchen CTA ── -->
-  <section class="seo-section seo-section--smoke" style="text-align:center;" aria-labelledby="termin-h2">
+  <!-- ── Coaches ── -->
+  <section class="seo-section seo-section--dark" aria-labelledby="pt-coaches-h2">
     <div class="container">
-      <div class="reveal">
-        <span class="tag tag--dark">JETZT STARTEN</span>
-        <h2 id="termin-h2" style="margin-top:1.25rem;">PERSONAL TRAINING<br><span>TERMIN BUCHEN</span></h2>
-        <p style="max-width:560px;margin:0 auto 0.75rem;">
-          Bereit, dein Training auf das nächste Level zu bringen? Buche jetzt deinen Personal Training Termin im Bomaye Gym München — oder sichere dir zuerst deinen Early-Bird-Platz als Mitglied.
-        </p>
-        <p style="max-width:560px;margin:0 auto 2rem;">
-          Wir beraten dich gerne zu Paketen, Terminen und Trainingsinhalten. Schreib uns einfach auf WhatsApp oder buche direkt online.
-        </p>
-        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-          <button class="btn btn--gold" onclick="openBooking()" type="button">
-            <i class="fa-solid fa-calendar-plus"></i> PERSONAL TRAINING BUCHEN
-          </button>
-          <a href="/mitglied-werden" class="btn btn--outline-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-            <i class="fa-solid fa-bolt"></i> JETZT MITGLIED WERDEN
-          </a>
-        </div>
+      <div class="seo-section-inner reveal">
+        <span class="tag tag--dark">DEINE COACHES</span>
+        <h2 id="pt-coaches-h2" style="margin-top:1rem;">TRAINIERE MIT DEN <span>BESTEN.</span></h2>
+        <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Olympic Coach. Kickbox-Weltmeister. Echte Lizenzen, echte Erfahrung.</p>
+      </div>
+      <div class="pt-coaches-grid">
+        <a href="#pt-booking" class="pt-coach-card reveal">
+          <div class="pt-coach-photo">
+            <img src="/assets/images/coach-raschad.webp?v=6" alt="Coach Raschad Pekpassi" loading="lazy" decoding="async" />
+          </div>
+          <div class="pt-coach-info">
+            <h3 class="pt-coach-name">RASCHAD</h3>
+            <span class="pt-coach-cred">OLYMPIC BOXING</span>
+          </div>
+        </a>
+        <a href="#pt-booking" class="pt-coach-card reveal delay-1">
+          <div class="pt-coach-photo">
+            <img src="/assets/images/coach-alfonso.webp" alt="Coach Alfonso Fusco" loading="lazy" decoding="async" />
+          </div>
+          <div class="pt-coach-info">
+            <h3 class="pt-coach-name">ALFONSO</h3>
+            <span class="pt-coach-cred">KICKBOX WELTMEISTER</span>
+          </div>
+        </a>
+        <a href="#pt-booking" class="pt-coach-card reveal delay-2">
+          <div class="pt-coach-photo">
+            <img src="/assets/images/coach-pavlos.webp?v=2" alt="Coach Pavlos" loading="lazy" decoding="async" />
+          </div>
+          <div class="pt-coach-info">
+            <h3 class="pt-coach-name">PAVLOS</h3>
+            <span class="pt-coach-cred">BOXING &amp; ATHLETIK</span>
+          </div>
+        </a>
+        <a href="#pt-booking" class="pt-coach-card reveal delay-3">
+          <div class="pt-coach-photo">
+            <img src="/assets/images/coach-nima.webp?v=3" alt="Coach Nima" loading="lazy" decoding="async" />
+          </div>
+          <div class="pt-coach-info">
+            <h3 class="pt-coach-name">NIMA</h3>
+            <span class="pt-coach-cred">BOXING &amp; KICKBOXING</span>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -677,44 +747,6 @@ function togglePageMenu() {
     btn.classList.toggle('open', open);
   }
 }
-
-/* ── Booking modal ── */
-let _bsportMounted = false;
-function openBooking() {
-  const modal = document.getElementById('booking-modal');
-  if (!modal) return;
-  modal.classList.add('open');
-  lockBodyScroll();
-  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
-}
-function closeBooking() {
-  const modal = document.getElementById('booking-modal');
-  if (!modal || !modal.classList.contains('open')) return;
-  modal.classList.remove('open');
-  unlockBodyScroll();
-}
-function _mountBsport() {
-  if (!document.getElementById('bsport-cdn')) {
-    const s = document.createElement('script');
-    s.id  = 'bsport-cdn';
-    s.src = 'https://cdn.bsport.io/scripts/widget.js';
-    document.head.appendChild(s);
-  }
-  _waitBsport(1);
-}
-function _waitBsport(attempt) {
-  if (attempt > 50) return;
-  if (typeof window.BsportWidget === 'undefined')
-    return setTimeout(() => _waitBsport(attempt + 1), 150);
-  BsportWidget.mount({
-    parentElement: 'bsport-widget-464090',
-    companyId: 5473, franchiseId: null,
-    dialogMode: 1, widgetType: 'calendar',
-    showFab: false, fullScreenPopup: false,
-  });
-}
-document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
 
 /* ── FAQ accordion ── */
 function toggleFaq(btn) {
