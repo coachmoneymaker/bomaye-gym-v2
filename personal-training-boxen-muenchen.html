@@ -268,6 +268,30 @@
     /* Nav active */
     .nav-link-active { color: var(--gold) !important; }
     #header .nav-link[href] { display: inline-flex; align-items: center; }
+
+    /* ── PT booking widget ────────────────────────── */
+    .pt-widget-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 900px;
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+    .pt-widget-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      overflow-x: hidden !important;
+    }
+    @media (max-width: 768px) {
+      .pt-widget-wrapper { min-height: 1100px; }
+    }
+    @media (max-width: 480px) {
+      .pt-widget-wrapper { min-height: 1200px; }
+    }
   </style>
 </head>
 
@@ -478,6 +502,21 @@
             <i class="fa-solid fa-bolt"></i> JETZT MITGLIED WERDEN
           </a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PT Booking Widget ── -->
+  <section id="pt-booking" class="seo-section seo-section--light" aria-labelledby="pt-booking-h2">
+    <div class="container">
+      <div class="seo-section-inner reveal">
+        <span class="tag tag--light-inv">BUCHEN</span>
+        <h2 id="pt-booking-h2" style="margin-top:1rem;color:var(--ink);">DEIN COACH. <span>DEIN TERMIN.</span></h2>
+        <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Wähle deinen Coach. Wähle deinen Slot. Starte dein 1:1 Training auf höchstem Niveau.</p>
+      </div>
+      <div class="pt-widget-wrapper">
+        <iframe frameborder="0" allowfullscreen srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
+        </iframe>
       </div>
     </div>
   </section>
