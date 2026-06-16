@@ -1984,85 +1984,129 @@ body[data-modal-open="true"] { overflow: hidden; }
   </section>
 
   <!-- SOCIAL PROOF SECTION -->
-  <section id="reviews" style="background:#0D0D0B;padding:80px 24px;position:relative;overflow:hidden;border-top:1px solid rgba(201,168,76,0.12);border-bottom:1px solid rgba(201,168,76,0.12);">
+  <section id="reviews" style="background:#0D0D0B;padding:80px 24px 72px;position:relative;overflow:hidden;border-top:1px solid rgba(201,168,76,0.12);border-bottom:1px solid rgba(201,168,76,0.12);">
 
-    <!-- Subtle gold glow background -->
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(201,168,76,0.04) 0%,transparent 70%);pointer-events:none;"></div>
+    <!-- Subtle radial glow -->
+    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse at top,rgba(201,168,76,0.05) 0%,transparent 65%);pointer-events:none;"></div>
 
     <!-- Section label -->
-    <div style="text-align:center;margin-bottom:40px;">
-      <span style="font-family:'Oswald',sans-serif;font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:0.18em;">Was unsere Community sagt</span>
+    <div style="text-align:center;margin-bottom:36px;">
+      <span style="font-family:'Oswald',sans-serif;font-size:11px;color:rgba(201,168,76,0.7);text-transform:uppercase;letter-spacing:0.2em;">Was unsere Community sagt</span>
     </div>
 
-    <!-- Rating row -->
-    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:52px;text-align:center;">
-      <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
-        <span style="color:#C9A84C;font-size:24px;letter-spacing:4px;">★★★★★</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:56px;color:#F5F0E8;line-height:1;">4.8</span>
+    <!-- Rating -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:56px;text-align:center;">
+      <div style="display:flex;align-items:baseline;gap:14px;justify-content:center;">
+        <span style="color:#C9A84C;font-size:22px;letter-spacing:4px;">★★★★★</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">4.8</span>
       </div>
-      <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.4);letter-spacing:0.05em;">auf Google · 41 Bewertungen</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.35);letter-spacing:0.06em;">auf Google · 69 Bewertungen</span>
     </div>
 
-    <!-- Review cards: horizontal scroll on mobile, 3-col on desktop -->
-    <div id="reviews-track" style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px;max-width:1100px;margin:0 auto 48px;scrollbar-width:none;">
+    <!-- 3 Cards — CSS Grid desktop, scroll snap mobile -->
+    <style>
+      .bom-reviews-grid {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        max-width: 1080px;
+        margin: 0 auto 16px;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .bom-reviews-grid::-webkit-scrollbar { display: none; }
+      .bom-review-card {
+        min-width: 288px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        background: #111110;
+        border: 1px solid rgba(201,168,76,0.16);
+        padding: 28px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+      }
+      .bom-review-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 16px; right: 16px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+      }
+      @media (min-width: 860px) {
+        .bom-reviews-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          overflow: visible;
+        }
+        .bom-review-card { min-width: 0; }
+      }
+    </style>
 
-      <style>#reviews-track::-webkit-scrollbar{display:none;}@media(min-width:900px){#reviews-track{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;}}</style>
+    <div class="bom-reviews-grid">
 
-      <!-- Card 1 -->
-      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
-        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">E</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Emanuele C.</span>
+      <!-- Card 1: Emanuele -->
+      <div class="bom-review-card">
+        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">E</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Emanuele C.</span>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
-        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — und auch für Wettkämpfer im Amateurboxen ist man hier genau richtig."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">L</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Lilian H.</span>
+      <!-- Card 2: Christopher -->
+      <div class="bom-review-card">
+        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Klare Empfehlung für JEDEN, der Interesse an Kampfsport hat. Alles sehr familiär, das Gym ist immer sauber — definitiv die richtige Adresse für Wettkämpfer und Wettkämpferinnen. 10/10."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">C</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Christopher M.</span>
         </div>
       </div>
 
-      <!-- Card 3 -->
-      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
-        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Klare Empfehlung für JEDEN, der Interesse an Kampfsport hat. Alles sehr familiär, das Gym ist immer sauber — definitiv die richtige Adresse für Wettkämpfer und Wettkämpferinnen. 10/10."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">C</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Christopher M.</span>
+      <!-- Card 3: Lilian -->
+      <div class="bom-review-card">
+        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — es gibt aber auch die Möglichkeit für Wettkämpfer im Amateurboxen sich weiterzuentwickeln."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">L</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Lilian H.</span>
         </div>
       </div>
 
     </div>
 
-    <!-- Mobile scroll dots -->
-    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:40px;" id="review-dots">
-      <span style="width:20px;height:2px;background:#C9A84C;display:block;"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.3);display:block;"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.3);display:block;"></span>
-      <style>@media(min-width:900px){#review-dots{display:none;}}</style>
+    <!-- Mobile scroll indicator -->
+    <div style="display:flex;justify-content:center;gap:5px;margin-bottom:44px;" class="bom-scroll-dots">
+      <span style="width:20px;height:2px;background:#C9A84C;"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);"></span>
+      <style>@media(min-width:860px){.bom-scroll-dots{display:none;}}</style>
     </div>
 
-    <!-- Two CTAs -->
-    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.1468,11.5167,17z/data=!4m8!3m7!1s0x479377aa5473b34b:0x4155ea3f2be12163!8m2!3d48.1468!4d11.5234!9m1!1b1"
-         target="_blank" rel="noopener"
-         style="display:inline-block;background:linear-gradient(180deg,#D0A040,#C09030);color:#0A0A08;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:14px 36px;text-decoration:none;">
-        ALLE BEWERTUNGEN LESEN
+    <!-- CTAs — verified links -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+
+      <!-- All reviews — verified short link -->
+      <a href="https://maps.app.goo.gl/E8NqijhFu1DzMMxH6"
+         target="_blank"
+         rel="noopener noreferrer"
+         style="display:inline-block;background:linear-gradient(180deg,#D0A040 0%,#B08030 100%);color:#0A0A08;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;padding:15px 40px;text-decoration:none;">
+        ALLE 69 BEWERTUNGEN LESEN
       </a>
-      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.1468,11.5167,17z/data=!4m8!3m7!1s0x479377aa5473b34b:0x4155ea3f2be12163!8m2!3d48.1468!4d11.5234!9m1!1b1&hl=de"
-         target="_blank" rel="noopener"
-         style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.4);text-decoration:none;letter-spacing:0.02em;border-bottom:1px solid rgba(245,240,232,0.15);padding-bottom:1px;">
-        + Eigene Bewertung hinterlassen
+
+      <!-- Write review — Google Place ID direct write link -->
+      <a href="https://search.google.com/local/writereview?placeid=ChIJS-tzVKp3nkcRbCHhKzfqVQQ"
+         target="_blank"
+         rel="noopener noreferrer"
+         style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.38);text-decoration:none;border-bottom:1px solid rgba(245,240,232,0.15);padding-bottom:2px;">
+        ✦ Eigene Bewertung hinterlassen
       </a>
+
     </div>
 
   </section>
