@@ -1984,52 +1984,85 @@ body[data-modal-open="true"] { overflow: hidden; }
   </section>
 
   <!-- SOCIAL PROOF SECTION -->
-  <style>
-    .reviews-section{background:#0A0A08;padding:80px 24px;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);}
-    .reviews-header{display:flex;flex-direction:column;align-items:center;gap:16px;margin-bottom:48px;text-align:center;}
-    .rating-stars{color:#C9A84C;font-size:22px;letter-spacing:2px;}
-    .rating-number{font-family:'Bebas Neue',sans-serif;font-size:48px;color:#C9A84C;line-height:1;}
-    .rating-label{font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(245,240,232,0.5);display:block;margin-top:4px;}
-    .founding-counter{border:1px solid rgba(201,168,76,0.3);padding:12px 24px;text-align:center;}
-    .counter-number{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#C9A84C;display:block;line-height:1;}
-    .counter-label{font-family:'Oswald',sans-serif;font-size:11px;color:rgba(245,240,232,0.5);text-transform:uppercase;letter-spacing:0.12em;display:block;margin-top:4px;}
-    .reviews-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:1000px;margin:0 auto;}
-    @media(min-width:768px){.reviews-grid{grid-template-columns:repeat(3,1fr);}}
-    .review-card{background:#111110;border:1px solid rgba(201,168,76,0.15);padding:28px 24px;display:flex;flex-direction:column;gap:16px;}
-    .review-stars{color:#C9A84C;font-size:16px;letter-spacing:2px;}
-    .review-text{font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;color:#F5F0E8;flex:1;margin:0;}
-    .review-name{font-family:'Oswald',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#C9A84C;}
-  </style>
-  <section class="reviews-section">
+  <section id="reviews" style="background:#0D0D0B;padding:80px 24px;position:relative;overflow:hidden;border-top:1px solid rgba(201,168,76,0.12);border-bottom:1px solid rgba(201,168,76,0.12);">
 
-    <div class="reviews-header">
-      <div class="reviews-rating">
-        <span class="rating-stars">★★★★★</span>
-        <span class="rating-number">4.8</span>
-        <span class="rating-label">auf Google · 41 Bewertungen</span>
-      </div>
-      <div class="founding-counter">
-        <span class="counter-number">105</span>
-        <span class="counter-label">von 300 Founding Member Plätzen vergeben</span>
-      </div>
+    <!-- Subtle gold glow background -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(201,168,76,0.04) 0%,transparent 70%);pointer-events:none;"></div>
+
+    <!-- Section label -->
+    <div style="text-align:center;margin-bottom:40px;">
+      <span style="font-family:'Oswald',sans-serif;font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:0.18em;">Was unsere Community sagt</span>
     </div>
 
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
-        <span class="review-name">Emanuele C.</span>
+    <!-- Rating row -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:52px;text-align:center;">
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+        <span style="color:#C9A84C;font-size:24px;letter-spacing:4px;">★★★★★</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:56px;color:#F5F0E8;line-height:1;">4.8</span>
       </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — es gibt aber auch die Möglichkeit für Wettkämpfer im Amateurboxen sich weiterzuentwickeln."</p>
-        <span class="review-name">Lilian H.</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.4);letter-spacing:0.05em;">auf Google · 41 Bewertungen</span>
+    </div>
+
+    <!-- Review cards: horizontal scroll on mobile, 3-col on desktop -->
+    <div id="reviews-track" style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px;max-width:1100px;margin:0 auto 48px;scrollbar-width:none;">
+
+      <style>#reviews-track::-webkit-scrollbar{display:none;}@media(min-width:900px){#reviews-track{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;}}</style>
+
+      <!-- Card 1 -->
+      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
+        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">E</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Emanuele C.</span>
+        </div>
       </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Super Gym, tolle Atmosphäre und sehr erfahrene Trainer, von denen man viel lernen kann."</p>
-        <span class="review-name">Tyler K.</span>
+
+      <!-- Card 2 -->
+      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
+        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — und auch für Wettkämpfer im Amateurboxen ist man hier genau richtig."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">L</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Lilian H.</span>
+        </div>
       </div>
+
+      <!-- Card 3 -->
+      <div style="min-width:280px;flex-shrink:0;scroll-snap-align:start;background:#121210;border:1px solid rgba(201,168,76,0.18);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
+        <div style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.9);margin:0;flex:1;">"Klare Empfehlung für JEDEN, der Interesse an Kampfsport hat. Alles sehr familiär, das Gym ist immer sauber — definitiv die richtige Adresse für Wettkämpfer und Wettkämpferinnen. 10/10."</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.1);">
+          <div style="width:28px;height:28px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#C9A84C;font-weight:600;">C</div>
+          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:#C9A84C;">Christopher M.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mobile scroll dots -->
+    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:40px;" id="review-dots">
+      <span style="width:20px;height:2px;background:#C9A84C;display:block;"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.3);display:block;"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.3);display:block;"></span>
+      <style>@media(min-width:900px){#review-dots{display:none;}}</style>
+    </div>
+
+    <!-- Two CTAs -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.1468,11.5167,17z/data=!4m8!3m7!1s0x479377aa5473b34b:0x4155ea3f2be12163!8m2!3d48.1468!4d11.5234!9m1!1b1"
+         target="_blank" rel="noopener"
+         style="display:inline-block;background:linear-gradient(180deg,#D0A040,#C09030);color:#0A0A08;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:14px 36px;text-decoration:none;">
+        ALLE BEWERTUNGEN LESEN
+      </a>
+      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.1468,11.5167,17z/data=!4m8!3m7!1s0x479377aa5473b34b:0x4155ea3f2be12163!8m2!3d48.1468!4d11.5234!9m1!1b1&hl=de"
+         target="_blank" rel="noopener"
+         style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.4);text-decoration:none;letter-spacing:0.02em;border-bottom:1px solid rgba(245,240,232,0.15);padding-bottom:1px;">
+        + Eigene Bewertung hinterlassen
+      </a>
     </div>
 
   </section>
