@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Wochenplan | BOMAYE GYM MUNICH</title>
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0A0A08">
+  <meta name="description" content="Der komplette Wochenplan des BOMAYE GYM MUNICH auf einen Blick — druckfertig, Montag bis Samstag." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://www.bomayegym.com/stundenplan" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Oswald:wght@400;500;600;700&display=swap" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: #F5F0E8; color: #0A0A08; font-family: 'DM Sans', sans-serif; }
+
+    .wp-wrap { max-width: 1240px; margin: 0 auto; padding: 44px 20px 32px; }
+
+    /* ── Header ── */
+    .wp-header { text-align: center; margin-bottom: 36px; }
+    .wp-logo { display: inline-block; }
+    .wp-logo img { height: 88px; width: auto; display: block; margin: 0 auto 18px; }
+    .wp-eyebrow {
+      font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px;
+    }
+    .wp-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 9vw, 4.5rem);
+      line-height: 0.95; letter-spacing: 3px; color: #0A0A08; text-transform: uppercase;
+    }
+    .wp-print {
+      display: inline-block; margin-top: 18px; padding: 8px 4px;
+      background: transparent; border: 0; cursor: pointer;
+      font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #C9A84C;
+      transition: color 0.15s ease;
+    }
+    .wp-print:hover { color: #A6842E; }
+
+    /* ── Week grid ── */
+    .wp-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+    @media (min-width: 1024px) {
+      .wp-grid { grid-template-columns: repeat(6, 1fr); gap: 0; }
+      .wp-day { padding: 0 12px; border-left: 1px solid rgba(10,10,8,0.12); }
+      .wp-day:first-child { border-left: 0; padding-left: 0; }
+      .wp-day:last-child { padding-right: 0; }
+    }
+    .wp-day-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.14em;
+      color: #0A0A08; text-transform: uppercase;
+      padding-bottom: 8px; margin-bottom: 4px; border-bottom: 2px solid #0A0A08;
+    }
+    .wp-row {
+      position: relative; padding: 9px 0 9px 12px;
+      border-bottom: 1px solid rgba(10,10,8,0.12);
+    }
+    .wp-row::before {
+      content: ''; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px;
+      background: #C9A84C;
+    }
+    .wp-row--invite::before { background: #0A0A08; }
+    .wp-row--open::before   { background: rgba(10,10,8,0.3); }
+    .wp-row--red::before    { background: #B3261E; }
+    .wp-time {
+      font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600;
+      font-variant-numeric: tabular-nums; letter-spacing: 0.04em; color: #0A0A08;
+      margin-bottom: 2px;
+    }
+    .wp-name {
+      font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.25; color: #0A0A08;
+    }
+    .wp-row--red .wp-name { color: #B3261E; }
+    .wp-neu {
+      display: inline-block; vertical-align: 2px; margin-left: 5px; padding: 1px 4px;
+      background: #C9A84C; color: #0A0A08;
+      font-family: 'Oswald', sans-serif; font-size: 7px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .wp-sub {
+      font-family: 'DM Sans', sans-serif; font-size: 9.5px; text-transform: uppercase;
+      letter-spacing: 0.07em; color: rgba(10,10,8,0.65); line-height: 1.4; margin-top: 2px;
+    }
+    .wp-error { text-align: center; padding: 40px 0; font-size: 14px; }
+    .wp-error a { color: #C9A84C; }
+
+    /* ── Footer ── */
+    .wp-footer {
+      margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(10,10,8,0.12);
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.35em;
+      color: #0A0A08;
+    }
+    .wp-footer a { color: inherit; text-decoration: none; }
+
+    /* ── Print: one A4 portrait page ── */
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      html, body { background: #FFFFFF !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      header:not(.wp-header), nav, footer:not(.wp-footer), #header, #mobile-nav, .noise, .wp-print { display: none !important; }
+      .wp-wrap { max-width: none; padding: 0; }
+      .wp-header { margin-bottom: 6mm; }
+      .wp-logo img { height: 18mm; margin-bottom: 3mm; }
+      .wp-eyebrow { font-size: 8pt; margin-bottom: 1.5mm; }
+      .wp-title { font-size: 26pt; }
+      .wp-grid { grid-template-columns: repeat(3, 1fr); gap: 5mm 6mm; }
+      .wp-day { break-inside: avoid; padding: 0; border-left: 0; }
+      .wp-day-name { font-size: 11pt; padding-bottom: 1.5mm; margin-bottom: 1mm; }
+      .wp-row { padding: 1.6mm 0 1.6mm 2.5mm; }
+      .wp-row::before { top: 1.6mm; bottom: 1.6mm; width: 0.8mm; }
+      .wp-time { font-size: 7pt; margin-bottom: 0.4mm; }
+      .wp-name { font-size: 8.5pt; }
+      .wp-neu { font-size: 5pt; padding: 0.3mm 0.8mm; }
+      .wp-sub { font-size: 6pt; margin-top: 0.4mm; }
+      .wp-footer { margin-top: 5mm; padding-top: 2.5mm; font-size: 9pt; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wp-wrap">
+
+  <header class="wp-header">
+    <a href="/" class="wp-logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" decoding="async" />
+    </a>
+    <div class="wp-eyebrow">BOMAYE GYM MUNICH</div>
+    <h1 class="wp-title">WOCHENPLAN</h1>
+    <button type="button" class="wp-print" onclick="window.print()">DRUCKEN / ALS PDF SICHERN</button>
+  </header>
+
+  <main class="wp-grid" id="wp-grid" aria-label="Wochenplan Montag bis Samstag">
+    <noscript>
+      <p class="wp-error">Bitte JavaScript aktivieren, um den Wochenplan zu laden — oder direkt zum <a href="/stundenplan">Stundenplan</a>.</p>
+    </noscript>
+  </main>
+
+  <footer class="wp-footer">
+    <a href="/">BOMAYEGYM.COM</a>
+  </footer>
+
+</div>
+
+<script>
+/* Renders the week from the SAME data as /stundenplan: the schedule
+   rows are fetched from that page and parsed — single source of truth,
+   no duplicated schedule data. */
+(function () {
+  var grid = document.getElementById('wp-grid');
+  if (!grid) return;
+
+  var DAYS = [
+    ['mo', 'MONTAG'], ['di', 'DIENSTAG'], ['mi', 'MITTWOCH'],
+    ['do', 'DONNERSTAG'], ['fr', 'FREITAG'], ['sa', 'SAMSTAG']
+  ];
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function fail() {
+    grid.innerHTML = '<p class="wp-error">Der Wochenplan konnte nicht geladen werden. Direkt zum <a href="/stundenplan">Stundenplan</a>.</p>';
+  }
+
+  function render(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var out = '';
+    var total = 0;
+
+    DAYS.forEach(function (day) {
+      var panel = doc.querySelector('#sp-plan .sp-day[data-day="' + day[0] + '"]');
+      if (!panel) return;
+      var rowsHtml = '';
+
+      panel.querySelectorAll('.sp-row').forEach(function (row) {
+        var times = row.querySelectorAll('.sp-time span');
+        var start = times[0] ? times[0].textContent.trim() : '';
+        var end = row.querySelector('.sp-time-end');
+        end = end ? end.textContent.trim() : '';
+
+        var nameEl = row.querySelector('.sp-name');
+        var isNeu = false;
+        var name = '';
+        if (nameEl) {
+          var clone = nameEl.cloneNode(true);
+          isNeu = !!clone.querySelector('.sp-neu');
+          var strip = clone.querySelectorAll('.sp-neu, .sp-live');
+          for (var i = 0; i < strip.length; i++) strip[i].parentNode.removeChild(strip[i]);
+          name = clone.textContent.trim();
+        }
+
+        var subEl = row.querySelector('.sp-sub');
+        var sub = subEl ? subEl.textContent.trim() : '';
+        if (row.querySelector('.sp-invite') && sub.toLowerCase().indexOf('einladung') === -1) {
+          sub += ' · Auf Einladung';
+        }
+
+        var mod = row.classList.contains('sp-row--red') ? ' wp-row--red'
+          : row.classList.contains('sp-row--open') ? ' wp-row--open'
+          : row.classList.contains('sp-row--invite') ? ' wp-row--invite' : '';
+
+        total++;
+        rowsHtml += '<div class="wp-row' + mod + '">'
+          + '<div class="wp-time">' + esc(start) + (end ? '–' + esc(end) : '') + '</div>'
+          + '<div class="wp-name">' + esc(name) + (isNeu ? '<span class="wp-neu">NEU</span>' : '') + '</div>'
+          + (sub ? '<div class="wp-sub">' + esc(sub) + '</div>' : '')
+          + '</div>';
+      });
+
+      out += '<section class="wp-day"><h2 class="wp-day-name">' + day[1] + '</h2>' + rowsHtml + '</section>';
+    });
+
+    if (!total) { fail(); return; }
+    grid.innerHTML = out;
+  }
+
+  fetch('/stundenplan')
+    .then(function (r) { if (!r.ok) throw new Error('status'); return r.text(); })
+    .catch(function () {
+      return fetch('/stundenplan.html').then(function (r) {
+        if (!r.ok) throw new Error('status');
+        return r.text();
+      });
+    })
+    .then(render)
+    .catch(fail);
+}());
+</script>
+
+</body>
+</html>

@@ -287,6 +287,20 @@
 
     #schedule { scroll-margin-top: calc(var(--nav-h) + 8px); }
 
+    /* Wochenplan link below the last row */
+    .sp-print-link-wrap { display: flex; justify-content: center; margin-top: 40px; }
+    .sp-print-link {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9A84C;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .sp-print-link:hover { color: #A6842E; }
+
     /* Sticky bottom conversion bar — mobile only */
     .sp-convbar {
       position: fixed;
@@ -721,6 +735,10 @@
           <div class="sp-sub">Nur für Wettkämpfer · Entfällt bei Veranstaltungen</div>
         </div>
       </div>
+    </div>
+
+    <div class="sp-print-link-wrap">
+      <a href="/wochenplan" class="sp-print-link">WOCHENPLAN ANSEHEN ↗</a>
     </div>
 
   </div>
