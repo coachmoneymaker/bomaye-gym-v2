@@ -116,6 +116,176 @@
       .sp-page-hero { padding-top: 140px; }
     }
 
+    /* ── WOCHENPLAN TIMELINE ── */
+    #sp-plan {
+      background: #F5F0E8;
+      border-bottom: 1px solid rgba(10,10,8,0.08);
+      padding: 0; /* kill global section padding — daybar sits flush under the hero */
+    }
+
+    /* Sticky day switcher */
+    .sp-daybar {
+      position: -webkit-sticky;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 90;
+      background: #F5F0E8;
+      border-bottom: 1px solid rgba(10,10,8,0.08);
+    }
+    .sp-day-tabs {
+      display: flex;
+      gap: 4px;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sp-day-tabs::-webkit-scrollbar { display: none; }
+    .sp-day-tab {
+      flex: 1 0 auto;
+      min-width: 48px;
+      padding: 12px 6px;
+      background: transparent;
+      border: 1px solid rgba(10,10,8,0.12);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      color: #0A0A08;
+      opacity: 0.45;
+      cursor: pointer;
+      position: relative;
+      transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .sp-day-tab:hover { opacity: 0.7; }
+    .sp-day-tab.active {
+      opacity: 1;
+      background: #0A0A08;
+      color: #F5F0E8;
+      border-color: #0A0A08;
+    }
+    .sp-day-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 5px;
+      width: 18px;
+      height: 2px;
+      background: #C9A84C;
+    }
+
+    /* Timeline rows */
+    .sp-days { max-width: 760px; margin: 0 auto; padding: 8px 20px 56px; }
+    .sp-day[hidden] { display: none; }
+    .sp-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      padding: 12px 0 12px 15px;
+      border-bottom: 1px solid rgba(10,10,8,0.08);
+    }
+    .sp-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 3px;
+      background: #C9A84C;
+    }
+    .sp-row--invite::before { background: #0A0A08; }
+    .sp-row--open::before   { background: rgba(10,10,8,0.22); }
+    .sp-row--red::before    { background: #B3261E; }
+
+    .sp-time {
+      flex: 0 0 72px;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #0A0A08;
+      letter-spacing: 0.04em;
+    }
+    .sp-time-end { opacity: 0.4; font-weight: 400; }
+
+    .sp-main { flex: 1 1 auto; min-width: 0; }
+    .sp-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #0A0A08;
+      line-height: 1.25;
+    }
+    .sp-row--red .sp-name { color: #B3261E; }
+    .sp-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      color: rgba(10,10,8,0.55);
+      line-height: 1.4;
+      margin-top: 1px;
+    }
+    .sp-neu {
+      display: inline-block;
+      vertical-align: 2px;
+      margin-left: 6px;
+      padding: 1px 5px;
+      border: 1px solid rgba(201,168,76,0.55);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: #C9A84C;
+    }
+    .sp-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      vertical-align: 1px;
+      margin-left: 8px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      color: #C9A84C;
+    }
+    .sp-live::before { content: ''; width: 6px; height: 6px; background: #C9A84C; }
+    .sp-live[hidden] { display: none; }
+
+    .sp-book {
+      flex: 0 0 auto;
+      margin-left: auto;
+      padding: 8px 0 8px 12px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #C9A84C;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .sp-book:hover { color: #0A0A08; }
+
+    #schedule { scroll-margin-top: calc(var(--nav-h) + 8px); }
+
+    @media (min-width: 768px) {
+      .sp-day-tabs { padding: 14px 24px; }
+      .sp-day-tab { min-width: 88px; padding: 14px 24px; font-size: 1.05rem; }
+      .sp-days { padding: 12px 24px 72px; }
+      .sp-row { gap: 20px; padding: 15px 0 15px 18px; }
+      .sp-row::before { top: 15px; bottom: 15px; }
+      .sp-time { flex-basis: 88px; font-size: 0.85rem; }
+      .sp-name { font-size: 1.05rem; }
+      .sp-sub { font-size: 0.78rem; }
+      .sp-book { font-size: 0.72rem; }
+    }
+
     /* ── SCHEDULE CONTAINER POLISH ── */
     section#schedule .container {
       padding-left: 32px;
@@ -225,6 +395,275 @@
     <p>Alle Kurse und Zeiten auf einen Blick — buche direkt deinen Platz.</p>
   </div>
 </div>
+
+<!-- ═══════ WOCHENPLAN TIMELINE ═══════ -->
+<section id="sp-plan" aria-label="Wochenplan">
+
+  <div class="sp-daybar">
+    <div class="sp-day-tabs" role="tablist" aria-label="Wochentag wählen">
+      <button class="sp-day-tab" data-day="mo" type="button">MO</button>
+      <button class="sp-day-tab" data-day="di" type="button">DI</button>
+      <button class="sp-day-tab" data-day="mi" type="button">MI</button>
+      <button class="sp-day-tab" data-day="do" type="button">DO</button>
+      <button class="sp-day-tab" data-day="fr" type="button">FR</button>
+      <button class="sp-day-tab" data-day="sa" type="button">SA</button>
+    </div>
+  </div>
+
+  <div class="sp-days">
+
+    <!-- MONTAG -->
+    <div class="sp-day" data-day="mo" hidden>
+      <div class="sp-row" data-s="12:00" data-e="13:00">
+        <div class="sp-time"><span>12:00</span><span class="sp-time-end">13:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">POWER LUNCH<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Boxing in der Mittagspause</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
+        <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">OPEN GYM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Freies Training · Nur Mitglieder</div>
+        </div>
+      </div>
+      <div class="sp-row" data-s="16:00" data-e="17:00">
+        <div class="sp-time"><span>16:00</span><span class="sp-time-end">17:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Kids 6–9 · Anfänger</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="17:00" data-e="18:30">
+        <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Youth 10–17</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Basic</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span><span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Advanced</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="20:00" data-e="21:30">
+        <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fight Team · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+    </div>
+
+    <!-- DIENSTAG -->
+    <div class="sp-day" data-day="di" hidden>
+      <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
+        <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">OPEN GYM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Freies Training · Nur Mitglieder</div>
+        </div>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="17:00" data-e="18:30">
+        <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">YOUTH FIGHT TEAM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">10–17 Jahre · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fight Team · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="20:00" data-e="21:30">
+        <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span><span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Alle Level</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+    </div>
+
+    <!-- MITTWOCH -->
+    <div class="sp-day" data-day="mi" hidden>
+      <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
+        <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">OPEN GYM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Freies Training · Nur Mitglieder</div>
+        </div>
+      </div>
+      <div class="sp-row" data-s="16:00" data-e="17:00">
+        <div class="sp-time"><span>16:00</span><span class="sp-time-end">17:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Kids 6–9 · Anfänger</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="17:00" data-e="18:30">
+        <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Youth 10–17</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="18:30" data-e="19:30">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">19:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE QUEENS<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fitness · Technik · Selbstverteidigung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="20:00" data-e="21:30">
+        <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fight Team · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="20:00" data-e="21:30">
+        <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Basic</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+    </div>
+
+    <!-- DONNERSTAG -->
+    <div class="sp-day" data-day="do" hidden>
+      <div class="sp-row" data-s="12:00" data-e="13:00">
+        <div class="sp-time"><span>12:00</span><span class="sp-time-end">13:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">POWER LUNCH<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Boxing in der Mittagspause</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
+        <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">OPEN GYM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Freies Training · Nur Mitglieder</div>
+        </div>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="17:00" data-e="18:30">
+        <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">YOUTH FIGHT TEAM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">10–17 Jahre · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span><span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Advanced</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fight Team · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="20:00" data-e="21:30">
+        <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span><span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Alle Level</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+    </div>
+
+    <!-- FREITAG -->
+    <div class="sp-day" data-day="fr" hidden>
+      <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
+        <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">OPEN GYM<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Freies Training · Nur Mitglieder</div>
+        </div>
+      </div>
+      <div class="sp-row" data-s="16:00" data-e="17:00">
+        <div class="sp-time"><span>16:00</span><span class="sp-time-end">17:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Kids 6–9 · Anfänger</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="17:00" data-e="18:30">
+        <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Youth 10–17</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row sp-row--invite" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOMAYE<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Fight Team · Auf Einladung</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+      <div class="sp-row" data-s="18:30" data-e="20:00">
+        <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">BOXING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Basic</div>
+        </div>
+        <a class="sp-book" href="#schedule">BUCHEN</a>
+      </div>
+    </div>
+
+    <!-- SAMSTAG -->
+    <div class="sp-day" data-day="sa" hidden>
+      <div class="sp-row sp-row--red" data-s="10:00" data-e="12:00">
+        <div class="sp-time"><span>10:00</span><span class="sp-time-end">12:00</span></div>
+        <div class="sp-main">
+          <div class="sp-name">SPARRING<span class="sp-live" hidden></span></div>
+          <div class="sp-sub">Nur für Wettkämpfer · Entfällt bei Veranstaltungen</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <!-- ═══════ BSPORT CALENDAR ═══════ -->
 <section id="schedule">
@@ -348,6 +787,90 @@ function toggleMobileMenu() {
   document.querySelectorAll('.logo-img').forEach(function (img) {
     if (img.complete && img.naturalWidth === 0) img.style.display = 'none';
     img.addEventListener('error', function () { this.style.display = 'none'; });
+  });
+}());
+
+/* ── Wochenplan timeline: day switcher + live indicator ── */
+(function () {
+  var plan = document.getElementById('sp-plan');
+  if (!plan) return;
+
+  var tabs   = plan.querySelectorAll('.sp-day-tab');
+  var panels = plan.querySelectorAll('.sp-day[data-day]');
+  if (!tabs.length || !panels.length) return;
+
+  var DAY_KEYS = ['so', 'mo', 'di', 'mi', 'do', 'fr', 'sa'];
+  var current = '';
+
+  function toMins(str) {
+    var p = (str || '').split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+  }
+
+  function updateLive() {
+    var now = new Date();
+    var isToday = current === DAY_KEYS[now.getDay()];
+    var mins = now.getHours() * 60 + now.getMinutes();
+
+    for (var i = 0; i < panels.length; i++) {
+      if (panels[i].getAttribute('data-day') !== current) continue;
+      var rows = panels[i].querySelectorAll('.sp-row');
+      for (var j = 0; j < rows.length; j++) {
+        var badge = rows[j].querySelector('.sp-live');
+        if (!badge) continue;
+        if (!isToday) { badge.hidden = true; continue; }
+        var s = toMins(rows[j].getAttribute('data-s'));
+        var e = toMins(rows[j].getAttribute('data-e'));
+        if (mins >= s && mins < e) {
+          badge.textContent = 'JETZT';
+          badge.hidden = false;
+        } else if (s - mins > 0 && s - mins <= 60) {
+          badge.textContent = 'GLEICH';
+          badge.hidden = false;
+        } else {
+          badge.hidden = true;
+        }
+      }
+    }
+  }
+
+  function showDay(day) {
+    if (day === current) return;
+    current = day;
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].classList.toggle('active', tabs[i].getAttribute('data-day') === day);
+    }
+    for (var j = 0; j < panels.length; j++) {
+      if (panels[j].getAttribute('data-day') === day) {
+        panels[j].removeAttribute('hidden');
+      } else {
+        panels[j].setAttribute('hidden', '');
+      }
+    }
+    updateLive();
+  }
+
+  for (var k = 0; k < tabs.length; k++) {
+    (function (tab) {
+      tab.addEventListener('click', function () {
+        showDay(tab.getAttribute('data-day'));
+      });
+    })(tabs[k]);
+  }
+
+  // Auto-select current weekday (Sunday falls back to Monday)
+  var todayKey = DAY_KEYS[new Date().getDay()];
+  showDay(todayKey === 'so' ? 'mo' : todayKey);
+  setInterval(updateLive, 60000);
+
+  // BUCHEN → scroll to the existing Bsport booking widget below
+  plan.addEventListener('click', function (e) {
+    var link = e.target && e.target.closest ? e.target.closest('.sp-book') : null;
+    if (!link) return;
+    var target = document.getElementById('schedule');
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }());
 </script>
