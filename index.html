@@ -1162,6 +1162,7 @@
     <button class="sched-day-tab" data-day="mi">Mi</button>
     <button class="sched-day-tab" data-day="do">Do</button>
     <button class="sched-day-tab" data-day="fr">Fr</button>
+    <button class="sched-day-tab" data-day="sa">Sa</button>
   </div>
 </div>
 
@@ -1169,272 +1170,267 @@
 
   <!-- MONDAY -->
   <div class="sched-slots" data-day="mo">
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="power-lunch" data-coach="fonsi" data-time="12:00 — 13:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="power-lunch" data-time="12:00 — 13:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">12:00 — 13:00</div>
         <div class="sched-slot-cat">BOXING IN DER MITTAGSPAUSE</div>
       </div>
       <h3 class="sched-discipline">POWER LUNCH</h3>
       <div class="sched-level">BOXING IN DER MITTAGSPAUSE</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-coach="fonsi" data-time="16:00 — 17:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="open-gym" data-time="13:00 — 16:00">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">13:00 — 16:00</div>
+        <div class="sched-slot-cat">FREIES TRAINING · NUR MITGLIEDER</div>
+      </div>
+      <h3 class="sched-discipline">OPEN GYM</h3>
+      <div class="sched-level">FREIES TRAINING · NUR MITGLIEDER</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
+    </a>
+    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-time="16:00 — 17:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">16:00 — 17:00</div>
         <div class="sched-slot-cat">KIDS 6–9 · ANFÄNGER</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">KIDS 6–9 · ANFÄNGER</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-coach="raschad" data-time="17:00 — 18:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-time="17:00 — 18:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">17:00 — 18:30</div>
         <div class="sched-slot-cat">YOUTH 10–17</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">YOUTH 10–17</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="boxing-basic" data-coach="raschad" data-time="18:30 — 20:00">
-      <div class="sched-slot-top">
-        <div class="sched-slot-time">18:30 — 20:00</div>
-        <div class="sched-slot-cat">BASIC</div>
-      </div>
-      <h3 class="sched-discipline">BOXING</h3>
-      <div class="sched-level">BASIC</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
-    </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="fight-team" data-coach="fonsi" data-time="20:00 — 21:30">
+    <!-- PARALLEL 18:30: Bomaye Basic + Bomaye Advanced run simultaneously -->
+    <div class="sched-split">
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="boxing-basic" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
+        <h3 class="sched-discipline">BOMAYE</h3>
+        <div class="sched-level">BASIC</div>
+      </a>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="bomaye-advanced" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
+        <h3 class="sched-discipline">BOMAYE</h3>
+        <div class="sched-level">ADVANCED · NEU</div>
+      </a>
+    </div>
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="fight-team" data-time="20:00 — 21:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">20:00 — 21:30</div>
         <div class="sched-slot-cat">FIGHT TEAM · AUF EINLADUNG</div>
       </div>
       <h3 class="sched-discipline">BOMAYE</h3>
       <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
   </div>
 
   <!-- TUESDAY -->
   <div class="sched-slots" data-day="di" hidden>
-    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="youth-fight-team" data-coach="fonsi" data-time="17:00 — 18:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="open-gym" data-time="13:00 — 16:00">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">13:00 — 16:00</div>
+        <div class="sched-slot-cat">FREIES TRAINING · NUR MITGLIEDER</div>
+      </div>
+      <h3 class="sched-discipline">OPEN GYM</h3>
+      <div class="sched-level">FREIES TRAINING · NUR MITGLIEDER</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
+    </a>
+    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="youth-fight-team" data-time="17:00 — 18:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">17:00 — 18:30</div>
         <div class="sched-slot-cat">10–17 JAHRE · AUF EINLADUNG</div>
       </div>
       <h3 class="sched-discipline">YOUTH FIGHT TEAM</h3>
       <div class="sched-level">10–17 JAHRE · AUF EINLADUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="fight-team" data-coach="raschad" data-time="18:30 — 20:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="fight-team" data-time="18:30 — 20:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">18:30 — 20:00</div>
         <div class="sched-slot-cat">FIGHT TEAM · AUF EINLADUNG</div>
       </div>
       <h3 class="sched-discipline">BOMAYE</h3>
       <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="bomaye-burn" data-coach="fonsi" data-time="20:00 — 21:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="bomaye-kickboxing" data-time="20:00 — 21:30">
       <div class="sched-slot-top">
-        <div class="sched-slot-time">20:00 — 21:00</div>
-        <div class="sched-slot-cat">HIIT BOXING WORKOUT</div>
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">KICKBOXING · NEU</div>
       </div>
-      <h3 class="sched-discipline">BOMAYE BURN</h3>
-      <div class="sched-level">HIIT BOXING WORKOUT</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <h3 class="sched-discipline">BOMAYE</h3>
+      <div class="sched-level">KICKBOXING · NEU</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
   </div>
 
   <!-- WEDNESDAY -->
   <div class="sched-slots" data-day="mi" hidden>
-    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-coach="fonsi" data-time="16:00 — 17:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="open-gym" data-time="13:00 — 16:00">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">13:00 — 16:00</div>
+        <div class="sched-slot-cat">FREIES TRAINING · NUR MITGLIEDER</div>
+      </div>
+      <h3 class="sched-discipline">OPEN GYM</h3>
+      <div class="sched-level">FREIES TRAINING · NUR MITGLIEDER</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
+    </a>
+    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-time="16:00 — 17:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">16:00 — 17:00</div>
         <div class="sched-slot-cat">KIDS 6–9 · ANFÄNGER</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">KIDS 6–9 · ANFÄNGER</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-coach="raschad" data-time="17:00 — 18:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-time="17:00 — 18:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">17:00 — 18:30</div>
         <div class="sched-slot-cat">YOUTH 10–17</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">YOUTH 10–17</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="queens" data-coach="pavlos" data-time="18:30 — 19:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="queens" data-time="18:30 — 19:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">18:30 — 19:30</div>
         <div class="sched-slot-cat">FITNESS · TECHNIK · SELBSTVERTEIDIGUNG</div>
       </div>
       <h3 class="sched-discipline">BOMAYE QUEENS</h3>
       <div class="sched-level">FITNESS · TECHNIK · SELBSTVERTEIDIGUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Pavlos</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <!-- PARALLEL 20:00: Fight Team (Pavlos) + Basic (Raschad) run simultaneously -->
+    <!-- PARALLEL 20:00: Fight Team + Boxing Basic run simultaneously -->
     <div class="sched-split">
-      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="fight-team" data-coach="pavlos" data-time="20:00 — 21:30">
-        <div class="sched-slot-top">
-          <div class="sched-slot-time">20:00 — 21:30</div>
-        </div>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="fight-team" data-time="20:00 — 21:30">
+        <div class="sched-slot-top"><div class="sched-slot-time">20:00 — 21:30</div></div>
         <h3 class="sched-discipline">BOMAYE</h3>
         <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
-        <div class="sched-coach">
-          <div class="sched-coach-name">Coach Pavlos</div>
-        </div>
       </a>
-      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="boxing-basic" data-coach="raschad" data-time="20:00 — 21:30">
-        <div class="sched-slot-top">
-          <div class="sched-slot-time">20:00 — 21:30</div>
-        </div>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="boxing-basic" data-time="20:00 — 21:30">
+        <div class="sched-slot-top"><div class="sched-slot-time">20:00 — 21:30</div></div>
         <h3 class="sched-discipline">BOXING</h3>
         <div class="sched-level">BASIC</div>
-        <div class="sched-coach">
-          <div class="sched-coach-name">Coach Raschad</div>
-        </div>
       </a>
     </div>
   </div>
 
   <!-- THURSDAY -->
   <div class="sched-slots" data-day="do" hidden>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="power-lunch" data-coach="pavlos" data-time="12:00 — 13:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="power-lunch" data-time="12:00 — 13:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">12:00 — 13:00</div>
         <div class="sched-slot-cat">BOXING IN DER MITTAGSPAUSE</div>
       </div>
       <h3 class="sched-discipline">POWER LUNCH</h3>
       <div class="sched-level">BOXING IN DER MITTAGSPAUSE</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Pavlos</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="youth-fight-team" data-coach="raschad" data-time="17:00 — 18:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="open-gym" data-time="13:00 — 16:00">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">13:00 — 16:00</div>
+        <div class="sched-slot-cat">FREIES TRAINING · NUR MITGLIEDER</div>
+      </div>
+      <h3 class="sched-discipline">OPEN GYM</h3>
+      <div class="sched-level">FREIES TRAINING · NUR MITGLIEDER</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
+    </a>
+    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="youth-fight-team" data-time="17:00 — 18:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">17:00 — 18:30</div>
         <div class="sched-slot-cat">10–17 JAHRE · AUF EINLADUNG</div>
       </div>
       <h3 class="sched-discipline">YOUTH FIGHT TEAM</h3>
       <div class="sched-level">10–17 JAHRE · AUF EINLADUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="fight-team" data-coach="raschad" data-time="18:30 — 20:00">
+    <!-- PARALLEL 18:30: Bomaye Advanced + Fight Team run simultaneously -->
+    <div class="sched-split">
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="bomaye-advanced" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
+        <h3 class="sched-discipline">BOMAYE</h3>
+        <div class="sched-level">ADVANCED · NEU</div>
+      </a>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="fight-team" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
+        <h3 class="sched-discipline">BOMAYE</h3>
+        <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
+      </a>
+    </div>
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="bomaye-kickboxing" data-time="20:00 — 21:30">
       <div class="sched-slot-top">
-        <div class="sched-slot-time">18:30 — 20:00</div>
-        <div class="sched-slot-cat">FIGHT TEAM · AUF EINLADUNG</div>
+        <div class="sched-slot-time">20:00 — 21:30</div>
+        <div class="sched-slot-cat">KICKBOXING · NEU</div>
       </div>
       <h3 class="sched-discipline">BOMAYE</h3>
-      <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
-    </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="bomaye-burn" data-coach="raschad" data-time="20:00 — 21:00">
-      <div class="sched-slot-top">
-        <div class="sched-slot-time">20:00 — 21:00</div>
-        <div class="sched-slot-cat">HIIT BOXING WORKOUT</div>
-      </div>
-      <h3 class="sched-discipline">BOMAYE BURN</h3>
-      <div class="sched-level">HIIT BOXING WORKOUT</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Raschad</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-level">KICKBOXING · NEU</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
   </div>
 
   <!-- FRIDAY -->
   <div class="sched-slots" data-day="fr" hidden>
-    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-coach="fonsi" data-time="16:00 — 17:00">
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="open-gym" data-time="13:00 — 16:00">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">13:00 — 16:00</div>
+        <div class="sched-slot-cat">FREIES TRAINING · NUR MITGLIEDER</div>
+      </div>
+      <h3 class="sched-discipline">OPEN GYM</h3>
+      <div class="sched-level">FREIES TRAINING · NUR MITGLIEDER</div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
+    </a>
+    <a href="/stundenplan" class="sched-slot" data-cat="kids" data-class-type="boxing-kids" data-time="16:00 — 17:00">
       <div class="sched-slot-top">
         <div class="sched-slot-time">16:00 — 17:00</div>
         <div class="sched-slot-cat">KIDS 6–9 · ANFÄNGER</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">KIDS 6–9 · ANFÄNGER</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Fonsi</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-coach="nima" data-time="17:00 — 18:30">
+    <a href="/stundenplan" class="sched-slot" data-cat="youth" data-class-type="boxing-youth" data-time="17:00 — 18:30">
       <div class="sched-slot-top">
         <div class="sched-slot-time">17:00 — 18:30</div>
         <div class="sched-slot-cat">YOUTH 10–17</div>
       </div>
       <h3 class="sched-discipline">BOXING</h3>
       <div class="sched-level">YOUTH 10–17</div>
-      <div class="sched-coach">
-        <div class="sched-coach-name">Coach Nima</div>
-        <div class="sched-arrow">→</div>
-      </div>
+      <div class="sched-coach"><div class="sched-arrow">→</div></div>
     </a>
-    <!-- PARALLEL 18:30: Boxing Basic (Nima) + Fight Team (Fonsi) run simultaneously -->
+    <!-- PARALLEL 18:30: Fight Team + Boxing Basic run simultaneously -->
     <div class="sched-split">
-      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="boxing-basic" data-coach="nima" data-time="18:30 — 20:00">
-        <div class="sched-slot-top">
-          <div class="sched-slot-time">18:30 — 20:00</div>
-        </div>
-        <h3 class="sched-discipline">BOXING</h3>
-        <div class="sched-level">BASIC</div>
-        <div class="sched-coach">
-          <div class="sched-coach-name">Coach Nima</div>
-        </div>
-      </a>
-      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="fight-team" data-coach="fonsi" data-time="18:30 — 20:00">
-        <div class="sched-slot-top">
-          <div class="sched-slot-time">18:30 — 20:00</div>
-        </div>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="fight-team" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
         <h3 class="sched-discipline">BOMAYE</h3>
         <div class="sched-level">FIGHT TEAM · AUF EINLADUNG</div>
-        <div class="sched-coach">
-          <div class="sched-coach-name">Coach Fonsi</div>
-        </div>
+      </a>
+      <a href="/stundenplan" class="sched-half" data-cat="adults" data-class-type="boxing-basic" data-time="18:30 — 20:00">
+        <div class="sched-slot-top"><div class="sched-slot-time">18:30 — 20:00</div></div>
+        <h3 class="sched-discipline">BOXING</h3>
+        <div class="sched-level">BASIC</div>
       </a>
     </div>
+  </div>
+
+  <!-- SATURDAY -->
+  <div class="sched-slots" data-day="sa" hidden>
+    <a href="/stundenplan" class="sched-slot" data-cat="adults" data-class-type="sparring" data-time="10:00 — 12:00" style="border-color:rgba(179,38,30,0.3);">
+      <div class="sched-slot-top">
+        <div class="sched-slot-time">10:00 — 12:00</div>
+        <div class="sched-slot-cat">NUR FÜR WETTKÄMPFER</div>
+      </div>
+      <h3 class="sched-discipline" style="color:#B3261E;">SPARRING</h3>
+      <div class="sched-level">NUR FÜR WETTKÄMPFER · ENTFÄLLT BEI VERANSTALTUNGEN</div>
+      <div class="sched-coach"><div class="sched-arrow" style="color:#B3261E;">→</div></div>
+    </a>
   </div>
 
 </div>
@@ -1917,18 +1913,16 @@ body[data-modal-open="true"] { overflow: hidden; }
           <h3 class="ms-title">POWER LUNCH</h3>
           <p class="ms-tagline">Die produktivste Mittagspause Münchens.</p>
           <p class="ms-desc">60 Minuten echtes Boxtraining zwischen zwei Meetings. Klare Struktur, präzise Technik, mentale Schärfe. Pünktlich rein, pünktlich raus — bereit für den Rest des Tages.</p>
-          <p class="ms-coach">COACH FONSI · COACH PAVLOS</p>
           <a href="/probetraining" class="ms-cta" onclick="ptOpenModal(); return false;">PROBETRAINING SICHERN</a>
         </div>
 
-        <!-- BOMAYE BURN -->
+        <!-- BOMAYE KICKBOXING -->
         <div class="ms-card">
           <span class="ms-neu" aria-label="Neues Programm">NEU</span>
-          <p class="ms-sched">DI + DO · 20:00–21:00</p>
-          <h3 class="ms-title">BOMAYE BURN</h3>
-          <p class="ms-tagline">Du musst nicht boxen können. Du musst nur kommen.</p>
-          <p class="ms-desc">HIIT trifft Box-Workout. Hohe Energie, einfache Bewegungen, maximaler Schweiß. Der einfachste Einstieg ins Bomaye-Universum — ohne Vorerfahrung, ohne Hemmschwelle.</p>
-          <p class="ms-coach">COACH FONSI · COACH NIMA</p>
+          <p class="ms-sched">DI + DO · 20:00–21:30</p>
+          <h3 class="ms-title">BOMAYE KICKBOXING</h3>
+          <p class="ms-tagline">Fäuste, Beine, volles Arsenal.</p>
+          <p class="ms-desc">Kickboxen auf Bomaye-Niveau. Saubere Technik, echte Kondition, klare Struktur — vom ersten Kick bis zum Sparring. Für alle Levels.</p>
           <a href="/probetraining" class="ms-cta" onclick="ptOpenModal(); return false;">PROBETRAINING SICHERN</a>
         </div>
 
@@ -1939,7 +1933,6 @@ body[data-modal-open="true"] { overflow: hidden; }
           <h3 class="ms-title">BOMAYE QUEENS</h3>
           <p class="ms-tagline">Boxen exklusiv für Frauen. Keine Männer im Raum.</p>
           <p class="ms-desc">Eine Stunde nur für dich und deine Crew. Echtes Boxtraining, kein Kompromiss. Selbstvertrauen, Kraft und eine Community, die dich trägt — unter sich.</p>
-          <p class="ms-coach">COACH PAVLOS</p>
           <a href="/probetraining" class="ms-cta" onclick="ptOpenModal(); return false;">PROBETRAINING SICHERN</a>
         </div>
 
@@ -3182,7 +3175,25 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     'kickboxing-kids':  { discipline: 'KICKBOXING',  subtitle: '', headline: '', body: 'Spielerischer Einstieg ins Kickboxen. Technik, Bewegung, Spaß — altersgerecht aufgebaut.', tags: '' },
     'kickboxing-basic': { discipline: 'KICKBOXING',  subtitle: '', headline: '', body: 'Kickboxen für alle Levels. Technik, Power, Kondition. Gecoacht von einem Weltmeister.', tags: '' },
-    'competition':      { discipline: 'COMPETITION', subtitle: '', headline: '', body: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.', tags: '' }
+    'competition':      { discipline: 'COMPETITION', subtitle: '', headline: '', body: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.', tags: '' },
+    'bomaye-advanced': {
+      discipline: 'BOMAYE ADVANCED', subtitle: 'FORTGESCHRITTENE',
+      headline: 'Mehr Tempo, mehr Tiefe.',
+      body: 'Für wer die Basics beherrscht und weiter will. Komplexere Kombinationen, mehr Ringintelligenz, höheres Tempo. Nur für Mitglieder mit grundlegenden Boxkenntnissen.',
+      tags: 'FORTGESCHRITTENE · 90 MIN'
+    },
+    'bomaye-kickboxing': {
+      discipline: 'BOMAYE KICKBOXING', subtitle: 'ALL LEVELS',
+      headline: 'Fäuste, Beine, volles Arsenal.',
+      body: 'Kickboxen auf Bomaye-Niveau. Saubere Technik, echte Kondition, klare Struktur — vom ersten Kick bis zum Sparring. Für alle Levels.',
+      tags: 'ALLE LEVEL · 90 MIN'
+    },
+    'sparring': {
+      discipline: 'SPARRING', subtitle: 'NUR FÜR WETTKÄMPFER',
+      headline: 'Samstags im Ring.',
+      body: 'Nur für Wettkämpfer und eingeladene Sparringspartner. Entfällt bei Veranstaltungen. Anmeldung erforderlich.',
+      tags: 'NUR WETTKÄMPFER · 120 MIN'
+    }
   };
 
   function populate(card) {
