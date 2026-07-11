@@ -1673,6 +1673,21 @@ footer {
   font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.45);
 }
 .footer-trust i { font-size: 10px; }
+.footer-trust a { display: inline-flex; align-items: center; }
+.footer-trust .bsport-logo {
+  height: 14px; width: auto; display: block;
+  filter: brightness(0) invert(1); opacity: 0.45;
+}
+
+/* Pineapple Park — footer location block */
+.footer-pineapple { display: flex; align-items: center; gap: 10px; margin: 0.9rem 0 0.4rem; }
+.footer-pineapple a { display: inline-flex; opacity: 0.55; transition: opacity 0.15s ease; }
+.footer-pineapple a:hover { opacity: 0.85; }
+.footer-pineapple img { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+.footer-pineapple-label {
+  font-family: var(--font-head); font-size: 9px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+}
 /* Footer brand column — centered as a deliberate brand mark */
 .footer-brand               { display: flex; flex-direction: column; align-items: center; }
 .footer-logo-link           { display: inline-block; line-height: 0; }
