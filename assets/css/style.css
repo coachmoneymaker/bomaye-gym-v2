@@ -1644,12 +1644,35 @@ footer {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr 1.5fr;
   gap: 2.5rem 4.5rem;
   padding-bottom: 4rem;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   margin-bottom: 0;
 }
+
+/* ── App store badges + partner logos (footer & trust bar) ── */
+.footer-app-badges { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.footer-app-badges img { height: 40px; width: auto; display: block; }
+.footer-partner-h { margin-top: 1.75rem; }
+.footer-partner-row { display: flex; align-items: center; gap: 24px; }
+.partner-link {
+  display: inline-flex; align-items: center;
+  opacity: 0.55; transition: opacity 0.15s ease;
+  text-decoration: none;
+}
+.partner-link:hover { opacity: 0.85; }
+.partner-logo { height: 18px; width: auto; display: block; filter: brightness(0) invert(1); }
+.partner-name {
+  font-family: var(--font-head); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #F5F0E8;
+  display: none;
+}
+.footer-trust {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.45);
+}
+.footer-trust i { font-size: 10px; }
 /* Footer brand column — centered as a deliberate brand mark */
 .footer-brand               { display: flex; flex-direction: column; align-items: center; }
 .footer-logo-link           { display: inline-block; line-height: 0; }

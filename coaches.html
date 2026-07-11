@@ -167,6 +167,68 @@
       margin-bottom: 1.5rem;
     }
 
+    /* ── Coach CTA row (socials + PT button) ── */
+    .coach-cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(201, 168, 76, 0.15);
+    }
+    .coach-socials {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .coach-social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: #C9A84C;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .coach-social-link:hover {
+      background: #C9A84C;
+      color: #0A0A08;
+      transform: translateY(-2px);
+    }
+    .coach-pt-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: #C9A84C;
+      color: #0A0A08;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .coach-pt-btn:hover {
+      background: #b89540;
+      transform: translateY(-2px);
+    }
+    .coach-pt-btn i { font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .coach-cta-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .coach-socials { justify-content: center; }
+      .coach-pt-btn { justify-content: center; padding: 1rem; }
+    }
+
     /* ── Trust badges ── */
     .coach-trust-badges {
       display: flex;
@@ -512,12 +574,18 @@
           <p class="coach-page-creds">LANDESTRAINER BABV · 20+ JAHRE ERFAHRUNG</p>
           <p class="coach-full-bio">Raschad ist Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf.</p>
           <p class="coach-full-bio">Sein Ansatz: keine Abkürzungen, keine Kompromisse. Saubere Technik, taktische Intelligenz, mentale Stärke — ob du zum ersten Mal Handschuhe anziehst oder auf deinen nächsten Wettkampf vorbereitest.</p>
-          <div class="coach-full-socials">
-            <a href="https://www.instagram.com/bomayegym_munich_munich/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf Instagram">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a href="https://www.tiktok.com/@bomayegym_munich" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Raschad auf TikTok">
-              <i class="fa-brands fa-tiktok"></i>
+          <div class="coach-cta-row">
+            <div class="coach-socials">
+              <a href="https://www.instagram.com/coach_raschad/" target="_blank" rel="noopener noreferrer" aria-label="Coach Raschad auf Instagram" class="coach-social-link">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@coach_raschad?lang=de-DE" target="_blank" rel="noopener noreferrer" aria-label="Coach Raschad auf TikTok" class="coach-social-link">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+            </div>
+            <a href="/personal-training-boxen-muenchen#pt-booking" class="coach-pt-btn">
+              <i class="fa-solid fa-calendar-plus"></i>
+              1:1 TRAINING
             </a>
           </div>
         </div>
@@ -539,12 +607,18 @@
           <p class="coach-page-creds">LANDESTRAINER BABV · KICKBOX WELTMEISTER</p>
           <p class="coach-full-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt.</p>
           <p class="coach-full-bio">Sein Fokus: was im Ring den Unterschied macht. Technik, taktisches Denken, Ringintelligenz — vom ersten Training bis zum Wettkampf. Ohne Kompromisse.</p>
-          <div class="coach-full-socials">
-            <a href="https://www.instagram.com/bomayegym_munich_munich/" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf Instagram">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a href="https://www.tiktok.com/@bomayegym_munich" class="coach-social-link" target="_blank" rel="noopener noreferrer" aria-label="Alfonso auf TikTok">
-              <i class="fa-brands fa-tiktok"></i>
+          <div class="coach-cta-row">
+            <div class="coach-socials">
+              <a href="https://www.instagram.com/coach_fonsi/" target="_blank" rel="noopener noreferrer" aria-label="Coach Fonsi auf Instagram" class="coach-social-link">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@coachfonsi?lang=de-DE" target="_blank" rel="noopener noreferrer" aria-label="Coach Fonsi auf TikTok" class="coach-social-link">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+            </div>
+            <a href="/personal-training-boxen-muenchen#pt-booking" class="coach-pt-btn">
+              <i class="fa-solid fa-calendar-plus"></i>
+              1:1 TRAINING
             </a>
           </div>
         </div>
@@ -563,7 +637,7 @@
           <!-- Nima -->
           <article class="coach-team-card">
             <div class="coach-team-photo">
-              <img src="/assets/images/coach-nima.webp?v=2" alt="Nima — Kickboxing &amp; K1 Coach, Bomaye Gym Munich" decoding="async" />
+              <img src="/assets/images/coach-nima.webp?v=3" alt="Nima — Kickboxing &amp; K1 Coach, Bomaye Gym Munich" decoding="async" />
               <div class="coach-team-creds-overlay">
                 <span class="coach-team-cred">BOXEN</span>
                 <span class="coach-team-cred">KICKBOXEN</span>
@@ -574,9 +648,20 @@
               <h3 class="coach-team-name">NIMA</h3>
               <span class="coach-team-title">BOXING &amp; KICKBOXING · COACH</span>
               <p class="coach-team-page-creds">BABV LIZENZ · ISKA LIZENZ</p>
-              <p class="coach-team-bio">Nima ist Coach im Bomaye Gym. Er ist BABV-lizenziert im Boxen sowie ISKA-lizenziert im K1 und bringt erste Wettkampferfahrung in beiden Disziplinen mit.</p>
+              <p class="coach-team-bio">Nima ist BABV-lizenziert im Boxen sowie ISKA-lizenziert im K1 und bringt erste Wettkampferfahrung in beiden Disziplinen mit.</p>
               <p class="coach-team-bio">Sein Fokus liegt auf sauberen Basics, Technik, Koordination und Balance. Er legt Wert auf klare Strukturen und verständliche Korrekturen – ohne unnötige Umwege.</p>
               <p class="coach-team-bio">Sein Ansatz: ehrlich, direkt und systematisch. Ob Einsteiger oder Fortgeschrittene — bei Nima lernst du nicht irgendwie, sondern richtig.</p>
+              <div class="coach-cta-row">
+                <div class="coach-socials">
+                  <a href="https://www.instagram.com/n_i_m_a___s_a_h_a/" target="_blank" rel="noopener noreferrer" aria-label="Coach Nima auf Instagram" class="coach-social-link">
+                    <i class="fa-brands fa-instagram"></i>
+                  </a>
+                </div>
+                <a href="/personal-training-boxen-muenchen#pt-booking" class="coach-pt-btn">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  1:1 TRAINING
+                </a>
+              </div>
             </div>
           </article>
 
@@ -596,6 +681,17 @@
               <p class="coach-team-page-creds">BABV LIZENZ · ATHLETIKTRAINER · SPORTTHERAPEUT</p>
               <p class="coach-team-bio">Pavlos verbindet langjährige Erfahrung im Boxsport mit Wissen als Athletiktrainer und Sporttherapeut. Sein Fokus: Technik und Körperkontrolle als Grundlage jedes Trainings.</p>
               <p class="coach-team-bio">Sein Ansatz: geschultes Auge für Details, klare Korrekturen, effektive Reize. Ob Einsteiger, Fortgeschrittene oder Kinder — bei Pavlos entwickelst du ein besseres Gefühl für Bewegung, Kontrolle und den eigenen Körper.</p>
+              <div class="coach-cta-row">
+                <div class="coach-socials">
+                  <a href="https://www.instagram.com/coach_greekmillyofficial/" target="_blank" rel="noopener noreferrer" aria-label="Coach Pavlos auf Instagram" class="coach-social-link">
+                    <i class="fa-brands fa-instagram"></i>
+                  </a>
+                </div>
+                <a href="/personal-training-boxen-muenchen#pt-booking" class="coach-pt-btn">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  1:1 TRAINING
+                </a>
+              </div>
             </div>
           </article>
 
@@ -658,6 +754,18 @@
           </ul>
         </div>
         <div class="footer-col">
+        <h4>APP</h4>
+        <div class="footer-app-badges">
+          <a href="https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484" target="_blank" rel="noopener" aria-label="Laden im App Store"><img src="/assets/badges/app-store-badge-de.svg" alt="Laden im App Store" loading="lazy" decoding="async"></a>
+          <a href="https://play.google.com/store/apps/details?id=com.bsport_799__5473" target="_blank" rel="noopener" aria-label="Jetzt bei Google Play"><img src="/assets/badges/google-play-badge-de.svg" alt="Jetzt bei Google Play" loading="lazy" decoding="async"></a>
+        </div>
+        <h4 class="footer-partner-h">PARTNER</h4>
+        <div class="footer-partner-row">
+          <a class="partner-link" href="https://locations.egym.com/embed/web/wellpass/muenchen-bomayegym" target="_blank" rel="noopener" aria-label="EGYM Wellpass"><img class="partner-logo" src="/assets/badges/wellpass-logo.svg" alt="EGYM Wellpass" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">EGYM WELLPASS</span></a>
+          <a class="partner-link" href="https://classpass.com/studios/bomaye-gym-wilhelm-hale-str-mnchen" target="_blank" rel="noopener" aria-label="ClassPass"><img class="partner-logo" src="/assets/badges/classpass-logo.svg" alt="ClassPass" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">CLASSPASS</span></a>
+        </div>
+      </div>
+      <div class="footer-col">
           <h4>KONTAKT</h4>
           <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
           <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
@@ -679,7 +787,8 @@
       <div class="footer-bottom">
         <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
         <div class="footer-legal">
-          <a href="/impressum">IMPRESSUM</a>
+        <span class="footer-trust"><i class="fa-solid fa-lock" aria-hidden="true"></i> Sichere Buchung über bsport</span>
+        <a href="/impressum">IMPRESSUM</a>
           <a href="/datenschutz">DATENSCHUTZ</a>
           <a href="/agb">AGB</a>
           <a href="/hausordnung">Hausordnung</a>
