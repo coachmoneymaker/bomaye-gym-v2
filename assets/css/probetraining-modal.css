@@ -121,9 +121,14 @@
 @supports (-webkit-touch-callout: none) {
   .pt-modal-body { -webkit-transform: translateZ(0); transform: translateZ(0); }
 }
-.pt-iframe-wrapper { width: 100%; position: relative; }
-.pt-iframe-wrapper:has(iframe[style*="height: 0px"]) { min-height: 200px; }
-.pt-iframe-wrapper:has(iframe[style*="height: 0px"])::before {
+/* Bsport widget host — official direct mount, participates in normal
+   document flow so the modal is the single scroll context */
+.pt-widget-host {
+  width: 100%;
+  min-height: 220px;
+  position: relative;
+}
+.pt-widget-host:empty::before {
   content: "L\00e4dt\2026";
   position: absolute;
   top: 50%; left: 50%;
@@ -133,18 +138,6 @@
   letter-spacing: 1px;
   text-transform: uppercase;
   pointer-events: none;
-}
-.pt-bsport-iframe {
-  width: 100%;
-  height: 0;
-  min-height: 0;
-  border: 0;
-  display: block;
-  overflow: hidden;
-  -webkit-overflow-scrolling: auto;
-  pointer-events: auto;
-  touch-action: pan-y;
-  transition: height 0.15s ease-out;
 }
 .pt-modal-footer {
   padding: 0.75rem 1.5rem;
@@ -192,7 +185,10 @@
   opacity: 0.7;
   line-height: 1.2;
 }
-@media (max-width: 600px) {
+@media (max-width: 767px) {
+  /* Single scroll context on mobile: the modal overlay itself scrolls,
+     the card grows with its content — one thumb swipe moves the whole
+     booking flow, no nested scrollers */
   #pt-booking-modal {
     padding: 0;
     align-items: flex-start;
@@ -204,6 +200,7 @@
     width: 100%;
     max-width: 100%;
     min-height: 100dvh;
+    max-height: none;
     overflow: visible;
     background: #F5F0E8;
     border-left: none;
@@ -233,81 +230,5 @@
   .pt-modal-footer {
     padding: 5px 14px;
     margin-top: auto;
-  }
-  /* Force iframe taller than any Bsport content state so iOS never
-     sees internal scroll and passes touch events to the outer modal */
-  .pt-bsport-iframe {
-    min-height: 950px;
-    transition: none;
-  }
-}
-/* ── Scroll-helper strip + hint (mobile only, when modal is open) ── */
-.pt-scroll-helper,
-.pt-scroll-hint { display: none; }
-@media (max-width: 767px) {
-  body.pt-modal-open .pt-scroll-helper {
-    position: fixed;
-    top: 35%;
-    right: 0;
-    width: 12px;
-    height: 120px;
-    z-index: 10001;
-    background: rgba(201, 168, 76, 0.2);
-    border-left: 2px solid #C9A84C;
-    border-top: 1px solid rgba(201, 168, 76, 0.4);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 0;
-    pointer-events: none;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  body.pt-modal-open .pt-scroll-helper.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .pt-scroll-helper-track {
-    flex: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2px 0;
-  }
-  .pt-scroll-helper-arrow {
-    color: #C9A84C;
-    font-size: 8px;
-    line-height: 1;
-  }
-  .pt-scroll-hint {
-    display: flex;
-    background: #0A0A08;
-    color: rgba(245, 240, 232, 0.72);
-    font-family: var(--font-body);
-    font-size: 11px;
-    padding: 7px 14px;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
-    letter-spacing: 0.03em;
-    flex-shrink: 0;
-  }
-  .pt-scroll-hint button {
-    background: transparent;
-    border: none;
-    color: #C9A84C;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
   }
 }
