@@ -1678,12 +1678,16 @@ footer {
 /* Pineapple Park — footer location block.
    Logos render as inline-styled mask spans (cream bg + SVG mask) so the
    SVG's own fills can never show and sizing survives stale CSS. */
-.footer-pineapple { display: flex; align-items: center; gap: 10px; margin: 0.9rem 0 0.4rem; }
+.footer-pineapple { display: flex; align-items: center; gap: 9px; margin: -0.35rem 0 0.95rem; }
 .footer-pineapple a { opacity: 0.55; transition: opacity 0.15s ease; }
 .footer-pineapple a:hover { opacity: 0.85; }
 .footer-pineapple-label {
   font-family: var(--font-head); font-size: 9px; font-weight: 600;
-  letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.45);
+}
+/* Mobile: divider follows the last contact row at normal row rhythm */
+@media (max-width: 768px) {
+  .footer-grid { padding-bottom: 0.85rem; }
 }
 /* Footer brand column — centered as a deliberate brand mark */
 .footer-brand               { display: flex; flex-direction: column; align-items: center; }
