@@ -153,37 +153,18 @@
   line-height: 1.5;
   margin: 0;
 }
-.pt-continue-button {
-  display: flex;
-  flex: 0 0 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 16px 24px;
-  background: #C9A84C;
-  color: #0A0A08;
-  border: none;
-  font-family: var(--font-head);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.pt-continue-button:hover  { background: #B89940; }
-.pt-continue-button:active { background: #A07830; }
-.pt-continue-subtitle {
+/* Slim step-1 hint — replaces the old KURS BUCHEN helper banner now
+   that the stepper auto-advances after the pass purchase */
+.pt-step-hint {
+  padding: 7px 14px;
+  background: #F5F0E8;
+  border-bottom: 1px solid rgba(10,10,8,0.08);
   font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.7;
-  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: rgba(10,10,8,0.55);
+  text-align: center;
+  flex-shrink: 0;
 }
 @media (max-width: 767px) {
   /* Single scroll context on mobile: the modal overlay itself scrolls,
@@ -217,11 +198,6 @@
   }
   .pt-modal-eyebrow { margin-bottom: 2px; }
   .pt-modal-title { font-size: clamp(1.35rem, 5vw, 2.2rem); }
-  .pt-continue-button {
-    padding: 10px 16px;
-    gap: 2px;
-  }
-  .pt-continue-subtitle { font-size: 10px; }
   .pt-modal-tab { padding: 7px 1rem; font-size: 0.63rem; }
   .pt-modal-body {
     flex: 0 0 auto;

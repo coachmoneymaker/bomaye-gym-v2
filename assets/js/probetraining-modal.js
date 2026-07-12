@@ -77,6 +77,100 @@
     });
   }
 
+  /* ── Shared confirmation hook: tracking + stepper auto-advance ──
+     Both consume the same Bsport event layer (postMessage from
+     *.bsport.io + widget dataLayer pushes). */
+  function _ptOnBsportConfirmation(source) {
+    _ptAutoAdvanceToStep2();
+    _ptFireBookingConfirmed(source);
+  }
+
+  /* FIX 1: after the pass purchase confirmation, move on to step 2
+     (~1.5s so the Bsport success screen stays briefly visible). */
+  var _ptAutoAdvanceArmed = true;
+  function _ptAutoAdvanceToStep2() {
+    if (!_ptAutoAdvanceArmed) return;
+    var tabPass = document.getElementById('pt-tab-pass');
+    if (!tabPass || !tabPass.classList.contains('active')) return; // only from step 1
+    _ptAutoAdvanceArmed = false;
+    setTimeout(function () {
+      var modal = document.getElementById('pt-booking-modal');
+      if (!modal || !modal.classList.contains('open')) return;
+      var passTab = document.getElementById('pt-tab-pass');
+      if (!passTab || !passTab.classList.contains('active')) return; // user already switched manually
+      window.ptSwitchTab('cal');
+      _ptScrollStepperToTop();
+    }, 1500);
+  }
+
+  function _ptScrollStepperToTop() {
+    var modal = document.getElementById('pt-booking-modal');
+    if (!modal) return;
+    var body = modal.querySelector('.pt-modal-body');
+    try { modal.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { modal.scrollTop = 0; }
+    if (body) { try { body.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { body.scrollTop = 0; } }
+  }
+
+  /* ── FIX 2 safety net: keep Bsport dialogs in view ──
+     dialogMode 1 dialogs are position:fixed (nothing to do). Any
+     dialog that still renders in-flow (e.g. pass-widget popups) is
+     smooth-scrolled to the viewport center; the previous scroll
+     position is restored when the dialog closes. */
+  var _ptDialogPrevScroll = null;
+  var _ptDialogObserver = null;
+  var _ptDialogSel = '.bsport-user-interaction-modal__container, .MuiDialog-root';
+
+  function _ptActiveScroller() {
+    var modal = document.getElementById('pt-booking-modal');
+    if (!modal) return null;
+    if (modal.scrollHeight > modal.clientHeight + 5) return modal;
+    var body = modal.querySelector('.pt-modal-body');
+    if (body && body.scrollHeight > body.clientHeight + 5) return body;
+    return modal;
+  }
+
+  function _ptOnBsportDialogOpen(dlg) {
+    var pos = '';
+    try { pos = getComputedStyle(dlg).position; } catch (e) {}
+    if (pos === 'fixed') return; /* viewport overlay: already centered */
+    var sc = _ptActiveScroller();
+    if (sc && _ptDialogPrevScroll === null) _ptDialogPrevScroll = { el: sc, top: sc.scrollTop };
+    setTimeout(function () {
+      try { dlg.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      catch (e) { try { dlg.scrollIntoView(); } catch (e2) {} }
+    }, 80);
+  }
+
+  function _ptOnBsportDialogClose() {
+    if (!_ptDialogPrevScroll) return;
+    var prev = _ptDialogPrevScroll;
+    _ptDialogPrevScroll = null;
+    try { prev.el.scrollTo({ top: prev.top, behavior: 'smooth' }); }
+    catch (e) { prev.el.scrollTop = prev.top; }
+  }
+
+  function _ptWatchBsportDialogs() {
+    if (_ptDialogObserver) return;
+    function findDialog(node) {
+      if (node.nodeType !== 1) return null;
+      if (node.matches && node.matches(_ptDialogSel)) return node;
+      return node.querySelector ? node.querySelector(_ptDialogSel) : null;
+    }
+    _ptDialogObserver = new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var m = muts[i], j;
+        for (j = 0; j < m.addedNodes.length; j++) {
+          var dlg = findDialog(m.addedNodes[j]);
+          if (dlg) { _ptOnBsportDialogOpen(dlg); return; }
+        }
+        for (j = 0; j < m.removedNodes.length; j++) {
+          if (findDialog(m.removedNodes[j])) { _ptOnBsportDialogClose(); return; }
+        }
+      }
+    });
+    _ptDialogObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
   function _ptStopBookingTracking() {
     if (_ptMessageListener) { window.removeEventListener('message', _ptMessageListener); _ptMessageListener = null; }
     if (_ptDataLayerUnwatch) { _ptDataLayerUnwatch(); _ptDataLayerUnwatch = null; }
@@ -103,7 +197,7 @@
                          ds.indexOf('confirmed') !== -1 || ds.indexOf('buchung') !== -1 ||
                          ds.indexOf('viel spa') !== -1;
       }
-      if (fromBsport && isConfirmation) { _ptFireBookingConfirmed('postMessage:' + e.origin); }
+      if (fromBsport && isConfirmation) { _ptOnBsportConfirmation('postMessage:' + e.origin); }
     };
     window.addEventListener('message', _ptMessageListener);
 
@@ -120,7 +214,7 @@
         if (ev.indexOf('booking') !== -1 || ev.indexOf('purchase') !== -1 ||
             ev.indexOf('conversion') !== -1 || ds.indexOf('viel spa') !== -1 ||
             ds.indexOf('buchung wurde erfolgreich') !== -1) {
-          _ptFireBookingConfirmed('dataLayer.push:' + args[0].event);
+          _ptOnBsportConfirmation('dataLayer.push:' + args[0].event);
         }
       }
       return result;
@@ -173,7 +267,11 @@
       parentElement: 'bsport-widget-880939',
       companyId: 5473,
       franchiseId: null,
-      dialogMode: 3,
+      /* dialogMode 1 = Bsport's built-in fixed viewport overlay for the
+         course-detail/booking dialog (always in view; same mode as the
+         /stundenplan calendar). Mode 3 rendered it in-flow, far down
+         the page. */
+      dialogMode: 1,
       widgetType: 'calendar',
       showFab: false,
       fullScreenPopup: false,
@@ -188,6 +286,8 @@
     var calView  = document.getElementById('pt-cal-view');
     var tabPass  = document.getElementById('pt-tab-pass');
     var tabCal   = document.getElementById('pt-tab-cal');
+    var hint     = document.getElementById('pt-step-hint');
+    if (hint) hint.style.display = (tab === 'pass') ? '' : 'none';
     if (tab === 'pass') {
       passView.className = 'pt-modal-view pt-modal-view--active';
       calView.className  = 'pt-modal-view';
@@ -217,6 +317,8 @@
     modal.classList.add('open');
     _ptLockBody();
     _ptStartBookingTracking();
+    _ptWatchBsportDialogs();
+    _ptAutoAdvanceArmed = true;
     if (window.dataLayer) dataLayer.push({ event: 'probetraining_modal_open' });
     if (window.fbq) fbq('track', 'Lead');
     modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
@@ -248,15 +350,12 @@
       + '<h2 class="pt-modal-title">Wähle deinen Termin</h2>'
       + '</div>'
       + '<button class="pt-modal-close" onclick="ptCloseModal()" aria-label="Schließen" type="button"><i class="fa-solid fa-xmark"></i></button>'
-      + '<button id="pt-continue-button" class="pt-continue-button" onclick="ptSwitchTab(\'cal\')" aria-label="Weiter zu Schritt 2" type="button">'
-      + '<span class="pt-continue-text">✓ KURS BUCHEN</span>'
-      + '<span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>'
-      + '</button>'
       + '</div>'
       + '<div class="pt-modal-tabs" role="tablist">'
       + '<button class="pt-modal-tab active" id="pt-tab-pass" onclick="ptSwitchTab(\'pass\')" role="tab" aria-selected="true" type="button">1. PASS HOLEN</button>'
       + '<button class="pt-modal-tab" id="pt-tab-cal" onclick="ptSwitchTab(\'cal\')" role="tab" aria-selected="false" type="button">2. KURS WÄHLEN</button>'
       + '</div>'
+      + '<div class="pt-step-hint" id="pt-step-hint">Nach dem Pass geht’s automatisch weiter →</div>'
       + '<div class="pt-modal-body">'
       + '<div id="pt-pass-view" class="pt-modal-view pt-modal-view--active"></div>'
       + '<div id="pt-cal-view" class="pt-modal-view"></div>'
