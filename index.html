@@ -518,6 +518,7 @@
     font-family: var(--font-head);
     font-size: 0.9rem;
     letter-spacing: 0.1em;
+    white-space: nowrap;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
@@ -534,6 +535,10 @@
     }
   }
   .mw-card-btn:active { transform: scale(0.99); }
+  /* Small phones: keep CTA on one line without overflowing the card */
+  @media (max-width: 360px) {
+    .mw-card-btn { font-size: 0.76rem; letter-spacing: 0.06em; padding: 15px 10px; }
+  }
 
   /* Pricing section padding */
   #pricing { padding: 80px 24px; }
@@ -1981,9 +1986,10 @@ body[data-modal-open="true"] { overflow: hidden; }
       }
       .bom-reviews-grid::-webkit-scrollbar { display: none; }
       .bom-review-card {
-        min-width: 288px;
-        flex-shrink: 0;
-        scroll-snap-align: start;
+        flex: 0 0 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        scroll-snap-align: center;
         background: #111110;
         border: 1px solid rgba(201,168,76,0.16);
         padding: 28px 24px;
@@ -1998,6 +2004,10 @@ body[data-modal-open="true"] { overflow: hidden; }
         top: 0; left: 16px; right: 16px;
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+      }
+      @media (max-width: 859px) {
+        /* One card per view: full section width, height adapts to content */
+        .bom-reviews-grid { align-items: flex-start; }
       }
       @media (min-width: 860px) {
         .bom-reviews-grid {
@@ -2045,11 +2055,35 @@ body[data-modal-open="true"] { overflow: hidden; }
 
     <!-- Mobile scroll indicator -->
     <div style="display:flex;justify-content:center;gap:5px;margin-bottom:44px;" class="bom-scroll-dots">
-      <span style="width:20px;height:2px;background:#C9A84C;"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);"></span>
+      <span style="width:20px;height:2px;background:#C9A84C;transition:width 0.15s ease,background 0.15s ease;"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);transition:width 0.15s ease,background 0.15s ease;"></span>
+      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);transition:width 0.15s ease,background 0.15s ease;"></span>
       <style>@media(min-width:860px){.bom-scroll-dots{display:none;}}</style>
     </div>
+
+    <script>
+    /* Reviews: sync pagination dots with scroll-snap position */
+    (function () {
+      var grid = document.querySelector('.bom-reviews-grid');
+      var dots = document.querySelectorAll('.bom-scroll-dots span');
+      if (!grid || !dots.length) return;
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var cards = grid.querySelectorAll('.bom-review-card');
+        if (!cards.length) return;
+        var step = cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : 1;
+        var idx = Math.max(0, Math.min(dots.length - 1, Math.round(grid.scrollLeft / step)));
+        for (var i = 0; i < dots.length; i++) {
+          dots[i].style.width = (i === idx) ? '20px' : '6px';
+          dots[i].style.background = (i === idx) ? '#C9A84C' : 'rgba(201,168,76,0.25)';
+        }
+      }
+      grid.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }, { passive: true });
+    }());
+    </script>
 
     <!-- CTAs — verified links -->
     <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
@@ -2062,7 +2096,7 @@ body[data-modal-open="true"] { overflow: hidden; }
         ALLE BEWERTUNGEN LESEN
       </a>
 
-      <a href="https://g.page/r/CWwh4Ss36IUEEBM/review"
+      <a href="https://g.page/r/CWwh4Ss36lUEEAE/review"
          target="_blank"
          rel="noopener noreferrer"
          style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.38);text-decoration:none;border-bottom:1px solid rgba(245,240,232,0.15);padding-bottom:2px;">
@@ -2216,7 +2250,7 @@ body[data-modal-open="true"] { overflow: hidden; }
         </ul>
         <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
            target="_blank" rel="noopener noreferrer"
-           class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
+           class="mw-card-btn">JETZT MITGLIED WERDEN</a>
       </article>
       <article class="mw-card mw-card--youth reveal" aria-label="Youth Paket">
         <p class="mw-card-label">FÜR JUGENDLICHE</p>
@@ -2243,10 +2277,35 @@ body[data-modal-open="true"] { overflow: hidden; }
   </section>
 
   <!-- ── PARTNER TRUST BAR ── -->
-  <div id="partner-bar" aria-label="Buchungspartner" style="background:#0A0A08;padding:22px 24px;display:flex;justify-content:center;align-items:center;gap:40px;flex-wrap:wrap;border-top:1px solid rgba(245,240,232,0.06);">
-    <span style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(245,240,232,0.45);">AUCH BUCHBAR ÜBER</span>
-    <a class="partner-link" href="https://locations.egym.com/embed/web/wellpass/muenchen-bomayegym" target="_blank" rel="noopener" aria-label="EGYM Wellpass"><img class="partner-logo" style="height:22px;" src="/assets/badges/wellpass-logo.svg" alt="EGYM Wellpass" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">EGYM WELLPASS</span></a>
-    <a class="partner-link" href="https://classpass.com/studios/bomaye-gym-wilhelm-hale-str-mnchen" target="_blank" rel="noopener" aria-label="ClassPass"><img class="partner-logo" style="height:22px;" src="/assets/badges/classpass-logo.svg" alt="ClassPass" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">CLASSPASS</span></a>
+  <style>
+    #partner-bar .pb-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: nowrap;
+    }
+    #partner-bar .pb-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: nowrap;
+    }
+    @media (max-width: 479px) {
+      /* Small phones: label on its own line, logos side by side below */
+      #partner-bar .pb-inner { flex-direction: column; gap: 14px; }
+      #partner-bar .pb-logos { gap: 32px; }
+    }
+  </style>
+  <div id="partner-bar" aria-label="Buchungspartner" style="background:#0A0A08;padding:22px 24px;border-top:1px solid rgba(245,240,232,0.06);">
+    <div class="pb-inner">
+      <span style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(245,240,232,0.45);white-space:nowrap;">AUCH BUCHBAR ÜBER</span>
+      <div class="pb-logos">
+        <a class="partner-link" href="https://locations.egym.com/embed/web/wellpass/muenchen-bomayegym" target="_blank" rel="noopener" aria-label="EGYM Wellpass"><img class="partner-logo" style="height:22px;" src="/assets/badges/wellpass-logo.svg" alt="EGYM Wellpass" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">EGYM WELLPASS</span></a>
+        <a class="partner-link" href="https://classpass.com/studios/bomaye-gym-wilhelm-hale-str-mnchen" target="_blank" rel="noopener" aria-label="ClassPass"><img class="partner-logo" style="height:22px;" src="/assets/badges/classpass-logo.svg" alt="ClassPass" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span class="partner-name">CLASSPASS</span></a>
+      </div>
+    </div>
   </div>
 
   <!-- ── BOMAYE APP ── -->
