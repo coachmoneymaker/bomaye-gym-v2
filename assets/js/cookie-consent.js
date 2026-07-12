@@ -29,8 +29,49 @@
     return d;
   }
 
-  /* ── Meta Pixel conditional loader ───────────────────────── */
+  /* ── Meta Pixel: consent-gated loader + Advanced Matching ──
+     GDPR / TDDDG: the pixel script is only injected after explicit
+     marketing consent. Advanced Matching identifiers (em/ph) are
+     passed to fbq('init') ONLY when BOTH hold:
+       (1) marketing consent is granted, and
+       (2) real user data exists from a form/checkout context.
+     Otherwise init is called WITHOUT the third parameter — no
+     placeholder or fake identifiers, ever. Values are passed in
+     plain text; Meta hashes them client-side with SHA-256 before
+     transmission. User data is kept in memory only (never persisted). */
+  var META_PIXEL_ID = '1989119321999811';
+  var _amUserData = null; /* { em, ph } — in-memory only */
+
+  function _marketingConsented() {
+    var c = getConsent();
+    return !!(c && c.marketing);
+  }
+
+  function _normalizeEmail(v) {
+    if (!v) return null;
+    v = String(v).trim().toLowerCase();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? v : null;
+  }
+
+  function _normalizePhone(v) {
+    if (!v) return null;
+    var d = String(v).replace(/[^0-9]/g, '');
+    if (d.length < 7 || /^(\d)\1+$/.test(d)) return null; /* too short or all same digit */
+    /* German national format -> country-code digits (Meta recommends E.164 digits) */
+    if (d.charAt(0) === '0' && d.charAt(1) !== '0') d = '49' + d.slice(1);
+    return d;
+  }
+
+  function _amPayload() {
+    if (!_amUserData) return null;
+    var o = {};
+    if (_amUserData.em) o.em = _amUserData.em;
+    if (_amUserData.ph) o.ph = _amUserData.ph;
+    return (o.em || o.ph) ? o : null;
+  }
+
   window.loadMetaPixel = function () {
+    if (!_marketingConsented()) return; /* hard gate: never load without consent */
     if (window._metaPixelLoaded) return;
     window._metaPixelLoaded = true;
     /* eslint-disable */
@@ -40,9 +81,47 @@
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
     document,'script','https://connect.facebook.net/en_US/fbevents.js');
     /* eslint-enable */
-    fbq('init', '1989119321999811');
+    var am = _amPayload();
+    if (am) {
+      fbq('init', META_PIXEL_ID, am);
+    } else {
+      fbq('init', META_PIXEL_ID);
+    }
     fbq('track', 'PageView');
   };
+
+  /* Public hook: register real user data from a form or checkout
+     context. Invalid/empty values are discarded; nothing is stored
+     beyond this page view. Applied to the pixel only under consent. */
+  window.bomayeSetPixelUserData = function (data) {
+    data = data || {};
+    var em = _normalizeEmail(data.email);
+    var ph = _normalizePhone(data.phone);
+    if (!em && !ph) return;
+    _amUserData = {
+      em: em || (_amUserData && _amUserData.em) || null,
+      ph: ph || (_amUserData && _amUserData.ph) || null
+    };
+    if (_marketingConsented() && window._metaPixelLoaded && typeof window.fbq === 'function') {
+      var am = _amPayload();
+      if (am) fbq('init', META_PIXEL_ID, am); /* upgrade AM for subsequent events */
+    }
+  };
+
+  /* Capture real user data the moment a visitor submits one of the
+     site's forms (Probetraining/family, corporate, lead). Runs in the
+     capture phase so it works with onsubmit= handlers too. */
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form || !form.querySelector) return;
+    var emailEl = form.querySelector('input[type="email"], input[name="email"]');
+    var phoneEl = form.querySelector('input[type="tel"], input[name="phone"]');
+    if (!emailEl && !phoneEl) return;
+    window.bomayeSetPixelUserData({
+      email: emailEl && emailEl.value,
+      phone: phoneEl && phoneEl.value
+    });
+  }, true);
 
   /* Apply stored marketing consent immediately on load */
   var _existing = getConsent();
@@ -182,10 +261,28 @@
     /* ── Modal button handlers ────────────────────────────────── */
     document.getElementById('cm-close').addEventListener('click', closeModal);
 
+    /* Withdrawal: an already-loaded pixel can only be stopped by a
+       reload \u2014 show a short notice, then reload the page. */
+    function reloadAfterWithdrawal() {
+      var notice = document.createElement('div');
+      notice.style.cssText = [
+        'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);',
+        'background:#0A0A08;color:#F5F0E8;padding:12px 24px;',
+        'font-size:13px;letter-spacing:0.06em;z-index:10000;',
+        'border:1px solid #C9A84C;white-space:nowrap;'
+      ].join('');
+      notice.textContent = 'Seite wird neu geladen\u2026';
+      document.body.appendChild(notice);
+      setTimeout(function () { window.location.reload(); }, 1000);
+    }
+
     document.getElementById('cm-essential-only').addEventListener('click', function () {
+      var prev = getConsent();
+      var prevMktg = !!(prev && prev.marketing);
       saveConsent(false, false);
       closeModal();
       closeBanner();
+      if (prevMktg && window._metaPixelLoaded) reloadAfterWithdrawal();
     });
 
     document.getElementById('cm-save').addEventListener('click', function () {
@@ -199,16 +296,7 @@
       if (mktg && !prevMktg) {
         window.loadMetaPixel();
       } else if (!mktg && prevMktg) {
-        var notice = document.createElement('div');
-        notice.style.cssText = [
-          'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);',
-          'background:#0A0A08;color:#F5F0E8;padding:12px 24px;',
-          'font-size:13px;letter-spacing:0.06em;z-index:10000;',
-          'border:1px solid #C9A84C;white-space:nowrap;'
-        ].join('');
-        notice.textContent = 'Seite wird neu geladen\u2026';
-        document.body.appendChild(notice);
-        setTimeout(function () { window.location.reload(); }, 1000);
+        reloadAfterWithdrawal();
       }
     });
 
