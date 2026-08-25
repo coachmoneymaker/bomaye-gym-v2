@@ -2,3 +2,6 @@ node_modules/
 .env
 .env.local
 .env*.local
+
+# Claude Ads installer ownership manifest (machine-specific absolute paths)
+.claude/skills/.claude-ads-*.manifest
