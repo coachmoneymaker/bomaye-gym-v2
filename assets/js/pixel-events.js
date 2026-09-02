@@ -1,8 +1,12 @@
 /* Meta Pixel – standard event tracking
- * Lead             → clicks on /mitglied-werden or /mitgliederbereich
- * InitiateCheckout → clicks on any bsport.io / checkout / subscription link or button,
+ * InitiateCheckout → clicks on /mitglied-werden,
+ *                    OR any bsport.io / checkout / subscription link or button,
  *                    OR buttons whose visible text matches checkout keywords
  * ViewContent      → fired inline on /kurse, /coaches, /about page load
+ *
+ * Lead is NOT sent from the browser. It is a server-side event only, fired by
+ * /api/bsport-webhook when a Probetraining invoice is finalized, so that the
+ * optimization signal is an actual booking and not a click or a modal open.
  */
 (function () {
 
@@ -77,9 +81,13 @@
                      el.getAttribute('data-link') || '');
     var innerText = (el.innerText || el.textContent || '');
 
-    // ── Lead: membership / login pages ──────────────────────────────────
+    // ── InitiateCheckout: membership page ───────────────────────────────
+    // Clicking through to the membership page is checkout intent. Lead is
+    // reserved for the server-side booking event from /api/bsport-webhook.
+    // /mitgliederbereich is the login area for existing members and is
+    // deliberately not tracked — it is not a funnel step.
     if (href === '/mitglied-werden' || href === '/mitgliederbereich') {
-      fbq('track', 'Lead');
+      if (href === '/mitglied-werden') fbq('track', 'InitiateCheckout');
       return;
     }
 
