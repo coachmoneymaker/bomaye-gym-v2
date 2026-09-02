@@ -121,6 +121,29 @@ function validateBsportRequest(rawBody, headers, parsedBody) {
  * HTTP client, not the customer, and would degrade match quality rather than
  * improve it. fbc/fbp are forwarded only if the payload actually carries them.
  */
+/**
+ * Normalize a phone number to digits with a country code, as Meta expects
+ * (no plus sign, no separators).
+ *
+ *   "089 123456"    → "4989123456"   national format, 0 replaced by 49
+ *   "0151 2345678"  → "491512345678"
+ *   "+49 89 123456" → "4989123456"   already international, left alone
+ *   "0049 89 12345" → "498912345"    00 is the international prefix, not a
+ *                                    national trunk 0 — dropping only one
+ *                                    zero and prepending 49 would corrupt it
+ *
+ * A number that starts with neither 0 nor a known prefix is passed through
+ * unchanged: it either already carries a country code or is foreign, and
+ * guessing 49 for it would produce a hash that matches the wrong person.
+ */
+export function normalizePhone(raw) {
+  const digits = String(raw ?? '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('00')) return digits.slice(2);
+  if (digits.startsWith('0'))  return `49${digits.slice(1)}`;
+  return digits;
+}
+
 export function buildMetaUserData(customer = {}) {
   const userData = {};
   const lower = s => s.trim().toLowerCase();
@@ -135,7 +158,7 @@ export function buildMetaUserData(customer = {}) {
   const alnum = s => lower(s).replace(/[^\p{L}\p{N}]/gu, '');
 
   put('em',      customer.email,      lower);
-  put('ph',      customer.phone,      s => s.replace(/\D/g, ''));
+  put('ph',      customer.phone,      normalizePhone);
   put('fn',      customer.first_name, lower);
   put('ln',      customer.last_name,  lower);
   put('ct',      customer.city,       alnum);
