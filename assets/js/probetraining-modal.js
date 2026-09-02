@@ -293,7 +293,12 @@
       if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
     }
     if (window.dataLayer) dataLayer.push({ event: 'probetraining_modal_open' });
-    if (window.fbq) fbq('track', 'Lead');
+    // Opening the booking modal is intent, not a booking. The actual Lead is
+    // sent server-side from /api/bsport-webhook once the invoice is finalized.
+    // content_name is required here: ViewContent also fires on /kurse, /coaches
+    // and /about, so without it a modal-open audience cannot be separated from
+    // ordinary page views.
+    if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Probetraining Modal' });
     modal.dispatchEvent(new Event('pt-modal-open', { bubbles: true }));
   };
 

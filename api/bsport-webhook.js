@@ -6,6 +6,10 @@
  * deduplicates via Vercel KV, fires server-side conversion events to
  * Meta CAPI and Google Ads, and sends an internal admin email via Resend.
  *
+ * Meta event mapping: total = 0 → Lead (Probetraining, value 30 EUR),
+ * total > 0 → Purchase (membership, actual invoice value). Both carry the
+ * invoice ID as event_id. Lead is not sent from the browser anywhere.
+ *
  * Processed events: "invoice-finalize" and "invoice-pay" (all invoices, paid and free).
  * booking-create, invoice-revert, and invoice-dispute are gracefully skipped.
  *
@@ -15,6 +19,8 @@
  *   BSPORT_STRICT            — set to "false" to skip fingerprint checks (local dev)
  *   META_PIXEL_ID            — Meta Pixel numeric ID
  *   META_ACCESS_TOKEN        — Meta Graph API system access token
+ *   TEST_EVENT_CODE          — optional; routes CAPI events to the Test Events
+ *                              tab instead of live reporting. Unset in production.
  *   GOOGLE_CONVERSION_ID     — format: AW-XXXXXXXXX
  *   GOOGLE_CONVERSION_LABEL  — Google Ads conversion label
  *   KV_REST_API_URL          — auto-injected when Vercel KV is linked
@@ -102,24 +108,84 @@ function validateBsportRequest(rawBody, headers, parsedBody) {
 
 // ── Meta CAPI ────────────────────────────────────────────────────────────────
 
-async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, contentName }) {
-  const pixelId = process.env.META_PIXEL_ID;
-  const token   = process.env.META_ACCESS_TOKEN;
-  if (!pixelId || !token) return { ok: false, reason: 'env-missing' };
+/**
+ * Build the hashed user_data block from whatever the Bsport invoice provides.
+ *
+ * Meta requires each value normalized *before* hashing: lowercased and trimmed,
+ * city without spaces or punctuation, zip reduced to alphanumerics, country as
+ * a two-letter ISO code. A field that is absent is omitted entirely — an empty
+ * hash is worse than no field, because it matches nothing but still counts.
+ *
+ * Deliberately NOT sent: client_ip_address and client_user_agent. This runs in
+ * a serverless function, so those describe Vercel's egress host and Bsport's
+ * HTTP client, not the customer, and would degrade match quality rather than
+ * improve it. fbc/fbp are forwarded only if the payload actually carries them.
+ */
+/**
+ * Normalize a phone number to digits with a country code, as Meta expects
+ * (no plus sign, no separators).
+ *
+ *   "089 123456"    → "4989123456"   national format, 0 replaced by 49
+ *   "0151 2345678"  → "491512345678"
+ *   "+49 89 123456" → "4989123456"   already international, left alone
+ *   "0049 89 12345" → "498912345"    00 is the international prefix, not a
+ *                                    national trunk 0 — dropping only one
+ *                                    zero and prepending 49 would corrupt it
+ *
+ * A number that starts with neither 0 nor a known prefix is passed through
+ * unchanged: it either already carries a country code or is foreign, and
+ * guessing 49 for it would produce a hash that matches the wrong person.
+ */
+export function normalizePhone(raw) {
+  const digits = String(raw ?? '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('00')) return digits.slice(2);
+  if (digits.startsWith('0'))  return `49${digits.slice(1)}`;
+  return digits;
+}
 
+export function buildMetaUserData(customer = {}) {
   const userData = {};
-  if (customer.email)      userData.em = [hash(customer.email.toLowerCase().trim())];
-  if (customer.phone)      userData.ph = [hash(customer.phone.replace(/\D/g, ''))];
-  if (customer.first_name) userData.fn = [hash(customer.first_name.toLowerCase().trim())];
-  if (customer.last_name)  userData.ln = [hash(customer.last_name.toLowerCase().trim())];
+  const lower = s => s.trim().toLowerCase();
 
+  const put = (key, raw, normalize) => {
+    const value = normalize(String(raw ?? ''));
+    if (value) userData[key] = [hash(value)];
+  };
+
+  // Strip separators and punctuation but keep letters — "münchen" must stay
+  // "münchen", not become "mnchen", or the hash never matches Meta's own.
+  const alnum = s => lower(s).replace(/[^\p{L}\p{N}]/gu, '');
+
+  put('em',      customer.email,      lower);
+  put('ph',      customer.phone,      normalizePhone);
+  put('fn',      customer.first_name, lower);
+  put('ln',      customer.last_name,  lower);
+  put('ct',      customer.city,       alnum);
+  put('zp',      customer.zip,        alnum);
+  // Two-letter ISO code only. A full country name ("Germany") would truncate to
+  // a wrong code, so it is dropped instead — no field beats a wrong field.
+  put('country', customer.country,    s => {
+    const code = lower(s).replace(/[^\p{L}]/gu, '');
+    return code.length === 2 ? code : '';
+  });
+
+  // Click ID and browser ID are identifiers, not PII — they are sent unhashed.
+  if (customer.fbc) userData.fbc = String(customer.fbc);
+  if (customer.fbp) userData.fbp = String(customer.fbp);
+
+  return userData;
+}
+
+/** Assemble the exact CAPI request body. Exported so it can be inspected in tests. */
+export function buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName, eventTime }) {
   const payload = {
     data: [{
       event_name:    eventName,
-      event_time:    Math.floor(Date.now() / 1000),
+      event_time:    eventTime ?? Math.floor(Date.now() / 1000),
       event_id:      String(invoiceId),
       action_source: 'website',
-      user_data:     userData,
+      user_data:     buildMetaUserData(customer),
       custom_data: {
         value,
         currency,
@@ -127,6 +193,21 @@ async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, 
       },
     }],
   };
+
+  // When set, the event appears in the Test Events tab instead of live
+  // reporting. Leave this variable unset in production.
+  const testEventCode = process.env.TEST_EVENT_CODE;
+  if (testEventCode) payload.test_event_code = testEventCode;
+
+  return payload;
+}
+
+async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, contentName }) {
+  const pixelId = process.env.META_PIXEL_ID;
+  const token   = process.env.META_ACCESS_TOKEN;
+  if (!pixelId || !token) return { ok: false, reason: 'env-missing' };
+
+  const payload = buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName });
 
   try {
     const res = await fetch(
@@ -279,12 +360,22 @@ export default async function handler(req, res) {
 
   // obj.customer may be null for anonymous POS invoices
   const cust = obj.customer ?? {};
+  // Bsport mirrors a Stripe-shaped invoice, where address fields appear nested
+  // under `address`. Flat variants are read as a fallback so a schema
+  // difference degrades to a missing field instead of a wrong one.
+  const addr = cust.address ?? {};
   const customer = {
     name:       cust.name || `${cust.first_name || ''} ${cust.last_name || ''}`.trim() || undefined,
     first_name: cust.first_name || '',
     last_name:  cust.last_name  || '',
     email:      cust.email      || '',
     phone:      cust.phone      || '',
+    city:       addr.city        || cust.city        || '',
+    zip:        addr.postal_code || cust.postal_code || cust.zip || '',
+    country:    addr.country     || cust.country     || '',
+    // Only present if the booking flow forwarded the Meta cookies to Bsport.
+    fbc:        obj.metadata?.fbc || cust.metadata?.fbc || '',
+    fbp:        obj.metadata?.fbp || cust.metadata?.fbp || '',
   };
 
   console.log(JSON.stringify({
@@ -319,20 +410,27 @@ export default async function handler(req, res) {
   const typeStr = isProbetraining ? 'Probetraining (Buchung)' : 'Mitgliedschaft';
   const amountStr = isProbetraining ? 'Kostenlos (0 €)' : `${totalEur.toFixed(2)} ${currency}`;
 
+  // Lead is the free Probetraining booking, Purchase the paid membership.
+  // A negative total (credit note, refund) is neither and is not reported to
+  // Meta at all — sending it as a Purchase would corrupt reported revenue.
+  const metaEventName = isProbetraining ? 'Lead' : (totalEur > 0 ? 'Purchase' : null);
+
   console.log(JSON.stringify({
     step: 'conversion', type: isProbetraining ? 'probetraining' : 'membership',
-    invoiceId, value
+    invoiceId, value, metaEventName
   }));
 
   const [metaResult, googleResult, emailResult] = await Promise.allSettled([
-    sendMetaEvent({
-      eventName:   'Lead',
-      invoiceId,
-      customer,
-      value,
-      currency,
-      contentName: productName,
-    }),
+    metaEventName
+      ? sendMetaEvent({
+          eventName:   metaEventName,
+          invoiceId,
+          customer,
+          value,
+          currency,
+          contentName: productName,
+        })
+      : Promise.resolve({ ok: false, reason: 'negative-total-not-reported' }),
     sendGoogleConversion({
       invoiceId,
       value,
@@ -353,7 +451,7 @@ export default async function handler(req, res) {
   const google = googleResult.status === 'fulfilled' ? googleResult.value : { ok: false, error: googleResult.reason?.message };
   const email  = emailResult.status  === 'fulfilled' ? emailResult.value  : { ok: false, error: emailResult.reason?.message };
 
-  console.log(JSON.stringify({ step: 'meta',   invoiceId, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
+  console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
   console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
   console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
 
