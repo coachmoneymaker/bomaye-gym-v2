@@ -12,8 +12,5 @@
       "destination": "/index?probetraining=1",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    { "source": "/", "destination": "/coming-soon" }
   ]
 }
