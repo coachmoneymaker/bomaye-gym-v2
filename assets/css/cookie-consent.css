@@ -295,29 +295,60 @@
   }
 }
 
-/* ── Persistent floating button ─────────────────────────── */
+/* ── Persistenter Zugang zu den Einstellungen / Widerruf ───
+   Art. 7 Abs. 3 DSGVO: Der Widerruf muss so einfach sein wie
+   die Einwilligung. Die fruehere Regel
+     @media(max-width:768px){#cookie-settings-btn{display:none!important}}
+   machte den Widerruf auf dem Telefon unmoeglich — es gab nach
+   der Zustimmung keinen Weg zurueck in die Einstellungen.
+   Der Button ist deshalb auf allen Breiten erreichbar.
+   Markenvorgabe: scharfe Kanten (radius 0), Gold auf Dunkel,
+   Oswald-Label statt Emoji. */
 #cookie-settings-btn {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 15px;
+  border-radius: 0;
   background: #0A0A08;
   border: 1px solid #C9A84C;
   color: #F5F0E8;
-  font-size: 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
   cursor: pointer;
   z-index: 9997;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  transition: opacity 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-#cookie-settings-btn:hover { opacity: 0.75; }
+#cookie-settings-btn:hover { background: #C9A84C; color: #0A0A08; }
+#cookie-settings-btn:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; }
 #cookie-settings-btn.cb-hidden { display: none; }
 
-@media(max-width: 768px) {
-  #cookie-settings-btn { display: none !important; }
+/* Mobile: Safe-Area beachten und nicht mit der Sticky-CTA-Leiste
+   (.sched-convbar, 56px, z-index 900) oder offenen Modals kollidieren.
+   Alle Regeln bleiben in dieser Media Query, damit Desktop unberuehrt
+   bleibt. */
+@media (max-width: 768px) {
+  #cookie-settings-btn {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 16px;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    padding: 0 13px;
+  }
+  body.sched-bar-on #cookie-settings-btn {
+    bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+  body.pt-modal-open #cookie-settings-btn,
+  body.bsport-modal-open #cookie-settings-btn { display: none; }
 }
