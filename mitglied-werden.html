@@ -927,8 +927,7 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn"
-             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
+             class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
         <!-- CARD: UNLIMITED — DOM pos 2, desktop col 2, mobile col 1 -->
@@ -954,8 +953,7 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn"
-             onclick="return openBsportModal(event)">JETZT FOUNDING MEMBER WERDEN</a>
+             class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
         </article>
 
         <!-- CARD: YOUTH — DOM pos 3, desktop col 3, mobile col 3 -->
@@ -979,8 +977,7 @@
           </ul>
           <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
              target="_blank" rel="noopener noreferrer"
-             class="mw-card-btn"
-             onclick="return openBsportModal(event)">MITGLIED WERDEN</a>
+             class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
       </div>
@@ -1205,17 +1202,6 @@ function MountBsportWidget(config, repeat) {
 
   var modal   = document.getElementById('bsport-sub-modal');
   var closeBtn = document.getElementById('bsport-sub-modal-close');
-
-  window.openBsportModal = function (e) {
-    if (e) e.preventDefault();
-    if (!modal) { return true; } // fallback: let the link open
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow            = 'hidden';
-    document.body.classList.add('bsport-modal-open');
-    modal.classList.add('is-open');
-    modal.removeAttribute('aria-hidden');
-    return false;
-  };
 
   window.closeBsportModal = function () {
     if (!modal) { return; }
