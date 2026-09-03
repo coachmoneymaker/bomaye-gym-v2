@@ -47,6 +47,26 @@
     return !!(c && c.marketing);
   }
 
+  /* ── Google Consent Mode v2 ────────────────────────────────
+     Der Default-Block im <head> jeder Seite setzt alle Werbe-
+     Typen auf 'denied'. Hier wird ausschliesslich aktualisiert,
+     sobald der Nutzer entscheidet — und bei jedem Seitenaufruf
+     erneut, weil der Default sonst 'denied' bliebe.
+     analytics_storage bleibt bewusst unberuehrt: die Statistik-
+     Kategorie ist derzeit nicht funktional und wird erst
+     verdrahtet, wenn ihr Beschreibungstext korrigiert ist.
+     Der Guard verhindert einen Fehler auf Seiten ohne gtag
+     (z. B. wochenplan.html). */
+  function _gtagConsent(granted) {
+    if (typeof window.gtag !== 'function') return;
+    var v = granted ? 'granted' : 'denied';
+    window.gtag('consent', 'update', {
+      'ad_storage':         v,
+      'ad_user_data':       v,
+      'ad_personalization': v
+    });
+  }
+
   function _normalizeEmail(v) {
     if (!v) return null;
     v = String(v).trim().toLowerCase();
@@ -125,6 +145,7 @@
 
   /* Apply stored marketing consent immediately on load */
   var _existing = getConsent();
+  if (_existing) _gtagConsent(!!_existing.marketing);
   if (_existing && _existing.marketing) window.loadMetaPixel();
 
   /* ── DOM ready ────────────────────────────────────────────── */
@@ -246,12 +267,14 @@
     /* ── Banner button handlers ───────────────────────────────── */
     document.getElementById('cb-accept').addEventListener('click', function () {
       saveConsent(true, true);
+      _gtagConsent(true);
       window.loadMetaPixel();
       closeBanner();
     });
 
     document.getElementById('cb-reject').addEventListener('click', function () {
       saveConsent(false, false);
+      _gtagConsent(false);
       closeBanner();
     });
 
@@ -280,6 +303,7 @@
       var prev = getConsent();
       var prevMktg = !!(prev && prev.marketing);
       saveConsent(false, false);
+      _gtagConsent(false);
       closeModal();
       closeBanner();
       if (prevMktg && window._metaPixelLoaded) reloadAfterWithdrawal();
@@ -291,6 +315,7 @@
       var prev = getConsent();
       var prevMktg = !!(prev && prev.marketing);
       saveConsent(mktg, stats);
+      _gtagConsent(mktg);
       closeModal();
       closeBanner();
       if (mktg && !prevMktg) {
