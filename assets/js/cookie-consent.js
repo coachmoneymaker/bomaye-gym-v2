@@ -223,7 +223,7 @@
         '</div>',
       '</div>',
       /* Floating button */
-      '<button id="cookie-settings-btn" aria-label="Cookie-Einstellungen öffnen" title="Cookie-Einstellungen">&#x1F36A;</button>'
+      '<button id="cookie-settings-btn" type="button" aria-label="Cookie-Einstellungen öffnen und Einwilligung widerrufen" title="Cookie-Einstellungen">Cookies</button>'
     ].join('');
 
     document.body.insertAdjacentHTML('beforeend', html);
