@@ -51,6 +51,24 @@
     ul { list-style: none; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
+    /* Metrisch angepasster Fallback fuer Bebas Neue.
+       Bebas Neue ist stark condensed; die System-Fallback-Schrift (Arial /
+       Helvetica / Roboto / Liberation Sans) ist bei gleicher Punktgroesse rund
+       70% breiter - gemessen 402px gegenueber 236px fuer "HOECHSTEM" bei 375px.
+       size-adjust skaliert den Fallback auf die Bebas-Breite (Verhaeltnis
+       236/402 = 58,7%), damit die Headline waehrend des font-swap - und
+       dauerhaft, falls Google Fonts nicht erreichbar ist - genauso umbricht wie
+       mit der echten Schrift, statt die Seite aufzuschieben oder im Wort zu
+       brechen. Nebeneffekt: der Layout-Sprung beim Nachladen der Schrift faellt
+       von rund 690px auf rund 250px Seitenhoehe.
+       Faellt size-adjust aus (Safari < 17) oder ist keine der local()-Schriften
+       vorhanden, fangen align-self und overflow-wrap weiter unten den Rest ab. */
+    @font-face {
+      font-family: 'Bebas Neue Fallback';
+      src: local('Arial'), local('Helvetica'), local('Roboto'), local('Liberation Sans');
+      size-adjust: 59%;
+    }
+
     /* ── Design Tokens ───────────────────────────────────────────── */
     :root {
       --gold:       #d4af37;
@@ -61,7 +79,7 @@
       --smoke:      #1a1a1a;
       --border:     rgba(212,175,55,0.22);
       --muted:      rgba(255,255,255,0.5);
-      --font-display: 'Bebas Neue', 'Oswald', sans-serif;
+      --font-display: 'Bebas Neue', 'Bebas Neue Fallback', 'Oswald', sans-serif;
       --font-head:    'Oswald', sans-serif;
       --font-body:    'DM Sans', system-ui, sans-serif;
       --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -593,6 +611,51 @@
     .delay-4 { transition-delay: 0.5s; }
     .delay-5 { transition-delay: 0.65s; }
     .delay-6 { transition-delay: 0.8s; }
+
+    /* ── Kein horizontaler Overflow, auch ohne Bebas Neue ────────────
+       Die Display-Schrift Bebas Neue ist stark condensed. Die System-
+       Fallback-Schrift (Arial / Roboto / Liberation Sans) ist bei gleicher
+       Punktgroesse rund 70% breiter. Bis Bebas geladen ist - also bei jedem
+       Kaltstart waehrend des font-swap, und dauerhaft, wenn Google Fonts nicht
+       erreichbar ist - sind die Display-Woerter dadurch breiter als der Platz:
+       "HOECHSTEM" misst bei 375px 402px statt 236px, "COMMUNITY." 483px.
+
+       Folge: das Layout-Viewport wird bei 375px auf 429px aufgeschoben. Der
+       fixierte Cookie-Banner ist an dieses Viewport gebunden und wird
+       mitgezogen; der Ablehnen-Button endet dann bei x 413 und liegt damit
+       ausserhalb des sichtbaren Bereichs - die Ablehnung ist auf dem Handy
+       nicht mehr erreichbar. Ablehnen muss so einfach sein wie Annehmen.
+
+       Zwei Ursachen, zwei Gegenmittel:
+       1. .hero-headline und .exp-word sind Flex-Items in zentrierenden
+          Column-Containern und werden deshalb nach fit-content bemessen, mit
+          der min-content-Breite (dem laengsten Wort) als harter Untergrenze.
+          align-self:stretch nimmt sie aus dieser Bemessung heraus, sie fuellen
+          dann genau die Inhaltsbreite ihres Containers.
+       2. Alle Display-Ueberschriften duerfen im Notfall im Wort umbrechen,
+          statt die Seite aufzuschieben.
+
+       Mit geladenem Bebas Neue aendert sich dadurch nichts: kein Wort ist
+       breiter als sein Container, kein Umbruch wird ausgeloest, die Zeilen
+       brechen exakt wie bisher. */
+    .logo-name,
+    .hero-headline,
+    .hero-sub,
+    .form-success-title,
+    .cs-footer-logo,
+    .eb-headline,
+    .section-headline,
+    .ali-headline,
+    .exp-word,
+    .champions-headline,
+    .coach-name {
+      overflow-wrap: break-word;
+    }
+    .hero-headline,
+    .exp-word {
+      align-self: stretch;
+      min-width: 0;
+    }
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
