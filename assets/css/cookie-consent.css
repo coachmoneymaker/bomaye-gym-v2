@@ -334,8 +334,12 @@
 #cookie-settings-btn:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; }
 #cookie-settings-btn.cb-hidden { display: none; }
 
-/* Mobile: Safe-Area beachten und nicht mit der Sticky-CTA-Leiste
-   (.sched-convbar, 56px, z-index 900) oder offenen Modals kollidieren.
+/* Mobile: Safe-Area beachten und nicht mit einer Sticky-CTA-Leiste
+   (56px + Safe-Area, z-index 900) oder offenen Modals kollidieren.
+   Zwei Seiten setzen so eine Leiste, jeweils mit eigener Body-Klasse:
+     index.html      -> body.sched-bar-on  (.sched-convbar)
+     stundenplan.html -> body.sp-bar-on    (.sp-convbar)
+   Beide werden vom gleichen Lift unten abgedeckt.
    Alle Regeln bleiben in dieser Media Query, damit Desktop unberuehrt
    bleibt. */
 @media (max-width: 768px) {
@@ -346,7 +350,8 @@
     letter-spacing: 0.14em;
     padding: 0 13px;
   }
-  body.sched-bar-on #cookie-settings-btn {
+  body.sched-bar-on #cookie-settings-btn,
+  body.sp-bar-on #cookie-settings-btn {
     bottom: calc(72px + env(safe-area-inset-bottom));
   }
   body.pt-modal-open #cookie-settings-btn,
