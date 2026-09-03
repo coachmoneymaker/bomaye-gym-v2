@@ -1,2 +1,13 @@
 # Claude Code Skills/Agents – Entwickler-Werkzeuge, gehoeren nicht ins Deployment
 .claude/
+
+# Backups, Doku und Build-Skripte – gehoeren nicht ins Deployment.
+# HINWEIS: package.json / package-lock.json duerfen NICHT ignoriert werden —
+# Vercel installiert daraus die Dependencies der Serverless Functions in /api
+# (resend, @vercel/kv). Ohne sie brechen Lead-, Verify- und Bsport-Webhook-Routen.
+*.bak
+*.md
+*.py
+pages/
+Bsport Snippets .html
+Preisliste Bomaye Gym.pdf
