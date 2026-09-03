@@ -672,7 +672,7 @@ function renderPage(type, { title, message }) {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>${escapeHtml(title)} — BOMAYE GYM</title>
   <link rel="stylesheet" href="/assets/css/fonts.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/vendor/fontawesome/6.4.0/css/all.min.css" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:#0a0a0a;color:#fff;font-family:'DM Sans',Arial,sans-serif;
