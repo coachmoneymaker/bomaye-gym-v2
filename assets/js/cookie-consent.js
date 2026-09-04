@@ -127,6 +127,13 @@
      context. Invalid/empty values are discarded; nothing is stored
      beyond this page view. Applied to the pixel only under consent. */
   window.bomayeSetPixelUserData = function (data) {
+    /* Ohne Marketing-Einwilligung wird nichts uebernommen. Die Pruefung
+       steht bewusst VOR jeder Verarbeitung: schon das Ablegen im
+       Speicher waere eine Erhebung ohne Rechtsgrundlage. Damit bleibt
+       _amUserData null, solange keine Einwilligung vorliegt - es gibt
+       also auch nichts, was bei einer spaeteren Einwilligung
+       nachtraeglich verwendet werden koennte. */
+    if (!_marketingConsented()) return;
     data = data || {};
     var em = _normalizeEmail(data.email);
     var ph = _normalizePhone(data.phone);
@@ -143,8 +150,23 @@
 
   /* Capture real user data the moment a visitor submits one of the
      site's forms (Probetraining/family, corporate, lead). Runs in the
-     capture phase so it works with onsubmit= handlers too. */
+     capture phase so it works with onsubmit= handlers too.
+
+     Die Einwilligungspruefung steht als allererste Anweisung - vor
+     querySelector und vor jedem Lesen von .value. Ohne Einwilligung
+     fasst der Handler die Formulardaten gar nicht erst an; er kehrt
+     zurueck, bevor er weiss, ob das Formular ueberhaupt E-Mail- oder
+     Telefonfelder hat. Die Pruefung liegt im Handler und nicht bei der
+     Registrierung, damit ein Besucher, der spaeter im selben Seiten-
+     aufruf einwilligt, ab dann normal erfasst wird - aber eben nur mit
+     Absendungen NACH der Einwilligung.
+
+     Dieser Handler dient ausschliesslich dem Advanced Matching des
+     Meta Pixels. Das Absenden der Formulare selbst laeuft davon
+     unabhaengig ueber assets/js/main.js an /api/contact und ist von
+     dieser Pruefung nicht betroffen. */
   document.addEventListener('submit', function (e) {
+    if (!_marketingConsented()) return;
     var form = e.target;
     if (!form || !form.querySelector) return;
     var emailEl = form.querySelector('input[type="email"], input[name="email"]');
