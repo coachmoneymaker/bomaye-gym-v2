@@ -52,6 +52,13 @@
     align-items: center;
     padding: 24px 40px;
   }
+  /* Auf dem Desktop wachsen Buttons sonst mit ihrer Beschriftung:
+     "ALLE AKZEPTIEREN" waere 180px breit, "ABLEHNEN" nur 120px - die
+     Zustimmung haette also die groessere Flaeche. Eine gemeinsame
+     Mindestbreite gleicht das aus; sie ist an der laengsten
+     Beschriftung bemessen, damit beide Buttons dieselbe Groesse haben.
+     Auf dem Telefon uebernimmt das flex:1 weiter unten. */
+  #cookie-banner .cb-buttons-primary .cb-btn { min-width: 184px; }
   #cookie-banner .cb-title { font-size: 15px; }
   #cookie-banner .cb-text-block { flex: 1; }
   #cookie-banner .cb-buttons {
@@ -75,18 +82,57 @@
   border: none;
   cursor: pointer;
   font-family: inherit;
-  transition: opacity 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   white-space: nowrap;
   box-sizing: border-box;
+  min-height: 44px;
 }
-.cb-btn:hover { opacity: 0.82; }
 
-.cb-btn--accept  { background: #C9A84C; color: #0A0A08; }
-.cb-btn--reject  { background: transparent; border: 1px solid #F5F0E8; color: #F5F0E8; }
+/* ── Annehmen und Ablehnen sind gleichwertig ──────────────
+   Zuvor war "Alle akzeptieren" eine gefuellte Goldflaeche und
+   "Ablehnen" eine duenne Kontur. Eine optisch untergeordnete
+   Ablehnung ist ein anerkanntes Dark Pattern und beschaedigt die
+   Freiwilligkeit der Einwilligung (Art. 4 Nr. 11, Art. 7 DSGVO).
+
+   Beide Buttons teilen sich jetzt exakt dieselbe Regel: gleiche
+   Groesse, gleiche Typografie, gleiche Kontur, gleiche Farbe. Sie
+   sind nicht nur aehnlich gewichtet, sondern identisch - damit laesst
+   sich gar keine Rangfolge hineinlesen. Gold bleibt der Marke als
+   Interaktionsakzent erhalten und liegt auf beiden Buttons gleich,
+   statt eine der beiden Entscheidungen vorab auszuzeichnen. */
+.cb-btn--accept,
+.cb-btn--reject {
+  background: transparent;
+  border: 1px solid #F5F0E8;
+  color: #F5F0E8;
+}
+.cb-btn--accept:hover,
+.cb-btn--reject:hover {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0A0A08;
+}
+.cb-btn--accept:focus-visible,
+.cb-btn--reject:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
+
+/* Einstellungen bleibt bewusst leiser - es ist der dritte Weg, nicht
+   die Ablehnung. Gedimmte Kontur und Schrift, aber dieselbe Groesse
+   und ein vollwertiges Ziel zum Antippen. */
 .cb-btn--settings {
   background: transparent;
   border: 1px solid rgba(245,240,232,0.3);
   color: rgba(245,240,232,0.7);
+}
+.cb-btn--settings:hover {
+  border-color: rgba(245,240,232,0.6);
+  color: #F5F0E8;
+}
+.cb-btn--settings:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
 }
 
 /* ── Settings Modal ───────────────────────────────────────── */
@@ -277,21 +323,22 @@
     flex: 1;
     padding: 12px 8px;
     font-size: 12px;
+    min-height: 44px;
   }
-  /* Settings becomes a plain text-link on mobile */
+  /* Einstellungen war hier ein 11px-Textlink mit 8px Polsterung -
+     rund 29px hoch und damit kein brauchbares Antippziel. Jetzt ein
+     vollbreiter Button mit denselben 44px wie das Paar darueber,
+     optisch weiterhin leiser durch gedimmte Kontur und Schrift. */
   #cookie-banner #cb-open-settings {
-    display: block;
+    display: flex;
     width: 100%;
-    background: none;
-    border: none;
-    color: rgba(245, 240, 232, 0.62);
-    font-size: 11px;
-    font-weight: 400;
+    min-height: 44px;
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 700;
     letter-spacing: 0.1em;
-    text-decoration: underline;
     text-transform: uppercase;
-    padding: 8px;
-    text-align: center;
+    text-decoration: none;
   }
 }
 
