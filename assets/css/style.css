@@ -1848,6 +1848,50 @@ footer {
 .legal-content ul li { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.4rem; list-style: disc; }
 .legal-content a { color: var(--gold); text-decoration: underline; }
 .legal-content a:hover { color: var(--gold-light); }
+
+/* Tabelle in Rechtstexten (Cookie-Uebersicht in der Datenschutzerklaerung).
+   Fuer .legal-content gab es bisher keine Tabellenregeln; diese hier nutzt
+   ausschliesslich vorhandene Design-Tokens. table-layout:fixed plus
+   overflow-wrap sorgen dafuer, dass die technischen Bezeichner umbrechen
+   statt die Seite bei 375px aufzuschieben - kein horizontales Scrollen. */
+.legal-content table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0.75rem 0 1.25rem;
+}
+.legal-content th,
+.legal-content td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.legal-content th {
+  font-family: var(--font-head);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.legal-content td {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.legal-content tbody tr:last-child td { border-bottom: none; }
+.legal-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  color: rgba(255,255,255,0.82);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .legal-content th { font-size: 0.6rem; letter-spacing: 1px; }
+  .legal-content td { font-size: 0.78rem; }
+  .legal-content th,
+  .legal-content td { padding: 0.5rem 0.3rem; }
+}
 .legal-back { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); transition: color 0.2s; }
 .legal-back:hover { color: var(--gold); }
 
