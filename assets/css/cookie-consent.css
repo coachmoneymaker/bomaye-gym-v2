@@ -343,64 +343,24 @@
 }
 
 /* ── Persistenter Zugang zu den Einstellungen / Widerruf ───
-   Art. 7 Abs. 3 DSGVO: Der Widerruf muss so einfach sein wie
-   die Einwilligung. Die fruehere Regel
-     @media(max-width:768px){#cookie-settings-btn{display:none!important}}
-   machte den Widerruf auf dem Telefon unmoeglich — es gab nach
-   der Zustimmung keinen Weg zurueck in die Einstellungen.
-   Der Button ist deshalb auf allen Breiten erreichbar.
-   Markenvorgabe: scharfe Kanten (radius 0), Gold auf Dunkel,
-   Oswald-Label statt Emoji. */
-#cookie-settings-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 15px;
-  border-radius: 0;
-  background: #0A0A08;
-  border: 1px solid #C9A84C;
-  color: #F5F0E8;
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  cursor: pointer;
-  z-index: 9997;
+   Art. 7 Abs. 3 DSGVO: Der Widerruf muss so einfach sein wie die
+   Einwilligung. Frueher lag dafuer ein schwebender Button ueber der
+   Seite. Der stand im Hero der Marke im Weg und musste auf zwei Seiten
+   eigens ueber die Sticky-CTA-Leisten gehoben werden (PR #17). Der Weg
+   fuehrt jetzt ueber einen Link im Footer, den es auf allen 22 Seiten
+   gibt — damit entfaellt beides an der Wurzel.
+   Der Link erbt das Aussehen der uebrigen Footer-Links der jeweiligen
+   Seite; hier wird nur das Antippziel abgesichert. */
+.cookie-settings-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  min-height: 44px;
+  cursor: pointer;
 }
-#cookie-settings-btn:hover { background: #C9A84C; color: #0A0A08; }
-#cookie-settings-btn:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; }
-#cookie-settings-btn.cb-hidden { display: none; }
 
-/* Mobile: Safe-Area beachten und nicht mit einer Sticky-CTA-Leiste
-   (56px + Safe-Area, z-index 900) oder offenen Modals kollidieren.
-   Zwei Seiten setzen so eine Leiste, jeweils mit eigener Body-Klasse:
-     index.html      -> body.sched-bar-on  (.sched-convbar)
-     stundenplan.html -> body.sp-bar-on    (.sp-convbar)
-   Beide werden vom gleichen Lift unten abgedeckt.
-   Alle Regeln bleiben in dieser Media Query, damit Desktop unberuehrt
-   bleibt. */
-@media (max-width: 768px) {
-  #cookie-settings-btn {
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    left: 16px;
-    font-size: 0.58rem;
-    letter-spacing: 0.14em;
-    padding: 0 13px;
-  }
-  body.sched-bar-on #cookie-settings-btn,
-  body.sp-bar-on #cookie-settings-btn {
-    bottom: calc(72px + env(safe-area-inset-bottom));
-  }
-  body.pt-modal-open #cookie-settings-btn,
-  body.bsport-modal-open #cookie-settings-btn { display: none; }
+@media print {
+  .cookie-settings-link,
+  #cookie-banner,
+  #cookie-modal-backdrop { display: none !important; }
+}
 }
