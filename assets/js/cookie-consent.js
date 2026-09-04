@@ -2,7 +2,7 @@
   'use strict';
 
   var CONSENT_KEY = 'bomaye_cookie_consent';
-  var CONSENT_VERSION = '1.0';
+  var CONSENT_VERSION = '2.0';
   var CONSENT_TTL = 365 * 24 * 60 * 60 * 1000;
 
   /* ── Storage ──────────────────────────────────────────────── */
@@ -17,10 +17,20 @@
     } catch (e) { return null; }
   }
 
-  function saveConsent(marketing, statistics) {
+  /* Der Datensatz kennt nur noch 'essential' und 'marketing'.
+     Aeltere Datensaetze (Version 1.0) enthielten zusaetzlich
+     'statistics' fuer eine Kategorie, die nie etwas gesteuert hat.
+     Sie brauchen keine Migration: getConsent() verwirft jeden
+     Datensatz mit abweichender Version, ein alter Datensatz wird
+     also nie gelesen und das Feld nie ausgewertet.
+
+     Kommt spaeter echte Analytik dazu, gehoert die Kategorie zurueck:
+     hier ein Feld ergaenzen, in _gtagConsent analytics_storage
+     entsprechend setzen, im Panel-Markup einen weiteren
+     .cm-category-Block einhaengen und die Version erneut erhoehen. */
+  function saveConsent(marketing) {
     var d = {
       essential: true,
-      statistics: !!statistics,
       marketing: !!marketing,
       timestamp: new Date().toISOString(),
       version: CONSENT_VERSION
@@ -52,9 +62,12 @@
      Typen auf 'denied'. Hier wird ausschliesslich aktualisiert,
      sobald der Nutzer entscheidet — und bei jedem Seitenaufruf
      erneut, weil der Default sonst 'denied' bliebe.
-     analytics_storage bleibt bewusst unberuehrt: die Statistik-
-     Kategorie ist derzeit nicht funktional und wird erst
-     verdrahtet, wenn ihr Beschreibungstext korrigiert ist.
+     analytics_storage bleibt bewusst auf 'denied': die Website
+     setzt keinerlei Analytik ein (der GTM-Container enthaelt nur
+     Google Ads und Meta, kein GA4). Es gibt also nichts, wofuer
+     eine Einwilligung eingeholt werden koennte. Kommt spaeter
+     Analytik dazu, wird hier ein eigener Wert gesetzt statt
+     'marketing' mitzubenutzen.
      Der Guard verhindert einen Fehler auf Seiten ohne gtag
      (z. B. wochenplan.html). */
   function _gtagConsent(granted) {
@@ -193,17 +206,6 @@
               '</div>',
               '<p class="cm-category-desc">Diese Cookies sind für den Betrieb der Website notwendig und können nicht deaktiviert werden. Sie speichern zum Beispiel deine Cookie-Auswahl.</p>',
             '</div>',
-            /* Statistik */
-            '<div class="cm-category">',
-              '<div class="cm-category-header">',
-                '<div><span class="cm-category-title">STATISTIK</span></div>',
-                '<label class="cm-toggle" aria-label="Statistik-Cookies">',
-                  '<input type="checkbox" id="toggle-statistics">',
-                  '<span class="cm-toggle-track"></span>',
-                '</label>',
-              '</div>',
-              '<p class="cm-category-desc">Hilft uns zu verstehen, wie die Website genutzt wird — komplett anonym. Aktuell nicht aktiv, wird ggf. später ergänzt.</p>',
-            '</div>',
             /* Marketing */
             '<div class="cm-category">',
               '<div class="cm-category-header">',
@@ -233,7 +235,6 @@
     var backdrop = document.getElementById('cookie-modal-backdrop');
     var floatBtn = document.getElementById('cookie-settings-btn');
     var tMktg    = document.getElementById('toggle-marketing');
-    var tStat    = document.getElementById('toggle-statistics');
 
     /* ── Initial state ────────────────────────────────────────── */
     var consent = getConsent();
@@ -253,7 +254,6 @@
     function openModal() {
       var c = getConsent();
       tMktg.checked = !!(c && c.marketing);
-      tStat.checked = !!(c && c.statistics);
       backdrop.classList.remove('cb-hidden');
       document.body.style.overflow = 'hidden';
       setTimeout(function () { document.getElementById('cm-close').focus(); }, 50);
@@ -266,14 +266,14 @@
 
     /* ── Banner button handlers ───────────────────────────────── */
     document.getElementById('cb-accept').addEventListener('click', function () {
-      saveConsent(true, true);
+      saveConsent(true);
       _gtagConsent(true);
       window.loadMetaPixel();
       closeBanner();
     });
 
     document.getElementById('cb-reject').addEventListener('click', function () {
-      saveConsent(false, false);
+      saveConsent(false);
       _gtagConsent(false);
       closeBanner();
     });
@@ -302,7 +302,7 @@
     document.getElementById('cm-essential-only').addEventListener('click', function () {
       var prev = getConsent();
       var prevMktg = !!(prev && prev.marketing);
-      saveConsent(false, false);
+      saveConsent(false);
       _gtagConsent(false);
       closeModal();
       closeBanner();
@@ -311,10 +311,9 @@
 
     document.getElementById('cm-save').addEventListener('click', function () {
       var mktg = tMktg.checked;
-      var stats = tStat.checked;
       var prev = getConsent();
       var prevMktg = !!(prev && prev.marketing);
-      saveConsent(mktg, stats);
+      saveConsent(mktg);
       _gtagConsent(mktg);
       closeModal();
       closeBanner();
