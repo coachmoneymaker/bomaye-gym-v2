@@ -245,9 +245,7 @@
             '<button class="cb-btn cm-btn--save" id="cm-save">AUSWAHL SPEICHERN</button>',
           '</div>',
         '</div>',
-      '</div>',
-      /* Floating button */
-      '<button id="cookie-settings-btn" type="button" aria-label="Cookie-Einstellungen öffnen und Einwilligung widerrufen" title="Cookie-Einstellungen">Cookies</button>'
+      '</div>'
     ].join('');
 
     document.body.insertAdjacentHTML('beforeend', html);
@@ -255,21 +253,15 @@
     /* ── Element refs ─────────────────────────────────────────── */
     var banner   = document.getElementById('cookie-banner');
     var backdrop = document.getElementById('cookie-modal-backdrop');
-    var floatBtn = document.getElementById('cookie-settings-btn');
     var tMktg    = document.getElementById('toggle-marketing');
 
     /* ── Initial state ────────────────────────────────────────── */
     var consent = getConsent();
-    if (consent) {
-      banner.classList.add('cb-hidden');
-    } else {
-      floatBtn.classList.add('cb-hidden');
-    }
+    if (consent) banner.classList.add('cb-hidden');
 
     /* ── Banner helpers ───────────────────────────────────────── */
     function closeBanner() {
       banner.classList.add('cb-hidden');
-      floatBtn.classList.remove('cb-hidden');
     }
 
     /* ── Modal helpers ────────────────────────────────────────── */
@@ -301,7 +293,6 @@
     });
 
     document.getElementById('cb-open-settings').addEventListener('click', openModal);
-    floatBtn.addEventListener('click', openModal);
 
     /* ── Modal button handlers ────────────────────────────────── */
     document.getElementById('cm-close').addEventListener('click', closeModal);
