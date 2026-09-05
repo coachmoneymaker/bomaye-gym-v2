@@ -277,8 +277,6 @@
   };
 
   window.ptOpenModal = function () {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({event: 'ProbetrainingModalOpen'});
     var modal = document.getElementById('pt-booking-modal');
     if (!modal) return;
     _ptMountWidget();
@@ -292,7 +290,14 @@
       var mb = modal.querySelector('.pt-modal-body');
       if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
     }
-    if (window.dataLayer) dataLayer.push({ event: 'probetraining_modal_open' });
+    // Exactly one modal-open event per open, pushed only once the modal is
+    // actually on screen. Two names used to be pushed here —
+    // ProbetrainingModalOpen and probetraining_modal_open — so any GTM trigger
+    // that matched both fired twice for a single open. The CamelCase name is
+    // the one the existing GTM trigger "Probetraining Modal Open" matches, so
+    // that is the one kept.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'ProbetrainingModalOpen' });
     // Opening the booking modal is intent, not a booking. The actual Lead is
     // sent server-side from /api/bsport-webhook once the invoice is finalized.
     // content_name is required here: ViewContent also fires on /kurse, /coaches
@@ -412,6 +417,24 @@
     el.addEventListener('click', function (e) { if (e.target === this) ptCloseModal(); });
   }
 
+  /* True only when the query string carries a parameter actually NAMED
+     "probetraining". A campaign parameter whose VALUE happens to contain the
+     word does not match. */
+  function _ptHasProbetrainingParam(search) {
+    var qs = String(search || '').replace(/^\?/, '');
+    if (!qs) return false;
+    if (typeof URLSearchParams === 'function') {
+      try { return new URLSearchParams(qs).has('probetraining'); } catch (e) {}
+    }
+    var parts = qs.split('&');
+    for (var i = 0; i < parts.length; i++) {
+      var name = parts[i].split('=')[0];
+      try { name = decodeURIComponent(name.replace(/\+/g, ' ')); } catch (e) {}
+      if (name === 'probetraining') return true;
+    }
+    return false;
+  }
+
   /* ── Boot ── */
   function _ptBoot() {
     /* Defensive reset: clear any stuck scroll-lock state from a previous page load */
@@ -421,7 +444,12 @@
     document.body.style.width = '';
     _ptInjectModal();
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ptCloseModal(); });
-    if (window.location.search.indexOf('probetraining') !== -1) {
+    /* Auto-open only on an explicit ?probetraining parameter, which is what
+       the /probetraining redirect in vercel.json points at. This was a
+       substring search over the whole query string, so any campaign URL
+       carrying the word — say ?utm_campaign=probetraining-september — opened
+       the modal on every ad click and reported an intent that never happened. */
+    if (_ptHasProbetrainingParam(window.location.search)) {
       setTimeout(window.ptOpenModal, 600);
     }
   }
