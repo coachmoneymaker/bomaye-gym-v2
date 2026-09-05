@@ -2,6 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
+       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
+       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+  <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -497,7 +501,7 @@
       <p class="sc-calendar-sub">Wähle deine Stunde — wir sehen uns im Ring.</p>
     </div>
     <div class="sc-calendar-widget">
-      <div style="overflow:hidden !important; position:relative; padding-top:125vh;"><iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;" frameborder="0" allowfullscreen srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-424753","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "calendar","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"calendar": {"coaches": [],"establishments": [],"metaActivities": [],"levels": [],"variant": null,"groupSessionByPeriod": true,"todayOnly": false,"cardMode": null}}})</script><div id="bsport-widget-424753"></div>'>
+      <div style="overflow:hidden !important; position:relative; padding-top:125vh;"><iframe style="position:absolute; overflow-x:hidden !important; height:100%; width:100%; left:0; top:0; border:0;" frameborder="0" allowfullscreen data-bsport-srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-424753","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "calendar","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"calendar": {"coaches": [],"establishments": [],"metaActivities": [],"levels": [],"variant": null,"groupSessionByPeriod": true,"todayOnly": false,"cardMode": null}}})</script><div id="bsport-widget-424753"></div>'>
       </iframe></div>
     </div>
   </section>
