@@ -203,53 +203,72 @@
     _ptTrackingTimeout = setTimeout(_ptStopBookingTracking, 10 * 60 * 1000);
   }
 
+  /* Die beiden Bsport-Widgets laden RudderStack mit (rl_anonymous_id,
+     rl_session, ...). Bsport bietet keinen Schalter, um nur diesen Teil
+     abzuschalten, deshalb liegen sie als Ganzes hinter der
+     Marketing-Einwilligung. Ohne Einwilligung erscheint im jeweiligen View ein
+     Hinweis mit Freigabe-Button; wird sie erteilt, laedt das Widget nach. */
+  function _ptGate(view, mountBody) {
+    if (typeof window.bomayeGateBsport !== 'function') {
+      console.warn('[consent] Consent-Bruecke nicht geladen - Bsport bleibt aus.');
+      return;
+    }
+    window.bomayeGateBsport(view, mountBody);
+  }
+
   /* ── Bsport widget lazy-mounting ── */
   var _ptWidgetMounted = false;
   function _ptMountWidget() {
     if (_ptWidgetMounted) return;
-    _ptWidgetMounted = true;
     var view = document.getElementById('pt-pass-view');
     if (!view) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'pt-iframe-wrapper';
-    var iframe = document.createElement('iframe');
-    iframe.id = 'pt-pass-iframe';
-    iframe.className = 'pt-bsport-iframe';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('scrolling', 'no');
-    iframe.srcdoc = _ptBomayeWidgetCSS
+    _ptGate(view, function () {
+      if (_ptWidgetMounted) return;
+      _ptWidgetMounted = true;
+      var wrap = document.createElement('div');
+      wrap.className = 'pt-iframe-wrapper';
+      var iframe = document.createElement('iframe');
+      iframe.id = 'pt-pass-iframe';
+      iframe.className = 'pt-bsport-iframe';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('scrolling', 'no');
+      iframe.srcdoc = _ptBomayeWidgetCSS
       + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
       + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
       + '<script>MountBsportWidget({"parentElement":"bsport-widget-458519","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"pass","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"pass":{"paymentPackCategories":[25328],"privatePassCategories":[],"hideFilters":true,"hidePaymentCombo":true,"hidePrivatePass":false}}})<\/script>'
       + '<div id="bsport-widget-458519"></div>';
-    wrap.appendChild(iframe);
-    view.appendChild(wrap);
-    _ptStartIframeAutoResize('pt-pass-iframe');
+      wrap.appendChild(iframe);
+      view.appendChild(wrap);
+      _ptStartIframeAutoResize('pt-pass-iframe');
+    });
   }
 
   var _ptCalMounted = false;
   function _ptMountCalendarWidget() {
     if (_ptCalMounted) return;
-    _ptCalMounted = true;
     var view = document.getElementById('pt-cal-view');
     if (!view) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'pt-iframe-wrapper';
-    var iframe = document.createElement('iframe');
-    iframe.id = 'pt-cal-iframe';
-    iframe.className = 'pt-bsport-iframe';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('scrolling', 'no');
-    iframe.srcdoc = _ptBomayeWidgetCSS
+    _ptGate(view, function () {
+      if (_ptCalMounted) return;
+      _ptCalMounted = true;
+      var wrap = document.createElement('div');
+      wrap.className = 'pt-iframe-wrapper';
+      var iframe = document.createElement('iframe');
+      iframe.id = 'pt-cal-iframe';
+      iframe.className = 'pt-bsport-iframe';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('scrolling', 'no');
+      iframe.srcdoc = _ptBomayeWidgetCSS
       + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
       + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
       + '<script>MountBsportWidget({"parentElement":"bsport-widget-880939","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"calendar","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"calendar":{"coaches":[],"establishments":[],"metaActivities":[244432,244539,244426,244420,244563,244431,245265],"levels":[],"variant":"time","groupSessionByPeriod":true,"todayOnly":false,"cardMode":false}}})<\/script>'
       + '<div id="bsport-widget-880939"></div>';
-    wrap.appendChild(iframe);
-    view.appendChild(wrap);
-    _ptStartIframeAutoResize('pt-cal-iframe');
+      wrap.appendChild(iframe);
+      view.appendChild(wrap);
+      _ptStartIframeAutoResize('pt-cal-iframe');
+    });
   }
 
   /* ── Global API (exposed for onclick= attributes) ── */

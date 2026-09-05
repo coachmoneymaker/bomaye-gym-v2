@@ -682,13 +682,24 @@ function closeBooking() {
   unlockBodyScroll();
 }
 function _mountBsport() {
-  if (!document.getElementById('bsport-cdn')) {
-    const s = document.createElement('script');
-    s.id  = 'bsport-cdn';
-    s.src = 'https://cdn.bsport.io/scripts/widget.js';
-    document.head.appendChild(s);
+  /* Das Bsport-Widget laedt RudderStack mit (rl_anonymous_id, rl_session, ...).
+     Bsport bietet keinen Schalter, um nur diesen Teil abzuschalten, also wird das
+     Widget als Ganzes hinter die Marketing-Einwilligung gelegt. Ohne Einwilligung
+     erscheint im Container ein Hinweis mit Freigabe-Button; wird sie erteilt,
+     laedt das Widget nach, ohne dass die Seite neu geladen werden muss. */
+  if (typeof window.bomayeGateBsport !== 'function') {
+    console.warn('[consent] Consent-Bruecke nicht geladen - Bsport bleibt aus.');
+    return;
   }
-  _waitBsport(1);
+  window.bomayeGateBsport('bsport-widget-464090', function () {
+    if (!document.getElementById('bsport-cdn')) {
+      const s = document.createElement('script');
+      s.id  = 'bsport-cdn';
+      s.src = 'https://cdn.bsport.io/scripts/widget.js';
+      document.head.appendChild(s);
+    }
+    _waitBsport(1);
+  });
 }
 function _waitBsport(attempt) {
   if (attempt > 50) return;
