@@ -7919,3 +7919,89 @@ a.mn-contact-text:hover { color: var(--gold); }
   .doc-strip { flex-direction: column; gap: 0.25rem; }
 }
 
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Einwilligung: Footer-Link und Bsport-Platzhalter
+   Lag frueher in assets/css/cookie-consent.css. Banner und Einstellungsdialog
+   stellt jetzt Cookiebot; uebrig bleibt der Link, der Cookiebot.renew() ruft,
+   und der Hinweis, der anstelle des Buchungs-Widgets erscheint, solange keine
+   Marketing-Einwilligung vorliegt.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Der Link erbt das Aussehen der uebrigen Footer-Links der jeweiligen Seite;
+   hier wird nur das Antippziel abgesichert (44px, PR #23/#25). */
+.cookie-settings-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.bomaye-consent-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 32px 24px;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  background: #0A0A08;
+  color: #F5F0E8;
+}
+
+.bomaye-consent-gate__title {
+  margin: 0;
+  font-family: 'Oswald', 'Oswald Fallback', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #C9A84C;
+}
+
+.bomaye-consent-gate__text,
+.bomaye-consent-gate__alt {
+  margin: 0;
+  font-family: 'DM Sans', 'DM Sans Fallback', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #F5F0E8;
+}
+
+.bomaye-consent-gate__alt {
+  font-size: 0.875rem;
+  opacity: 0.75;
+}
+
+.bomaye-consent-gate__alt a {
+  color: #C9A84C;
+  text-decoration: underline;
+}
+
+.bomaye-consent-gate__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 24px;
+  border: 1px solid #C9A84C;
+  border-radius: 0;
+  background: #C9A84C;
+  color: #0A0A08;
+  font-family: 'Oswald', 'Oswald Fallback', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.bomaye-consent-gate__btn:hover,
+.bomaye-consent-gate__btn:focus-visible {
+  background: transparent;
+  color: #C9A84C;
+}
+
+@media print {
+  .cookie-settings-link,
+  .bomaye-consent-gate { display: none !important; }
+}
