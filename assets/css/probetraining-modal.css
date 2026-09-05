@@ -121,31 +121,6 @@
 @supports (-webkit-touch-callout: none) {
   .pt-modal-body { -webkit-transform: translateZ(0); transform: translateZ(0); }
 }
-.pt-iframe-wrapper { width: 100%; position: relative; }
-.pt-iframe-wrapper:has(iframe[style*="height: 0px"]) { min-height: 200px; }
-.pt-iframe-wrapper:has(iframe[style*="height: 0px"])::before {
-  content: "L\00e4dt\2026";
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(10,10,8,0.3);
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-.pt-bsport-iframe {
-  width: 100%;
-  height: 0;
-  min-height: 0;
-  border: 0;
-  display: block;
-  overflow: hidden;
-  -webkit-overflow-scrolling: auto;
-  pointer-events: auto;
-  touch-action: pan-y;
-  transition: height 0.15s ease-out;
-}
 .pt-modal-footer {
   padding: 0.75rem 1.5rem;
   border-top: 1px solid rgba(10,10,8,0.1);
@@ -243,78 +218,96 @@
   }
   /* Force iframe taller than any Bsport content state so iOS never
      sees internal scroll and passes touch events to the outer modal */
-  .pt-bsport-iframe {
-    min-height: 950px;
-    transition: none;
   }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bsport-Widget im Modal — Markenoptik
+   Lag frueher als <style>-String in probetraining-modal.js und wurde in ein
+   srcdoc-iframe eingeschleust. Das iframe ist entfallen (iOS reicht
+   Touch-Scrollen nicht aus einem iframe an das Elterndokument weiter,
+   bugs.webkit.org/show_bug.cgi?id=149264), deshalb stehen die Regeln jetzt
+   hier und greifen direkt auf das im Dokument eingehaengte Widget.
+   ───────────────────────────────────────────────────────────────────────── */
+
+#pt-pass-view, #pt-cal-view { width: 100%; }
+
+#pt-pass-view [id^="bsport-widget-"],
+#pt-cal-view  [id^="bsport-widget-"] {
+  overflow: visible;
+  height: auto;
+  min-height: 0;
 }
-/* ── Scroll-helper strip + hint (mobile only, when modal is open) ── */
-.pt-scroll-helper,
-.pt-scroll-hint { display: none; }
-@media (max-width: 767px) {
-  body.pt-modal-open .pt-scroll-helper {
-    position: fixed;
-    top: 35%;
-    right: 0;
-    width: 12px;
-    height: 120px;
-    z-index: 10001;
-    background: rgba(201, 168, 76, 0.2);
-    border-left: 2px solid #C9A84C;
-    border-top: 1px solid rgba(201, 168, 76, 0.4);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 0;
-    pointer-events: none;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  body.pt-modal-open .pt-scroll-helper.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .pt-scroll-helper-track {
-    flex: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2px 0;
-  }
-  .pt-scroll-helper-arrow {
-    color: #C9A84C;
-    font-size: 8px;
-    line-height: 1;
-  }
-  .pt-scroll-hint {
-    display: flex;
-    background: #0A0A08;
-    color: rgba(245, 240, 232, 0.72);
-    font-family: var(--font-body);
-    font-size: 11px;
-    padding: 7px 14px;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
-    letter-spacing: 0.03em;
-    flex-shrink: 0;
-  }
-  .pt-scroll-hint button {
-    background: transparent;
-    border: none;
-    color: #C9A84C;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
+
+#pt-pass-view button,
+#pt-pass-view .MuiButton-root,
+#pt-pass-view [role="button"],
+#pt-pass-view .MuiButtonBase-root,
+#pt-cal-view  button,
+#pt-cal-view  .MuiButton-root,
+#pt-cal-view  [role="button"],
+#pt-cal-view  .MuiButtonBase-root {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+#pt-pass-view .MuiButton-contained,
+#pt-pass-view .MuiButton-containedPrimary,
+#pt-cal-view  .MuiButton-contained,
+#pt-cal-view  .MuiButton-containedPrimary {
+  background-color: #C9A84C !important;
+  color: #0A0A08 !important;
+  border: 2px solid #C9A84C !important;
+}
+
+#pt-pass-view .MuiButton-text,
+#pt-pass-view .MuiButton-outlined,
+#pt-cal-view  .MuiButton-text,
+#pt-cal-view  .MuiButton-outlined {
+  color: #0A0A08 !important;
+  background: transparent !important;
+  border: 2px solid rgba(10, 10, 8, 0.2) !important;
+}
+
+#pt-pass-view .MuiCard-root, #pt-pass-view .MuiPaper-root,
+#pt-cal-view  .MuiCard-root, #pt-cal-view  .MuiPaper-root {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#pt-pass-view .MuiInputBase-root, #pt-pass-view .MuiOutlinedInput-root,
+#pt-cal-view  .MuiInputBase-root, #pt-cal-view  .MuiOutlinedInput-root {
+  border-radius: 0 !important;
+}
+
+#pt-pass-view .MuiChip-root,
+#pt-cal-view  .MuiChip-root {
+  border-radius: 0 !important;
+  background-color: rgba(201, 168, 76, 0.1) !important;
+  color: #0A0A08 !important;
+  border: 1px solid #C9A84C !important;
+}
+
+/* Das Widget darf keinen eigenen Scroll-Container aufmachen - im Modal
+   scrollt genau eine Ebene, und das ist die Modalflaeche. */
+#pt-pass-view [style*="overflow"], #pt-cal-view [style*="overflow"] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Nur mit ?ptdebug=1 sichtbar: zeigt auf dem Geraet, welches Element die
+   Beruehrung bekommt und welcher Container scrollt. */
+#pt-touch-debug {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2147483000;
+  padding: 8px 10px;
+  background: rgba(10, 10, 8, 0.92);
+  color: #C9A84C;
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  pointer-events: none;
+  word-break: break-all;
 }

@@ -18,117 +18,6 @@
     window.scrollTo({ top: _ptScrollY, behavior: 'instant' });
   }
 
-  /* ── Bomaye brand CSS injected into Bsport srcdoc iframes ── */
-  var _ptBomayeWidgetCSS = '<style>'
-    + 'html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;max-height:none!important;-webkit-overflow-scrolling:auto!important;touch-action:pan-y!important;}'
-    + '[id^="bsport-widget-"]{overflow:visible!important;height:auto!important;min-height:0!important;}'
-    + '*{overflow:visible!important;max-height:none!important;}'
-    + 'div[style*="overflow"]{overflow:visible!important;max-height:none!important;height:auto!important;}'
-    + 'button,.MuiButton-root,[role="button"],.MuiButtonBase-root{border-radius:0!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;box-shadow:none!important;overflow:hidden!important;}'
-    + '.MuiButton-contained,.MuiButton-containedPrimary{background-color:#C9A84C!important;color:#0A0A08!important;border:2px solid #C9A84C!important;}'
-    + '.MuiButton-text,.MuiButton-outlined{color:#0A0A08!important;background:transparent!important;border:2px solid rgba(10,10,8,.2)!important;}'
-    + '.MuiCard-root,.MuiPaper-root{border-radius:0!important;box-shadow:none!important;}'
-    + '.MuiInputBase-root,.MuiOutlinedInput-root{border-radius:0!important;}'
-    + '.MuiChip-root{border-radius:0!important;background-color:rgba(201,168,76,.1)!important;color:#0A0A08!important;border:1px solid #C9A84C!important;}'
-    + '</style>'
-    /* Forward touch-scroll from inside the srcdoc iframe up to the parent modal body */
-    + '<script>(function(){'
-    + 'var lastY=0;'
-    + 'document.addEventListener("touchstart",function(e){lastY=e.touches[0].clientY;},{passive:true});'
-    + 'document.addEventListener("touchmove",function(e){'
-    + 'var dy=lastY-e.touches[0].clientY;lastY=e.touches[0].clientY;'
-    + 'try{'
-    + 'var outer=window.parent.document.getElementById("pt-booking-modal");'
-    + 'var inner=window.parent.document.querySelector(".pt-modal-body");'
-    + 'if(outer&&outer.scrollHeight>outer.clientHeight+5){outer.scrollTop+=dy;}'
-    + 'else if(inner){inner.scrollTop+=dy;}'
-    + '}catch(err){}'
-    + '},{passive:true});'
-    /* After any tap inside the iframe, wait for Bsport to render its popup,
-       then scroll the outer modal to top so the popup is fully visible */
-    + 'document.addEventListener("click",function(){'
-    + 'setTimeout(function(){'
-    + 'try{'
-    + 'var mo=window.parent.document.getElementById("pt-booking-modal");'
-    + 'if(mo&&mo.scrollTop>200)mo.scrollTo({top:0,behavior:"smooth"});'
-    + '}catch(e){}'
-    + '},400);'
-    + '});'
-    + '})()\x3c/script>';
-
-  /* ── Iframe auto-resize (same-origin srcdoc iframes) ── */
-  function _ptResizeIframeToContent(iframe) {
-    if (typeof iframe === 'string') iframe = document.getElementById(iframe);
-    if (!iframe) return false;
-    var doc;
-    try { doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document); } catch (e) { return false; }
-    if (!doc || !doc.body) return false;
-    var body = doc.body, html = doc.documentElement;
-    var bodyRect = body.getBoundingClientRect().height, htmlRect = html.getBoundingClientRect().height;
-    var contentH = Math.max(body.scrollHeight, body.offsetHeight, bodyRect, html.clientHeight, html.scrollHeight, html.offsetHeight, htmlRect);
-    var deepest = 0;
-    try {
-      var els = body.querySelectorAll('*');
-      for (var i = 0; i < els.length; i++) {
-        var r = els[i].getBoundingClientRect();
-        var b = r.top + r.height;
-        if (b > deepest && r.height > 0) deepest = b;
-      }
-    } catch (e) {}
-    var mobileMin = window.innerWidth <= 767 ? 950 : 0;
-    var finalH = Math.max(contentH, deepest, mobileMin);
-    var currentH = parseInt(iframe.style.height) || 0;
-    if (finalH > 50 && Math.abs(finalH - currentH) > 20) { iframe.style.height = finalH + 'px'; return true; }
-    return false;
-  }
-
-  function _ptStartIframeAutoResize(iframeId) {
-    _ptStopIframeAutoResize(iframeId);
-    var iframe = document.getElementById(iframeId);
-    if (!iframe) return;
-    var startTime = Date.now();
-    function tick() {
-      if (!document.getElementById(iframeId)) return;
-      var elapsed = Date.now() - startTime;
-      _ptResizeIframeToContent(iframe);
-      var next = elapsed < 5000 ? 100 : elapsed < 15000 ? 300 : elapsed < 30000 ? 1000 : -1;
-      if (next === -1) return;
-      iframe._ptResizeTimer = setTimeout(tick, next);
-    }
-    tick();
-    iframe.addEventListener('load', function () {
-      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 100);
-      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 500);
-      setTimeout(function () { _ptResizeIframeToContent(iframe); }, 1500);
-      try {
-        var doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
-        if (!doc || !doc.body) return;
-        if (typeof ResizeObserver !== 'undefined') {
-          var ro = new ResizeObserver(function () { _ptResizeIframeToContent(iframe); });
-          ro.observe(doc.body); ro.observe(doc.documentElement);
-          Array.prototype.forEach.call(doc.body.children, function (c) { try { ro.observe(c); } catch (e) {} });
-          iframe._ptResizeObserver = ro;
-        }
-        var mo = new MutationObserver(function () {
-          if (iframe._ptResizeObserver) {
-            Array.prototype.forEach.call(doc.body.children, function (c) { try { iframe._ptResizeObserver.observe(c); } catch (e) {} });
-          }
-          _ptResizeIframeToContent(iframe);
-        });
-        mo.observe(doc.body, { childList: true, subtree: true });
-        iframe._ptMutationObserver = mo;
-      } catch (e) {}
-    });
-  }
-
-  function _ptStopIframeAutoResize(iframeId) {
-    var iframe = document.getElementById(iframeId);
-    if (!iframe) return;
-    if (iframe._ptResizeTimer) { clearTimeout(iframe._ptResizeTimer); delete iframe._ptResizeTimer; }
-    if (iframe._ptResizeObserver) { iframe._ptResizeObserver.disconnect(); delete iframe._ptResizeObserver; }
-    if (iframe._ptMutationObserver) { iframe._ptMutationObserver.disconnect(); delete iframe._ptMutationObserver; }
-  }
-
   /* ── Booking confirmation tracking ── */
   var _ptBookingTracked = false;
   var _ptMessageListener = null;
@@ -203,53 +92,148 @@
     _ptTrackingTimeout = setTimeout(_ptStopBookingTracking, 10 * 60 * 1000);
   }
 
-  /* ── Bsport widget lazy-mounting ── */
+  /* ── Bsport-Widget: direkter Mount, ohne iframe ──────────────────────────
+     Frueher lag das Widget in einem srcdoc-iframe, nur damit sich die
+     Bsport-Oberflaeche per eingeschleustem <style> umfaerben liess. Der Preis
+     dafuer war ein zweites Dokument mitten im Modal - und genau daran ist das
+     Scrollen auf iOS gescheitert: Beruehrungen landen im iframe-Dokument,
+     scrollen muesste aber das Elterndokument. WebKit reicht das nicht weiter
+     (bugs.webkit.org/show_bug.cgi?id=149264), und die Umgehungen dafuer gelten
+     bis heute als unzuverlaessig. Deshalb wurde ueber die Randleiste gewischt:
+     die liegt im Elterndokument und war damit die einzige Stelle, die
+     funktionierte.
+
+     Jetzt wird das Widget direkt in den Container gehaengt - genauso wie auf
+     allen anderen Seiten dieser Website (kurse, coaches, stundenplan ...), die
+     nie Scroll-Probleme hatten, und genauso, wie Bsport es vorsieht:
+     BsportWidget.mount({ parentElement: ... }).
+
+     Damit gibt es im Modal nur noch EIN Dokument und genau EINEN Scroll-
+     Container. Die Marken-Optik steht jetzt in probetraining-modal.css. */
+
+  /* Das Bsport-Widget laedt RudderStack mit und liegt deshalb hinter der
+     Marketing-Einwilligung (PR #29). Ohne Einwilligung erscheint im jeweiligen
+     View ein Hinweis; wird sie erteilt, laedt das Widget nach. */
+  function _ptGate(view, mountBody) {
+    if (typeof window.bomayeGateBsport !== 'function') {
+      console.warn('[consent] Consent-Bruecke nicht geladen - Bsport bleibt aus.');
+      return;
+    }
+    window.bomayeGateBsport(view, mountBody);
+  }
+
+  var PT_CDN = 'https://cdn.bsport.io/scripts/widget.js';
+
+  function _ptLoadBsport(cb) {
+    if (window.BsportWidget) { cb(); return; }
+    if (!document.getElementById('bsport-cdn')) {
+      var sc = document.createElement('script');
+      sc.id = 'bsport-cdn';
+      sc.src = PT_CDN;
+      document.head.appendChild(sc);
+    }
+    var tries = 0;
+    var t = setInterval(function () {
+      if (window.BsportWidget) { clearInterval(t); cb(); return; }
+      if (++tries > 100) clearInterval(t);   /* 100 x 150 ms = 15 s */
+    }, 150);
+  }
+
+  function _ptMountInto(view, holderId, config) {
+    var holder = document.getElementById(holderId);
+    if (!holder) {
+      holder = document.createElement('div');
+      holder.id = holderId;
+      view.appendChild(holder);
+    }
+    _ptLoadBsport(function () {
+      try { window.BsportWidget.mount(config); } catch (e) {}
+    });
+  }
+
   var _ptWidgetMounted = false;
   function _ptMountWidget() {
     if (_ptWidgetMounted) return;
-    _ptWidgetMounted = true;
     var view = document.getElementById('pt-pass-view');
     if (!view) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'pt-iframe-wrapper';
-    var iframe = document.createElement('iframe');
-    iframe.id = 'pt-pass-iframe';
-    iframe.className = 'pt-bsport-iframe';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('scrolling', 'no');
-    iframe.srcdoc = _ptBomayeWidgetCSS
-      + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
-      + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
-      + '<script>MountBsportWidget({"parentElement":"bsport-widget-458519","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"pass","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"pass":{"paymentPackCategories":[25328],"privatePassCategories":[],"hideFilters":true,"hidePaymentCombo":true,"hidePrivatePass":false}}})<\/script>'
-      + '<div id="bsport-widget-458519"></div>';
-    wrap.appendChild(iframe);
-    view.appendChild(wrap);
-    _ptStartIframeAutoResize('pt-pass-iframe');
+    _ptGate(view, function () {
+      if (_ptWidgetMounted) return;
+      _ptWidgetMounted = true;
+      _ptMountInto(view, 'bsport-widget-458519', {
+        parentElement: 'bsport-widget-458519',
+        companyId: 5473, franchiseId: null,
+        dialogMode: 3, widgetType: 'pass',
+        showFab: false, fullScreenPopup: false, styles: undefined,
+        config: { pass: { paymentPackCategories: [25328], privatePassCategories: [],
+                          hideFilters: true, hidePaymentCombo: true, hidePrivatePass: false } }
+      });
+    });
   }
 
   var _ptCalMounted = false;
   function _ptMountCalendarWidget() {
     if (_ptCalMounted) return;
-    _ptCalMounted = true;
     var view = document.getElementById('pt-cal-view');
     if (!view) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'pt-iframe-wrapper';
-    var iframe = document.createElement('iframe');
-    iframe.id = 'pt-cal-iframe';
-    iframe.className = 'pt-bsport-iframe';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('scrolling', 'no');
-    iframe.srcdoc = _ptBomayeWidgetCSS
-      + '<script id="insert-bsport-widget-cdn">!function(b,s,p,o,r,t){typeof window.BsportWidget==="undefined"&&!document.getElementById("bsport-widget-cdn")&&!function(){m=b.createElement(s),m.id="bsport-widget-cdn",m.src=p,b.getElementsByTagName("head")[0].appendChild(m)}()}(document,"script","https://cdn.bsport.io/scripts/widget.js")<\/script>'
-      + '<script id="bsport-widget-mount">function MountBsportWidget(config,repeat){repeat=repeat||1;if(repeat>50)return;if(!window.BsportWidget)return setTimeout(function(){MountBsportWidget(config,repeat+1)},100*repeat||1);BsportWidget.mount(config)}<\/script>'
-      + '<script>MountBsportWidget({"parentElement":"bsport-widget-880939","companyId":5473,"franchiseId":null,"dialogMode":3,"widgetType":"calendar","showFab":false,"fullScreenPopup":false,"styles":undefined,"config":{"calendar":{"coaches":[],"establishments":[],"metaActivities":[244432,244539,244426,244420,244563,244431,245265],"levels":[],"variant":"time","groupSessionByPeriod":true,"todayOnly":false,"cardMode":false}}})<\/script>'
-      + '<div id="bsport-widget-880939"></div>';
-    wrap.appendChild(iframe);
-    view.appendChild(wrap);
-    _ptStartIframeAutoResize('pt-cal-iframe');
+    _ptGate(view, function () {
+      if (_ptCalMounted) return;
+      _ptCalMounted = true;
+      _ptMountInto(view, 'bsport-widget-880939', {
+        parentElement: 'bsport-widget-880939',
+        companyId: 5473, franchiseId: null,
+        dialogMode: 3, widgetType: 'calendar',
+        showFab: false, fullScreenPopup: false, styles: undefined,
+        config: { calendar: { coaches: [], establishments: [],
+                              metaActivities: [244432, 244539, 244426, 244420, 244563, 244431, 245265],
+                              levels: [], variant: 'time', groupSessionByPeriod: true,
+                              todayOnly: false, cardMode: false } }
+      });
+    });
+  }
+
+  /* ── Scroll-Diagnose fuer den Geraetetest ────────────────────────────────
+     Sichtbar nur mit ?ptdebug=1 in der URL. Zeigt direkt auf dem Telefon an,
+     welches Element die Beruehrung bekommt, ob sie in einem fremden Dokument
+     landet und welcher Container tatsaechlich scrollt. Damit ist der naechste
+     Test auch dann auswertbar, wenn es immer noch klemmt - ohne Mac, ohne
+     angestoepseltes Safari. */
+  function _ptSetupTouchDebug() {
+    if (!/[?&]ptdebug=1/.test(window.location.search)) return;
+    var box = document.createElement('div');
+    box.id = 'pt-touch-debug';
+    document.body.appendChild(box);
+    var startY = 0, startScroll = 0, target = '';
+
+    function describe(el) {
+      if (!el) return '-';
+      return (el.tagName || '?').toLowerCase()
+        + (el.id ? '#' + el.id : '')
+        + (el.className && typeof el.className === 'string'
+            ? '.' + el.className.split(' ')[0] : '');
+    }
+    function scroller() {
+      var m = document.getElementById('pt-booking-modal');
+      var b = m && m.querySelector('.pt-modal-body');
+      return { modal: m ? m.scrollTop : -1, body: b ? b.scrollTop : -1, win: window.scrollY };
+    }
+    document.addEventListener('touchstart', function (e) {
+      var t = e.touches[0]; if (!t) return;
+      startY = t.clientY;
+      var el = document.elementFromPoint(t.clientX, t.clientY);
+      target = describe(el);
+      var s = scroller();
+      startScroll = s.modal + s.body + s.win;
+      box.textContent = 'Beruehrt: ' + target + ' | iframes im Modal: '
+        + document.querySelectorAll('#pt-booking-modal iframe').length;
+    }, { passive: true });
+    document.addEventListener('touchend', function () {
+      var s = scroller();
+      var moved = (s.modal + s.body + s.win) - startScroll;
+      box.textContent = 'Beruehrt: ' + target
+        + ' | gescrollt: ' + moved + 'px'
+        + ' | modal ' + s.modal + ' body ' + s.body + ' seite ' + s.win
+        + ' | iframes: ' + document.querySelectorAll('#pt-booking-modal iframe').length;
+    }, { passive: true });
   }
 
   /* ── Global API (exposed for onclick= attributes) ── */
@@ -282,7 +266,6 @@
     _ptMountWidget();
     _ptMountCalendarWidget();
     document.body.classList.add('pt-modal-open');
-    _ptSetupScrollHelper();
     modal.classList.add('open');
     _ptLockBody();
     _ptStartBookingTracking();
@@ -316,61 +299,6 @@
     _ptUnlockBody();
   };
 
-  /* ── Scroll-helper strip (mobile touch-trap bypass) ── */
-  window.ptDismissScrollHint = function () {
-    var hint = document.getElementById('pt-scroll-hint');
-    if (hint) hint.style.display = 'none';
-    try { localStorage.setItem('pt-hint-seen', '1'); } catch (e) {}
-  };
-
-  var _ptScrollHelperReady = false;
-  var _ptUpdateHelperVisibility = null;
-  function _ptSetupScrollHelper() {
-    var strip = document.getElementById('pt-scroll-helper-strip');
-    var modal = document.getElementById('pt-booking-modal');
-    if (!strip || !modal) return;
-    if (_ptScrollHelperReady) {
-      if (_ptUpdateHelperVisibility) setTimeout(_ptUpdateHelperVisibility, 300);
-      return;
-    }
-    _ptScrollHelperReady = true;
-    try {
-      if (localStorage.getItem('pt-hint-seen') === '1') {
-        var hint = document.getElementById('pt-scroll-hint');
-        if (hint) hint.style.display = 'none';
-      }
-    } catch (e) {}
-    _ptUpdateHelperVisibility = function () {
-      var maxScroll = modal.scrollHeight - modal.clientHeight;
-      var scrollProgress = maxScroll > 0 ? modal.scrollTop / maxScroll : 0;
-      var hasMore = (maxScroll - modal.scrollTop) > 100;
-      if ((scrollProgress > 0.15 && hasMore) || scrollProgress > 0.4) {
-        strip.classList.add('is-visible');
-      } else {
-        strip.classList.remove('is-visible');
-      }
-    };
-    modal.addEventListener('scroll', _ptUpdateHelperVisibility, { passive: true });
-    setTimeout(_ptUpdateHelperVisibility, 500);
-    var _isDragging = false, _startY = 0, _startScroll = 0;
-    strip.addEventListener('touchstart', function (e) {
-      _isDragging = true;
-      _startY = e.touches[0].clientY;
-      _startScroll = modal.scrollTop;
-      e.preventDefault();
-    }, { passive: false });
-    strip.addEventListener('touchmove', function (e) {
-      if (!_isDragging) return;
-      var dy = e.touches[0].clientY - _startY;
-      modal.scrollTop = _startScroll - dy * 3;
-      e.preventDefault();
-    }, { passive: false });
-    strip.addEventListener('touchend', function () {
-      _isDragging = false;
-      setTimeout(_ptUpdateHelperVisibility, 200);
-    });
-  }
-
   /* ── Modal HTML injection — runs once per page ── */
   function _ptInjectModal() {
     if (document.getElementById('pt-booking-modal')) return;
@@ -393,10 +321,6 @@
       + '<span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>'
       + '</button>'
       + '</div>'
-      + '<div class="pt-scroll-hint" id="pt-scroll-hint">'
-      + '<span>Tipp: Am rechten Rand wischen zum Scrollen</span>'
-      + '<button onclick="ptDismissScrollHint()" aria-label="Hinweis schlie\xdfen" type="button">\xd7</button>'
-      + '</div>'
       + '<div class="pt-modal-tabs" role="tablist">'
       + '<button class="pt-modal-tab active" id="pt-tab-pass" onclick="ptSwitchTab(\'pass\')" role="tab" aria-selected="true" type="button">1. PASS HOLEN</button>'
       + '<button class="pt-modal-tab" id="pt-tab-cal" onclick="ptSwitchTab(\'cal\')" role="tab" aria-selected="false" type="button">2. KURS WÄHLEN</button>'
@@ -406,12 +330,6 @@
       + '<div id="pt-cal-view" class="pt-modal-view"></div>'
       + '</div>'
       + '<div class="pt-modal-footer"><p>Du wirst sicher über bsport.io abgewickelt — kostenlos, unverbindlich.</p></div>'
-      + '<div class="pt-scroll-helper" id="pt-scroll-helper-strip" aria-hidden="true">'
-      + '<div class="pt-scroll-helper-track">'
-      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-up">&#9650;</div>'
-      + '<div class="pt-scroll-helper-arrow pt-scroll-helper-arrow-down">&#9660;</div>'
-      + '</div>'
-      + '</div>'
       + '</div>';
     document.body.appendChild(el);
     el.addEventListener('click', function (e) { if (e.target === this) ptCloseModal(); });
@@ -443,6 +361,7 @@
     document.body.style.top = '';
     document.body.style.width = '';
     _ptInjectModal();
+    _ptSetupTouchDebug();
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ptCloseModal(); });
     /* Auto-open only on an explicit ?probetraining parameter, which is what
        the /probetraining redirect in vercel.json points at. This was a

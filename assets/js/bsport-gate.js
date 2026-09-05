@@ -345,7 +345,7 @@
       add(inert[k].parentNode && inert[k].parentNode.nodeType === 1 ? inert[k].parentNode : null);
     }
     /* Nur die aeussersten Container behalten. Sonst bekommt z. B. sowohl
-       #pt-pass-view als auch der darin liegende .pt-iframe-wrapper einen
+       #pt-pass-view als auch ein darin liegender Widget-Container einen
        eigenen Hinweis, und der Besucher sieht denselben Text mehrfach. */
     return out.filter(function (c) {
       return !out.some(function (other) { return other !== c && other.contains(c); });
