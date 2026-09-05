@@ -6,9 +6,14 @@
  * deduplicates via Vercel KV, fires server-side conversion events to
  * Meta CAPI and Google Ads, and sends an internal admin email via Resend.
  *
- * Meta event mapping: total = 0 → Lead (Probetraining, value 30 EUR),
- * total > 0 → Purchase (membership, actual invoice value). Both carry the
- * invoice ID as event_id. Lead is not sent from the browser anywhere.
+ * Meta event mapping: an explicit numeric total of 0 → Lead (Probetraining,
+ * value 30 EUR), total > 0 → Purchase (membership, actual invoice value). Both
+ * carry the invoice ID as event_id. Lead is not sent from the browser anywhere.
+ *
+ * A total that is missing, null, empty or unparseable is NOT treated as 0 and
+ * is reported to no ad platform — it is logged as "invoice-total-unusable" so
+ * the payload shape can be inspected. Same for a negative total (credit note,
+ * refund). The admin email still goes out in both cases.
  *
  * Processed events: "invoice-finalize" and "invoice-pay" (all invoices, paid and free).
  * booking-create, invoice-revert, and invoice-dispute are gracefully skipped.
@@ -57,6 +62,31 @@ async function getKV() {
 /** SHA-256 hex — used for PII hashing and invoice-ID fallback. */
 function hash(str) {
   return createHash('sha256').update(String(str ?? '').trim()).digest('hex');
+}
+
+/**
+ * Read the invoice total (in cents) from a webhook payload.
+ *
+ * Returns null — not 0 — when the value is missing, null, empty or otherwise
+ * unusable. The distinction matters: 0 is the value that classifies an invoice
+ * as a free Probetraining and sends a Lead to Meta. Coercing an absent field to
+ * 0 (`Number(obj.total ?? 0)`) made every payload without a readable total look
+ * like a booked trial, which is exactly the fail-open that inflated the Lead
+ * count. An amount we cannot read is not zero — it is unknown, and unknown is
+ * not reportable.
+ *
+ * Booleans are rejected deliberately: Number(true) is 1, which would silently
+ * become a 0.01 EUR Purchase.
+ */
+export function parseInvoiceTotalCents(raw) {
+  if (typeof raw === 'number') return Number.isFinite(raw) ? raw : null;
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+    if (trimmed === '') return null;
+    const n = Number(trimmed);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
 }
 
 /** Accumulate the request stream into a single Buffer. */
@@ -353,8 +383,9 @@ export default async function handler(req, res) {
   const invoiceId = obj.id;
   const status = obj.status;
   const currency = (obj.currency || 'eur').toUpperCase();
-  const totalCents = Number(obj.total ?? 0);
-  const totalEur = totalCents / 100;
+  const totalCents = parseInvoiceTotalCents(obj.total);
+  const hasTotal = totalCents !== null;
+  const totalEur = hasTotal ? totalCents / 100 : null;
   const lineItems = obj.line_items?.data ?? [];
   const productName = lineItems[0]?.description ?? 'Probetraining';
 
@@ -380,8 +411,29 @@ export default async function handler(req, res) {
 
   console.log(JSON.stringify({
     step: 'invoice', ok: true, invoiceId, eventType, status,
-    totalEur, hasCustomer: !!obj.customer
+    totalEur, hasTotal, hasCustomer: !!obj.customer
   }));
+
+  // An invoice whose total we cannot read is logged in full shape — never its
+  // contents — so the real cause can be identified from the logs instead of
+  // guessed at. Field NAMES only (a differently named amount field is the most
+  // likely cause); no customer data, no line-item text, since those can carry
+  // personal data and none of it is needed to diagnose a schema mismatch.
+  if (!hasTotal) {
+    console.log(JSON.stringify({
+      step: 'invoice-total-unusable',
+      ok: false,
+      invoiceId,
+      eventType,
+      status,
+      currency,
+      rawTotalType: obj.total === null ? 'null' : typeof obj.total,
+      rawTotalIsEmptyString: obj.total === '',
+      lineItemCount: lineItems.length,
+      invoiceKeys: Object.keys(obj).slice(0, 40),
+      hasCustomer: !!obj.customer,
+    }));
+  }
 
   // Idempotency — same key for both finalize and pay on the same invoice;
   // first event to arrive wins, second is deduped.
@@ -405,21 +457,38 @@ export default async function handler(req, res) {
     }
   }
 
-  const isProbetraining = totalEur === 0;
-  const value = isProbetraining ? 30 : totalEur;
-  const typeStr = isProbetraining ? 'Probetraining (Buchung)' : 'Mitgliedschaft';
-  const amountStr = isProbetraining ? 'Kostenlos (0 €)' : `${totalEur.toFixed(2)} ${currency}`;
+  // Classification is positive, not residual: an invoice is a Probetraining
+  // only when it carries a total we could actually read AND that total is
+  // exactly zero. Everything we cannot price — missing, null, empty or
+  // unparseable — falls through to no classification at all.
+  const isProbetraining = hasTotal && totalEur === 0;
+  const isPurchase      = hasTotal && totalEur > 0;
 
   // Lead is the free Probetraining booking, Purchase the paid membership.
-  // A negative total (credit note, refund) is neither and is not reported to
-  // Meta at all — sending it as a Purchase would corrupt reported revenue.
-  const metaEventName = isProbetraining ? 'Lead' : (totalEur > 0 ? 'Purchase' : null);
+  // Anything else is not reported to any ad platform: a negative total (credit
+  // note, refund) would corrupt reported revenue, and an unreadable total is an
+  // unknown amount rather than a free one.
+  const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
+
+  const value = isProbetraining ? 30 : (hasTotal ? totalEur : null);
+  const typeStr = isProbetraining
+    ? 'Probetraining (Buchung)'
+    : (isPurchase ? 'Mitgliedschaft' : 'Unklarer Rechnungsbetrag');
+  const amountStr = isProbetraining
+    ? 'Kostenlos (0 €)'
+    : (hasTotal ? `${totalEur.toFixed(2)} ${currency}` : 'Betrag unlesbar — bitte in Bsport prüfen');
 
   console.log(JSON.stringify({
-    step: 'conversion', type: isProbetraining ? 'probetraining' : 'membership',
-    invoiceId, value, metaEventName
+    step: 'conversion',
+    type: isProbetraining ? 'probetraining' : (isPurchase ? 'membership' : 'unclassified'),
+    invoiceId, value, metaEventName,
+    reason: metaEventName ? undefined
+          : (!hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported'),
   }));
 
+  // The admin email is sent in every case, including the unclassified one: the
+  // gym still needs to know a booking happened, even when we decline to report
+  // it to the ad platforms.
   const [metaResult, googleResult, emailResult] = await Promise.allSettled([
     metaEventName
       ? sendMetaEvent({
@@ -430,12 +499,14 @@ export default async function handler(req, res) {
           currency,
           contentName: productName,
         })
-      : Promise.resolve({ ok: false, reason: 'negative-total-not-reported' }),
-    sendGoogleConversion({
-      invoiceId,
-      value,
-      currency,
-    }),
+      : Promise.resolve({ ok: false, reason: !hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported' }),
+    metaEventName
+      ? sendGoogleConversion({
+          invoiceId,
+          value,
+          currency,
+        })
+      : Promise.resolve({ ok: false, reason: !hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported' }),
     sendAdminEmail({
       customer,
       transactionId:   invoiceId,
