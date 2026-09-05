@@ -175,6 +175,143 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
+  /* ──────────────── 4b. Cookiebot-Verfuegbarkeit und Modal ──────────────── */
+
+  var lastFailure = null;
+  var reopenModalAfterConsent = false;
+
+  function cookiebotReady() {
+    return !!(window.Cookiebot && typeof window.Cookiebot.renew === 'function');
+  }
+
+  /* Wartet, bis Cookiebot da ist. Es wird asynchron von consent.cookiebot.com
+     geladen; auf einer langsamen Mobilverbindung vergehen dabei leicht mehrere
+     Sekunden, in denen window.Cookiebot noch nicht existiert. */
+  function whenCookiebotReady(onReady, onTimeout) {
+    if (cookiebotReady()) { onReady(); return; }
+    var waited = 0;
+    var step = 150;
+    var limit = 8000;
+    var t = window.setInterval(function () {
+      if (cookiebotReady()) { window.clearInterval(t); onReady(); return; }
+      waited += step;
+      if (waited >= limit) { window.clearInterval(t); if (onTimeout) onTimeout(); }
+    }, step);
+  }
+
+  /* ── Vollflaechige Overlays wirklich aus dem Render-Tree nehmen ──
+     Das Schliessen des Modals entfernt nur die Klasse .open. Das Element bleibt
+     als bildschirmfuellendes position:fixed mit aktivem -webkit-backdrop-filter
+     im Render-Tree stehen - visibility:hidden und opacity:0 beenden weder den
+     Layer noch das Compositing. Auf dieser Seite sind das nach dem Schliessen
+     gleich mehrere:
+
+       #pt-booking-modal  z 9000  390x844  display:flex   backdrop-filter
+       #family-modal      z 2100  390x844  visible,op:0   backdrop-filter
+       #corporate-modal   z 2100  390x844  visible,op:0   backdrop-filter
+       #mobile-nav        z  999  390x844  hidden         backdrop-filter
+       #header            z 1000                          transform+backdrop-filter+isolation
+
+     Auf iOS Safari ist genau das der bekannte Grund dafuer, dass ein danach
+     geoeffneter fixed-Dialog zwar im DOM steht, aber nicht sichtbar oder nicht
+     antippbar wird. display:none beendet Layer und Compositing zuverlaessig;
+     backdrop-filter:none nimmt den Rest dort weg, wo das Element sichtbar
+     bleiben muss (Kopfzeile). Alles wird danach wieder hergestellt. */
+
+  var suppressed = [];
+
+  function suppressOverlays() {
+    if (suppressed.length) return;
+    var all = document.querySelectorAll('body *');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      var cs = window.getComputedStyle(el);
+      if (cs.position !== 'fixed') continue;
+      var hasLayer = (cs.backdropFilter && cs.backdropFilter !== 'none') ||
+                     (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none');
+      if (!hasLayer) continue;
+      var r = el.getBoundingClientRect();
+      var fullScreen = r.width >= window.innerWidth * 0.9 && r.height >= window.innerHeight * 0.9;
+      var rec = { el: el, display: el.style.display, backdrop: el.style.backdropFilter,
+                  webkitBackdrop: el.style.webkitBackdropFilter };
+      if (fullScreen) {
+        /* Ganzflaechige Overlays komplett aus dem Render-Tree. */
+        el.style.display = 'none';
+      } else {
+        /* Sichtbare Elemente (Kopfzeile) bleiben stehen, verlieren aber den
+           Compositing-Layer. */
+        el.style.backdropFilter = 'none';
+        el.style.webkitBackdropFilter = 'none';
+      }
+      suppressed.push(rec);
+    }
+    /* Sicherheitsnetz: nichts darf dauerhaft unterdrueckt bleiben, auch wenn
+       der Besucher den Dialog einfach wegtippt. */
+    window.setTimeout(restoreOverlays, 60000);
+  }
+
+  function restoreOverlays() {
+    for (var i = 0; i < suppressed.length; i++) {
+      var r = suppressed[i];
+      r.el.style.display = r.display || '';
+      r.el.style.backdropFilter = r.backdrop || '';
+      r.el.style.webkitBackdropFilter = r.webkitBackdrop || '';
+    }
+    suppressed = [];
+  }
+
+  /* Schliesst das Probetraining-Modal, falls es offen ist, und meldet zurueck,
+     ob es wieder geoeffnet werden soll. */
+  function closeBookingModal() {
+    var m = document.getElementById('pt-booking-modal');
+    if (!m || !m.classList.contains('open')) return false;
+    if (typeof window.ptCloseModal === 'function') {
+      try { window.ptCloseModal(); return true; } catch (e) {}
+    }
+    /* Notfalls von Hand, damit der Body-Scroll-Lock auf keinen Fall stehen bleibt. */
+    m.classList.remove('open');
+    document.body.classList.remove('pt-modal-open');
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    return true;
+  }
+
+  function reopenBookingModal() {
+    restoreOverlays();
+    if (!reopenModalAfterConsent) return;
+    reopenModalAfterConsent = false;
+    if (typeof window.ptOpenModal === 'function') {
+      try { window.ptOpenModal(); } catch (e) {}
+    }
+  }
+
+  /* Zustandsbericht fuer den naechsten Test am echten Geraet. */
+  window.bomayeConsentDebug = function () {
+    return {
+      cookiebotObject: typeof window.Cookiebot,
+      renewType: typeof (window.Cookiebot && window.Cookiebot.renew),
+      consentMarketing: consented(),
+      gatesOnPage: document.querySelectorAll('.' + GATE_CLASS).length,
+      modalOpen: !!document.querySelector('#pt-booking-modal.open'),
+      bodyPosition: document.body ? window.getComputedStyle(document.body).position : null,
+      cybotElements: document.querySelectorAll('[id^="Cybot"]').length,
+      suppressedOverlays: suppressed.length,
+      fixedBackdropLayers: (function () {
+        var n = 0, all = document.querySelectorAll('body *');
+        for (var i = 0; i < all.length; i++) {
+          var cs = window.getComputedStyle(all[i]);
+          if (cs.position === 'fixed' && cs.display !== 'none' &&
+              ((cs.backdropFilter && cs.backdropFilter !== 'none') ||
+               (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none'))) n++;
+        }
+        return n;
+      })(),
+      lastFailure: lastFailure
+    };
+  };
+
   /* ───────────────────────── 5. Platzhalter ───────────────────────── */
 
   /* Container, in denen ein Bsport-Widget haette erscheinen sollen. Die
@@ -237,10 +374,124 @@
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = GATE_CLASS + '__btn';
-    btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+
+    /* Fehlerausgabe direkt im Platzhalter. Der Knopf darf unter keinen
+       Umstaenden stumm nichts tun - genau das war der gemeldete Fehler auf dem
+       iPhone. Der Grund steht sichtbar auf dem Geraet, damit der naechste Test
+       am echten Telefon ohne Debugger auswertbar ist. */
+    var fail = document.createElement('p');
+    fail.className = GATE_CLASS + '__fail';
+    fail.hidden = true;
+
+    function showFailure(reason) {
+      lastFailure = reason;
+      /* Der Platzhalter liegt auf index.html IM Buchungs-Modal. Haben wir das
+         fuer den Dialog geschlossen und unterdrueckt, waere die Meldung genau
+         dort unsichtbar, wo der Besucher sie braucht (visibility:hidden). Also
+         erst alles zurueckholen und das Modal wieder oeffnen, dann melden. */
+      restoreOverlays();
+      if (reopenModalAfterConsent) {
+        reopenModalAfterConsent = false;
+        if (typeof window.ptOpenModal === 'function') {
+          try { window.ptOpenModal(); } catch (e) {}
+        }
+      }
+      fail.hidden = false;
+      fail.textContent = 'Der Einwilligungsdialog laesst sich auf diesem Geraet nicht '
+        + 'oeffnen. Bitte buche telefonisch oder per WhatsApp - oder nutze den Link '
+        + '"Cookie-Einstellungen" ganz unten auf der Seite. (Grund: ' + reason + ')';
+      btn.disabled = false;
+      btn.textContent = 'ERNEUT VERSUCHEN';
+      addCleanPageEscape();
+      try { console.warn('[consent] renew fehlgeschlagen:', reason); } catch (e) {}
+    }
+
+    /* Letzter Ausweg, der von unseren eigenen Overlays gar nicht abhaengen
+       kann: die Seite ohne ?probetraining= neu laden. Dort gibt es kein Modal,
+       keinen Scroll-Lock und keine ganzflaechige Ebene - der Cookiebot-Dialog
+       hat freie Bahn, und der Footer-Link funktioniert normal. */
+    function addCleanPageEscape() {
+      if (box.querySelector('.' + GATE_CLASS + '__escape')) return;
+      var a = document.createElement('button');
+      a.type = 'button';
+      a.className = GATE_CLASS + '__escape';
+      a.textContent = 'SEITE OHNE BUCHUNGSFENSTER NEU LADEN';
+      a.addEventListener('click', function () {
+        try {
+          var u = new URL(window.location.href);
+          u.searchParams.delete('probetraining');
+          u.hash = '';
+          window.location.href = u.toString();
+        } catch (e) {
+          window.location.href = window.location.pathname;
+        }
+      });
+      box.insertBefore(a, alt);
+    }
+
+    /* Ist ein Cookiebot-Dialog sichtbar im Bild? Cookiebot vergibt seinen
+       Elementen durchgaengig das Praefix "Cybot". */
+    function cookiebotDialogVisible() {
+      var nodes = document.querySelectorAll('[id^="Cybot"]');
+      for (var i = 0; i < nodes.length; i++) {
+        var r = nodes[i].getBoundingClientRect();
+        var cs = window.getComputedStyle(nodes[i]);
+        if (r.width > 40 && r.height > 40 && cs.visibility !== 'hidden' &&
+            cs.display !== 'none' && cs.opacity !== '0') return true;
+      }
+      return false;
+    }
+
+    function armButton() {
+      if (cookiebotReady()) {
+        btn.disabled = false;
+        btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+        return true;
+      }
+      btn.disabled = true;
+      btn.textContent = 'EINWILLIGUNGSDIALOG WIRD GELADEN …';
+      return false;
+    }
+
+    if (!armButton()) {
+      /* Wettlauf ausschliessen: der Platzhalter kann fertig sein, bevor
+         consent.cookiebot.com geladen hat. Solange bleibt der Knopf gesperrt
+         statt ins Leere zu greifen. */
+      whenCookiebotReady(armButton, function () {
+        showFailure('Cookiebot wurde nicht geladen - moeglicherweise blockiert ein '
+                  + 'Inhaltsblocker consent.cookiebot.com');
+      });
+    }
+
     btn.addEventListener('click', function () {
-      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+      fail.hidden = true;
+      try {
+        if (!cookiebotReady()) {
+          showFailure('Cookiebot.renew ist nicht verfuegbar');
+          return;
+        }
+        /* Das Buchungs-Modal aus dem Weg raeumen, BEVOR der Dialog aufgeht.
+           Es liegt bildschirmfuellend bei z-index 9000, sperrt den Body per
+           position:fixed und hat backdrop-filter. Jede dieser drei Eigenschaften
+           kann auf iOS dazu fuehren, dass der Einwilligungsdialog zwar geoeffnet,
+           aber nicht sichtbar oder nicht antippbar ist. Nach erteilter
+           Einwilligung wird es weiter unten wieder geoeffnet. */
+        reopenModalAfterConsent = closeBookingModal();
+        /* Erst NACH dem Schliessen unterdruecken, damit das Modal seinen
+           Scroll-Lock ordentlich aufraeumt, bevor es aus dem Baum faellt. */
+        suppressOverlays();
+
         window.Cookiebot.renew();
+
+        /* Wenn renew() zwar durchlaeuft, aber nichts erscheint, darf der
+           Besucher nicht ratlos zurueckbleiben. */
+        window.setTimeout(function () {
+          if (!consented() && !cookiebotDialogVisible()) {
+            showFailure('renew() lief, es erschien aber kein Dialog');
+          }
+        }, 1500);
+      } catch (err) {
+        showFailure((err && err.message) ? err.message : String(err));
       }
     });
 
@@ -254,6 +505,7 @@
     box.appendChild(h);
     box.appendChild(p);
     box.appendChild(btn);
+    box.appendChild(fail);
     box.appendChild(alt);
     container.appendChild(box);
   }
@@ -350,9 +602,12 @@
     if (consented()) release(); else paintAll();
   });
   window.addEventListener('CookiebotOnAccept', function () {
-    if (consented()) release();
+    if (consented()) { release(); reopenBookingModal(); }
   });
-  window.addEventListener('CookiebotOnDecline', paintAll);
+  window.addEventListener('CookiebotOnDecline', function () {
+    restoreOverlays();
+    paintAll();
+  });
 
   function onReady() {
     sweep(document);
