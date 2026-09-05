@@ -199,6 +199,67 @@
     }, step);
   }
 
+  /* ── Vollflaechige Overlays wirklich aus dem Render-Tree nehmen ──
+     Das Schliessen des Modals entfernt nur die Klasse .open. Das Element bleibt
+     als bildschirmfuellendes position:fixed mit aktivem -webkit-backdrop-filter
+     im Render-Tree stehen - visibility:hidden und opacity:0 beenden weder den
+     Layer noch das Compositing. Auf dieser Seite sind das nach dem Schliessen
+     gleich mehrere:
+
+       #pt-booking-modal  z 9000  390x844  display:flex   backdrop-filter
+       #family-modal      z 2100  390x844  visible,op:0   backdrop-filter
+       #corporate-modal   z 2100  390x844  visible,op:0   backdrop-filter
+       #mobile-nav        z  999  390x844  hidden         backdrop-filter
+       #header            z 1000                          transform+backdrop-filter+isolation
+
+     Auf iOS Safari ist genau das der bekannte Grund dafuer, dass ein danach
+     geoeffneter fixed-Dialog zwar im DOM steht, aber nicht sichtbar oder nicht
+     antippbar wird. display:none beendet Layer und Compositing zuverlaessig;
+     backdrop-filter:none nimmt den Rest dort weg, wo das Element sichtbar
+     bleiben muss (Kopfzeile). Alles wird danach wieder hergestellt. */
+
+  var suppressed = [];
+
+  function suppressOverlays() {
+    if (suppressed.length) return;
+    var all = document.querySelectorAll('body *');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      var cs = window.getComputedStyle(el);
+      if (cs.position !== 'fixed') continue;
+      var hasLayer = (cs.backdropFilter && cs.backdropFilter !== 'none') ||
+                     (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none');
+      if (!hasLayer) continue;
+      var r = el.getBoundingClientRect();
+      var fullScreen = r.width >= window.innerWidth * 0.9 && r.height >= window.innerHeight * 0.9;
+      var rec = { el: el, display: el.style.display, backdrop: el.style.backdropFilter,
+                  webkitBackdrop: el.style.webkitBackdropFilter };
+      if (fullScreen) {
+        /* Ganzflaechige Overlays komplett aus dem Render-Tree. */
+        el.style.display = 'none';
+      } else {
+        /* Sichtbare Elemente (Kopfzeile) bleiben stehen, verlieren aber den
+           Compositing-Layer. */
+        el.style.backdropFilter = 'none';
+        el.style.webkitBackdropFilter = 'none';
+      }
+      suppressed.push(rec);
+    }
+    /* Sicherheitsnetz: nichts darf dauerhaft unterdrueckt bleiben, auch wenn
+       der Besucher den Dialog einfach wegtippt. */
+    window.setTimeout(restoreOverlays, 60000);
+  }
+
+  function restoreOverlays() {
+    for (var i = 0; i < suppressed.length; i++) {
+      var r = suppressed[i];
+      r.el.style.display = r.display || '';
+      r.el.style.backdropFilter = r.backdrop || '';
+      r.el.style.webkitBackdropFilter = r.webkitBackdrop || '';
+    }
+    suppressed = [];
+  }
+
   /* Schliesst das Probetraining-Modal, falls es offen ist, und meldet zurueck,
      ob es wieder geoeffnet werden soll. */
   function closeBookingModal() {
@@ -218,6 +279,7 @@
   }
 
   function reopenBookingModal() {
+    restoreOverlays();
     if (!reopenModalAfterConsent) return;
     reopenModalAfterConsent = false;
     if (typeof window.ptOpenModal === 'function') {
@@ -235,6 +297,17 @@
       modalOpen: !!document.querySelector('#pt-booking-modal.open'),
       bodyPosition: document.body ? window.getComputedStyle(document.body).position : null,
       cybotElements: document.querySelectorAll('[id^="Cybot"]').length,
+      suppressedOverlays: suppressed.length,
+      fixedBackdropLayers: (function () {
+        var n = 0, all = document.querySelectorAll('body *');
+        for (var i = 0; i < all.length; i++) {
+          var cs = window.getComputedStyle(all[i]);
+          if (cs.position === 'fixed' && cs.display !== 'none' &&
+              ((cs.backdropFilter && cs.backdropFilter !== 'none') ||
+               (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none'))) n++;
+        }
+        return n;
+      })(),
       lastFailure: lastFailure
     };
   };
@@ -312,13 +385,48 @@
 
     function showFailure(reason) {
       lastFailure = reason;
+      /* Der Platzhalter liegt auf index.html IM Buchungs-Modal. Haben wir das
+         fuer den Dialog geschlossen und unterdrueckt, waere die Meldung genau
+         dort unsichtbar, wo der Besucher sie braucht (visibility:hidden). Also
+         erst alles zurueckholen und das Modal wieder oeffnen, dann melden. */
+      restoreOverlays();
+      if (reopenModalAfterConsent) {
+        reopenModalAfterConsent = false;
+        if (typeof window.ptOpenModal === 'function') {
+          try { window.ptOpenModal(); } catch (e) {}
+        }
+      }
       fail.hidden = false;
       fail.textContent = 'Der Einwilligungsdialog laesst sich auf diesem Geraet nicht '
         + 'oeffnen. Bitte buche telefonisch oder per WhatsApp - oder nutze den Link '
         + '"Cookie-Einstellungen" ganz unten auf der Seite. (Grund: ' + reason + ')';
       btn.disabled = false;
       btn.textContent = 'ERNEUT VERSUCHEN';
+      addCleanPageEscape();
       try { console.warn('[consent] renew fehlgeschlagen:', reason); } catch (e) {}
+    }
+
+    /* Letzter Ausweg, der von unseren eigenen Overlays gar nicht abhaengen
+       kann: die Seite ohne ?probetraining= neu laden. Dort gibt es kein Modal,
+       keinen Scroll-Lock und keine ganzflaechige Ebene - der Cookiebot-Dialog
+       hat freie Bahn, und der Footer-Link funktioniert normal. */
+    function addCleanPageEscape() {
+      if (box.querySelector('.' + GATE_CLASS + '__escape')) return;
+      var a = document.createElement('button');
+      a.type = 'button';
+      a.className = GATE_CLASS + '__escape';
+      a.textContent = 'SEITE OHNE BUCHUNGSFENSTER NEU LADEN';
+      a.addEventListener('click', function () {
+        try {
+          var u = new URL(window.location.href);
+          u.searchParams.delete('probetraining');
+          u.hash = '';
+          window.location.href = u.toString();
+        } catch (e) {
+          window.location.href = window.location.pathname;
+        }
+      });
+      box.insertBefore(a, alt);
     }
 
     /* Ist ein Cookiebot-Dialog sichtbar im Bild? Cookiebot vergibt seinen
@@ -369,6 +477,9 @@
            aber nicht sichtbar oder nicht antippbar ist. Nach erteilter
            Einwilligung wird es weiter unten wieder geoeffnet. */
         reopenModalAfterConsent = closeBookingModal();
+        /* Erst NACH dem Schliessen unterdruecken, damit das Modal seinen
+           Scroll-Lock ordentlich aufraeumt, bevor es aus dem Baum faellt. */
+        suppressOverlays();
 
         window.Cookiebot.renew();
 
@@ -493,7 +604,10 @@
   window.addEventListener('CookiebotOnAccept', function () {
     if (consented()) { release(); reopenBookingModal(); }
   });
-  window.addEventListener('CookiebotOnDecline', paintAll);
+  window.addEventListener('CookiebotOnDecline', function () {
+    restoreOverlays();
+    paintAll();
+  });
 
   function onReady() {
     sweep(document);

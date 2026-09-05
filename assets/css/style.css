@@ -8039,3 +8039,28 @@ a.mn-contact-text:hover { color: var(--gold); }
   opacity: 0.55;
   cursor: default;
 }
+
+/* Notausgang im Bsport-Platzhalter: Seite ohne Buchungsfenster neu laden.
+   Erscheint nur, wenn sich der Einwilligungsdialog nicht oeffnen liess. */
+.bomaye-consent-gate__escape {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 20px;
+  border: 1px solid #C9A84C;
+  border-radius: 0;
+  background: transparent;
+  color: #C9A84C;
+  font-family: 'Oswald', 'Oswald Fallback', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.bomaye-consent-gate__escape:hover,
+.bomaye-consent-gate__escape:focus-visible {
+  background: #C9A84C;
+  color: #0A0A08;
+}
