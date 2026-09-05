@@ -175,6 +175,70 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   }
 
+  /* ──────────────── 4b. Cookiebot-Verfuegbarkeit und Modal ──────────────── */
+
+  var lastFailure = null;
+  var reopenModalAfterConsent = false;
+
+  function cookiebotReady() {
+    return !!(window.Cookiebot && typeof window.Cookiebot.renew === 'function');
+  }
+
+  /* Wartet, bis Cookiebot da ist. Es wird asynchron von consent.cookiebot.com
+     geladen; auf einer langsamen Mobilverbindung vergehen dabei leicht mehrere
+     Sekunden, in denen window.Cookiebot noch nicht existiert. */
+  function whenCookiebotReady(onReady, onTimeout) {
+    if (cookiebotReady()) { onReady(); return; }
+    var waited = 0;
+    var step = 150;
+    var limit = 8000;
+    var t = window.setInterval(function () {
+      if (cookiebotReady()) { window.clearInterval(t); onReady(); return; }
+      waited += step;
+      if (waited >= limit) { window.clearInterval(t); if (onTimeout) onTimeout(); }
+    }, step);
+  }
+
+  /* Schliesst das Probetraining-Modal, falls es offen ist, und meldet zurueck,
+     ob es wieder geoeffnet werden soll. */
+  function closeBookingModal() {
+    var m = document.getElementById('pt-booking-modal');
+    if (!m || !m.classList.contains('open')) return false;
+    if (typeof window.ptCloseModal === 'function') {
+      try { window.ptCloseModal(); return true; } catch (e) {}
+    }
+    /* Notfalls von Hand, damit der Body-Scroll-Lock auf keinen Fall stehen bleibt. */
+    m.classList.remove('open');
+    document.body.classList.remove('pt-modal-open');
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    return true;
+  }
+
+  function reopenBookingModal() {
+    if (!reopenModalAfterConsent) return;
+    reopenModalAfterConsent = false;
+    if (typeof window.ptOpenModal === 'function') {
+      try { window.ptOpenModal(); } catch (e) {}
+    }
+  }
+
+  /* Zustandsbericht fuer den naechsten Test am echten Geraet. */
+  window.bomayeConsentDebug = function () {
+    return {
+      cookiebotObject: typeof window.Cookiebot,
+      renewType: typeof (window.Cookiebot && window.Cookiebot.renew),
+      consentMarketing: consented(),
+      gatesOnPage: document.querySelectorAll('.' + GATE_CLASS).length,
+      modalOpen: !!document.querySelector('#pt-booking-modal.open'),
+      bodyPosition: document.body ? window.getComputedStyle(document.body).position : null,
+      cybotElements: document.querySelectorAll('[id^="Cybot"]').length,
+      lastFailure: lastFailure
+    };
+  };
+
   /* ───────────────────────── 5. Platzhalter ───────────────────────── */
 
   /* Container, in denen ein Bsport-Widget haette erscheinen sollen. Die
@@ -237,10 +301,86 @@
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = GATE_CLASS + '__btn';
-    btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+
+    /* Fehlerausgabe direkt im Platzhalter. Der Knopf darf unter keinen
+       Umstaenden stumm nichts tun - genau das war der gemeldete Fehler auf dem
+       iPhone. Der Grund steht sichtbar auf dem Geraet, damit der naechste Test
+       am echten Telefon ohne Debugger auswertbar ist. */
+    var fail = document.createElement('p');
+    fail.className = GATE_CLASS + '__fail';
+    fail.hidden = true;
+
+    function showFailure(reason) {
+      lastFailure = reason;
+      fail.hidden = false;
+      fail.textContent = 'Der Einwilligungsdialog laesst sich auf diesem Geraet nicht '
+        + 'oeffnen. Bitte buche telefonisch oder per WhatsApp - oder nutze den Link '
+        + '"Cookie-Einstellungen" ganz unten auf der Seite. (Grund: ' + reason + ')';
+      btn.disabled = false;
+      btn.textContent = 'ERNEUT VERSUCHEN';
+      try { console.warn('[consent] renew fehlgeschlagen:', reason); } catch (e) {}
+    }
+
+    /* Ist ein Cookiebot-Dialog sichtbar im Bild? Cookiebot vergibt seinen
+       Elementen durchgaengig das Praefix "Cybot". */
+    function cookiebotDialogVisible() {
+      var nodes = document.querySelectorAll('[id^="Cybot"]');
+      for (var i = 0; i < nodes.length; i++) {
+        var r = nodes[i].getBoundingClientRect();
+        var cs = window.getComputedStyle(nodes[i]);
+        if (r.width > 40 && r.height > 40 && cs.visibility !== 'hidden' &&
+            cs.display !== 'none' && cs.opacity !== '0') return true;
+      }
+      return false;
+    }
+
+    function armButton() {
+      if (cookiebotReady()) {
+        btn.disabled = false;
+        btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+        return true;
+      }
+      btn.disabled = true;
+      btn.textContent = 'EINWILLIGUNGSDIALOG WIRD GELADEN …';
+      return false;
+    }
+
+    if (!armButton()) {
+      /* Wettlauf ausschliessen: der Platzhalter kann fertig sein, bevor
+         consent.cookiebot.com geladen hat. Solange bleibt der Knopf gesperrt
+         statt ins Leere zu greifen. */
+      whenCookiebotReady(armButton, function () {
+        showFailure('Cookiebot wurde nicht geladen - moeglicherweise blockiert ein '
+                  + 'Inhaltsblocker consent.cookiebot.com');
+      });
+    }
+
     btn.addEventListener('click', function () {
-      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+      fail.hidden = true;
+      try {
+        if (!cookiebotReady()) {
+          showFailure('Cookiebot.renew ist nicht verfuegbar');
+          return;
+        }
+        /* Das Buchungs-Modal aus dem Weg raeumen, BEVOR der Dialog aufgeht.
+           Es liegt bildschirmfuellend bei z-index 9000, sperrt den Body per
+           position:fixed und hat backdrop-filter. Jede dieser drei Eigenschaften
+           kann auf iOS dazu fuehren, dass der Einwilligungsdialog zwar geoeffnet,
+           aber nicht sichtbar oder nicht antippbar ist. Nach erteilter
+           Einwilligung wird es weiter unten wieder geoeffnet. */
+        reopenModalAfterConsent = closeBookingModal();
+
         window.Cookiebot.renew();
+
+        /* Wenn renew() zwar durchlaeuft, aber nichts erscheint, darf der
+           Besucher nicht ratlos zurueckbleiben. */
+        window.setTimeout(function () {
+          if (!consented() && !cookiebotDialogVisible()) {
+            showFailure('renew() lief, es erschien aber kein Dialog');
+          }
+        }, 1500);
+      } catch (err) {
+        showFailure((err && err.message) ? err.message : String(err));
       }
     });
 
@@ -254,6 +394,7 @@
     box.appendChild(h);
     box.appendChild(p);
     box.appendChild(btn);
+    box.appendChild(fail);
     box.appendChild(alt);
     container.appendChild(box);
   }
@@ -350,7 +491,7 @@
     if (consented()) release(); else paintAll();
   });
   window.addEventListener('CookiebotOnAccept', function () {
-    if (consented()) release();
+    if (consented()) { release(); reopenBookingModal(); }
   });
   window.addEventListener('CookiebotOnDecline', paintAll);
 

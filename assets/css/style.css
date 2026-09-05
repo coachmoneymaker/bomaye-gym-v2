@@ -8021,3 +8021,21 @@ a.mn-contact-text:hover { color: var(--gold); }
   color: #C9A84C;
   text-decoration: underline;
 }
+
+/* Sichtbare Fehlermeldung im Bsport-Platzhalter, falls sich der
+   Einwilligungsdialog nicht oeffnen laesst. Der Knopf darf nie stumm
+   nichts tun. */
+.bomaye-consent-gate__fail {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid #C9A84C;
+  background: rgba(201, 168, 76, 0.12);
+  font-family: 'DM Sans', 'DM Sans Fallback', sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #F5F0E8;
+}
+.bomaye-consent-gate__btn[disabled] {
+  opacity: 0.55;
+  cursor: default;
+}
