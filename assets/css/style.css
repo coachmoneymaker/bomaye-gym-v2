@@ -8005,3 +8005,19 @@ a.mn-contact-text:hover { color: var(--gold); }
   .cookie-settings-link,
   .bomaye-consent-gate { display: none !important; }
 }
+
+/* Hinweis, wenn nach der Freigabe das Wiederholungsfenster des Seitenskripts
+   schon abgelaufen war und der Container leer geblieben ist. */
+.bomaye-consent-gate__reload {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  font-family: 'DM Sans', 'DM Sans Fallback', sans-serif;
+}
+.bomaye-consent-gate__reload a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #C9A84C;
+  text-decoration: underline;
+}

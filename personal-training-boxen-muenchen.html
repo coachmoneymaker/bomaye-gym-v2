@@ -2,6 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
+       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
+       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+  <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -579,7 +583,7 @@
         <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Wähle deinen Coach. Wähle deinen Slot. Starte dein 1:1 Training auf höchstem Niveau.</p>
       </div>
       <div class="pt-widget-wrapper">
-        <iframe frameborder="0" allowfullscreen srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
+        <iframe frameborder="0" allowfullscreen data-bsport-srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
         </iframe>
       </div>
     </div>
