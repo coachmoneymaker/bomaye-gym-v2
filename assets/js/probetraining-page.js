@@ -176,88 +176,105 @@
     });
   }
 
-  /* ─────────────────── Bsports eigenes Modal ───────────────────
-     Bsport haengt seinen Buchungs- und Anmeldedialog als direktes Kind an
-     <body>. Nach dem Vorbild von stundenplan.html, wo dieses Muster seit jeher
-     laeuft: waehrend der Dialog offen ist, tritt unser Header zurueck und der
-     Hintergrund scrollt nicht mit. Anders als dort ist die Sperre hier an eine
-     Bedingung geknuepft - siehe check() weiter unten.
+  /* ─────────────────── Bsports Dialog in den Seitenfluss holen ───────────
+     BEFUND AUS DEM GERAETETEST
+     Der Kalenderschritt scrollt einwandfrei mit der Seite - dort gibt es
+     naemlich gar keinen Bsport-Dialog: die Terminliste haengt in #pt-cal-view,
+     also in unserem eigenen Markup, mitten im Dokument. Erst beim Tippen auf
+     einen Termin baut Bsport seinen Dialog auf und haengt ihn als direktes
+     Kind an <body>. Genau ab da klemmte das Scrollen.
 
-     Wichtig ist, was hier NICHT passiert: der Dialog bekommt keine
-     Hoehendeckelung, kein overflow und keinen zweiten Scroll-Container von
-     uns. Er scrollt selbst - das konnte er im alten Overlay nur deshalb
-     nicht, weil unsere body-Sperre schon aktiv war, bevor er ueberhaupt
-     aufging. */
-  function _ptWatchBsportModal() {
+     Es ist also kein verpasster Zustandswechsel, sondern schlicht der
+     Zustand, in dem dieser Dialog auf die Welt kommt: fest positioniert,
+     mit eigener Scroll-Flaeche, ausserhalb von allem, was uns gehoert.
+
+     WARUM JETZT NICHT MEHR ERKANNT, SONDERN ERZWUNGEN WIRD
+     Die bisherige Fassung hat Bsports Positionierung gemessen und darauf
+     reagiert. Das ist ein Wettlauf, den man nicht gewinnt: es gibt beliebig
+     viele Zwischenzustaende, und jeder verpasste kostet eine Buchung. Statt
+     hinterherzumessen wird der Dialog jetzt in den Seitenfluss GEZWUNGEN -
+     in jedem Schritt, unabhaengig davon, was Bsports JavaScript setzt:
+
+       1. Der Dialog wandert aus <body> in denselben Container wie der
+          Kalender. Ohne das stuende er als letztes Kind von <body> unterhalb
+          des Footers.
+       2. CSS zwingt ihn per !important in den Fluss (siehe
+          probetraining-page.css) - keine feste Positionierung, keine
+          Hoehendeckelung, keine eigene Scroll-Flaeche.
+       3. Nachfahren, die selbst fest positioniert sind (Hintergrund-
+          abdunklung, klebende Kopf- oder Fusszeile des Dialogs), werden
+          eingereiht. Das laesst sich in CSS nicht ausdruecken - man kann
+          nicht nach berechneter Positionierung selektieren -, deshalb hier.
+       4. Der Kalender darunter wird ausgeblendet, solange der Dialog offen
+          ist. So steht das Formular genau dort, wo eben noch die Terminliste
+          stand: gleicher Container, gleiche Breite, gleiches Scrollen.
+
+     Es wird NICHTS mehr gesperrt. Das Dokument ist in jedem Schritt der eine
+     Scroll-Container - im Kalenderschritt war es das ohnehin schon, und
+     genau der funktioniert. Der Formularschritt verhaelt sich jetzt gleich.
+
+     Der Kalenderschritt bleibt unberuehrt: solange kein Dialog da ist, tut
+     diese Funktion nichts. */
+  function _ptAdoptBsportDialog() {
     var MODAL_SEL = '.bsport-user-interaction-modal__container';
     var BODY_CLASS = 'bsport-modal-open';
-    var _scrollY = 0;
-    var _locked = false;
-    var _dialog = null;
-    var _dialogObserver = null;
-    var _tick = null;
+    var MARKER = 'ptFlowFixed';
 
-    function lockScroll() {
-      if (_locked) return;
-      _locked = true;
-      _scrollY = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = '-' + _scrollY + 'px';
-      document.body.style.width = '100%';
+    /* Wohin der Dialog gehoert: direkt neben den Kalender, in denselben
+       Container - damit er dessen Breite und Raender erbt. */
+    function ziel() {
+      var view = document.getElementById('pt-cal-view');
+      return view && view.parentElement ? view.parentElement : null;
     }
 
-    function unlockScroll() {
-      if (!_locked) return;
-      _locked = false;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo({ top: _scrollY, behavior: 'instant' });
-    }
-
-    /* Hat der Dialog selbst eine Scroll-Flaeche - er selbst oder ein Kind? */
-    function hasOwnScroller(el) {
-      if (el.scrollHeight - el.clientHeight > 4) return true;
-      var kids = el.querySelectorAll('*');
-      for (var i = 0; i < kids.length; i++) {
-        var k = kids[i];
-        if (k.scrollHeight - k.clientHeight <= 4) continue;
-        var oy = window.getComputedStyle(k).overflowY;
-        if (oy === 'auto' || oy === 'scroll') return true;
+    /* Fest positionierte Nachfahren einreihen. position: relative statt
+       static, damit absolut positionierte Kinder darin (Schliessen-Kreuz,
+       Auswahllisten) ihren Bezugsrahmen behalten. */
+    function einreihen(root) {
+      var alle = root.querySelectorAll('*');
+      for (var i = 0; i < alle.length; i++) {
+        var el = alle[i];
+        if (el.dataset && el.dataset[MARKER]) continue;
+        if (window.getComputedStyle(el).position !== 'fixed') continue;
+        el.style.setProperty('position', 'relative', 'important');
+        el.style.setProperty('inset', 'auto', 'important');
+        if (el.dataset) el.dataset[MARKER] = '1';
       }
-      return false;
-    }
-
-    /* Die Hintergrundsperre darf nur greifen, wenn Bsports Dialog das Scrollen
-       selbst uebernimmt. Im Zweifel wird NICHT gesperrt - eine mitscrollende
-       Seite hinter dem Dialog ist ein Schoenheitsfehler, eine faelschlich
-       gesetzte Sperre kostet die Buchung.
-
-         im Dokumentfluss          -> nie sperren, das Dokument IST sein Scroller
-         fest und passt auf den
-           Schirm                  -> sperren, er braucht kein Scrollen
-         fest mit eigener
-           Scroll-Flaeche          -> sperren, er scrollt selbst
-         fest, laenger als der
-           Schirm, ohne Scroller   -> nicht sperren                              */
-    function shouldLock(el) {
-      var pos = window.getComputedStyle(el).position;
-      if (pos !== 'fixed' && pos !== 'sticky') return false;
-      if (el.getBoundingClientRect().height <= window.innerHeight + 1) return true;
-      return hasOwnScroller(el);
     }
 
     function check() {
       var el = document.querySelector(MODAL_SEL);
       document.body.classList.toggle(BODY_CLASS, !!el);
-      if (el !== _dialog) { _dialog = el; bindDialog(el); }
-      if (el && shouldLock(el)) { lockScroll(); } else { unlockScroll(); }
+
+      if (!el) {
+        /* Sicherheitsnetz: eine Sperre aus einer frueheren Fassung oder von
+           fremdem Code darf nicht liegen bleiben. */
+        if (document.body.style.position === 'fixed') {
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+        }
+        return;
+      }
+
+      var ziel_ = ziel();
+      if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
+      einreihen(el);
+
+      /* Bsport oder fremder Code koennte die Seite gesperrt haben. Im
+         Seitenfluss ist das Dokument der Scroll-Container - eine Sperre
+         wuerde genau das Formular stilllegen. */
+      if (document.body.style.position === 'fixed') {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+      }
     }
 
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
-       Auf einen Bildaufbau zusammenfassen, sonst rechnen wir umsonst. */
+       Auf einen Bildaufbau zusammenfassen. */
     var _pending = false;
     function schedule() {
       if (_pending) return;
@@ -265,35 +282,16 @@
       window.requestAnimationFrame(function () { _pending = false; check(); });
     }
 
-    /* DER PUNKT, AN DEM DIE VORIGE FASSUNG SCHEITERTE
-       Sie beobachtete ausschliesslich body/childList. Das meldet nur, dass ein
-       Kind von <body> dazukommt oder verschwindet - also genau einmal, wenn
-       der Dialog aufgeht. Wechselt DERSELBE Dialog danach seine Positionierung,
-       weil aus der Kalenderauswahl das Anmeldeformular wird, feuert dort nichts
-       mehr. Die Sperre vom Kalenderschritt blieb liegen und legte den
-       Formularschritt still. Nachgestellt:
-
-         Schritt 1 Kalender:  pos=fixed    -> gesperrt   (richtig)
-         Schritt 2 Formular:  pos=absolute -> gesperrt   (falsch)
-         Ergebnis: Dokument scrollbar 0px, Absende-Button unerreichbar
-
-       Deshalb haengt jetzt zusaetzlich ein Beobachter am Dialog selbst, auf
-       style, class und seinen ganzen Inhalt - plus ein ruhiger Takt als Netz
-       fuer Aenderungen, die keine Mutation ausloesen (etwa eine Regel aus
-       einem nachgeladenen Stylesheet). */
-    function bindDialog(el) {
-      if (_dialogObserver) { _dialogObserver.disconnect(); _dialogObserver = null; }
-      if (_tick) { clearInterval(_tick); _tick = null; }
-      if (!el) return;
-      _dialogObserver = new MutationObserver(schedule);
-      _dialogObserver.observe(el, {
-        attributes: true, attributeFilter: ['style', 'class'],
-        childList: true, subtree: true
-      });
-      _tick = setInterval(schedule, 500);
-    }
-
-    new MutationObserver(schedule).observe(document.body, { childList: true });
+    /* Am ganzen Dokument beobachten, nicht nur an <body>/childList: der
+       Dialog wechselt seinen Inhalt und seine Stile, ohne dass ein Kind von
+       <body> dazukommt. Dazu ein ruhiger Takt fuer Aenderungen, die gar
+       keine Mutation ausloesen - etwa eine Regel aus einem nachgeladenen
+       Stylesheet. */
+    new MutationObserver(schedule).observe(document.documentElement, {
+      childList: true, subtree: true,
+      attributes: true, attributeFilter: ['style', 'class']
+    });
+    setInterval(schedule, 500);
     window.addEventListener('resize', schedule, { passive: true });
     window.addEventListener('orientationchange', schedule, { passive: true });
     check();
@@ -410,7 +408,7 @@
     document.body.style.width = '';
 
     _ptMountCalendar();
-    _ptWatchBsportModal();
+    _ptAdoptBsportDialog();
     _ptSetupTouchDebug();
 
     /* Genau ein Ereignis pro Seitenaufruf. Der Name bleibt

@@ -199,6 +199,67 @@
   border: 1px solid #C9A84C !important;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Bsports Anmeldedialog in den Seitenfluss zwingen
+
+   Der Kalenderschritt scrollt einwandfrei, weil die Terminliste in unserem
+   eigenen Markup haengt (#pt-cal-view) und das Dokument sie scrollt. Erst
+   beim Tippen auf einen Termin baut Bsport seinen Dialog auf, haengt ihn an
+   <body> und positioniert ihn fest, mit eigener Scroll-Flaeche. Ab da klemmte
+   es - und deshalb half die Randleiste: die gehoerte noch zum Dokument.
+
+   Statt Bsports Positionierung zu messen und darauf zu reagieren, wird sie
+   hier ueberschrieben. Der Dialog bekommt keine Sonderrolle mehr, er ist ein
+   Abschnitt der Seite wie jeder andere.
+
+   position: relative statt static - dann bleibt er im Fluss, liefert aber
+   weiterhin den Bezugsrahmen fuer absolut positionierte Kinder (Schliessen-
+   Kreuz, Auswahllisten), die sonst an einen fremden Vorfahren springen.
+
+   Eng auf die bekannte Bsport-Klasse begrenzt. Ohne Dialog greift hier
+   nichts - der Kalenderschritt bleibt unberuehrt.
+   ───────────────────────────────────────────────────────────────────────── */
+
+body .bsport-user-interaction-modal__container {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  /* Ein transform macht das Element zum Bezugsrahmen fuer feste
+     Positionierung darin - dann waere position: fixed bei Kindern wieder
+     wirksam, obwohl wir sie eingereiht haben. */
+  transform: none !important;
+  z-index: auto !important;
+  /* Die Abdunklung des Hintergrunds ergibt im Fluss keinen Sinn mehr und
+     wuerde den Text unlesbar machen. */
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Kein Nachfahre darf eine eigene senkrechte Scroll-Flaeche oder eine
+   Hoehendeckelung aufmachen. Nur senkrecht: eine waagerechte Auswahl darf
+   weiter seitlich scrollen. */
+body .bsport-user-interaction-modal__container * {
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+
+/* Solange das Formular offen ist, tritt die Terminliste zurueck. Damit steht
+   das Formular genau dort, wo eben noch der Kalender stand - gleicher
+   Container, gleiche Breite, gleiches Scrollen. */
+body.bsport-modal-open #pt-cal-view {
+  display: none !important;
+}
+
 /* Nur mit ?ptdebug=1 sichtbar. */
 #pt-touch-debug {
   position: fixed;
