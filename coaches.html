@@ -138,6 +138,7 @@
       border-radius: 0;
       overflow: hidden;
     }
+    .coach-full-photo picture { display: block; }
     .coach-full-photo img {
       width: 100%;
       aspect-ratio: 3/4;
@@ -590,7 +591,17 @@
       <!-- Raschad -->
       <div class="coach-card-full reveal">
         <div class="coach-full-photo">
-          <img src="/assets/images/coach-raschad.webp?v=6" alt="Raschad Pekpassi — Head Coach &amp; Founder" loading="eager" decoding="async" />
+          <picture>
+            <source type="image/webp"
+                    srcset="/assets/images/coach-portrait-1-480.webp 480w, /assets/images/coach-portrait-1-720.webp 720w, /assets/images/coach-portrait-1.webp 1080w"
+                    sizes="(max-width: 768px) 100vw, 50vw">
+            <img src="/assets/images/coach-portrait-1.jpg"
+                 srcset="/assets/images/coach-portrait-1-480.jpg 480w, /assets/images/coach-portrait-1-720.jpg 720w, /assets/images/coach-portrait-1.jpg 1080w"
+                 sizes="(max-width: 768px) 100vw, 50vw"
+                 width="1080" height="1440"
+                 alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand"
+                 loading="eager" decoding="async" />
+          </picture>
           <div class="coach-full-creds">
             <span class="coach-full-cred">LANDESTRAINER</span>
             <span class="coach-full-cred">20+ JAHRE</span>
@@ -623,7 +634,17 @@
       <!-- Alfonso -->
       <div class="coach-card-full reverse reveal delay-1">
         <div class="coach-full-photo">
-          <img src="/assets/images/coach-alfonso.webp" alt="Alfonso Fusco — Head Coach &amp; Founder" loading="eager" decoding="async" />
+          <picture>
+            <source type="image/webp"
+                    srcset="/assets/images/coach-portrait-2-480.webp 480w, /assets/images/coach-portrait-2-720.webp 720w, /assets/images/coach-portrait-2.webp 1080w"
+                    sizes="(max-width: 768px) 100vw, 50vw">
+            <img src="/assets/images/coach-portrait-2.jpg"
+                 srcset="/assets/images/coach-portrait-2-480.jpg 480w, /assets/images/coach-portrait-2-720.jpg 720w, /assets/images/coach-portrait-2.jpg 1080w"
+                 sizes="(max-width: 768px) 100vw, 50vw"
+                 width="1080" height="1440"
+                 alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand" class="img-nofade"
+                 loading="lazy" decoding="async" />
+          </picture>
           <div class="coach-full-creds">
             <span class="coach-full-cred">WM-TITEL</span>
             <span class="coach-full-cred">KICKBOXEN</span>

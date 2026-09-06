@@ -298,7 +298,10 @@ body.bsport-modal-open #header {
 .hero-bg {
   position: absolute; inset: 0;
   background: linear-gradient(135deg, #0A0A08 0%, #141414 40%, #0d0d0d 100%);
-  background-image: url('../images/community.webp');
+  /* JPG zuerst als Rueckfallebene, image-set() liefert modernen Browsern WebP. */
+  background-image: url('../images/gym-hall.jpg');
+  background-image: image-set(url('../images/gym-hall.webp') type('image/webp'),
+                              url('../images/gym-hall.jpg')  type('image/jpeg'));
   background-size: cover; background-position: center 30%;
   animation: heroBgZoom 7s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
   transform-origin: center center;
@@ -567,7 +570,9 @@ body.bsport-modal-open #header {
 ══════════════════════════════════════════════════════════════ */
 #community {
   padding: 7rem 0;
-  background-image: url('../images/community.webp');
+  background-image: url('../images/gym-hall.jpg');
+  background-image: image-set(url('../images/gym-hall.webp') type('image/webp'),
+                              url('../images/gym-hall.jpg')  type('image/jpeg'));
   background-size: cover; background-position: center; background-attachment: fixed;
   text-align: center; position: relative;
 }
@@ -4556,12 +4561,15 @@ body {
 
 /* ── Lazy-loaded images: fade in on load ── */
 /* Scoped to content images only — logos (.logo-img, .intro-brand-logo,
-   .dna-visual-logo) are excluded to prevent invisible-until-JS bugs.  */
-img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo) {
+   .dna-visual-logo) are excluded to prevent invisible-until-JS bugs.
+   .img-nofade ist derselbe Schutz fuer Inhaltsbilder auf Seiten OHNE
+   assets/js/main.js: die .loaded-Klasse wird dort von initImageFallbacks()
+   nie gesetzt, das Bild bliebe sonst dauerhaft auf opacity:0.  */
+img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade) {
   opacity: 0;
   transition: opacity 0.5s var(--ease-expo);
 }
-img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo).loaded {
+img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade).loaded {
   opacity: 1;
 }
 
