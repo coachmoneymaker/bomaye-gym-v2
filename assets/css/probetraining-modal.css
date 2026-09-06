@@ -233,11 +233,22 @@
   height: auto !important;
 }
 
-/* Gleiches Ziel, zweiter Weg: Bsport setzt je nach Ansicht eine Hoehendeckelung
-   auch ohne overflow im selben style-Attribut. Nur die Deckelung faellt weg,
-   height bleibt unangetastet - das Formular darf so lang werden, wie es ist,
-   egal wie viele Felder das Backoffice gerade ausliefert. */
-#pt-cal-view [style*="max-height"] {
+/* Und derselbe Riegel klassenbasiert. Die beiden Regeln oben greifen nur auf
+   das style-Attribut. Das Bsport-Widget ist aber MUI/emotion-basiert (siehe
+   die .Mui*-Regeln weiter oben), und emotion schreibt seine Stile in erzeugte
+   Klassennamen wie .css-1q2w3e, nicht inline. Ein so gedeckelter Scroll-Kasten
+   lief den Attributselektoren also glatt durch - gemessen: 902px Formular
+   blieben eingesperrt, die Modalflaeche scrollte 1px, der Absende-Button war
+   nicht erreichbar. Genau das war die Luecke in PR #43.
+
+   Nur die senkrechte Achse wird freigegeben. Ein waagerechter Streifen, etwa
+   die Tagesauswahl im Kalender, behaelt sein overflow-x: auto - bei gesetztem
+   overflow-x rechnet der Browser overflow-y ohnehin auf auto zurueck, die
+   Regel kann dort also nichts kaputt machen. height bleibt unangetastet,
+   es faellt ausschliesslich die Deckelung weg. */
+#pt-cal-view,
+#pt-cal-view * {
+  overflow-y: visible !important;
   max-height: none !important;
 }
 

@@ -205,47 +205,122 @@
   }
 
   /* ── Scroll-Diagnose fuer den Geraetetest ────────────────────────────────
-     Sichtbar nur mit ?ptdebug=1 in der URL. Zeigt direkt auf dem Telefon an,
-     welches Element die Beruehrung bekommt, ob sie in einem fremden Dokument
-     landet und welcher Container tatsaechlich scrollt. Damit ist der naechste
-     Test auch dann auswertbar, wenn es immer noch klemmt - ohne Mac, ohne
-     angestoepseltes Safari. */
+     Sichtbar nur mit ?ptdebug=1 in der URL. Beantwortet auf dem Telefon die
+     eine offene Frage: WARUM klemmt es. Drei Ursachen kommen in Frage und sie
+     verhalten sich unter dem Finger gleich, sind aber voellig verschieden zu
+     loesen:
+
+       IFRAME  - Bsport rendert in einem eigenen Dokument. Beruehrungen landen
+                 dort und erreichen unser Dokument nie (WebKit-Fehler 149264).
+                 Von unserer Seite nicht loesbar, muss zu Bsport.
+       KASTEN  - ein gedeckelter Scroll-Kasten im selben Dokument. Von uns per
+                 CSS loesbar - die Anzeige nennt Klasse und Herkunft der
+                 Deckelung, damit die Regel gezielt sitzt.
+       PORTAL  - Bsport haengt das Formular ausserhalb von #pt-cal-view direkt
+                 an <body>. Dann greift keine unserer Regeln, sie muessen
+                 umgehaengt werden.
+
+     Ohne Mac, ohne angestoepseltes Safari. */
   function _ptSetupTouchDebug() {
     if (!/[?&]ptdebug=1/.test(window.location.search)) return;
     var box = document.createElement('div');
     box.id = 'pt-touch-debug';
     document.body.appendChild(box);
-    var startY = 0, startScroll = 0, target = '';
+    var startScroll = 0, bericht = '', tipps = 0;
+
+    /* Der wichtigste Hinweis ist ein AUSBLEIBENDER: liegt das Formular in
+       einem iframe, bekommt unser Dokument die Beruehrung ueberhaupt nicht -
+       dieser Zaehler bleibt dann stehen, obwohl der Finger auf dem Formular
+       liegt. Genau das ist WebKit-Fehler 149264, und genau das kann kein
+       Zuhoerer in diesem Dokument melden, weil er nie aufgerufen wird. */
+    function leerlauf() {
+      if (tipps) return;   /* sobald getippt wurde, gilt der echte Befund */
+      box.textContent = 'Bereit. Tippe auf das Formular. Bleibt die Zahl bei #0, '
+        + 'liegt das Formular in einem fremden Dokument (iframe) - dann ist es '
+        + 'nicht von uns loesbar. iframes im Modal gerade: '
+        + document.querySelectorAll('#pt-booking-modal iframe').length;
+    }
+    leerlauf();
+    /* Das Widget wird erst beim Oeffnen eingehaengt, die Zahl beim Seitenaufbau
+       waere also immer 0 und damit irrefuehrend. Deshalb nachfuehren, bis der
+       erste Tipp einen echten Befund liefert. */
+    setInterval(leerlauf, 1000);
 
     function describe(el) {
       if (!el) return '-';
-      return (el.tagName || '?').toLowerCase()
-        + (el.id ? '#' + el.id : '')
-        + (el.className && typeof el.className === 'string'
-            ? '.' + el.className.split(' ')[0] : '');
+      var cls = (el.className && typeof el.className === 'string')
+        ? '.' + el.className.split(' ').slice(0, 2).join('.') : '';
+      return (el.tagName || '?').toLowerCase() + (el.id ? '#' + el.id : '') + cls;
     }
+
+    /* Naechster senkrecht scrollender Vorfahr ueber dem Beruehrungspunkt -
+       also der Kasten, der den Wisch tatsaechlich schluckt. */
+    function trapper(el) {
+      while (el && el !== document.body) {
+        var cs = window.getComputedStyle(el);
+        var scrollt = (cs.overflowY === 'auto' || cs.overflowY === 'scroll');
+        if (scrollt && el.scrollHeight - el.clientHeight > 4) return { el: el, cs: cs };
+        el = el.parentElement;
+      }
+      return null;
+    }
+
+    /* Woher kommt die Hoehenbegrenzung: aus dem style-Attribut oder aus einer
+       Klasse? Das entscheidet, ob unsere Attributselektoren sie ueberhaupt
+       sehen koennen. */
+    function herkunft(el) {
+      var inline = (el.getAttribute('style') || '');
+      var hatInline = /height/.test(inline);
+      return hatInline ? 'inline' : 'Klasse';
+    }
+
     function scroller() {
       var m = document.getElementById('pt-booking-modal');
       var b = m && m.querySelector('.pt-modal-body');
       return { modal: m ? m.scrollTop : -1, body: b ? b.scrollTop : -1, win: window.scrollY };
     }
+
     document.addEventListener('touchstart', function (e) {
       var t = e.touches[0]; if (!t) return;
-      startY = t.clientY;
       var el = document.elementFromPoint(t.clientX, t.clientY);
-      target = describe(el);
+      var view = document.getElementById('pt-cal-view');
+      var rahmen = document.querySelectorAll('#pt-booking-modal iframe').length;
       var s = scroller();
       startScroll = s.modal + s.body + s.win;
-      box.textContent = 'Beruehrt: ' + target + ' | iframes im Modal: '
-        + document.querySelectorAll('#pt-booking-modal iframe').length;
+      tipps++;
+
+      /* elementFromPoint liefert bei einem iframe das iframe selbst - in ein
+         fremdes Dokument kann es nicht hineinsehen. Genau das ist der Beweis. */
+      if (el && el.tagName === 'IFRAME') {
+        bericht = '#' + tipps + ' URSACHE: IFRAME — Beruehrung landet in fremdem Dokument. '
+                + 'Nicht von uns loesbar (WebKit 149264).';
+        box.textContent = bericht; return;
+      }
+      if (el && view && !view.contains(el) && el.closest
+          && !el.closest('.pt-modal-header, .pt-modal-footer, #pt-booking-modal > .pt-modal-card')) {
+        bericht = '#' + tipps + ' URSACHE: PORTAL — beruehrt ' + describe(el)
+                + ', liegt AUSSERHALB #pt-cal-view. Unsere Regeln greifen dort nicht.';
+        box.textContent = bericht; return;
+      }
+      var tr = trapper(el);
+      if (tr) {
+        bericht = '#' + tipps + ' URSACHE: KASTEN — ' + describe(tr.el)
+                + ' | overflow-y=' + tr.cs.overflowY
+                + ' height=' + tr.cs.height + ' (' + herkunft(tr.el) + ')'
+                + ' max-height=' + tr.cs.maxHeight
+                + ' | gefangen ' + (tr.el.scrollHeight - tr.el.clientHeight) + 'px';
+      } else {
+        bericht = '#' + tipps + ' Kein gedeckelter Kasten unter dem Finger. Beruehrt: '
+                + describe(el) + ' | iframes: ' + rahmen;
+      }
+      box.textContent = bericht;
     }, { passive: true });
+
     document.addEventListener('touchend', function () {
       var s = scroller();
       var moved = (s.modal + s.body + s.win) - startScroll;
-      box.textContent = 'Beruehrt: ' + target
-        + ' | gescrollt: ' + moved + 'px'
-        + ' | modal ' + s.modal + ' body ' + s.body + ' seite ' + s.win
-        + ' | iframes: ' + document.querySelectorAll('#pt-booking-modal iframe').length;
+      box.textContent = bericht + ' || gewischt: ' + moved + 'px'
+        + ' (modal ' + s.modal + ' body ' + s.body + ' seite ' + s.win + ')';
     }, { passive: true });
   }
 
