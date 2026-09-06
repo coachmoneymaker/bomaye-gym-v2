@@ -193,6 +193,11 @@
       max-width: 760px;
       margin: 0 auto;
     }
+    .seo-figure {
+      margin: clamp(28px, 4vw, 44px) 0 clamp(24px, 3.5vw, 36px);
+    }
+    .seo-figure picture { display: block; }
+    .seo-figure img { width: 100%; height: auto; display: block; }
     .seo-section h2 {
       font-family: var(--font-display);
       font-size: clamp(1.6rem, 4vw, 2.6rem);
@@ -401,6 +406,15 @@
         <p>
           Vorwissen ist nicht notwendig. Was du mitbringen solltest: Motivation, Offenheit und die Bereitschaft, an dir selbst zu arbeiten. Den Rest übernehmen wir.
         </p>
+
+        <figure class="seo-figure reveal">
+          <picture>
+            <source type="image/webp" srcset="/assets/images/gear-loaner-gloves-480.webp 480w, /assets/images/gear-loaner-gloves-760.webp 760w, /assets/images/gear-loaner-gloves.webp 1120w" sizes="(max-width: 820px) 90vw, 760px">
+            <img src="/assets/images/gear-loaner-gloves.jpg" srcset="/assets/images/gear-loaner-gloves-480.jpg 480w, /assets/images/gear-loaner-gloves-760.jpg 760w, /assets/images/gear-loaner-gloves.jpg 1120w" sizes="(max-width: 820px) 90vw, 760px"
+                 width="1120" height="747" alt="Boxhandschuhe zum Leihen für das erste Boxtraining im Bomaye Gym Munich" class="img-nofade"
+                 loading="lazy" decoding="async" />
+          </picture>
+        </figure>
         <div class="seo-feature-grid">
           <div class="seo-feature-card">
             <div class="seo-feature-card-icon"><i class="fa-solid fa-bullseye"></i></div>
