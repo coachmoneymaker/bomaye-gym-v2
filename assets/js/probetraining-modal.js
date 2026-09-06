@@ -151,24 +151,37 @@
     });
   }
 
-  var _ptWidgetMounted = false;
-  function _ptMountWidget() {
-    if (_ptWidgetMounted) return;
-    var view = document.getElementById('pt-pass-view');
-    if (!view) return;
-    _ptGate(view, function () {
-      if (_ptWidgetMounted) return;
-      _ptWidgetMounted = true;
-      _ptMountInto(view, 'bsport-widget-458519', {
-        parentElement: 'bsport-widget-458519',
-        companyId: 5473, franchiseId: null,
-        dialogMode: 3, widgetType: 'pass',
-        showFab: false, fullScreenPopup: false, styles: undefined,
-        config: { pass: { paymentPackCategories: [25328], privatePassCategories: [],
-                          hideFilters: true, hidePaymentCombo: true, hidePrivatePass: false } }
-      });
-    });
-  }
+  /* ── Ein einziges Kalender-Widget ────────────────────────────────────────
+     Bis hierher lagen im Modal zwei getrennte Bsport-Widgets in zwei Reitern:
+     erst ein Pass-Widget fuer den 0-Euro-Probetrainingspass, dann ein
+     Kalender-Widget fuer den Termin, dazwischen ein Knopf mit der Aufschrift
+     "Klicke hier nach Pass-Kauf". Zwischen beiden Widgets gab es keine
+     Datenuebergabe - der Besucher musste sich registrieren, bevor er
+     ueberhaupt einen Termin gesehen hatte.
+
+     Mit dem im Bsport-Backoffice aktivierten Express Checkout entfaellt der
+     Passschritt: Bsport erkennt den als "Nur fuer Neukunden" gefuehrten
+     Probetrainingspass selbst und wendet ihn beim Buchen an. Uebrig bleibt
+     ein Ablauf: Termin waehlen, einmal die Pflichtfelder ausfuellen, fertig.
+
+     Die Verknuepfung Pass <-> Kurs liegt dabei im Backoffice, nicht hier:
+     paymentPackCategories ist laut Bsport-Dokumentation ein Schluessel des
+     PASS-Widgets (config.pass), nicht des Kalenders. Der Kalender kennt nur
+     coaches, establishments, metaActivities, levels, variant,
+     groupSessionByPeriod, todayOnly und cardMode. Die Passnummer steht
+     deshalb unten nur als Notiz - sie wird bewusst nicht mitgegeben, weil ein
+     nicht dokumentierter Schluessel im Mount entweder wirkungslos waere oder
+     ihn zum Scheitern bringen koennte.
+
+     Fuer bestehende Mitglieder aendert sich nichts: Express Checkout greift
+     laut Bsport nur bei neuen, nicht registrierten Personen. Wer ein Konto
+     hat, meldet sich im Kalender-Widget wie bisher an und bucht mit seinem
+     vorhandenen Pass oder Abo. */
+
+  /* Zugehoeriger Probetrainingspass im Backoffice: paymentPackCategories
+     25328, gefuehrt als "Nur fuer Neukunden". Nur zur Nachvollziehbarkeit -
+     siehe Begruendung oben, wird nicht an den Mount uebergeben. */
+  var PT_WELCOME_PASS_CATEGORY = 25328;   /* eslint-disable-line no-unused-vars */
 
   var _ptCalMounted = false;
   function _ptMountCalendarWidget() {
@@ -237,33 +250,10 @@
   }
 
   /* ── Global API (exposed for onclick= attributes) ── */
-  window.ptSwitchTab = function (tab) {
-    var passView = document.getElementById('pt-pass-view');
-    var calView  = document.getElementById('pt-cal-view');
-    var tabPass  = document.getElementById('pt-tab-pass');
-    var tabCal   = document.getElementById('pt-tab-cal');
-    if (tab === 'pass') {
-      passView.className = 'pt-modal-view pt-modal-view--active';
-      calView.className  = 'pt-modal-view';
-      tabPass.className  = 'pt-modal-tab active';
-      tabPass.setAttribute('aria-selected', 'true');
-      tabCal.className   = 'pt-modal-tab';
-      tabCal.setAttribute('aria-selected', 'false');
-    } else {
-      calView.className  = 'pt-modal-view pt-modal-view--active';
-      passView.className = 'pt-modal-view';
-      tabCal.className   = 'pt-modal-tab active';
-      tabCal.setAttribute('aria-selected', 'true');
-      tabPass.className  = 'pt-modal-tab';
-      tabPass.setAttribute('aria-selected', 'false');
-      _ptMountCalendarWidget();
-    }
-  };
 
   window.ptOpenModal = function () {
     var modal = document.getElementById('pt-booking-modal');
     if (!modal) return;
-    _ptMountWidget();
     _ptMountCalendarWidget();
     document.body.classList.add('pt-modal-open');
     modal.classList.add('open');
@@ -316,18 +306,9 @@
       + '<h2 class="pt-modal-title">Wähle deinen Termin</h2>'
       + '</div>'
       + '<button class="pt-modal-close" onclick="ptCloseModal()" aria-label="Schließen" type="button"><i class="fa-solid fa-xmark"></i></button>'
-      + '<button id="pt-continue-button" class="pt-continue-button" onclick="ptSwitchTab(\'cal\')" aria-label="Weiter zu Schritt 2" type="button">'
-      + '<span class="pt-continue-text">✓ KURS BUCHEN</span>'
-      + '<span class="pt-continue-subtitle">Klicke hier nach Pass-Kauf</span>'
-      + '</button>'
-      + '</div>'
-      + '<div class="pt-modal-tabs" role="tablist">'
-      + '<button class="pt-modal-tab active" id="pt-tab-pass" onclick="ptSwitchTab(\'pass\')" role="tab" aria-selected="true" type="button">1. PASS HOLEN</button>'
-      + '<button class="pt-modal-tab" id="pt-tab-cal" onclick="ptSwitchTab(\'cal\')" role="tab" aria-selected="false" type="button">2. KURS WÄHLEN</button>'
       + '</div>'
       + '<div class="pt-modal-body">'
-      + '<div id="pt-pass-view" class="pt-modal-view pt-modal-view--active"></div>'
-      + '<div id="pt-cal-view" class="pt-modal-view"></div>'
+      + '<div id="pt-cal-view"></div>'
       + '</div>'
       + '<div class="pt-modal-footer"><p>Du wirst sicher über bsport.io abgewickelt — kostenlos, unverbindlich.</p></div>'
       + '</div>';

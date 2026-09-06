@@ -80,33 +80,6 @@
   touch-action: manipulation;
 }
 .pt-modal-close:hover { color: #F5F0E8; transform: rotate(90deg); }
-.pt-modal-tabs {
-  display: flex;
-  background: #F5F0E8;
-  border-bottom: 1px solid rgba(10,10,8,0.1);
-  flex-shrink: 0;
-}
-.pt-modal-tab {
-  flex: 1;
-  padding: 0.9rem 1rem;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  font-family: var(--font-head);
-  font-size: 0.68rem;
-  letter-spacing: 2px;
-  color: rgba(10,10,8,0.5);
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.pt-modal-tab.active { color: #0A0A08; border-bottom-color: #C9A84C; }
-.pt-modal-tab:hover:not(.active) { color: rgba(10,10,8,0.8); }
-.pt-modal-view { display: none; }
-.pt-modal-view--active { display: block; }
 .pt-modal-body {
   flex: 1;
   min-height: 0;
@@ -134,38 +107,6 @@
   text-align: center;
   line-height: 1.5;
   margin: 0;
-}
-.pt-continue-button {
-  display: flex;
-  flex: 0 0 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 16px 24px;
-  background: #C9A84C;
-  color: #0A0A08;
-  border: none;
-  font-family: var(--font-head);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.pt-continue-button:hover  { background: #B89940; }
-.pt-continue-button:active { background: #A07830; }
-.pt-continue-subtitle {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.7;
-  line-height: 1.2;
 }
 /* Ein einziger Scroll-Container auf Mobil: die Modal-Flaeche selbst scrollt,
    Karte und Body scrollen NICHT. Die Grenze muss dieselbe sein wie die des
@@ -202,12 +143,6 @@
   }
   .pt-modal-eyebrow { margin-bottom: 2px; }
   .pt-modal-title { font-size: clamp(1.35rem, 5vw, 2.2rem); }
-  .pt-continue-button {
-    padding: 10px 16px;
-    gap: 2px;
-  }
-  .pt-continue-subtitle { font-size: 10px; }
-  .pt-modal-tab { padding: 7px 1rem; font-size: 0.63rem; }
   .pt-modal-body {
     flex: 0 0 auto;
     overflow: visible;
@@ -218,31 +153,17 @@
   }
   /* Force iframe taller than any Bsport content state so iOS never
      sees internal scroll and passes touch events to the outer modal */
-  }
-
-/* ─────────────────────────────────────────────────────────────────────────
+  }/* ─────────────────────────────────────────────────────────────────────────
    Bsport-Widget im Modal — Markenoptik
    Lag frueher als <style>-String in probetraining-modal.js und wurde in ein
    srcdoc-iframe eingeschleust. Das iframe ist entfallen (iOS reicht
    Touch-Scrollen nicht aus einem iframe an das Elterndokument weiter,
-   bugs.webkit.org/show_bug.cgi?id=149264), deshalb stehen die Regeln jetzt
-   hier und greifen direkt auf das im Dokument eingehaengte Widget.
-   ───────────────────────────────────────────────────────────────────────── */
-
-#pt-pass-view, #pt-cal-view { width: 100%; }
-
-#pt-pass-view [id^="bsport-widget-"],
-#pt-cal-view  [id^="bsport-widget-"] {
+bugs.webkit.org/show_bug.cgi?id=149264),
+#pt-cal-view { width: 100%; }#pt-cal-view  [id^="bsport-widget-"] {
   overflow: visible;
   height: auto;
   min-height: 0;
-}
-
-#pt-pass-view button,
-#pt-pass-view .MuiButton-root,
-#pt-pass-view [role="button"],
-#pt-pass-view .MuiButtonBase-root,
-#pt-cal-view  button,
+}#pt-cal-view  button,
 #pt-cal-view  .MuiButton-root,
 #pt-cal-view  [role="button"],
 #pt-cal-view  .MuiButtonBase-root {
@@ -251,48 +172,31 @@
   letter-spacing: 0.5px !important;
   font-weight: 600 !important;
   box-shadow: none !important;
-}
-
-#pt-pass-view .MuiButton-contained,
-#pt-pass-view .MuiButton-containedPrimary,
-#pt-cal-view  .MuiButton-contained,
+}#pt-cal-view  .MuiButton-contained,
 #pt-cal-view  .MuiButton-containedPrimary {
   background-color: #C9A84C !important;
   color: #0A0A08 !important;
   border: 2px solid #C9A84C !important;
-}
-
-#pt-pass-view .MuiButton-text,
-#pt-pass-view .MuiButton-outlined,
-#pt-cal-view  .MuiButton-text,
+}#pt-cal-view  .MuiButton-text,
 #pt-cal-view  .MuiButton-outlined {
   color: #0A0A08 !important;
   background: transparent !important;
   border: 2px solid rgba(10, 10, 8, 0.2) !important;
-}
-
-#pt-pass-view .MuiCard-root, #pt-pass-view .MuiPaper-root,
-#pt-cal-view  .MuiCard-root, #pt-cal-view  .MuiPaper-root {
+}#pt-cal-view  .MuiCard-root,
+#pt-cal-view  .MuiPaper-root {
   border-radius: 0 !important;
   box-shadow: none !important;
-}
-
-#pt-pass-view .MuiInputBase-root, #pt-pass-view .MuiOutlinedInput-root,
-#pt-cal-view  .MuiInputBase-root, #pt-cal-view  .MuiOutlinedInput-root {
+}#pt-cal-view  .MuiInputBase-root,
+#pt-cal-view  .MuiOutlinedInput-root {
   border-radius: 0 !important;
-}
-
-#pt-pass-view .MuiChip-root,
-#pt-cal-view  .MuiChip-root {
+}#pt-cal-view  .MuiChip-root {
   border-radius: 0 !important;
   background-color: rgba(201, 168, 76, 0.1) !important;
   color: #0A0A08 !important;
   border: 1px solid #C9A84C !important;
-}
-
-/* Das Widget darf keinen eigenen Scroll-Container aufmachen - im Modal
-   scrollt genau eine Ebene, und das ist die Modalflaeche. */
-#pt-pass-view [style*="overflow"], #pt-cal-view [style*="overflow"] {
+}/* Das Widget darf keinen eigenen Scroll-Container aufmachen - im Modal
+   scrollt genau eine Ebene,
+#pt-cal-view [style*="overflow"] {
   overflow: visible !important;
   max-height: none !important;
   height: auto !important;
