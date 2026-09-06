@@ -259,10 +259,12 @@
     modal.classList.add('open');
     _ptLockBody();
     _ptStartBookingTracking();
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      var mb = modal.querySelector('.pt-modal-body');
-      if (mb) { mb.style.webkitOverflowScrolling = 'touch'; mb.style.overflowY = 'auto'; }
-    }
+    /* Frueher wurde hier auf iOS per Inline-Style overflow-y:auto auf den
+       Modal-Body geschrieben - ein Rest aus der iframe-Zeit. Inline schlaegt
+       jede Regel im Stylesheet, also hat das auf Mobil genau die Regel
+       ausgehebelt, die den Body auf overflow:visible setzt, und eine zweite
+       Scroll-Ebene im Modal aufgemacht. Es gilt: genau ein Scroll-Container.
+       Die Zustaendigkeit dafuer liegt allein in probetraining-modal.css. */
     // Exactly one modal-open event per open, pushed only once the modal is
     // actually on screen. Two names used to be pushed here —
     // ProbetrainingModalOpen and probetraining_modal_open — so any GTM trigger
