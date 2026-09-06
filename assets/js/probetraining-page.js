@@ -242,35 +242,58 @@
       }
     }
 
+    /* DIE SPERRE, DIE DREI ANLAEUFE UEBERSEHEN HABEN
+       Bsports Widget ist MUI-basiert, und MUIs ModalManager sperrt das
+       Seiten-Scrollen SELBST, sobald ein Dialog aufgeht. Er schreibt dazu
+       overflow: hidden als Inline-Stil auf den Scroll-Container - im
+       Normalfall <body>, auf iOS auf <html> - und legt sich die alten Werte
+       fuer overflow, overflow-x und overflow-y zum Zuruecksetzen beiseite.
+       Belegt in MUIs Quelltext (packages/mui-material/src/Modal/ModalManager)
+       und in der Modal-Dokumentation.
+
+       Bis hierher hat der Code nur die Sperre aufgeraeumt, die wir selbst
+       einmal gesetzt hatten - und das auch nur, wenn position: fixed am body
+       stand:
+
+         if (document.body.style.position === 'fixed') { ... overflow = '' }
+
+       MUI setzt aber overflow: hidden OHNE position: fixed. Die Bedingung war
+       damit nie erfuellt, die Sperre blieb liegen. Beim letzten Anlauf war das
+       besonders bitter: der Dialog lag da bereits im Seitenfluss, das Dokument
+       war also der einzige Weg zum Absende-Button - und genau dieser Weg war
+       von MUI zugesperrt. Was noch scrollte, war die Randleiste.
+
+       Deshalb wird hier gezielt und wiederholt entsperrt, auf body UND html.
+       Nur Werte, die tatsaechlich auf hidden oder fixed stehen, werden
+       angefasst - fremde, legitime Stile bleiben unberuehrt. */
+    function entsperren() {
+      var knoten = [document.body, document.documentElement];
+      for (var i = 0; i < knoten.length; i++) {
+        var st = knoten[i].style;
+        if (st.overflow === 'hidden') st.overflow = '';
+        if (st.overflowY === 'hidden') st.overflowY = '';
+        if (st.overflowX === 'hidden') st.overflowX = '';
+        if (st.position === 'fixed') {
+          st.position = '';
+          st.top = '';
+          st.width = '';
+        }
+        /* MUI gleicht die verschwundene Scrollleiste mit paddingRight aus.
+           Ohne Sperre gibt es nichts auszugleichen. */
+        if (st.paddingRight) st.paddingRight = '';
+      }
+    }
+
     function check() {
       var el = document.querySelector(MODAL_SEL);
       document.body.classList.toggle(BODY_CLASS, !!el);
 
-      if (!el) {
-        /* Sicherheitsnetz: eine Sperre aus einer frueheren Fassung oder von
-           fremdem Code darf nicht liegen bleiben. */
-        if (document.body.style.position === 'fixed') {
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-        }
-        return;
-      }
+      if (!el) { entsperren(); return; }
 
       var ziel_ = ziel();
       if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
       einreihen(el);
-
-      /* Bsport oder fremder Code koennte die Seite gesperrt haben. Im
-         Seitenfluss ist das Dokument der Scroll-Container - eine Sperre
-         wuerde genau das Formular stilllegen. */
-      if (document.body.style.position === 'fixed') {
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-      }
+      entsperren();
     }
 
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
