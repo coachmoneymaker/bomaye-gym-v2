@@ -263,37 +263,64 @@ body.bsport-modal-open #pt-cal-view {
 /* ─────────────────────────────────────────────────────────────────────────
    NOTBEHELF: Hinweis auf das Wischen am Bildschirmrand
 
-   Steht als erstes Element im Anmeldeformular, also bevor jemand hineinlaeuft
-   und stecken bleibt - nicht darunter, wo er zu spaet kaeme.
+   KEINE Geraeteabfrage mehr. Die erste Fassung war mit @media (pointer:
+   coarse) abgeriegelt - und auf dem Geraet des Kunden blieb der Hinweis
+   unsichtbar. Die eigentliche Ursache lag zwar woanders (der Hinweis hing in
+   Bsports React-Portal und wurde dort laufend weggeraeumt, siehe
+   probetraining-page.js), aber die Lehre bleibt: ein Hinweis, der auf dem
+   Zeigergeraet ueberfluessig ist, kostet nichts. Einer, der genau dort
+   ausfaellt, wo er gebraucht wird, kostet die Buchung. Also wird er ueberall
+   angezeigt.
 
-   Nur auf Geraeten mit grobem Zeiger, sprich per Finger. Am Zeigergeraet gibt
-   es den Umweg nicht, dort waere der Hinweis nur Rauschen.
+   Zwei Zustaende, ein Element:
+     ruhend   im Seitenfluss ueber der Terminliste - wird gelesen, bevor
+              ueberhaupt jemand hineinlaeuft
+     angeheftet  sobald der Buchungsschritt laeuft, oben am Bildschirmrand,
+              damit er nicht von der Scrollposition abhaengt
 
-   Warum es diesen Hinweis gibt und was stattdessen die eigentliche Loesung
-   waere, steht ausfuehrlich in probetraining-page.js bei hinweisZeigen().
-   Kurz: PR #43, fuenf Anlaeufe, Ursache liegt in Bsports MUI-Dialog. Faellt
-   der Umweg weg, kann dieser Block ersatzlos verschwinden.
+   pointer-events: none ist Pflicht - der Hinweis darf unter keinen Umstaenden
+   selbst Beruehrungen abfangen, sonst waere er Teil des Problems.
    ───────────────────────────────────────────────────────────────────────── */
 
 #pt-edge-hint {
-  display: none;
+  margin: 0 auto 20px;
+  max-width: 640px;
+  padding: 12px 14px;
+  background: #0A0A08;
+  color: #F5F0E8;
+  border: none;
+  border-left: 3px solid #C9A84C;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: left;
 }
 
-@media (pointer: coarse) {
-  #pt-edge-hint {
-    display: block;
-    margin: 0 0 16px;
-    padding: 12px 14px;
-    background: #0A0A08;
-    color: #F5F0E8;
-    border: none;
-    border-left: 3px solid #C9A84C;
-    border-radius: 0;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    line-height: 1.45;
-    letter-spacing: 0.01em;
-  }
+/* Angeheftet, sobald der Buchungsschritt laeuft. Die Klasse setzt
+   probetraining-page.js - entweder weil Bsports Dialog erkannt wurde oder
+   weil in die Terminliste getippt wurde. */
+body.pt-form-step #pt-edge-hint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147482000;
+  margin: 0;
+  max-width: none;
+  pointer-events: none;
+  box-shadow: 0 2px 12px rgba(10, 10, 8, 0.35);
+  padding-top: max(12px, env(safe-area-inset-top));
+  /* Angeheftet steht der Hinweis auch mal ueber dunklem Grund - etwa dem
+     Footer. Ohne Abgrenzung verschwaende er dort. */
+  border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+}
+
+/* Der angeheftete Hinweis liegt oben. Damit er die ersten Zeilen des
+   Formulars nicht verdeckt, rueckt der Buchungsbereich nach. */
+body.pt-form-step .pt-booking-section {
+  padding-top: 96px;
 }
 
 /* Nur mit ?ptdebug=1 sichtbar. */

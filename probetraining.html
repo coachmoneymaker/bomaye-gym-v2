@@ -152,6 +152,13 @@
     <p>Fortgeschrittenen- und Wettkampftraining ist Mitgliedern vorbehalten.</p>
   </div>
   <div class="container">
+    <!-- Notbehelf-Hinweis. Steht bewusst HIER, im eigenen Markup, und wird
+         nicht mehr in Bsports Dialog injiziert: der ist eine React-Portal-
+         Wurzel, und React raeumt fremde Kinder beim naechsten Neuzeichnen
+         wieder weg. Genau daran ist die erste Fassung gescheitert.
+         Hintergrund und naechster sinnvoller Schritt: probetraining-page.js
+         beim Abschnitt "NOTBEHELF". -->
+    <p id="pt-edge-hint">Tipp: Falls sich das Formular nicht scrollen lässt &mdash; am Bildschirmrand wischen.</p>
     <div id="pt-cal-view">
       <noscript>
         <p style="text-align:center;color:rgba(10,10,8,0.6);padding:2rem 0;">

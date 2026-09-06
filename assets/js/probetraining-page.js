@@ -284,7 +284,7 @@
       }
     }
 
-    /* ── NOTBEHELF: sichtbarer Hinweis auf das Wischen am Rand ──────────────
+    /* ── NOTBEHELF: Hinweis auf das Wischen am Rand ────────────────────────
        STAND DER DINGE, damit das in einer spaeteren Sitzung niemand neu
        herleiten muss:
 
@@ -302,31 +302,54 @@
             (overflow:hidden auf <html>)    reproduziert, half aber nur teilweise
 
        Die Punkte 3 bis 5 bleiben in Kraft, sie sind nachweislich richtig.
-       Was danach noch klemmt, ist ungeklaert. Statt eines sechsten Anlaufs
-       hat der Kunde entschieden, den Umweg erst einmal ERKLAERBAR zu machen -
-       so wie es das alte Buchungs-Modal vor PR #34 schon einmal getan hat
-       ("Tipp: Am rechten Rand wischen zum Scrollen", Commit e99c0b9).
+       Was danach noch klemmt, ist ungeklaert. Der Kunde hat entschieden, den
+       Umweg vorerst zu ERKLAEREN statt einen sechsten Anlauf zu nehmen.
 
-       Dies ist also ausdruecklich KEINE Loesung, sondern eine Beschriftung
-       des Problems. Wer hier weitermacht: der naechste sinnvolle Schritt ist
-       nicht ein weiterer CSS-Eingriff, sondern Bsports gehosteter
-       Buchungslink - ihre Seite, ihr Scrollen. Faellt der Umweg irgendwann
-       weg, kann dieser Block ersatzlos verschwinden. */
-    function hinweisZeigen(dialog) {
-      if (document.getElementById('pt-edge-hint')) return;
-      var box = document.createElement('p');
-      box.id = 'pt-edge-hint';
-      box.textContent = 'Tipp: Am Bildschirmrand wischen zum Scrollen.';
-      dialog.insertBefore(box, dialog.firstChild);
+       WARUM DIE ERSTE FASSUNG DES HINWEISES UNSICHTBAR BLIEB
+       Sie hat den Hinweis per insertBefore in Bsports Dialog gehaengt. Der
+       ist aber eine React-Portal-Wurzel: React gleicht die Kinder dieses
+       Containers bei jedem Neuzeichnen mit seinem eigenen Baum ab und
+       entfernt dabei, was es nicht kennt. Der Hinweis wurde also eingesetzt,
+       sofort wieder weggeraeumt, vom 500-ms-Takt erneut eingesetzt, und so
+       fort - sichtbar war davon nichts. Nur das Scrollen an den
+       Formularanfang ist aufgefallen, weil es beim ersten Einsetzen einmal
+       wirklich gesprungen ist.
 
-      /* Der Hinweis steht am Anfang des Formulars - wer aber gerade einen
-         Termin ausgewaehlt hat, steht weiter unten auf der Seite und saehe
-         ihn nie. Also einmal an den Anfang des Formulars springen. Das
-         entspricht ohnehin dem, was man nach dem Schrittwechsel erwartet:
-         oben anfangen, nicht mitten im Formular. Der Abzug haelt Abstand zur
-         Kopfzeile, die ueber dem Inhalt liegt. */
-      var y = box.getBoundingClientRect().top + window.scrollY - 84;
+       Deshalb steht der Hinweis jetzt als festes Markup in probetraining.html,
+       ausserhalb von allem, was Bsport oder React gehoert. Hier wird nur noch
+       eine Klasse am <body> gesetzt.
+
+       Faellt der Umweg irgendwann weg, koennen dieser Block, die Klasse und
+       das Markup ersatzlos verschwinden. Der naechste sinnvolle Schritt waere
+       aber ohnehin kein weiterer CSS-Eingriff, sondern Bsports gehosteter
+       Buchungslink - ihre Seite, ihr Scrollen. */
+    var FORM_CLASS = 'pt-form-step';
+    var _gesprungen = false;
+
+    function formSchrittAn() {
+      document.body.classList.add(FORM_CLASS);
+      if (_gesprungen) return;
+      _gesprungen = true;
+      /* Einmal an den Anfang des Buchungsbereichs. Wer gerade einen Termin
+         ausgesucht hat, steht weiter unten - und das Formular beginnt oben.
+         Der Abzug haelt Abstand zur Kopfzeile. */
+      var anker = document.getElementById('pt-booking');
+      if (!anker) return;
+      var y = anker.getBoundingClientRect().top + window.scrollY - 84;
       window.scrollTo({ top: y > 0 ? y : 0, behavior: 'smooth' });
+    }
+
+    /* Zweiter, unabhaengiger Ausloeser. Die Erkennung von Bsports Dialog
+       haengt an deren Klassennamen - aendert Bsport den, faellt der Hinweis
+       wieder still aus. Ein Tipp in die Terminliste ist dagegen der einzige
+       Weg ins Formular und gehoert ganz uns. Lieber einmal zu frueh
+       eingeblendet als im entscheidenden Moment gar nicht. */
+    function ausloeserRuesten() {
+      var view = document.getElementById('pt-cal-view');
+      if (!view) return;
+      view.addEventListener('click', function () {
+        window.setTimeout(formSchrittAn, 400);
+      }, true);
     }
 
     function check() {
@@ -339,7 +362,7 @@
       if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
       einreihen(el);
       entsperren();
-      hinweisZeigen(el);
+      formSchrittAn();
     }
 
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
@@ -356,6 +379,7 @@
        <body> dazukommt. Dazu ein ruhiger Takt fuer Aenderungen, die gar
        keine Mutation ausloesen - etwa eine Regel aus einem nachgeladenen
        Stylesheet. */
+    ausloeserRuesten();
     new MutationObserver(schedule).observe(document.documentElement, {
       childList: true, subtree: true,
       attributes: true, attributeFilter: ['style', 'class']
