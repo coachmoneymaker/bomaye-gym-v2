@@ -1,0 +1,203 @@
+/* Bomaye Gym — Probetraining-Seite
+ *
+ * Nachfolger von probetraining-modal.css. Was hier bewusst FEHLT, ist der
+ * eigentliche Punkt dieser Datei:
+ *
+ *   kein position: fixed          - es gibt kein Overlay mehr
+ *   kein max-height / 100dvh      - nichts deckelt die Hoehe des Widgets
+ *   kein overflow: auto|hidden    - es gibt keinen zweiten Scroll-Container
+ *
+ * Gescrollt wird ausschliesslich das Dokument selbst, genau wie auf
+ * stundenplan.html, wo das Bsport-Widget seit jeher ohne Scroll-Probleme im
+ * Seitenfluss haengt. Eine Hoehenangabe steht hier nur als min-height fuer den
+ * Ladezustand - eine Untergrenze verhindert das Springen des Layouts, eine
+ * Obergrenze wuerde genau den Fehler zurueckholen, den dieser Umbau behebt.
+ */
+
+/* ── Seiten-Hero ── */
+.pt-page-hero {
+  background: #F5F0E8;
+  padding: 100px 24px 60px;
+  text-align: center;
+  border-bottom: 1px solid rgba(10, 10, 8, 0.08);
+}
+.pt-page-hero .pt-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: #C9A84C;
+  margin-bottom: 24px;
+}
+.pt-page-hero .pt-eyebrow::before,
+.pt-page-hero .pt-eyebrow::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: #C9A84C;
+}
+.pt-page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: #0A0A08;
+  letter-spacing: 3px;
+  margin: 0.5rem 0;
+  text-transform: uppercase;
+}
+.pt-page-hero p {
+  color: rgba(10, 10, 8, 0.6);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  margin-top: 0.75rem;
+}
+
+/* ── Kurzer Ablauf, damit die Seite nicht nur aus dem Widget besteht ── */
+.pt-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+.pt-step {
+  flex: 1 1 200px;
+  max-width: 260px;
+  text-align: center;
+}
+.pt-step-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #C9A84C;
+  letter-spacing: 2px;
+}
+.pt-step p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(10, 10, 8, 0.65);
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+
+/* ── Widget-Bereich: im Seitenfluss, ohne Deckel ── */
+.pt-booking-section {
+  background: #F5F0E8;
+  padding: 56px 0 72px;
+}
+.pt-booking-head {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 24px;
+}
+.pt-booking-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: #0A0A08;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.pt-booking-head p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(10, 10, 8, 0.6);
+  margin-top: 0.5rem;
+}
+
+/* Nur eine Untergrenze fuer den Ladezustand - niemals eine Obergrenze. */
+#pt-cal-view {
+  width: 100%;
+  min-height: 420px;
+}
+#pt-cal-view:empty {
+  min-height: 420px;
+}
+
+.pt-booking-note {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(10, 10, 8, 0.55);
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 0 24px;
+}
+
+@media (max-width: 767px) {
+  .pt-page-hero { padding: 84px 20px 44px; }
+  .pt-booking-section { padding: 40px 0 56px; }
+  #pt-cal-view,
+  #pt-cal-view:empty { min-height: 380px; }
+
+  /* Bsport setzt auf seinen Containern Seitenraender, die auf voller Breite
+     als senkrechte Linien am Bildschirmrand erscheinen. Gleiche Behandlung
+     wie auf stundenplan.html. */
+  #pt-cal-view .cleanslate,
+  #pt-cal-view > * {
+    border-left: none !important;
+    border-right: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bsport-Widget — Markenoptik
+   Gilt nur fuer den Kalender, der inline in dieser Seite haengt. Bsports
+   eigener Anmeldedialog haengt an <body> und wird bewusst NICHT angefasst:
+   sein Aussehen und sein Scrollverhalten gehoeren ihm.
+   ───────────────────────────────────────────────────────────────────────── */
+
+#pt-cal-view button,
+#pt-cal-view .MuiButton-root,
+#pt-cal-view [role="button"],
+#pt-cal-view .MuiButtonBase-root {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+#pt-cal-view .MuiButton-contained,
+#pt-cal-view .MuiButton-containedPrimary {
+  background-color: #C9A84C !important;
+  color: #0A0A08 !important;
+  border: 2px solid #C9A84C !important;
+}
+
+#pt-cal-view .MuiButton-text,
+#pt-cal-view .MuiButton-outlined {
+  color: #0A0A08 !important;
+  background: transparent !important;
+  border: 2px solid rgba(10, 10, 8, 0.2) !important;
+}
+
+#pt-cal-view .MuiCard-root,
+#pt-cal-view .MuiPaper-root {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#pt-cal-view .MuiInputBase-root,
+#pt-cal-view .MuiOutlinedInput-root {
+  border-radius: 0 !important;
+}
+
+#pt-cal-view .MuiChip-root {
+  border-radius: 0 !important;
+  background-color: rgba(201, 168, 76, 0.1) !important;
+  color: #0A0A08 !important;
+  border: 1px solid #C9A84C !important;
+}
+
+/* Nur mit ?ptdebug=1 sichtbar. */
+#pt-touch-debug {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2147483000;
+  padding: 8px 10px;
+  background: rgba(10, 10, 8, 0.92);
+  color: #C9A84C;
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  pointer-events: none;
+  word-break: break-all;
+}
