@@ -120,13 +120,13 @@
       transition: color 0.2s;
       text-decoration: none;
     }
-    .u18-back:hover { color: #C9A961; }
-    .u18-back:focus-visible { outline: 2px solid #C9A961; outline-offset: 3px; border-radius: 2px; }
+    .u18-back:hover { color: #C9A84C; }
+    .u18-back:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; border-radius: 0; }
 
     .u18-page h1 {
       font-family: var(--font-display);
       font-size: clamp(2.4rem, 6vw, 3.5rem);
-      color: #C9A961;
+      color: #C9A84C;
       text-transform: uppercase;
       letter-spacing: 0.03em;
       line-height: 1.05;
@@ -153,7 +153,7 @@
     .u18-page h2 {
       font-family: var(--font-display);
       font-size: clamp(1.15rem, 3vw, 1.4rem);
-      color: #C9A961;
+      color: #C9A84C;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       line-height: 1.1;
@@ -171,25 +171,25 @@
     }
 
     .u18-page a {
-      color: #C9A961;
+      color: #C9A84C;
       text-decoration: none;
       border-bottom: 1px solid rgba(201,169,97,0.4);
       transition: border-color 0.2s, color 0.2s;
     }
     .u18-page a:hover {
       color: #b8954e;
-      border-bottom-color: #C9A961;
+      border-bottom-color: #C9A84C;
     }
     .u18-page a:focus-visible {
-      outline: 2px solid #C9A961;
+      outline: 2px solid #C9A84C;
       outline-offset: 3px;
-      border-radius: 2px;
+      border-radius: 0;
     }
 
     /* Info box */
     .u18-infobox {
       background: rgba(201,169,97,0.07);
-      border-left: 3px solid #C9A961;
+      border-left: 3px solid #C9A84C;
       padding: 1rem 1.25rem;
       border-radius: 0 var(--radius) var(--radius) 0;
       margin: 0 0 1.75rem;
@@ -199,7 +199,7 @@
       font-size: 0.78rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #C9A961;
+      color: #C9A84C;
       margin-bottom: 0.75rem;
     }
     .u18-infobox ul {
@@ -224,7 +224,7 @@
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: #C9A961;
+      background: #C9A84C;
     }
 
     /* Document card grid */
@@ -236,7 +236,7 @@
     }
 
     .u18-card {
-      background: #fff;
+      background: #F5F0E8;
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: var(--radius-lg);
       padding: 1.25rem 1.5rem;
@@ -246,7 +246,7 @@
     }
     .u18-card:hover {
       transform: translateY(-2px);
-      border-color: #C9A961;
+      border-color: #C9A84C;
       box-shadow: 0 6px 24px rgba(201,169,97,0.12);
     }
 
@@ -255,7 +255,7 @@
       font-size: 0.72rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      color: #C9A961;
+      color: #C9A84C;
       margin-bottom: 0.6rem;
     }
 
@@ -287,22 +287,22 @@
       font-size: 0.72rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #C9A961;
-      border: 1px solid #C9A961;
+      color: #C9A84C;
+      border: 1px solid #C9A84C;
       padding: 0.65rem 1.25rem;
       border-radius: var(--radius);
       text-decoration: none;
-      border-bottom: 1px solid #C9A961;
+      border-bottom: 1px solid #C9A84C;
       transition: background 0.2s, color 0.2s;
       align-self: flex-start;
     }
     .u18-dl-btn:hover {
-      background: #C9A961;
+      background: #C9A84C;
       color: #1A1A1A;
-      border-bottom-color: #C9A961;
+      border-bottom-color: #C9A84C;
     }
     .u18-dl-btn:focus-visible {
-      outline: 2px solid #C9A961;
+      outline: 2px solid #C9A84C;
       outline-offset: 4px;
       border-radius: var(--radius);
     }
@@ -334,7 +334,7 @@
       border-top: 1px solid rgba(201,169,97,0.15);
       font-family: var(--font-display);
       font-size: 1.4rem;
-      color: #C9A961;
+      color: #C9A84C;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -342,7 +342,7 @@
     /* Print styles */
     @media print {
       #header, footer, .u18-back, .u18-dl-btn { display: none !important; }
-      .u18-page { padding-top: 0; background: #fff; }
+      .u18-page { padding-top: 0; background: #F5F0E8; }
       .u18-inner { padding: 1.5cm; max-width: 100%; color: #000; }
       .u18-page h1, .u18-page h2, .u18-card h3 { color: #000; }
       .u18-page p, .u18-card-desc, .u18-infobox ul li { color: #000; font-size: 10pt; }
