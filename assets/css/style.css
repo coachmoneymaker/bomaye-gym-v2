@@ -34,6 +34,9 @@
   --font-body:    'DM Sans', system-ui, sans-serif;
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Verzoegerung des Sekundaerblocks im Mobilmenue (Info-Links, Konto,
+     Socials). Eine Gruppe, ein Wert — nach der Navigation, vor dem Ende. */
+  --mn-tail: 320ms;
   --ease-out:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   --radius-legacy: 0;   /* frueher 6px — Marke verlangt 0 */
@@ -105,7 +108,7 @@ section[id],
 .sec--smoke { background: var(--smoke); }
 .sec--white { background: #1a1a1a; }
 .sec--ink2  { background: var(--smoke2); }
-.sec--light { background: #f9f7f4; }
+.sec--light { background: #F5F0E8; }
 .sec--light-2 { background: #F5F0E8; }
 section { padding: clamp(80px, 8vw, 120px) 0; }
 .sec-header { text-align: center; margin-bottom: clamp(24px, 4vw, 56px); }
@@ -668,7 +671,7 @@ body.bsport-modal-open #header {
 /* ══════════════════════════════════════════════════════════════
    TEAM
 ══════════════════════════════════════════════════════════════ */
-#team { background: #f9f7f4; }
+#team { background: #F5F0E8; }
 .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .coach-card {
   display: grid; grid-template-columns: 240px 1fr; gap: 0;
@@ -2062,7 +2065,7 @@ footer {
   }
   #intro  { background: var(--smoke) !important; }
   #faq    { background: var(--smoke) !important; }
-  #faq.sec--faq-white { background: #f9f7f4 !important; } /* light variant keeps light bg on mobile */
+  #faq.sec--faq-white { background: #F5F0E8 !important; } /* light variant keeps light bg on mobile */
   #booking{ background: var(--ink2)  !important; }
   .coach-card, .step-card {
     backdrop-filter: none !important;
@@ -2476,15 +2479,15 @@ footer {
 /* ══════════════════════════════════════════════════════════════
    PREMIUM LAYOUT — SECTION RHYTHM & CONTRAST
    Hero (#0A0A08) → Diff/Features (anthracite) → …
-   Meet the Champions (deep black) → Pricing (off-white #f7f7f7)
+   Meet the Champions (deep black) → Pricing (Marken-Creme #F5F0E8)
    → Testimonials (anthracite) → Footer (deep black)
 ══════════════════════════════════════════════════════════════ */
 
 /* ── Hero — deep black ───────────────────────────────── */
 #hero { background: var(--ink-deep); }
 
-/* ── Pricing Section → Off-White Premium ───────────── */
-#pricing { background: #f7f7f7 !important; }
+/* ── Pricing Section → Marken-Creme ────────────────── */
+#pricing { background: #F5F0E8 !important; }
 
 /* Section header — premium gold badge for membership */
 #pricing .sec-header .tag {
@@ -3049,7 +3052,7 @@ footer .footer-grid + div {
 }
 
 /* ── Testimonials Section → Cream (unified with FAQ / Team) ─────────── */
-#testimonials { background: #f9f7f4 !important; }
+#testimonials { background: #F5F0E8 !important; }
 #testimonials::before { background: transparent !important; }
 
 #testimonials .tag--light-inv {
@@ -3499,7 +3502,7 @@ footer .footer-grid + div {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   GOOGLE RATING — CREAM SECTION (testimonials is now #f9f7f4)
+   GOOGLE RATING — CREAM SECTION (testimonials is now #F5F0E8)
 ══════════════════════════════════════════════════════════════ */
 #testimonials .google-rating {
   background: rgba(0,0,0,0.05);
@@ -3856,7 +3859,7 @@ footer .footer-grid + div {
    even when the dark rules carry !important.
    ───────────────────────────────────────────────────────────────────────── */
 #faq.sec--faq-white {
-  background: #f9f7f4 !important;          /* warm off-white */
+  background: #F5F0E8 !important;          /* Marken-Creme */
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-top:    1px solid rgba(0,0,0,0.07) !important;
@@ -4381,7 +4384,7 @@ body {
    WHY BOMAYE — premium depth / 3D card feel
 ══════════════════════════════════════════════════════════════ */
 #why-bomaye {
-  background: #f9f7f4;
+  background: #F5F0E8;
   position: relative;
 }
 /* Subtle diagonal texture overlay */
@@ -4901,7 +4904,7 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):
   }
 
   /* why-card already has solid #F5F0E8 background — good for stacking
-     on the #f9f7f4 section background without any color change.       */
+     on the #F5F0E8 section background without any color change.       */
   .why-card {
     position: sticky !important;
     margin-bottom: 10vh !important;
@@ -5136,7 +5139,7 @@ section { padding: var(--sv) 0; }
    Thin, elegant cues so users feel each section boundary
    without harsh breaks or colour clashes.                    */
 
-/* Testimonials (cream #f9f7f4) → FAQ (cream): gold hairline divider */
+/* Testimonials (Creme) → FAQ (Creme): Gold-Haarlinie als Trenner */
 #testimonials {
   border-bottom: 1px solid rgba(201,168,76,0.20);
 }
@@ -5275,11 +5278,18 @@ section { padding: var(--sv) 0; }
   /* Entrance: each item starts hidden + slight offset           */
   opacity: 0;
   transform: translateY(14px);
-  /* Stagger via --mn-i custom property set inline in HTML       */
+  /* Staffel ueber --mn-i, inline im HTML gesetzt. Nur die sechs
+     Hauptpunkte (Index 0-5) werden gestaffelt; alles darunter kommt
+     als eine ruhige Gruppe (siehe --mn-tail unten) und liest die
+     Indizes 6-10 nicht mehr aus.
+     45ms statt 60ms und 340ms statt 400ms: sichtbarer pro Schritt,
+     insgesamt kuerzer. Das !important ist entfallen — .mn-item traegt
+     keine zweite Klasse mit eigener Transition, es war unnoetig und
+     hat den Druckzustand weiter unten blockiert. */
   transition:
-    opacity    0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    transform  0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    color      0.2s !important;
+    opacity    0.34s var(--ease-expo) calc(var(--mn-i, 0) * 45ms),
+    transform  0.34s var(--ease-expo) calc(var(--mn-i, 0) * 45ms),
+    color      0.2s;
 }
 
 /* When nav is open, items animate in */
@@ -5310,7 +5320,7 @@ section { padding: var(--sv) 0; }
   display: block;
   margin: 0.15rem auto 0.1rem;
   opacity: 0;
-  transition: opacity 0.4s var(--ease-expo) calc(var(--mn-i, 5) * 60ms);
+  transition: opacity 0.3s var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-info-eyebrow,
 #mobile-nav.open .mn-info-eyebrow { opacity: 1; }
@@ -5327,11 +5337,11 @@ section { padding: var(--sv) 0; }
   text-align: center;
   padding: 0.25rem 1rem;
   opacity: 0;
-  transform: translateY(10px);
+  /* Kein Versatz mehr: der Info-Block soll leise erscheinen, nicht
+     einlaufen. Der auffaellige Auftritt gehoert der Navigation. */
   transition:
-    opacity    0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    transform  0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    color      0.2s;
+    opacity 0.3s var(--ease-expo) var(--mn-tail),
+    color   0.2s;
 }
 .mobile-overlay-nav.open .mn-info-link,
 #mobile-nav.open .mn-info-link { opacity: 1; transform: translateY(0); }
@@ -5359,10 +5369,8 @@ section { padding: var(--sv) 0; }
   letter-spacing: 0.5px;
   padding: 0.5rem 1rem;
   opacity: 0;
-  transform: translateY(12px);
   transition:
-    opacity    0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    transform  0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    opacity 0.3s var(--ease-expo) var(--mn-tail),
     color      0.2s;
 }
 .mobile-overlay-nav.open .mn-account,
@@ -5381,7 +5389,7 @@ section { padding: var(--sv) 0; }
   margin: 28px auto 20px;
   flex-shrink: 0;
   opacity: 0;
-  transition: opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms);
+  transition: opacity 0.3s var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-contact-divider,
 #mobile-nav.open .mn-contact-divider { opacity: 1; }
@@ -5391,10 +5399,8 @@ section { padding: var(--sv) 0; }
   gap: 20px;
   margin: 0 0 14px;
   opacity: 0;
-  transform: translateY(12px);
   transition:
-    opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    transform 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms);
+    opacity 0.3s var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-socials,
 #mobile-nav.open .mn-socials { opacity: 1; transform: translateY(0); }
@@ -5422,10 +5428,8 @@ section { padding: var(--sv) 0; }
   line-height: 1.6;
   padding: 4px 12px;
   opacity: 0;
-  transform: translateY(10px);
   transition:
-    opacity 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
-    transform 0.4s var(--ease-expo) calc(var(--mn-i, 0) * 60ms),
+    opacity 0.3s var(--ease-expo) var(--mn-tail),
     color 0.2s ease;
 }
 .mobile-overlay-nav.open .mn-contact-text,
@@ -6500,8 +6504,8 @@ a.mn-contact-text:hover { color: var(--gold); }
   #services   { background: #111111 !important; }
   #booking    { background: #0A0A08 !important; }
   #faq        { background: #111111 !important; }
-  #dna        { background: #F8F6F1 !important; }
-  #disciplines{ background: #F8F6F1 !important; }
+  #dna        { background: #F5F0E8 !important; }
+  #disciplines{ background: #F5F0E8 !important; }
   #early-bird { background: #0A0A08 !important; }
   .diff-block { background: #0A0A08 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }
@@ -6522,7 +6526,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* ── Authority / DNA Section ─────────────────────────────── */
 #dna {
-  background: #F8F6F1 !important;
+  background: #F5F0E8 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-top: 1px solid rgba(201,168,76,0.18) !important;
@@ -6554,7 +6558,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* ── Disciplines / Kurse Section ─────────────────────────── */
 #disciplines {
-  background: #F8F6F1 !important;
+  background: #F5F0E8 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-top: 1px solid rgba(201,168,76,0.18) !important;
@@ -8202,4 +8206,96 @@ a.mn-contact-text:hover { color: var(--gold); }
   .vfacade__play-icon,
   .vfacade__poster img { transition: none; }
   .vfacade:hover .vfacade__poster img { transform: none; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   PAKET A — Menuereihenfolge, Druck- und Fokuszustaende
+   Reine Zustandsebene. Keine neuen Farben, Schriften oder Radien;
+   animiert werden ausschliesslich transform und opacity, wie beim
+   gestapelten Disziplinen-Effekt auf der Startseite.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Der Buchungsknopf im Mobilmenue ───────────────────────────
+   Er traegt .btn .btn--gold .mn-cta, aber NICHT .mn-item — deshalb
+   hat er bisher die Staffel uebersprungen und die Transition von
+   .btn geerbt (transition: all 0.28s, Verzoegerung 0). Gemessen war
+   er nach 17ms da, also vor der Navigation darueber.
+
+   Er bekommt jetzt eine eigene Transition mit fester Verzoegerung:
+   nach der Navigation (letzter Punkt bei 225ms), vor dem
+   Sekundaerblock (320ms). Bewusst nur opacity und kein transform —
+   .btn--gold:hover setzt selbst ein transform, und eine
+   Einblendung mit transform wuerde das im geoeffneten Menue
+   ueberschreiben.                                              */
+.mn-cta {
+  opacity: 0;
+  transition: opacity 0.34s var(--ease-expo) 260ms;
+}
+.mobile-overlay-nav.open .mn-cta,
+#mobile-nav.open .mn-cta { opacity: 1; }
+
+/* ── Druckzustand ──────────────────────────────────────────────
+   .btn--gold:active gibt es bereits (scale 0.98 ueber 80ms) — das
+   ist die Sprache, die hier auf die uebrigen tippbaren Flaechen
+   ausgedehnt wird. .btn--gold, .plan-card, .disc-panel--clickable
+   und .schedule-back-btn bleiben aussen vor, sie haben eigene. */
+.btn:not(.btn--gold):active,
+.nav-link:active,
+.mn-item:active,
+.mn-cta:active,
+.mn-info-link:active,
+.mn-account:active,
+.faq-q:active,
+.coach-social-link:active,
+.social-icon:active,
+.doc-btn:active,
+.burger:active {
+  transform: scale(0.98);
+  transition-duration: 80ms;
+}
+
+/* Die Kurskarten auf /kurse setzen ihr transform selbst ueber
+   .dsk-card.dsk-active bzw. .dsk-adjacent — beide (0,2,0). Die
+   doppelte Klasse hebt den Druckzustand auf (0,3,0), damit gerade
+   die zentrierte Karte, die man tatsaechlich antippt, reagiert.
+   Bewusst statt !important.                                    */
+.dsk-card.dsk-card:active,
+.carousel-card.carousel-card:active {
+  transform: scale(0.98);
+  transition-duration: 80ms;
+}
+
+/* ── Tastaturfokus ─────────────────────────────────────────────
+   Bisher acht verstreute Einzelregeln. Ein Ring in Marken-Gold
+   fuer alles, was Fokus bekommen kann. Die bestehenden Regeln
+   bleiben unangetastet und gewinnen weiterhin, wo sie greifen. */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+/* Diese drei setzen outline: none bzw. entfernen die
+   Tap-Markierung und brauchen den Ring darum ausdruecklich. */
+.fif-field textarea:focus-visible,
+.fif-field input:focus-visible,
+.fif-field select:focus-visible,
+.nav-account-icon:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:not(.btn--gold):active,
+  .nav-link:active,
+  .mn-item:active,
+  .mn-cta:active,
+  .mn-info-link:active,
+  .mn-account:active,
+  .faq-q:active,
+  .coach-social-link:active,
+  .social-icon:active,
+  .doc-btn:active,
+  .burger:active,
+  .dsk-card.dsk-card:active,
+  .carousel-card.carousel-card:active { transform: none; }
 }
