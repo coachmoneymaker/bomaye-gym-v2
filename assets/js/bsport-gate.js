@@ -329,8 +329,9 @@
       if (divs[i].tagName !== 'SCRIPT') add(divs[i]);
     }
 
-    /* Views des Probetraining-Modals (Ladeweg B) */
-    add(document.getElementById('pt-pass-view'));
+    /* View des Probetraining-Modals (Ladeweg B). Seit dem Umbau auf Express
+       Checkout gibt es dort nur noch einen Container - der frueher zusaetzlich
+       eingetragene #pt-pass-view existiert nicht mehr. */
     add(document.getElementById('pt-cal-view'));
 
     /* Eltern der abgefangenen iframes (Ladeweg B und D) */
