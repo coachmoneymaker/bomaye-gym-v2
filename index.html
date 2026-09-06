@@ -2488,6 +2488,51 @@ body[data-modal-open="true"] { overflow: hidden; }
     </div>
   </section>
 
+  <!-- ── ANFAHRT-VIDEO ──────────────────────────────────────────────
+       Fassade statt Einbettung: sichtbar ist zunaechst nur ein eigenes
+       Standbild. Der Player wird erst nach einem Klick geladen — bei
+       YouTube zusaetzlich erst nach Marketing-Einwilligung.
+
+       Umstellung auf eine selbst gehostete Datei: Datei nach
+       /assets/videos/ legen und unten data-video-source auf
+       "selfhosted" setzen. Sonst ist nichts zu aendern.
+  ────────────────────────────────────────────────────────────────── -->
+  <section id="anfahrt-video" aria-labelledby="anfahrt-video-h2">
+    <div class="anfahrt-video-inner reveal">
+      <div class="anfahrt-video-copy">
+        <span class="tag tag--dark">ANFAHRT</span>
+        <h2 id="anfahrt-video-h2">SO FINDEST<br><span class="gold">DU UNS.</span></h2>
+        <p class="anfahrt-video-lead">Das Gym liegt im Tiefhof des Pineapple Park. Das Video zeigt dir den Weg bis zur Hallentür.</p>
+      </div>
+
+      <div class="vfacade"
+           data-video-source="youtube"
+           data-video-id="_9FDrM2PB5k"
+           data-video-mp4="/assets/videos/anfahrt.mp4"
+           data-video-poster="/assets/images/location-arrival.jpg"
+           data-video-title="Anfahrt zum Bomaye Gym Munich, Wilhelm-Hale-Straße 44">
+        <picture class="vfacade__poster">
+          <source type="image/webp"
+                  srcset="/assets/images/location-arrival-405.webp 405w, /assets/images/location-arrival-608.webp 608w, /assets/images/location-arrival.webp 810w"
+                  sizes="(max-width: 430px) 92vw, 380px">
+          <img src="/assets/images/location-arrival.jpg"
+               srcset="/assets/images/location-arrival-405.jpg 405w, /assets/images/location-arrival-608.jpg 608w, /assets/images/location-arrival.jpg 810w"
+               sizes="(max-width: 430px) 92vw, 380px"
+               width="810" height="1440"
+               alt="Trainingshalle des Bomaye Gym Munich im Pineapple Park, Wilhelm-Hale-Straße 44"
+               loading="lazy" decoding="async" />
+        </picture>
+        <button type="button" class="vfacade__play" aria-label="Anfahrtsvideo abspielen">
+          <span class="vfacade__play-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </span>
+          <span>VIDEO ABSPIELEN</span>
+        </button>
+        <p class="vfacade__error" hidden>Das Video ist gerade nicht verfügbar. <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen" target="_blank" rel="noopener">Route in Google Maps öffnen</a>.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ── FOOTER ── -->
   <footer>
     <div class="container">
@@ -3177,6 +3222,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
+<script src="/assets/js/video-facade.js"></script>
 
 <script>
 (function() {
