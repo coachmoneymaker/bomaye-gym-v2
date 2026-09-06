@@ -47,7 +47,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="Personal Training Boxen München | Bomaye Gym" />
   <meta property="og:description" content="Personal Training im Boxen in München im Bomaye Gym. Individuelles Coaching für Technik, Fitness und Performance." />
-  <meta property="og:image" content="https://www.bomayegym.com/assets/images/community.webp" />
+  <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/personal-training-boxen-muenchen" />
   <meta property="og:locale" content="de_DE" />
@@ -350,6 +350,7 @@
       overflow: hidden;
       background: #0A0A08;
     }
+    .pt-coach-photo picture { display: block; width: 100%; height: 100%; }
     .pt-coach-photo img {
       width: 100%;
       height: 100%;
@@ -536,7 +537,17 @@
       <div class="pt-coaches-grid">
         <a href="#pt-booking" class="pt-coach-card reveal">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-raschad.webp?v=6" alt="Coach Raschad Pekpassi" loading="eager" decoding="async" />
+            <picture>
+              <source type="image/webp"
+                      srcset="/assets/images/coach-portrait-1-480.webp 480w, /assets/images/coach-portrait-1-720.webp 720w, /assets/images/coach-portrait-1.webp 1080w"
+                      sizes="(max-width: 900px) 50vw, 25vw">
+              <img src="/assets/images/coach-portrait-1.jpg"
+                   srcset="/assets/images/coach-portrait-1-480.jpg 480w, /assets/images/coach-portrait-1-720.jpg 720w, /assets/images/coach-portrait-1.jpg 1080w"
+                   sizes="(max-width: 900px) 50vw, 25vw"
+                   width="1080" height="1440"
+                   alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand"
+                   loading="eager" decoding="async" />
+            </picture>
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">RASCHAD</h3>
@@ -545,7 +556,17 @@
         </a>
         <a href="#pt-booking" class="pt-coach-card reveal delay-1">
           <div class="pt-coach-photo">
-            <img src="/assets/images/coach-alfonso.webp" alt="Coach Alfonso Fusco" loading="eager" decoding="async" />
+            <picture>
+              <source type="image/webp"
+                      srcset="/assets/images/coach-portrait-2-480.webp 480w, /assets/images/coach-portrait-2-720.webp 720w, /assets/images/coach-portrait-2.webp 1080w"
+                      sizes="(max-width: 900px) 50vw, 25vw">
+              <img src="/assets/images/coach-portrait-2.jpg"
+                   srcset="/assets/images/coach-portrait-2-480.jpg 480w, /assets/images/coach-portrait-2-720.jpg 720w, /assets/images/coach-portrait-2.jpg 1080w"
+                   sizes="(max-width: 900px) 50vw, 25vw"
+                   width="1080" height="1440"
+                   alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand" class="img-nofade"
+                   loading="lazy" decoding="async" />
+            </picture>
           </div>
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">ALFONSO</h3>

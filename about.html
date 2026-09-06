@@ -775,6 +775,7 @@
       border-radius: 0;
       overflow: hidden;
     }
+    .ab-coach-photo-wrap picture { display: block; }
     .ab-coach-photo-wrap img {
       width: 100%;
       aspect-ratio: 3/4;
@@ -869,9 +870,17 @@
       <!-- Raschad Pekpassi -->
       <div class="ab-reveal" data-delay="0">
         <div class="ab-coach-photo-wrap">
-          <img src="/assets/images/coach-raschad.webp?v=6"
-               alt="Raschad Pekpassi — Head Coach &amp; Founder, Bomaye Gym Munich"
-               loading="eager" decoding="async" />
+          <picture>
+            <source type="image/webp"
+                    srcset="/assets/images/coach-portrait-1-480.webp 480w, /assets/images/coach-portrait-1-720.webp 720w, /assets/images/coach-portrait-1.webp 1080w"
+                    sizes="(max-width: 640px) 100vw, 530px">
+            <img src="/assets/images/coach-portrait-1.jpg"
+                 srcset="/assets/images/coach-portrait-1-480.jpg 480w, /assets/images/coach-portrait-1-720.jpg 720w, /assets/images/coach-portrait-1.jpg 1080w"
+                 sizes="(max-width: 640px) 100vw, 530px"
+                 width="1080" height="1440"
+                 alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand"
+                 loading="eager" decoding="async" />
+          </picture>
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">RASCHAD PEKPASSI</h3>
@@ -893,9 +902,17 @@
       <!-- Alfonso Fusco -->
       <div class="ab-reveal" data-delay="300">
         <div class="ab-coach-photo-wrap">
-          <img src="/assets/images/coach-alfonso.webp"
-               alt="Alfonso Fusco — Landestrainer BABV &amp; Kickbox-Weltmeister, Bomaye Gym Munich"
-               loading="eager" decoding="async" />
+          <picture>
+            <source type="image/webp"
+                    srcset="/assets/images/coach-portrait-2-480.webp 480w, /assets/images/coach-portrait-2-720.webp 720w, /assets/images/coach-portrait-2.webp 1080w"
+                    sizes="(max-width: 640px) 100vw, 530px">
+            <img src="/assets/images/coach-portrait-2.jpg"
+                 srcset="/assets/images/coach-portrait-2-480.jpg 480w, /assets/images/coach-portrait-2-720.jpg 720w, /assets/images/coach-portrait-2.jpg 1080w"
+                 sizes="(max-width: 640px) 100vw, 530px"
+                 width="1080" height="1440"
+                 alt="Coach des Bomaye Gym München im Portrait vor der Bomaye-Wand" class="img-nofade"
+                 loading="lazy" decoding="async" />
+          </picture>
         </div>
         <div class="ab-coach-info">
           <h3 class="ab-coach-name">ALFONSO FUSCO</h3>
@@ -924,7 +941,9 @@
   <style>
     .ab-cinema {
       background-color: #0A0A08;
-      background-image: url('/assets/images/community.webp');
+      background-image: url('/assets/images/gym-hall.jpg');
+      background-image: image-set(url('/assets/images/gym-hall.webp') type('image/webp'),
+                                  url('/assets/images/gym-hall.jpg')  type('image/jpeg'));
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
