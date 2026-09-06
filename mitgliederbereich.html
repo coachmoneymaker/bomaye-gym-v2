@@ -74,7 +74,7 @@
       padding: 0;
       background: #0d0d0d;
       min-height: 100vh;
-      color: #fff;
+      color: #F5F0E8;
       font-family: var(--font-body);
     }
 
@@ -88,7 +88,7 @@
       backdrop-filter: blur(20px) saturate(1.4);
       -webkit-backdrop-filter: blur(20px) saturate(1.4);
       border-bottom: 1px solid rgba(197,160,89,0.10);
-      box-shadow: 0 1px 0 rgba(198,164,90,0.05), 0 8px 32px rgba(0,0,0,0.45);
+      box-shadow: 0 1px 0 rgba(201,168,76,0.05), 0 8px 32px rgba(0,0,0,0.45);
       display: flex;
       align-items: center;
       padding: 0 2rem;
@@ -107,7 +107,7 @@
       align-items: center;
       gap: 0.5rem;
       text-decoration: none;
-      color: #fff;
+      color: #F5F0E8;
       flex-shrink: 0;
     }
     .mw-logo-img {
@@ -119,7 +119,7 @@
       font-family: var(--font-display);
       font-size: 1.25rem;
       letter-spacing: 3px;
-      color: #fff;
+      color: #F5F0E8;
       line-height: 1;
     }
     .mw-back-link {
@@ -129,7 +129,7 @@
       font-family: var(--font-head);
       font-size: 0.68rem;
       letter-spacing: 2.5px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(245,240,232,0.45);
       text-decoration: none;
       transition: color 0.22s ease;
       white-space: nowrap;
@@ -145,7 +145,7 @@
 
     /* ── Page intro ─────────────────────────────────────── */
     .mw-intro {
-      background: #ffffff;
+      background: #F5F0E8;
       padding: clamp(48px, 7vw, 80px) 24px 0;
       text-align: center;
     }
@@ -166,7 +166,7 @@
       font-family: var(--font-display);
       font-size: clamp(2rem, 6vw, 3.2rem);
       letter-spacing: 0.1em;
-      color: #0a0a0a;
+      color: #0A0A08;
       margin: 0 0 14px;
       line-height: 1;
     }
@@ -180,7 +180,7 @@
 
     /* ── Widget container ───────────────────────────────── */
     .mw-widget-shell {
-      background: #ffffff;
+      background: #F5F0E8;
       position: relative;
       z-index: 1;
     }
@@ -200,8 +200,8 @@
 
     /* ── Footer strip ────────────────────────────────────── */
     .mw-footer {
-      background: #080808;
-      border-top: 1px solid rgba(198,164,90,0.10);
+      background: #0A0A08;
+      border-top: 1px solid rgba(201,168,76,0.10);
       padding: 1.5rem 1.25rem;
       text-align: center;
     }
@@ -216,7 +216,7 @@
       font-family: var(--font-head);
       font-size: 0.6rem;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(245,240,232,0.3);
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -225,7 +225,7 @@
       font-family: var(--font-head);
       font-size: 0.58rem;
       letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.18);
+      color: rgba(245,240,232,0.18);
     }
 
     /* ── Responsive ──────────────────────────────────────── */
@@ -274,7 +274,7 @@
     <!-- ── NO SUBSCRIPTION CTA ───────────────────────────── -->
     <div style="background:#f5f4f1;border-top:1px solid rgba(0,0,0,0.07);padding:clamp(32px,5vw,48px) 24px;text-align:center;">
       <div style="max-width:520px;margin:0 auto;">
-        <p style="font-family:var(--font-head);font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold,#C6A45A);margin:0 0 10px;">Noch kein Abo?</p>
+        <p style="font-family:var(--font-head);font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold,#C9A84C);margin:0 0 10px;">Noch kein Abo?</p>
         <p style="font-family:var(--font-body);font-size:0.9rem;color:rgba(0,0,0,0.55);margin:0 0 20px;line-height:1.7;">
           Sichere dir jetzt deinen Early Bird Preis — dauerhaft günstiger, bevor das Gym öffnet.
         </p>
@@ -283,10 +283,10 @@
            style="display:inline-flex;align-items:center;gap:0.5rem;
                   font-family:var(--font-head);font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;
                   font-weight:700;text-decoration:none;
-                  padding:0.85rem 2rem;border-radius:10px;
-                  background:linear-gradient(135deg,#C6A45A 0%,#d4b472 52%,#A67C2E 100%);
-                  color:#0a0a0a;
-                  box-shadow:0 0 20px rgba(198,164,90,0.28),0 4px 14px rgba(0,0,0,0.18);">
+                  padding:0.85rem 2rem;border-radius: 0;
+                  background:linear-gradient(135deg,#C9A84C 0%,#d4b472 52%,#A67C2E 100%);
+                  color:#0A0A08;
+                  box-shadow:0 0 20px rgba(201,168,76,0.28),0 4px 14px rgba(0,0,0,0.18);">
           <i class="fa-solid fa-bolt"></i> Mitgliedschaft buchen
         </a>
       </div>
@@ -326,7 +326,7 @@
      * dialogMode: 3 caused the consumerSpace widget to render its login/welcome
      * chrome (header "Willkommen zurück!" + footer "Abmelden") inline but pushed
      * the main profile content into an internal popup layer that never surfaced —
-     * producing the white space seen in the screenshots.
+     * producing the #F5F0E8 space seen in the screenshots.
      *
      * dialogMode: 0 renders the entire widget inline (full-page mode), which is
      * the correct behaviour for a dedicated account page. All content — navigation,

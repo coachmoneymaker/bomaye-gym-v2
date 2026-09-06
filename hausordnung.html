@@ -120,13 +120,13 @@
       transition: color 0.2s;
       text-decoration: none;
     }
-    .ho-back:hover { color: #C9A961; }
-    .ho-back:focus-visible { outline: 2px solid #C9A961; outline-offset: 3px; border-radius: 2px; }
+    .ho-back:hover { color: #C9A84C; }
+    .ho-back:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; border-radius: 0; }
 
     .ho-page h1 {
       font-family: var(--font-display);
       font-size: clamp(2.4rem, 6vw, 3.5rem);
-      color: #C9A961;
+      color: #C9A84C;
       text-transform: uppercase;
       letter-spacing: 0.03em;
       line-height: 1.05;
@@ -154,7 +154,7 @@
     .ho-page h2 {
       font-family: var(--font-display);
       font-size: clamp(1.15rem, 3vw, 1.4rem);
-      color: #C9A961;
+      color: #C9A84C;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       line-height: 1.1;
@@ -193,23 +193,23 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #C9A961;
+      background: #C9A84C;
     }
 
     .ho-page a {
-      color: #C9A961;
+      color: #C9A84C;
       text-decoration: none;
       border-bottom: 1px solid rgba(201,169,97,0.4);
       transition: border-color 0.2s, color 0.2s;
     }
     .ho-page a:hover {
       color: #b8954e;
-      border-bottom-color: #C9A961;
+      border-bottom-color: #C9A84C;
     }
     .ho-page a:focus-visible {
-      outline: 2px solid #C9A961;
+      outline: 2px solid #C9A84C;
       outline-offset: 3px;
-      border-radius: 2px;
+      border-radius: 0;
     }
 
     .ho-divider {
@@ -240,21 +240,21 @@
       font-size: 0.82rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #C9A961;
-      border: 1px solid #C9A961;
+      color: #C9A84C;
+      border: 1px solid #C9A84C;
       padding: 0.85rem 2rem;
       border-radius: var(--radius);
       text-decoration: none;
-      border-bottom: 1px solid #C9A961;
+      border-bottom: 1px solid #C9A84C;
       transition: background 0.2s, color 0.2s;
     }
     .ho-pdf-btn:hover {
-      background: #C9A961;
+      background: #C9A84C;
       color: #1A1A1A;
-      border-bottom-color: #C9A961;
+      border-bottom-color: #C9A84C;
     }
     .ho-pdf-btn:focus-visible {
-      outline: 2px solid #C9A961;
+      outline: 2px solid #C9A84C;
       outline-offset: 4px;
       border-radius: var(--radius);
     }
@@ -262,7 +262,7 @@
     /* Print styles */
     @media print {
       #header, footer, .ho-back, .ho-pdf-cta { display: none !important; }
-      .ho-page { padding-top: 0; background: #fff; }
+      .ho-page { padding-top: 0; background: #F5F0E8; }
       .ho-inner { padding: 1.5cm; max-width: 100%; color: #000; }
       .ho-page h1, .ho-page h2 { color: #000; break-before: auto; }
       .ho-page h2 { break-before: page; }
