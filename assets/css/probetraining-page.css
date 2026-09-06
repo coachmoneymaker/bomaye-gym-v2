@@ -104,6 +104,16 @@
   color: rgba(10, 10, 8, 0.6);
   margin-top: 0.5rem;
 }
+/* Die Einschraenkung steht vor der Terminliste, nicht darunter: wer erst
+   scrollt und dann liest, hat sich den falschen Kurs schon ausgesucht. */
+.pt-booking-limit {
+  display: inline-block;
+  border-left: 2px solid #C9A84C;
+  padding-left: 12px;
+  text-align: left;
+  color: rgba(10, 10, 8, 0.85) !important;
+  font-weight: 600;
+}
 
 /* Nur eine Untergrenze fuer den Ladezustand - niemals eine Obergrenze. */
 #pt-cal-view {

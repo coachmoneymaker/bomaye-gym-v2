@@ -193,6 +193,9 @@
     var BODY_CLASS = 'bsport-modal-open';
     var _scrollY = 0;
     var _locked = false;
+    var _dialog = null;
+    var _dialogObserver = null;
+    var _tick = null;
 
     function lockScroll() {
       if (_locked) return;
@@ -214,46 +217,114 @@
       window.scrollTo({ top: _scrollY, behavior: 'instant' });
     }
 
-    /* Die Hintergrundsperre darf NUR greifen, wenn Bsports Dialog ein fest
-       positioniertes Overlay ist. Dann scrollt er selbst, und die Sperre
-       verhindert nur, dass die Seite darunter mitwandert.
+    /* Hat der Dialog selbst eine Scroll-Flaeche - er selbst oder ein Kind? */
+    function hasOwnScroller(el) {
+      if (el.scrollHeight - el.clientHeight > 4) return true;
+      var kids = el.querySelectorAll('*');
+      for (var i = 0; i < kids.length; i++) {
+        var k = kids[i];
+        if (k.scrollHeight - k.clientHeight <= 4) continue;
+        var oy = window.getComputedStyle(k).overflowY;
+        if (oy === 'auto' || oy === 'scroll') return true;
+      }
+      return false;
+    }
 
-       Haengt der Dialog dagegen im Dokumentfluss, ist das Dokument sein
-       Scroll-Container - eine Sperre wuerde dann genau ihn stilllegen. Gemessen
-       mit einem 22-Feld-Formular und zwoelf echten Wischgesten:
+    /* Die Hintergrundsperre darf nur greifen, wenn Bsports Dialog das Scrollen
+       selbst uebernimmt. Im Zweifel wird NICHT gesperrt - eine mitscrollende
+       Seite hinter dem Dialog ist ein Schoenheitsfehler, eine faelschlich
+       gesetzte Sperre kostet die Buchung.
 
-         Sperre an  -> Dokument scrollbar 0px,    Absende-Button unerreichbar
-         Sperre aus -> Dokument scrollbar 1953px, Absende-Button erreichbar
-
-       Genau diese Sperre lag im alten Overlay schon aktiv auf der Seite, bevor
-       Bsports Dialog ueberhaupt aufging. */
-    function ownScroller(el) {
+         im Dokumentfluss          -> nie sperren, das Dokument IST sein Scroller
+         fest und passt auf den
+           Schirm                  -> sperren, er braucht kein Scrollen
+         fest mit eigener
+           Scroll-Flaeche          -> sperren, er scrollt selbst
+         fest, laenger als der
+           Schirm, ohne Scroller   -> nicht sperren                              */
+    function shouldLock(el) {
       var pos = window.getComputedStyle(el).position;
-      return pos === 'fixed' || pos === 'sticky';
+      if (pos !== 'fixed' && pos !== 'sticky') return false;
+      if (el.getBoundingClientRect().height <= window.innerHeight + 1) return true;
+      return hasOwnScroller(el);
     }
 
     function check() {
       var el = document.querySelector(MODAL_SEL);
-      var open = el !== null;
-      document.body.classList.toggle(BODY_CLASS, open);
-      if (open && ownScroller(el)) { lockScroll(); } else { unlockScroll(); }
+      document.body.classList.toggle(BODY_CLASS, !!el);
+      if (el !== _dialog) { _dialog = el; bindDialog(el); }
+      if (el && shouldLock(el)) { lockScroll(); } else { unlockScroll(); }
     }
 
-    new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
+    /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
+       Auf einen Bildaufbau zusammenfassen, sonst rechnen wir umsonst. */
+    var _pending = false;
+    function schedule() {
+      if (_pending) return;
+      _pending = true;
+      window.requestAnimationFrame(function () { _pending = false; check(); });
+    }
+
+    /* DER PUNKT, AN DEM DIE VORIGE FASSUNG SCHEITERTE
+       Sie beobachtete ausschliesslich body/childList. Das meldet nur, dass ein
+       Kind von <body> dazukommt oder verschwindet - also genau einmal, wenn
+       der Dialog aufgeht. Wechselt DERSELBE Dialog danach seine Positionierung,
+       weil aus der Kalenderauswahl das Anmeldeformular wird, feuert dort nichts
+       mehr. Die Sperre vom Kalenderschritt blieb liegen und legte den
+       Formularschritt still. Nachgestellt:
+
+         Schritt 1 Kalender:  pos=fixed    -> gesperrt   (richtig)
+         Schritt 2 Formular:  pos=absolute -> gesperrt   (falsch)
+         Ergebnis: Dokument scrollbar 0px, Absende-Button unerreichbar
+
+       Deshalb haengt jetzt zusaetzlich ein Beobachter am Dialog selbst, auf
+       style, class und seinen ganzen Inhalt - plus ein ruhiger Takt als Netz
+       fuer Aenderungen, die keine Mutation ausloesen (etwa eine Regel aus
+       einem nachgeladenen Stylesheet). */
+    function bindDialog(el) {
+      if (_dialogObserver) { _dialogObserver.disconnect(); _dialogObserver = null; }
+      if (_tick) { clearInterval(_tick); _tick = null; }
+      if (!el) return;
+      _dialogObserver = new MutationObserver(schedule);
+      _dialogObserver.observe(el, {
+        attributes: true, attributeFilter: ['style', 'class'],
+        childList: true, subtree: true
+      });
+      _tick = setInterval(schedule, 500);
+    }
+
+    new MutationObserver(schedule).observe(document.body, { childList: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('orientationchange', schedule, { passive: true });
     check();
   }
 
   /* ─────────────────── Diagnose ───────────────────
-     Nur mit ?ptdebug=1. Sagt am Geraet, wo das Formular tatsaechlich haengt
-     und wer den Wisch bekommt. Bleibt der Zaehler bei #0, waehrend der Finger
-     auf dem Formular liegt, liegt es in einem fremden Dokument (iframe) - das
-     waere dann Bsports Sache. */
+     Nur mit ?ptdebug=1. Zwei Zeilen am unteren Rand:
+
+       Zeile 1  laufender Zustand von Bsports Dialog - Positionierung, Hoehe
+                gegen Schirmhoehe, eigener Scroller, ob wir gesperrt haben, wie
+                weit die Seite scrollen kann. Dazu die letzten Zustandswechsel,
+                damit auch der Formularschritt ablesbar ist und nicht nur der
+                Kalenderschritt.
+       Zeile 2  was der letzte Wisch getroffen hat und wer ihn geschluckt hat.
+
+     Bleibt der Tippzaehler bei #0, waehrend der Finger auf dem Formular liegt,
+     landet die Beruehrung in einem fremden Dokument (iframe) - das waere dann
+     Bsports Sache und von uns nicht loesbar. */
   function _ptSetupTouchDebug() {
     if (!/[?&]ptdebug=1/.test(window.location.search)) return;
     var box = document.createElement('div');
     box.id = 'pt-touch-debug';
     document.body.appendChild(box);
+    var zeile1 = document.createElement('div');
+    var zeile2 = document.createElement('div');
+    zeile2.style.opacity = '0.75';
+    box.appendChild(zeile1);
+    box.appendChild(zeile2);
     var tipps = 0;
+    var verlauf = [];
+    var letzter = '';
 
     function describe(el) {
       if (!el) return '-';
@@ -262,41 +333,70 @@
       return (el.tagName || '?').toLowerCase() + (el.id ? '#' + el.id : '') + cls;
     }
 
-    function leerlauf() {
-      if (tipps) return;
-      box.textContent = 'Bereit. Tippe auf das Formular. Bleibt die Zahl bei #0, '
-        + 'liegt es in einem fremden Dokument (iframe). Bsport-Dialog offen: '
-        + (document.querySelector('.bsport-user-interaction-modal__container') ? 'ja' : 'nein')
-        + ' | iframes: ' + document.querySelectorAll('iframe').length;
+    function scrollerIn(el) {
+      if (el.scrollHeight - el.clientHeight > 4) return 'selbst';
+      var kids = el.querySelectorAll('*');
+      for (var i = 0; i < kids.length; i++) {
+        var k = kids[i];
+        if (k.scrollHeight - k.clientHeight <= 4) continue;
+        var oy = window.getComputedStyle(k).overflowY;
+        if (oy === 'auto' || oy === 'scroll') return describe(k);
+      }
+      return 'KEINER';
     }
-    leerlauf();
-    setInterval(leerlauf, 1000);
+
+    function zustand() {
+      var el = document.querySelector('.bsport-user-interaction-modal__container');
+      var doc = document.scrollingElement || document.documentElement;
+      var gesperrt = document.body.style.position === 'fixed';
+      var seite = doc.scrollHeight - doc.clientHeight;
+      if (!el) {
+        letzter = 'kein Dialog';
+        zeile1.textContent = 'Kein Bsport-Dialog offen | Seite scrollbar ' + seite
+          + 'px | Sperre ' + (gesperrt ? 'AN' : 'aus')
+          + ' | iframes: ' + document.querySelectorAll('iframe').length;
+        return;
+      }
+      var pos = window.getComputedStyle(el).position;
+      var h = Math.round(el.getBoundingClientRect().height);
+      var kurz = pos + ' ' + h + '/' + window.innerHeight + ' ' + (gesperrt ? 'gesperrt' : 'frei');
+      if (kurz !== letzter) {
+        letzter = kurz;
+        verlauf.push(kurz);
+        if (verlauf.length > 3) verlauf.shift();
+      }
+      zeile1.textContent = 'Dialog ' + pos + ' h=' + h + '/' + window.innerHeight
+        + ' Scroller=' + scrollerIn(el)
+        + ' | Sperre ' + (gesperrt ? 'AN' : 'aus')
+        + ' | Seite ' + seite + 'px'
+        + ' | Verlauf: ' + verlauf.join(' -> ');
+    }
+    zustand();
+    setInterval(zustand, 500);
+
+    zeile2.textContent = 'Noch nicht getippt (#0). Bleibt die Zahl stehen, waehrend '
+      + 'der Finger auf dem Formular liegt: fremdes Dokument (iframe).';
 
     document.addEventListener('touchstart', function (e) {
       var t = e.touches[0]; if (!t) return;
       tipps++;
       var el = document.elementFromPoint(t.clientX, t.clientY);
       if (el && el.tagName === 'IFRAME') {
-        box.textContent = '#' + tipps + ' IFRAME — fremdes Dokument, nicht von uns loesbar.';
+        zeile2.textContent = '#' + tipps + ' IFRAME — fremdes Dokument, nicht von uns loesbar.';
         return;
       }
-      /* Naechster senkrecht scrollender Vorfahr - der Kasten, der den Wisch
-         tatsaechlich schluckt. */
       var n = el, treffer = null;
       while (n && n !== document.body) {
         var cs = window.getComputedStyle(n);
         if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll') && n.scrollHeight - n.clientHeight > 4) {
-          treffer = { el: n, cs: cs }; break;
+          treffer = n; break;
         }
         n = n.parentElement;
       }
-      var doc = document.scrollingElement || document.documentElement;
-      box.textContent = '#' + tipps + ' ' + describe(el)
+      zeile2.textContent = '#' + tipps + ' ' + describe(el)
         + (treffer
-            ? ' | scrollt: ' + describe(treffer.el) + ' (' + (treffer.el.scrollHeight - treffer.el.clientHeight) + 'px)'
-            : ' | kein innerer Scroll-Kasten')
-        + ' | Seite scrollbar um ' + (doc.scrollHeight - doc.clientHeight) + 'px'
-        + ' | body fixiert: ' + (document.body.style.position === 'fixed' ? 'JA' : 'nein');
+            ? ' | schluckt: ' + describe(treffer) + ' (' + (treffer.scrollHeight - treffer.clientHeight) + 'px)'
+            : ' | kein innerer Scroll-Kasten');
     }, { passive: true });
   }
 
