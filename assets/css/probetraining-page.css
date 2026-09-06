@@ -260,6 +260,42 @@ body.bsport-modal-open #pt-cal-view {
   display: none !important;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   NOTBEHELF: Hinweis auf das Wischen am Bildschirmrand
+
+   Steht als erstes Element im Anmeldeformular, also bevor jemand hineinlaeuft
+   und stecken bleibt - nicht darunter, wo er zu spaet kaeme.
+
+   Nur auf Geraeten mit grobem Zeiger, sprich per Finger. Am Zeigergeraet gibt
+   es den Umweg nicht, dort waere der Hinweis nur Rauschen.
+
+   Warum es diesen Hinweis gibt und was stattdessen die eigentliche Loesung
+   waere, steht ausfuehrlich in probetraining-page.js bei hinweisZeigen().
+   Kurz: PR #43, fuenf Anlaeufe, Ursache liegt in Bsports MUI-Dialog. Faellt
+   der Umweg weg, kann dieser Block ersatzlos verschwinden.
+   ───────────────────────────────────────────────────────────────────────── */
+
+#pt-edge-hint {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  #pt-edge-hint {
+    display: block;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    background: #0A0A08;
+    color: #F5F0E8;
+    border: none;
+    border-left: 3px solid #C9A84C;
+    border-radius: 0;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+  }
+}
+
 /* Nur mit ?ptdebug=1 sichtbar. */
 #pt-touch-debug {
   position: fixed;

@@ -284,6 +284,51 @@
       }
     }
 
+    /* ── NOTBEHELF: sichtbarer Hinweis auf das Wischen am Rand ──────────────
+       STAND DER DINGE, damit das in einer spaeteren Sitzung niemand neu
+       herleiten muss:
+
+       Auf dem Anmeldeformular laesst sich auf iOS je nach Zustand nur am
+       Bildschirmrand scrollen. Die Ursache liegt nicht bei uns, sondern in
+       der Kombination aus Bsports MUI-Dialog und WebKit. PR #43 hat das in
+       fuenf Anlaeufen verfolgt:
+
+         1. CSS auf #pt-cal-view          - falsches Element, Bsport rendert
+                                            das Formular in ein Portal an <body>
+         2. dasselbe klassenbasiert       - ebenfalls falsches Element
+         3. Umbau Overlay -> eigene Seite - richtig und behalten, reichte nicht
+         4. Dialog in den Seitenfluss     - richtig und behalten, reichte nicht
+         5. MUIs eigene Scroll-Sperre     - siehe entsperren(), belegt und
+            (overflow:hidden auf <html>)    reproduziert, half aber nur teilweise
+
+       Die Punkte 3 bis 5 bleiben in Kraft, sie sind nachweislich richtig.
+       Was danach noch klemmt, ist ungeklaert. Statt eines sechsten Anlaufs
+       hat der Kunde entschieden, den Umweg erst einmal ERKLAERBAR zu machen -
+       so wie es das alte Buchungs-Modal vor PR #34 schon einmal getan hat
+       ("Tipp: Am rechten Rand wischen zum Scrollen", Commit e99c0b9).
+
+       Dies ist also ausdruecklich KEINE Loesung, sondern eine Beschriftung
+       des Problems. Wer hier weitermacht: der naechste sinnvolle Schritt ist
+       nicht ein weiterer CSS-Eingriff, sondern Bsports gehosteter
+       Buchungslink - ihre Seite, ihr Scrollen. Faellt der Umweg irgendwann
+       weg, kann dieser Block ersatzlos verschwinden. */
+    function hinweisZeigen(dialog) {
+      if (document.getElementById('pt-edge-hint')) return;
+      var box = document.createElement('p');
+      box.id = 'pt-edge-hint';
+      box.textContent = 'Tipp: Am Bildschirmrand wischen zum Scrollen.';
+      dialog.insertBefore(box, dialog.firstChild);
+
+      /* Der Hinweis steht am Anfang des Formulars - wer aber gerade einen
+         Termin ausgewaehlt hat, steht weiter unten auf der Seite und saehe
+         ihn nie. Also einmal an den Anfang des Formulars springen. Das
+         entspricht ohnehin dem, was man nach dem Schrittwechsel erwartet:
+         oben anfangen, nicht mitten im Formular. Der Abzug haelt Abstand zur
+         Kopfzeile, die ueber dem Inhalt liegt. */
+      var y = box.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({ top: y > 0 ? y : 0, behavior: 'smooth' });
+    }
+
     function check() {
       var el = document.querySelector(MODAL_SEL);
       document.body.classList.toggle(BODY_CLASS, !!el);
@@ -294,6 +339,7 @@
       if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
       einreihen(el);
       entsperren();
+      hinweisZeigen(el);
     }
 
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
