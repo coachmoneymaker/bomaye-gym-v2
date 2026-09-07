@@ -8299,3 +8299,108 @@ a.mn-contact-text:hover { color: var(--gold); }
   .dsk-card.dsk-card:active,
   .carousel-card.carousel-card:active { transform: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PAKET 1 — Ueberschriften-Hierarchie (Audit-Befund 03)
+
+   Die sieben Detail-Hero-Ueberschriften und "Alle Preise." waren <h1>. Auf
+   einer Seite gehoert genau eine <h1>, und die ist hier die versteckte mit der
+   deutschen Suchformulierung. Semantisch sind es jetzt <h3> bzw. <h2>.
+
+   Das Stylesheet setzt Schriftgroessen aber ueber den Elementnamen:
+     h1  clamp(3rem, 8vw, 6.5rem)
+     h2  clamp(2.5rem, 5.5vw, 4.5rem)   mobil clamp(2.2rem, 6.5vw, 3.5rem)
+     h3  clamp(1.6rem, 3vw, 2.2rem)     mobil clamp(1.4rem, 4.5vw, 1.9rem)
+
+   Ein reiner Tag-Tausch haette diese Ueberschriften also auf ein Drittel
+   geschrumpft. Die beiden Regeln hier stellen exakt die frueheren h1-Werte
+   wieder her - gleiche Zahl, gleiche Funktion, kein neuer Wert. Sie stehen
+   ueber der Klasse und schlagen damit auch die mobilen Elementregeln.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.detail-hero-content h3 { font-size: clamp(3rem, 8vw, 6.5rem); }
+.mehr-preise-page h2    { font-size: clamp(3rem, 8vw, 6.5rem); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PAKET 1 — Trefferflaechen auf Fingergroesse (Audit-Befund 09)
+
+   Gemessen bei 390px: 55 von 160 Bedienelementen lagen unter 44px, dem Wert
+   aus Apples Richtlinien. Vier Fusszeilen-Links waren 16px hoch.
+
+   TECHNIK: unsichtbare Flaeche per ::after, NICHT Innenabstand.
+
+   Der erste Anlauf arbeitete mit Innenabstand plus negativem Aussenabstand.
+   Das ist rechnerisch layoutneutral, war es in der Messung aber nicht: die
+   Fusszeile schrumpfte um 28px, weil negative Aussenabstaende in Flex-
+   Containern die Zeilenhoehe mitziehen. Bei zwei Dutzend verschiedenen
+   Umgebungen ist das nicht sauber auszurechnen.
+
+   Eine ueberlagerte ::after-Flaeche nimmt dagegen per Definition keinen Platz
+   im Layout ein - sie kann gar keine Verschiebung ausloesen. Die sichtbare
+   Kachel, ihre Raender, Abstaende und Schriftgroessen bleiben unberuehrt; es
+   waechst ausschliesslich, was der Finger trifft.
+
+   AUSGENOMMEN: Links mitten im Fliesstext (.footer-seo-link, .footer-trust,
+   Einwilligungshinweis). WCAG 2.2 nimmt sie ausdruecklich aus ("Inline: the
+   target is in a sentence") - eine 44px-Flaeche wuerde dort die Flaechen der
+   Nachbarzeilen ueberlappen.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.footer-links a,
+.footer-contact-item > a,
+.footer-contactbar > a,
+.footer-pineapple > a,
+.footer-legal > a,
+.footer-app-badges > a,
+.partner-link,
+.social-icon,
+.mn-info-link,
+.mn-contact-text,
+.mn-account,
+.family-modal-close,
+.hero-eyebrow,
+.sched-print-link,
+.sched-convbar-cta,
+.sched-convbar-x,
+.slot-modal__close-text,
+.pt-modal-close,
+/* Bewertungs-Link: eigenstaendig, aber ohne Klasse - ueber das Ziel adressiert. */
+a[href*="g.page"],
+/* bsport-Logo in der Vertrauenszeile: Bildmarke, kein Fliesstext. */
+.footer-trust > a {
+  position: relative;
+}
+
+.footer-links a::after,
+.footer-contact-item > a::after,
+.footer-contactbar > a::after,
+.footer-pineapple > a::after,
+.footer-legal > a::after,
+.footer-app-badges > a::after,
+.partner-link::after,
+.social-icon::after,
+.mn-info-link::after,
+.mn-contact-text::after,
+.mn-account::after,
+.family-modal-close::after,
+.hero-eyebrow::after,
+.sched-print-link::after,
+.sched-convbar-cta::after,
+.sched-convbar-x::after,
+.slot-modal__close-text::after,
+.pt-modal-close::after,
+a[href*="g.page"]::after,
+.footer-trust > a::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  /* Rein zum Antippen da - nichts zu sehen, nichts zu erben. */
+  background: none;
+  border: 0;
+  pointer-events: auto;
+}
