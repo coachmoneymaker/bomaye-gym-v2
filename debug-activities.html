@@ -45,8 +45,15 @@
 
        Der Kalender wird hier OHNE metaActivities-Filter gemountet
        (config.calendar = {}), zeigt also alle Kurse. Das Skript unten faengt
-       die JSON-Antworten von bsport.io ab und listet jedes Objekt mit
-       id + name gross auf der Seite auf.
+       die JSON-Antworten von bsport.io ab.
+
+       Zweiter Anlauf: der erste Versuch hat aus JEDER Antwort jedes Objekt
+       mit id + name genommen und deshalb Bsports globales Kategorien-
+       Woerterbuch ausgegeben (rund 2000 generische Eintraege, mehrsprachig,
+       kleine IDs — "Kick Boxing" = 85). Gesucht sind aber die Aktivitaeten
+       dieses Studios (244xxx). Die stehen in der Stundenplan-Antwort, an
+       jedem Termin als meta_activity_id bzw. verschachteltes meta_activity.
+       Die Auswertung liest jetzt gezielt diese Termin-Objekte.
 
        Nicht verlinkt, nicht in der Sitemap, auf noindex.
        ════════════════════════════════════════════════════════════════════ -->
@@ -97,15 +104,24 @@
     .hinweis { font-size: 14px; opacity: 0.7; margin-bottom: 18px; }
     #status { font-size: 15px; padding: 10px 12px; background: #141310;
               border-left: 3px solid #C9A84C; margin-bottom: 18px; }
-    .gruppe { margin: 0 0 26px; }
-    .gruppe h2 { font-size: 15px; color: #C9A84C; margin: 0 0 8px;
+    .gruppe { margin: 0 0 30px; }
+    .gruppe h2 { font-size: 15px; color: #C9A84C; margin: 0 0 4px;
                  text-transform: uppercase; letter-spacing: 1px; }
+    .gruppe .hinweis { margin-bottom: 10px; }
     .zeile { font-size: 26px; padding: 7px 0; border-bottom: 1px solid #241f18;
              word-break: break-word; }
+    .zeile.klein { font-size: 15px; padding: 3px 0; opacity: 0.75; }
+    .zeile.leer { font-size: 17px; color: #C9A84C; border: 0; }
     .id { color: #C9A84C; font-weight: 700; }
+    .zusatz { opacity: 0.6; font-size: 17px; }
+    details { margin-bottom: 30px; }
+    summary { font-size: 15px; color: #C9A84C; cursor: pointer;
+              text-transform: uppercase; letter-spacing: 1px; }
     button { font: inherit; font-size: 15px; background: #C9A84C; color: #0A0A08;
              border: 0; padding: 12px 18px; cursor: pointer; margin-bottom: 18px; }
-    #kalender { margin-top: 30px; opacity: 0.25; }
+    #kalender { margin-top: 30px; opacity: 0.6; }
+    #kalender h2 { font-size: 15px; color: #C9A84C; text-transform: uppercase;
+                   letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -117,8 +133,11 @@
 <button type="button" onclick="bsAuswerten()">Neu einlesen</button>
 <div id="ausgabe"></div>
 
-<!-- Kalender ohne Filter: zeigt alle Kurse. Absichtlich blass, er wird nicht gebraucht. -->
-<div id="kalender"><div id="bsport-widget-999001"></div></div>
+<!-- Kalender ohne Filter: zeigt alle Kurse. Wird zum Abgleich gebraucht. -->
+<div id="kalender">
+  <h2>Kalender (alle Kurse, ohne Filter)</h2>
+  <div id="bsport-widget-999001"></div>
+</div>
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
@@ -127,64 +146,235 @@
 (function () {
   'use strict';
 
-  /* Jedes Objekt mit numerischer id und Textnamen einsammeln, nach dem Feld
-     gruppiert, unter dem es steckte. meta_activity ist das gesuchte. */
-  function sammeln(wert, feld, treffer, tiefe) {
-    if (!wert || tiefe > 9) return;
+  /* ── Warum hier nicht mehr blind alles eingesammelt wird ────────────────
+     Der erste Versuch hat jedes Objekt mit id + name aus jeder Antwort
+     genommen. Damit kam Bsports globales Kategorien-Woerterbuch heraus:
+     rund 2000 generische Eintraege in mehreren Sprachen, kleine IDs
+     ("Kick Boxing" = 85). Das sind nicht die Aktivitaeten dieses Studios.
+
+     Die studio-eigenen Aktivitaeten stecken in der Stundenplan-Antwort:
+     jeder Termin traegt dort meta_activity_id bzw. ein verschachteltes
+     meta_activity-Objekt (siehe @bsport/common, available-payment.type.ts).
+     Genau diese Termin-Objekte werden jetzt gezielt gelesen — erkennbar
+     daran, dass sie neben der Aktivitaet auch Datum, Trainer oder
+     Standort tragen, was ein Woerterbuch-Eintrag nie hat.
+     --------------------------------------------------------------------- */
+
+  var STUDIO_VON = 200000;   /* Die Studio-IDs liegen im 244xxx-Bereich, der   */
+  var STUDIO_BIS = 999999;   /* Rahmen ist bewusst weit, damit nichts wegfaellt. */
+
+  function zahl(v) { return typeof v === 'number' && isFinite(v); }
+  function text(v) { return (typeof v === 'string' && v.trim()) ? v.trim() : ''; }
+  function sicher(s) {
+    return String(s).replace(/[<>&]/g, function (c) {
+      return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c];
+    });
+  }
+
+  /* Felder, die ein Termin hat und ein Woerterbuch-Eintrag nicht. */
+  var TERMIN_MERKMALE = ['date_start', 'date_end', 'start_date', 'end_date',
+    'datetime_start', 'datetime_end', 'start', 'coach', 'coaches', 'establishment',
+    'capacity', 'session_type', 'booking_count', 'duration', 'level', 'room'];
+
+  function istTermin(o) {
+    if (!('meta_activity' in o) && !('meta_activity_id' in o)) return false;
+    for (var i = 0; i < TERMIN_MERKMALE.length; i++) {
+      if (TERMIN_MERKMALE[i] in o) return true;
+    }
+    return false;
+  }
+
+  function nameVon(p) {
+    if (!p || typeof p !== 'object') return '';
+    return text(p.name) || text(p.title) || text(p.label) ||
+           (text(p.first_name) + ' ' + text(p.last_name)).trim();
+  }
+
+  function trainerVon(o) {
+    var q = o.coach || o.coaches || o.trainer;
+    if (Array.isArray(q)) {
+      var n = [];
+      for (var i = 0; i < q.length; i++) { var e = nameVon(q[i]); if (e) n.push(e); }
+      return n.join(', ');
+    }
+    return nameVon(q) || text(q);
+  }
+
+  function zeitVon(o) {
+    var r = text(o.date_start) || text(o.datetime_start) || text(o.start_date) || text(o.start);
+    if (!r) return '';
+    var d = new Date(r);
+    if (isNaN(d.getTime())) return r;
+    var zwei = function (n) { return (n < 10 ? '0' : '') + n; };
+    return zwei(d.getDate()) + '.' + zwei(d.getMonth() + 1) + '. ' +
+           zwei(d.getHours()) + ':' + zwei(d.getMinutes());
+  }
+
+  /* Ein Durchgang durch eine Antwort fuellt drei Sammlungen:
+       kurse   - id → name, ausschliesslich aus Termin-Objekten (das Gesuchte)
+       termine - die einzelnen Termine, zum Abgleich mit dem sichtbaren Plan
+       alle    - id → name aus dem ganzen Baum, nur als Netz darunter        */
+  function gehen(wert, quelle, feld, s, tiefe) {
+    if (!wert || tiefe > 10) return;
     if (Array.isArray(wert)) {
-      for (var i = 0; i < wert.length; i++) sammeln(wert[i], feld, treffer, tiefe + 1);
+      for (var i = 0; i < wert.length; i++) gehen(wert[i], quelle, feld, s, tiefe + 1);
       return;
     }
     if (typeof wert !== 'object') return;
-    if (typeof wert.id === 'number' && typeof wert.name === 'string' && wert.name.trim()) {
-      var f = feld || '(Wurzel)';
-      treffer[f] = treffer[f] || {};
-      treffer[f][wert.id] = wert.name.trim();
+
+    if (istTermin(wert)) {
+      var ma = wert.meta_activity;
+      var id = null;
+      var name = '';
+      if (ma && typeof ma === 'object') {
+        if (zahl(ma.id)) id = ma.id;
+        name = nameVon(ma);
+      } else if (zahl(ma)) {
+        id = ma;
+      }
+      if (id === null && zahl(wert.meta_activity_id)) id = wert.meta_activity_id;
+      if (!name) name = nameVon(wert);
+
+      if (id !== null) {
+        var da = s.kurse[id];
+        if (!da) s.kurse[id] = { name: name, quelle: quelle, anzahl: 1 };
+        else {
+          da.anzahl++;
+          if (name.length > da.name.length) da.name = name;
+        }
+        s.termine.push({ id: id, name: name, zeit: zeitVon(wert), trainer: trainerVon(wert) });
+      }
     }
+
+    if (zahl(wert.id)) {
+      var n2 = nameVon(wert);
+      if (n2 && !s.alle[wert.id]) {
+        s.alle[wert.id] = { name: n2, feld: feld || '(Wurzel)', quelle: quelle };
+      }
+    }
+
     for (var k in wert) {
-      if (Object.prototype.hasOwnProperty.call(wert, k)) sammeln(wert[k], k, treffer, tiefe + 1);
+      if (Object.prototype.hasOwnProperty.call(wert, k)) gehen(wert[k], quelle, k, s, tiefe + 1);
     }
+  }
+
+  function gruppe(titel, hinweis) {
+    var g = document.createElement('div');
+    g.className = 'gruppe';
+    var h = document.createElement('h2');
+    h.textContent = titel;
+    g.appendChild(h);
+    if (hinweis) {
+      var p = document.createElement('p');
+      p.className = 'hinweis';
+      p.textContent = hinweis;
+      g.appendChild(p);
+    }
+    return g;
+  }
+
+  function zeile(g, links, rechts, zusatz, klasse) {
+    var z = document.createElement('div');
+    z.className = 'zeile' + (klasse ? ' ' + klasse : '');
+    z.innerHTML = '<span class="id">' + sicher(links) + '</span> &nbsp; ' + sicher(rechts) +
+      (zusatz ? ' <span class="zusatz">' + sicher(zusatz) + '</span>' : '');
+    g.appendChild(z);
   }
 
   window.bsAuswerten = function () {
     var antworten = window.__bsAntworten || [];
-    var status = document.getElementById('status');
     var aus = document.getElementById('ausgabe');
-    var treffer = {};
-    for (var i = 0; i < antworten.length; i++) sammeln(antworten[i].daten, null, treffer, 0);
+    var s = { kurse: {}, termine: [], alle: {} };
+    for (var i = 0; i < antworten.length; i++) {
+      gehen(antworten[i].daten, antworten[i].url, null, s, 0);
+    }
 
-    var felder = Object.keys(treffer).sort(function (a, b) {
-      var pa = a.indexOf('meta_activity') !== -1 ? 0 : 1;
-      var pb = b.indexOf('meta_activity') !== -1 ? 0 : 1;
-      return pa - pb || a.localeCompare(b);
-    });
+    var kursIds = Object.keys(s.kurse).sort(function (a, b) { return a - b; });
 
-    var gesamt = 0;
-    felder.forEach(function (f) { gesamt += Object.keys(treffer[f]).length; });
-
-    status.textContent = antworten.length + ' Antworten von bsport.io mitgeschnitten, '
-      + gesamt + ' Einträge mit id + name gefunden.'
-      + (antworten.length === 0 ? '  ⚠ Nichts empfangen — Cookie-Banner akzeptiert?' : '');
+    document.getElementById('status').textContent =
+      antworten.length + ' Antworten von bsport.io · ' +
+      kursIds.length + ' Kurse aus dem Stundenplan · ' +
+      s.termine.length + ' einzelne Termine' +
+      (antworten.length === 0 ? '   ⚠ Nichts empfangen — Cookie-Banner akzeptiert?' : '');
 
     aus.innerHTML = '';
-    felder.forEach(function (f) {
-      var g = document.createElement('div');
-      g.className = 'gruppe';
-      var h = document.createElement('h2');
-      h.textContent = f + (f.indexOf('meta_activity') !== -1 ? '   ← das hier ist gesucht' : '');
-      g.appendChild(h);
-      var ids = Object.keys(treffer[f]).sort(function (a, b) { return a - b; });
-      ids.forEach(function (id) {
-        var z = document.createElement('div');
-        z.className = 'zeile';
-        z.innerHTML = '<span class="id">' + id + '</span> &nbsp; ' +
-          String(treffer[f][id]).replace(/[<>&]/g, function (c) {
-            return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c];
-          });
-        g.appendChild(z);
-      });
-      aus.appendChild(g);
+
+    /* 1 — das Gesuchte: nur die Aktivitaeten, die an echten Terminen haengen. */
+    var g1 = gruppe('1 · Kurse aus dem Stundenplan   ← das hier ist gesucht',
+      'Nur Aktivitäten, die an einem echten Termin dieses Studios hängen.');
+    if (kursIds.length === 0) {
+      zeile(g1, '—', 'Noch nichts gefunden. Im Kalender unten eine Woche weiterblättern, dann „Neu einlesen“.', '', 'leer');
+    }
+    kursIds.forEach(function (id) {
+      var k = s.kurse[id];
+      zeile(g1, id, k.name || '(ohne Namen)', '');
     });
+    aus.appendChild(g1);
+
+    /* 2 — die Termine selbst, damit sich die ID gegen den sichtbaren Plan
+           pruefen laesst ("Bomaye Kickboxing, 20:00, Alfonso Fusco"). */
+    var gesehen = {};
+    var termine = s.termine.filter(function (t) {
+      var s2 = t.id + '|' + t.zeit;
+      if (gesehen[s2]) return false;
+      gesehen[s2] = 1;
+      return true;
+    }).slice(0, 80);
+    if (termine.length) {
+      var g2 = gruppe('2 · Einzelne Termine (zum Abgleich mit dem Kalender)',
+        'Zeigt Zeit und Trainer neben der ID — so lässt sich z. B. „Bomaye Kickboxing, 20:00, Alfonso Fusco“ eindeutig zuordnen.');
+      termine.forEach(function (t) {
+        zeile(g2, t.id, t.name || '(ohne Namen)',
+          [t.zeit, t.trainer].filter(Boolean).join(' · '));
+      });
+      aus.appendChild(g2);
+    }
+
+    /* 3 — Netz darunter: alle IDs im Studio-Bereich, falls die
+           Termin-Erkennung an einer unbekannten Feldstruktur scheitert. */
+    var studioIds = Object.keys(s.alle).filter(function (id) {
+      return Number(id) >= STUDIO_VON && Number(id) <= STUDIO_BIS;
+    }).sort(function (a, b) { return a - b; });
+    if (studioIds.length) {
+      var g3 = gruppe('3 · Alle IDs ab ' + STUDIO_VON + ' (Reserve)',
+        'Falls Abschnitt 1 leer bleibt: die studio-eigenen IDs liegen im 244xxx-Bereich.');
+      studioIds.forEach(function (id) {
+        zeile(g3, id, s.alle[id].name, s.alle[id].feld);
+      });
+      aus.appendChild(g3);
+    }
+
+    /* 4 — welche Endpunkte ueberhaupt geantwortet haben. */
+    var d4 = document.createElement('details');
+    var z4 = document.createElement('summary');
+    z4.textContent = '4 · Antworten von bsport.io (' + antworten.length + ')';
+    d4.appendChild(z4);
+    antworten.forEach(function (a, n) {
+      var z = document.createElement('div');
+      z.className = 'zeile klein';
+      z.textContent = (n + 1) + '. ' + a.url;
+      d4.appendChild(z);
+    });
+    aus.appendChild(d4);
+
+    /* 5 — der alte, ungefilterte Blick. Bleibt eingeklappt, weil hier das
+           globale Woerterbuch drin steckt, das beim ersten Versuch stoerte. */
+    var uebrig = Object.keys(s.alle).filter(function (id) {
+      return !(Number(id) >= STUDIO_VON && Number(id) <= STUDIO_BIS);
+    }).sort(function (a, b) { return a - b; });
+    var d5 = document.createElement('details');
+    var z5 = document.createElement('summary');
+    z5.textContent = '5 · Alles Übrige, ungefiltert (' + uebrig.length +
+      ') — enthält Bsports globales Kategorien-Wörterbuch';
+    d5.appendChild(z5);
+    uebrig.slice(0, 400).forEach(function (id) {
+      var z = document.createElement('div');
+      z.className = 'zeile klein';
+      z.innerHTML = '<span class="id">' + id + '</span> &nbsp; ' +
+        sicher(s.alle[id].name) + ' <span class="zusatz">' + sicher(s.alle[id].feld) + '</span>';
+      d5.appendChild(z);
+    });
+    aus.appendChild(d5);
   };
 
   /* Widget ohne Filter mounten - gleiche Kette wie auf den anderen Seiten:
@@ -232,7 +422,7 @@
   } else {
     mounten();
   }
-  setInterval(window.bsAuswerten, 3000);
+  setInterval(function () { window.bsAuswerten(); }, 3000);
 })();
 </script>
 
