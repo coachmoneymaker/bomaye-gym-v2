@@ -1,0 +1,337 @@
+/* Bomaye Gym — Probetraining-Seite
+ *
+ * Nachfolger von probetraining-modal.css. Was hier bewusst FEHLT, ist der
+ * eigentliche Punkt dieser Datei:
+ *
+ *   kein position: fixed          - es gibt kein Overlay mehr
+ *   kein max-height / 100dvh      - nichts deckelt die Hoehe des Widgets
+ *   kein overflow: auto|hidden    - es gibt keinen zweiten Scroll-Container
+ *
+ * Gescrollt wird ausschliesslich das Dokument selbst, genau wie auf
+ * stundenplan.html, wo das Bsport-Widget seit jeher ohne Scroll-Probleme im
+ * Seitenfluss haengt. Eine Hoehenangabe steht hier nur als min-height fuer den
+ * Ladezustand - eine Untergrenze verhindert das Springen des Layouts, eine
+ * Obergrenze wuerde genau den Fehler zurueckholen, den dieser Umbau behebt.
+ */
+
+/* ── Seiten-Hero ── */
+.pt-page-hero {
+  background: #F5F0E8;
+  padding: 100px 24px 60px;
+  text-align: center;
+  border-bottom: 1px solid rgba(10, 10, 8, 0.08);
+}
+.pt-page-hero .pt-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: #C9A84C;
+  margin-bottom: 24px;
+}
+.pt-page-hero .pt-eyebrow::before,
+.pt-page-hero .pt-eyebrow::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: #C9A84C;
+}
+.pt-page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: #0A0A08;
+  letter-spacing: 3px;
+  margin: 0.5rem 0;
+  text-transform: uppercase;
+}
+.pt-page-hero p {
+  color: rgba(10, 10, 8, 0.6);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  margin-top: 0.75rem;
+}
+
+/* ── Kurzer Ablauf, damit die Seite nicht nur aus dem Widget besteht ── */
+.pt-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+.pt-step {
+  flex: 1 1 200px;
+  max-width: 260px;
+  text-align: center;
+}
+.pt-step-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #C9A84C;
+  letter-spacing: 2px;
+}
+.pt-step p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(10, 10, 8, 0.65);
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+
+/* ── Widget-Bereich: im Seitenfluss, ohne Deckel ── */
+.pt-booking-section {
+  background: #F5F0E8;
+  padding: 56px 0 72px;
+}
+.pt-booking-head {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 24px;
+}
+.pt-booking-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: #0A0A08;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.pt-booking-head p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(10, 10, 8, 0.6);
+  margin-top: 0.5rem;
+}
+/* Die Einschraenkung steht vor der Terminliste, nicht darunter: wer erst
+   scrollt und dann liest, hat sich den falschen Kurs schon ausgesucht. */
+.pt-booking-limit {
+  display: inline-block;
+  border-left: 2px solid #C9A84C;
+  padding-left: 12px;
+  text-align: left;
+  color: rgba(10, 10, 8, 0.85) !important;
+  font-weight: 600;
+}
+
+/* Nur eine Untergrenze fuer den Ladezustand - niemals eine Obergrenze. */
+#pt-cal-view {
+  width: 100%;
+  min-height: 420px;
+}
+#pt-cal-view:empty {
+  min-height: 420px;
+}
+
+.pt-booking-note {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(10, 10, 8, 0.55);
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 0 24px;
+}
+
+@media (max-width: 767px) {
+  .pt-page-hero { padding: 84px 20px 44px; }
+  .pt-booking-section { padding: 40px 0 56px; }
+  #pt-cal-view,
+  #pt-cal-view:empty { min-height: 380px; }
+
+  /* Bsport setzt auf seinen Containern Seitenraender, die auf voller Breite
+     als senkrechte Linien am Bildschirmrand erscheinen. Gleiche Behandlung
+     wie auf stundenplan.html. */
+  #pt-cal-view .cleanslate,
+  #pt-cal-view > * {
+    border-left: none !important;
+    border-right: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bsport-Widget — Markenoptik
+   Gilt nur fuer den Kalender, der inline in dieser Seite haengt. Bsports
+   eigener Anmeldedialog haengt an <body> und wird bewusst NICHT angefasst:
+   sein Aussehen und sein Scrollverhalten gehoeren ihm.
+   ───────────────────────────────────────────────────────────────────────── */
+
+#pt-cal-view button,
+#pt-cal-view .MuiButton-root,
+#pt-cal-view [role="button"],
+#pt-cal-view .MuiButtonBase-root {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+#pt-cal-view .MuiButton-contained,
+#pt-cal-view .MuiButton-containedPrimary {
+  background-color: #C9A84C !important;
+  color: #0A0A08 !important;
+  border: 2px solid #C9A84C !important;
+}
+
+#pt-cal-view .MuiButton-text,
+#pt-cal-view .MuiButton-outlined {
+  color: #0A0A08 !important;
+  background: transparent !important;
+  border: 2px solid rgba(10, 10, 8, 0.2) !important;
+}
+
+#pt-cal-view .MuiCard-root,
+#pt-cal-view .MuiPaper-root {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#pt-cal-view .MuiInputBase-root,
+#pt-cal-view .MuiOutlinedInput-root {
+  border-radius: 0 !important;
+}
+
+#pt-cal-view .MuiChip-root {
+  border-radius: 0 !important;
+  background-color: rgba(201, 168, 76, 0.1) !important;
+  color: #0A0A08 !important;
+  border: 1px solid #C9A84C !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bsports Anmeldedialog in den Seitenfluss zwingen
+
+   Der Kalenderschritt scrollt einwandfrei, weil die Terminliste in unserem
+   eigenen Markup haengt (#pt-cal-view) und das Dokument sie scrollt. Erst
+   beim Tippen auf einen Termin baut Bsport seinen Dialog auf, haengt ihn an
+   <body> und positioniert ihn fest, mit eigener Scroll-Flaeche. Ab da klemmte
+   es - und deshalb half die Randleiste: die gehoerte noch zum Dokument.
+
+   Statt Bsports Positionierung zu messen und darauf zu reagieren, wird sie
+   hier ueberschrieben. Der Dialog bekommt keine Sonderrolle mehr, er ist ein
+   Abschnitt der Seite wie jeder andere.
+
+   position: relative statt static - dann bleibt er im Fluss, liefert aber
+   weiterhin den Bezugsrahmen fuer absolut positionierte Kinder (Schliessen-
+   Kreuz, Auswahllisten), die sonst an einen fremden Vorfahren springen.
+
+   Eng auf die bekannte Bsport-Klasse begrenzt. Ohne Dialog greift hier
+   nichts - der Kalenderschritt bleibt unberuehrt.
+   ───────────────────────────────────────────────────────────────────────── */
+
+body .bsport-user-interaction-modal__container {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  /* Ein transform macht das Element zum Bezugsrahmen fuer feste
+     Positionierung darin - dann waere position: fixed bei Kindern wieder
+     wirksam, obwohl wir sie eingereiht haben. */
+  transform: none !important;
+  z-index: auto !important;
+  /* Die Abdunklung des Hintergrunds ergibt im Fluss keinen Sinn mehr und
+     wuerde den Text unlesbar machen. */
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Kein Nachfahre darf eine eigene senkrechte Scroll-Flaeche oder eine
+   Hoehendeckelung aufmachen. Nur senkrecht: eine waagerechte Auswahl darf
+   weiter seitlich scrollen. */
+body .bsport-user-interaction-modal__container * {
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+
+/* Solange das Formular offen ist, tritt die Terminliste zurueck. Damit steht
+   das Formular genau dort, wo eben noch der Kalender stand - gleicher
+   Container, gleiche Breite, gleiches Scrollen. */
+body.bsport-modal-open #pt-cal-view {
+  display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   NOTBEHELF: Hinweis auf das Wischen am Bildschirmrand
+
+   KEINE Geraeteabfrage mehr. Die erste Fassung war mit @media (pointer:
+   coarse) abgeriegelt - und auf dem Geraet des Kunden blieb der Hinweis
+   unsichtbar. Die eigentliche Ursache lag zwar woanders (der Hinweis hing in
+   Bsports React-Portal und wurde dort laufend weggeraeumt, siehe
+   probetraining-page.js), aber die Lehre bleibt: ein Hinweis, der auf dem
+   Zeigergeraet ueberfluessig ist, kostet nichts. Einer, der genau dort
+   ausfaellt, wo er gebraucht wird, kostet die Buchung. Also wird er ueberall
+   angezeigt.
+
+   Zwei Zustaende, ein Element:
+     ruhend   im Seitenfluss ueber der Terminliste - wird gelesen, bevor
+              ueberhaupt jemand hineinlaeuft
+     angeheftet  sobald der Buchungsschritt laeuft, oben am Bildschirmrand,
+              damit er nicht von der Scrollposition abhaengt
+
+   pointer-events: none ist Pflicht - der Hinweis darf unter keinen Umstaenden
+   selbst Beruehrungen abfangen, sonst waere er Teil des Problems.
+   ───────────────────────────────────────────────────────────────────────── */
+
+#pt-edge-hint {
+  margin: 0 auto 20px;
+  max-width: 640px;
+  padding: 12px 14px;
+  background: #0A0A08;
+  color: #F5F0E8;
+  border: none;
+  border-left: 3px solid #C9A84C;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+
+/* Angeheftet, sobald der Buchungsschritt laeuft. Die Klasse setzt
+   probetraining-page.js - entweder weil Bsports Dialog erkannt wurde oder
+   weil in die Terminliste getippt wurde. */
+body.pt-form-step #pt-edge-hint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147482000;
+  margin: 0;
+  max-width: none;
+  pointer-events: none;
+  box-shadow: 0 2px 12px rgba(10, 10, 8, 0.35);
+  padding-top: max(12px, env(safe-area-inset-top));
+  /* Angeheftet steht der Hinweis auch mal ueber dunklem Grund - etwa dem
+     Footer. Ohne Abgrenzung verschwaende er dort. */
+  border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+}
+
+/* Der angeheftete Hinweis liegt oben. Damit er die ersten Zeilen des
+   Formulars nicht verdeckt, rueckt der Buchungsbereich nach. */
+body.pt-form-step .pt-booking-section {
+  padding-top: 96px;
+}
+
+/* Nur mit ?ptdebug=1 sichtbar. */
+#pt-touch-debug {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2147483000;
+  padding: 8px 10px;
+  background: rgba(10, 10, 8, 0.92);
+  color: #C9A84C;
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  pointer-events: none;
+  word-break: break-all;
+}

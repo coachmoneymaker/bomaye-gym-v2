@@ -8,9 +8,26 @@
       "permanent": true
     },
     {
-      "source": "/probetraining",
-      "destination": "/index?probetraining=1",
-      "permanent": true
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "probetraining"
+        }
+      ],
+      "destination": "/probetraining",
+      "permanent": false
+    },
+    {
+      "source": "/index",
+      "has": [
+        {
+          "type": "query",
+          "key": "probetraining"
+        }
+      ],
+      "destination": "/probetraining",
+      "permanent": false
     }
   ]
 }
