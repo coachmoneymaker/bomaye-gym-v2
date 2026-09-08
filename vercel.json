@@ -3,6 +3,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/coming-soon",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/alle-preise",
       "destination": "/mitglied-werden",
       "permanent": true
