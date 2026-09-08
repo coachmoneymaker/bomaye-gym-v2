@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
+       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
+       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+  <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
+  <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
+       Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
+       die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
+       data-cookieconsent="ignore" ist zwingend: dieser Block darf von Cookiebot NICHT
+       blockiert werden, sonst gaebe es keinen Default, gegen den das Update laufen kann. -->
+  <script data-cookieconsent="ignore">
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("consent", "default", {
+      ad_personalization: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500,
+    });
+    gtag("set", "ads_data_redaction", true);
+    gtag("set", "url_passthrough", false);
+  </script>
+  <!-- End Google Consent Mode v2 -->
+  <!-- Cookiebot CMP — muss direkt nach dem Consent-Default und VOR GTM/gtag.js stehen. -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
+  <!-- End Cookiebot CMP -->
+  <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Debug: Bsport-Aktivitäten</title>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       TEMPORÄRE DEBUG-SEITE — nach Gebrauch loeschen.
+
+       Zweck: die IDs der Bsport-Aktivitaeten sichtbar machen, weil sie im
+       Backoffice nicht auffindbar waren und in den Entwicklertools zwischen
+       Uebersetzungsdateien untergingen.
+
+       Der Kalender wird hier OHNE metaActivities-Filter gemountet
+       (config.calendar = {}), zeigt also alle Kurse. Das Skript unten faengt
+       die JSON-Antworten von bsport.io ab und listet jedes Objekt mit
+       id + name gross auf der Seite auf.
+
+       Nicht verlinkt, nicht in der Sitemap, auf noindex.
+       ════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Antworten mitschneiden. Muss stehen, BEVOR das Widget seine Daten holt. -->
+  <script data-cookieconsent="ignore">
+  (function () {
+    window.__bsAntworten = [];
+    function merken(url, text) {
+      try {
+        var t = (text || '').trim();
+        if (!t || (t.charAt(0) !== '{' && t.charAt(0) !== '[')) return;
+        window.__bsAntworten.push({ url: String(url), daten: JSON.parse(t) });
+      } catch (e) { /* keine JSON-Antwort, ignorieren */ }
+    }
+    var istBsport = function (u) { return String(u).indexOf('bsport') !== -1; };
+
+    var origFetch = window.fetch;
+    if (origFetch) {
+      window.fetch = function () {
+        var url = (arguments[0] && arguments[0].url) || arguments[0];
+        var p = origFetch.apply(this, arguments);
+        if (istBsport(url)) {
+          p.then(function (r) { r.clone().text().then(function (t) { merken(url, t); }); })
+           .catch(function () {});
+        }
+        return p;
+      };
+    }
+
+    var oOpen = XMLHttpRequest.prototype.open;
+    var oSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function (m, u) { this.__url = u; return oOpen.apply(this, arguments); };
+    XMLHttpRequest.prototype.send = function () {
+      var x = this;
+      x.addEventListener('load', function () {
+        if (istBsport(x.__url)) merken(x.__url, x.responseText);
+      });
+      return oSend.apply(this, arguments);
+    };
+  })();
+  </script>
+
+  <style>
+    body { margin: 0; padding: 20px; background: #0A0A08; color: #F5F0E8;
+           font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    h1 { font-size: 22px; margin: 0 0 4px; color: #C9A84C; }
+    .hinweis { font-size: 14px; opacity: 0.7; margin-bottom: 18px; }
+    #status { font-size: 15px; padding: 10px 12px; background: #141310;
+              border-left: 3px solid #C9A84C; margin-bottom: 18px; }
+    .gruppe { margin: 0 0 26px; }
+    .gruppe h2 { font-size: 15px; color: #C9A84C; margin: 0 0 8px;
+                 text-transform: uppercase; letter-spacing: 1px; }
+    .zeile { font-size: 26px; padding: 7px 0; border-bottom: 1px solid #241f18;
+             word-break: break-word; }
+    .id { color: #C9A84C; font-weight: 700; }
+    button { font: inherit; font-size: 15px; background: #C9A84C; color: #0A0A08;
+             border: 0; padding: 12px 18px; cursor: pointer; margin-bottom: 18px; }
+    #kalender { margin-top: 30px; opacity: 0.25; }
+  </style>
+</head>
+<body>
+
+<h1>Bsport-Aktivitäten</h1>
+<p class="hinweis">Temporäre Hilfsseite. Cookie-Banner akzeptieren, dann 5–10 Sekunden warten.</p>
+
+<div id="status">Warte auf Einwilligung und Widget…</div>
+<button type="button" onclick="bsAuswerten()">Neu einlesen</button>
+<div id="ausgabe"></div>
+
+<!-- Kalender ohne Filter: zeigt alle Kurse. Absichtlich blass, er wird nicht gebraucht. -->
+<div id="kalender"><div id="bsport-widget-999001"></div></div>
+
+<!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
+<script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Jedes Objekt mit numerischer id und Textnamen einsammeln, nach dem Feld
+     gruppiert, unter dem es steckte. meta_activity ist das gesuchte. */
+  function sammeln(wert, feld, treffer, tiefe) {
+    if (!wert || tiefe > 9) return;
+    if (Array.isArray(wert)) {
+      for (var i = 0; i < wert.length; i++) sammeln(wert[i], feld, treffer, tiefe + 1);
+      return;
+    }
+    if (typeof wert !== 'object') return;
+    if (typeof wert.id === 'number' && typeof wert.name === 'string' && wert.name.trim()) {
+      var f = feld || '(Wurzel)';
+      treffer[f] = treffer[f] || {};
+      treffer[f][wert.id] = wert.name.trim();
+    }
+    for (var k in wert) {
+      if (Object.prototype.hasOwnProperty.call(wert, k)) sammeln(wert[k], k, treffer, tiefe + 1);
+    }
+  }
+
+  window.bsAuswerten = function () {
+    var antworten = window.__bsAntworten || [];
+    var status = document.getElementById('status');
+    var aus = document.getElementById('ausgabe');
+    var treffer = {};
+    for (var i = 0; i < antworten.length; i++) sammeln(antworten[i].daten, null, treffer, 0);
+
+    var felder = Object.keys(treffer).sort(function (a, b) {
+      var pa = a.indexOf('meta_activity') !== -1 ? 0 : 1;
+      var pb = b.indexOf('meta_activity') !== -1 ? 0 : 1;
+      return pa - pb || a.localeCompare(b);
+    });
+
+    var gesamt = 0;
+    felder.forEach(function (f) { gesamt += Object.keys(treffer[f]).length; });
+
+    status.textContent = antworten.length + ' Antworten von bsport.io mitgeschnitten, '
+      + gesamt + ' Einträge mit id + name gefunden.'
+      + (antworten.length === 0 ? '  ⚠ Nichts empfangen — Cookie-Banner akzeptiert?' : '');
+
+    aus.innerHTML = '';
+    felder.forEach(function (f) {
+      var g = document.createElement('div');
+      g.className = 'gruppe';
+      var h = document.createElement('h2');
+      h.textContent = f + (f.indexOf('meta_activity') !== -1 ? '   ← das hier ist gesucht' : '');
+      g.appendChild(h);
+      var ids = Object.keys(treffer[f]).sort(function (a, b) { return a - b; });
+      ids.forEach(function (id) {
+        var z = document.createElement('div');
+        z.className = 'zeile';
+        z.innerHTML = '<span class="id">' + id + '</span> &nbsp; ' +
+          String(treffer[f][id]).replace(/[<>&]/g, function (c) {
+            return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c];
+          });
+        g.appendChild(z);
+      });
+      aus.appendChild(g);
+    });
+  };
+
+  /* Widget ohne Filter mounten - gleiche Kette wie auf den anderen Seiten:
+     Einwilligung abwarten, CDN laden, mounten. */
+  function mounten() {
+    var ziel = document.getElementById('bsport-widget-999001');
+    if (typeof window.bomayeGateBsport !== 'function') {
+      document.getElementById('status').textContent =
+        'Consent-Brücke nicht geladen — Bsport bleibt aus.';
+      return;
+    }
+    window.bomayeGateBsport(ziel, function () {
+      if (!document.getElementById('bsport-cdn')) {
+        var s = document.createElement('script');
+        s.id = 'bsport-cdn';
+        s.src = 'https://cdn.bsport.io/scripts/widget.js';
+        document.head.appendChild(s);
+      }
+      var n = 0;
+      var t = setInterval(function () {
+        if (window.BsportWidget) {
+          clearInterval(t);
+          window.BsportWidget.mount({
+            parentElement: 'bsport-widget-999001',
+            companyId: 5473,
+            franchiseId: null,
+            dialogMode: 3,
+            widgetType: 'calendar',
+            showFab: false,
+            fullScreenPopup: false,
+            styles: undefined,
+            config: { calendar: {} }   /* KEIN Filter: alle Kurse */
+          });
+          setTimeout(window.bsAuswerten, 2500);
+          setTimeout(window.bsAuswerten, 6000);
+        } else if (++n > 100) {
+          clearInterval(t);
+        }
+      }, 150);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mounten);
+  } else {
+    mounten();
+  }
+  setInterval(window.bsAuswerten, 3000);
+})();
+</script>
+
+</body>
+</html>
