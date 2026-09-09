@@ -167,34 +167,32 @@
                  nicht auffindbar und wurden ueber die temporaere Debug-Seite
                  aus den Termin-Objekten des Kalender-Widgets ausgelesen
                  (PR #46 / #47). Damit das nicht noch einmal jemand suchen
-                 muss, hier die vollstaendige Zuordnung:
+                 muss, hier die vollstaendige Zuordnung samt Begruendung:
 
-                   236749  Bomaye Boxing Advanced        (nicht im Filter)
-                   236751  Bomaye Kickboxing
-                   244420  BOXING KIDS (6-9 Jahre)
-                   244426  BOXING BASICS
-                   244431  YOUTH FIGHT TEAM
-                   244432  BOMAYE FIGHT TEAM
-                   244539  BOMAYE QUEENS
-                   244563  BOXING YOUTH (10-17 Jahre)
-                   245265  OPEN GYM
-                   249398  POWER LAUNCH                  (nicht im Filter)
+                   236749  Bomaye Boxing Advanced   raus - Fortgeschrittene
+                   236751  Bomaye Kickboxing        DRIN
+                   244420  BOXING KIDS (6-9 Jahre)  DRIN
+                   244426  BOXING BASICS            DRIN
+                   244431  YOUTH FIGHT TEAM         raus - Wettkampf
+                   244432  BOMAYE FIGHT TEAM        raus - Wettkampf, Profi
+                   244539  BOMAYE QUEENS            DRIN
+                   244563  BOXING YOUTH (10-17)     DRIN
+                   245265  OPEN GYM                 raus - freies Training fuer
+                                                    Mitglieder, kein angeleiteter
+                                                    Einstieg
+                   249398  POWER LAUNCH             raus - von der Seite bereits
+                                                    entfernt
 
-                 Achtung, offener Punkt: der Text ueber dem Kalender sagt
-                 "Fortgeschrittenen- und Wettkampftraining ist Mitgliedern
-                 vorbehalten", der Filter laesst aber YOUTH FIGHT TEAM und
-                 BOMAYE FIGHT TEAM (Profi) zur kostenlosen Probe zu. Das ist
-                 eine Entscheidung des Studios, keine technische Frage, und
-                 steht deshalb unveraendert. */
+                 Die fuenf verbleibenden Kurse sind genau die, die der Text
+                 ueber dem Kalender zusagt. Wer den Filter aendert, muss den
+                 Text in probetraining.html mitaendern - sonst verspricht die
+                 Seite etwas, das nicht buchbar ist, oder umgekehrt. */
               metaActivities: [
-                236751,   /* Bomaye Kickboxing        - im Seitentext zugesagt */
-                244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"                 */
-                244426,   /* BOXING BASICS            - "Basic"                */
-                244431,   /* YOUTH FIGHT TEAM                                  */
-                244432,   /* BOMAYE FIGHT TEAM                                 */
-                244539,   /* BOMAYE QUEENS                                     */
-                244563,   /* BOXING YOUTH (10-17)     - "Youth"                */
-                245265    /* OPEN GYM                                          */
+                236751,   /* Bomaye Kickboxing        - "Kickboxing" */
+                244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"       */
+                244426,   /* BOXING BASICS            - "Basic"      */
+                244539,   /* BOMAYE QUEENS            - "Queens"     */
+                244563    /* BOXING YOUTH (10-17)     - "Youth"      */
               ],
               levels: [],
               variant: 'time',
