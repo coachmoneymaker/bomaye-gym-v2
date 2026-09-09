@@ -39,36 +39,56 @@
   <!-- ════════════════════════════════════════════════════════════════════
        TEMPORÄRE DEBUG-SEITE — nach Gebrauch loeschen.
 
-       Zweck: die IDs der Bsport-Aktivitaeten sichtbar machen, weil sie im
-       Backoffice nicht auffindbar waren und in den Entwicklertools zwischen
-       Uebersetzungsdateien untergingen.
+       Zweck: die IDs der Bsport-Aktivitaeten dieses Studios sichtbar machen.
+       Im Backoffice waren sie nicht auffindbar, in den Entwicklertools gingen
+       sie zwischen Uebersetzungsdateien unter.
 
-       Der Kalender wird hier OHNE metaActivities-Filter gemountet
-       (config.calendar = {}), zeigt also alle Kurse. Das Skript unten faengt
-       die JSON-Antworten von bsport.io ab.
+       Anlauf 1 hat aus jeder Antwort jedes Objekt mit id + name genommen und
+       damit Bsports globales Kategorien-Woerterbuch ausgegeben (rund 2000
+       generische, mehrsprachige Eintraege — "Kick Boxing" = 85). Auffaellig
+       daran: es kamen nur zwei Gruppen heraus, "(Wurzel)" und "SCS". Eine
+       Gruppe mit den Kursen des Studios fehlte voellig, obwohl der Kalender
+       darunter "Bomaye Kickboxing" korrekt anzeigt. Die Daten des Studios
+       stecken also nicht dort, wo sie erwartet wurden.
 
-       Zweiter Anlauf: der erste Versuch hat aus JEDER Antwort jedes Objekt
-       mit id + name genommen und deshalb Bsports globales Kategorien-
-       Woerterbuch ausgegeben (rund 2000 generische Eintraege, mehrsprachig,
-       kleine IDs — "Kick Boxing" = 85). Gesucht sind aber die Aktivitaeten
-       dieses Studios (244xxx). Die stehen in der Stundenplan-Antwort, an
-       jedem Termin als meta_activity_id bzw. verschachteltes meta_activity.
-       Die Auswertung liest jetzt gezielt diese Termin-Objekte.
+       Anlauf 2 geht deshalb drei unabhaengige Wege gleichzeitig — es reicht,
+       wenn einer greift:
+         A  aus dem gerenderten Kalender ueber Reacts Props
+         B  aus den mitgeschnittenen Antworten, gezielt aus Termin-Objekten
+         C  Volltextsuche nach "Bomaye" im Rohtext jeder Antwort
+
+       Der Kalender wird ohne metaActivities-Filter gemountet
+       (config.calendar = {}), zeigt also alle Kurse.
 
        Nicht verlinkt, nicht in der Sitemap, auf noindex.
        ════════════════════════════════════════════════════════════════════ -->
 
-  <!-- Antworten mitschneiden. Muss stehen, BEVOR das Widget seine Daten holt. -->
+  <!-- Antworten mitschneiden. Muss stehen, BEVOR das Widget seine Daten holt.
+       Jede Antwort von bsport.io wird protokolliert (Laenge, ob JSON, ob der
+       Name "Bomaye" darin vorkommt) — auch die, die kein JSON sind. Der
+       Rohtext wird nur dort behalten, wo "Bomaye" vorkommt; das sind die
+       studio-eigenen Daten, und nur die werden gebraucht. -->
   <script data-cookieconsent="ignore">
   (function () {
     window.__bsAntworten = [];
-    function merken(url, text) {
+    window.__bsProtokoll = [];
+
+    function merken(url, text, quelle) {
+      var t = text || '';
+      var eintrag = {
+        url: String(url), quelle: quelle, laenge: t.length,
+        json: false, bomaye: t.indexOf('Bomaye') !== -1
+      };
+      window.__bsProtokoll.push(eintrag);
+      var g = t.trim();
+      if (!g || (g.charAt(0) !== '{' && g.charAt(0) !== '[')) return;
       try {
-        var t = (text || '').trim();
-        if (!t || (t.charAt(0) !== '{' && t.charAt(0) !== '[')) return;
-        window.__bsAntworten.push({ url: String(url), daten: JSON.parse(t) });
-      } catch (e) { /* keine JSON-Antwort, ignorieren */ }
+        var daten = JSON.parse(g);
+        eintrag.json = true;
+        window.__bsAntworten.push({ url: String(url), daten: daten, bomaye: eintrag.bomaye });
+      } catch (e) { /* kein JSON, bleibt im Protokoll vermerkt */ }
     }
+
     var istBsport = function (u) { return String(u).indexOf('bsport') !== -1; };
 
     var origFetch = window.fetch;
@@ -77,7 +97,7 @@
         var url = (arguments[0] && arguments[0].url) || arguments[0];
         var p = origFetch.apply(this, arguments);
         if (istBsport(url)) {
-          p.then(function (r) { r.clone().text().then(function (t) { merken(url, t); }); })
+          p.then(function (r) { r.clone().text().then(function (t) { merken(url, t, 'fetch'); }); })
            .catch(function () {});
         }
         return p;
@@ -90,7 +110,7 @@
     XMLHttpRequest.prototype.send = function () {
       var x = this;
       x.addEventListener('load', function () {
-        if (istBsport(x.__url)) merken(x.__url, x.responseText);
+        if (istBsport(x.__url)) merken(x.__url, x.responseText, 'xhr');
       });
       return oSend.apply(this, arguments);
     };
@@ -110,16 +130,19 @@
     .gruppe .hinweis { margin-bottom: 10px; }
     .zeile { font-size: 26px; padding: 7px 0; border-bottom: 1px solid #241f18;
              word-break: break-word; }
-    .zeile.klein { font-size: 15px; padding: 3px 0; opacity: 0.75; }
+    .zeile.klein { font-size: 14px; padding: 3px 0; opacity: 0.8; }
     .zeile.leer { font-size: 17px; color: #C9A84C; border: 0; }
     .id { color: #C9A84C; font-weight: 700; }
-    .zusatz { opacity: 0.6; font-size: 17px; }
+    .zusatz { opacity: 0.6; font-size: 16px; }
+    pre { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+          white-space: pre-wrap; word-break: break-all; background: #141310;
+          padding: 10px; margin: 0 0 10px; border-left: 3px solid #241f18; }
     details { margin-bottom: 30px; }
     summary { font-size: 15px; color: #C9A84C; cursor: pointer;
               text-transform: uppercase; letter-spacing: 1px; }
     button { font: inherit; font-size: 15px; background: #C9A84C; color: #0A0A08;
              border: 0; padding: 12px 18px; cursor: pointer; margin-bottom: 18px; }
-    #kalender { margin-top: 30px; opacity: 0.6; }
+    #kalender { margin-top: 30px; }
     #kalender h2 { font-size: 15px; color: #C9A84C; text-transform: uppercase;
                    letter-spacing: 1px; }
   </style>
@@ -133,7 +156,7 @@
 <button type="button" onclick="bsAuswerten()">Neu einlesen</button>
 <div id="ausgabe"></div>
 
-<!-- Kalender ohne Filter: zeigt alle Kurse. Wird zum Abgleich gebraucht. -->
+<!-- Kalender ohne Filter: zeigt alle Kurse. Wird ausgelesen und dient zum Abgleich. -->
 <div id="kalender">
   <h2>Kalender (alle Kurse, ohne Filter)</h2>
   <div id="bsport-widget-999001"></div>
@@ -146,22 +169,33 @@
 (function () {
   'use strict';
 
-  /* ── Warum hier nicht mehr blind alles eingesammelt wird ────────────────
-     Der erste Versuch hat jedes Objekt mit id + name aus jeder Antwort
-     genommen. Damit kam Bsports globales Kategorien-Woerterbuch heraus:
-     rund 2000 generische Eintraege in mehreren Sprachen, kleine IDs
-     ("Kick Boxing" = 85). Das sind nicht die Aktivitaeten dieses Studios.
+  /* ── Warum hier drei Wege parallel laufen ──────────────────────────────
+     Anlauf 1 hat aus jeder Antwort jedes Objekt mit id + name genommen und
+     damit Bsports globales Kategorien-Woerterbuch ausgegeben (rund 2000
+     generische, mehrsprachige Eintraege — "Kick Boxing" = 85). Auffaellig
+     war dabei: es kamen NUR zwei Gruppen heraus, "(Wurzel)" und "SCS".
+     Eine Gruppe mit den Kursen des Studios fehlte voellig, obwohl der
+     Kalender darunter "Bomaye Kickboxing" korrekt anzeigt. Die Daten des
+     Studios stecken also nicht dort, wo sie erwartet wurden.
 
-     Die studio-eigenen Aktivitaeten stecken in der Stundenplan-Antwort:
-     jeder Termin traegt dort meta_activity_id bzw. ein verschachteltes
-     meta_activity-Objekt (siehe @bsport/common, available-payment.type.ts).
-     Genau diese Termin-Objekte werden jetzt gezielt gelesen — erkennbar
-     daran, dass sie neben der Aktivitaet auch Datum, Trainer oder
-     Standort tragen, was ein Woerterbuch-Eintrag nie hat.
+     Deshalb jetzt drei voneinander unabhaengige Wege. Es reicht, wenn
+     einer davon greift:
+
+       A  aus dem gerenderten Kalender selbst — React haengt an jedes
+          Element seine Props; darin steckt das Termin-Objekt mitsamt
+          meta_activity_id. Das funktioniert unabhaengig davon, wie die
+          Daten ueber das Netz kamen.
+       B  aus den mitgeschnittenen Antworten, gezielt aus Termin-Objekten
+          (erkennbar an meta_activity plus Datum/Trainer/Standort).
+       C  Volltextsuche nach "Bomaye" im Rohtext jeder Antwort. Das findet
+          die richtige Antwort ohne jede Annahme ueber Feldnamen und zeigt
+          das gefundene Objekt roh an — notfalls laesst sich die ID von
+          Hand ablesen.
      --------------------------------------------------------------------- */
 
-  var STUDIO_VON = 200000;   /* Die Studio-IDs liegen im 244xxx-Bereich, der   */
+  var STUDIO_VON = 200000;   /* Die Studio-IDs liegen im 244xxx-Bereich, der    */
   var STUDIO_BIS = 999999;   /* Rahmen ist bewusst weit, damit nichts wegfaellt. */
+  var BUDGET = 300000;       /* Obergrenze besuchter Knoten, gegen Endlosläufe.  */
 
   function zahl(v) { return typeof v === 'number' && isFinite(v); }
   function text(v) { return (typeof v === 'string' && v.trim()) ? v.trim() : ''; }
@@ -171,13 +205,26 @@
     });
   }
 
-  /* Felder, die ein Termin hat und ein Woerterbuch-Eintrag nicht. */
+  /* Felder, die ein Termin hat und ein Woerterbuch-Eintrag nie hat. */
   var TERMIN_MERKMALE = ['date_start', 'date_end', 'start_date', 'end_date',
-    'datetime_start', 'datetime_end', 'start', 'coach', 'coaches', 'establishment',
-    'capacity', 'session_type', 'booking_count', 'duration', 'level', 'room'];
+    'datetime_start', 'datetime_end', 'start', 'end', 'coach', 'coaches',
+    'establishment', 'capacity', 'session_type', 'booking_count', 'duration',
+    'level', 'room', 'time_start'];
+
+  function aktivitaetsId(o) {
+    var ma = o.meta_activity;
+    if (ma && typeof ma === 'object' && zahl(ma.id)) return ma.id;
+    if (zahl(ma)) return ma;
+    if (zahl(o.meta_activity_id)) return o.meta_activity_id;
+    return null;
+  }
+
+  function hatAktivitaet(o) {
+    return ('meta_activity' in o) || ('meta_activity_id' in o);
+  }
 
   function istTermin(o) {
-    if (!('meta_activity' in o) && !('meta_activity_id' in o)) return false;
+    if (!hatAktivitaet(o)) return false;
     for (var i = 0; i < TERMIN_MERKMALE.length; i++) {
       if (TERMIN_MERKMALE[i] in o) return true;
     }
@@ -201,7 +248,8 @@
   }
 
   function zeitVon(o) {
-    var r = text(o.date_start) || text(o.datetime_start) || text(o.start_date) || text(o.start);
+    var r = text(o.date_start) || text(o.datetime_start) || text(o.start_date) ||
+            text(o.start) || text(o.time_start);
     if (!r) return '';
     var d = new Date(r);
     if (isNaN(d.getTime())) return r;
@@ -210,39 +258,52 @@
            zwei(d.getHours()) + ':' + zwei(d.getMinutes());
   }
 
-  /* Ein Durchgang durch eine Antwort fuellt drei Sammlungen:
-       kurse   - id → name, ausschliesslich aus Termin-Objekten (das Gesuchte)
-       termine - die einzelnen Termine, zum Abgleich mit dem sichtbaren Plan
-       alle    - id → name aus dem ganzen Baum, nur als Netz darunter        */
-  function gehen(wert, quelle, feld, s, tiefe) {
-    if (!wert || tiefe > 10) return;
+  /* Kurzfassung eines Objekts, damit sich Feldnamen von Hand lesen lassen. */
+  function flach(o, tiefe) {
+    tiefe = tiefe || 0;
+    if (o === null || typeof o !== 'object') return JSON.stringify(o);
+    if (tiefe >= 2) return Array.isArray(o) ? '[…]' : '{…}';
+    if (Array.isArray(o)) {
+      return '[' + o.slice(0, 3).map(function (e) { return flach(e, tiefe + 1); }).join(', ') +
+             (o.length > 3 ? ', …' + o.length : '') + ']';
+    }
+    var teile = [];
+    for (var k in o) {
+      if (!Object.prototype.hasOwnProperty.call(o, k)) continue;
+      if (teile.length >= 25) { teile.push('…'); break; }
+      teile.push(k + ': ' + flach(o[k], tiefe + 1));
+    }
+    return '{ ' + teile.join(', ') + ' }';
+  }
+
+  /* Ein Durchgang fuellt vier Sammlungen. besucht/budget verhindern, dass
+     der Lauf in Zyklen oder DOM-Knoten haengenbleibt (React-Props!). */
+  function gehen(wert, quelle, feld, s, tiefe, streng) {
+    if (!wert || typeof wert !== 'object' || tiefe > 12) return;
+    if (s.budget-- < 0) return;
+    if (wert.nodeType || wert instanceof Window) return;   /* DOM nicht betreten */
+    if (s.besucht.has(wert)) return;
+    s.besucht.add(wert);
+
     if (Array.isArray(wert)) {
-      for (var i = 0; i < wert.length; i++) gehen(wert[i], quelle, feld, s, tiefe + 1);
+      for (var i = 0; i < wert.length; i++) gehen(wert[i], quelle, feld, s, tiefe + 1, streng);
       return;
     }
-    if (typeof wert !== 'object') return;
 
-    if (istTermin(wert)) {
-      var ma = wert.meta_activity;
-      var id = null;
-      var name = '';
-      if (ma && typeof ma === 'object') {
-        if (zahl(ma.id)) id = ma.id;
-        name = nameVon(ma);
-      } else if (zahl(ma)) {
-        id = ma;
-      }
-      if (id === null && zahl(wert.meta_activity_id)) id = wert.meta_activity_id;
-      if (!name) name = nameVon(wert);
-
+    var passt = streng ? istTermin(wert) : hatAktivitaet(wert);
+    if (passt) {
+      var id = aktivitaetsId(wert);
       if (id !== null) {
+        var ma = wert.meta_activity;
+        var name = (ma && typeof ma === 'object') ? nameVon(ma) : '';
+        if (!name) name = nameVon(wert);
         var da = s.kurse[id];
-        if (!da) s.kurse[id] = { name: name, quelle: quelle, anzahl: 1 };
-        else {
-          da.anzahl++;
-          if (name.length > da.name.length) da.name = name;
+        if (!da) s.kurse[id] = { name: name, quelle: quelle };
+        else if (name.length > da.name.length) da.name = name;
+        var zeit = zeitVon(wert);
+        if (zeit || trainerVon(wert)) {
+          s.termine.push({ id: id, name: name, zeit: zeit, trainer: trainerVon(wert) });
         }
-        s.termine.push({ id: id, name: name, zeit: zeitVon(wert), trainer: trainerVon(wert) });
       }
     }
 
@@ -253,9 +314,54 @@
       }
     }
 
-    for (var k in wert) {
-      if (Object.prototype.hasOwnProperty.call(wert, k)) gehen(wert[k], quelle, k, s, tiefe + 1);
+    /* Weg C: Objekte, deren eigene Texte "Bomaye" enthalten, roh aufheben. */
+    if (s.roh.length < 6) {
+      for (var k2 in wert) {
+        if (!Object.prototype.hasOwnProperty.call(wert, k2)) continue;
+        if (typeof wert[k2] === 'string' && wert[k2].indexOf('Bomaye') !== -1) {
+          s.roh.push({ quelle: quelle, feld: feld || '(Wurzel)', objekt: flach(wert, 0) });
+          break;
+        }
+      }
     }
+
+    for (var k in wert) {
+      if (Object.prototype.hasOwnProperty.call(wert, k)) {
+        gehen(wert[k], quelle, k, s, tiefe + 1, streng);
+      }
+    }
+  }
+
+  /* Weg A: React haengt seine Props als __reactProps$… bzw. __reactFiber$…
+     an jedes DOM-Element. Darin steckt das Termin-Objekt des Kurses. */
+  function ausDemKalender(s) {
+    var wurzel = document.getElementById('kalender');
+    if (!wurzel) return 0;
+    var knoten = wurzel.querySelectorAll('*');
+    var geprueft = 0;
+    for (var i = 0; i < knoten.length && i < 4000; i++) {
+      var el = knoten[i];
+      var eigene = Object.keys(el);   /* nur eigene Keys - die Prototypkette ist teuer */
+      for (var j = 0; j < eigene.length; j++) {
+        var k = eigene[j];
+        if (k.indexOf('__reactProps$') !== 0 && k.indexOf('__reactFiber$') !== 0 &&
+            k.indexOf('__reactInternalInstance$') !== 0) continue;
+        geprueft++;
+        var f = el[k];
+        if (k.indexOf('__reactProps$') === 0) {
+          gehen(f, 'Kalender (React-Props)', null, s, 8, false);
+        } else {
+          /* Fiber: eigene Props und die der Eltern, ein paar Ebenen hoch. */
+          var n = 0;
+          while (f && n++ < 10) {
+            gehen(f.memoizedProps, 'Kalender (React-Fiber)', null, s, 8, false);
+            gehen(f.memoizedState, 'Kalender (React-Fiber)', null, s, 8, false);
+            f = f.return;
+          }
+        }
+      }
+    }
+    return geprueft;
   }
 
   function gruppe(titel, hinweis) {
@@ -281,100 +387,126 @@
     g.appendChild(z);
   }
 
+  function klappe(titel) {
+    var d = document.createElement('details');
+    var z = document.createElement('summary');
+    z.textContent = titel;
+    d.appendChild(z);
+    return d;
+  }
+
   window.bsAuswerten = function () {
     var antworten = window.__bsAntworten || [];
+    var protokoll = window.__bsProtokoll || [];
     var aus = document.getElementById('ausgabe');
-    var s = { kurse: {}, termine: [], alle: {} };
+    var s = { kurse: {}, termine: [], alle: {}, roh: [],
+              besucht: new WeakSet(), budget: BUDGET };
+
+    /* B und C - aus den Antworten */
     for (var i = 0; i < antworten.length; i++) {
-      gehen(antworten[i].daten, antworten[i].url, null, s, 0);
+      gehen(antworten[i].daten, antworten[i].url, null, s, 0, true);
     }
+
+    /* A - aus dem gerenderten Kalender, mit eigenem Budget */
+    var reactKnoten = 0;
+    s.budget = BUDGET;
+    try { reactKnoten = ausDemKalender(s); } catch (e) { /* egal, B und C bleiben */ }
 
     var kursIds = Object.keys(s.kurse).sort(function (a, b) { return a - b; });
 
     document.getElementById('status').textContent =
-      antworten.length + ' Antworten von bsport.io · ' +
-      kursIds.length + ' Kurse aus dem Stundenplan · ' +
-      s.termine.length + ' einzelne Termine' +
-      (antworten.length === 0 ? '   ⚠ Nichts empfangen — Cookie-Banner akzeptiert?' : '');
+      antworten.length + ' JSON-Antworten (' + protokoll.length + ' Anfragen) · ' +
+      reactKnoten + ' React-Knoten im Kalender · ' +
+      kursIds.length + ' Kurse gefunden' +
+      (protokoll.length === 0 ? '   ⚠ Nichts empfangen — Cookie-Banner akzeptiert?' : '');
 
     aus.innerHTML = '';
 
-    /* 1 — das Gesuchte: nur die Aktivitaeten, die an echten Terminen haengen. */
-    var g1 = gruppe('1 · Kurse aus dem Stundenplan   ← das hier ist gesucht',
-      'Nur Aktivitäten, die an einem echten Termin dieses Studios hängen.');
+    /* 1 - das Gesuchte */
+    var g1 = gruppe('1 · Kurse dieses Studios   ← das hier ist gesucht',
+      'Nur Aktivitäten, die an einem echten Termin hängen — aus dem Kalender und aus den Antworten.');
     if (kursIds.length === 0) {
-      zeile(g1, '—', 'Noch nichts gefunden. Im Kalender unten eine Woche weiterblättern, dann „Neu einlesen“.', '', 'leer');
+      zeile(g1, '—', 'Noch nichts gefunden. Kalender abwarten, dann „Neu einlesen“. Sonst Abschnitt 2 und 3 lesen.', '', 'leer');
     }
     kursIds.forEach(function (id) {
-      var k = s.kurse[id];
-      zeile(g1, id, k.name || '(ohne Namen)', '');
+      zeile(g1, id, s.kurse[id].name || '(ohne Namen)', s.kurse[id].quelle.indexOf('Kalender') === 0 ? 'Kalender' : '');
     });
     aus.appendChild(g1);
 
-    /* 2 — die Termine selbst, damit sich die ID gegen den sichtbaren Plan
-           pruefen laesst ("Bomaye Kickboxing, 20:00, Alfonso Fusco"). */
-    var gesehen = {};
-    var termine = s.termine.filter(function (t) {
-      var s2 = t.id + '|' + t.zeit;
-      if (gesehen[s2]) return false;
-      gesehen[s2] = 1;
-      return true;
-    }).slice(0, 80);
-    if (termine.length) {
-      var g2 = gruppe('2 · Einzelne Termine (zum Abgleich mit dem Kalender)',
-        'Zeigt Zeit und Trainer neben der ID — so lässt sich z. B. „Bomaye Kickboxing, 20:00, Alfonso Fusco“ eindeutig zuordnen.');
-      termine.forEach(function (t) {
-        zeile(g2, t.id, t.name || '(ohne Namen)',
-          [t.zeit, t.trainer].filter(Boolean).join(' · '));
+    /* 2 - Rohfund "Bomaye": zeigt die echten Feldnamen, ohne jede Annahme */
+    if (s.roh.length) {
+      var g2 = gruppe('2 · Rohdaten mit „Bomaye“',
+        'Die Objekte, in denen der Name des Studios vorkommt — hier lässt sich die ID notfalls von Hand ablesen.');
+      s.roh.forEach(function (r) {
+        var p = document.createElement('pre');
+        p.textContent = '[' + r.feld + ']  ' + r.objekt;
+        g2.appendChild(p);
       });
       aus.appendChild(g2);
     }
 
-    /* 3 — Netz darunter: alle IDs im Studio-Bereich, falls die
-           Termin-Erkennung an einer unbekannten Feldstruktur scheitert. */
-    var studioIds = Object.keys(s.alle).filter(function (id) {
-      return Number(id) >= STUDIO_VON && Number(id) <= STUDIO_BIS;
-    }).sort(function (a, b) { return a - b; });
-    if (studioIds.length) {
-      var g3 = gruppe('3 · Alle IDs ab ' + STUDIO_VON + ' (Reserve)',
-        'Falls Abschnitt 1 leer bleibt: die studio-eigenen IDs liegen im 244xxx-Bereich.');
-      studioIds.forEach(function (id) {
-        zeile(g3, id, s.alle[id].name, s.alle[id].feld);
+    /* 3 - einzelne Termine, zum Abgleich mit dem Kalender darunter */
+    var gesehen = {};
+    var termine = s.termine.filter(function (t) {
+      var k = t.id + '|' + t.zeit + '|' + t.trainer;
+      if (gesehen[k]) return false;
+      gesehen[k] = 1;
+      return true;
+    }).slice(0, 80);
+    if (termine.length) {
+      var g3 = gruppe('3 · Einzelne Termine (zum Abgleich mit dem Kalender)',
+        'Zeit und Trainer neben der ID — so lässt sich „Bomaye Kickboxing, 20:00, Alfonso Fusco“ eindeutig zuordnen.');
+      termine.forEach(function (t) {
+        zeile(g3, t.id, t.name || '(ohne Namen)',
+          [t.zeit, t.trainer].filter(Boolean).join(' · '));
       });
       aus.appendChild(g3);
     }
 
-    /* 4 — welche Endpunkte ueberhaupt geantwortet haben. */
-    var d4 = document.createElement('details');
-    var z4 = document.createElement('summary');
-    z4.textContent = '4 · Antworten von bsport.io (' + antworten.length + ')';
-    d4.appendChild(z4);
-    antworten.forEach(function (a, n) {
+    /* 4 - Reserve: alles im Studio-Zahlenbereich */
+    var studioIds = Object.keys(s.alle).filter(function (id) {
+      return Number(id) >= STUDIO_VON && Number(id) <= STUDIO_BIS;
+    }).sort(function (a, b) { return a - b; });
+    if (studioIds.length) {
+      var g4 = gruppe('4 · Alle IDs ab ' + STUDIO_VON + ' (Reserve)',
+        'Falls Abschnitt 1 leer bleibt: die studio-eigenen IDs liegen im 244xxx-Bereich.');
+      studioIds.forEach(function (id) {
+        zeile(g4, id, s.alle[id].name, s.alle[id].feld);
+      });
+      aus.appendChild(g4);
+    }
+
+    /* 5 - Diagnose: welche Anfragen gab es ueberhaupt */
+    var d5 = klappe('5 · Anfragen an bsport.io (' + protokoll.length + ')');
+    protokoll.forEach(function (p, n) {
       var z = document.createElement('div');
       z.className = 'zeile klein';
-      z.textContent = (n + 1) + '. ' + a.url;
-      d4.appendChild(z);
+      z.textContent = (n + 1) + '. ' + (p.bomaye ? '★ ' : '') + p.quelle + ' · ' +
+        p.laenge + ' Z. · ' + (p.json ? 'JSON' : 'kein JSON') + ' · ' + p.url;
+      d5.appendChild(z);
     });
-    aus.appendChild(d4);
+    var iframes = document.querySelectorAll('#kalender iframe');
+    var zi = document.createElement('div');
+    zi.className = 'zeile klein';
+    zi.textContent = 'iframes im Kalender: ' + iframes.length +
+      (iframes.length ? '  ⚠ Daten könnten im iframe geladen werden und wären dann hier unsichtbar.' : '');
+    d5.appendChild(zi);
+    aus.appendChild(d5);
 
-    /* 5 — der alte, ungefilterte Blick. Bleibt eingeklappt, weil hier das
-           globale Woerterbuch drin steckt, das beim ersten Versuch stoerte. */
+    /* 6 - der alte, ungefilterte Blick mit dem globalen Woerterbuch */
     var uebrig = Object.keys(s.alle).filter(function (id) {
       return !(Number(id) >= STUDIO_VON && Number(id) <= STUDIO_BIS);
     }).sort(function (a, b) { return a - b; });
-    var d5 = document.createElement('details');
-    var z5 = document.createElement('summary');
-    z5.textContent = '5 · Alles Übrige, ungefiltert (' + uebrig.length +
-      ') — enthält Bsports globales Kategorien-Wörterbuch';
-    d5.appendChild(z5);
+    var d6 = klappe('6 · Alles Übrige, ungefiltert (' + uebrig.length +
+      ') — enthält Bsports globales Kategorien-Wörterbuch');
     uebrig.slice(0, 400).forEach(function (id) {
       var z = document.createElement('div');
       z.className = 'zeile klein';
       z.innerHTML = '<span class="id">' + id + '</span> &nbsp; ' +
         sicher(s.alle[id].name) + ' <span class="zusatz">' + sicher(s.alle[id].feld) + '</span>';
-      d5.appendChild(z);
+      d6.appendChild(z);
     });
-    aus.appendChild(d5);
+    aus.appendChild(d6);
   };
 
   /* Widget ohne Filter mounten - gleiche Kette wie auf den anderen Seiten:
@@ -408,8 +540,8 @@
             styles: undefined,
             config: { calendar: {} }   /* KEIN Filter: alle Kurse */
           });
-          setTimeout(window.bsAuswerten, 2500);
-          setTimeout(window.bsAuswerten, 6000);
+          setTimeout(window.bsAuswerten, 3000);
+          setTimeout(window.bsAuswerten, 8000);
         } else if (++n > 100) {
           clearInterval(t);
         }
@@ -422,7 +554,7 @@
   } else {
     mounten();
   }
-  setInterval(function () { window.bsAuswerten(); }, 3000);
+  setInterval(function () { window.bsAuswerten(); }, 4000);
 })();
 </script>
 
