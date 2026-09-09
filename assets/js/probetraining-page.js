@@ -163,7 +163,39 @@
             calendar: {
               coaches: [],
               establishments: [],
-              metaActivities: [244432, 244539, 244426, 244420, 244563, 244431, 245265],
+              /* Die meta_activity-IDs dieses Studios. Sie waren im Backoffice
+                 nicht auffindbar und wurden ueber die temporaere Debug-Seite
+                 aus den Termin-Objekten des Kalender-Widgets ausgelesen
+                 (PR #46 / #47). Damit das nicht noch einmal jemand suchen
+                 muss, hier die vollstaendige Zuordnung:
+
+                   236749  Bomaye Boxing Advanced        (nicht im Filter)
+                   236751  Bomaye Kickboxing
+                   244420  BOXING KIDS (6-9 Jahre)
+                   244426  BOXING BASICS
+                   244431  YOUTH FIGHT TEAM
+                   244432  BOMAYE FIGHT TEAM
+                   244539  BOMAYE QUEENS
+                   244563  BOXING YOUTH (10-17 Jahre)
+                   245265  OPEN GYM
+                   249398  POWER LAUNCH                  (nicht im Filter)
+
+                 Achtung, offener Punkt: der Text ueber dem Kalender sagt
+                 "Fortgeschrittenen- und Wettkampftraining ist Mitgliedern
+                 vorbehalten", der Filter laesst aber YOUTH FIGHT TEAM und
+                 BOMAYE FIGHT TEAM (Profi) zur kostenlosen Probe zu. Das ist
+                 eine Entscheidung des Studios, keine technische Frage, und
+                 steht deshalb unveraendert. */
+              metaActivities: [
+                236751,   /* Bomaye Kickboxing        - im Seitentext zugesagt */
+                244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"                 */
+                244426,   /* BOXING BASICS            - "Basic"                */
+                244431,   /* YOUTH FIGHT TEAM                                  */
+                244432,   /* BOMAYE FIGHT TEAM                                 */
+                244539,   /* BOMAYE QUEENS                                     */
+                244563,   /* BOXING YOUTH (10-17)     - "Youth"                */
+                245265    /* OPEN GYM                                          */
+              ],
               levels: [],
               variant: 'time',
               groupSessionByPeriod: true,
