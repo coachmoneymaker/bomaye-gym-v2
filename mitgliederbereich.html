@@ -79,7 +79,7 @@
     .mw-header {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 200;
+      z-index: 1000;   /* wie #header: liegt ueber dem Mobile-Overlay (999), unter dem Bsport-Modal (1200) */
       height: 72px;
       background: rgba(8,8,8,0.92);
       backdrop-filter: blur(20px) saturate(1.4);
@@ -231,13 +231,17 @@
       .mw-page { padding-top: 64px; }
       .mw-logo-img { height: 40px; }
     }
+    /* Aktiver Navigationspunkt - gleiche Regel wie auf den
+       uebrigen Seiten des Projekts. */
+    .nav-link-active { color: var(--gold) !important; }
+
   </style>
 </head>
 <body>
 <!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
      Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
      https://fontawesome.com/license/free -->
-<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></symbol><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol></svg>
+<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-arrow-left" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></symbol><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol></svg>
 
 
   <!-- ═══════ MINIMAL HEADER ═══════ -->
@@ -251,8 +255,37 @@
       <a href="/" class="mw-back-link" aria-label="Zurück zur Startseite">
         <i class="icon" aria-hidden="true"><svg><use href="#i-arrow-left"/></svg></i> STARTSEITE
       </a>
+
+      <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ABOUT US</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">MITGLIED WERDEN — AB 14,90€</a>
+    </nav>
+
+      <button class="burger" onclick="togglePageMenu()" aria-label="Menü" aria-expanded="false" id="page-burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
     </div>
   </header>
+
+<div id="page-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;">
+  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:2">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:3">ABOUT US</a>
+  <a class="mn-item" href="/faq" style="--mn-i:4">FAQ</a>
+  <div class="mn-divider"></div>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:5"><i class="icon" aria-hidden="true"><svg><use href="#i-user"/></svg></i> Mein Konto</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="togglePageMenu();" style="--mn-i:6;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+</div>
+
 
   <!-- ═══════ PAGE CONTENT ═══════ -->
   <main class="mw-page" role="main">
@@ -452,5 +485,37 @@
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
+
+<script>
+/* ── iOS-compatible scroll lock ── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
+/* ── Mobile nav toggle ── */
+function togglePageMenu() {
+  const nav = document.getElementById('page-mobile-nav');
+  const btn = document.getElementById('page-burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+</script>
 </body>
 </html>

@@ -6328,7 +6328,8 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* Legal pages header: always show the dark glass background */
 .header-inner ~ * { }
-#header:has(.header-inner) {
+#header:has(.header-inner),
+#header.header-solid {
   background: rgba(10, 10, 10, 0.80);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
