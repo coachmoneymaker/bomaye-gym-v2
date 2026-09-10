@@ -481,6 +481,12 @@
       -webkit-appearance: none;
     }
     .field-input::placeholder { color: rgba(245,240,232,0.18); }
+    /* outline: none oben nimmt jede Tastaturmarkierung weg - hier
+       zurueckholen, in derselben Form wie im ganzen Projekt. */
+    .field-input:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: -2px;
+    }
     .field-input:focus {
       border-color: rgba(201,168,76,0.45);
       background: rgba(245,240,232,0.055);
@@ -1432,6 +1438,18 @@
       .coaches-grid { grid-template-columns: 1fr; }
       .champions-header { margin-bottom: 52px; }
     }
+    /* ── Tastaturfokus ──────────────────────────────────────────
+       Diese Seite laedt style.css nicht und hatte deshalb nur den
+       Standardring des Browsers. Gleiche Behandlung wie im Rest des
+       Projekts: goldener Ring aussen, dunkler Begleitring darunter.
+       Auf hellem Grund traegt der dunkle Ring den Kontrast (17,47:1),
+       Gold allein kaeme dort nur auf 2,01:1. */
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+      box-shadow: 0 0 0 3px #0A0A08;
+    }
+
   </style>
 </head>
 <body>

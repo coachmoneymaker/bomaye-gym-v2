@@ -2925,8 +2925,8 @@ footer .footer-grid + div {
 
 /* Focus ring for keyboard users */
 .fif-radio-card input[type="radio"]:focus-visible + .fif-radio-card__box {
-  outline: 2px solid var(--gold-dark);
-  outline-offset: 2px;
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 .fif-required {
@@ -5837,7 +5837,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 }
 
 .plan-card:focus-visible {
-  outline: 2px solid rgba(201,168,76,0.8);
+  outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
 
@@ -7685,7 +7685,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   text-decoration: none;
 }
 .dl-back:hover { color: var(--gold); }
-.dl-back:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 0; }
+.dl-back:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* Hero */
 .dl-eyebrow {
@@ -7851,8 +7851,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 .doc-btn:hover { background: var(--gold); color: #1A1A1A; }
 .doc-btn:focus-visible {
   outline: 2px solid var(--gold);
-  outline-offset: 4px;
-  border-radius: var(--radius);
+  outline-offset: 3px;
 }
 
 /* Info note */
@@ -8180,7 +8179,9 @@ a.mn-contact-text:hover { color: var(--gold); }
   border-color: var(--brand-gold);
   transform: scale(1.06);
 }
-.vfacade__play:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: -4px; }
+/* Abspielknopf sitzt in einem beschneidenden Rahmen - Ring nach innen. */
+.vfacade__play:focus-visible { outline: 2px solid var(--gold); outline-offset: -4px;
+  box-shadow: 0 0 0 2px var(--brand-dark) inset; }
 .vfacade__poster img { transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
 .vfacade__play:hover ~ .vfacade__poster img,
 .vfacade:hover .vfacade__poster img { transform: scale(1.04); }
@@ -8266,22 +8267,69 @@ a.mn-contact-text:hover { color: var(--gold); }
   transition-duration: 80ms;
 }
 
-/* ── Tastaturfokus ─────────────────────────────────────────────
-   Bisher acht verstreute Einzelregeln. Ein Ring in Marken-Gold
-   fuer alles, was Fokus bekommen kann. Die bestehenden Regeln
-   bleiben unangetastet und gewinnen weiterhin, wo sie greifen. */
+/* ── Tastaturfokus — verbindlicher Standard ────────────────────
+   EIN Ring fuer das ganze Projekt:
+
+       outline: 2px solid var(--gold);
+       outline-offset: 3px;
+
+   Wer eine eigene Fokusregel schreibt, nimmt genau diese zwei
+   Zeilen. Keine Literale (#C9A84C), kein zweiter Tokenname
+   (--brand-gold), kein abgedunkeltes Gold (--gold-dark, zu wenig
+   Kontrast auf dunklem Grund), keine Teildeckkraft.
+
+   Vom Abstand 3px darf abgewichen werden, wenn ein beschneidender
+   Vorfahr den Ring sonst abschneidet - dann negativ, damit er
+   INNEN liegt. Das betrifft heute genau zwei Faelle: die
+   Formularfelder (-2px) und den Abspielknopf der Videofassade
+   (-4px). Beide sind unten so kommentiert.
+
+   border-radius gehoert NICHT in eine Fokusregel: der Ring folgt
+   ohnehin der Form des Elements, und der Radius ist projektweit 0.
+
+   :focus-visible, nicht :focus - der Ring soll bei Mausklick
+   nicht erscheinen, nur bei Tastaturnavigation. */
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
+  /* Begleitring in Dunkel, genau in der Luecke zwischen Element und
+     goldenem Ring. Zweifarbig, weil ein rein goldener Ring auf den
+     hellen Abschnitten nur 2,01:1 erreicht - unter den 3:1, die
+     WCAG 1.4.11 fuer Bedienelemente verlangt. Gemessen betraf das
+     148 Elemente auf 18 Seiten.
+       dunkler Grund: Gold traegt (8,67:1), Dunkel faellt weg
+       heller Grund: Dunkel traegt (17,47:1), Gold faellt weg
+     box-shadow statt border, damit sich nichts verschiebt. */
+  box-shadow: 0 0 0 3px var(--brand-dark);
+}
+
+/* <input type="date"> gibt den Fokus an ein Teil im Schatten-DOM weiter,
+   das aeussere input matcht :focus-visible deshalb nicht. Hier ist :focus
+   richtig: bei einer Texteingabe ist ein Ring auch bei Mausfokus
+   erwartbar - man will sehen, in welchem Feld man tippt.
+   Der Ring liegt innen, weil das Feld in einer beschneidenden Karte sitzt.
+
+   Nicht loesbar, bewusst offen gelassen: eingebettete iframes (Karte,
+   Buchungswidget). Der Fokus wandert in das fremde Dokument, das aeussere
+   iframe-Element matcht weder :focus noch :focus-visible - geprueft mit
+   echten Tab-Anschlaegen. Die Bedienelemente im Rahmen bringen ihre
+   eigene Fokusmarkierung mit. */
+.fif-field input[type="date"]:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
+  box-shadow: 0 0 0 2px var(--brand-dark) inset;
 }
 /* Diese drei setzen outline: none bzw. entfernen die
    Tap-Markierung und brauchen den Ring darum ausdruecklich. */
+/* Diese liegen in beschneidenden Karten - Ring nach innen, deshalb
+   Begleitring ebenfalls nach innen. */
 .fif-field textarea:focus-visible,
 .fif-field input:focus-visible,
 .fif-field select:focus-visible,
 .nav-account-icon:focus-visible {
   outline: 2px solid var(--gold);
-  outline-offset: 2px;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 2px var(--brand-dark) inset;
 }
 
 @media (prefers-reduced-motion: reduce) {

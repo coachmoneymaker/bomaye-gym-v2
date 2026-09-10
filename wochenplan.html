@@ -156,6 +156,18 @@
       .wp-sub { font-size: 6pt; margin-top: 0.4mm; }
       .wp-footer { margin-top: 5mm; padding-top: 2.5mm; font-size: 9pt; }
     }
+    /* ── Tastaturfokus ──────────────────────────────────────────
+       Diese Seite laedt style.css nicht und hatte deshalb nur den
+       Standardring des Browsers. Gleiche Behandlung wie im Rest des
+       Projekts: goldener Ring aussen, dunkler Begleitring darunter.
+       Auf hellem Grund traegt der dunkle Ring den Kontrast (17,47:1),
+       Gold allein kaeme dort nur auf 2,01:1. */
+    :focus-visible {
+      outline: 2px solid #C9A84C;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 3px #0A0A08;
+    }
+
   </style>
 </head>
 
