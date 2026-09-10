@@ -90,7 +90,6 @@
   <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/vendor/fontawesome/6.5.0/css/all.min.css">
 
   <style>
     /* ── Hausordnung: light content block ── */
@@ -299,6 +298,11 @@
   </script>
 </head>
 <body>
+<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
+     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
+     https://fontawesome.com/license/free -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></symbol><symbol id="i-file-pdf" viewBox="0 0 512 512"><path d="M0 64C0 28.7 28.7 0 64 0L224 0l0 128c0 17.7 14.3 32 32 32l128 0 0 144-208 0c-35.3 0-64 28.7-64 64l0 144-48 0c-35.3 0-64-28.7-64-64L0 64zm384 64l-128 0L256 0 384 128zM176 352l32 0c30.9 0 56 25.1 56 56s-25.1 56-56 56l-16 0 0 32c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-48 0-80c0-8.8 7.2-16 16-16zm32 80c13.3 0 24-10.7 24-24s-10.7-24-24-24l-16 0 0 48 16 0zm96-80l32 0c26.5 0 48 21.5 48 48l0 64c0 26.5-21.5 48-48 48l-32 0c-8.8 0-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zm32 128c8.8 0 16-7.2 16-16l0-64c0-8.8-7.2-16-16-16l-16 0 0 96 16 0zm80-112c0-8.8 7.2-16 16-16l48 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 32 32 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 48c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-64 0-64z"/></symbol></svg>
+
 
   <!-- Header -->
   <header id="header">
@@ -315,7 +319,7 @@
     <div class="ho-inner">
 
       <a href="/" class="ho-back" onclick="event.preventDefault(); history.back();">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Zurück
+        <i class="icon" aria-hidden="true"><svg><use href="#i-arrow-left"/></svg></i> Zurück
       </a>
 
       <h1>Hausordnung</h1>
@@ -431,7 +435,7 @@
            download
            class="ho-pdf-btn"
            aria-label="Hausordnung als PDF herunterladen">
-          <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+          <i class="icon" aria-hidden="true"><svg><use href="#i-file-pdf"/></svg></i>
           Hausordnung als PDF herunterladen
         </a>
       </div>

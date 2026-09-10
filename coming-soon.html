@@ -51,14 +51,6 @@
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
 
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="/assets/vendor/fontawesome/6.4.0/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-
   <style>
     /* ── Reset & Base ────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1443,6 +1435,11 @@
   </style>
 </head>
 <body>
+<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
+     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
+     https://fontawesome.com/license/free -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol><symbol id="i-boxing-glove" viewBox="0 0 448 512"><path d="M192 0c17.7 0 32 14.3 32 32V144H160V32c0-17.7 14.3-32 32-32zM64 64c0-17.7 14.3-32 32-32s32 14.3 32 32v80H64V64zm192 0c0-17.7 14.3-32 32-32s32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V64zm96 64c0-17.7 14.3-32 32-32s32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V128zm-96 88l0-.6c9.4 5.4 20.3 8.6 32 8.6c13.2 0 25.4-4 35.6-10.8c8.7 24.9 32.5 42.8 60.4 42.8c11.7 0 22.6-3.1 32-8.6V256c0 52.3-25.1 98.8-64 128v96c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V401.6c-17.3-7.9-33.2-18.8-46.9-32.5L69.5 357.5C45.5 333.5 32 300.9 32 267V240c0-35.3 28.7-64 64-64h88c22.1 0 40 17.9 40 40s-17.9 40-40 40H128c-8.8 0-16 7.2-16 16s7.2 16 16 16h56c39.8 0 72-32.2 72-72z"/></symbol><symbol id="i-check" viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></symbol><symbol id="i-child" viewBox="0 0 320 512"><path d="M96 64a64 64 0 1 1 128 0A64 64 0 1 1 96 64zm48 320v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V287.8L59.1 321c-9.4 15-29.2 19.4-44.1 10S-4.5 301.9 4.9 287l39.9-63.3C69.7 184 113.2 160 160 160s90.3 24 115.2 63.6L315.1 287c9.4 15 4.9 34.7-10 44.1s-34.7 4.9-44.1-10L240 287.8V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V384H144z"/></symbol><symbol id="i-child-reaching" viewBox="0 0 384 512"><path d="M256 64A64 64 0 1 0 128 64a64 64 0 1 0 128 0zM152.9 169.3c-23.7-8.4-44.5-24.3-58.8-45.8L74.6 94.2C64.8 79.5 45 75.6 30.2 85.4s-18.7 29.7-8.9 44.4L40.9 159c18.1 27.1 42.8 48.4 71.1 62.4V480c0 17.7 14.3 32 32 32s32-14.3 32-32V384h32v96c0 17.7 14.3 32 32 32s32-14.3 32-32V221.6c29.1-14.2 54.4-36.2 72.7-64.2l18.2-27.9c9.6-14.8 5.4-34.6-9.4-44.3s-34.6-5.5-44.3 9.4L291 122.4c-21.8 33.4-58.9 53.6-98.8 53.6c-12.6 0-24.9-2-36.6-5.8c-.9-.3-1.8-.7-2.7-.9z"/></symbol><symbol id="i-circle-check" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></symbol><symbol id="i-dumbbell" viewBox="0 0 640 512"><path d="M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288c-17.7 0-32-14.3-32-32s14.3-32 32-32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64c17.7 0 32 14.3 32 32s-14.3 32-32 32v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM416 224v64H224V224H416z"/></symbol><symbol id="i-location-dot" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol><symbol id="i-lock" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></symbol><symbol id="i-person-running" viewBox="0 0 448 512"><path d="M320 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM125.7 175.5c9.9-9.9 23.4-15.5 37.5-15.5c1.9 0 3.8 .1 5.6 .3L137.6 254c-9.3 28 1.7 58.8 26.8 74.5l86.2 53.9-25.4 88.8c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l28.7-100.4c5.9-20.6-2.6-42.6-20.7-53.9L238 299l30.9-82.4 5.1 12.3C289 264.7 323.9 288 362.7 288H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H362.7c-12.9 0-24.6-7.8-29.5-19.7l-6.3-15c-14.6-35.1-44.1-61.9-80.5-73.1l-48.7-15c-11.1-3.4-22.7-5.2-34.4-5.2c-31 0-60.8 12.3-82.7 34.3L57.4 153.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l23.1-23.1zM91.2 352H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h69.6c19 0 36.2-11.2 43.9-28.5L157 361.6l-9.5-6c-17.5-10.9-30.5-26.8-37.9-44.9L91.2 352z"/></symbol><symbol id="i-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></symbol><symbol id="i-shield-halved" viewBox="0 0 512 512"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z"/></symbol><symbol id="i-trophy" viewBox="0 0 576 512"><path d="M400 0H176c-26.5 0-48.1 21.8-47.1 48.2c.2 5.3 .4 10.6 .7 15.8H24C10.7 64 0 74.7 0 88c0 92.6 33.5 157 78.5 200.7c44.3 43.1 98.3 64.8 138.1 75.8c23.4 6.5 39.4 26 39.4 45.6c0 20.9-17 37.9-37.9 37.9H192c-17.7 0-32 14.3-32 32s14.3 32 32 32H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H357.9C337 448 320 431 320 410.1c0-19.6 15.9-39.2 39.4-45.6c39.9-11 93.9-32.7 138.2-75.8C542.5 245 576 180.6 576 88c0-13.3-10.7-24-24-24H446.4c.3-5.2 .5-10.4 .7-15.8C448.1 21.8 426.5 0 400 0zM48.9 112h84.4c9.1 90.1 29.2 150.3 51.9 190.6c-24.9-11-50.8-26.5-73.2-48.3c-32-31.1-58-76-63-142.3zM464.1 254.3c-22.4 21.8-48.3 37.3-73.2 48.3c22.7-40.3 42.8-100.5 51.9-190.6h84.4c-5.1 66.3-31.1 111.2-63 142.3z"/></symbol></svg>
+
 
   <!-- Background stack -->
   <div class="bg-base" aria-hidden="true"></div>
@@ -1477,7 +1474,7 @@
 
       <div class="hero-cta-wrap fade-up delay-3 visible">
         <button type="button" class="hero-cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'})">
-          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+          <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i>
           MITGLIED WERDEN
         </button>
         <div class="spots-bar" style="margin-top:0;">
@@ -1498,8 +1495,8 @@
       </p>
 
       <ul class="eb-bullets fade-up delay-3">
-        <li><i class="fa-solid fa-check"></i> Preis bleibt für immer gleich</li>
-        <li><i class="fa-solid fa-check"></i> Zugang vor offizieller Eröffnung</li>
+        <li><i class="icon" aria-hidden="true"><svg><use href="#i-check"/></svg></i> Preis bleibt für immer gleich</li>
+        <li><i class="icon" aria-hidden="true"><svg><use href="#i-check"/></svg></i> Zugang vor offizieller Eröffnung</li>
       </ul>
 
       <div class="eb-cta-wrap fade-up delay-4">
@@ -1509,7 +1506,7 @@
           id="eb-cta-btn"
           aria-label="Zum Anmeldeformular scrollen"
         >
-          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+          <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i>
           MITGLIED WERDEN
         </button>
         <p class="eb-payment-note">Zahle erst ab Opening</p>
@@ -1608,7 +1605,7 @@
 
         <!-- Success state -->
         <div class="form-success" id="form-success" role="alert" aria-live="polite">
-          <div class="form-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="form-success-icon"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-check"/></svg></i></div>
           <div class="form-success-title">Du bist dabei!</div>
           <p class="form-success-msg">
             Wir melden uns bei dir, sobald es losgehen kann.<br />
@@ -1625,17 +1622,17 @@
           <span class="category-label">Für wen meldest du dich an?</span>
           <div class="category-grid" role="group" aria-label="Kategorie auswählen">
             <button type="button" class="cat-btn" data-cat="kids" aria-pressed="false">
-              <i class="fa-solid fa-child"></i>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-child"/></svg></i>
               Kids
               <span class="cat-age">4 – 12 Jahre</span>
             </button>
             <button type="button" class="cat-btn" data-cat="youth" aria-pressed="false">
-              <i class="fa-solid fa-person-running"></i>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-person-running"/></svg></i>
               Jugend
               <span class="cat-age">13 – 17 Jahre</span>
             </button>
             <button type="button" class="cat-btn" data-cat="adults" aria-pressed="false">
-              <i class="fa-solid fa-dumbbell"></i>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-dumbbell"/></svg></i>
               Erwachsene
               <span class="cat-age">18+ Jahre</span>
             </button>
@@ -1700,16 +1697,16 @@
 
           <!-- Submit -->
           <button type="submit" class="submit-btn">
-            <i class="fa-solid fa-bolt"></i>
+            <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i>
             Jetzt Mitglied werden
           </button>
 
           <p class="form-no-obligation">
-            <i class="fa-solid fa-shield-halved"></i>
+            <i class="icon" aria-hidden="true"><svg><use href="#i-shield-halved"/></svg></i>
             Keine Verpflichtung. Wir melden uns zuerst persönlich bei dir.
           </p>
           <p class="form-note">
-            <i class="fa-solid fa-lock"></i>
+            <i class="icon" aria-hidden="true"><svg><use href="#i-lock"/></svg></i>
             Kein Spam. Keine Weitergabe. Nur relevante Infos zu BOMAYE GYM.
           </p>
         </form>
@@ -1757,22 +1754,22 @@
     <!-- Features strip -->
     <div class="features" aria-label="Was dich erwartet">
       <div class="feature-item fade-up visible">
-        <div class="feature-icon"><i class="fa-solid fa-boxing-glove"></i></div>
+        <div class="feature-icon"><i class="icon" aria-hidden="true"><svg><use href="#i-boxing-glove"/></svg></i></div>
         <div class="feature-name">Premium Boxtraining</div>
         <div class="feature-desc">Professionelle Trainer, kleine Gruppen, maximale Qualität.</div>
       </div>
       <div class="feature-item fade-up delay-1 visible">
-        <div class="feature-icon"><i class="fa-solid fa-child-reaching"></i></div>
+        <div class="feature-icon"><i class="icon" aria-hidden="true"><svg><use href="#i-child-reaching"/></svg></i></div>
         <div class="feature-name">Kids &amp; Jugend</div>
         <div class="feature-desc">Altersgerechte Programme ab 4 Jahren — Charakter, Disziplin, Spaß.</div>
       </div>
       <div class="feature-item fade-up delay-2 visible">
-        <div class="feature-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="feature-icon"><i class="icon" aria-hidden="true"><svg><use href="#i-trophy"/></svg></i></div>
         <div class="feature-name">Early-Bird-Vorteile</div>
         <div class="feature-desc">Sonderkonditionen und Prioritätszugang für die ersten Mitglieder.</div>
       </div>
       <div class="feature-item fade-up delay-3 visible">
-        <div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="feature-icon"><i class="icon" aria-hidden="true"><svg><use href="#i-location-dot"/></svg></i></div>
         <div class="feature-name">Munich</div>
         <div class="feature-desc">Zentrale Lage — bald mehr Details zu Adresse und Eröffnung.</div>
       </div>
@@ -1788,7 +1785,7 @@
           <details class="faq-item">
             <summary class="faq-question">
               <span>Was passiert nach meiner Anmeldung?</span>
-              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+              <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </summary>
             <p class="faq-answer">Wir melden uns persönlich bei dir — mit allen Details zu Eröffnung, Trainingszeiten und deinem Early Bird Preis. Kein Automatismus, kein Spam.</p>
           </details>
@@ -1796,7 +1793,7 @@
           <details class="faq-item">
             <summary class="faq-question">
               <span>Ist der Preis wirklich dauerhaft?</span>
-              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+              <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </summary>
             <p class="faq-answer">Ja. Die ersten 300 Mitglieder sichern sich ihren Early Bird Preis dauerhaft — solange die Mitgliedschaft aktiv bleibt. Kein Preisanstieg nach der Eröffnung.</p>
           </details>
@@ -1804,7 +1801,7 @@
           <details class="faq-item">
             <summary class="faq-question">
               <span>Kann ich später upgraden?</span>
-              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+              <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </summary>
             <p class="faq-answer">Selbstverständlich. Du kannst dein Paket jederzeit erweitern — z.B. von Kids auf Familienpaket oder auf Personal Training. Wir besprechen das gemeinsam beim ersten Kontakt.</p>
           </details>
@@ -1812,7 +1809,7 @@
           <details class="faq-item">
             <summary class="faq-question">
               <span>Wie viele Plätze sind noch verfügbar?</span>
-              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+              <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </summary>
             <p class="faq-answer">Maximal 300 Early Bird Mitgliedschaften — danach gilt der reguläre Preis. Sobald diese vergeben sind, schließen wir die Early Bird Phase.</p>
           </details>
@@ -1820,7 +1817,7 @@
           <details class="faq-item">
             <summary class="faq-question">
               <span>Für wen ist BOMAYE GYM geeignet?</span>
-              <i class="fa-solid fa-plus faq-icon" aria-hidden="true"></i>
+              <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </summary>
             <p class="faq-answer">Für alle: Kids ab 4 Jahren, Jugendliche, Erwachsene und Familien. Ob Anfänger oder Fortgeschrittener — unsere Programme sind auf jedes Level ausgelegt.</p>
           </details>

@@ -1,0 +1,12 @@
+Die in dieses Projekt eingebetteten SVG-Icons stammen aus Font Awesome Free 6.5.2.
+
+  Icons:  CC BY 4.0 License — https://creativecommons.org/licenses/by/4.0/
+  Quelle: https://fontawesome.com
+  Lizenz: https://fontawesome.com/license/free
+
+Verwendet werden ausschliesslich die Pfaddaten der Icons; Schriftdateien und
+CSS von Font Awesome sind nicht mehr Teil des Projekts. Die Symbole liegen als
+<symbol>-Sprite direkt in den jeweiligen HTML-Seiten und in api/verify.js.
+
+Bei Weitergabe oder Aenderung der Icons muss diese Namensnennung erhalten
+bleiben (CC BY 4.0, Abschnitt 3.a).
