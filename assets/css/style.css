@@ -4964,6 +4964,28 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):
   --sv:   clamp(72px, 8vw, 112px);  /* desktop  */
   --sv-m: clamp(56px, 7vw,  88px);  /* tablet   */
   --sv-s: clamp(44px, 6vw,  64px);  /* mobile   */
+
+  /* ── TAKT: drei Abstaende zwischen Abschnitten ─────────────────────
+     Aus den gemessenen Werten abgeleitet, nicht erfunden. Gemessen
+     wurde jeder Abschnitt aller 22 Seiten bei 390 und 1280px.
+
+       --takt       48 / 96 px   Standard. Exakt der Wert, den heute
+                                 schon zehn Seiten teilen (die sieben
+                                 Themenseiten, kurse, coaches, faq).
+                                 Diese Seiten bleiben pixelgleich.
+       --takt-eng   32 / 64 px   Fuer Abschnitte, die eng
+                                 zusammengehoeren.
+       --takt-weit 100 / 140 px  Der Takt der About-Seite. Ihr
+                                 langsameres Tempo traegt den
+                                 Erzaehltext und bleibt bewusst
+                                 erhalten - siehe about.html.
+
+     Diese drei loesen --sv/--sv-m/--sv-s NICHT ab: jene gelten
+     weiterhin fuer die Grundregel an <section>. --takt wird dort
+     gesetzt, wo eine Seite bisher einen eigenen Wert hatte. */
+  --takt-eng:  clamp(2rem, 5vw, 4rem);
+  --takt:      clamp(3rem, 7vw, 6rem);
+  --takt-weit: clamp(6.25rem, 11vw, 8.75rem);
 }
 
 /* Base rhythm upgrade */

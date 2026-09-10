@@ -275,6 +275,14 @@
   ══════════════════════════════════════════════════ -->
   <style>
     /* ── Chapter 1: Hero ── */
+    /* ══ ABSTAENDE: diese Seite geht bewusst im weiten Takt ══════════
+       About ist die Erzaehlseite - Kinshasa-Geschichte, DNA-Bild,
+       Zitat. Das langsamere Tempo traegt den Text, statt zum
+       Ueberfliegen einzuladen. Es bleibt deshalb erhalten und heisst
+       jetzt --takt-weit (100px mobil, 140px Desktop) statt aus festen
+       140/120/160px zu bestehen. Aus dem Zufall wird eine Entscheidung.
+       Alle anderen Seiten nutzen --takt (48/90px).
+    ══════════════════════════════════════════════════════════════════ */
     .ab-hero {
       background: #0A0A08;
       background-image: radial-gradient(ellipse at 50% 40%, rgba(40,35,25,0.85) 0%, rgba(10,10,8,1) 70%);
@@ -415,10 +423,10 @@
   <style>
     .ab-origin {
       background: #0A0A08;
-      padding: 140px 24px;
+      padding: var(--takt-weit) 24px;
       text-align: center;
     }
-    @media (max-width: 480px) { .ab-origin { padding: 100px 20px; } }
+    @media (max-width: 480px) { .ab-origin { padding: var(--takt-weit) 20px; } }
     .ab-origin-label {
       display: block;
       font-family: var(--font-head);
@@ -488,9 +496,9 @@
   <style>
     .ab-meaning {
       background: #F5F0E8;
-      padding: 140px 24px;
+      padding: var(--takt-weit) 24px;
     }
-    @media (max-width: 480px) { .ab-meaning { padding: 100px 20px; } }
+    @media (max-width: 480px) { .ab-meaning { padding: var(--takt-weit) 20px; } }
     .ab-meaning-inner {
       max-width: 800px;
       margin: 0 auto;
@@ -544,10 +552,10 @@
   ══════════════════════════════════════════════════ -->
   <style>
     .ab-dna-section {
-      padding: 120px 48px;
+      padding: var(--takt-weit) 48px;
       position: relative;
     }
-    @media (max-width: 480px) { .ab-dna-section { padding: 80px 24px; } }
+    @media (max-width: 480px) { .ab-dna-section { padding: var(--takt-weit) 24px; } }
     .ab-dna-section--dark  { background: #0A0A08; }
     .ab-dna-section--cream { background: #F5F0E8; }
 
@@ -659,10 +667,10 @@
   <style>
     .ab-charakter {
       background: #0A0A08;
-      padding: 140px 24px;
+      padding: var(--takt-weit) 24px;
       text-align: center;
     }
-    @media (max-width: 480px) { .ab-charakter { padding: 100px 20px; } }
+    @media (max-width: 480px) { .ab-charakter { padding: var(--takt-weit) 20px; } }
     .ab-charakter-inner {
       max-width: 700px;
       margin: 0 auto;
@@ -714,12 +722,12 @@
     .ab-quote {
       background-color: #1c1c1a;
       background-image: radial-gradient(ellipse at center, #252522 0%, #111110 100%);
-      padding: 140px 24px;
+      padding: var(--takt-weit) 24px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    @media (max-width: 480px) { .ab-quote { padding: 100px 20px; } }
+    @media (max-width: 480px) { .ab-quote { padding: var(--takt-weit) 20px; } }
     /* Concrete texture stripes */
     .ab-quote::before {
       content: '';
@@ -794,9 +802,9 @@
   <style>
     .ab-coaches {
       background: #F5F0E8;
-      padding: 120px 48px;
+      padding: var(--takt-weit) 48px;
     }
-    @media (max-width: 480px) { .ab-coaches { padding: 80px 24px; } }
+    @media (max-width: 480px) { .ab-coaches { padding: var(--takt-weit) 24px; } }
     .ab-coaches-label {
       display: block;
       font-family: var(--font-head);
@@ -1035,12 +1043,12 @@
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      padding: 160px 24px;
+      padding: var(--takt-weit) 24px;
       text-align: center;
       position: relative;
     }
     @media (max-width: 768px) {
-      .ab-cinema { background-attachment: scroll; padding: 120px 20px; }
+      .ab-cinema { background-attachment: scroll; padding: var(--takt-weit) 20px; }
     }
     .ab-cinema::before {
       content: '';
@@ -1088,10 +1096,10 @@
   <style>
     .ab-cta {
       background: #F5F0E8;
-      padding: 120px 48px;
+      padding: var(--takt-weit) 48px;
       text-align: center;
     }
-    @media (max-width: 480px) { .ab-cta { padding: 80px 24px; } }
+    @media (max-width: 480px) { .ab-cta { padding: var(--takt-weit) 24px; } }
     .ab-cta-inner {
       max-width: 700px;
       margin: 0 auto;

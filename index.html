@@ -565,8 +565,8 @@
   }
 
   /* Pricing section padding */
-  #pricing { padding: 80px 24px; }
-  @media (min-width: 900px) { #pricing { padding: 100px 40px; } }
+  #pricing { padding: var(--takt) 24px; }
+  @media (min-width: 900px) { #pricing { padding: var(--takt) 40px; } }
 </style>
   <!-- Organization — Identitaet der Marke, sameAs verknuepft Social und App-Stores -->
   <script type="application/ld+json">
@@ -1835,10 +1835,10 @@ body[data-modal-open="true"] { overflow: hidden; }
   <style>
     #money-slots {
       background: #0A0A08;
-      padding: 80px 24px;
+      padding: var(--takt) 24px;
       box-sizing: border-box;
     }
-    @media (min-width: 1024px) { #money-slots { padding: 96px 24px; } }
+    @media (min-width: 1024px) { #money-slots { padding: var(--takt) 24px; } }
     .ms-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
     .ms-eyebrow {
       font-family: var(--font-head);
@@ -2368,7 +2368,7 @@ body[data-modal-open="true"] { overflow: hidden; }
   <!-- ── FOUNDING MEMBER ── -->
   <section id="early-bird" style="background:#0A0A08;padding:80px 24px;text-align:center;">
     <style>
-      @media(min-width:769px){#early-bird{padding:100px 40px!important;}}
+      @media(min-width:769px){#early-bird{padding:var(--takt) 40px!important;}}
       #early-bird .fm-benefits{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;flex-direction:column;}
       @media(min-width:769px){#early-bird .fm-benefits{flex-direction:row;gap:0;}}
       #early-bird .fm-sep{display:none;margin:0 12px;color:rgba(245,240,232,0.4);}
