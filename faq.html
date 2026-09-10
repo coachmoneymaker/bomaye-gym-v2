@@ -400,6 +400,27 @@
     ]
   }
   </script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Startseite",
+        "item": "https://www.bomayegym.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "FAQ",
+        "item": "https://www.bomayegym.com/faq"
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -616,8 +637,6 @@
 </main><!-- /faqp-main -->
 
 <!-- ═══════ SCRIPTS ═══════ -->
-<!-- JSON-LD FAQ Schema — generated from same data as accordion -->
-<script type="application/ld+json" id="faq-jsonld"></script>
 <script src="/assets/js/faq-data.js"></script>
 <script>
 /* ── Header scroll styling (same as main site) ─── */
@@ -710,32 +729,6 @@ function _waitBsport(attempt) {
 }
 document.addEventListener('click',   e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown',  e => { if (e.key === 'Escape') closeBooking(); });
-
-/* ════════════════════════════════════════════════
-   FAQ JSON-LD SCHEMA — injected after data loads
-════════════════════════════════════════════════ */
-(function buildJsonLd() {
-  if (typeof BOMAYE_FAQ === 'undefined') return;
-  var qas = [];
-  BOMAYE_FAQ.forEach(function (section) {
-    section.items.forEach(function (item) {
-      qas.push({
-        '@type': 'Question',
-        'name': item.q,
-        'acceptedAnswer': { '@type': 'Answer', 'text': item.a }
-      });
-    });
-  });
-  var schema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    '@id': 'https://bomayegym.com/faq#faqpage',
-    'mainEntity': qas
-  };
-  var el = document.getElementById('faq-jsonld');
-  if (el) el.textContent = JSON.stringify(schema);
-})();
-
 /* ════════════════════════════════════════════════
    FAQ ACCORDION — rendered from faq-data.js
 ════════════════════════════════════════════════ */

@@ -307,6 +307,48 @@
     .nav-link-active { color: var(--gold) !important; }
     #header .nav-link[href] { display: inline-flex; align-items: center; }
   </style>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Startseite",
+        "item": "https://www.bomayegym.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Kickboxen München",
+        "item": "https://www.bomayegym.com/kickboxen-muenchen"
+      }
+    ]
+  }
+  </script>
+  <!-- Course -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Kickboxing",
+    "description": "Kickbox-Training im Bomaye Gym München für Anfänger und Fortgeschrittene — Schlag- und Tritttechnik, Beinarbeit und Kondition, angeleitet von Kickbox-Weltmeister Alfonso Fusco.",
+    "url": "https://www.bomayegym.com/kickboxen-muenchen",
+    "provider": {
+      "@id": "https://bomayegym.com/#gym"
+    },
+    "inLanguage": "de",
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "onsite",
+      "location": {
+        "@id": "https://bomayegym.com/#gym"
+      }
+    }
+  }
+  </script>
 </head>
 
 <body>

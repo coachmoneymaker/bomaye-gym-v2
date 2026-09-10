@@ -880,6 +880,108 @@
     "priceRange": "€€"
   }
   </script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Startseite",
+        "item": "https://www.bomayegym.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Mitglied werden",
+        "item": "https://www.bomayegym.com/mitglied-werden"
+      }
+    ]
+  }
+  </script>
+  <!-- Offer — die drei Mitgliedschaften -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Mitgliedschaft im Bomaye Gym München",
+    "serviceType": "Boxgym-Mitgliedschaft",
+    "provider": {
+      "@id": "https://bomayegym.com/#gym"
+    },
+    "areaServed": {
+      "@type": "City",
+      "name": "München"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Kids",
+        "description": "6 – 9 Jahre · Early-Bird-Preis, dauerhaft. Zusätzlich 100 € einmalig inklusive Fighter-Kit. Mindestlaufzeit 12 Monate.",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.bomayegym.com/mitglied-werden",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "14.90",
+          "priceCurrency": "EUR",
+          "unitCode": "WEE",
+          "unitText": "Woche"
+        },
+        "eligibleQuantity": {
+          "@type": "QuantitativeValue",
+          "value": 12,
+          "unitCode": "MON",
+          "unitText": "Monate Mindestlaufzeit"
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Youth",
+        "description": "10 – 17 Jahre · Early-Bird-Preis, dauerhaft. Zusätzlich 100 € einmalig inklusive Fighter-Kit. Mindestlaufzeit 12 Monate.",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.bomayegym.com/mitglied-werden",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "15.90",
+          "priceCurrency": "EUR",
+          "unitCode": "WEE",
+          "unitText": "Woche"
+        },
+        "eligibleQuantity": {
+          "@type": "QuantitativeValue",
+          "value": 12,
+          "unitCode": "MON",
+          "unitText": "Monate Mindestlaufzeit"
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Unlimited",
+        "description": "ab 18 Jahren, alle Programme · Early-Bird-Preis, dauerhaft. Zusätzlich 100 € einmalig inklusive Fighter-Kit. Mindestlaufzeit 12 Monate.",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.bomayegym.com/mitglied-werden",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "18.90",
+          "priceCurrency": "EUR",
+          "unitCode": "WEE",
+          "unitText": "Woche"
+        },
+        "eligibleQuantity": {
+          "@type": "QuantitativeValue",
+          "value": 12,
+          "unitCode": "MON",
+          "unitText": "Monate Mindestlaufzeit"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
