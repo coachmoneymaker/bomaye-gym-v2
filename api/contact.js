@@ -184,7 +184,7 @@ function emailWrapper(title, fieldsHtml) {
           <tr>
             <td style="background:#0a0a0a;padding:32px 40px 28px;">
               <p style="margin:0 0 6px;font-size:10px;letter-spacing:0.2em;
-                        text-transform:uppercase;color:#C6A45A;font-weight:600;">
+                        text-transform:uppercase;color:#C9A84C;font-weight:600;">
                 BOMAYE GYM MUNICH
               </p>
               <h1 style="margin:0;font-size:22px;color:#ffffff;font-weight:600;
@@ -270,7 +270,7 @@ function field(label, value) {
 
 function emailLink(email) {
   const safe = escapeHtml(email);
-  return `<a href="mailto:${safe}" style="color:#C6A45A;text-decoration:none;font-weight:600;">${safe}</a>`;
+  return `<a href="mailto:${safe}" style="color:#C9A84C;text-decoration:none;font-weight:600;">${safe}</a>`;
 }
 
 function escapeHtml(str) {

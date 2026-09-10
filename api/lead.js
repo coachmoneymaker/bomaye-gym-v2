@@ -299,7 +299,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                 ? `<img src="${logoUrl}" alt="BOMAYE GYM" width="130" height="auto"
                         style="display:block;width:130px;height:auto;border:0;outline:none;text-decoration:none;" />`
                 : `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;
-                             font-weight:700;letter-spacing:0.25em;color:#C6A45A;">BOMAYE GYM</p>`
+                             font-weight:700;letter-spacing:0.25em;color:#C9A84C;">BOMAYE GYM</p>`
               }
             </td>
           </tr>
@@ -307,14 +307,14 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
           <!-- ── CARD ──────────────────────────────────────────────── -->
           <tr>
             <td style="background-color:#111111;border-radius:2px;
-                       border:1px solid rgba(198,164,90,0.16);">
+                       border:1px solid rgba(201,168,76,0.16);">
 
               <!-- Gold accent bar -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td bgcolor="#C6A45A" height="3"
+                  <td bgcolor="#C9A84C" height="3"
                       style="height:3px;line-height:3px;font-size:3px;
-                             background-color:#C6A45A;">&nbsp;</td>
+                             background-color:#C9A84C;">&nbsp;</td>
                 </tr>
               </table>
 
@@ -323,14 +323,14 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                 <tr>
                   <td align="center"
                       style="padding:52px 52px 40px;
-                             border-bottom:1px solid rgba(198,164,90,0.1);">
+                             border-bottom:1px solid rgba(201,168,76,0.1);">
 
                     <!-- Eyebrow -->
                     <p style="margin:0 0 20px;
                               font-family:Arial,Helvetica,sans-serif;
                               font-size:10px;font-weight:700;
                               letter-spacing:0.32em;text-transform:uppercase;
-                              color:#C6A45A;">
+                              color:#C9A84C;">
                       Early Bird Access &mdash; Munich
                     </p>
 
@@ -365,7 +365,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                       du bist fast dabei. Ein Klick genügt, um deinen exklusiven
                       Early Bird Platz bei BOMAYE GYM Munich dauerhaft zu sichern.<br /><br />
                       Der Bestätigungslink ist
-                      <span style="color:#C6A45A;font-weight:600;">24&nbsp;Stunden</span>
+                      <span style="color:#C9A84C;font-weight:600;">24&nbsp;Stunden</span>
                       gültig.
                     </p>
                   </td>
@@ -379,7 +379,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                     <!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
                       href="${verifyUrl}" style="height:58px;v-text-anchor:middle;width:340px;"
-                      arcsize="4%" strokecolor="#C6A45A" fillcolor="#C6A45A">
+                      arcsize="4%" strokecolor="#C9A84C" fillcolor="#C9A84C">
                       <w:anchorlock/>
                       <center style="color:#080808;font-family:Arial,Helvetica,sans-serif;
                                      font-size:12px;font-weight:700;letter-spacing:0.2em;">
@@ -390,8 +390,8 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                     <!--[if !mso]><!-->
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation">
                       <tr>
-                        <td bgcolor="#C6A45A"
-                            style="background-color:#C6A45A;border-radius:3px;">
+                        <td bgcolor="#C9A84C"
+                            style="background-color:#C9A84C;border-radius:3px;">
                           <a href="${verifyUrl}" target="_blank"
                              style="display:inline-block;
                                     padding:20px 52px;
@@ -440,7 +440,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                               font-size:10px;line-height:1.6;
                               color:rgba(255,255,255,0.14);">
                       <a href="${verifyUrl}" target="_blank"
-                         style="color:rgba(198,164,90,0.38);text-decoration:none;
+                         style="color:rgba(201,168,76,0.38);text-decoration:none;
                                 word-break:break-all;word-wrap:break-word;">
                         ${verifyUrl}
                       </a>
@@ -459,7 +459,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
               <!-- Ornament -->
               <p style="margin:0 0 20px;
                         font-family:Arial,Helvetica,sans-serif;
-                        font-size:10px;color:rgba(198,164,90,0.25);
+                        font-size:10px;color:rgba(201,168,76,0.25);
                         letter-spacing:0.35em;">
                 &mdash;&nbsp;&nbsp;&#9670;&nbsp;&nbsp;&mdash;
               </p>
@@ -469,7 +469,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                         font-family:Arial,Helvetica,sans-serif;
                         font-size:11px;font-weight:700;
                         letter-spacing:0.28em;text-transform:uppercase;
-                        color:rgba(198,164,90,0.35);">
+                        color:rgba(201,168,76,0.35);">
                 BOMAYE GYM MUNICH
               </p>
 

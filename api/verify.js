@@ -270,7 +270,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                 ? `<img src="${logoUrl}" alt="BOMAYE GYM" width="130" height="auto"
                         style="display:block;width:130px;height:auto;border:0;outline:none;text-decoration:none;" />`
                 : `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;
-                             font-weight:700;letter-spacing:0.25em;color:#C6A45A;">BOMAYE GYM</p>`
+                             font-weight:700;letter-spacing:0.25em;color:#C9A84C;">BOMAYE GYM</p>`
               }
             </td>
           </tr>
@@ -278,14 +278,14 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
           <!-- ── CARD ──────────────────────────────────────────────── -->
           <tr>
             <td style="background-color:#111111;border-radius:2px;
-                       border:1px solid rgba(198,164,90,0.16);">
+                       border:1px solid rgba(201,168,76,0.16);">
 
               <!-- Gold accent bar -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td bgcolor="#C6A45A" height="3"
+                  <td bgcolor="#C9A84C" height="3"
                       style="height:3px;line-height:3px;font-size:3px;
-                             background-color:#C6A45A;">&nbsp;</td>
+                             background-color:#C9A84C;">&nbsp;</td>
                 </tr>
               </table>
 
@@ -294,7 +294,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                 <tr>
                   <td align="center"
                       style="padding:52px 52px 44px;
-                             border-bottom:1px solid rgba(198,164,90,0.1);">
+                             border-bottom:1px solid rgba(201,168,76,0.1);">
 
                     <!-- Checkmark icon (inline SVG — email safe) -->
                     <div style="margin:0 0 24px;">
@@ -303,10 +303,10 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                         <tr>
                           <td bgcolor="#1a1a0d"
                               style="width:56px;height:56px;border-radius:50%;
-                                     border:2px solid rgba(198,164,90,0.35);
+                                     border:2px solid rgba(201,168,76,0.35);
                                      background-color:#1a1a0d;text-align:center;
                                      vertical-align:middle;line-height:56px;">
-                            <span style="font-size:22px;color:#C6A45A;line-height:56px;">&#10003;</span>
+                            <span style="font-size:22px;color:#C9A84C;line-height:56px;">&#10003;</span>
                           </td>
                         </tr>
                       </table>
@@ -317,7 +317,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                               font-family:Arial,Helvetica,sans-serif;
                               font-size:10px;font-weight:700;
                               letter-spacing:0.32em;text-transform:uppercase;
-                              color:#C6A45A;">
+                              color:#C9A84C;">
                       Founding Member &mdash; Bestätigt
                     </p>
 
@@ -364,7 +364,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                   <td style="padding:0 52px 44px;">
 
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
-                           style="border:1px solid rgba(198,164,90,0.14);border-radius:3px;
+                           style="border:1px solid rgba(201,168,76,0.14);border-radius:3px;
                                   background-color:#0d0d0d;">
 
                       <!-- Row: Name -->
@@ -414,7 +414,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                           <p style="margin:0;
                                     font-family:Arial,Helvetica,sans-serif;
                                     font-size:14px;font-weight:700;
-                                    color:#C6A45A;">
+                                    color:#C9A84C;">
                             &#10003;&nbsp; Early Bird Platz bestätigt
                           </p>
                         </td>
@@ -451,7 +451,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                               line-height:1.75;letter-spacing:0.01em;">
                       Fragen? Antworte einfach auf diese E-Mail oder schreibe uns an
                       <a href="mailto:support@bomayegym.com"
-                         style="color:#C6A45A;text-decoration:none;font-weight:500;">
+                         style="color:#C9A84C;text-decoration:none;font-weight:500;">
                         support@bomayegym.com
                       </a>.
                     </p>
@@ -468,7 +468,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
 
               <p style="margin:0 0 20px;
                         font-family:Arial,Helvetica,sans-serif;
-                        font-size:10px;color:rgba(198,164,90,0.25);
+                        font-size:10px;color:rgba(201,168,76,0.25);
                         letter-spacing:0.35em;">
                 &mdash;&nbsp;&nbsp;&#9670;&nbsp;&nbsp;&mdash;
               </p>
@@ -477,7 +477,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                         font-family:Arial,Helvetica,sans-serif;
                         font-size:11px;font-weight:700;
                         letter-spacing:0.28em;text-transform:uppercase;
-                        color:rgba(198,164,90,0.35);">
+                        color:rgba(201,168,76,0.35);">
                 BOMAYE GYM MUNICH
               </p>
 
@@ -554,7 +554,7 @@ function buildAdminEmailHtml(lead, verifiedAt) {
           <tr>
             <td style="background:#0a0a0a;padding:32px 40px 28px;">
               <p style="margin:0 0 6px;font-size:10px;letter-spacing:0.2em;
-                        text-transform:uppercase;color:#C6A45A;font-weight:600;">
+                        text-transform:uppercase;color:#C9A84C;font-weight:600;">
                 BOMAYE GYM MUNICH
               </p>
               <h1 style="margin:0;font-size:22px;color:#ffffff;font-weight:600;
@@ -589,7 +589,7 @@ function buildAdminEmailHtml(lead, verifiedAt) {
                 ${field('First Name',    escapeHtml(lead.firstName))}
                 ${field('Last Name',     escapeHtml(lead.lastName))}
                 ${field('Email',         `<a href="mailto:${escapeHtml(lead.email)}"
-                           style="color:#C6A45A;text-decoration:none;font-weight:600;">
+                           style="color:#C9A84C;text-decoration:none;font-weight:600;">
                            ${escapeHtml(lead.email)}</a>`)}
                 ${field('Phone',         escapeHtml(lead.phone))}
                 ${field('Category',      escapeHtml(lead.category))}
@@ -598,7 +598,7 @@ function buildAdminEmailHtml(lead, verifiedAt) {
                 ${Array.isArray(lead.members) && lead.members.length
                   ? field('Family Members', lead.members.map((m, i) =>
                       escapeHtml(m) + (i === 3
-                        ? ' <span style="color:#C6A45A;font-size:11px;font-weight:600;">(free)</span>'
+                        ? ' <span style="color:#C9A84C;font-size:11px;font-weight:600;">(free)</span>'
                         : '')
                     ).join('<br />'))
                   : ''}
@@ -662,8 +662,8 @@ function renderPage(type, { title, message }) {
   const icon = type === 'error'
     ? '<i class="fa-solid fa-circle-xmark" style="color:#e53e3e;"></i>'
     : type === 'already'
-    ? '<i class="fa-solid fa-circle-check" style="color:#C6A45A;"></i>'
-    : '<i class="fa-solid fa-circle-check" style="color:#C6A45A;"></i>';
+    ? '<i class="fa-solid fa-circle-check" style="color:#C9A84C;"></i>'
+    : '<i class="fa-solid fa-circle-check" style="color:#C9A84C;"></i>';
 
   return `<!DOCTYPE html>
 <html lang="de">
@@ -677,15 +677,15 @@ function renderPage(type, { title, message }) {
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:#0a0a0a;color:#fff;font-family:'DM Sans',Arial,sans-serif;
          min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{background:#111;border:1px solid rgba(198,164,90,0.12);border-radius:12px;
+    .card{background:#111;border:1px solid rgba(201,168,76,0.12);border-radius:12px;
           padding:48px 40px;text-align:center;max-width:460px;width:100%}
-    .icon{font-size:3rem;margin-bottom:24px;filter:drop-shadow(0 0 20px rgba(198,164,90,0.3))}
+    .icon{font-size:3rem;margin-bottom:24px;filter:drop-shadow(0 0 20px rgba(201,168,76,0.3))}
     .eyebrow{font-family:'Bebas Neue',sans-serif;font-size:0.6rem;letter-spacing:4px;
-             color:#C6A45A;text-transform:uppercase;margin-bottom:16px;opacity:0.8}
+             color:#C9A84C;text-transform:uppercase;margin-bottom:16px;opacity:0.8}
     h1{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.04em;
        color:#fff;margin-bottom:16px;font-weight:400}
     p{font-size:0.9rem;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:28px}
-    a.btn{display:inline-block;background:#C6A45A;color:#000;text-decoration:none;
+    a.btn{display:inline-block;background:#C9A84C;color:#000;text-decoration:none;
           font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
           padding:14px 32px;border-radius:4px}
   </style>
