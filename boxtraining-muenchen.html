@@ -272,15 +272,15 @@
       font-size: 0.8rem;
       letter-spacing: 1.5px;
       color: #F5F0E8;
-      transition: background 0.2s;
+      transition: background var(--dur-normal) var(--ease-out);
     }
     .faq-q:hover { background: rgba(201,168,76,0.07); }
-    .faq-q i { color: var(--gold); transition: transform 0.3s; flex-shrink: 0; }
+    .faq-q i { color: var(--gold); transition: transform var(--dur-normal) var(--ease-out); flex-shrink: 0; }
     .faq-item.open .faq-q i { transform: rotate(45deg); }
     .faq-a {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s ease;
+      transition: max-height var(--dur-ruhig) var(--ease-out), padding var(--dur-ruhig) var(--ease-out);
       padding: 0 1.4rem;
       font-family: var(--font-body);
       font-size: 0.92rem;

@@ -39,6 +39,30 @@
   --mn-tail: 320ms;
   --ease-out:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
+  /* ── Bewegung — eine Sprache fuer alle Interaktionen ──────────────────
+     Vorher: 30 verschiedene Dauern und 7 Kurven, gewachsen ueber Monate.
+     Die gemessene Verteilung hatte vier klare Haeufungen; danach sind
+     diese vier Werte gewaehlt - nicht nach Geschmack, sondern nach dem,
+     was ohnehin da war:
+
+       unter 200 ms    42 Stellen  ->  --dur-schnell
+       200 bis 350    268          ->  --dur-normal   (die Masse)
+       360 bis 600     50          ->  --dur-ruhig
+       ueber 600       40          ->  --dur-auftritt
+
+     Ab 1150 ms bleibt alles unberuehrt: einzelne dekorative Effekte
+     (Bildzoom 1,4 s, ein Hintergrund-Schwenk mit 8 s), keine Reaktion
+     auf eine Bedienhandlung. Verzoegerungen bleiben ebenfalls stehen.
+
+     Kurven bleiben bei den zwei vorhandenen: --ease-out als Standard,
+     --ease-expo fuer groessere Bewegungen. Die drei weiteren
+     cubic-bezier-Varianten im Projekt sind praktisch deckungsgleich mit
+     --ease-expo und zeigen jetzt darauf. */
+  --dur-schnell:  150ms;
+  --dur-normal:   250ms;
+  --dur-ruhig:    500ms;
+  --dur-auftritt: 800ms;
+
   --radius-legacy: 0;   /* frueher 6px — Marke verlangt 0 */
   --radius-lg: 0;       /* frueher 12px — Marke verlangt 0 */
   --nav-h:     130px;
@@ -87,11 +111,11 @@ ul { list-style: none; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
   will-change: opacity, transform;
   transform: translateY(0) translateZ(0);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transition: opacity var(--dur-ruhig) var(--ease-out), transform var(--dur-ruhig) var(--ease-out);
 }
 #preloader.loader-exit { opacity: 0; transform: translateY(-10px) translateZ(0); pointer-events: none; }
 .loader-logo { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 5rem); letter-spacing: 0.15em; color: var(--gold); }
-.loader-line  { width: 220px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left center; transition: transform 0.8s var(--ease-expo); will-change: transform; }
+.loader-line  { width: 220px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-auftritt) var(--ease-expo); will-change: transform; }
 .loader-sub   { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
 @media (max-width: 768px) { #preloader { display: none; } }
 
@@ -147,7 +171,7 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
   padding: 0.9rem 2.2rem; border-radius: 0; border: 1px solid transparent;
-  transition: all 0.28s var(--ease-out); white-space: nowrap; text-decoration: none;
+  transition: all var(--dur-normal) var(--ease-out); white-space: nowrap; text-decoration: none;
 }
 .btn--gold {
   background: linear-gradient(135deg, #C9A84C 0%, #d4b472 52%, #A67C2E 100%);
@@ -175,7 +199,7 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   height: var(--nav-h);
   background: linear-gradient(180deg, rgba(0,0,0,0.44) 0%, transparent 100%);
-  transition: background 380ms var(--ease-out), backdrop-filter 380ms var(--ease-out), -webkit-backdrop-filter 380ms var(--ease-out), box-shadow 380ms var(--ease-out);
+  transition: background var(--dur-ruhig) var(--ease-out), backdrop-filter var(--dur-ruhig) var(--ease-out), -webkit-backdrop-filter var(--dur-ruhig) var(--ease-out), box-shadow var(--dur-ruhig) var(--ease-out);
   border-bottom: 1px solid transparent;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
@@ -227,7 +251,7 @@ body.bsport-modal-open #header {
 .nav-link {
   font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 2.5px;
   color: rgba(245,240,232,0.58); padding: 0.45rem 0.85rem; border-radius: 0;
-  transition: color 0.22s var(--ease-out); white-space: nowrap;
+  transition: color var(--dur-normal) var(--ease-out); white-space: nowrap;
 }
 .nav-link:hover { color: var(--white); }
 .nav-link.active { color: var(--gold); }
@@ -247,7 +271,7 @@ body.bsport-modal-open #header {
   text-decoration: none;
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color var(--dur-normal) var(--ease-out), opacity var(--dur-normal) var(--ease-out);
 }
 .nav-account-icon:hover { color: var(--gold); opacity: 0.9; }
 .nav-account-icon i { font-size: 1.05rem; pointer-events: none; }
@@ -256,7 +280,7 @@ body.bsport-modal-open #header {
 .back-btn {
   display: none; align-items: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 2.5px;
-  color: rgba(245,240,232,0.50); padding: 0.45rem 0.75rem; border-radius: 0; transition: color 0.22s var(--ease-out);
+  color: rgba(245,240,232,0.50); padding: 0.45rem 0.75rem; border-radius: 0; transition: color var(--dur-normal) var(--ease-out);
 }
 .back-btn.visible { display: flex; }
 .back-btn:hover { color: var(--white); }
@@ -270,18 +294,18 @@ body.bsport-modal-open #header {
   padding: calc(var(--nav-h) + 48px) 0 32px;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
   opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0.42s;
 }
 #mobile-nav.open {
   opacity: 1; visibility: visible; pointer-events: auto;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0s;
 }
 #mobile-nav .nav-link { font-size: 0.88rem; letter-spacing: 3px; padding: 0.85rem 2rem; }
 /* Close button: sits at the same visual position as the burger in the header */
 .mob-close {
   position: absolute; top: 1.35rem; right: 1.5rem;
   font-size: 1.2rem; line-height: 1;
-  color: rgba(245,240,232,0.38); transition: color 0.22s var(--ease-out);
+  color: rgba(245,240,232,0.38); transition: color var(--dur-normal) var(--ease-out);
 }
 .mob-close:hover { color: var(--white); }
 
@@ -341,7 +365,7 @@ body.bsport-modal-open #header {
   -webkit-backdrop-filter: blur(6px);
   box-shadow: 0 0 20px rgba(201,168,76,0.10), inset 0 0 12px rgba(201,168,76,0.04);
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s var(--ease-out), border-color 0.25s;
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .hero-eyebrow:hover {
   border-color: rgba(201,168,76,0.85);
@@ -351,13 +375,13 @@ body.bsport-modal-open #header {
   font-size: clamp(3.75rem, 9.5vw, 7.5rem);
   line-height: 0.9; color: var(--white); margin-bottom: 2.5rem;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 .hero-subtitle {
   font-family: var(--font-body); font-size: clamp(0.95rem, 2vw, 1.15rem);
   color: rgba(245,240,232,0.82); margin-bottom: 1.5rem; margin-top: -1.25rem;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 .hero-eb-counter {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -370,7 +394,7 @@ body.bsport-modal-open #header {
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 2px 16px rgba(201,168,76,0.14), 0 0 0 1px rgba(201,168,76,0.08);
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  cursor: pointer; touch-action: manipulation; transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1), border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer; touch-action: manipulation; transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo), border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .hero-eb-counter:hover {
   border-color: rgba(201,168,76,0.9);
@@ -386,7 +410,7 @@ body.bsport-modal-open #header {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   opacity: 0; transform: translateY(10px); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 @media (min-width: 769px) {
   .hero-brand-tagline {
@@ -400,12 +424,12 @@ body.bsport-modal-open #header {
   display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;
   margin-bottom: 3rem;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 .hero-trust {
   display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 .hero-trust-item {
   display: flex; align-items: center; gap: 0.5rem;
@@ -418,7 +442,7 @@ body.bsport-modal-open #header {
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 0.52rem; letter-spacing: 3px; color: rgba(245,240,232,0.3);
   opacity: 0; will-change: opacity;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo);
 }
 .scroll-hint-line {
   width: 1px; height: 44px;
@@ -624,7 +648,7 @@ body.bsport-modal-open #header {
 }
 .service-card {
   position: relative; overflow: hidden; cursor: pointer; background: #0d0d0d;
-  transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  transition: box-shadow var(--dur-ruhig) var(--ease-out), transform var(--dur-ruhig) var(--ease-out);
 }
 @media (max-width: 768px) {
   .service-card {
@@ -646,7 +670,7 @@ body.bsport-modal-open #header {
 }
 .service-card-bg {
   position: absolute; inset: 0; background-size: cover; background-position: center;
-  transition: transform 0.7s var(--ease-expo), filter 0.4s; filter: brightness(0.38);
+  transition: transform var(--dur-auftritt) var(--ease-expo), filter var(--dur-ruhig) var(--ease-out); filter: brightness(0.38);
 }
 .service-card:hover .service-card-bg { transform: scale(1.06); filter: brightness(0.32); }
 .service-card-arrow {
@@ -654,7 +678,7 @@ body.bsport-modal-open #header {
   width: 34px; height: 34px;
   background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem; color: var(--gold); transition: all 0.3s;
+  font-size: 0.75rem; color: var(--gold); transition: all var(--dur-normal) var(--ease-out);
 }
 .service-card:hover .service-card-arrow {
   background: var(--gold); color: var(--ink); transform: rotate(45deg);
@@ -676,7 +700,7 @@ body.bsport-modal-open #header {
 .coach-card {
   display: grid; grid-template-columns: 240px 1fr; gap: 0;
   background: var(--smoke); border-radius: var(--radius-lg); overflow: hidden;
-  border: 1px solid rgba(245,240,232,0.06); transition: border-color 0.3s;
+  border: 1px solid rgba(245,240,232,0.06); transition: border-color var(--dur-normal) var(--ease-out);
 }
 .coach-card:hover { border-color: var(--border); }
 .coach-photo { position: relative; min-height: 300px; }
@@ -708,7 +732,7 @@ body.bsport-modal-open #header {
   background: rgba(245,240,232,0.06); border: 1px solid rgba(245,240,232,0.10);
   color: rgba(245,240,232,0.38); font-size: 0.72rem;
   text-decoration: none; flex-shrink: 0;
-  transition: background 0.25s var(--ease-out), border-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+  transition: background var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
 }
 .coach-social-link:hover, .coach-social-link:focus-visible {
   background: rgba(201,168,76,0.14);
@@ -746,7 +770,7 @@ body.bsport-modal-open #header {
   box-shadow: 0 2px 10px rgba(0,0,0,0.10);
   min-height: 44px;
   min-width: 44px;
-  transition: background 0.15s, box-shadow 0.15s;
+  transition: background var(--dur-schnell) var(--ease-out), box-shadow var(--dur-schnell) var(--ease-out);
   position: relative;
   z-index: 10;
 }
@@ -1414,7 +1438,7 @@ body.bsport-modal-open #header {
   font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 2px;
   color: var(--muted); background: rgba(245,240,232,0.05);
   border: 1px solid rgba(245,240,232,0.1); border-radius: 0;
-  padding: 0.6rem 1.5rem; transition: all 0.3s; cursor: pointer;
+  padding: 0.6rem 1.5rem; transition: all var(--dur-normal) var(--ease-out); cursor: pointer;
 }
 .atab:hover, .atab.active {
   background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold);
@@ -1437,7 +1461,7 @@ body.bsport-modal-open #header {
   background: var(--smoke); border: 1px solid rgba(245,240,232,0.09);
   border-radius: var(--radius-lg); padding: 2.25rem 2rem;
   display: flex; flex-direction: column; gap: 0.7rem;
-  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  transition: border-color var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   position: relative; overflow: hidden;
   box-shadow: 0 4px 24px rgba(0,0,0,0.35);
 }
@@ -1445,7 +1469,7 @@ body.bsport-modal-open #header {
 .prog-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
-  opacity: 0; transition: opacity 0.3s;
+  opacity: 0; transition: opacity var(--dur-normal) var(--ease-out);
 }
 .prog-card:hover::before { opacity: 1; }
 .prog-icon { font-size: 1.1rem; color: var(--gold); margin-bottom: 0.25rem; }
@@ -1478,14 +1502,14 @@ body.bsport-modal-open #header {
   display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin: 0 auto;
   font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; color: var(--muted);
   background: rgba(245,240,232,0.04); border: 1px solid rgba(245,240,232,0.1);
-  border-radius: 0; padding: 0.65rem 1.5rem; transition: all 0.3s; cursor: pointer;
+  border-radius: 0; padding: 0.65rem 1.5rem; transition: all var(--dur-normal) var(--ease-out); cursor: pointer;
 }
 .mehr-preise-btn:hover { border-color: var(--gold); color: var(--gold); }
-.mehr-preise-btn i { transition: transform 0.3s; }
+.mehr-preise-btn i { transition: transform var(--dur-normal) var(--ease-out); }
 .mehr-preise-btn[aria-expanded="true"] i { transform: rotate(180deg); }
 .mehr-preise-panel {
   max-height: 0; overflow: hidden;
-  transition: max-height 0.5s var(--ease-expo);
+  transition: max-height var(--dur-ruhig) var(--ease-expo);
 }
 .mehr-preise-panel.open { max-height: 800px; }
 .mehr-preise-table-wrap {
@@ -1563,7 +1587,7 @@ body.bsport-modal-open #header {
   border-radius: var(--radius-lg); padding: 2.25rem 2rem;
   text-align: center;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .why-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
 .why-card-icon {
@@ -1646,12 +1670,12 @@ body.bsport-modal-open #header {
 .faq-q {
   width: 100%; text-align: left; padding: 1.35rem 0;
   display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--font-head); font-size: 0.92rem; letter-spacing: 1px; color: var(--white); transition: color 0.2s;
+  font-family: var(--font-head); font-size: 0.92rem; letter-spacing: 1px; color: var(--white); transition: color var(--dur-normal) var(--ease-out);
 }
 .faq-q:hover { color: var(--gold); }
-.faq-icon { font-size: 0.82rem; transition: transform 0.3s; color: var(--gold); flex-shrink: 0; margin-left: 1rem; }
+.faq-icon { font-size: 0.82rem; transition: transform var(--dur-normal) var(--ease-out); color: var(--gold); flex-shrink: 0; margin-left: 1rem; }
 .faq-q[aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
-.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--ease-expo); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height var(--dur-ruhig) var(--ease-expo); }
 .faq-a-inner { padding: 0 0 1.35rem; font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1678,7 +1702,7 @@ footer {
 .footer-partner-row { display: flex; align-items: center; gap: 24px; }
 .partner-link {
   display: inline-flex; align-items: center;
-  opacity: 0.55; transition: opacity 0.15s ease;
+  opacity: 0.55; transition: opacity var(--dur-schnell) var(--ease-out);
   text-decoration: none;
 }
 .partner-link:hover { opacity: 0.85; }
@@ -1699,7 +1723,7 @@ footer {
    Logos render as inline-styled mask spans (cream bg + SVG mask) so the
    SVG's own fills can never show and sizing survives stale CSS. */
 .footer-pineapple { display: flex; align-items: center; gap: 9px; margin: -0.35rem 0 0.95rem; }
-.footer-pineapple a { opacity: 0.55; transition: opacity 0.15s ease; }
+.footer-pineapple a { opacity: 0.55; transition: opacity var(--dur-schnell) var(--ease-out); }
 .footer-pineapple a:hover { opacity: 0.85; }
 .footer-pineapple-label {
   font-family: var(--font-head); font-size: 9px; font-weight: 600;
@@ -1726,7 +1750,7 @@ footer {
   background: rgba(245,240,232,0.04); border: 1px solid rgba(245,240,232,0.09);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 0.88rem; color: rgba(245,240,232,0.45);
-  transition: background 0.25s var(--ease-out), border-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+  transition: background var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
 }
 .social-icon:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.55); color: var(--gold); }
 /* Column headings — understated label style */
@@ -1738,7 +1762,7 @@ footer {
 .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
 .footer-links button, .footer-links a {
   font-size: 0.84rem; color: rgba(245,240,232,0.50); text-align: left;
-  transition: color 0.22s var(--ease-out); display: block;
+  transition: color var(--dur-normal) var(--ease-out); display: block;
 }
 .footer-links button:hover, .footer-links a:hover { color: var(--white); }
 /* Inline SEO sentence links (premium footer copy) */
@@ -1746,7 +1770,7 @@ footer {
   color: rgba(245,240,232,0.6);
   text-decoration: none;
   border-bottom: 1px solid rgba(245,240,232,0.2);
-  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+  transition: color var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .footer-seo-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
 .footer-contact-item {
@@ -1754,7 +1778,7 @@ footer {
   margin-bottom: 0.85rem; font-size: 0.84rem;
 }
 .footer-contact-item i { color: var(--gold); width: 14px; flex-shrink: 0; margin-top: 0.2em; font-size: 0.8rem; }
-.footer-contact-item span, .footer-contact-item a { color: rgba(245,240,232,0.50); transition: color 0.22s var(--ease-out); }
+.footer-contact-item span, .footer-contact-item a { color: rgba(245,240,232,0.50); transition: color var(--dur-normal) var(--ease-out); }
 .footer-contact-item a:hover { color: var(--white); }
 /* Compact contact bar — subtle one-liner */
 .footer-contactbar {
@@ -1764,7 +1788,7 @@ footer {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.35);
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.4rem;
 }
-.footer-contactbar a { transition: color 0.22s var(--ease-out); }
+.footer-contactbar a { transition: color var(--dur-normal) var(--ease-out); }
 .footer-contactbar a:hover { color: var(--white); }
 .footer-contactbar .dot { color: rgba(201,168,76,0.30); padding: 0 0.4rem; }
 /* Bottom strip — copyright + legal */
@@ -1776,7 +1800,7 @@ footer {
 .footer-legal { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-legal a {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px;
-  color: rgba(245,240,232,0.28); transition: color 0.22s var(--ease-out);
+  color: rgba(245,240,232,0.28); transition: color var(--dur-normal) var(--ease-out);
 }
 .footer-legal a:hover { color: var(--white); }
 
@@ -1787,7 +1811,7 @@ footer {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(8,8,8,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   display: flex; flex-direction: column;
-  transform: translateY(100%); transition: transform 0.5s var(--ease-expo);
+  transform: translateY(100%); transition: transform var(--dur-ruhig) var(--ease-expo);
   pointer-events: none; /* prevent stray taps on off-screen modal */
 }
 #booking-modal.open {
@@ -1804,7 +1828,7 @@ footer {
   width: 42px; height: 42px;
   background: rgba(245,240,232,0.05); border: 1px solid rgba(245,240,232,0.12);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.05rem; color: var(--muted); transition: all 0.3s;
+  font-size: 1.05rem; color: var(--muted); transition: all var(--dur-normal) var(--ease-out);
 }
 .modal-close:hover { border-color: var(--gold); color: var(--gold); }
 .modal-body {
@@ -1912,13 +1936,13 @@ footer {
   .legal-content th,
   .legal-content td { padding: 0.5rem 0.3rem; }
 }
-.legal-back { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); transition: color 0.2s; }
+.legal-back { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); transition: color var(--dur-normal) var(--ease-out); }
 .legal-back:hover { color: var(--gold); }
 
 /* ══════════════════════════════════════════════════════════════
    SCROLL REVEAL
 ══════════════════════════════════════════════════════════════ */
-.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s var(--ease-expo), transform 0.55s var(--ease-expo); }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-ruhig) var(--ease-expo), transform var(--dur-ruhig) var(--ease-expo); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 .delay-1 { transition-delay: 0.12s !important; }
 .delay-2 { transition-delay: 0.22s !important; }
@@ -2167,7 +2191,7 @@ footer {
 .slider-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: rgba(245,240,232,0.2); border: none; padding: 0;
-  cursor: pointer; transition: background 0.25s, transform 0.25s;
+  cursor: pointer; transition: background var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
 .slider-dot.active {
   background: var(--gold); transform: scale(1.3);
@@ -2335,7 +2359,7 @@ footer {
   font-family: var(--font-head); font-size: 0.65rem; letter-spacing: 1.5px;
   color: var(--muted); background: rgba(245,240,232,0.05);
   border: 1px solid rgba(245,240,232,0.1); border-radius: 0;
-  padding: 0.5rem 1.1rem; cursor: pointer; transition: all 0.25s; white-space: nowrap;
+  padding: 0.5rem 1.1rem; cursor: pointer; transition: all var(--dur-normal) var(--ease-out); white-space: nowrap;
 }
 .dtab-inner:hover, .dtab-inner.active {
   background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold);
@@ -2411,7 +2435,7 @@ footer {
 .mehr-preise-nav .mehr-preise-btn {
   display: inline-flex; align-items: center; gap: 0.5rem;
 }
-.mehr-preise-nav .mehr-preise-btn i { font-size: 0.8rem; transition: transform 0.25s; }
+.mehr-preise-nav .mehr-preise-btn i { font-size: 0.8rem; transition: transform var(--dur-normal) var(--ease-out); }
 .mehr-preise-nav .mehr-preise-btn:hover i { transform: translateX(4px); }
 
 @media (max-width: 580px) {
@@ -2604,7 +2628,7 @@ footer {
   border-radius: 0;
   padding: 0.7rem 1.75rem;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all var(--dur-normal) var(--ease-out);
 }
 #pricing .mehr-preise-btn:hover {
   background: rgba(160,124,58,0.13);
@@ -2665,7 +2689,7 @@ footer .footer-grid + div {
   padding: 0;
   align-self: flex-start;
   opacity: 0.9;
-  transition: opacity 0.2s;
+  transition: opacity var(--dur-normal) var(--ease-out);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: rgba(160,124,58,0.45);
@@ -2686,7 +2710,7 @@ footer .footer-grid + div {
   padding: 1.5rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s var(--ease-out);
+  transition: opacity var(--dur-normal) var(--ease-out);
 }
 #corporate-modal.open {
   opacity: 1;
@@ -2710,7 +2734,7 @@ footer .footer-grid + div {
   padding: 1.5rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s var(--ease-out);
+  transition: opacity var(--dur-normal) var(--ease-out);
 }
 #family-modal.open {
   opacity: 1;
@@ -2728,7 +2752,7 @@ footer .footer-grid + div {
   overflow-y: auto;
   padding: 3rem 2.5rem 2.5rem;
   transform: translateY(20px);
-  transition: transform 0.35s var(--ease-expo);
+  transition: transform var(--dur-ruhig) var(--ease-expo);
   -webkit-overflow-scrolling: touch;
 }
 #family-modal.open .family-modal-card {
@@ -2749,7 +2773,7 @@ footer .footer-grid + div {
   cursor: pointer;
   color: rgba(8,8,8,0.45);
   font-size: 0.85rem;
-  transition: background 0.2s, color 0.2s;
+  transition: background var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
 }
 .family-modal-close:hover {
   background: rgba(8,8,8,0.1);
@@ -2837,7 +2861,7 @@ footer .footer-grid + div {
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--ink);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   outline: none;
   appearance: none;
   -webkit-appearance: none;
@@ -2890,7 +2914,7 @@ footer .footer-grid + div {
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--ink);
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  transition: border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out);
   user-select: none;
   -webkit-user-select: none;
   min-height: 2.75rem;
@@ -3008,7 +3032,7 @@ footer .footer-grid + div {
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 0.7rem;
-  transition: opacity 0.35s;
+  transition: opacity var(--dur-ruhig) var(--ease-out);
 }
 .modal-scroll-fade__hint {
   font-family: var(--font-head);
@@ -3625,7 +3649,7 @@ footer .footer-grid + div {
   box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.08);
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.45s var(--ease-expo), transform 0.45s var(--ease-expo);
+  transition: opacity var(--dur-ruhig) var(--ease-expo), transform var(--dur-ruhig) var(--ease-expo);
   pointer-events: none;
 }
 #social-proof-toast.sp-visible {
@@ -3674,13 +3698,13 @@ footer .footer-grid + div {
   border: 1px solid rgba(245,240,232,0.08);
   border-radius: var(--radius-lg); padding: 2.5rem 2rem;
   text-align: center; position: relative; overflow: hidden;
-  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  transition: border-color var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
   display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
 }
 .standard-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0; transition: opacity 0.3s;
+  opacity: 0; transition: opacity var(--dur-normal) var(--ease-out);
 }
 .standard-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-4px); }
 .standard-card:hover::before { opacity: 1; }
@@ -3689,7 +3713,7 @@ footer .footer-grid + div {
   background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
   display: flex; align-items: center; justify-content: center;
   font-size: 1.4rem; color: var(--gold);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   flex-shrink: 0;
 }
 .standard-card:hover .standard-icon {
@@ -3785,12 +3809,12 @@ footer .footer-grid + div {
 
 /* ── Diff-block: hover depth & card effect ── */
 .diff-block {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--dur-normal) var(--ease-out);
 }
 .diff-item {
   padding: 1.25rem 1rem;
   border-radius: 0;
-  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  transition: background var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   cursor: default;
 }
 .diff-item:hover {
@@ -3801,7 +3825,7 @@ footer .footer-grid + div {
 
 /* ── Discipline cards: hover lift ── */
 .discipline-card--photo {
-  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out);
   cursor: pointer;
 }
 .discipline-card--photo:hover {
@@ -3820,7 +3844,7 @@ footer .footer-grid + div {
   background: #f8f6f2;
   border: 1px solid rgba(201,168,76,0.15);
   box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .standard-card--light:hover {
   transform: translateY(-4px);
@@ -3911,7 +3935,7 @@ footer .footer-grid + div {
 
 /* ── Why cards: hover polish (already exist, ensure lift) ── */
 .why-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .why-card:hover {
   transform: translateY(-5px);
@@ -3940,7 +3964,7 @@ footer .footer-grid + div {
   border-radius: 0;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.3s var(--ease-expo), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out);
   cursor: default;
   /* Override any previously appended diff-item rules */
   flex: unset;
@@ -3963,7 +3987,7 @@ footer .footer-grid + div {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: background var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
 .diff-card-icon i {
   font-size: 1.25rem;
@@ -4036,7 +4060,7 @@ footer .footer-grid + div {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: background var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
 .step-icon i {
   font-size: 1.1rem;
@@ -4056,7 +4080,7 @@ footer .footer-grid + div {
   border-radius: 0 !important;
   padding: 2rem 1.75rem !important;
   text-align: left !important;
-  transition: transform 0.3s var(--ease-expo), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease !important;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out) !important;
 }
 .step-card:hover {
   transform: translateY(-6px) !important;
@@ -4114,7 +4138,7 @@ footer .footer-grid + div {
   flex-wrap: wrap;
   margin-top: 2.25rem;
   opacity: 0; transform: translateY(10px) scale(0.98); will-change: opacity, transform;
-  transition: opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1);
+  transition: opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 
 .hero-cred-item {
@@ -4273,7 +4297,7 @@ footer .footer-grid + div {
 
 /* Service cards: stronger depth on hover */
 .service-card {
-  transition: transform 0.32s var(--ease-expo), box-shadow 0.32s ease !important;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out) !important;
 }
 .service-card:hover {
   transform: translateY(-6px) scale(1.015) !important;
@@ -4282,7 +4306,7 @@ footer .footer-grid + div {
 
 /* Why-cards on light background: richer shadow */
 .why-card {
-  transition: transform 0.28s var(--ease-expo), box-shadow 0.28s ease, border-color 0.28s ease !important;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out) !important;
 }
 .why-card:hover {
   transform: translateY(-6px) !important;
@@ -4292,7 +4316,7 @@ footer .footer-grid + div {
 
 /* Coach cards: subtle lift */
 .coach-card {
-  transition: box-shadow 0.3s ease, transform 0.3s var(--ease-expo);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-expo);
 }
 .coach-card:hover {
   transform: translateY(-4px);
@@ -4301,7 +4325,7 @@ footer .footer-grid + div {
 
 /* Standard cards: lift on #F5F0E8 bg */
 .standard-card--light {
-  transition: transform 0.28s var(--ease-expo), box-shadow 0.28s ease, border-color 0.28s ease !important;
+  transition: transform var(--dur-normal) var(--ease-expo), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out) !important;
 }
 .standard-card--light:hover {
   transform: translateY(-5px) !important;
@@ -4425,7 +4449,7 @@ body {
   height: 2px;
   background: linear-gradient(90deg, transparent, rgba(201,168,76,0.55), transparent);
   border-radius: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--dur-normal) var(--ease-out);
   opacity: 0;
 }
 .why-card:hover::before { opacity: 1; }
@@ -4448,7 +4472,7 @@ body {
   font-size: 1.5rem !important;
   margin-bottom: 1.75rem !important;
   box-shadow: 0 4px 16px rgba(201,168,76,0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .why-card:hover .why-card-icon {
   transform: scale(1.1) rotate(-3deg);
@@ -4570,7 +4594,7 @@ body {
    nie gesetzt, das Bild bliebe sonst dauerhaft auf opacity:0.  */
 img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade) {
   opacity: 0;
-  transition: opacity 0.5s var(--ease-expo);
+  transition: opacity var(--dur-ruhig) var(--ease-expo);
 }
 img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade).loaded {
   opacity: 1;
@@ -5050,7 +5074,7 @@ section { padding: var(--sv) 0; }
 /* Coach photo: soft image zoom on card hover — image stays crisp */
 .coach-photo { overflow: hidden; }
 .coach-photo img {
-  transition: transform 0.65s var(--ease-expo);
+  transition: transform var(--dur-auftritt) var(--ease-expo);
 }
 .coach-card:hover .coach-photo img {
   transform: scale(1.05);
@@ -5058,10 +5082,7 @@ section { padding: var(--sv) 0; }
 
 /* Testimonial cards: light lift */
 .testimonial-card {
-  transition:
-    transform    0.30s var(--ease-out),
-    box-shadow   0.30s ease,
-    border-color 0.30s ease;
+  transition:transform    var(--dur-normal) var(--ease-out), box-shadow   var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .testimonial-card:hover {
   transform:    translateY(-4px);
@@ -5071,7 +5092,7 @@ section { padding: var(--sv) 0; }
 
 /* Membership card: soft gold glow on hover */
 .membership-card {
-  transition: border-color 0.30s ease, box-shadow 0.30s ease;
+  transition: border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .membership-card:hover {
   border-color: rgba(201,168,76,0.44) !important;
@@ -5082,10 +5103,7 @@ section { padding: var(--sv) 0; }
 
 /* Addon cards: subtle lift */
 .addon-card {
-  transition:
-    transform    0.28s var(--ease-out),
-    box-shadow   0.28s ease,
-    border-color 0.28s ease;
+  transition:transform    var(--dur-normal) var(--ease-out), box-shadow   var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .addon-card:hover {
   transform:    translateY(-3px);
@@ -5109,7 +5127,7 @@ section { padding: var(--sv) 0; }
   height: 1px;
   background: var(--gold);
   opacity: 0;
-  transition: left 0.25s var(--ease-out), right 0.25s var(--ease-out), opacity 0.25s;
+  transition: left var(--dur-normal) var(--ease-out), right var(--dur-normal) var(--ease-out), opacity var(--dur-normal) var(--ease-out);
 }
 .nav-links .nav-link:hover::after,
 .nav-links .nav-link.active::after {
@@ -5211,7 +5229,7 @@ section { padding: var(--sv) 0; }
   background: rgba(245,240,232,0.88);
   border-radius: 0;
   transform-origin: center;
-  transition: transform 0.32s var(--ease-expo), opacity 0.22s ease, background 0.22s ease;
+  transition: transform var(--dur-normal) var(--ease-expo), opacity var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out);
 }
 /* Middle line slightly shorter for visual rhythm */
 .burger-line:nth-child(2) { width: 16px; }
@@ -5232,7 +5250,7 @@ section { padding: var(--sv) 0; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0.42s;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: calc(var(--nav-h) + 48px) 0 32px;
@@ -5241,7 +5259,7 @@ section { padding: var(--sv) 0; }
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0s;
 }
 
 /* #mobile-nav (index.html / stundenplan.html) — timing confirmed here */
@@ -5249,13 +5267,13 @@ section { padding: var(--sv) 0; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0.42s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0.42s;
 }
 #mobile-nav.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.42s var(--ease-expo), visibility 0s 0s;
+  transition: opacity var(--dur-ruhig) var(--ease-expo), visibility 0s 0s;
 }
 
 
@@ -5286,10 +5304,7 @@ section { padding: var(--sv) 0; }
      insgesamt kuerzer. Das !important ist entfallen — .mn-item traegt
      keine zweite Klasse mit eigener Transition, es war unnoetig und
      hat den Druckzustand weiter unten blockiert. */
-  transition:
-    opacity    0.34s var(--ease-expo) calc(var(--mn-i, 0) * 45ms),
-    transform  0.34s var(--ease-expo) calc(var(--mn-i, 0) * 45ms),
-    color      0.2s;
+  transition:opacity    var(--dur-normal) var(--ease-expo) calc(var(--mn-i, 0) * 45ms), transform  var(--dur-normal) var(--ease-expo) calc(var(--mn-i, 0) * 45ms), color      var(--dur-normal) var(--ease-out);
 }
 
 /* When nav is open, items animate in */
@@ -5320,7 +5335,7 @@ section { padding: var(--sv) 0; }
   display: block;
   margin: 0.15rem auto 0.1rem;
   opacity: 0;
-  transition: opacity 0.3s var(--ease-expo) var(--mn-tail);
+  transition: opacity var(--dur-normal) var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-info-eyebrow,
 #mobile-nav.open .mn-info-eyebrow { opacity: 1; }
@@ -5339,9 +5354,7 @@ section { padding: var(--sv) 0; }
   opacity: 0;
   /* Kein Versatz mehr: der Info-Block soll leise erscheinen, nicht
      einlaufen. Der auffaellige Auftritt gehoert der Navigation. */
-  transition:
-    opacity 0.3s var(--ease-expo) var(--mn-tail),
-    color   0.2s;
+  transition:opacity var(--dur-normal) var(--ease-expo) var(--mn-tail), color   var(--dur-normal) var(--ease-out);
 }
 .mobile-overlay-nav.open .mn-info-link,
 #mobile-nav.open .mn-info-link { opacity: 1; transform: translateY(0); }
@@ -5369,9 +5382,7 @@ section { padding: var(--sv) 0; }
   letter-spacing: 0.5px;
   padding: 0.5rem 1rem;
   opacity: 0;
-  transition:
-    opacity 0.3s var(--ease-expo) var(--mn-tail),
-    color      0.2s;
+  transition:opacity var(--dur-normal) var(--ease-expo) var(--mn-tail), color      var(--dur-normal) var(--ease-out);
 }
 .mobile-overlay-nav.open .mn-account,
 #mobile-nav.open .mn-account {
@@ -5389,7 +5400,7 @@ section { padding: var(--sv) 0; }
   margin: 28px auto 20px;
   flex-shrink: 0;
   opacity: 0;
-  transition: opacity 0.3s var(--ease-expo) var(--mn-tail);
+  transition: opacity var(--dur-normal) var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-contact-divider,
 #mobile-nav.open .mn-contact-divider { opacity: 1; }
@@ -5399,8 +5410,7 @@ section { padding: var(--sv) 0; }
   gap: 20px;
   margin: 0 0 14px;
   opacity: 0;
-  transition:
-    opacity 0.3s var(--ease-expo) var(--mn-tail);
+  transition:opacity var(--dur-normal) var(--ease-expo) var(--mn-tail);
 }
 .mobile-overlay-nav.open .mn-socials,
 #mobile-nav.open .mn-socials { opacity: 1; transform: translateY(0); }
@@ -5413,7 +5423,7 @@ section { padding: var(--sv) 0; }
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--dur-normal) var(--ease-out);
 }
 .mn-socials a:hover { color: var(--gold); }
 
@@ -5428,9 +5438,7 @@ section { padding: var(--sv) 0; }
   line-height: 1.6;
   padding: 4px 12px;
   opacity: 0;
-  transition:
-    opacity 0.3s var(--ease-expo) var(--mn-tail),
-    color 0.2s ease;
+  transition:opacity var(--dur-normal) var(--ease-expo) var(--mn-tail), color var(--dur-normal) var(--ease-out);
 }
 .mobile-overlay-nav.open .mn-contact-text,
 #mobile-nav.open .mn-contact-text { opacity: 1; transform: translateY(0); }
@@ -5450,7 +5458,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   .coach-photo img,
   [class*="kp-img"] img,
   [class*="disc-slide"] img {
-    transition: transform 0.4s ease, filter 0.4s ease !important;
+    transition: transform var(--dur-ruhig) var(--ease-out), filter var(--dur-ruhig) var(--ease-out) !important;
   }
 
   /* Scale + darken on hover */
@@ -5478,9 +5486,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 .reveal {
   opacity: 0 !important;
   transform: translateY(20px) !important;
-  transition:
-    opacity   500ms var(--ease-expo),
-    transform 500ms var(--ease-expo) !important;
+  transition:opacity   var(--dur-ruhig) var(--ease-expo), transform var(--dur-ruhig) var(--ease-expo) !important;
 }
 .reveal.visible {
   opacity: 1 !important;
@@ -5641,7 +5647,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   border-radius: 0;
   padding: 0.75rem 0.5rem;
   cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -5654,14 +5660,14 @@ a.mn-contact-text:hover { color: var(--gold); }
   letter-spacing: 2px;
   color: #222;
   text-transform: uppercase;
-  transition: color 0.2s ease;
+  transition: color var(--dur-normal) var(--ease-out);
 }
 
 .mtab-age {
   font-family: var(--font-body);
   font-size: 0.72rem;
   color: rgba(0,0,0,0.55);
-  transition: color 0.2s ease;
+  transition: color var(--dur-normal) var(--ease-out);
 }
 
 .mtab.active {
@@ -5729,7 +5735,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   letter-spacing: 2px;
   background: linear-gradient(135deg, #C9A84C 0%, #A67C2E 100%) !important;
   box-shadow: 0 6px 32px rgba(201,168,76,0.4);
-  transition: box-shadow 0.25s ease, transform 0.2s ease;
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
 
 .membership-main-cta:hover {
@@ -5818,7 +5824,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   padding: 2.25rem 2rem 1.5rem;
   cursor: pointer;
   position: relative;
-  transition: transform 0.22s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
   box-shadow: 0 4px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(201,168,76,0.08);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -6026,7 +6032,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   padding: 1rem 2.5rem;
   border-radius: 0;
   box-shadow: 0 4px 20px rgba(201,168,76,0.4);
-  transition: box-shadow 0.25s ease, transform 0.2s ease, filter 0.2s ease;
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out), filter var(--dur-normal) var(--ease-out);
   pointer-events: none;
   white-space: nowrap;
   width: 100%;
@@ -6106,7 +6112,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   cursor: pointer;
   color: #F5F0E8;
   font-size: 1rem;
-  transition: background 0.15s ease;
+  transition: background var(--dur-schnell) var(--ease-out);
 }
 
 .booking-modal-close:hover {
@@ -6335,7 +6341,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 }
 .disc-panel--clickable:hover .disc-panel__title {
   color: var(--gold-light);
-  transition: color 0.25s ease;
+  transition: color var(--dur-normal) var(--ease-out);
 }
 .disc-panel--clickable .disc-panel__content::after {
   content: 'Mehr erfahren →';
@@ -6346,7 +6352,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   color: rgba(201, 168, 76, 0.75);
   margin-top: 1rem;
   text-transform: uppercase;
-  transition: color 0.25s ease;
+  transition: color var(--dur-normal) var(--ease-out);
 }
 .disc-panel--clickable:hover .disc-panel__content::after {
   color: var(--gold-light);
@@ -7006,7 +7012,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   gap: 0.7rem;
   flex: 1 1 160px;
   padding: 1.25rem 2rem;
-  transition: transform 0.3s var(--ease-out);
+  transition: transform var(--dur-normal) var(--ease-out);
 }
 .manifesto-pillar:hover { transform: translateY(-4px); }
 .manifesto-pillar i {
@@ -7247,9 +7253,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 ══════════════════════════════════════════════════════════════ */
 
 .reveal {
-  transition:
-    opacity 0.68s cubic-bezier(0.22,1,0.36,1),
-    transform 0.68s cubic-bezier(0.22,1,0.36,1);
+  transition:opacity var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 
 
@@ -7266,7 +7270,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   height: 2px;
   background: linear-gradient(90deg, #A67C2E, #C9A84C, #d4b472);
   z-index: 9999;
-  transition: width 0.08s linear;
+  transition: width var(--dur-schnell) linear;
   pointer-events: none;
   will-change: width;
 }
@@ -7339,7 +7343,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 /* ── Manifesto Pillars — Elevated hover experience ── */
 .manifesto-pillar {
   border-radius: 0;
-  transition: transform 0.32s var(--ease-out), background 0.32s ease !important;
+  transition: transform var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out) !important;
 }
 .manifesto-pillar:hover {
   transform: translateY(-7px) !important;
@@ -7402,9 +7406,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* ── Scroll reveal — slightly faster for snappier feel ── */
 .reveal {
-  transition:
-    opacity 0.58s cubic-bezier(0.22,1,0.36,1),
-    transform 0.58s cubic-bezier(0.22,1,0.36,1) !important;
+  transition:opacity var(--dur-ruhig) var(--ease-expo), transform var(--dur-ruhig) var(--ease-expo) !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -7427,9 +7429,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* Brand moment: 0.6s ease fade-in (overrides the global reveal timing) */
 .dna-brand-moment.reveal {
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease !important;
+  transition:opacity var(--dur-auftritt) var(--ease-out), transform var(--dur-auftritt) var(--ease-out) !important;
 }
 
 /* Make brand moment visible on mobile (overrides display:none from 768px rule) */
@@ -7480,9 +7480,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 @media (hover: hover) {
   .disc-panel--clickable {
     border-bottom: 2px solid transparent;
-    transition:
-      transform 0.3s ease,
-      border-bottom-color 0.3s ease;
+    transition:transform var(--dur-normal) var(--ease-out), border-bottom-color var(--dur-normal) var(--ease-out);
   }
 
   /* Gold tint overlay — sits between bg (z:0) and content (z:2) */
@@ -7493,7 +7491,7 @@ a.mn-contact-text:hover { color: var(--gold); }
     background: rgba(201,168,76,0);
     z-index: 1;
     pointer-events: none;
-    transition: background 0.3s ease;
+    transition: background var(--dur-normal) var(--ease-out);
   }
 
   /* Hover: lift + gold border + gold tint */
@@ -7507,7 +7505,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
   /* Kicker number turns gold on hover */
   .disc-panel__kicker {
-    transition: color 0.3s ease;
+    transition: color var(--dur-normal) var(--ease-out);
   }
   .disc-panel--clickable:hover .disc-panel__kicker {
     color: #C9A84C;
@@ -7518,7 +7516,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 @media (hover: none) {
   .disc-panel--clickable:active {
     transform: scale(0.98);
-    transition: transform 0.1s ease;
+    transition: transform var(--dur-schnell) var(--ease-out);
   }
 }
 
@@ -7540,7 +7538,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   background: #C9A84C;
   transform: scaleY(0);
   transform-origin: top center;
-  transition: transform 0.3s ease;
+  transition: transform var(--dur-normal) var(--ease-out);
   pointer-events: none;
 }
 
@@ -7614,7 +7612,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   color: #C9A84C;
   font-size: 18px;
   display: inline-block;
-  transition: transform 0.3s ease;
+  transition: transform var(--dur-normal) var(--ease-out);
   flex-shrink: 0;
   font-family: var(--font-body);
   line-height: 1;
@@ -7628,7 +7626,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 /* ── FAQ REDESIGN: Answer panel ── */
 .faq-list--light .faq-a {
-  transition: max-height 0.3s ease !important;
+  transition: max-height var(--dur-normal) var(--ease-out) !important;
 }
 .faq-list--light .faq-a-inner {
   padding: 0 0 20px !important;
@@ -7637,7 +7635,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   line-height: 1.7 !important;
   opacity: 0;
   transform: translateY(-8px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
 .faq-list--light .faq-item:has(.faq-q--light[aria-expanded="true"]) .faq-a-inner {
   opacity: 1;
@@ -7681,7 +7679,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba(26,26,26,0.55);
-  transition: color 0.2s;
+  transition: color var(--dur-normal) var(--ease-out);
   text-decoration: none;
 }
 .dl-back:hover { color: var(--gold); }
@@ -7757,9 +7755,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s var(--ease-out),
-              border-color 0.2s var(--ease-out),
-              box-shadow 0.2s var(--ease-out);
+  transition: transform var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
 .doc-card:hover {
   transform: translateY(-2px);
@@ -7844,7 +7840,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius);
   text-decoration: none;
-  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  transition: background var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
   align-self: flex-start;
   white-space: nowrap;
 }
@@ -7874,7 +7870,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   color: var(--gold);
   border-bottom: 1px solid rgba(201,168,76,0.4);
   text-decoration: none;
-  transition: border-color 0.2s;
+  transition: border-color var(--dur-normal) var(--ease-out);
 }
 .dl-note a:hover { border-bottom-color: var(--gold); }
 
@@ -7935,7 +7931,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   border-bottom: 1px solid rgba(201,168,76,0.45);
   white-space: nowrap;
   flex-shrink: 0;
-  transition: border-color 0.2s;
+  transition: border-color var(--dur-normal) var(--ease-out);
 }
 .doc-strip-link:hover { border-bottom-color: var(--gold); }
 @media (max-width: 540px) {
@@ -8169,9 +8165,7 @@ a.mn-contact-text:hover { color: var(--gold); }
   background: rgba(10,10,8,0.42);
   color: var(--brand-gold);
   font-size: 1.05rem;
-  transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background var(--dur-auftritt) var(--ease-expo), border-color var(--dur-auftritt) var(--ease-expo), transform var(--dur-auftritt) var(--ease-expo);
 }
 .vfacade__play:hover .vfacade__play-icon,
 .vfacade__play:focus-visible .vfacade__play-icon {
@@ -8231,7 +8225,7 @@ a.mn-contact-text:hover { color: var(--gold); }
    ueberschreiben.                                              */
 .mn-cta {
   opacity: 0;
-  transition: opacity 0.34s var(--ease-expo) 260ms;
+  transition: opacity var(--dur-normal) var(--ease-expo) 260ms;
 }
 .mobile-overlay-nav.open .mn-cta,
 #mobile-nav.open .mn-cta { opacity: 1; }

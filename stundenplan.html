@@ -181,7 +181,7 @@
       opacity: 0.45;
       cursor: pointer;
       position: relative;
-      transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+      transition: opacity var(--dur-schnell) var(--ease-out), background var(--dur-schnell) var(--ease-out), color var(--dur-schnell) var(--ease-out);
     }
     .sp-day-tab:hover { opacity: 0.7; }
     .sp-day-tab.active {
@@ -296,7 +296,7 @@
       text-transform: uppercase;
       color: #C9A84C;
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color var(--dur-schnell) var(--ease-out);
     }
     .sp-book:hover { color: #0A0A08; }
     .sp-invite {
@@ -324,7 +324,7 @@
       text-transform: uppercase;
       color: #C9A84C;
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color var(--dur-schnell) var(--ease-out);
     }
     .sp-print-link:hover { color: #A6842E; }
 
@@ -343,7 +343,7 @@
       padding: 0 10px env(safe-area-inset-bottom) 14px;
       background: #0A0A08;
       transform: translateY(101%);
-      transition: transform 0.15s ease;
+      transition: transform var(--dur-schnell) var(--ease-out);
     }
     .sp-convbar.on { transform: translateY(0); }
     .sp-convbar[hidden] { display: none; }
@@ -360,7 +360,7 @@
       text-align: center;
       color: #0A0A08;
       text-decoration: none;
-      transition: background 0.15s ease;
+      transition: background var(--dur-schnell) var(--ease-out);
     }
     .sp-convbar-cta:hover { background: #A6842E; }
     .sp-convbar-x {
@@ -373,7 +373,7 @@
       line-height: 1;
       color: rgba(245,240,232,0.7);
       cursor: pointer;
-      transition: color 0.15s ease, border-color 0.15s ease;
+      transition: color var(--dur-schnell) var(--ease-out), border-color var(--dur-schnell) var(--ease-out);
     }
     .sp-convbar-x:hover { color: #F5F0E8; border-color: rgba(245,240,232,0.5); }
     @media (max-width: 1023px) {

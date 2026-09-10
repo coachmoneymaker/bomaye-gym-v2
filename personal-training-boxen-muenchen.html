@@ -272,15 +272,15 @@
       font-size: 0.8rem;
       letter-spacing: 1.5px;
       color: #F5F0E8;
-      transition: background 0.2s;
+      transition: background var(--dur-normal) var(--ease-out);
     }
     .faq-q:hover { background: rgba(201,168,76,0.07); }
-    .faq-q i { color: var(--gold); transition: transform 0.3s; flex-shrink: 0; }
+    .faq-q i { color: var(--gold); transition: transform var(--dur-normal) var(--ease-out); flex-shrink: 0; }
     .faq-item.open .faq-q i { transform: rotate(45deg); }
     .faq-a {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s ease;
+      transition: max-height var(--dur-ruhig) var(--ease-out), padding var(--dur-ruhig) var(--ease-out);
       padding: 0 1.4rem;
       font-family: var(--font-body);
       font-size: 0.92rem;
@@ -334,7 +334,7 @@
       color: inherit;
       background: rgba(245,240,232,0.03);
       border: 1px solid rgba(201,168,76,0.15);
-      transition: border-color 0.3s ease, transform 0.3s ease;
+      transition: border-color var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
       overflow: hidden;
     }
     .pt-coach-card:hover {
@@ -357,7 +357,7 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
     }
     .pt-coach-card:hover .pt-coach-photo img {
       transform: scale(1.03);
@@ -367,7 +367,7 @@
       position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
       background: var(--gold);
       transform: scaleX(0); transform-origin: left;
-      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
       z-index: 2;
     }
     .pt-coach-card:hover .pt-coach-photo::after { transform: scaleX(1); }

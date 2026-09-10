@@ -116,7 +116,7 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: rgba(26,26,26,0.55);
-      transition: color 0.2s;
+      transition: color var(--dur-normal) var(--ease-out);
       text-decoration: none;
     }
     .u18-back:hover { color: #C9A84C; }
@@ -173,7 +173,7 @@
       color: #C9A84C;
       text-decoration: none;
       border-bottom: 1px solid rgba(201,169,97,0.4);
-      transition: border-color 0.2s, color 0.2s;
+      transition: border-color var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
     }
     .u18-page a:hover {
       color: #b8954e;
@@ -240,7 +240,7 @@
       padding: 1.25rem 1.5rem;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s var(--ease-out), border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+      transition: transform var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
     }
     .u18-card:hover {
       transform: translateY(-2px);
@@ -291,7 +291,7 @@
       border-radius: var(--radius);
       text-decoration: none;
       border-bottom: 1px solid #C9A84C;
-      transition: background 0.2s, color 0.2s;
+      transition: background var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
       align-self: flex-start;
     }
     .u18-dl-btn:hover {

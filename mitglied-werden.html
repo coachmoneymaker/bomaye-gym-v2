@@ -137,7 +137,7 @@
       letter-spacing: 2.5px;
       color: rgba(245,240,232,0.45);
       text-decoration: none;
-      transition: color 0.22s ease;
+      transition: color var(--dur-normal) var(--ease-out);
       white-space: nowrap;
     }
     .mw-back-link:hover { color: #F5F0E8; }
@@ -279,7 +279,7 @@
       flex-direction: column;
       position: relative;
       box-shadow: 0 8px 48px rgba(0,0,0,0.12);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
     }
     @media (min-width: 900px) {
       .mw-card { padding: 32px; }
@@ -457,7 +457,7 @@
       padding: 16px;
       border-radius: 0;
       text-decoration: none;
-      transition: filter 0.2s ease, transform 0.2s ease;
+      transition: filter var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
       margin-top: 28px;
     }
     @media (hover: hover) {
@@ -565,7 +565,7 @@
       border: none;
       text-align: center;
       cursor: pointer;
-      transition: filter 0.2s, transform 0.2s;
+      transition: filter var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
       -webkit-tap-highlight-color: transparent;
       margin-bottom: 14px;
     }
@@ -686,7 +686,7 @@
       padding: 14px 32px;
       border-radius: 0;
       text-decoration: none;
-      transition: background 0.25s ease, filter 0.25s ease;
+      transition: background var(--dur-normal) var(--ease-out), filter var(--dur-normal) var(--ease-out);
       white-space: nowrap;
       cursor: pointer;
     }
@@ -728,7 +728,7 @@
       letter-spacing: 2px;
       color: rgba(245,240,232,0.3);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color var(--dur-normal) var(--ease-out);
     }
     .mw-footer-links a:hover { color: #C9A84C; }
     .mw-footer-copy {
