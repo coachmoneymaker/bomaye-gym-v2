@@ -307,7 +307,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
           <!-- ── CARD ──────────────────────────────────────────────── -->
           <tr>
             <td style="background-color:#111111;border-radius:2px;
-                       border:1px solid rgba(198,164,90,0.16);">
+                       border:1px solid rgba(201,168,76,0.16);">
 
               <!-- Gold accent bar -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
@@ -323,7 +323,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                 <tr>
                   <td align="center"
                       style="padding:52px 52px 40px;
-                             border-bottom:1px solid rgba(198,164,90,0.1);">
+                             border-bottom:1px solid rgba(201,168,76,0.1);">
 
                     <!-- Eyebrow -->
                     <p style="margin:0 0 20px;
@@ -440,7 +440,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                               font-size:10px;line-height:1.6;
                               color:rgba(255,255,255,0.14);">
                       <a href="${verifyUrl}" target="_blank"
-                         style="color:rgba(198,164,90,0.38);text-decoration:none;
+                         style="color:rgba(201,168,76,0.38);text-decoration:none;
                                 word-break:break-all;word-wrap:break-word;">
                         ${verifyUrl}
                       </a>
@@ -459,7 +459,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
               <!-- Ornament -->
               <p style="margin:0 0 20px;
                         font-family:Arial,Helvetica,sans-serif;
-                        font-size:10px;color:rgba(198,164,90,0.25);
+                        font-size:10px;color:rgba(201,168,76,0.25);
                         letter-spacing:0.35em;">
                 &mdash;&nbsp;&nbsp;&#9670;&nbsp;&nbsp;&mdash;
               </p>
@@ -469,7 +469,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                         font-family:Arial,Helvetica,sans-serif;
                         font-size:11px;font-weight:700;
                         letter-spacing:0.28em;text-transform:uppercase;
-                        color:rgba(198,164,90,0.35);">
+                        color:rgba(201,168,76,0.35);">
                 BOMAYE GYM MUNICH
               </p>
 
