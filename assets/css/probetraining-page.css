@@ -272,19 +272,30 @@ body.bsport-modal-open #pt-cal-view {
    ausfaellt, wo er gebraucht wird, kostet die Buchung. Also wird er ueberall
    angezeigt.
 
-   Zwei Zustaende, ein Element:
-     ruhend   im Seitenfluss ueber der Terminliste - wird gelesen, bevor
-              ueberhaupt jemand hineinlaeuft
-     angeheftet  sobald der Buchungsschritt laeuft, oben am Bildschirmrand,
-              damit er nicht von der Scrollposition abhaengt
+   ER BLEIBT WEG, BIS ES ETWAS ZU ERKLAEREN GIBT
+   Die vorige Fassung hatte hier gar keinen Standardzustand: der Hinweis stand
+   von der ersten Sekunde an im Seitenfluss ueber der Terminliste. Jeder
+   Besucher las "Falls sich das Formular nicht scrollen laesst", bevor es
+   ueberhaupt ein Formular gab - ein Umweg, den die meisten nie brauchen, als
+   Begruessung. Das war eine Ueberkorrektur: weil der Hinweis einmal
+   unsichtbar geblieben war, wurde er anschliessend gar nicht mehr
+   abgeriegelt. Die Ursache von damals lag aber nicht am Abriegeln, sondern
+   am Ort (React-Portal, siehe probetraining-page.js).
+
+   Also: display none als Standard, sichtbar nur unter body.pt-form-step.
+   Der Schalter ist eine Klasse am <body> und liegt damit ausserhalb jedes
+   React-Baums - genau deshalb kann React ihn nicht wegraeumen. Welche drei
+   Signale die Klasse setzen, steht in probetraining-page.js.
 
    pointer-events: none ist Pflicht - der Hinweis darf unter keinen Umstaenden
    selbst Beruehrungen abfangen, sonst waere er Teil des Problems.
    ───────────────────────────────────────────────────────────────────────── */
 
+/* Nur noch das Aussehen. Die Lage setzt die Regel darunter - der Hinweis
+   erscheint ausschliesslich angeheftet, einen Zustand im Seitenfluss gibt
+   es nicht mehr. */
 #pt-edge-hint {
-  margin: 0 auto 20px;
-  max-width: 640px;
+  display: none;
   padding: 12px 14px;
   background: #0A0A08;
   color: #F5F0E8;
@@ -302,6 +313,7 @@ body.bsport-modal-open #pt-cal-view {
    probetraining-page.js - entweder weil Bsports Dialog erkannt wurde oder
    weil in die Terminliste getippt wurde. */
 body.pt-form-step #pt-edge-hint {
+  display: block;
   position: fixed;
   top: 0;
   left: 0;

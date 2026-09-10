@@ -349,36 +349,118 @@
        ausserhalb von allem, was Bsport oder React gehoert. Hier wird nur noch
        eine Klasse am <body> gesetzt.
 
+       WARUM DER HINWEIS BIS ZUM FORMULARSCHRITT WEGBLEIBT
+       Aus dem Portal-Fehler wurde einmal die falsche Lehre gezogen: weil der
+       Hinweis unsichtbar geblieben war, wurde er anschliessend ueberhaupt
+       nicht mehr abgeriegelt - er stand von der ersten Sekunde an ueber der
+       Terminliste. Jeder Besucher las "Falls sich das Formular nicht scrollen
+       laesst", bevor es ueberhaupt ein Formular gab. Der Hinweis beschreibt
+       einen Umweg, den die meisten nie brauchen, und saete Zweifel an einer
+       Buchung, die noch gar nicht begonnen hatte.
+
+       Der Fehler von damals lag aber nicht am Abriegeln, sondern am ORT: der
+       Hinweis hing IN Bsports Portal. Daran aendert sich nichts - er steht
+       weiter als festes Markup in probetraining.html, ausserhalb von allem,
+       was Bsport oder React gehoert. Umgeschaltet wird ausschliesslich ueber
+       eine Klasse am <body>, und <body> gehoert keinem React-Baum. React kann
+       diesen Schalter also gar nicht anfassen.
+
+       WORAN "Formularschritt" ERKANNT WIRD - drei Signale, absteigend sicher
+
+         1. Bsports Dialog ist da (MODAL_SEL). Sicher, solange Bsport seinen
+            Klassennamen behaelt.
+         2. Es steht ein sichtbares Eingabefeld ausserhalb der Terminliste.
+            KLASSENUNABHAENGIG und damit das Netz unter Signal 1:
+            probetraining.html hat selbst kein einziges Formularfeld, jedes
+            Feld im Dokument gehoert Bsport. Felder INNERHALB von #pt-cal-view
+            zaehlen nicht - dort sitzt die Terminliste mit ihren eigenen
+            Filtern, das ist noch nicht der Anmeldeschritt.
+         3. Kurze Frist nach einem Tipp in die Terminliste. Nur eine Bruecke,
+            bis eines der beiden echten Signale nachkommt - keine Dauerzusage,
+            denn getippt haben kann man auch auf den Wochenpfeil.
+
+       Die Richtung der Unsicherheit bleibt dieselbe wie bisher: lieber einmal
+       zu frueh eingeblendet als im entscheidenden Moment gar nicht. Deshalb
+       reicht EIN Signal zum Einblenden, waehrend zum Ausblenden alle drei
+       fehlen muessen - und das auch erst, nachdem sie AUS_VERZUG lang
+       durchgehend gefehlt haben.
+
        Faellt der Umweg irgendwann weg, koennen dieser Block, die Klasse und
        das Markup ersatzlos verschwinden. Der naechste sinnvolle Schritt waere
        aber ohnehin kein weiterer CSS-Eingriff, sondern Bsports gehosteter
        Buchungslink - ihre Seite, ihr Scrollen. */
     var FORM_CLASS = 'pt-form-step';
+    var TIPP_FRIST = 8000;   /* Bruecke nach einem Tipp in die Terminliste */
+    var AUS_VERZUG = 600;    /* so lange muss jedes Signal fehlen, bevor aus */
     var _gesprungen = false;
+    var _tippBis    = 0;
+    var _fehltSeit  = 0;
 
-    function formSchrittAn() {
-      document.body.classList.add(FORM_CLASS);
-      if (_gesprungen) return;
-      _gesprungen = true;
-      /* Einmal an den Anfang des Buchungsbereichs. Wer gerade einen Termin
-         ausgesucht hat, steht weiter unten - und das Formular beginnt oben.
-         Der Abzug haelt Abstand zur Kopfzeile. */
-      var anker = document.getElementById('pt-booking');
-      if (!anker) return;
-      var y = anker.getBoundingClientRect().top + window.scrollY - 84;
-      window.scrollTo({ top: y > 0 ? y : 0, behavior: 'smooth' });
+    /* Signal 2. Bewusst am ganzen Dokument, nicht nur im Buchungsbereich:
+       faellt Signal 1 aus, weil Bsport umbenannt hat, wird der Dialog auch
+       nicht mehr in den Seitenfluss geholt und steht dann dort, wo Bsports
+       Portal ihn hinlegt - meist direkt an <body>. */
+    function formularfeldSichtbar() {
+      var liste = document.getElementById('pt-cal-view');
+      var felder = document.querySelectorAll(
+        'input:not([type="hidden"]), textarea, select');
+      for (var i = 0; i < felder.length; i++) {
+        var f = felder[i];
+        if (liste && liste.contains(f)) continue;
+        var r = f.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) return true;
+      }
+      return false;
     }
 
-    /* Zweiter, unabhaengiger Ausloeser. Die Erkennung von Bsports Dialog
-       haengt an deren Klassennamen - aendert Bsport den, faellt der Hinweis
-       wieder still aus. Ein Tipp in die Terminliste ist dagegen der einzige
-       Weg ins Formular und gehoert ganz uns. Lieber einmal zu frueh
-       eingeblendet als im entscheidenden Moment gar nicht. */
+    /* an     - irgendein Signal liegt an, der Hinweis gehoert eingeblendet
+       sicher - es ist eines der beiden ECHTEN Signale (Dialog oder Feld),
+                nicht bloss die Tipp-Bruecke. Nur darauf wird gesprungen:
+                ein Tipp auf den Wochenpfeil soll die Seite nicht bewegen. */
+    function formSchritt(an, sicher) {
+      if (an) {
+        _fehltSeit = 0;
+        document.body.classList.add(FORM_CLASS);
+        /* Sobald ein echtes Signal da ist, hat die Bruecke ihren Dienst
+           getan. Sie muss weg, sonst haengt sie nach: wer den Dialog
+           innerhalb der Frist wieder schliesst, saehe den Hinweis sonst
+           noch sekundenlang ueber der Terminliste stehen - genau der
+           Zustand, den diese Aenderung abstellt. */
+        if (sicher) _tippBis = 0;
+        if (sicher && !_gesprungen) {
+          _gesprungen = true;
+          /* Einmal an den Anfang des Buchungsbereichs. Wer gerade einen
+             Termin ausgesucht hat, steht weiter unten - und das Formular
+             beginnt oben. Der Abzug haelt Abstand zur Kopfzeile. */
+          var anker = document.getElementById('pt-booking');
+          if (anker) {
+            var y = anker.getBoundingClientRect().top + window.scrollY - 84;
+            window.scrollTo({ top: y > 0 ? y : 0, behavior: 'smooth' });
+          }
+        }
+        return;
+      }
+
+      if (!document.body.classList.contains(FORM_CLASS)) return;
+
+      /* Nicht im selben Bildaufbau ausblenden. React haengt seinen Dialog
+         beim Neuzeichnen kurz aus dem Baum; wer darauf sofort reagiert,
+         laesst den Hinweis flackern und den Abstand darunter springen. */
+      if (!_fehltSeit) { _fehltSeit = Date.now(); return; }
+      if (Date.now() - _fehltSeit < AUS_VERZUG) return;
+      document.body.classList.remove(FORM_CLASS);
+      _fehltSeit = 0;
+    }
+
+    /* Signal 3. Setzt nur eine Frist, keine Dauerzusage - kommt der Dialog
+       nach, uebernimmt sein eigenes Signal; bleibt er aus, war es eben der
+       Wochenpfeil und der Hinweis geht von selbst wieder weg. */
     function ausloeserRuesten() {
       var view = document.getElementById('pt-cal-view');
       if (!view) return;
       view.addEventListener('click', function () {
-        window.setTimeout(formSchrittAn, 400);
+        _tippBis = Date.now() + TIPP_FRIST;
+        schedule();
       }, true);
     }
 
@@ -386,13 +468,15 @@
       var el = document.querySelector(MODAL_SEL);
       document.body.classList.toggle(BODY_CLASS, !!el);
 
+      var sicher = !!el || formularfeldSichtbar();
+      formSchritt(sicher || Date.now() < _tippBis, sicher);
+
       if (!el) { entsperren(); return; }
 
       var ziel_ = ziel();
       if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
       einreihen(el);
       entsperren();
-      formSchrittAn();
     }
 
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
