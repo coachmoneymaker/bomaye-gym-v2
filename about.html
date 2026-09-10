@@ -87,7 +87,7 @@
     .ab-reveal {
       opacity: 0;
       transform: translateY(30px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity var(--dur-auftritt) var(--ease-out), transform var(--dur-auftritt) var(--ease-out);
     }
     .ab-reveal.ab-visible {
       opacity: 1;
@@ -96,7 +96,7 @@
     .ab-reveal-left {
       opacity: 0;
       transform: translateX(-20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity var(--dur-auftritt) var(--ease-out), transform var(--dur-auftritt) var(--ease-out);
     }
     .ab-reveal-left.ab-visible {
       opacity: 1;
@@ -105,7 +105,7 @@
     .ab-reveal-right {
       opacity: 0;
       transform: translateX(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity var(--dur-auftritt) var(--ease-out), transform var(--dur-auftritt) var(--ease-out);
     }
     .ab-reveal-right.ab-visible {
       opacity: 1;
@@ -114,7 +114,7 @@
     .ab-reveal-scale {
       opacity: 0;
       transform: scale(0.97);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity var(--dur-auftritt) var(--ease-out), transform var(--dur-auftritt) var(--ease-out);
     }
     .ab-reveal-scale.ab-visible {
       opacity: 1;
@@ -345,7 +345,7 @@
       height: 1px;
       background: #C9A84C;
       margin: 1.5rem auto 0;
-      transition: width 1s ease 0.6s;
+      transition: width var(--dur-auftritt) var(--ease-out) 0.6s;
       display: block;
     }
     .ab-hero-line.ab-line-drawn { width: 80px; }
@@ -828,7 +828,7 @@
       aspect-ratio: 3/4;
       object-fit: cover;
       display: block;
-      transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
     }
     .ab-coach-photo-wrap:hover img { transform: scale(1.03); }
     .ab-coach-photo-wrap::after {
@@ -836,7 +836,7 @@
       position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
       background: var(--gold);
       transform: scaleX(0); transform-origin: left;
-      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
       z-index: 2;
     }
     .ab-coach-photo-wrap:hover::after { transform: scaleX(1); }
@@ -916,14 +916,14 @@
       border: none;
       text-decoration: none;
       padding: 0;
-      transition: color 0.2s ease;
+      transition: color var(--dur-normal) var(--ease-out);
     }
     .ab-coach-social-btn svg {
       width: 20px;
       height: 20px;
       fill: #C9A84C;
       flex-shrink: 0;
-      transition: fill 0.2s ease;
+      transition: fill var(--dur-normal) var(--ease-out);
     }
     .ab-coach-social-btn::after {
       content: '';
@@ -931,7 +931,7 @@
       width: 100%;
       height: 1px;
       background: rgba(201,168,76,0.3);
-      transition: background 0.2s ease;
+      transition: background var(--dur-normal) var(--ease-out);
     }
     .ab-coach-social-btn:hover svg {
       fill: #f0d080;
@@ -1147,7 +1147,7 @@
       text-transform: uppercase;
       white-space: nowrap;
       box-shadow: 0 0 20px rgba(201,168,76,0.30), 0 4px 14px rgba(0,0,0,0.40);
-      transition: all 0.28s ease;
+      transition: all var(--dur-normal) var(--ease-out);
     }
     .ab-btn-primary:hover {
       transform: translateY(-2px) scale(1.04);
@@ -1170,7 +1170,7 @@
       border-radius: 0;
       text-transform: uppercase;
       white-space: nowrap;
-      transition: background 0.28s ease;
+      transition: background var(--dur-normal) var(--ease-out);
     }
     .ab-btn-secondary:hover {
       background: rgba(201,168,76,0.08);

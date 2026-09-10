@@ -381,10 +381,9 @@
       padding: clamp(36px, 5vw, 56px) clamp(28px, 5vw, 52px);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.4),
-        0 24px 80px rgba(0,0,0,0.5),
-        0 0 60px rgba(201,168,76,0.04);
+      /* Die beiden schwarzen Anteile lagen auf nahezu schwarzem Grund
+         und waren gemessen wirkungslos; das Gold-Leuchten bleibt. */
+      box-shadow: 0 0 60px rgba(201,168,76,0.04);
     }
 
     .form-title {
@@ -434,7 +433,7 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: border-color 0.25s, color 0.25s, background 0.25s, box-shadow 0.25s;
+      transition: border-color 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), color 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     .cat-btn i { font-size: 1.25rem; }
     .cat-btn:hover {
@@ -477,7 +476,7 @@
       font-size: 0.95rem;
       padding: 14px 18px;
       outline: none;
-      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      transition: border-color 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
       -webkit-appearance: none;
     }
     .field-input::placeholder { color: rgba(245,240,232,0.18); }
@@ -517,7 +516,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      transition: opacity 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
       box-shadow: 0 4px 32px rgba(201,168,76,0.25);
     }
     .submit-btn:hover {
@@ -627,7 +626,7 @@
     .fade-up {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
+      transition: opacity 800ms var(--ease-expo), transform 800ms var(--ease-expo);
     }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
     .delay-1 { transition-delay: 0.1s; }
@@ -883,10 +882,7 @@
       border-radius: 0;
       border: none;
       cursor: pointer;
-      transition:
-        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.2s;
+      transition:transform 250ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
       box-shadow: 0 6px 40px rgba(201,168,76,0.28);
     }
     .eb-cta-btn:hover {
@@ -1052,7 +1048,7 @@
       background: rgba(245,240,232,0.02);
       border: 1px solid rgba(201,168,76,0.12);
       border-radius: 0;
-      transition: border-color 0.25s, background 0.25s;
+      transition: border-color 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     .trust-pillar:hover {
       border-color: rgba(201,168,76,0.28);
@@ -1098,7 +1094,7 @@
       border-radius: 0;
       overflow: hidden;
       background: rgba(245,240,232,0.02);
-      transition: border-color 0.25s;
+      transition: border-color 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     .faq-item[open] {
       border-color: rgba(201,168,76,0.28);
@@ -1125,7 +1121,7 @@
       color: rgba(201,168,76,0.6);
       font-size: 0.7rem;
       flex-shrink: 0;
-      transition: transform 0.25s;
+      transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     .faq-item[open] .faq-icon { transform: rotate(45deg); color: var(--gold); }
     .faq-answer {
@@ -1158,7 +1154,7 @@
       border-radius: 0;
       text-decoration: none;
       cursor: pointer;
-      transition: transform 0.25s var(--ease-expo), box-shadow 0.25s var(--ease-expo);
+      transition: transform 250ms var(--ease-expo), box-shadow 250ms var(--ease-expo);
       box-shadow: 0 6px 40px rgba(212,175,55,0.28);
       border: none;
     }

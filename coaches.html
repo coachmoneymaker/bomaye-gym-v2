@@ -181,7 +181,7 @@
        Motiv, das die Kurskarten auf /kurse schon benutzen.             */
     .coach-full-photo picture { display: block; }
     .coach-full-photo img {
-      transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
     }
     .coach-card-full:hover .coach-full-photo img { transform: scale(1.03); }
     .coach-full-photo::before {
@@ -196,7 +196,7 @@
       position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
       background: var(--gold);
       transform: scaleX(0); transform-origin: left;
-      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--dur-auftritt) var(--ease-expo);
       z-index: 3;
     }
     .coach-card-full:hover .coach-full-photo::after { transform: scaleX(1); }
@@ -262,7 +262,7 @@
       color: #C9A84C;
       font-size: 1.1rem;
       text-decoration: none;
-      transition: all 0.25s ease;
+      transition: all var(--dur-normal) var(--ease-out);
     }
     .coach-social-link:hover {
       background: #C9A84C;
@@ -282,7 +282,7 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       text-decoration: none;
-      transition: all 0.25s ease;
+      transition: all var(--dur-normal) var(--ease-out);
       white-space: nowrap;
     }
     .coach-pt-btn:hover {
