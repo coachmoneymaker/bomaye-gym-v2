@@ -290,7 +290,12 @@ body.bsport-modal-open #header {
 #mobile-nav {
   position: fixed; inset: 0; z-index: 999;
   background: rgba(6,6,6,0.97); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  /* "safe center" statt "center": bei Ueberlauf richtet der Kasten oben aus
+     statt zu zentrieren. Mit reinem center liegt der erste Menuepunkt auf
+     kleinen Geraeten oberhalb des scrollbaren Bereichs und ist auch bei
+     scrollTop 0 nicht erreichbar (gemessen: -90px auf 360x640). Aeltere
+     Browser ignorieren den Wert und verhalten sich wie bisher. */
+  display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: 0;
   padding: calc(var(--nav-h) + 48px) 0 32px;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
   opacity: 0; visibility: hidden; pointer-events: none;
@@ -2745,7 +2750,10 @@ footer .footer-grid + div {
   background: #faf9f6;
   border: 1px solid rgba(160,124,58,0.28);
   border-radius: 0;
-  box-shadow: 0 24px 72px rgba(0,0,0,0.18), 0 4px 16px rgba(160,124,58,0.1);
+  /* Der schwarze 72-px-Schatten ist raus (Gesamtreview 4·10): gemessen
+     hoechstens 6 von 255 Helligkeitsstufen Unterschied, verteilt ueber die
+     ganze Flaeche. Die Kantenarbeit macht der Rahmen darueber. */
+  box-shadow: 0 4px 16px rgba(160,124,58,0.1);
   max-width: 540px;
   width: 100%;
   max-height: 90vh;
@@ -6350,6 +6358,13 @@ a.mn-contact-text:hover { color: var(--gold); }
 
   /* wie unterhalb 900px */
   .nav-links .nav-account-icon { display: none; }
+
+  /* Dasselbe Mittel auf den schlanken Leisten von /mitglied-werden und
+     /mitgliederbereich. Deren Zeile hat 64px Innenabstand statt 72px und
+     damit noch weniger Luft; mit dem siebten Navigationspunkt (SCHEDULE)
+     lief der Gold-CTA auf /mitgliederbereich bei 901px 32px aus dem Bild.
+     Der Startseiten-Link doppelt ohnehin den HOME-Punkt daneben. */
+  .mw-header-inner .mw-back-link { display: none; }
 
   .nav-links            { gap: 0.15rem; }
   .nav-links .nav-link  { padding-left: 0.6rem; padding-right: 0.6rem; }
