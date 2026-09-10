@@ -298,7 +298,11 @@
       .coach-full-photo::after { transition: none; }
     }
 
-    .coach-full-info h3 {
+    /* Frueher .coach-full-info h3 - die Namen sind jetzt h2, weil sie die
+       Titel ihrer eigenen Abschnitte sind. Als h3 waren sie mit 32px
+       groesser als das h2 daneben (29px). Selektor auf die Klasse gezogen,
+       damit die Groesse auf den Pixel gleich bleibt. */
+    .coach-full-info .coach-full-name {
       font-family: var(--font-display);
       font-size: clamp(2rem, 4vw, 3rem);
       color: #0A0A08;
@@ -786,7 +790,7 @@
           </div>
         </div>
         <div class="coach-full-info">
-          <h3 id="coach-raschad-h">RASCHAD PEKPASSI</h3>
+          <h2 class="coach-full-name" id="coach-raschad-h">RASCHAD PEKPASSI</h2>
           <p class="coach-full-title">OLYMPIC BOXING · FOUNDER</p>
           <p class="coach-page-creds">LANDESTRAINER BABV · 20+ JAHRE ERFAHRUNG</p>
           <p class="coach-full-bio">Raschad ist Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf.</p>
@@ -836,7 +840,7 @@
           </div>
         </div>
         <div class="coach-full-info">
-          <h3 id="coach-alfonso-h">ALFONSO FUSCO</h3>
+          <h2 class="coach-full-name" id="coach-alfonso-h">ALFONSO FUSCO</h2>
           <p class="coach-full-title">KICKBOX WELTMEISTER · FOUNDER</p>
           <p class="coach-page-creds">LANDESTRAINER BABV · KICKBOX WELTMEISTER</p>
           <p class="coach-full-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt.</p>
