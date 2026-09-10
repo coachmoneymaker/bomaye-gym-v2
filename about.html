@@ -623,7 +623,7 @@
     <div class="ab-dna-grid">
       <div class="ab-dna-col">
         <span class="ab-dna-label ab-reveal-left" data-delay="0">01 / DNA</span>
-        <h2 class="ab-dna-word ab-dna-word--cream ab-reveal-left" data-delay="100">TECHNIK.</h2>
+        <p class="ab-dna-word ab-dna-word--cream ab-reveal-left" data-delay="100">TECHNIK.</p>
         <hr class="ab-dna-rule ab-reveal-left" data-delay="200" aria-hidden="true" />
         <p class="ab-dna-body--dark ab-reveal-left" data-delay="300">Kein Fitness-Studio-Training. Echte Boxtechnik, sauber und präzise — von Coaches die selbst im Ring standen. Wir lehren nicht Bewegungen. Wir lehren Verständnis.</p>
       </div>
@@ -646,7 +646,7 @@
       </figure>
       <div class="ab-dna-col">
         <span class="ab-dna-label ab-reveal-right" data-delay="0">02 / DNA</span>
-        <h2 class="ab-dna-word ab-dna-word--dark ab-reveal-right" data-delay="100">COMMUNITY.</h2>
+        <p class="ab-dna-word ab-dna-word--dark ab-reveal-right" data-delay="100">COMMUNITY.</p>
         <hr class="ab-dna-rule ab-reveal-right" data-delay="200" aria-hidden="true" />
         <p class="ab-dna-body--cream ab-reveal-right" data-delay="300">Du trainierst nicht neben anderen. Du trainierst mit ihnen. Bomaye ist ein Ort wo Menschen füreinander da sind — am ersten Tag und am tausendsten.</p>
       </div>
@@ -1107,7 +1107,10 @@
     }
     .ab-cta-h2 {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 10vw, 5rem);
+      /* War clamp(3rem,10vw,5rem) = 48px mobil / 80px Desktop und damit
+         groesser als das h1 dieser Seite (45/80). Jetzt die Groesse, die
+         dieselbe Aussage auf /kurse hat: 32px mobil, 48px Desktop. */
+      font-size: clamp(2rem, 5vw, 3rem);
       color: #0A0A08;
       line-height: 1;
       text-transform: uppercase;
