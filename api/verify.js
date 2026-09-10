@@ -659,11 +659,12 @@ function buildAdminEmailHtml(lead, verifiedAt) {
 // ── HTML page renderer ─────────────────────────────────────────────────────────
 
 function renderPage(type, { title, message }) {
+  /* Eingebettete SVG statt Font Awesome - diese Seite wird serverseitig
+     ausgeliefert und soll keinen Webfont nachladen.
+     Icons: Font Awesome Free, CC BY 4.0, https://fontawesome.com/license/free */
   const icon = type === 'error'
-    ? '<i class="fa-solid fa-circle-xmark" style="color:#e53e3e;"></i>'
-    : type === 'already'
-    ? '<i class="fa-solid fa-circle-check" style="color:#C9A84C;"></i>'
-    : '<i class="fa-solid fa-circle-check" style="color:#C9A84C;"></i>';
+    ? '<svg viewBox="0 0 512 512" width="48" height="48" fill="#e53e3e" aria-hidden="true" style="display:block;margin:0 auto;"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>'
+    : '<svg viewBox="0 0 512 512" width="48" height="48" fill="#C9A84C" aria-hidden="true" style="display:block;margin:0 auto;"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>';
 
   return `<!DOCTYPE html>
 <html lang="de">
@@ -672,7 +673,6 @@ function renderPage(type, { title, message }) {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>${escapeHtml(title)} — BOMAYE GYM</title>
   <link rel="stylesheet" href="/assets/css/fonts.css" />
-  <link rel="stylesheet" href="/assets/vendor/fontawesome/6.4.0/css/all.min.css" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:#0a0a0a;color:#fff;font-family:'DM Sans',Arial,sans-serif;

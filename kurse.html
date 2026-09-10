@@ -58,8 +58,6 @@
   <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="preload" href="/assets/vendor/fontawesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="/assets/vendor/fontawesome/6.4.0/css/all.min.css" /></noscript>
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
@@ -720,6 +718,11 @@
 </head>
 
 <body>
+<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
+     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
+     https://fontawesome.com/license/free -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol><symbol id="i-check-circle" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 320 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></symbol><symbol id="i-chevron-right" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></symbol><symbol id="i-circle-info" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></symbol><symbol id="i-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol><symbol id="i-instagram" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></symbol><symbol id="i-location-dot" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol><symbol id="i-lock" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></symbol><symbol id="i-phone" viewBox="0 0 512 512"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></symbol><symbol id="i-tiktok" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></symbol><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></symbol><symbol id="i-xmark" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></symbol><symbol id="i-youtube" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></symbol></svg>
+
 <div class="noise" aria-hidden="true"></div>
 
 <!-- ═══════ HEADER ═══════ -->
@@ -730,7 +733,7 @@
       <span class="logo-text">BOMAYE</span>
     </a>
     <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
-      <i class="fa-solid fa-arrow-left-long"></i> <span>ZURÜCK</span>
+      <i class="icon" aria-hidden="true"><svg><use href="#i-arrow-left-long"/></svg></i> <span>ZURÜCK</span>
     </a>
     <nav class="nav-links" aria-label="Hauptnavigation">
       <a class="nav-link" href="/">HOME</a>
@@ -764,12 +767,12 @@
   <a class="mn-info-link" href="/downloads" style="--mn-i:7">Downloads</a>
   <a class="mn-info-link" href="/u18" style="--mn-i:8">U18 · Minderjährige</a>
   <div class="mn-divider" style="margin:14px auto;"></div>
-  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:9"><i class="fa-solid fa-user"></i> Mein Konto</a>
+  <a href="https://backoffice.bsport.io/m/Bomaye%20Box%20Gym/5473" class="mn-account" target="_blank" rel="noopener" aria-label="Mein Konto" style="--mn-i:9"><i class="icon" aria-hidden="true"><svg><use href="#i-user"/></svg></i> Mein Konto</a>
   <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="toggleKurseMenu();" style="--mn-i:10;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
   <div class="mn-contact-divider" style="--mn-i:11"></div>
   <div class="mn-socials" style="--mn-i:12">
-    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+    <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" aria-label="Instagram"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i></a>
+    <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" aria-label="TikTok"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i></a>
   </div>
   <span class="mn-contact-text" style="--mn-i:13">Pineapple Park · 80639 München</span>
   <a class="mn-contact-text" href="mailto:support@bomayegym.com" style="--mn-i:14">support@bomayegym.com</a>
@@ -779,7 +782,7 @@
 <!-- ═══════ WHATSAPP FLOAT ═══════ -->
 <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
-  <i class="fa-brands fa-whatsapp"></i>
+  <i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i>
 </a>
 
 <!-- ═══════ BOOKING MODAL ═══════ -->
@@ -787,7 +790,7 @@
   <div class="modal-header">
     <span class="modal-header-title">JETZT BUCHEN</span>
     <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
-      <i class="fa-solid fa-xmark"></i>
+      <i class="icon" aria-hidden="true"><svg><use href="#i-xmark"/></svg></i>
     </button>
   </div>
   <div class="modal-body">
@@ -819,8 +822,8 @@
 
     <!-- ── DESKTOP PREMIUM CAROUSEL ── -->
     <div class="desk-carousel-outer" id="dsk-outer">
-    <button class="dsk-arrow dsk-arrow--prev" id="dsk-prev" aria-label="Vorheriger Kurs" type="button"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-    <button class="dsk-arrow dsk-arrow--next" id="dsk-next" aria-label="Nächster Kurs" type="button"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+    <button class="dsk-arrow dsk-arrow--prev" id="dsk-prev" aria-label="Vorheriger Kurs" type="button"><i class="icon" aria-hidden="true"><svg><use href="#i-chevron-left"/></svg></i></button>
+    <button class="dsk-arrow dsk-arrow--next" id="dsk-next" aria-label="Nächster Kurs" type="button"><i class="icon" aria-hidden="true"><svg><use href="#i-chevron-right"/></svg></i></button>
     <div class="desk-carousel" id="desk-carousel" aria-label="Kursauswahl">
       <div class="dsk-track" id="dsk-track">
 
@@ -916,21 +919,21 @@
               </p>
               <div class="course-detail__feats" id="detail-feats">
                 <div class="course-detail__feat">
-                  <i class="fa-solid fa-check-circle"></i>
+                  <i class="icon" aria-hidden="true"><svg><use href="#i-check-circle"/></svg></i>
                   <div class="course-detail__feat-body">
                     <strong>Alle Level willkommen</strong>
                     <span>Anfänger, Fortgeschrittene und Wettkämpfer im selben Umfeld</span>
                   </div>
                 </div>
                 <div class="course-detail__feat">
-                  <i class="fa-solid fa-check-circle"></i>
+                  <i class="icon" aria-hidden="true"><svg><use href="#i-check-circle"/></svg></i>
                   <div class="course-detail__feat-body">
                     <strong>Technisches Einzel-Feedback</strong>
                     <span>Kein anonymes Gruppentraining — jede Stunde mit klarem Coaching</span>
                   </div>
                 </div>
                 <div class="course-detail__feat">
-                  <i class="fa-solid fa-check-circle"></i>
+                  <i class="icon" aria-hidden="true"><svg><use href="#i-check-circle"/></svg></i>
                   <div class="course-detail__feat-body">
                     <strong>Sparring &amp; Wettkampf optional</strong>
                     <span>Sicher, kontrolliert, mit Erfahrung begleitet</span>
@@ -938,7 +941,7 @@
                 </div>
               </div>
               <a id="detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-                <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
+                <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN
               </a>
             </div>
           </div>
@@ -956,7 +959,7 @@
             <span class="carousel-card__num">01 / 07</span>
             <h3 class="carousel-card__title">BOXING</h3>
             <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -968,7 +971,7 @@
             <span class="carousel-card__num">02 / 07</span>
             <h3 class="carousel-card__title">KICKBOXING</h3>
             <p class="carousel-card__short">Hände und Beine. Mit Kickbox-Weltmeister Alfonso Fusco.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -979,7 +982,7 @@
             <span class="carousel-card__num">03 / 07</span>
             <h3 class="carousel-card__title">YOUTH BOXING</h3>
             <p class="carousel-card__short">Boxen für Kids &amp; Jugendliche ab 6 Jahren.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -990,7 +993,7 @@
             <span class="carousel-card__num">04 / 07</span>
             <h3 class="carousel-card__title">OLYMPISCHES BOXEN</h3>
             <p class="carousel-card__short">Wettkampforientiertes Training nach olympischen Regeln.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -1002,7 +1005,7 @@
             <span class="carousel-card__num">05 / 07</span>
             <h3 class="carousel-card__title">CORPORATE BOXING</h3>
             <p class="carousel-card__short">Teambuilding für Unternehmen — ab 5 Personen auf Anfrage.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -1013,7 +1016,7 @@
             <span class="carousel-card__num">06 / 07</span>
             <h3 class="carousel-card__title">PERSONAL TRAINING</h3>
             <p class="carousel-card__short">1:1 Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -1025,7 +1028,7 @@
             <span class="carousel-card__num">07 / 07</span>
             <h3 class="carousel-card__title">BOMAYE QUEENS</h3>
             <p class="carousel-card__short">Exklusiver Safe Space für Frauen — Power, Stärke, Community.</p>
-            <span class="carousel-card__cta"><i class="fa-solid fa-circle-info"></i> Details ansehen</span>
+            <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
 
@@ -1049,7 +1052,7 @@
         <p class="mobile-course-detail__desc" id="mob-detail-desc"></p>
         <div class="mobile-course-detail__feats" id="mob-detail-feats"></div>
         <a id="mob-detail-cta-btn" href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;width:100%;justify-content:center;">
-          <i class="fa-solid fa-bolt"></i> JETZT ANMELDEN
+          <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN
         </a>
       </div>
 
@@ -1065,7 +1068,7 @@
       <p style="color:rgba(10,10,8,0.72);max-width:480px;margin:0 auto 2rem;">Wer jetzt startet, zahlt dauerhaft den Early Bird Preis. Keine Preiserhöhung, kein Jahres-Update. Unser Versprechen an die erste Generation.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="/mitglied-werden" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="fa-solid fa-bolt"></i> MITGLIED WERDEN
+          <i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> MITGLIED WERDEN
         </a>
       </div>
     </div>
@@ -1081,10 +1084,10 @@
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">
-            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="icon" aria-hidden="true"><svg><use href="#i-youtube"/></svg></i></a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i></a>
+            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i></a>
           </div>
         </div>
         <div class="footer-col">
@@ -1122,15 +1125,15 @@
       </div>
       <div class="footer-col">
           <h4>KONTAKT</h4>
-          <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pineapple Park, 80639 München</span></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-location-dot"/></svg></i><span>Pineapple Park, 80639 München</span></div>
         <div class="footer-pineapple" style="display:flex;align-items:center;gap:9px;margin:-0.35rem 0 0.95rem;">
           <a href="https://www.pineapplepark-munich.com/" target="_blank" rel="noopener" aria-label="Pineapple Park München" style="display:inline-flex;"><span role="img" aria-label="Pineapple Park" style="display:block;width:18px;height:20px;background:#F5F0E8;-webkit-mask:url('/assets/badges/pineapplepark-logo.svg') no-repeat center / contain;mask:url('/assets/badges/pineapplepark-logo.svg') no-repeat center / contain;"></span></a>
           <span class="footer-pineapple-label" style="font-family:'Oswald',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.45);line-height:1.3;">IM PINEAPPLE PARK AREAL</span>
         </div>
-          <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
-          <div class="footer-contact-item"><i class="fa-regular fa-envelope"></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
-          <div class="footer-contact-item"><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
-          <div class="footer-contact-item"><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-phone"/></svg></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         </div>
       </div>
       <!-- SEO footer text -->
@@ -1147,7 +1150,7 @@
       <div class="footer-bottom">
         <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
         <div class="footer-legal">
-        <span class="footer-trust"><i class="fa-solid fa-lock" aria-hidden="true"></i> Sichere Buchung über <a href="https://bsport.io" target="_blank" rel="noopener" aria-label="bsport" style="display:inline-flex;align-items:center;"><span role="img" aria-label="bsport" style="display:block;width:39px;height:14px;background:#F5F0E8;opacity:0.45;-webkit-mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;"></span></a></span>
+        <span class="footer-trust"><i class="icon" aria-hidden="true"><svg><use href="#i-lock"/></svg></i> Sichere Buchung über <a href="https://bsport.io" target="_blank" rel="noopener" aria-label="bsport" style="display:inline-flex;align-items:center;"><span role="img" aria-label="bsport" style="display:block;width:39px;height:14px;background:#F5F0E8;opacity:0.45;-webkit-mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;"></span></a></span>
         <a href="/impressum">IMPRESSUM</a>
           <a href="/datenschutz">DATENSCHUTZ</a>
           <a href="/agb">AGB</a>
@@ -1296,7 +1299,7 @@ function openCourse(id) {
   const featsEl = document.getElementById('detail-feats');
   featsEl.innerHTML = data.feats.map(f => `
     <div class="course-detail__feat">
-      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <i class="icon" aria-hidden="true"><svg><use href="#i-check-circle"/></svg></i>
       <div class="course-detail__feat-body">
         <strong>${f.strong}</strong>
         <span>${f.span}</span>
@@ -1308,10 +1311,10 @@ function openCourse(id) {
   if (ctaBtn) {
     if (data.cta && data.cta.type === 'email') {
       ctaBtn.href = 'mailto:' + data.cta.email;
-      ctaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
+      ctaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i> ' + data.cta.text;
     } else {
       ctaBtn.href = '/mitglied-werden';
-      ctaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
+      ctaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN';
     }
   }
 
@@ -1338,7 +1341,7 @@ function openMobileCourse(id, idx) {
   const featsEl = document.getElementById('mob-detail-feats');
   featsEl.innerHTML = data.feats.map(f => `
     <div class="mobile-course-detail__feat">
-      <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+      <i class="icon" aria-hidden="true"><svg><use href="#i-check-circle"/></svg></i>
       <div class="mobile-course-detail__feat-body">
         <strong>${f.strong}</strong>
         <span>${f.span}</span>
@@ -1350,10 +1353,10 @@ function openMobileCourse(id, idx) {
   if (mobCtaBtn) {
     if (data.cta && data.cta.type === 'email') {
       mobCtaBtn.href = 'mailto:' + data.cta.email;
-      mobCtaBtn.innerHTML = '<i class="fa-solid fa-envelope" aria-hidden="true"></i> ' + data.cta.text;
+      mobCtaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i> ' + data.cta.text;
     } else {
       mobCtaBtn.href = '/mitglied-werden';
-      mobCtaBtn.innerHTML = '<i class="fa-solid fa-bolt" aria-hidden="true"></i> JETZT ANMELDEN';
+      mobCtaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN';
     }
   }
 
