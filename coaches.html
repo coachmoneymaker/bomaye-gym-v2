@@ -117,6 +117,99 @@
       background: #F5F0E8;  /* light background so dark text is readable */
     }
 
+    /* ══════════════════════════════════════════════════
+       SPRUNGLEISTE + ABSCHNITTE JE COACH
+
+       Die Seite war ein Block von 4945px ohne Uebersicht und ohne
+       Sprungmarken. Jetzt hat jeder Coach einen eigenen Abschnitt mit
+       eigener ID, darueber eine Leiste mit den vier Namen.
+
+       Das Aussehen der Leiste ist Wert fuer Wert das der Wochentag-Reiter
+       aus dem Stundenplan-Ausschnitt der Startseite (.sched-day-tab,
+       index.html) - dort liegt es inline und nicht in style.css, deshalb
+       steht es hier ein zweites Mal. Keine neuen Farben, Schriften oder
+       Radien; der helle Grund dieses Abschnitts ist derselbe, fuer den das
+       Bauteil dort gebaut ist.
+    ══════════════════════════════════════════════════ */
+    .coach-jump { margin-bottom: clamp(24px, 4vw, 40px); }
+    .coach-jump-tabs {
+      display: flex;
+      gap: 0;
+      max-width: 640px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(8,8,8,0.1);
+      border-bottom: 1px solid rgba(8,8,8,0.1);
+    }
+    .coach-jump-tab {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 14px 2px;
+      background: transparent;
+      border: 0;
+      font-family: var(--font-head);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      /* Literale wie bei .sp-day-tab auf stundenplan.html: --dark und
+         --cream stehen nur in index.html, nicht in style.css - hier waere
+         die Beschriftung sonst unsichtbar (cremefarben auf creme).
+         Gleiche Werte, andere Schreibweise. */
+      color: #0A0A08;
+      opacity: 0.45;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      position: relative;
+      transition: opacity var(--dur-schnell) var(--ease-out), background var(--dur-schnell) var(--ease-out), color var(--dur-schnell) var(--ease-out);
+    }
+    .coach-jump-tab:hover { opacity: 0.7; }
+    .coach-jump-tab.active {
+      opacity: 1;
+      background: #0A0A08;
+      color: #F5F0E8;
+    }
+    .coach-jump-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 6px;
+      width: 18px;
+      height: 2px;
+      background: var(--gold);
+    }
+    @media (max-width: 767px) {
+      .coach-jump-tab { padding: 16px 2px; font-size: 0.72rem; letter-spacing: 0.08em; }
+    }
+
+    /* Die Trennlinie lag bisher an .coach-card-full:last-child. Jede Karte
+       ist jetzt letztes Kind ihres eigenen Abschnitts, die Regel greift also
+       ueberall - die Linie kommt deshalb an die Abschnittsgrenze. Gleicher
+       Wert, gleiches Bild. */
+    /* style.css gibt jedem <section> clamp(60px,6vw,96px) Innenabstand.
+       Die Karten darin bringen ihren eigenen mit - ohne das Zuruecksetzen
+       waere die Seite allein durch die Umhuellung um 420px gewachsen. */
+    .coach-section { padding: 0; }
+    .coach-section + .coach-section { border-top: 1px solid rgba(8,8,8,0.1); }
+    /* Damit die Ueberschrift beim Springen nicht unter der Kopfzeile landet. */
+    .coach-section, .coach-team-card { scroll-margin-top: calc(var(--nav-h, 80px) + 16px); }
+
+    .coach-oben {
+      text-align: right;
+      margin: 1.5rem 0 0;
+    }
+    .coach-oben a {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(8,8,8,0.45);
+      text-decoration: none;
+      transition: color var(--dur-schnell) var(--ease-out);
+    }
+    .coach-oben a:hover { color: var(--gold-dark); }
+
     /* Full coach card with bio */
     .coach-card-full {
       display: grid;
@@ -652,9 +745,27 @@
 
   <!-- ── Coach Cards ── -->
   <section class="coaches-page-section">
+
+    <!-- Sprungleiste. Bauteil .sched-day-tab aus dem Stundenplan-Ausschnitt
+         der Startseite, Wert fuer Wert uebernommen - dort liegt es inline in
+         index.html und nicht in style.css. Statt <button> hier <a>, weil es
+         Sprungziele sind; der aktive Zustand wird beim Scrollen gesetzt,
+         genau wie bei den Wochentagen. -->
+    <div class="container">
+      <nav class="coach-jump" id="coach-jump" aria-label="Zu einem Coach springen">
+        <div class="coach-jump-tabs">
+          <a class="coach-jump-tab" href="#coach-raschad">Raschad</a>
+          <a class="coach-jump-tab" href="#coach-alfonso">Alfonso</a>
+          <a class="coach-jump-tab" href="#coach-nima">Nima</a>
+          <a class="coach-jump-tab" href="#coach-pavlos">Pavlos</a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Raschad -->
+    <section class="coach-section" id="coach-raschad" aria-labelledby="coach-raschad-h">
     <div class="container">
 
-      <!-- Raschad -->
       <div class="coach-card-full reveal">
         <div class="coach-full-photo">
           <picture>
@@ -675,7 +786,7 @@
           </div>
         </div>
         <div class="coach-full-info">
-          <h3>RASCHAD PEKPASSI</h3>
+          <h3 id="coach-raschad-h">RASCHAD PEKPASSI</h3>
           <p class="coach-full-title">OLYMPIC BOXING · FOUNDER</p>
           <p class="coach-page-creds">LANDESTRAINER BABV · 20+ JAHRE ERFAHRUNG</p>
           <p class="coach-full-bio">Raschad ist Gründer von Bomaye Gym und lizenzierter Landestrainer des BABV. Über zwei Jahrzehnte olympisches Boxen — auf dem Trainingsfeld, in der Ecke, im Wettkampf.</p>
@@ -697,7 +808,14 @@
         </div>
       </div>
 
-      <!-- Alfonso -->
+        <p class="coach-oben"><a href="#coach-jump">↑ Nach oben</a></p>
+    </div>
+    </section>
+
+    <!-- Alfonso -->
+    <section class="coach-section" id="coach-alfonso" aria-labelledby="coach-alfonso-h">
+    <div class="container">
+
       <div class="coach-card-full reverse reveal delay-1">
         <div class="coach-full-photo">
           <picture>
@@ -718,7 +836,7 @@
           </div>
         </div>
         <div class="coach-full-info">
-          <h3>ALFONSO FUSCO</h3>
+          <h3 id="coach-alfonso-h">ALFONSO FUSCO</h3>
           <p class="coach-full-title">KICKBOX WELTMEISTER · FOUNDER</p>
           <p class="coach-page-creds">LANDESTRAINER BABV · KICKBOX WELTMEISTER</p>
           <p class="coach-full-bio">Alfonso Fusco ist Kickbox-Weltmeister, lizenzierter Landestrainer des BABV und Mitgründer von Bomaye Gym. Seine Karriere hat ihn auf die höchste Wettkampfstufe geführt.</p>
@@ -740,18 +858,25 @@
         </div>
       </div>
 
-      <!-- ── Coach Team ── -->
+        <p class="coach-oben"><a href="#coach-jump">↑ Nach oben</a></p>
+    </div>
+    </section>
+
+    <!-- ── Coach Team ── -->
+    <section class="coach-section" id="coach-team" aria-labelledby="coach-team-h">
+    <div class="container">
+
       <div class="coach-team-section">
         <hr class="coach-team-divider" aria-hidden="true">
         <header class="coach-team-header">
           <span class="coach-team-eyebrow">COACH TEAM</span>
-          <h2 class="coach-team-headline">DIE NÄCHSTE GENERATION.</h2>
+          <h2 class="coach-team-headline" id="coach-team-h">DIE NÄCHSTE GENERATION.</h2>
           <p class="coach-team-sub">Unsere Coaches tragen den Spirit jeden Tag in den Ring — zertifiziert, erfahren und mit klarem Fokus auf Technik.</p>
         </header>
         <div class="coach-team-grid">
 
           <!-- Nima -->
-          <article class="coach-team-card">
+          <article class="coach-team-card" id="coach-nima" aria-labelledby="coach-nima-h">
             <div class="coach-team-photo">
               <img src="/assets/images/coach-nima.webp?v=3" alt="Nima — Kickboxing &amp; K1 Coach, Bomaye Gym Munich" decoding="async" />
               <div class="coach-team-creds-overlay">
@@ -761,7 +886,7 @@
               </div>
             </div>
             <div class="coach-team-info">
-              <h3 class="coach-team-name">NIMA</h3>
+              <h3 class="coach-team-name" id="coach-nima-h">NIMA</h3>
               <span class="coach-team-title">BOXING &amp; KICKBOXING · COACH</span>
               <p class="coach-team-page-creds">BABV LIZENZ · ISKA LIZENZ</p>
               <p class="coach-team-bio">Nima ist BABV-lizenziert im Boxen sowie ISKA-lizenziert im K1 und bringt erste Wettkampferfahrung in beiden Disziplinen mit.</p>
@@ -782,7 +907,7 @@
           </article>
 
           <!-- Pavlos -->
-          <article class="coach-team-card">
+          <article class="coach-team-card" id="coach-pavlos" aria-labelledby="coach-pavlos-h">
             <div class="coach-team-photo">
               <img src="/assets/images/coach-pavlos.webp?v=2" alt="Pavlos — Boxing &amp; Athletik Coach, Bomaye Gym Munich" decoding="async" />
               <div class="coach-team-creds-overlay">
@@ -792,7 +917,7 @@
               </div>
             </div>
             <div class="coach-team-info">
-              <h3 class="coach-team-name">PAVLOS</h3>
+              <h3 class="coach-team-name" id="coach-pavlos-h">PAVLOS</h3>
               <span class="coach-team-title">BOXING &amp; ATHLETIK · COACH</span>
               <p class="coach-team-page-creds">BABV LIZENZ · ATHLETIKTRAINER · SPORTTHERAPEUT</p>
               <p class="coach-team-bio">Pavlos verbindet langjährige Erfahrung im Boxsport mit Wissen als Athletiktrainer und Sporttherapeut. Sein Fokus: Technik und Körperkontrolle als Grundlage jedes Trainings.</p>
@@ -814,7 +939,10 @@
         </div>
       </div>
 
+        <p class="coach-oben"><a href="#coach-jump">↑ Nach oben</a></p>
     </div>
+    </section>
+
   </section>
 
   <!-- ── Bottom CTA ── -->
@@ -1011,6 +1139,50 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
   els.forEach(el => io.observe(el));
+})();
+
+/* ── Sprungleiste: aktiven Namen mitfuehren ──────────────────
+   Die Wochentag-Reiter, von denen das Aussehen stammt, haben immer genau
+   einen aktiven Zustand. Ohne das saehe die Leiste hier aus wie vier tote
+   Beschriftungen.
+
+   Bewusst per Scroll-Listener statt IntersectionObserver: die Coach-
+   Abschnitte sind hoeher als das Bild, ein solcher Abschnitt ueberschreitet
+   die Schwellen des Observers nie und der Rueckruf bliebe aus. Genau das
+   ist beim Testen bei 390px passiert - nach dem Sprung war kein Reiter
+   aktiv. Ein Bildaufbau pro Scroll-Ereignis kostet hier nichts. */
+(function () {
+  var reiter = document.querySelectorAll('.coach-jump-tab');
+  if (!reiter.length) return;
+
+  var ziele = [];
+  reiter.forEach(function (a) {
+    var el = document.querySelector(a.getAttribute('href'));
+    if (el) ziele.push({ a: a, el: el });
+  });
+  if (!ziele.length) return;
+
+  function bewerten() {
+    var grenze = window.innerHeight * 0.35;   /* oberes Drittel entscheidet */
+    var beste = ziele[0].a;
+    for (var i = 0; i < ziele.length; i++) {
+      if (ziele[i].el.getBoundingClientRect().top <= grenze) beste = ziele[i].a;
+    }
+    for (var j = 0; j < ziele.length; j++) {
+      ziele[j].a.classList.toggle('active', ziele[j].a === beste);
+    }
+  }
+
+  var offen = false;
+  function takt() {
+    if (offen) return;
+    offen = true;
+    window.requestAnimationFrame(function () { offen = false; bewerten(); });
+  }
+
+  window.addEventListener('scroll', takt, { passive: true });
+  window.addEventListener('resize', takt, { passive: true });
+  bewerten();
 })();
 </script>
 <script src="/assets/js/pixel-events.js"></script>
