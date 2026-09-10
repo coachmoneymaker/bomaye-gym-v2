@@ -299,7 +299,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                 ? `<img src="${logoUrl}" alt="BOMAYE GYM" width="130" height="auto"
                         style="display:block;width:130px;height:auto;border:0;outline:none;text-decoration:none;" />`
                 : `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;
-                             font-weight:700;letter-spacing:0.25em;color:#C6A45A;">BOMAYE GYM</p>`
+                             font-weight:700;letter-spacing:0.25em;color:#C9A84C;">BOMAYE GYM</p>`
               }
             </td>
           </tr>
@@ -312,9 +312,9 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
               <!-- Gold accent bar -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td bgcolor="#C6A45A" height="3"
+                  <td bgcolor="#C9A84C" height="3"
                       style="height:3px;line-height:3px;font-size:3px;
-                             background-color:#C6A45A;">&nbsp;</td>
+                             background-color:#C9A84C;">&nbsp;</td>
                 </tr>
               </table>
 
@@ -330,7 +330,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                               font-family:Arial,Helvetica,sans-serif;
                               font-size:10px;font-weight:700;
                               letter-spacing:0.32em;text-transform:uppercase;
-                              color:#C6A45A;">
+                              color:#C9A84C;">
                       Early Bird Access &mdash; Munich
                     </p>
 
@@ -365,7 +365,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                       du bist fast dabei. Ein Klick genügt, um deinen exklusiven
                       Early Bird Platz bei BOMAYE GYM Munich dauerhaft zu sichern.<br /><br />
                       Der Bestätigungslink ist
-                      <span style="color:#C6A45A;font-weight:600;">24&nbsp;Stunden</span>
+                      <span style="color:#C9A84C;font-weight:600;">24&nbsp;Stunden</span>
                       gültig.
                     </p>
                   </td>
@@ -379,7 +379,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                     <!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
                       href="${verifyUrl}" style="height:58px;v-text-anchor:middle;width:340px;"
-                      arcsize="4%" strokecolor="#C6A45A" fillcolor="#C6A45A">
+                      arcsize="4%" strokecolor="#C9A84C" fillcolor="#C9A84C">
                       <w:anchorlock/>
                       <center style="color:#080808;font-family:Arial,Helvetica,sans-serif;
                                      font-size:12px;font-weight:700;letter-spacing:0.2em;">
@@ -390,8 +390,8 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                     <!--[if !mso]><!-->
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation">
                       <tr>
-                        <td bgcolor="#C6A45A"
-                            style="background-color:#C6A45A;border-radius:3px;">
+                        <td bgcolor="#C9A84C"
+                            style="background-color:#C9A84C;border-radius:3px;">
                           <a href="${verifyUrl}" target="_blank"
                              style="display:inline-block;
                                     padding:20px 52px;
