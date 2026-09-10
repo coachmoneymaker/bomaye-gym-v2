@@ -28,6 +28,17 @@
  *    paste it at the end of the array (before the final ]);).
  *
  *  IMPORTANT: Keep valid syntax — commas between items/blocks.
+ *
+ *  ACHTUNG, ZWEITE STELLE: Das FAQPage-Schema fuer Suchmaschinen
+ *  steht fest im Quelltext von faq.html, im <head>, als
+ *  <script type="application/ld+json"> mit "@type": "FAQPage".
+ *  Frueher wurde es per JavaScript aus dieser Datei erzeugt — das
+ *  sahen nur Crawler, die JavaScript ausfuehren, und es entstand ein
+ *  zweiter, doppelter Knoten. Deshalb steht es jetzt direkt im HTML.
+ *
+ *  Wer hier eine Frage aendert, ergaenzt oder loescht, muss denselben
+ *  Eintrag in faq.html von Hand nachziehen. Sonst zeigt Google noch
+ *  die alte Fassung. Stand heute stimmen beide ueberein: 11 Fragen.
  * ============================================================
  */
 

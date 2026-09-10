@@ -3,6 +3,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/schedule",
+      "destination": "/stundenplan",
+      "permanent": true
+    },
+    {
       "source": "/coming-soon",
       "destination": "/",
       "permanent": true
