@@ -6326,6 +6326,39 @@ a.mn-contact-text:hover { color: var(--gold); }
 }
 #early-bird > * { position: relative; z-index: 1; }
 
+/* ══════════════════════════════════════════════════════════════
+   KOPFZEILE — ZWISCHENBEREICH 901–1199 px
+   Ab 901 px zeigt die Kopfzeile wieder die volle Navigation, hat
+   dafuer aber noch nicht die Breite, die sie braucht: Logo (240px)
+   + Zurueck-Button (94px) + Navigation (bis 766px) = bis zu 1100px
+   Inhalt in einer Zeile, die bei 901px nur 829px frei hat. Die Zeile
+   laeuft nach rechts ueber und der Gold-CTA wird abgeschnitten —
+   bei 901px komplett unsichtbar.
+   Diese Stufe holt den Platz mit genau den Mitteln zurueck, die das
+   Layout unterhalb von 900px ohnehin schon einsetzt: kleineres Logo,
+   ausgeblendeter Zurueck-Button und Konto-Icon, knappere Abstaende.
+   Dazu die Kurzfassung des CTA-Textes, die im Mobile-Menue ohnehin
+   die uebliche ist. Ab 1200px greift wieder die volle Darstellung.
+══════════════════════════════════════════════════════════════ */
+@media (min-width: 901px) and (max-width: 1199px) {
+  .nav-inner .logo-img { height: 104px; }
+
+  /* Zurueck-Button ist unter 768px ohnehin ausgeblendet; das Logo
+     verlinkt auf jeder Seite zur Startseite. */
+  .nav-inner .back-btn,
+  .nav-inner .back-btn.visible { display: none; }
+
+  /* wie unterhalb 900px */
+  .nav-links .nav-account-icon { display: none; }
+
+  .nav-links            { gap: 0.15rem; }
+  .nav-links .nav-link  { padding-left: 0.6rem; padding-right: 0.6rem; }
+  .nav-links > .btn     { margin-left: 0.6rem; }
+
+  /* CTA auf "MITGLIED WERDEN" kuerzen — der Preis kommt ab 1200px zurueck */
+  .nav-cta-preis        { display: none; }
+}
+
 /* Legal pages header: always show the dark glass background */
 .header-inner ~ * { }
 #header:has(.header-inner),
