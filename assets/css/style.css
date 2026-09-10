@@ -176,14 +176,17 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 .btn--gold {
   background: linear-gradient(135deg, #C9A84C 0%, #d4b472 52%, #A67C2E 100%);
   color: #0A0A08; border-color: transparent; font-weight: 700;
-  box-shadow: 0 0 20px rgba(201,168,76,0.30), 0 4px 14px rgba(0,0,0,0.40);
+  /* Kein box-shadow hier: der Wert wurde weiter unten im Block
+     "CONSISTENT BUTTON HIERARCHY" ohnehin ueberschrieben und hat nie
+     gerendert. Nachgemessen: der Knopf zeigt --glanz-eng. */
 }
 .btn--gold:hover {
   background: linear-gradient(135deg, #d4b472 0%, #C9A84C 52%, #A67C2E 100%);
   border-color: transparent;
   transform: translateY(-2px) scale(1.04);
   filter: brightness(1.08);
-  box-shadow: 0 0 40px rgba(201,168,76,0.65), 0 10px 32px rgba(201,168,76,0.32);
+  /* Ebenso: der frueher hier stehende 40px-Schatten wurde vom
+     46px-Wert weiter unten ueberschrieben und hat nie gerendert. */
 }
 .btn--outline-light { background: transparent; color: var(--white); border-color: rgba(245,240,232,0.4); }
 .btn--outline-light:hover { background: rgba(245,240,232,0.10); border-color: rgba(245,240,232,0.9); color: var(--white); transform: translateY(-1px); }
@@ -670,7 +673,9 @@ body.bsport-modal-open #header {
   .service-card { flex: 0 0 88vw; height: 258px; }
 }
 .service-card:hover {
-  box-shadow: 0 0 0 1px rgba(201,168,76,0.30), 0 12px 40px rgba(0,0,0,0.55);
+  /* Kante + eigener Tiefenschatten. Der 1px-Ring ist die Rolle,
+     der schwarze Teil bleibt komponenteneigen. */
+  box-shadow: var(--glanz-kante), 0 12px 40px rgba(0,0,0,0.55);
   transform: translateY(-3px);
 }
 .service-card-bg {
@@ -4983,6 +4988,34 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):
      Diese drei loesen --sv/--sv-m/--sv-s NICHT ab: jene gelten
      weiterhin fuer die Grundregel an <section>. --takt wird dort
      gesetzt, wo eine Seite bisher einen eigenen Wert hatte. */
+  /* ── GLANZ: drei Gold-Leuchten nach Rolle ──────────────────────────
+     Gemessen wurde, was tatsaechlich rendert - nicht, was im Quelltext
+     steht. Im Quelltext stehen 62 Gold-Regeln, im geladenen Dokument
+     rendern 12 verschiedene Schattenwerte, und einer davon deckt 84 von
+     102 Vorkommen ab.
+
+       --glanz-kante  1px-Ring statt Rahmen. Zeichnet eine Kante nach,
+                      leuchtet nicht.
+       --glanz-eng    Enges Leuchten am Element. Ruhezustand des
+                      Gold-Buttons - der mit Abstand haeufigste Schatten
+                      der Seite.
+       --glanz-weit   Weites Leuchten. Hover des Gold-Buttons.
+
+     eng und weit sind ZWEI ABSICHTEN, keine zwei Schreibweisen: das
+     eine haelt sich am Element, das andere greift in die Flaeche. Sie
+     werden nicht zusammengelegt.
+
+     Schwarze weiche Schatten auf hellem Grund sind hier bewusst NICHT
+     erfasst - sie leisten dort echte Arbeit und haben eine eigene
+     Rolle (Tiefe statt Leuchten). */
+  --glanz-kante: 0 0 0 1px rgba(201,168,76,0.30);
+  --glanz-eng:   0 0 22px rgba(201,168,76,0.34),
+                 0 3px 12px rgba(0,0,0,0.32),
+                 inset 0 1px 0 rgba(245,240,232,0.10);
+  --glanz-weit:  0 0 46px rgba(201,168,76,0.70),
+                 0 10px 30px rgba(201,168,76,0.28),
+                 inset 0 1px 0 rgba(245,240,232,0.14);
+
   --takt-eng:  clamp(2rem, 5vw, 4rem);
   --takt:      clamp(3rem, 7vw, 6rem);
   --takt-weit: clamp(6.25rem, 11vw, 8.75rem);
@@ -5036,17 +5069,11 @@ section { padding: var(--sv) 0; }
 
 /* Primary: stronger ambient glow at rest — unmistakable lead action */
 .btn--gold {
-  box-shadow:
-    0 0 22px rgba(201,168,76,0.34),
-    0 3px 12px rgba(0,0,0,0.32),
-    inset 0 1px 0 rgba(245,240,232,0.10);
+  box-shadow: var(--glanz-eng);
 }
 .btn--gold:hover {
   transform: translateY(-3px) scale(1.03);
-  box-shadow:
-    0 0 46px rgba(201,168,76,0.70),
-    0 10px 30px rgba(201,168,76,0.28),
-    inset 0 1px 0 rgba(245,240,232,0.14);
+  box-shadow: var(--glanz-weit);
 }
 
 /* Secondary: reduced visual weight — clearly subordinate */
