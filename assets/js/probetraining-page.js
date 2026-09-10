@@ -163,7 +163,37 @@
             calendar: {
               coaches: [],
               establishments: [],
-              metaActivities: [244432, 244539, 244426, 244420, 244563, 244431, 245265],
+              /* Die meta_activity-IDs dieses Studios. Sie waren im Backoffice
+                 nicht auffindbar und wurden ueber die temporaere Debug-Seite
+                 aus den Termin-Objekten des Kalender-Widgets ausgelesen
+                 (PR #46 / #47). Damit das nicht noch einmal jemand suchen
+                 muss, hier die vollstaendige Zuordnung samt Begruendung:
+
+                   236749  Bomaye Boxing Advanced   raus - Fortgeschrittene
+                   236751  Bomaye Kickboxing        DRIN
+                   244420  BOXING KIDS (6-9 Jahre)  DRIN
+                   244426  BOXING BASICS            DRIN
+                   244431  YOUTH FIGHT TEAM         raus - Wettkampf
+                   244432  BOMAYE FIGHT TEAM        raus - Wettkampf, Profi
+                   244539  BOMAYE QUEENS            DRIN
+                   244563  BOXING YOUTH (10-17)     DRIN
+                   245265  OPEN GYM                 raus - freies Training fuer
+                                                    Mitglieder, kein angeleiteter
+                                                    Einstieg
+                   249398  POWER LAUNCH             raus - von der Seite bereits
+                                                    entfernt
+
+                 Die fuenf verbleibenden Kurse sind genau die, die der Text
+                 ueber dem Kalender zusagt. Wer den Filter aendert, muss den
+                 Text in probetraining.html mitaendern - sonst verspricht die
+                 Seite etwas, das nicht buchbar ist, oder umgekehrt. */
+              metaActivities: [
+                236751,   /* Bomaye Kickboxing        - "Kickboxing" */
+                244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"       */
+                244426,   /* BOXING BASICS            - "Basic"      */
+                244539,   /* BOMAYE QUEENS            - "Queens"     */
+                244563    /* BOXING YOUTH (10-17)     - "Youth"      */
+              ],
               levels: [],
               variant: 'time',
               groupSessionByPeriod: true,
