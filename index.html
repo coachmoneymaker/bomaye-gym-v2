@@ -386,6 +386,24 @@
   /* Erst ab 1100 px passen Adresse und Anreise nebeneinander in eine Zeile,
      ohne umzubrechen — gemessen brauchen beide zusammen 923 px. Darunter
      bleiben sie gestapelt. */
+  .ort-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  /* Der Pfeil im Videoknopf ist dasselbe SVG wie im Abspielknopf der
+     Videofassade weiter unten — gleiche Geste, gleiches Zeichen. */
+  .ort-video-btn .icon svg { width: 0.85em; height: 0.85em; }
+
+  @media (max-width: 480px) {
+    /* Nebeneinander passen die beiden Beschriftungen bei 390 px nicht;
+       gestapelt und volle Breite ist dieselbe Regel, die .location-btns
+       im Block weiter unten schon benutzt. */
+    .ort-btns { flex-direction: column; align-self: stretch; }
+    .ort-btns .btn { width: 100%; }
+  }
+
   @media (min-width: 1100px) {
     .ort-zeilen { flex-direction: row; gap: 0 3rem; }
   }
@@ -1046,10 +1064,19 @@
           <span class="hero-cred-v2-item">Parkpl&auml;tze im Areal</span>
         </p>
       </div>
-      <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
-         target="_blank" rel="noopener" class="btn btn--gold btn--sm">
-        <i class="icon" aria-hidden="true"><svg><use href="#i-diamond-turn-right"/></svg></i> ROUTE PLANEN
-      </a>
+      <div class="ort-btns">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
+           target="_blank" rel="noopener" class="btn btn--gold btn--sm">
+          <i class="icon" aria-hidden="true"><svg><use href="#i-diamond-turn-right"/></svg></i> ROUTE PLANEN
+        </a>
+        <!-- Springt zum vorhandenen Anfahrtsvideo weiter unten und loest dort
+             denselben Abspielknopf aus. Kein zweites Video, keine zweite
+             Einwilligungsschranke — siehe Skript am Seitenende. -->
+        <button type="button" class="btn btn--outline-light btn--sm ort-video-btn"
+                aria-controls="anfahrt-video">
+          <i class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></i> VIDEO: WEG ZUR T&Uuml;R
+        </button>
+      </div>
     </div>
   </section>
 
@@ -3330,6 +3357,42 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 <script src="/assets/js/video-facade.js"></script>
+<script>
+/* Videoknopf im Ortsstreifen — springt zum vorhandenen Anfahrtsvideo.
+ *
+ * Bewusst kein Modal und keine zweite Einbettung: das Video haengt an der
+ * Einwilligungsfassade (.vfacade). Ohne Marketing-Einwilligung zeigt sie
+ * eine Schranke, deren Knopf den Cookiebot-Dialog oeffnet — also selbst
+ * ein Overlay. Ein Overlay im Overlay auf iOS Safari ist genau das Muster,
+ * an dem die Probetrainings-Seite schon gescheitert ist. Und den
+ * .vfacade-Block umzuhaengen statt zu kopieren wuerde #anfahrt-video
+ * waehrenddessen leerraeumen.
+ *
+ * Stattdessen: zum vorhandenen Video scrollen und dort denselben
+ * Abspielknopf ausloesen, den ein Besucher auch von Hand drueckt. Damit
+ * laeuft unveraendert video-facade.js — vor der Einwilligung geht keine
+ * einzige Anfrage an YouTube raus. html hat scroll-behavior:auto, der
+ * Sprung ist also sofort und nicht als langer Scroll ueber 9000 px. */
+(function () {
+  var knopf = document.querySelector('.ort-video-btn');
+  var ziel  = document.getElementById('anfahrt-video');
+  if (!knopf || !ziel) return;
+  var fassade = ziel.querySelector('.vfacade');
+  knopf.addEventListener('click', function () {
+    var kasten = fassade || ziel;
+    kasten.scrollIntoView({ block: 'center' });
+    /* Tastatur-Fokus wandert mit auf den Videokasten, nicht auf den
+       Abspielknopf: der verschwindet, sobald das Video laeuft, und der
+       Fokus faende sich sonst wieder am Seitenanfang. Vom Kasten aus fuehrt
+       die naechste Tabulatortaste entweder in den Player oder in die
+       Einwilligungsschranke. */
+    if (!kasten.hasAttribute('tabindex')) kasten.setAttribute('tabindex', '-1');
+    kasten.focus({ preventScroll: true });
+    var abspielen = ziel.querySelector('.vfacade__play');
+    if (abspielen) abspielen.click();
+  });
+})();
+</script>
 
 <script>
 (function() {
