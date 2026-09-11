@@ -3256,18 +3256,27 @@ body {
    Final refinement pass — spacing, motion, visual hierarchy
 ══════════════════════════════════════════════════════════════ */
 
-/* ── Lazy-loaded images: fade in on load ── */
-/* Scoped to content images only — logos (.logo-img, .intro-brand-logo,
-   .dna-visual-logo) are excluded to prevent invisible-until-JS bugs.
-   .img-nofade ist derselbe Schutz fuer Inhaltsbilder auf Seiten OHNE
-   assets/js/main.js: die .loaded-Klasse wird dort von initImageFallbacks()
-   nie gesetzt, das Bild bliebe sonst dauerhaft auf opacity:0.  */
+/* ── Verzoegert geladene Bilder: Einblenden ──────────────────────────────
+   Vorher stand hier opacity:0, aufgehoben durch eine .loaded-Klasse. Die
+   setzt initImageFallbacks() in assets/js/main.js — und main.js laeuft nur
+   auf der Startseite. Auf den anderen 22 Seiten blieb jedes Bild mit
+   loading="lazy" deshalb dauerhaft unsichtbar, sofern es nicht in der
+   Ausnahmeliste stand. Die Liste war eine Abmeldeliste: wer einem Bild
+   loading="lazy" gab, musste von ihr wissen. Genau daran ist es gescheitert
+   — 60 Bilder auf 16 Seiten, darunter die Coach-Fotos und alle
+   Footer-Badges.
+
+   Jetzt eine Animation mit fill-mode both statt einer Klasse: sie endet
+   immer bei opacity 1, ohne JavaScript und ohne Ausnahmeliste. Faellt ein
+   Skript aus oder kommt ein neues Bild dazu, ist das Bild trotzdem da.
+   Die vier :not()-Ausnahmen bleiben stehen, damit Logos und die bereits
+   mit .img-nofade markierten Bilder wie bisher ohne Einblenden erscheinen. */
 img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade) {
-  opacity: 0;
-  transition: opacity var(--dur-ruhig) var(--ease-expo);
+  animation: bildEinblenden var(--dur-ruhig) var(--ease-expo) both;
 }
-img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):not(.img-nofade).loaded {
-  opacity: 1;
+@keyframes bildEinblenden {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── Section header spacing: tighter for compact rhythm ── */
@@ -3357,6 +3366,7 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):
   img[loading="lazy"] {
     opacity: 1 !important;
     transition: none !important;
+    animation: none !important;
   }
   .disc-panel .disc-panel__bg {
     transition: none !important;
