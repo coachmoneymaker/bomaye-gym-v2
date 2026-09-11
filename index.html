@@ -333,6 +333,63 @@
     .hero-cred-v2-item:last-child::after { content: ''; }
   }
 
+  /* ── Ortsstreifen unter dem Hero ───────────────────────────────────────
+     Beantwortet "wo seid ihr" beim ersten Scrollen statt erst nach elf
+     Abschnitten. Der vollstaendige Block mit Karte, Oeffnungszeiten,
+     Telefon und Anfahrtsvideo bleibt unveraendert unten in #location —
+     hier steht nur die Kurzform, woertlich von dort uebernommen.
+     Typografie und Trennstriche sind dieselben Bausteine wie in der
+     Credentials-Zeile des Hero (.hero-cred-v2-item / -divider), damit
+     kein zweites Muster fuer dieselbe Sache entsteht. */
+  #ort {
+    background: #0A0A08;
+    padding: var(--takt-eng) 0;
+  }
+  /* style.css zieht mit "#hero + section" eine goldene Haarlinie unter den
+     Hero — sie markiert dort den Schnitt zwischen dunklem Hero und cremefarbenem
+     Stundenplan. Der Ortsstreifen ist ebenfalls dunkel, der Hero endet optisch
+     also erst unter ihm. Die Haarlinie wandert deshalb mit: weg vom Streifen,
+     hin an seine Unterkante. Ohne diese beiden Regeln haette der Streifen die
+     Linie geerbt und #schedule-preview sie verloren. */
+  #hero + #ort   { border-top: 0; }
+  #ort + section { border-top: 1px solid rgba(201,168,76,0.10); }
+  .ort-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    text-align: center;
+  }
+  .ort-zeilen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .ort-zeile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .ort-zeile > .icon {
+    color: #C9A84C;
+    font-size: 0.8rem;
+    margin-right: 0.7rem;
+    flex-shrink: 0;
+  }
+  /* Die Anreise ist die Nebeninformation und tritt eine Stufe zurueck. */
+  .ort-anreise .hero-cred-v2-item { color: rgba(245,240,232,0.58); }
+  .ort-anreise > .icon { opacity: 0.75; }
+
+  /* Erst ab 1100 px passen Adresse und Anreise nebeneinander in eine Zeile,
+     ohne umzubrechen — gemessen brauchen beide zusammen 923 px. Darunter
+     bleiben sie gestapelt. */
+  @media (min-width: 1100px) {
+    .ort-zeilen { flex-direction: row; gap: 0 3rem; }
+  }
+
   /* ── Pricing cards (shared with /mitglied-werden) ── */
   .mw-cards-inner {
     max-width: 1100px;
@@ -966,6 +1023,33 @@
     </div>
     <div class="scroll-hint" aria-hidden="true">
       <div class="scroll-hint-line"></div>
+    </div>
+  </section>
+
+  <!-- ── ORT — Kurzantwort auf "wo seid ihr" ──
+       Vollstaendiger Block mit Karte, Zeiten und Anfahrtsvideo: #location -->
+  <section id="ort" aria-label="Standort">
+    <div class="container ort-inner">
+      <div class="ort-zeilen">
+        <p class="ort-zeile ort-adresse">
+          <i class="icon" aria-hidden="true"><svg><use href="#i-location-dot"/></svg></i>
+          <span class="hero-cred-v2-item">Wilhelm-Hale-Stra&szlig;e 44</span>
+          <span class="hero-cred-v2-divider" aria-hidden="true"></span>
+          <span class="hero-cred-v2-item">Tiefhof Pineapple Park</span>
+          <span class="hero-cred-v2-divider" aria-hidden="true"></span>
+          <span class="hero-cred-v2-item">80639 M&uuml;nchen</span>
+        </p>
+        <p class="ort-zeile ort-anreise">
+          <i class="icon" aria-hidden="true"><svg><use href="#i-train-subway"/></svg></i>
+          <span class="hero-cred-v2-item">S-Bahn Hirschgarten (5 Min.)</span>
+          <span class="hero-cred-v2-divider" aria-hidden="true"></span>
+          <span class="hero-cred-v2-item">Parkpl&auml;tze im Areal</span>
+        </p>
+      </div>
+      <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
+         target="_blank" rel="noopener" class="btn btn--gold btn--sm">
+        <i class="icon" aria-hidden="true"><svg><use href="#i-diamond-turn-right"/></svg></i> ROUTE PLANEN
+      </a>
     </div>
   </section>
 
