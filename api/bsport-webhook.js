@@ -207,14 +207,52 @@ export function buildMetaUserData(customer = {}) {
   return userData;
 }
 
+/**
+ * Die Seite, auf der die Konversion entstanden ist.
+ *
+ * Meta verlangt event_source_url, sobald action_source "website" ist, und
+ * meldet das Fehlen im Events Manager ausdruecklich als Schaden fuer
+ * Attribution und Optimierung. Bisher stand das Feld nicht im Payload.
+ *
+ * Die Reihenfolge ist bewusst:
+ *   1. Was Bsport mitschickt, falls die Buchungsstrecke die Seite je in die
+ *      Rechnungs-Metadaten legt — derselbe Haken wie fuer fbc/fbp.
+ *   2. Sonst die kanonische Seite je Ereignisart: ein Lead entsteht am
+ *      Probetraining-Kalender, ein Purchase an der Mitgliedschaft.
+ *
+ * Punkt 2 ist eine Naeherung und als solche benannt: der Kalender steht auf
+ * mehreren Seiten, serverseitig ist die konkrete Seite nicht bekannt. Eine
+ * plausible Seite der eigenen Domain ist fuer Metas Zuordnung aber deutlich
+ * besser als gar keine — und sie ist nie falsch in dem Sinn, dass sie auf eine
+ * fremde Domain zeigt.
+ */
+export function buildEventSourceUrl({ eventName, metadataUrl }) {
+  const base = (process.env.SITE_BASE_URL || 'https://www.bomayegym.com').replace(/\/+$/, '');
+  const roh = typeof metadataUrl === 'string' ? metadataUrl.trim() : '';
+  /* Nur eine vollstaendige Adresse oder ein absoluter Pfad. Ohne diese
+     Schranke wuerde jede beliebige Zeichenkette relativ zur eigenen Domain
+     aufgeloest ("@@@" -> https://www.bomayegym.com/@@@) und als Ereignisort
+     gemeldet, obwohl es die Seite nicht gibt. */
+  if (roh && (/^https?:\/\//i.test(roh) || roh.startsWith('/'))) {
+    try {
+      const u = new URL(roh, base + '/');
+      /* Nur die eigene Domain: eine fremde URL im Payload waere schlechter als
+         keine, weil Meta sie als Ereignisort werten wuerde. */
+      if (u.origin === new URL(base).origin) return u.href;
+    } catch { /* unbrauchbare URL faellt auf die Naeherung zurueck */ }
+  }
+  return eventName === 'Purchase' ? base + '/mitglied-werden' : base + '/probetraining';
+}
+
 /** Assemble the exact CAPI request body. Exported so it can be inspected in tests. */
-export function buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName, eventTime }) {
+export function buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName, eventTime, sourceUrl }) {
   const payload = {
     data: [{
       event_name:    eventName,
       event_time:    eventTime ?? Math.floor(Date.now() / 1000),
       event_id:      String(invoiceId),
       action_source: 'website',
+      event_source_url: sourceUrl || buildEventSourceUrl({ eventName }),
       user_data:     buildMetaUserData(customer),
       custom_data: {
         value,
@@ -232,12 +270,12 @@ export function buildMetaPayload({ eventName, invoiceId, customer, value, curren
   return payload;
 }
 
-async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, contentName }) {
+async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, contentName, sourceUrl }) {
   const pixelId = process.env.META_PIXEL_ID;
   const token   = process.env.META_ACCESS_TOKEN;
   if (!pixelId || !token) return { ok: false, reason: 'env-missing' };
 
-  const payload = buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName });
+  const payload = buildMetaPayload({ eventName, invoiceId, customer, value, currency, contentName, sourceUrl });
 
   try {
     const res = await fetch(
@@ -409,6 +447,17 @@ export default async function handler(req, res) {
     fbp:        obj.metadata?.fbp || cust.metadata?.fbp || '',
   };
 
+  /* Ereignisort fuer Meta. Bsport liefert die Seite heute nicht mit; der
+     Zugriff steht hier, damit es ohne Codeaenderung greift, sobald die
+     Buchungsstrecke sie in die Rechnungs-Metadaten legt. Bis dahin faellt
+     buildEventSourceUrl auf die kanonische Seite der Ereignisart zurueck. */
+  const metaSourceUrlRoh = (obj.metadata?.event_source_url || obj.metadata?.source_url
+                         || cust.metadata?.event_source_url || '');
+  const metaSourceUrl = metaSourceUrlRoh ? buildEventSourceUrl({
+    eventName: null,
+    metadataUrl: metaSourceUrlRoh,
+  }) : null;   /* null => buildMetaPayload waehlt die Seite nach Ereignisart */
+
   console.log(JSON.stringify({
     step: 'invoice', ok: true, invoiceId, eventType, status,
     totalEur, hasTotal, hasCustomer: !!obj.customer
@@ -498,6 +547,7 @@ export default async function handler(req, res) {
           value,
           currency,
           contentName: productName,
+          sourceUrl:   metaSourceUrl,
         })
       : Promise.resolve({ ok: false, reason: !hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported' }),
     metaEventName
@@ -522,7 +572,7 @@ export default async function handler(req, res) {
   const google = googleResult.status === 'fulfilled' ? googleResult.value : { ok: false, error: googleResult.reason?.message };
   const email  = emailResult.status  === 'fulfilled' ? emailResult.value  : { ok: false, error: emailResult.reason?.message };
 
-  console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error }));
+  console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error, event_source_url: metaSourceUrl || (metaEventName ? buildEventSourceUrl({ eventName: metaEventName }) : null) }));
   console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
   console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
 
