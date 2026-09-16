@@ -436,9 +436,8 @@
     },
     "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
     "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "13:00", "closes": "22:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "14:00" }
     ],
     "priceRange": "€€"
   }
@@ -551,14 +550,6 @@
 
     <!-- MONTAG -->
     <div class="sp-day" data-day="mo" hidden>
-      <div class="sp-row" data-s="12:00" data-e="13:00">
-        <div class="sp-time"><span>12:00</span><span class="sp-time-end">13:00</span><span class="sp-live" hidden></span></div>
-        <div class="sp-main">
-          <div class="sp-name">POWER LUNCH</div>
-          <div class="sp-sub">Boxing in der Mittagspause</div>
-        </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
-      </div>
       <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
         <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
@@ -696,14 +687,6 @@
 
     <!-- DONNERSTAG -->
     <div class="sp-day" data-day="do" hidden>
-      <div class="sp-row" data-s="12:00" data-e="13:00">
-        <div class="sp-time"><span>12:00</span><span class="sp-time-end">13:00</span><span class="sp-live" hidden></span></div>
-        <div class="sp-main">
-          <div class="sp-name">POWER LUNCH</div>
-          <div class="sp-sub">Boxing in der Mittagspause</div>
-        </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
-      </div>
       <div class="sp-row sp-row--open" data-s="13:00" data-e="16:00">
         <div class="sp-time"><span>13:00</span><span class="sp-time-end">16:00</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
@@ -859,12 +842,12 @@
       <div class="footer-col">
         <h4>KURSE</h4>
         <ul class="footer-links">
-          <li><a href="/kurse">Boxing</a></li>
+          <li><a href="/kurse#kursdetail-boxing">Boxing</a></li>
           <li><a href="/kickboxen-muenchen">Kickboxing</a></li>
           <li><a href="/frauenboxen-muenchen">Women's Boxing</a></li>
-          <li><a href="/kurse">Youth Boxing</a></li>
-          <li><a href="/kurse">Personal Training</a></li>
-          <li><a href="/kurse">Corporate Boxing</a></li>
+          <li><a href="/kurse#kursdetail-youth">Youth Boxing</a></li>
+          <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
+          <li><a href="/kurse#kursdetail-firmenfitness">Corporate Boxing</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -906,6 +889,8 @@
         <a href="/impressum">IMPRESSUM</a>
         <a href="/datenschutz">DATENSCHUTZ</a>
         <a href="/agb">AGB</a>
+          <a href="/hausordnung">Hausordnung</a>
+          <a href="/downloads">Downloads</a>
         <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
       </div>
     </div>

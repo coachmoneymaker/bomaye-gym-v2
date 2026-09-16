@@ -95,9 +95,8 @@
     },
     "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
     "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "11:30" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "16:00", "closes": "22:30" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "16:00" }
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "13:00", "closes": "22:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "14:00" }
     ],
     "priceRange": "€€"
   }
@@ -1203,7 +1202,7 @@
       <div class="sched-meta-label">Tage</div>
     </div>
     <div class="sched-meta-item">
-      <div class="sched-meta-num">23</div>
+      <div class="sched-meta-num">22</div>
       <div class="sched-meta-label">Klassen</div>
     </div>
     <div class="sched-meta-item">
@@ -1228,14 +1227,6 @@
 
   <!-- MONDAY -->
   <div class="sched-slots" data-day="mo">
-    <a href="/stundenplan" class="sched-row sched-slot" data-class-type="power-lunch" data-time="12:00 — 13:00">
-      <div class="sched-row-time"><span>12:00</span><span class="sched-row-end">13:00</span><span class="sched-live" hidden></span></div>
-      <div class="sched-row-main">
-        <h3 class="sched-row-name">POWER LUNCH</h3>
-        <div class="sched-row-sub">Boxing in der Mittagspause</div>
-      </div>
-      <span class="sched-book">BUCHEN</span>
-    </a>
     <div class="sched-row sched-row--open" data-time="13:00 — 16:00">
       <div class="sched-row-time"><span>13:00</span><span class="sched-row-end">16:00</span><span class="sched-live" hidden></span></div>
       <div class="sched-row-main">
@@ -1373,14 +1364,6 @@
 
   <!-- THURSDAY -->
   <div class="sched-slots" data-day="do" hidden>
-    <a href="/stundenplan" class="sched-row sched-slot" data-class-type="power-lunch" data-time="12:00 — 13:00">
-      <div class="sched-row-time"><span>12:00</span><span class="sched-row-end">13:00</span><span class="sched-live" hidden></span></div>
-      <div class="sched-row-main">
-        <h3 class="sched-row-name">POWER LUNCH</h3>
-        <div class="sched-row-sub">Boxing in der Mittagspause</div>
-      </div>
-      <span class="sched-book">BUCHEN</span>
-    </a>
     <div class="sched-row sched-row--open" data-time="13:00 — 16:00">
       <div class="sched-row-time"><span>13:00</span><span class="sched-row-end">16:00</span><span class="sched-live" hidden></span></div>
       <div class="sched-row-main">
@@ -2124,6 +2107,12 @@ body[data-modal-open="true"] { overflow: hidden; }
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:56px;text-align:center;">
       <div style="display:flex;align-items:baseline;gap:14px;justify-content:center;">
         <span style="color:#C9A84C;font-size:22px;letter-spacing:4px;">★★★★★</span>
+        <!-- HANDWERT — keine Live-Daten. Diese Zahl wird NICHT von Google
+             abgerufen, sie steht hier fest im Quelltext. Ändert sich die
+             Bewertung im Google-Unternehmensprofil, muss sie hier von Hand
+             nachgezogen werden; sonst steht auf der Startseite eine Zahl,
+             die es so nicht mehr gibt. Stand: 16.09.2026. Dasselbe gilt für
+             die drei Rezensionstexte darunter. -->
         <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">4.9</span>
       </div>
 
@@ -2526,7 +2515,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
             Was muss ich mitbringen? <i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
           </button>
-          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Hinweis: Getränke stehen aktuell noch nicht zur Verfügung — bitte nimm deine eigene Trinkflasche mit.</div></div>
+          <div class="faq-a"><div class="faq-a-inner" style="color:rgba(8,8,8,0.7);">Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Vor Ort gibt's Wasser, Schorlen, Softdrinks und Heißgetränke.</div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q faq-q--light" onclick="toggleFaq(this)" type="button" aria-expanded="false">
@@ -2581,8 +2570,8 @@ body[data-modal-open="true"] { overflow: hidden; }
           <div class="location-detail-text">
             <strong>Öffnungszeiten</strong>
             <div class="hours-grid">
-              <span class="day">Mo – Fr</span><span>07:00 – 11:30 Uhr<br>16:00 – 22:30 Uhr</span>
-              <span class="day">Samstag</span><span>10:00 – 16:00 Uhr<br>(außer bei Veranstaltungen)</span>
+              <span class="day">Mo – Fr</span><span>13:00 – 22:00 Uhr</span>
+              <span class="day">Samstag</span><span>10:00 – 14:00 Uhr<br>(außer bei Veranstaltungen)</span>
               <span class="day">Sonntag</span><span>Ruhetag (außer bei Veranstaltungen)</span>
             </div>
           </div>
@@ -2690,9 +2679,9 @@ body[data-modal-open="true"] { overflow: hidden; }
         <div class="footer-col">
           <h4>TRAINING</h4>
           <ul class="footer-links">
-            <li><a href="/kurse#boxing">Olympic Boxing</a></li>
-            <li><a href="/kurse#youth">Youth Boxing</a></li>
-            <li><a href="/kurse#queens">Bomaye Queens</a></li>
+            <li><a href="/kurse#kursdetail-olympic">Olympic Boxing</a></li>
+            <li><a href="/kurse#kursdetail-youth">Youth Boxing</a></li>
+            <li><a href="/kurse#kursdetail-women">Bomaye Queens</a></li>
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
           </ul>
         </div>
@@ -3423,12 +3412,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   var SLOT_CLASS_TYPES = {
-    'power-lunch': {
-      discipline: 'POWER LUNCH', subtitle: 'BOXING IN DER MITTAGSPAUSE',
-      headline: 'Eine Stunde Boxen. Der Rest des Tages gehört dir.',
-      body: 'Mittags raus aus dem Schreibtisch-Modus. 60 Minuten Boxtraining, das den Kopf leert wie sonst nichts. Du gehst zurück ins Büro fokussierter, wacher und mit weniger im Kopf als vorher. Duschen vor Ort. Punkt 13 Uhr bist du wieder draußen.',
-      tags: 'ALLE LEVEL · DUSCHEN VOR ORT · 60 MIN'
-    },
     'bomaye-burn': {
       discipline: 'BOMAYE BURN', subtitle: 'HIIT BOXING WORKOUT',
       headline: 'Härteste Stunde der Woche. Schnellster Effekt.',
