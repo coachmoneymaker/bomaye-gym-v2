@@ -180,8 +180,9 @@
                    245265  OPEN GYM                 raus - freies Training fuer
                                                     Mitglieder, kein angeleiteter
                                                     Einstieg
-                   249398  POWER LAUNCH             raus - von der Seite bereits
-                                                    entfernt
+                   249398  POWER LAUNCH             raus - Kurs eingestellt,
+                                                    auch im Bsport-Backoffice
+                                                    geloescht
 
                  Die fuenf verbleibenden Kurse sind genau die, die der Text
                  ueber dem Kalender zusagt. Wer den Filter aendert, muss den
