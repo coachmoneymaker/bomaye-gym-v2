@@ -670,7 +670,7 @@
           "@type": "Course",
           "name": "BOXING",
           "description": "Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.",
-          "url": "https://www.bomayegym.com/kurse#boxing",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-boxing",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -691,7 +691,7 @@
           "@type": "Course",
           "name": "KICKBOXING",
           "description": "Kickboxing bei Bomaye Gym Munich verbindet Schlag- und Tritttechnik zu einem Handwerk, das den ganzen Körper fordert. Der Einstieg läuft über Stand, Gleichgewicht und Deckung — die Tritte kommen dazu, sobald die Basis sitzt. Unter der Leitung von Alfonso Fusco, Kickbox-Weltmeister.",
-          "url": "https://www.bomayegym.com/kurse#kickboxing",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-kickboxing",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -712,7 +712,7 @@
           "@type": "Course",
           "name": "YOUTH BOXING",
           "description": "Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt — es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.",
-          "url": "https://www.bomayegym.com/kurse#youth",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-youth",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -733,7 +733,7 @@
           "@type": "Course",
           "name": "OLYMPISCHES BOXEN",
           "description": "Olympisches Boxen nach AIBA-Regeln — das Original. Unser wettkampforientiertes Programm bereitet Athleten gezielt auf Meisterschaften, Turniere und Ausscheidungskämpfe vor. Raschad Pekpassi als Landestrainer des BABV führt dich durch diesen Weg.",
-          "url": "https://www.bomayegym.com/kurse#olympic",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-olympic",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -754,7 +754,7 @@
           "@type": "Course",
           "name": "CORPORATE BOXING",
           "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs — es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.",
-          "url": "https://www.bomayegym.com/kurse#firmenfitness",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-firmenfitness",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -775,7 +775,7 @@
           "@type": "Course",
           "name": "PERSONAL TRAINING",
           "description": "Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.",
-          "url": "https://www.bomayegym.com/kurse#executive",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-executive",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -796,7 +796,7 @@
           "@type": "Course",
           "name": "BOMAYE QUEENS",
           "description": "Bomaye Queens ist dein exklusiver Safe Space — speziell zugeschnittenes Training, erfahrenes Coaching und eine starke Community. Egal ob Anfängerin oder mit Erfahrung: hier bist du richtig.",
-          "url": "https://www.bomayegym.com/kurse#women",
+          "url": "https://www.bomayegym.com/kurse#kursdetail-women",
           "provider": {
             "@id": "https://bomayegym.com/#gym"
           },
@@ -1914,12 +1914,34 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth > 768) openCourse('boxing');
 });
 
-/* ─── URL hash: jump to specific course ───────────────────── */
+/* ─── URL hash: jump to specific course ───────────────────────
+   Zwei Formen sind gueltig:
+     #kursdetail-boxing  echte Element-ID, der Browser springt selbst hin
+     #boxing             alter JS-Schluessel (bereits indexierte Links)
+   Beide oeffnen die Kursdetail-Ansicht und den passenden Textblock;
+   positioniert wird in beiden Faellen von uns. */
 (function () {
   const hash = location.hash.replace('#', '');
-  if (COURSES[hash]) {
-    document.addEventListener('DOMContentLoaded', () => openCourse(hash));
-  }
+  if (!hash) return;
+  const key = hash.replace(/^kursdetail-/, '');
+  if (!COURSES[key]) return;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    openCourse(key);
+
+    const block = document.getElementById('kursdetail-' + key);
+    if (!block) return;
+    const item = block.closest('.faq-item');
+    const btn  = item && item.querySelector('.faq-q');
+    if (btn && btn.getAttribute('aria-expanded') !== 'true') toggleKursDetail(btn);
+    /* Immer selbst positionieren: der native Sprung zielt auf die Antwort,
+       die Kursueberschrift daruber laege dann hinter dem Header. Der
+       Browser springt erst nach 'load' - danach also noch einmal. */
+    if (!item) return;
+    const hin = () => item.scrollIntoView({ block: 'start' });
+    hin();
+    window.addEventListener('load', () => requestAnimationFrame(hin), { once: true });
+  });
 })();
 
 /* ─── Header scroll styling ───────────────────────────────── */
