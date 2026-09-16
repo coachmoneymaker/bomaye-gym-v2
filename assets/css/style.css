@@ -125,7 +125,9 @@ ul { list-style: none; }
 /* Fixed header offset: sections linked via anchor / scrollIntoView
    get enough top margin so they aren't hidden under the nav bar  */
 section[id],
-.diff-block[id] {
+.diff-block[id],
+.faq-a[id],
+.kursdetail-item {
   scroll-margin-top: var(--nav-h);
 }
 .sec--dark  { background: var(--ink2); }
