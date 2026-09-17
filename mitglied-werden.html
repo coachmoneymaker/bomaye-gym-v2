@@ -1081,8 +1081,7 @@
             <li>Sicheres, geführtes Boxen lernen</li>
             <li>Kleingruppen für individuelle Förderung</li>
           </ul>
-          <a href="https://backoffice.bsport.io/checkout/5473/subscription/45432?force=true"
-             target="_self" rel="noopener noreferrer"
+          <a href="/mitglied-werden#packages" data-abo-contract="45432"
              class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
@@ -1107,8 +1106,7 @@
             <li>Stärkstes Community-Erlebnis in München</li>
             <li>Early Bird Preis bleibt dauerhaft gesichert</li>
           </ul>
-          <a href="https://backoffice.bsport.io/checkout/5473/subscription/45433?force=true"
-             target="_self" rel="noopener noreferrer"
+          <a href="/mitglied-werden#packages" data-abo-contract="45433"
              class="mw-card-btn">JETZT FOUNDING MEMBER WERDEN</a>
         </article>
 
@@ -1131,8 +1129,7 @@
             <li>Disziplin und Fokus durch Boxen</li>
             <li>Starke Community von Anfang an</li>
           </ul>
-          <a href="https://backoffice.bsport.io/checkout/5473/subscription/45434?force=true"
-             target="_self" rel="noopener noreferrer"
+          <a href="/mitglied-werden#packages" data-abo-contract="45434"
              class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
@@ -1315,7 +1312,7 @@
 <div id="bsport-sub-modal" class="bsport-modal-overlay"
      role="dialog" aria-modal="true" aria-label="Mitgliedschaft wählen" aria-hidden="true">
   <div class="bsport-modal-frame">
-    <button id="bsport-sub-modal-close" class="bsport-modal-close" aria-label="Modal schließen">&#215;</button>
+    <button id="bsport-sub-modal-close" class="bsport-modal-close" data-abo-close aria-label="Modal schließen">&#215;</button>
     <div class="bsport-modal-content">
       <div id="bsport-widget-342467"></div>
     </div>
@@ -1337,56 +1334,18 @@ function MountBsportWidget(config, repeat) {
 }
 </script>
 
-<!-- BSPORT — Mount subscription widget + modal open/close logic -->
+<!-- BSPORT — Abo-Overlay: Mount und Nachricht uebernimmt abo-embed.js.
+     Montiert wird erst beim ersten Klick, nicht beim Seitenaufruf. -->
+<script src="/assets/js/abo-embed.js"></script>
 <script>
-(function () {
-  'use strict';
-
-  if (document.getElementById('bsport-widget-342467')) {
-    MountBsportWidget({
-      parentElement: 'bsport-widget-342467',
-      companyId: 5473,
-      franchiseId: null,
-      dialogMode: 3,
-      widgetType: 'subscription',
-      showFab: false,
-      fullScreenPopup: false,
-      styles: undefined,
-      config: { subscription: {} }
-    });
-  }
-
-  var modal   = document.getElementById('bsport-sub-modal');
-  var closeBtn = document.getElementById('bsport-sub-modal-close');
-
-  window.closeBsportModal = function () {
-    if (!modal) { return; }
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('bsport-modal-open');
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow            = '';
-  };
-
-  if (closeBtn) { closeBtn.addEventListener('click', window.closeBsportModal); }
-
-  // Backdrop click
-  if (modal) {
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) { window.closeBsportModal(); }
-    });
-  }
-
-  // Escape key
-  document.addEventListener('keydown', function (e) {
-    if ((e.key === 'Escape' || e.key === 'Esc') && modal && modal.classList.contains('is-open')) {
-      window.closeBsportModal();
-    }
+  window.bomayeAbo.init({
+    modalId:        'bsport-sub-modal',
+    containerId:    'bsport-widget-342467',
+    uniqueWidgetId: 'bomaye-abo-mw'
   });
-
-}());
+  /* Bestehende Aufrufer nicht brechen: closeBsportModal() war global. */
+  window.closeBsportModal = window.bomayeAbo.schliessen;
 </script>
-
 
 <script>
 /* ── iOS-compatible scroll lock ── */
