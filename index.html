@@ -3483,6 +3483,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  /* data-class-type -> Kurs-Slug fuer /stundenplan?kurs=...
+     Dieselben Slugs, die die BUCHEN-Knoepfe im Stundenplan benutzen; die
+     Zuordnung Slug -> meta_activity-ID steht dort in SP_KURSE, damit die
+     IDs nur an einer Stelle gepflegt werden.
+     Bewusst nicht gelistet: fight-team und youth-fight-team - beide nur
+     auf Einladung. Ihr Knopf fuehrt weiterhin auf den ungefilterten
+     Stundenplan. */
+  var SLOT_KURS_SLUG = {
+    'bomaye-advanced':   'advanced',
+    'bomaye-kickboxing': 'kickboxing',
+    'boxing-kids':       'kids',
+    'boxing-basic':      'basics',
+    'boxing-youth':      'youth',
+    'queens':            'queens'
+  };
+
+  function slotKursZiel(classType) {
+    var hat = Object.prototype.hasOwnProperty.call(SLOT_KURS_SLUG, classType);
+    return hat ? '/stundenplan?kurs=' + SLOT_KURS_SLUG[classType] : '/stundenplan';
+  }
+
   function populate(card) {
     var classType = card.getAttribute('data-class-type') || '';
     var coachKey  = card.getAttribute('data-coach') || '';
@@ -3498,6 +3519,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (els.headline)  els.headline.textContent  = classData.headline || '';
     if (els.body)      els.body.textContent      = classData.body || '';
     if (els.tags)      els.tags.textContent      = classData.tags || '';
+
+    // JETZT BUCHEN zeigt auf den vorgefilterten Stundenplan
+    if (els.cta) els.cta.setAttribute('href', slotKursZiel(classType));
 
     // Coming-soon toggle
     var isComingSoon = card.classList.contains('sched-coming');
@@ -3527,9 +3551,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Close via [data-modal-close] targets and backdrop
   modal.addEventListener('click', function(e) {
-    if (e.target.closest('.slot-modal__cta')) {
+    var cta = e.target.closest('.slot-modal__cta');
+    if (cta) {
       e.preventDefault();
-      window.location.href = '/stundenplan';
+      window.location.href = cta.getAttribute('href') || '/stundenplan';
       return;
     }
     if (e.target.closest('[data-modal-close]')) {
