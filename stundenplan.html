@@ -124,6 +124,13 @@
       max-width: 600px;
       margin: 24px auto 0;
     }
+    /* Aktiver Kursfilter: sagt, worauf gefiltert ist, und zurueck zur
+       vollen Ansicht - sonst sieht der gefilterte Kalender aus wie ein
+       Stundenplan, aus dem Kurse verschwunden sind. */
+    .sp-kurs-note { margin: 0 auto 24px; font-style: normal; }
+    .sp-kurs-note[hidden] { display: none; }
+    .sp-kurs-note strong { color: #0A0A08; font-weight: 600; }
+    .sp-kurs-note a { color: #A67C2E; }
 
     /* ── CTA BAR ── */
     .sp-cta-bar {
@@ -563,7 +570,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Kids 6–9 · Anfänger</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=kids" aria-label="Boxing Kids 6–9 buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="17:00" data-e="18:30">
         <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span><span class="sp-live" hidden></span></div>
@@ -571,7 +578,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Youth 10–17</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=youth" aria-label="Boxing Youth 10–17 buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
@@ -579,7 +586,7 @@
           <div class="sp-name">BOMAYE</div>
           <div class="sp-sub">Basic</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=basics" aria-label="Boxing Basic buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
@@ -630,7 +637,7 @@
           <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span></div>
           <div class="sp-sub">Alle Level</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=kickboxing" aria-label="Bomaye Kickboxing buchen">BUCHEN</a>
       </div>
     </div>
 
@@ -649,7 +656,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Kids 6–9 · Anfänger</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=kids" aria-label="Boxing Kids 6–9 buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="17:00" data-e="18:30">
         <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span><span class="sp-live" hidden></span></div>
@@ -657,7 +664,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Youth 10–17</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=youth" aria-label="Boxing Youth 10–17 buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="18:30" data-e="19:30">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">19:30</span><span class="sp-live" hidden></span></div>
@@ -665,7 +672,7 @@
           <div class="sp-name">BOMAYE QUEENS</div>
           <div class="sp-sub">Fitness · Technik · Selbstverteidigung</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=queens" aria-label="Bomaye Queens buchen">BUCHEN</a>
       </div>
       <div class="sp-row sp-row--invite" data-s="20:00" data-e="21:30">
         <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span><span class="sp-live" hidden></span></div>
@@ -681,7 +688,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Basic</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=basics" aria-label="Boxing Basic buchen">BUCHEN</a>
       </div>
     </div>
 
@@ -724,7 +731,7 @@
           <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span></div>
           <div class="sp-sub">Alle Level</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=kickboxing" aria-label="Bomaye Kickboxing buchen">BUCHEN</a>
       </div>
     </div>
 
@@ -743,7 +750,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Kids 6–9 · Anfänger</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=kids" aria-label="Boxing Kids 6–9 buchen">BUCHEN</a>
       </div>
       <div class="sp-row" data-s="17:00" data-e="18:30">
         <div class="sp-time"><span>17:00</span><span class="sp-time-end">18:30</span><span class="sp-live" hidden></span></div>
@@ -751,7 +758,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Youth 10–17</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=youth" aria-label="Boxing Youth 10–17 buchen">BUCHEN</a>
       </div>
       <div class="sp-row sp-row--invite" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
@@ -767,7 +774,7 @@
           <div class="sp-name">BOXING</div>
           <div class="sp-sub">Basic</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=basics" aria-label="Boxing Basic buchen">BUCHEN</a>
       </div>
     </div>
 
@@ -798,6 +805,10 @@
 <!-- ═══════ BSPORT CALENDAR ═══════ -->
 <section id="schedule">
   <div class="container">
+    <p class="sp-widget-note sp-kurs-note" id="sp-kurs-note" hidden>
+      Gefiltert auf <strong id="sp-kurs-name"></strong> &middot;
+      <a href="/stundenplan">Alle Kurse anzeigen</a>
+    </p>
     <div class="schedule-frame" id="schedule-section-wrap">
         <div class="schedule-frame__widget">
           <div id="bsport-widget-172485"></div>
@@ -1013,10 +1024,13 @@ function toggleMobileMenu() {
   showDay(todayKey === 'so' ? 'mo' : todayKey);
   setInterval(updateLive, 60000);
 
-  // BUCHEN → scroll to the existing Bsport booking widget below
+  // BUCHEN → scroll to the existing Bsport booking widget below.
+  // Kurs-Deep-Links (/stundenplan?kurs=...) laufen hier absichtlich durch:
+  // sie laden die Seite neu, damit das Widget gefiltert montiert wird.
   plan.addEventListener('click', function (e) {
     var link = e.target && e.target.closest ? e.target.closest('.sp-book') : null;
     if (!link) return;
+    if ((link.getAttribute('href') || '').charAt(0) !== '#') return;
     var target = document.getElementById('schedule');
     if (!target) return;
     e.preventDefault();
@@ -1081,10 +1095,71 @@ function MountBsportWidget(config, repeat=1) {
 }
 </script>
 <script>
+/* ── Kurs-Deep-Links: /stundenplan?kurs=<slug> ───────────────────────────────
+   Die BUCHEN-Knoepfe im Stundenplan oben zeigen auf diese Adressen. Beim
+   Laden wird der Kalender direkt auf die passende meta_activity gefiltert -
+   ohne Parameter bleibt er wie bisher ungefiltert.
+
+   Die IDs stammen aus derselben Quelle wie der Probetrainings-Filter in
+   assets/js/probetraining-page.js; dort steht die vollstaendige Liste des
+   Studios samt Begruendung, welche Kurse oeffentlich buchbar sind.
+   Bewusst NICHT verlinkt: 244431 YOUTH FIGHT TEAM und 244432 BOMAYE FIGHT
+   TEAM (nur auf Einladung) sowie 245265 OPEN GYM - diese Zeilen haben im
+   Stundenplan gar keinen BUCHEN-Knopf. Fuer "BOMAYE Advanced" liegt noch
+   keine bestaetigte ID vor, die beiden Zeilen scrollen weiter wie bisher
+   nur zum ungefilterten Kalender. */
+var SP_KURSE = {
+  kickboxing: { id: 236751, name: 'Bomaye Kickboxing'  },
+  kids:       { id: 244420, name: 'Boxing Kids 6–9'    },
+  basics:     { id: 244426, name: 'Boxing Basic'       },
+  queens:     { id: 244539, name: 'Bomaye Queens'      },
+  youth:      { id: 244563, name: 'Boxing Youth 10–17' }
+};
+
+function spBereit(fn) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    fn();
+  }
+}
+
+function spAktiverKurs() {
+  var slug;
+  try {
+    slug = new URLSearchParams(window.location.search).get('kurs');
+  } catch (err) {
+    return null;                      /* kein URLSearchParams: ungefiltert */
+  }
+  if (!slug) return null;
+  slug = String(slug).toLowerCase();
+  /* hasOwnProperty, damit ?kurs=constructor o.ae. nicht im Prototyp landet */
+  return Object.prototype.hasOwnProperty.call(SP_KURSE, slug) ? SP_KURSE[slug] : null;
+}
+
 (function () {
   var mounted = false;
   var target  = document.getElementById('bsport-widget-172485');
   if (!target) return;
+  var kurs = spAktiverKurs();
+
+  /* Mit aktivem Filter: Hinweis einblenden und direkt zum Kalender. Der
+     Besucher hat oben auf BUCHEN getippt - er will buchen, nicht wieder
+     oben auf der Seite landen. Nach 'load' noch einmal, weil Bilder
+     darueber die Position bis dahin verschieben koennen. */
+  if (kurs) {
+    spBereit(function () {
+      var hinweis = document.getElementById('sp-kurs-note');
+      var name    = document.getElementById('sp-kurs-name');
+      if (hinweis && name) { name.textContent = kurs.name; hinweis.hidden = false; }
+      var ziel = document.getElementById('schedule');
+      if (!ziel) return;
+      var hin = function () { ziel.scrollIntoView({ block: 'start' }); };
+      hin();
+      window.addEventListener('load', function () { requestAnimationFrame(hin); }, { once: true });
+    });
+  }
+
   function mount() {
     if (mounted) return;
     mounted = true;
@@ -1097,7 +1172,7 @@ function MountBsportWidget(config, repeat=1) {
       "showFab": false,
       "fullScreenPopup": false,
       "styles": undefined,
-      "config": { "calendar": {} }
+      "config": { "calendar": kurs ? { "metaActivities": [kurs.id] } : {} }
     });
   }
   if ('IntersectionObserver' in window) {
