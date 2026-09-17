@@ -6,6 +6,10 @@
        Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
        wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
   <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
+  <!-- Kurs-Deep-Link-Datum: bewusst OHNE defer. Die Seitenskripte stehen
+       inline im Body und laufen waehrend des Parsens - ein defer-Skript
+       kaeme erst danach, das Modul waere dann noch nicht da. -->
+  <script src="/assets/js/kurs-datum.js"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -3258,9 +3262,19 @@ document.addEventListener("DOMContentLoaded", function () {
     'queens':            'queens'
   };
 
-  function slotKursZiel(classType) {
+  function slotKursZiel(classType, card) {
     var hat = Object.prototype.hasOwnProperty.call(SLOT_KURS_SLUG, classType);
-    return hat ? '/stundenplan?kurs=' + SLOT_KURS_SLUG[classType] : '/stundenplan';
+    if (!hat) return '/stundenplan';
+    var ziel = '/stundenplan?kurs=' + SLOT_KURS_SLUG[classType];
+    /* Dazu das Datum dieses Termins, damit der Kalender auf dem richtigen
+       Tag aufgeht statt auf heute. Der Wochentag steht am Panel
+       (.sched-slots[data-day]); gerechnet wird in kurs-datum.js. Fehlt das
+       Modul oder das Panel, bleibt es bei der Adresse ohne Datum - also
+       beim Verhalten aus PR #75. */
+    var panel = card && card.closest ? card.closest('.sched-slots') : null;
+    var tag   = panel && panel.getAttribute('data-day');
+    if (tag && window.bomayeKurs) ziel = window.bomayeKurs.mitDatum(ziel, tag);
+    return ziel;
   }
 
   function populate(card) {
@@ -3280,7 +3294,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (els.tags)      els.tags.textContent      = classData.tags || '';
 
     // JETZT BUCHEN zeigt auf den vorgefilterten Stundenplan
-    if (els.cta) els.cta.setAttribute('href', slotKursZiel(classType));
+    if (els.cta) els.cta.setAttribute('href', slotKursZiel(classType, card));
 
     // Coming-soon toggle
     var isComingSoon = card.classList.contains('sched-coming');
