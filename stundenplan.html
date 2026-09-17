@@ -1233,7 +1233,9 @@ function spKalender(kurs) {
        Datum; findet es nichts Belastbares, tut es nichts. Der Kalender
        bleibt dann auf heute - richtig gefiltert, wie ohne diese Zeile. */
     if (window.bomayeKalenderTag && datum) {
-      window.bomayeKalenderTag.starte('bsport-widget-172485', datum, false);
+      /* spDebug durchreichen, sonst laesst sich das Ablaufprotokoll nie
+         einschalten - es haengt an genau diesem Schalter. */
+      window.bomayeKalenderTag.starte('bsport-widget-172485', datum, spDebug);
     }
     MountBsportWidget({
       "parentElement": "bsport-widget-172485",

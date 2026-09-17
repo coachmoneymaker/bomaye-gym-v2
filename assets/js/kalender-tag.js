@@ -228,6 +228,17 @@
      laesst. */
   var PREFIX = '[bomaye-diag]';
 
+  /* Schritt-fuer-Schritt-Protokoll des Navigationsablaufs. Nur mit
+     ?bsdebug=1, sonst absolut still - kein Rauschen im Betrieb. */
+  var spurAn = false;
+  function spur() {
+    if (!spurAn) return;
+    var a = Array.prototype.slice.call(arguments);
+    a.unshift(PREFIX + ' [ablauf]');
+    /* eslint-disable no-console */
+    console.log.apply(console, a);
+  }
+
   function kurz(t, n) {
     return String(t || '').replace(/\s+/g, ' ').trim().slice(0, n);
   }
@@ -342,24 +353,47 @@
     /* Diagnose zuerst und bedingungslos. Genau hier lag der Fehler: sie
        stand hinter der Datumspruefung und den Tagesgrenzen und lief
        deshalb nie, wenn das Datum verworfen wurde oder zu weit weg lag. */
+    spurAn = !!debug;
     if (debug) starteDiagnose(wurzelId);
 
-    if (!ziel) return;
+    spur('starte: ziel =', ziel ? iso(ziel) : null, '| heute =', iso(new Date()));
+    if (!ziel) { spur('ABBRUCH: kein gueltiges Datum in der Adresse'); return; }
 
     var start = Date.now();
     var abstand = tagesAbstand(new Date(), ziel);
-    if (abstand === 0) return;                            /* heute: nichts zu tun */
-    if (abstand < 0 || abstand > MAX_TAGE) return;        /* ausserhalb des Horizonts */
+    spur('Abstand in Tagen:', abstand);
+    if (abstand === 0) { spur('ABBRUCH: Zieltag ist heute, nichts zu tun'); return; }
+    if (abstand < 0 || abstand > MAX_TAGE) {
+      spur('ABBRUCH: ausserhalb des Horizonts (0 <', abstand, '<=', MAX_TAGE, 'verlangt)');
+      return;
+    }
 
-    /* Auf Inhalt warten - ohne Einwilligung kommt nie einer, dann endet es hier. */
-    var wartete = 0;
-    (function aufInhalt() {
+    /* Warten und WIEDERHOLEN statt eines einzigen Versuchs.
+
+       Genau hier lag der verbleibende Fehler: der Ablauf lief einmal,
+       sobald der Container 400 ms still war - spaetestens aber nach 4 s.
+       Das Widget laedt Konfiguration, Theme und AGB nach und baut den
+       Kalender erst danach. Traf dieses eine Fenster den Zustand vor dem
+       Kalender, war der Datumswaehler noch nicht da, angezeigteWoche()
+       lieferte null - und es gab keinen zweiten Anlauf.
+
+       Jetzt wird bis zum Gesamtdeckel alle 1,2 s neu angesetzt, bis ein
+       Versuch greift. */
+    var laeuft = false;
+    (function versuch() {
+      if (laeuft) return;
+      if (Date.now() - start > MAX_MS) { spur('ABBRUCH: Zeitdeckel', MAX_MS, 'ms erreicht'); return; }
       if (wurzel.children.length === 0) {
-        if (Date.now() - start > MAX_MS) return;
-        wartete = setTimeout(aufInhalt, 250);
+        spur('warte: Container noch leer');
+        setTimeout(versuch, 250);
         return;
       }
-      wennRuhig(wurzel, losBlaettern);
+      wennRuhig(wurzel, function () {
+        if (laeuft) return;
+        var fertig = losBlaettern();
+        if (fertig) { laeuft = true; return; }
+        setTimeout(versuch, 1200);
+      });
     }());
 
     /* ── Die angezeigte Woche lesen ───────────────────────────────────────
@@ -388,15 +422,29 @@
        allgemeine Vorwaerts-Erkennung. Ob der Fund stimmt, entscheidet
        hinterher der Wochentext, nicht der Name. */
     function wochenKnopf(vorwaerts) {
+      /* Zuerst der aus der Livediagnose belegte Selektor. Die Mustersuche
+         dahinter bleibt als Netz, falls Bsport die Klasse einmal umbenennt -
+         sie ist aber nicht mehr der Hauptweg. */
+      var fest = vorwaerts
+        ? '.bs-marketplace-date-picker__right-button'
+        : '.bs-marketplace-date-picker__left-button';
       var muster = vorwaerts
         ? '[class*="right-button"],[class*="rightButton"],[class*="next-button"],[class*="nextButton"]'
         : '[class*="left-button"],[class*="leftButton"],[class*="prev-button"],[class*="prevButton"]';
-      var treffer = wurzel.querySelectorAll(muster);
-      for (var i = 0; i < treffer.length; i++) {
-        if (istInKarte(treffer[i])) continue;
-        if (treffer[i].getBoundingClientRect().height > 0) return treffer[i];
+
+      var quellen = [fest, muster];
+      for (var q = 0; q < quellen.length; q++) {
+        var treffer = wurzel.querySelectorAll(quellen[q]);
+        for (var i = 0; i < treffer.length; i++) {
+          if (istInKarte(treffer[i])) continue;
+          if (treffer[i].getBoundingClientRect().height <= 0) continue;
+          spur('Knopf gefunden ueber', q === 0 ? 'festen Selektor' : 'Muster',
+               ':', treffer[i].className);
+          return treffer[i];
+        }
       }
       var allg = navKandidaten(wurzel, vorwaerts ? VOR : ZURUECK);
+      spur('Knopf ueber allgemeine Suche:', allg.length ? allg[0].className : 'KEINER');
       return allg.length ? allg[0] : null;
     }
 
@@ -412,36 +460,48 @@
       return true;
     }
 
+    /* Liefert true, wenn dieser Versuch etwas erreicht hat oder endgueltig
+       entschieden ist - dann wird nicht erneut angesetzt. */
     function losBlaettern() {
-      if (zumTagScrollen()) return;          /* schon sichtbar */
+      if (zumTagScrollen()) { spur('FERTIG: Zieltag lag schon im DOM, hingescrollt'); return true; }
 
       var woche = angezeigteWoche();
-      if (!woche) return;                    /* Woche nicht lesbar -> nichts tun */
+      if (!woche) { spur('warte: Wochentext noch nicht lesbar'); return false; }
+      spur('Woche gelesen:', woche.text, '=>', iso(woche.von), 'bis', iso(woche.bis));
       wocheSchritt(woche, 0);
+      return true;
     }
 
     function wocheSchritt(woche, runde) {
-      /* Liegt der Zieltag in der angezeigten Woche? */
-      if (tagesAbstand(woche.von, ziel) >= 0 && tagesAbstand(ziel, woche.bis) >= 0) {
-        zumTagScrollen();
+      var vorSchluss = tagesAbstand(woche.von, ziel) >= 0;
+      var nachAnfang = tagesAbstand(ziel, woche.bis) >= 0;
+      spur('Runde', runde, '| Ziel in dieser Woche?', vorSchluss && nachAnfang);
+      if (vorSchluss && nachAnfang) {
+        var ok = zumTagScrollen();
+        spur(ok ? 'FERTIG: richtige Woche, Tag angesteuert'
+                : 'FERTIG: richtige Woche, Tagesgruppe nicht gefunden');
         return;
       }
-      if (runde >= MAX_KLICKS || Date.now() - start > MAX_MS) return;
+      if (runde >= MAX_KLICKS) { spur('ABBRUCH: mehr als', MAX_KLICKS, 'Wochenschritte'); return; }
+      if (Date.now() - start > MAX_MS) { spur('ABBRUCH: Zeitdeckel erreicht'); return; }
 
       var vorwaerts = tagesAbstand(woche.bis, ziel) > 0;
+      spur('Richtung:', vorwaerts ? 'vorwaerts' : 'zurueck');
       var knopf = wochenKnopf(vorwaerts);
-      if (!knopf) return;                    /* kein Bedienelement -> nichts tun */
+      if (!knopf) { spur('ABBRUCH: kein Wochenknopf gefunden'); return; }
 
-      try { knopf.click(); } catch (e) { return; }
+      try { knopf.click(); spur('Klick abgesetzt'); }
+      catch (e) { spur('ABBRUCH: Klick warf', e && e.message); return; }
 
       wennRuhig(wurzel, function () {
         var neu = angezeigteWoche();
-        if (!neu) return;                                  /* nicht mehr lesbar */
+        if (!neu) { spur('ABBRUCH: Wochentext nach dem Klick nicht lesbar'); return; }
         var bewegt = tagesAbstand(woche.von, neu.von);
         var erwartet = vorwaerts ? 7 : -7;
+        spur('Woche nach Klick:', neu.text, '| verschoben um', bewegt, 'Tage, erwartet', erwartet);
         /* Nur weiter, wenn der Klick die Woche nachweislich um genau sieben
            Tage in die richtige Richtung geschoben hat. Sonst Schluss. */
-        if (bewegt !== erwartet) return;
+        if (bewegt !== erwartet) { spur('ABBRUCH: Klick hat die Woche nicht wie erwartet bewegt'); return; }
         wocheSchritt(neu, runde + 1);
       });
     }
