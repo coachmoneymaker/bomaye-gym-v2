@@ -594,7 +594,7 @@
           <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span></div>
           <div class="sp-sub">Advanced</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=advanced" aria-label="Bomaye Boxing Advanced buchen">BUCHEN</a>
       </div>
       <div class="sp-row sp-row--invite" data-s="20:00" data-e="21:30">
         <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span><span class="sp-live" hidden></span></div>
@@ -715,7 +715,7 @@
           <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span></div>
           <div class="sp-sub">Advanced</div>
         </div>
-        <a class="sp-book" href="#schedule">BUCHEN</a>
+        <a class="sp-book" href="/stundenplan?kurs=advanced" aria-label="Bomaye Boxing Advanced buchen">BUCHEN</a>
       </div>
       <div class="sp-row sp-row--invite" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
@@ -1105,15 +1105,14 @@ function MountBsportWidget(config, repeat=1) {
    Studios samt Begruendung, welche Kurse oeffentlich buchbar sind.
    Bewusst NICHT verlinkt: 244431 YOUTH FIGHT TEAM und 244432 BOMAYE FIGHT
    TEAM (nur auf Einladung) sowie 245265 OPEN GYM - diese Zeilen haben im
-   Stundenplan gar keinen BUCHEN-Knopf. Fuer "BOMAYE Advanced" liegt noch
-   keine bestaetigte ID vor, die beiden Zeilen scrollen weiter wie bisher
-   nur zum ungefilterten Kalender. */
+   Stundenplan gar keinen BUCHEN-Knopf. */
 var SP_KURSE = {
-  kickboxing: { id: 236751, name: 'Bomaye Kickboxing'  },
-  kids:       { id: 244420, name: 'Boxing Kids 6–9'    },
-  basics:     { id: 244426, name: 'Boxing Basic'       },
-  queens:     { id: 244539, name: 'Bomaye Queens'      },
-  youth:      { id: 244563, name: 'Boxing Youth 10–17' }
+  advanced:   { id: 236749, name: 'Bomaye Boxing Advanced' },
+  kickboxing: { id: 236751, name: 'Bomaye Kickboxing'      },
+  kids:       { id: 244420, name: 'Boxing Kids 6–9'        },
+  basics:     { id: 244426, name: 'Boxing Basic'           },
+  queens:     { id: 244539, name: 'Bomaye Queens'          },
+  youth:      { id: 244563, name: 'Boxing Youth 10–17'     }
 };
 
 function spBereit(fn) {
