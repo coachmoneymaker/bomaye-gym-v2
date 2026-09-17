@@ -39,7 +39,8 @@
 (function () {
   'use strict';
 
-  var MAX_TAGE      = 14;    /* realistischer Buchungshorizont */
+  var MAX_TAGE      = 14;    /* realistischer Buchungshorizont, in Tagen */
+  var MAX_KLICKS    = 4;     /* Wochenschritte; 14 Tage sind hoechstens 3 */
   var MAX_MS        = 15000; /* Gesamtdeckel, danach ist Schluss */
   var RUHE_MS       = 400;   /* so lange muss der DOM still sein = fertig */
   var RUHE_MAX_MS   = 4000;  /* falls er nie still wird */
@@ -100,13 +101,28 @@
       }
     }
 
-    /* 18.09. ohne Jahr */
-    m = t.match(/\b(\d{1,2})\.(\d{1,2})\.(?!\d)/);
-    if (m) {
-      var jahr2 = bezug ? bezug.getFullYear() : new Date().getFullYear();
-      var d2 = new Date(jahr2, +m[2] - 1, +m[1], 12, 0, 0, 0);
-      if (bezug && tagesAbstand(bezug, d2) < -180) d2.setFullYear(jahr2 + 1);
-      return d2;
+    /* 18.09. ohne Jahr - und 14.9 ganz ohne abschliessenden Punkt. Genau
+       diese Form benutzt der Datumswaehler des Widgets ("Mo 14.9 - So
+       20.9"); die alte Fassung verlangte den Schlusspunkt und hat deshalb
+       nie etwas gelesen. Uhrzeiten wie "13:00 - 14:00" duerfen dabei nicht
+       als Datum durchgehen, deshalb der Doppelpunkt-Ausschluss. */
+    /* Uhrzeiten herausschneiden statt den ganzen Text zu verwerfen: eine
+       Tagesgruppe enthaelt beides - "Fr 18.9" UND "18:30 - 20:00". Die
+       erste Fassung hat deshalb genau die Elemente uebersprungen, auf die
+       es ankommt. */
+    var ohneUhr = t.replace(/\d{1,2}\s*:\s*\d{2}/g, ' ');
+    {
+      m = ohneUhr.match(/\b(\d{1,2})\.(\d{1,2})\.?(?!\d)/);
+      if (m) {
+        var tagN = +m[1], monN = +m[2];
+        if (tagN >= 1 && tagN <= 31 && monN >= 1 && monN <= 12) {
+          var jahr2 = bezug ? bezug.getFullYear() : new Date().getFullYear();
+          var d2 = new Date(jahr2, monN - 1, tagN, 12, 0, 0, 0);
+          if (bezug && tagesAbstand(bezug, d2) < -180) d2.setFullYear(jahr2 + 1);
+          if (bezug && tagesAbstand(bezug, d2) > 300) d2.setFullYear(jahr2 - 1);
+          return d2;
+        }
+      }
     }
     return null;
   }
@@ -254,8 +270,27 @@
       '[class*="week"],[class*="Week"]');
     for (i = 0; i < dr.length && daten.length < 40; i++) daten.push(zeile(dr[i]));
 
+    /* Der Datumswaehler vollstaendig - hier steckt die letzte offene Frage:
+       gibt es innerhalb der Woche einen anklickbaren Tages-Selektor? Ein
+       Blick in diesen Teilbaum beantwortet das, ohne raten zu muessen. */
+    var waehler = wurzel.querySelector('[class*="date-picker"], [class*="datePicker"]');
+    var wochenTage = [];
+    if (waehler) {
+      var wt = waehler.querySelectorAll('*');
+      for (i = 0; i < wt.length && wochenTage.length < 40; i++) {
+        var t = kurz(wt[i].textContent, 20);
+        if (t && wt[i].children.length === 0) wochenTage.push(zeile(wt[i]));
+      }
+    }
+
     var ergebnis = {
       zeitpunkt:   new Date().toISOString(),
+      wochentext:  (function () {
+        var ph = wurzel.querySelector('[class*="date-picker__placeholder"], [class*="datePicker__placeholder"]');
+        return ph ? kurz(ph.textContent, 60) : null;
+      }()),
+      waehlerHtml: waehler ? kurz(waehler.outerHTML, 3000) : null,
+      waehlerBlaetter: wochenTage,
       adresse:     location.href,
       kindElemente: wurzel.children.length,
       textLaenge:  (wurzel.textContent || '').length,
@@ -327,47 +362,87 @@
       wennRuhig(wurzel, losBlaettern);
     }());
 
-    function losBlaettern() {
-      /* Schritt 1: Zieltag schon da? Dann nur hinscrollen. */
-      var treffer = elementFuerTag(wurzel, ziel);
-      if (treffer) {
-        try { treffer.scrollIntoView({ block: 'center' }); } catch (e) {}
-        return;
-      }
-
-      /* Schritt 2: aktuelles Datum lesen. */
-      var jetzt = angezeigtesDatum(wurzel, ziel);
-      if (!jetzt) return;                                  /* nicht lesbar -> nichts tun */
-
-      schritt(jetzt, 0);
+    /* ── Die angezeigte Woche lesen ───────────────────────────────────────
+       Beleg aus der Livediagnose: .bs-marketplace-date-picker__placeholder
+       enthaelt "Mo 14.9 - So 20.9". Beide Enden werden geparst; taugt nur
+       eines, wird die Woche daraus abgeleitet (Start = Montag). */
+    function angezeigteWoche() {
+      var p = wurzel.querySelector('[class*="date-picker__placeholder"], [class*="datePicker__placeholder"]');
+      if (!p) return null;
+      var text = (p.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!text) return null;
+      var teile = text.split(/\s[-–—]\s/);
+      var von = datumAusText(teile[0], ziel);
+      var bis = teile.length > 1 ? datumAusText(teile[1], ziel) : null;
+      if (!von && !bis) return null;
+      if (!von) { von = new Date(bis.getTime()); von.setDate(von.getDate() - 6); }
+      if (!bis) { bis = new Date(von.getTime()); bis.setDate(bis.getDate() + 6); }
+      if (tagesAbstand(von, bis) < 0 || tagesAbstand(von, bis) > 10) return null;
+      return { von: von, bis: bis, text: text, knoten: p };
     }
 
-    function schritt(jetzt, runde) {
-      var rest = tagesAbstand(jetzt, ziel);
-      if (rest === 0) return;                              /* angekommen */
-      if (runde >= MAX_TAGE || Date.now() - start > MAX_MS) return;
+    /* Bedienelemente des Datumswaehlers. Der linke Knopf ist belegt
+       (.bs-marketplace-date-picker__left-button); der rechte ist aus der
+       Diagnose nicht belegt, deshalb wird er nicht hart verdrahtet, sondern
+       gesucht - erst ueber das symmetrische Namensmuster, dann ueber die
+       allgemeine Vorwaerts-Erkennung. Ob der Fund stimmt, entscheidet
+       hinterher der Wochentext, nicht der Name. */
+    function wochenKnopf(vorwaerts) {
+      var muster = vorwaerts
+        ? '[class*="right-button"],[class*="rightButton"],[class*="next-button"],[class*="nextButton"]'
+        : '[class*="left-button"],[class*="leftButton"],[class*="prev-button"],[class*="prevButton"]';
+      var treffer = wurzel.querySelectorAll(muster);
+      for (var i = 0; i < treffer.length; i++) {
+        if (istInKarte(treffer[i])) continue;
+        if (treffer[i].getBoundingClientRect().height > 0) return treffer[i];
+      }
+      var allg = navKandidaten(wurzel, vorwaerts ? VOR : ZURUECK);
+      return allg.length ? allg[0] : null;
+    }
 
-      var kandidaten = navKandidaten(wurzel, rest > 0 ? VOR : ZURUECK);
-      if (!kandidaten.length) return;                      /* nichts gefunden -> nichts tun */
+    /* ── Tag innerhalb der sichtbaren Woche ───────────────────────────────
+       Die Termine stehen bereits gruppiert im DOM
+       (bs-week__listMode__content__day__offers). Ist der Zieltag dabei,
+       genuegt Hinscrollen - kein Klick noetig. */
+    function zumTagScrollen() {
+      var el = elementFuerTag(wurzel, ziel);
+      if (!el) return false;
+      var block = el.closest ? (el.closest('[class*="listMode__content__day"]') || el) : el;
+      try { block.scrollIntoView({ block: 'center' }); } catch (e) {}
+      return true;
+    }
 
-      var knopf = kandidaten[0];
+    function losBlaettern() {
+      if (zumTagScrollen()) return;          /* schon sichtbar */
+
+      var woche = angezeigteWoche();
+      if (!woche) return;                    /* Woche nicht lesbar -> nichts tun */
+      wocheSchritt(woche, 0);
+    }
+
+    function wocheSchritt(woche, runde) {
+      /* Liegt der Zieltag in der angezeigten Woche? */
+      if (tagesAbstand(woche.von, ziel) >= 0 && tagesAbstand(ziel, woche.bis) >= 0) {
+        zumTagScrollen();
+        return;
+      }
+      if (runde >= MAX_KLICKS || Date.now() - start > MAX_MS) return;
+
+      var vorwaerts = tagesAbstand(woche.bis, ziel) > 0;
+      var knopf = wochenKnopf(vorwaerts);
+      if (!knopf) return;                    /* kein Bedienelement -> nichts tun */
+
       try { knopf.click(); } catch (e) { return; }
 
       wennRuhig(wurzel, function () {
-        /* Zuerst: ist der Zieltag jetzt sichtbar? */
-        var da = elementFuerTag(wurzel, ziel);
-        if (da) { try { da.scrollIntoView({ block: 'center' }); } catch (e) {} return; }
-
-        var neu = angezeigtesDatum(wurzel, ziel);
-        if (!neu) return;                                  /* nicht mehr lesbar -> Abbruch */
-
-        var bewegt = tagesAbstand(jetzt, neu);
-        var erwartet = rest > 0 ? 1 : -1;
-        /* Nur weiterklicken, wenn der Klick nachweislich genau einen Tag
-           in die richtige Richtung bewegt hat. Alles andere: Abbruch. */
+        var neu = angezeigteWoche();
+        if (!neu) return;                                  /* nicht mehr lesbar */
+        var bewegt = tagesAbstand(woche.von, neu.von);
+        var erwartet = vorwaerts ? 7 : -7;
+        /* Nur weiter, wenn der Klick die Woche nachweislich um genau sieben
+           Tage in die richtige Richtung geschoben hat. Sonst Schluss. */
         if (bewegt !== erwartet) return;
-
-        schritt(neu, runde + 1);
+        wocheSchritt(neu, runde + 1);
       });
     }
   }
