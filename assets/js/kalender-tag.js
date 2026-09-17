@@ -460,16 +460,119 @@
       return true;
     }
 
+    /* ── Den Tagesreiter des Zieltags waehlen ─────────────────────────────
+       Bis PR #83 gab es diesen Schritt nicht: nach der richtigen Woche
+       wurde nur gescrollt. Das Widget behaelt dabei seinen eigenen
+       ausgewaehlten Tag ueber den Wochensprung hinweg - im Livetest stand
+       nach dem Sprung auf die Woche des 21.9. der Reiter FR (25.9.).
+       Der Zustand liegt also im Widget, nicht bei uns; wir muessen den
+       Reiter aktiv anklicken.
+
+       Der Selektor des Reiters ist nicht belegt, deshalb wird er zur
+       Laufzeit gesucht und das Ergebnis geprueft:
+         1. Elemente, deren Datum exakt dem Zieltag entspricht
+         2. sonst Elemente, deren Text mit dem Wochentagskuerzel beginnt
+       Geklickt wird nur ausserhalb der Termin-Karten, nur Kurztext bis 14
+       Zeichen und bis 220 px Breite - ein Buchungsknopf kann das nicht
+       sein. Nach dem Klick muss das Element als aktiv markiert sein, sonst
+       gilt der Versuch als gescheitert. */
+    var KURZ = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+    function istAktiv(el) {
+      var k = String((el.className && el.className.baseVal !== undefined)
+                       ? el.className.baseVal : (el.className || ''));
+      return /(active|selected|current|is-on|checked)/i.test(k) ||
+             el.getAttribute('aria-selected') === 'true' ||
+             el.getAttribute('aria-pressed') === 'true' ||
+             el.getAttribute('aria-current') === 'date' ||
+             el.getAttribute('aria-current') === 'true';
+    }
+
+    function tagKandidaten() {
+      var kurz = KURZ[ziel.getDay()];
+      var mitDatum = [], mitKurz = [];
+      var roh = wurzel.querySelectorAll(
+        'button,[role="button"],[role="tab"],li,a:not([href]),' +
+        '[class*="day"],[class*="Day"]');
+      for (var i = 0; i < roh.length && i < 400; i++) {
+        var el = roh[i];
+        if (istInKarte(el)) continue;
+        var r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0 || r.width > 220) continue;
+        var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!txt || txt.length > 14) continue;
+        var d = datumAusText(el.getAttribute('datetime') || txt, ziel);
+        if (d && iso(d) === iso(ziel)) { mitDatum.push(el); continue; }
+        if (txt.toLowerCase().indexOf(kurz.toLowerCase()) === 0) mitKurz.push(el);
+      }
+      return mitDatum.concat(mitKurz);
+    }
+
+    /* Klickt bis zu drei Kandidaten, jeder wird einzeln geprueft. */
+    function tagWaehlen(fertig) {
+      var kurz = KURZ[ziel.getDay()];
+      var kandidaten = tagKandidaten();
+      spur('Tagesauswahl: suche', kurz, iso(ziel), '- Kandidaten:', kandidaten.length,
+           kandidaten.slice(0, 5).map(function (e) {
+             return ((e.textContent || '').replace(/\s+/g, ' ').trim() || '?') +
+                    ' [' + String(e.className).slice(0, 40) + ']';
+           }).join(' | '));
+
+      if (!kandidaten.length) { spur('Tagesauswahl: kein Reiter gefunden, nur scrollen'); return fertig(false); }
+
+      var bereitsAktiv = kandidaten.filter(istAktiv);
+      if (bereitsAktiv.length) {
+        spur('Tagesauswahl: Zieltag ist bereits aktiv, kein Klick');
+        return fertig(true);
+      }
+
+      var n = 0;
+      (function naechster() {
+        if (n >= kandidaten.length || n >= 3) {
+          spur('Tagesauswahl: keiner der Kandidaten liess sich bestaetigen');
+          return fertig(false);
+        }
+        var el = kandidaten[n++];
+        try { el.click(); spur('Tagesauswahl: Klick auf Kandidat', n, String(el.className).slice(0, 50)); }
+        catch (e) { spur('Tagesauswahl: Klick warf', e && e.message); return fertig(false); }
+
+        wennRuhig(wurzel, function () {
+          /* Nach einem Neuaufbau ist das alte Element eventuell weg -
+             deshalb frisch suchen und dort nach der Aktiv-Markierung sehen. */
+          var jetzt = tagKandidaten().filter(istAktiv);
+          if (jetzt.length) {
+            spur('Tagesauswahl: bestaetigt, Zieltag ist aktiv');
+            return fertig(true);
+          }
+          spur('Tagesauswahl: Kandidat', n, 'blieb ohne Wirkung');
+          naechster();
+        });
+      }());
+    }
+
+    /* Richtige Woche erreicht: erst den Tag waehlen, dann hinscrollen. */
+    function tagFestlegen() {
+      tagWaehlen(function (ok) {
+        var gescrollt = zumTagScrollen();
+        spur('FERTIG: Woche richtig, Tag', ok ? 'gewaehlt' : 'nicht gewaehlt',
+             '| gescrollt:', gescrollt);
+      });
+    }
+
     /* Liefert true, wenn dieser Versuch etwas erreicht hat oder endgueltig
        entschieden ist - dann wird nicht erneut angesetzt. */
     function losBlaettern() {
-      if (zumTagScrollen()) { spur('FERTIG: Zieltag lag schon im DOM, hingescrollt'); return true; }
-
       var woche = angezeigteWoche();
-      if (!woche) { spur('warte: Wochentext noch nicht lesbar'); return false; }
-      spur('Woche gelesen:', woche.text, '=>', iso(woche.von), 'bis', iso(woche.bis));
-      wocheSchritt(woche, 0);
-      return true;
+      if (woche) {
+        spur('Woche gelesen:', woche.text, '=>', iso(woche.von), 'bis', iso(woche.bis));
+        wocheSchritt(woche, 0);
+        return true;
+      }
+      /* Kein lesbarer Datumswaehler: dann bleibt nur der alte Weg - liegt
+         der Zieltag schon im DOM, dorthin scrollen. */
+      if (zumTagScrollen()) { spur('FERTIG: kein Wochentext, aber Zieltag im DOM - hingescrollt'); return true; }
+      spur('warte: Wochentext noch nicht lesbar');
+      return false;
     }
 
     function wocheSchritt(woche, runde) {
@@ -477,9 +580,7 @@
       var nachAnfang = tagesAbstand(ziel, woche.bis) >= 0;
       spur('Runde', runde, '| Ziel in dieser Woche?', vorSchluss && nachAnfang);
       if (vorSchluss && nachAnfang) {
-        var ok = zumTagScrollen();
-        spur(ok ? 'FERTIG: richtige Woche, Tag angesteuert'
-                : 'FERTIG: richtige Woche, Tagesgruppe nicht gefunden');
+        tagFestlegen();
         return;
       }
       if (runde >= MAX_KLICKS) { spur('ABBRUCH: mehr als', MAX_KLICKS, 'Wochenschritte'); return; }
