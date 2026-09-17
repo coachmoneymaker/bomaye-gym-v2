@@ -200,38 +200,120 @@
     deckel = setTimeout(schluss, RUHE_MAX_MS);
   }
 
-  /* ── Diagnose ─────────────────────────────────────────────────────────── */
-  function diagnose(wurzel) {
-    var zeile = function (el) {
-      var r = el.getBoundingClientRect();
-      return { tag: el.tagName, klasse: String(el.className).slice(0, 80),
-               aria: el.getAttribute('aria-label') || '', titel: el.getAttribute('title') || '',
-               text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40),
-               breite: Math.round(r.width), hoehe: Math.round(r.height) };
+  /* ── Diagnose ───────────────────────────────────────────────────────────
+     Haengt an KEINER Bedingung ausser dem Schalter selbst. Der erste Anlauf
+     hing am Datum und an den Tagesgrenzen und lief deshalb nie los, wenn
+     das Datum verworfen wurde. Ausserdem lief er genau einmal, zu einem
+     Zeitpunkt, den das Widget mit seinen Nachladungen leicht verfehlt.
+
+     Jetzt: sofort eine Startmeldung, dann mehrere Anlaeufe, und jederzeit
+     von Hand ausloesbar ueber window.bomayeDiagnose(). Ausgabe zusaetzlich
+     als eine einzige JSON-Zeile, weil sich console.table nicht kopieren
+     laesst. */
+  var PREFIX = '[bomaye-diag]';
+
+  function kurz(t, n) {
+    return String(t || '').replace(/\s+/g, ' ').trim().slice(0, n);
+  }
+
+  function zeile(el) {
+    var r = el.getBoundingClientRect();
+    return {
+      tag:    el.tagName,
+      klasse: kurz(el.className && el.className.baseVal !== undefined
+                     ? el.className.baseVal : el.className, 90),
+      aria:   kurz(el.getAttribute('aria-label'), 40),
+      titel:  kurz(el.getAttribute('title'), 40),
+      datetime: el.getAttribute && el.getAttribute('datetime') || '',
+      text:   kurz(el.textContent, 45),
+      b: Math.round(r.width), h: Math.round(r.height),
+      html:   kurz(el.outerHTML, 200)
     };
-    var klick = [], i;
-    var roh = wurzel.querySelectorAll('button, [role="button"], a');
-    for (i = 0; i < roh.length && i < 60; i++) if (!istInKarte(roh[i])) klick.push(zeile(roh[i]));
-    var daten = [];
-    var dr = wurzel.querySelectorAll('time[datetime],[class*="date"],[class*="Date"],[class*="day"],[class*="Day"]');
-    for (i = 0; i < dr.length && i < 40; i++) daten.push(zeile(dr[i]));
+  }
+
+  function diagnoseJetzt(wurzelId) {
+    var wurzel = document.getElementById(wurzelId || 'bsport-widget-172485');
     /* eslint-disable no-console */
-    console.log('[bomaye] Widget-Diagnose - bitte diese zwei Tabellen kopieren:');
-    console.log('[bomaye] Bedienelemente ausserhalb der Termin-Karten:');
-    if (console.table) console.table(klick); else console.log(klick);
-    console.log('[bomaye] Datumsverdaechtige Elemente:');
-    if (console.table) console.table(daten); else console.log(daten);
-    console.log('[bomaye] gelesenes Datum:', angezeigtesDatum(wurzel, new Date()));
+    if (!wurzel) {
+      console.log(PREFIX + ' Container nicht gefunden: ' + (wurzelId || 'bsport-widget-172485'));
+      return null;
+    }
+
+    var bedien = [], daten = [], i, el;
+
+    var roh = wurzel.querySelectorAll('button, [role="button"], a, [class*="arrow"], [class*="Arrow"], svg');
+    for (i = 0; i < roh.length && bedien.length < 60; i++) {
+      el = roh[i];
+      if (istInKarte(el)) continue;
+      bedien.push(zeile(el));
+    }
+
+    var dr = wurzel.querySelectorAll(
+      'time[datetime],[class*="date"],[class*="Date"],[class*="day"],[class*="Day"],' +
+      '[class*="header"],[class*="Header"],[class*="toolbar"],[class*="Toolbar"],' +
+      '[class*="week"],[class*="Week"]');
+    for (i = 0; i < dr.length && daten.length < 40; i++) daten.push(zeile(dr[i]));
+
+    var ergebnis = {
+      zeitpunkt:   new Date().toISOString(),
+      adresse:     location.href,
+      kindElemente: wurzel.children.length,
+      textLaenge:  (wurzel.textContent || '').length,
+      gelesenesDatum: (function () {
+        var d = angezeigtesDatum(wurzel, new Date());
+        return d ? iso(d) : null;
+      }()),
+      bedienelemente: bedien,
+      datumsElemente: daten
+    };
+
+    console.log(PREFIX + ' Treffer: ' + bedien.length + ' Bedienelemente, ' +
+                daten.length + ' datumsverdaechtige Elemente, gelesenes Datum: ' +
+                ergebnis.gelesenesDatum);
+    if (console.table && bedien.length) {
+      console.log(PREFIX + ' Bedienelemente ausserhalb der Termin-Karten:');
+      console.table(bedien);
+    }
+    if (console.table && daten.length) {
+      console.log(PREFIX + ' Datumsverdaechtige Elemente:');
+      console.table(daten);
+    }
+    /* Eine kopierbare Zeile - console.table laesst sich nicht kopieren. */
+    console.log(PREFIX + ' JSON-ANFANG');
+    console.log(JSON.stringify(ergebnis));
+    console.log(PREFIX + ' JSON-ENDE');
+
+    window.__bomayeDiagnose = ergebnis;
+    return ergebnis;
+  }
+
+  /* Mehrere Anlaeufe, weil das Widget Konfiguration, Theme und AGB
+     nachlaedt und dabei mehrfach neu rendert. */
+  function starteDiagnose(wurzelId) {
+    /* eslint-disable no-console */
+    console.log(PREFIX + ' Diagnosemodus aktiv. Ergebnisse folgen nach 2, 5, 10 und 20 s.');
+    console.log(PREFIX + ' Jederzeit selbst ausloesen: bomayeDiagnose()');
+    console.log(PREFIX + ' Letztes Ergebnis liegt danach in: window.__bomayeDiagnose');
+    [2000, 5000, 10000, 20000].forEach(function (ms) {
+      setTimeout(function () { diagnoseJetzt(wurzelId); }, ms);
+    });
   }
 
   /* ── Ablauf ───────────────────────────────────────────────────────────── */
   function starte(wurzelId, ziel, debug) {
     var wurzel = document.getElementById(wurzelId);
-    if (!wurzel || !ziel) return;
+    if (!wurzel) return;
+
+    /* Diagnose zuerst und bedingungslos. Genau hier lag der Fehler: sie
+       stand hinter der Datumspruefung und den Tagesgrenzen und lief
+       deshalb nie, wenn das Datum verworfen wurde oder zu weit weg lag. */
+    if (debug) starteDiagnose(wurzelId);
+
+    if (!ziel) return;
 
     var start = Date.now();
     var abstand = tagesAbstand(new Date(), ziel);
-    if (abstand === 0 && !debug) return;                  /* heute: nichts zu tun */
+    if (abstand === 0) return;                            /* heute: nichts zu tun */
     if (abstand < 0 || abstand > MAX_TAGE) return;        /* ausserhalb des Horizonts */
 
     /* Auf Inhalt warten - ohne Einwilligung kommt nie einer, dann endet es hier. */
@@ -242,10 +324,7 @@
         wartete = setTimeout(aufInhalt, 250);
         return;
       }
-      wennRuhig(wurzel, function () {
-        if (debug) diagnose(wurzel);
-        losBlaettern();
-      });
+      wennRuhig(wurzel, losBlaettern);
     }());
 
     function losBlaettern() {
@@ -293,5 +372,7 @@
     }
   }
 
-  window.bomayeKalenderTag = { starte: starte };
+  window.bomayeKalenderTag = { starte: starte, diagnose: diagnoseJetzt, starteDiagnose: starteDiagnose };
+  /* Von Hand ausloesbar, damit der Zeitpunkt egal ist. */
+  window.bomayeDiagnose = diagnoseJetzt;
 }());

@@ -1194,6 +1194,16 @@ function spKalender(kurs) {
   var kurs  = spAktiverKurs();
   var datum = kurs ? spAktivesDatum() : null;
 
+  /* Diagnosemodus haengt an nichts: nicht am Kurs, nicht am Datum und nicht
+     am Mount. Sonst laeuft er ausgerechnet dann nicht, wenn man ihn braucht
+     - etwa weil das Widget noch unter dem Sichtbereich haengt und der
+     IntersectionObserver noch nicht ausgeloest hat. */
+  var spDebug = spParameter('bsdebug');
+  spDebug = !!spDebug && spDebug !== '0' && spDebug !== 'false';
+  if (spDebug && window.bomayeKalenderTag) {
+    window.bomayeKalenderTag.starteDiagnose('bsport-widget-172485');
+  }
+
   /* Mit aktivem Filter: Hinweis einblenden und direkt zum Kalender. Der
      Besucher hat oben auf BUCHEN getippt - er will buchen, nicht wieder
      oben auf der Seite landen. Nach 'load' noch einmal, weil Bilder
@@ -1222,9 +1232,8 @@ function spKalender(kurs) {
        Bedienelemente zur Laufzeit und prueft jeden Schritt am angezeigten
        Datum; findet es nichts Belastbares, tut es nichts. Der Kalender
        bleibt dann auf heute - richtig gefiltert, wie ohne diese Zeile. */
-    if (window.bomayeKalenderTag && (datum || spParameter('bsdebug'))) {
-      window.bomayeKalenderTag.starte('bsport-widget-172485', datum,
-                                      spParameter('bsdebug') === '1');
+    if (window.bomayeKalenderTag && datum) {
+      window.bomayeKalenderTag.starte('bsport-widget-172485', datum, false);
     }
     MountBsportWidget({
       "parentElement": "bsport-widget-172485",
