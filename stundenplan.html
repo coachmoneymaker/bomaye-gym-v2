@@ -10,6 +10,7 @@
        inline im Body und laufen waehrend des Parsens - ein defer-Skript
        kaeme erst danach, das Modul waere dann noch nicht da. -->
   <script src="/assets/js/kurs-datum.js"></script>
+  <script src="/assets/js/kalender-tag.js"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -1174,22 +1175,15 @@ function spAktivesDatum() {
 
 /* Die Kalender-Konfiguration an genau einer Stelle.
 
-   ACHTUNG, ungeprueft: dass Bsports Kalender-Widget den Starttag ueber
-   config.calendar.date annimmt, ist NICHT belegt. metaActivities ist es -
-   der Schluessel stammt aus PR #46/#47, wo die IDs aus den Termin-Objekten
-   des laufenden Widgets ausgelesen wurden. Fuer ein Datumsfeld gibt es
-   keine solche Quelle: cdn.bsport.io ist aus unserer Bauumgebung nicht
-   erreichbar, und @bsport/common enthaelt nur Master-Data-Enums, kein
-   Config-Schema. Der Schluessel muss einmal live bestaetigt werden.
-
-   Kennt das Widget den Schluessel nicht, ignoriert es ihn - dann bleibt es
-   beim bisherigen Verhalten (heute, richtig gefiltert). Betroffen sind
-   ohnehin nur Aufrufe MIT ?datum=; ohne den Parameter ist die
-   Konfiguration Zeichen fuer Zeichen die alte. */
-function spKalender(kurs, datum) {
+   Kein Datumsfeld: der Versuch aus PR #79, den Starttag ueber
+   config.calendar.date mitzugeben, ist im Livetest durchgefallen - das
+   Widget ignoriert den Schluessel. Er ist deshalb wieder raus, statt als
+   bestaetigt wirkungsloser Eintrag stehen zu bleiben. Den Zieltag stellt
+   jetzt /assets/js/kalender-tag.js nach dem Mounten ueber die Bedienung
+   des Widgets ein. */
+function spKalender(kurs) {
   var cfg = {};
-  if (kurs)  cfg.metaActivities = [kurs.id];
-  if (datum) cfg.date = window.bomayeKurs.alsIso(datum);
+  if (kurs) cfg.metaActivities = [kurs.id];
   return cfg;
 }
 
@@ -1224,6 +1218,14 @@ function spKalender(kurs, datum) {
   function mount() {
     if (mounted) return;
     mounted = true;
+    /* Nach dem Mounten den Zieltag im Widget ansteuern. Das Modul sucht die
+       Bedienelemente zur Laufzeit und prueft jeden Schritt am angezeigten
+       Datum; findet es nichts Belastbares, tut es nichts. Der Kalender
+       bleibt dann auf heute - richtig gefiltert, wie ohne diese Zeile. */
+    if (window.bomayeKalenderTag && (datum || spParameter('bsdebug'))) {
+      window.bomayeKalenderTag.starte('bsport-widget-172485', datum,
+                                      spParameter('bsdebug') === '1');
+    }
     MountBsportWidget({
       "parentElement": "bsport-widget-172485",
       "companyId": 5473,
@@ -1233,7 +1235,7 @@ function spKalender(kurs, datum) {
       "showFab": false,
       "fullScreenPopup": false,
       "styles": undefined,
-      "config": { "calendar": spKalender(kurs, datum) }
+      "config": { "calendar": spKalender(kurs) }
     });
   }
   if ('IntersectionObserver' in window) {
