@@ -1401,40 +1401,6 @@ footer {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DETAIL VIEWS
-══════════════════════════════════════════════════════════════ */
-.detail-hero-wrap {
-  position: relative; height: 55vh; min-height: 380px; margin-top: var(--nav-h);
-}
-.detail-hero-bg {
-  position: absolute; inset: 0; background-size: cover; background-position: center;
-}
-.detail-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.8) 100%);
-}
-.detail-hero-content {
-  position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 1200px; padding: 0 1.5rem;
-}
-.detail-body { padding: 4.5rem 0; background: var(--ink); }
-.detail-body-inner { max-width: 700px; }
-.detail-tagline {
-  font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 4px; color: var(--gold); margin-bottom: 1.5rem;
-}
-.detail-desc { margin-bottom: 1.2rem; font-size: 0.98rem; }
-.detail-features { margin: 2rem 0; display: flex; flex-direction: column; gap: 0.65rem; }
-.detail-features li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.93rem; color: rgba(245,240,232,0.72); }
-.detail-features i { color: var(--gold); font-size: 0.9rem; }
-.target-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0 2.5rem; }
-.target-tag {
-  font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 1.5px;
-  background: rgba(245,240,232,0.05); color: rgba(245,240,232,0.5);
-  border: 1px solid rgba(245,240,232,0.1); padding: 5px 13px; border-radius: 0;
-}
-.detail-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-/* ══════════════════════════════════════════════════════════════
    LEGAL PAGES
 ══════════════════════════════════════════════════════════════ */
 .legal-page { padding-top: calc(var(--nav-h) + 3rem); padding-bottom: 5rem; background: var(--ink); min-height: 100vh; }
@@ -1610,9 +1576,6 @@ footer {
   .location-info { padding: 2.5rem 1.25rem; }
   .location-btns { flex-direction: column; }
   .location-btns .btn { width: 100%; }
-
-  .detail-ctas { flex-direction: column; }
-  .detail-ctas .btn { width: 100%; }
 
   .early-bird-inner .btn { width: 100%; }
 
@@ -4818,7 +4781,6 @@ a.mn-contact-text:hover { color: var(--gold); }
   p { font-size: 1rem; }
 
   /* Buttons: full width everywhere on small screens */
-  .detail-ctas .btn,
   .location-btns .btn,
   .hero-ctas .btn { width: 100%; }
 
@@ -6394,11 +6356,10 @@ a.mn-contact-text:hover { color: var(--gold); }
 
    Ein reiner Tag-Tausch haette diese Ueberschriften also auf ein Drittel
    geschrumpft. Die beiden Regeln hier stellen exakt die frueheren h1-Werte
-   wieder her - gleiche Zahl, gleiche Funktion, kein neuer Wert. Sie stehen
-   ueber der Klasse und schlagen damit auch die mobilen Elementregeln.
+   wieder her - gleiche Zahl, gleiche Funktion, kein neuer Wert. Die Regel
+   steht ueber der Klasse und schlaegt damit auch die mobilen Elementregeln.
    ═══════════════════════════════════════════════════════════════════════════ */
-.detail-hero-content h3 { font-size: clamp(3rem, 8vw, 6.5rem); }
-.mehr-preise-page h2    { font-size: clamp(3rem, 8vw, 6.5rem); }
+.mehr-preise-page h2 { font-size: clamp(3rem, 8vw, 6.5rem); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PAKET 1 — Trefferflaechen auf Fingergroesse (Audit-Befund 09)
