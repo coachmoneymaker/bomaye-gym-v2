@@ -255,8 +255,10 @@ export function buildMetaPayload({ eventName, invoiceId, customer, value, curren
       event_source_url: sourceUrl || buildEventSourceUrl({ eventName }),
       user_data:     buildMetaUserData(customer),
       custom_data: {
-        value,
-        currency,
+        // Wert und Waehrung gehoeren zusammen: entweder beide oder keins.
+        // Eine Waehrung ohne Betrag waere fuer Meta so unbrauchbar wie ein
+        // erfundener Betrag.
+        ...(value === undefined || value === null ? {} : { value, currency }),
         ...(contentName ? { content_name: contentName } : {}),
       },
     }],
@@ -300,11 +302,17 @@ async function sendGoogleConversion({ invoiceId, value, currency }) {
 
   // TODO: purchases may need a separate Google Conversion Label in the future.
   // Currently using the same label for both probetraining and purchases.
+  // Ohne Betrag werden value und currency_code weggelassen statt als
+  // "undefined" in die Adresse geschrieben zu werden.
+  const wertTeil = (value === undefined || value === null)
+    ? ''
+    : `&value=${encodeURIComponent(value)}` +
+      `&currency_code=${encodeURIComponent(currency)}`;
+
   const url =
     `https://www.googleadservices.com/pagead/conversion/${numId}/` +
     `?label=${encodeURIComponent(label)}` +
-    `&value=${value}` +
-    `&currency_code=${encodeURIComponent(currency)}` +
+    wertTeil +
     `&oid=${encodeURIComponent(String(invoiceId))}`;
 
   try {
@@ -519,7 +527,21 @@ export default async function handler(req, res) {
   // unknown amount rather than a free one.
   const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
 
-  const value = isProbetraining ? 30 : (hasTotal ? totalEur : null);
+  // Das Probetraining ist kostenlos - der Code sagt das zwei Zeilen weiter
+  // unten selbst ("Kostenlos (0 €)"). Trotzdem stand hier fest 30. Damit trug
+  // jedes Lead-Event denselben erfundenen Betrag, und genau das meldet Metas
+  // Events Manager: "Alle Lead-Events deiner Website senden dieselben
+  // Preisdaten". Leads gehen jetzt ganz ohne Wert und Waehrung raus; Meta
+  // optimiert dann auf Anzahl statt auf einen Fantasiewert.
+  //
+  // Kaeufe bleiben unveraendert: sie tragen den echten Rechnungsbetrag aus
+  // obj.total. Wenn Meta auch dort identische Werte meldet, liegt das nicht an
+  // dieser Zeile - dann sind es entweder tatsaechlich lauter gleiche Betraege
+  // (bisher fast nur das eine Early-Bird-Paket) oder Bsports eigene Events,
+  // die ueber unser globales fbq laufen.
+  const hatWert = !isProbetraining && hasTotal;
+  const value         = hatWert ? totalEur : undefined;
+  const valueCurrency = hatWert ? currency : undefined;
   const typeStr = isProbetraining
     ? 'Probetraining (Buchung)'
     : (isPurchase ? 'Mitgliedschaft' : 'Unklarer Rechnungsbetrag');
@@ -545,7 +567,7 @@ export default async function handler(req, res) {
           invoiceId,
           customer,
           value,
-          currency,
+          currency: valueCurrency,
           contentName: productName,
           sourceUrl:   metaSourceUrl,
         })
@@ -554,7 +576,7 @@ export default async function handler(req, res) {
       ? sendGoogleConversion({
           invoiceId,
           value,
-          currency,
+          currency: valueCurrency,
         })
       : Promise.resolve({ ok: false, reason: !hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported' }),
     sendAdminEmail({

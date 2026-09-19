@@ -41,9 +41,12 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'probetraining_booking_completed',
-      booking_type: 'probetraining',
-      value: 30,
-      currency: 'EUR'
+      booking_type: 'probetraining'
+      /* Kein value/currency mehr: das Probetraining ist kostenlos, die
+         frueheren 30 EUR waren erfunden. Der Ereignisname bleibt exakt
+         gleich - daran haengen die GTM-Trigger. Falls in GTM ein Tag den
+         Wert ausgelesen hat, sendet es jetzt keinen - was fuer eine
+         Gratisbuchung richtig ist. */
     });
   }
 
