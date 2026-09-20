@@ -387,12 +387,17 @@ body .pt-bsport-dialog * {
   overscroll-behavior: auto !important;
 }
 
-/* Solange das Formular offen ist, tritt die Terminliste zurueck. Damit steht
-   das Formular genau dort, wo eben noch der Kalender stand - gleicher
-   Container, gleiche Breite, gleiches Scrollen. */
-body.bsport-modal-open #pt-cal-view {
-  display: none !important;
-}
+/* Das Zuruecktreten der Terminliste steht NICHT mehr hier.
+
+   Diese Regel lautete body.bsport-modal-open #pt-cal-view { display: none }.
+   Richtig, solange Bsports Dialog an <body> hing. Der Geraetetest hat
+   gezeigt, dass er in #pt-cal-view haengt - die Regel haette ihn also mit
+   ausgeblendet und den Buchungsbereich leer gelassen.
+
+   Ausgeblendet wird jetzt in probetraining-page.js, Abschnitt "NUR DER
+   DIALOG BLEIBT STEHEN": dort wird der Weg vom Dialog nach oben abgegangen
+   und nur das ausgeblendet, was daneben steht. Das trifft in beiden
+   Gestalten das Richtige. */
 
 /* ─────────────────────────────────────────────────────────────────────────
    NOTBEHELF: Hinweis auf das Wischen am Bildschirmrand

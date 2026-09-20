@@ -6,11 +6,18 @@
  * positionierter Kasten mit eigener Scroll-Flaeche, dazu eine Sperre des
  * Seiten-Scrollens (body { position: fixed; overflow: hidden }).
  *
- * Bsport haengt sein Anmeldeformular aber NICHT in den Container, den wir ihm
- * geben. Es rendert es als direktes Kind von <body>, in einem eigenen
- * Portal-Container (.bsport-user-interaction-modal__container). Genau darum
- * ist keine der CSS-Korrekturen aus PR #43 je angekommen: sie waren alle auf
- * #pt-cal-view begrenzt, und das Formular lag nie darin.
+ * ACHTUNG, HIER STAND JAHRELANG ETWAS FALSCHES:
+ * "Bsport haengt sein Anmeldeformular NICHT in den Container, den wir ihm
+ * geben, sondern rendert es als direktes Kind von <body>." Das galt fuer den
+ * alten Dialog (.bsport-user-interaction-modal__container). Der Geraetetest
+ * zu PR #90 hat die vollstaendige Kette geliefert, und heute liegt das
+ * Formular MITTEN IN #pt-cal-view - in unserem eigenen Container. Aus der
+ * falschen Annahme folgte zweimal hintereinander eine Erkennung, die genau
+ * dort nicht hingesehen hat.
+ *
+ * Deshalb wird der Dialog jetzt weder ueber seinen Namen noch ueber seinen
+ * Ort gesucht, sondern ueber seine Bauart: fest positioniert, nicht von uns,
+ * mit sichtbarem Inhalt. Einzelheiten beim Abschnitt "BSPORTS DIALOG FINDEN".
  *
  * Zusammen ergab das die gemeldete Randleiste: Bsports Formular lag mittig auf
  * dem Schirm, sein Scrollen war durch unsere body-Sperre lahmgelegt, und das
@@ -271,39 +278,62 @@
     var _huelle = null;   /* Bsports Wurzel, aus der wir den Dialog holen */
     var HAKEN  = 'pt-bsport-dialog';   /* unsere eigene Marke am Dialog */
 
-    /* ── BSPORTS DIALOG FINDEN, OHNE AUF EINEN NAMEN ZU WETTEN ────────────
-       WAS DER GERAETETEST GEZEIGT HAT
-       Auf dem Anmeldeschritt (Adressfelder) meldete ?ptdebug=1 auf dem echten
-       iPhone: "Kein Bsport-Dialog offen", alle Zaehler auf 0 - waehrend der
-       Dialog sichtbar offen war. Die Kette unter dem Finger lautete:
+    /* ── BSPORTS DIALOG FINDEN ────────────────────────────────────────────
+       DIE ANNAHME, DIE SEIT PR #43 IM CODE STAND, IST FALSCH
+       Oben in dieser Datei steht seit jeher: "Bsport haengt sein
+       Anmeldeformular NICHT in den Container, den wir ihm geben. Es rendert
+       es als direktes Kind von <body>." Der zweite Geraetetest hat die
+       vollstaendige Kette geliefert, und sie endet woanders:
 
-         div.bs-book-button__inner_text
-         > div#bs-activity--dialog__content.MuiDialogContent-root-917  [981px]
-         > div.MuiPaper-root-889.MuiDialog-paper-876      [SCHEINSCROLLER 0px]
-         > div.cleanslate                                 [SCHEINSCROLLER 0px]
+         div.bs-activity__middle__coach__description
+         > div.bs-activity__middle__coach > div.bs-activity__middle
+         > div.bs-activity
+         > div#bs-activity--dialog__content.MuiDialogContent-root-1149 [735px]
+         > div.MuiPaper-root-1121.MuiDialog-paper-1108  [SCHEINSCROLLER 0px]
+         > div.MuiDialog-container-1107.MuiDialog-scrollPaper-1105
+         > div#bs-activity--dialog.MuiDialog-root-1104  [FEST]
+         > div#bs-setup-derived-variable.bs-setup-variable
+         > div > div.jss2 > div.jss1
+         > div.cleanslate                               [SCHEINSCROLLER 0px]
+         > div#bsport-widget-880939
+         > div#pt-cal-view
+         > div.container
 
-       Damit ist zweierlei belegt:
+       Der Dialog haengt IN UNSEREM EIGENEN Container. Und die Suche aus
+       PR #89 hat genau dort nicht hingesehen: sie ging die Kinder von <body>
+       durch und uebersprang alles, was #pt-cal-view enthaelt, damit nicht
+       versehentlich die Terminliste eingesammelt wird. Diese Ausnahme war
+       der Fehler - sie schloss ausgerechnet den Ort aus, an dem der Dialog
+       steht. Deshalb wieder: kein Dialog gefunden, alle Zaehler auf 0.
 
-       1. Dieser Dialog heisst nicht bsport-user-interaction-modal, sondern
-          bs-activity--dialog. Der fest verdrahtete Selektor traf nichts -
-          also lief KEIN einziger Eingriff, weder CSS noch JS. Die beiden
-          Scheinscroller in der Kette sind genau die, die PR #88 entschaerft
-          haette, wenn es den Dialog gesehen haette.
-       2. Bsports MUI-Klassen tragen laufende Nummern (MuiPaper-root-889).
-          Ein Selektor .MuiPaper-root trifft so etwas NICHT - es ist ein
-          anderer Klassenname, kein Praefix.
+       WAS DIESMAL ANDERS IST
+       Gesucht wird ausschliesslich nach einer Eigenschaft, die weder ein
+       Klassenname noch eine Schachtelungstiefe ist:
 
-       WAS DARAUS FOLGT
-       Auf einen Klassennamen zu wetten war der Fehler, nicht dieser eine
-       Name. Gesucht wird jetzt nach Bauart statt nach Beschriftung: ein
-       Kind von <body>, das uns nicht gehoert, sichtbar ist und Bsports
-       Handschrift traegt - cleanslate, bs-* oder bsport-*. Was davon
-       uebernommen wird, ist die .cleanslate-Huelle: sie umschliesst Bsports
-       Oberflaeche, waehrend die feste Wurzel darueber liegen bleibt und
-       entschaerft wird.
+         position: fixed + gehoert uns nicht + hat sichtbaren Inhalt
 
-       Und einmal uebernommen, traegt der Dialog UNSERE Marke (HAKEN).
-       Ab da haengt weder CSS noch JS an einem fremden Namen. */
+       Das genuegt und traegt ueber alle Unterschritte hinweg: die
+       Terminliste steht im normalen Fluss, nur der Dialog ist fest
+       positioniert. Damit braucht es die Ausnahme fuer #pt-cal-view nicht
+       mehr - und die Namen dazwischen (bs-setup-derived-variable, jss1,
+       jss2, MuiDialog-container-1107) duerfen sich aendern, so oft sie
+       wollen. Sie werden nicht mehr gelesen.
+
+       Gesucht wird an den beiden Orten, die ueberhaupt vorkommen: in
+       unseren Widget-Containern und an <body>. Genommen wird der
+       AEUSSERSTE feste Treffer - bei MUI ist das die Dialogwurzel, die
+       Blende darin ist ihr Kind.
+
+       WARUM DER DIALOG NICHT MEHR UMGEHAENGT WIRD
+       Frueher wurde er neben die Terminliste gehaengt. Bei dieser Gestalt
+       waere das schaedlich: .cleanslate liegt als Vorfahre ueber ihm, und
+       Bsports gesamte Gestaltung haengt an genau diesem Vorfahren. Wer den
+       Dialog dort herausholt, nimmt ihm sein Aussehen. Er bleibt also
+       stehen, wo er ist - fest positioniert wird er trotzdem nicht mehr,
+       siehe probetraining-page.css bei .pt-bsport-dialog.
+
+       Einmal erkannt, traegt er UNSERE Marke. Ab da haengt weder CSS noch
+       JS an etwas, das Bsport gehoert. */
 
     function sichtbar(el) {
       if (!el || !el.getBoundingClientRect) return false;
@@ -311,90 +341,116 @@
       if (r.width < 2 || r.height < 2) return false;
       var cs = window.getComputedStyle(el);
       if (cs.display === 'none' || cs.visibility === 'hidden') return false;
-      return String(el.textContent || '').trim().length > 0;
+      return true;
     }
 
-    /* Traegt das Element selbst Bsports Handschrift? */
-    function bsportZeichen(el) {
-      if (el.id && /^(bs-|bsport)/.test(el.id)) return true;
-      var k = el.classList;
-      for (var i = 0; i < k.length; i++) {
-        if (k[i] === 'cleanslate' || /^bs-/.test(k[i]) || /bsport/.test(k[i])) return true;
-      }
-      return false;
-    }
-
-    /* Auch der Inhalt zaehlt: die feste Huelle traegt auf dem Geraet
-       moeglicherweise gar keine bs-Klasse, das .cleanslate darin schon. */
-    function bsportEigen(el) {
-      if (bsportZeichen(el)) return true;
-      return !!el.querySelector('.cleanslate,[id^="bs-"],[id^="bsport"],[class^="bs-"],[class*=" bs-"],[class*="bsport"]');
-    }
-
-    /* Was uns gehoert, wird nie uebernommen - sonst haengt sich die Seite
-       in sich selbst ein. */
+    /* Was WIR gebaut haben. Diese Namen sind stabil - wir vergeben sie
+       selbst. Ueber Bsports Namen wird nichts mehr angenommen. */
     function unserEigen(el) {
       if (!el || el.nodeType !== 1) return true;
       var t = el.tagName;
       if (t === 'SCRIPT' || t === 'STYLE' || t === 'LINK' || t === 'NOSCRIPT'
           || t === 'TEMPLATE' || t === 'IFRAME') return true;
-      if (el.id === 'pt-touch-debug' || el.id === 'pt-edge-hint') return true;
-      var view = document.getElementById('pt-cal-view');
-      if (view && el.contains(view)) return true;
+      switch (el.id) {
+        case 'pt-touch-debug': case 'pt-edge-hint': case 'header':
+        case 'mobile-nav': case 'preloader': case 'pt-cal-view':
+          return true;
+      }
+      if (el.classList && el.classList.contains('noise')) return true;
+      if (el.classList && el.classList.contains('bomaye-consent-gate')) return true;
+      if (el.id && el.id.indexOf('bsport-widget-') === 0) return true;  /* unser Halter */
       return false;
     }
 
-    function dialogWurzel() {
-      var kinder = document.body.children;
-      for (var i = 0; i < kinder.length; i++) {
-        var el = kinder[i];
-        if (unserEigen(el)) continue;
-        if (!bsportEigen(el)) continue;
-        if (!sichtbar(el)) continue;
-        return el;
-      }
+    /* Bsports Handschrift. Wird NUR gebraucht, um an <body> eine fremde
+       feste Ebene von Bsports zu unterscheiden - im Test hat sonst
+       Cookiebots Einwilligungsdialog den Zuschlag bekommen, und mit ihm
+       verschwand die Terminliste.
 
-      /* Auffangnetz, falls Bsport sein Portal nicht an <body> haengt, sondern
-         irgendwo sonst. Die Terminliste ist ausgenommen - sie bringt ihr
-         eigenes .cleanslate mit und ist nicht der Anmeldeschritt. Verlangt
-         werden Eingabefelder, damit hier nicht irgendein Bsport-Baustein
-         eingesammelt wird. querySelectorAll liefert in Dokumentreihenfolge,
-         der erste Treffer ist also der aeusserste. */
+       Innerhalb unserer Widget-Container wird sie NICHT verlangt: was dort
+       steht, hat Bsport gebaut, da genuegt "fest positioniert". Genau dort
+       lagen beide gemeldeten Fehler, und genau dort wird weiterhin nichts
+       ueber Namen angenommen. */
+    function bsportHandschrift(el) {
+      if (el.id && /^(bs-|bsport)/.test(el.id)) return true;
+      var k = el.classList;
+      for (var i = 0; i < k.length; i++) {
+        if (k[i] === 'cleanslate' || /^bs-/.test(k[i]) || /bsport/.test(k[i])) return true;
+      }
+      return !!el.querySelector('.cleanslate,[id^="bs-"],[id^="bsport"],[class^="bs-"],[class*=" bs-"],[class*="bsport"]');
+    }
+
+    /* Ein Dialog hat etwas zu zeigen - Bedienelemente oder ordentlich Text.
+       Das unterscheidet ihn von einer leeren Blende. */
+    function hatInhalt(el) {
+      if (el.querySelector('input,select,textarea,button,a,[role="button"]')) return true;
+      return String(el.textContent || '').trim().length > 20;
+    }
+
+    /* Die beiden Orte, an denen ueberhaupt ein Dialog stehen kann. Mehr
+       Suchraum kostet Rechenzeit und bringt nichts. */
+    function suchraeume() {
+      var raeume = [];
+      var halter = document.querySelectorAll('[id^="bsport-widget-"]');
+      for (var i = 0; i < halter.length; i++) {
+        /* unser eigener Halter: alles darin gehoert Bsport */
+        if (halter[i].tagName !== 'SCRIPT') raeume.push({ el: halter[i], unser: true });
+      }
       var view = document.getElementById('pt-cal-view');
-      var k = document.querySelectorAll('.cleanslate,[id^="bs-"],[class*="bsport-"]');
-      for (var j = 0; j < k.length; j++) {
-        var c = k[j];
-        if (view && view.contains(c)) continue;
-        if (unserEigen(c)) continue;
-        if (!c.querySelector('input,select,textarea')) continue;
-        if (!sichtbar(c)) continue;
-        return c;
+      var kinder = document.body.children;
+      for (var j = 0; j < kinder.length; j++) {
+        var el = kinder[j];
+        if (unserEigen(el)) continue;
+        if (view && el.contains(view)) continue;   /* ueber die Halter abgedeckt */
+        raeume.push({ el: el, unser: false });
+      }
+      return raeume;
+    }
+
+    /* Fest positioniert? Bei fixed ist offsetParent immer null, und das ist
+       billiger zu lesen als der ganze berechnete Stil - erst der Vorfilter,
+       dann die teure Frage. */
+    function festUndFremd(el) {
+      if (el.offsetParent !== null) return false;
+      if (unserEigen(el)) return false;
+      return window.getComputedStyle(el).position === 'fixed';
+    }
+
+    function festerDialog() {
+      var raeume = suchraeume();
+      for (var i = 0; i < raeume.length; i++) {
+        var raum = raeume[i].el;
+        var imEigenen = raeume[i].unser;
+        function taugt(el) {
+          if (!festUndFremd(el)) return false;
+          if (!sichtbar(el) || !hatInhalt(el)) return false;
+          /* Nur ausserhalb unserer Halter: es muss auch Bsports sein. */
+          return imEigenen || bsportHandschrift(el);
+        }
+        if (taugt(raum)) return raum;
+        /* getElementsByTagName liefert in Dokumentreihenfolge - der erste
+           Treffer ist damit der aeusserste. */
+        var alle = raum.getElementsByTagName('*');
+        for (var j = 0; j < alle.length; j++) {
+          if (taugt(alle[j])) return alle[j];
+        }
       }
       return null;
     }
 
-    /* Uebernommen wird Bsports Oberflaeche, nicht ihre feste Huelle: die
-       bleibt liegen und wird durchlaessig gemacht. */
-    function adoptionsZiel(wurzel) {
-      if (wurzel.classList.contains('cleanslate')) return wurzel;
-      var cs = wurzel.querySelector('.cleanslate');
-      return cs || wurzel;
-    }
-
     function dialogFinden() {
-      /* Schon uebernommen? Dann traegt er unsere Marke. Verschwindet der
-         Inhalt, gilt er als zu - sonst bliebe die Terminliste fuer immer
-         ausgeblendet, wenn React nur eine leere Huelle stehen laesst. */
+      /* Schon erkannt? Dann traegt er unsere Marke - und ist nicht mehr fest
+         positioniert, wuerde von festerDialog() also gar nicht mehr gefunden.
+         Verschwindet sein Inhalt, gilt er als zu. */
       var da = document.querySelector('.' + HAKEN);
       if (da) {
-        if (sichtbar(da)) return da;
+        if (document.body.contains(da) && sichtbar(da) && hatInhalt(da)) return da;
         da.classList.remove(HAKEN);
       }
-      var gefunden = document.querySelector(MODAL_SEL);
-      if (!gefunden) {
-        var w = dialogWurzel();
-        if (w) gefunden = adoptionsZiel(w);
-      }
+      var gefunden = festerDialog();
+      /* Letztes Netz: der alte, fest verdrahtete Name. Kostet nichts und
+         faengt die Gestalt ab, gegen die PR #43 gebaut wurde. */
+      if (!gefunden) gefunden = document.querySelector(MODAL_SEL);
       if (!gefunden) return null;
       gefunden.classList.add(HAKEN);
       return gefunden;
@@ -413,9 +469,22 @@
        Geraet ablesen, WELCHER Eingriff ueberhaupt etwas zu tun hatte. Bei
        diesem Fehler ist schon oft genug geraten worden.
 
-       1. FEST POSITIONIERT -> EINGEREIHT
-          position: relative statt static, damit absolut positionierte Kinder
-          darin (Schliessen-Kreuz, Auswahllisten) ihren Bezugsrahmen behalten.
+       1. AUS DEM FLUSS GENOMMEN -> WIEDER EINGEREIHT
+          Fest positionierte Nachfahren werden relativ, damit absolut
+          positionierte Kinder darin (Schliessen-Kreuz, Auswahllisten) ihren
+          Bezugsrahmen behalten.
+
+          Dazu ein Fall, den der Versuchsaufbau aufgedeckt hat: ein absolut
+          positioniertes Element, bei dem SOWOHL top ALS AUCH bottom gesetzt
+          sind, wird an seinem Container festgezurrt. Solange die Dialog-
+          wurzel fest positioniert war, war dieser Container der Schirm und
+          alles stimmte. Sobald sie im Fluss steht und ihre Hoehe sich nach
+          dem Inhalt richtet, spannt sich das Kind zwischen Ober- und
+          Unterkante eines Kastens auf, der genau deshalb null hoch ist - der
+          Dialog verschwand im Test spurlos, obwohl er im Baum stand.
+          Deshalb wird auch das eingereiht. Dekorative Absolute (top und
+          right gesetzt, bottom auto) bleiben unberuehrt - die Bedingung
+          trifft sie nicht.
 
        2. SCHEINSCROLLER -> ENTSCHAERFT
           Ein Element, dessen overflow-y auf auto oder scroll steht, dessen
@@ -495,7 +564,9 @@
         if (!ds) continue;
         var cs = window.getComputedStyle(el);
 
-        if (!ds[MARKER] && cs.position === 'fixed') {
+        var gespannt = cs.position === 'absolute'
+                    && cs.top !== 'auto' && cs.bottom !== 'auto';
+        if (!ds[MARKER] && (cs.position === 'fixed' || gespannt)) {
           el.style.setProperty('position', 'relative', 'important');
           el.style.setProperty('inset', 'auto', 'important');
           ds[MARKER] = '1';
@@ -713,6 +784,63 @@
       }, true);
     }
 
+    /* ── NUR DER DIALOG BLEIBT STEHEN ─────────────────────────────────────
+       Frueher verschwand die Terminliste per CSS: body.bsport-modal-open
+       #pt-cal-view { display: none }. Das war richtig, solange der Dialog an
+       <body> hing. Jetzt haengt er IN #pt-cal-view - die Regel wuerde ihn
+       mit ausblenden und den Buchungsbereich leer lassen.
+
+       Stattdessen wird der Weg vom Dialog nach oben abgegangen und auf jeder
+       Stufe ausgeblendet, was DANEBEN steht. Was uebrig bleibt, ist genau
+       die Kette bis zum Dialog - das Formular steht dort, wo eben noch die
+       Terminliste stand. Kein Klassenname, keine Tiefe, keine Annahme
+       darueber, wo Bsport die Liste hinbaut. */
+    function nurDialogZeigen(dialog, stop) {
+      var n = dialog;
+      while (n && n !== stop && n.parentElement) {
+        var g = n.parentElement.children;
+        for (var i = 0; i < g.length; i++) {
+          var s = g[i];
+          if (s === n || unserEigen(s)) continue;
+          if (s.dataset && s.dataset.ptVersteckt) continue;
+          if (s.dataset) s.dataset.ptVersteckt = '1';
+          s.style.setProperty('display', 'none', 'important');
+        }
+        n = n.parentElement;
+      }
+    }
+
+    function wiederZeigen() {
+      var v = document.querySelectorAll('[data-pt-versteckt]');
+      for (var i = 0; i < v.length; i++) {
+        v[i].style.removeProperty('display');
+        v[i].removeAttribute('data-pt-versteckt');
+      }
+    }
+
+    /* MUIs Blende ist ein fest positioniertes, schirmfuellendes Kind der
+       Dialogwurzel ohne eigenen Inhalt. Im Seitenfluss ergibt sie keinen
+       Sinn mehr, und sobald einreihen() ihre feste Lage aufhebt, wuerde sie
+       als leerer Block von Schirmhoehe die Seite aufblaehen. Deshalb weg -
+       und zwar VOR einreihen(), solange "fest" noch ablesbar ist.
+       Bedingung gemessen, nicht geraten: fest + fast schirmfuellend + nichts
+       drin. Ein echtes Inhaltselement erfuellt das nicht. */
+    function blendenAusblenden(dialog) {
+      var alle = dialog.querySelectorAll('*');
+      for (var i = 0; i < alle.length; i++) {
+        var el = alle[i];
+        if (el.dataset && el.dataset.ptBlende) continue;
+        if (window.getComputedStyle(el).position !== 'fixed') continue;
+        var r = el.getBoundingClientRect();
+        if (r.width < window.innerWidth * 0.8) continue;
+        if (r.height < window.innerHeight * 0.8) continue;
+        if (hatInhalt(el)) continue;
+        el.style.setProperty('display', 'none', 'important');
+        if (el.dataset) el.dataset.ptBlende = '1';
+        _ptZaehler.schleier++;
+      }
+    }
+
     function check() {
       var el = dialogFinden();
       document.body.classList.toggle(BODY_CLASS, !!el);
@@ -720,14 +848,27 @@
       var sicher = !!el || formularfeldSichtbar();
       formSchritt(sicher || Date.now() < _tippBis, sicher);
 
-      if (!el) { entsperren(); return; }
+      if (!el) { wiederZeigen(); entsperren(); return; }
 
-      var ziel_ = ziel();
-      if (ziel_ && el.parentElement !== ziel_) {
-        if (el.parentElement) _huelle = el.parentElement;
-        ziel_.appendChild(el);
+      var view = document.getElementById('pt-cal-view');
+      if (view && view.contains(el)) {
+        /* Der Fall vom Geraet: der Dialog steht schon in unserem Fluss. */
+        nurDialogZeigen(el, view);
+      } else {
+        /* Die alte Gestalt: Portal an <body>. Dann wird umgehaengt und die
+           Terminliste tritt als Ganzes zurueck. */
+        var ziel_ = ziel();
+        if (ziel_ && el.parentElement !== ziel_) {
+          if (el.parentElement) _huelle = el.parentElement;
+          ziel_.appendChild(el);
+        }
+        if (_huelle) schleierEntschaerfen(_huelle);
+        if (view && !view.dataset.ptVersteckt) {
+          view.dataset.ptVersteckt = '1';
+          view.style.setProperty('display', 'none', 'important');
+        }
       }
-      if (_huelle) schleierEntschaerfen(_huelle);
+      blendenAusblenden(el);
       einreihen(el);
       entsperren();
     }
