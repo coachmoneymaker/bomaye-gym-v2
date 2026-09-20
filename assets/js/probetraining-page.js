@@ -258,7 +258,10 @@
      diese Funktion nichts. */
   /* Was die Eingriffe am Bsport-Dialog tatsaechlich zu tun hatten. Wird von
      ?ptdebug=1 angezeigt - siehe _ptSetupTouchDebug. */
-  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0 };
+  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0 };
+
+  /* Der erkannte Dialog, als ELEMENT. Siehe dialogFinden(). */
+  var _ptDialog = null;
 
   /* Erlaubt der Wert senkrechtes Wischen? auto und manipulation ja, none und
      ein reines pan-x nein. Steht hier oben, weil sowohl der Eingriff als auch
@@ -438,21 +441,44 @@
       return null;
     }
 
+    /* ── WARUM HIER EIN ELEMENT GEHALTEN WIRD UND NICHT NUR EINE KLASSE ───
+       Die Marke pt-bsport-dialog ist ein Klassenname, und className gehoert
+       im Dialog React. Baut es das Formular fuer den naechsten Schritt neu
+       auf, schreibt es className neu - unsere Marke ist weg, obwohl dasselbe
+       Element noch dasteht.
+
+       Genau das stand im dritten Geraetetest: Zeile 1 meldete "Kein
+       Bsport-Dialog offen", waehrend die Kette unter dem Finger
+       div#bs-activity--dialog.pt-bsport-dialog zeigte. Kein Widerspruch,
+       sondern zwei Momentaufnahmen - dazwischen hatte React die Klasse
+       einmal abgeraeumt.
+
+       Das Element selbst kann uns niemand wegnehmen. Es wird hier gehalten
+       und bei jedem Takt nur noch geprueft; die Klasse wird neu gesetzt,
+       wenn sie fehlt, damit das CSS weiter greift. Der Zaehler "marke" sagt
+       auf dem Geraet, wie oft das noetig war. */
     function dialogFinden() {
-      /* Schon erkannt? Dann traegt er unsere Marke - und ist nicht mehr fest
-         positioniert, wuerde von festerDialog() also gar nicht mehr gefunden.
-         Verschwindet sein Inhalt, gilt er als zu. */
-      var da = document.querySelector('.' + HAKEN);
-      if (da) {
-        if (document.body.contains(da) && sichtbar(da) && hatInhalt(da)) return da;
-        da.classList.remove(HAKEN);
+      if (_ptDialog && document.body.contains(_ptDialog)
+          && sichtbar(_ptDialog) && hatInhalt(_ptDialog)) {
+        if (!_ptDialog.classList.contains(HAKEN)) {
+          _ptDialog.classList.add(HAKEN);
+          _ptZaehler.marke++;
+        }
+        return _ptDialog;
       }
+      _ptDialog = null;
+
+      /* Ein Ueberbleibsel von vorhin? Dann ist es zu. */
+      var da = document.querySelector('.' + HAKEN);
+      if (da) da.classList.remove(HAKEN);
+
       var gefunden = festerDialog();
       /* Letztes Netz: der alte, fest verdrahtete Name. Kostet nichts und
          faengt die Gestalt ab, gegen die PR #43 gebaut wurde. */
       if (!gefunden) gefunden = document.querySelector(MODAL_SEL);
       if (!gefunden) return null;
       gefunden.classList.add(HAKEN);
+      _ptDialog = gefunden;
       return gefunden;
     }
 
@@ -556,37 +582,83 @@
       }
     }
 
+    /* ── WELCHE ELEMENTE UEBERHAUPT BEHANDELT WERDEN ──────────────────────
+       DER FEHLER, DEN DER DRITTE GERAETETEST GEZEIGT HAT
+       Am Ende des Formulars (Notfallkontakt, Haken) lautete die Kette:
+
+         ... > div#bs-activity--dialog.pt-bsport-dialog   <- unsere Marke
+         > div#bs-setup-derived-variable > div > div.jss2 > div.jss1
+         > div.cleanslate  [SCHEINSCROLLER 0px]  <- hat den Wisch gefangen
+         > div#bsport-widget-880939
+
+       .cleanslate ist kein NACHFAHRE des Dialogs, sondern sein VORFAHRE.
+       Behandelt wurden bisher nur Nachfahren (querySelectorAll geht nach
+       unten), und dieselbe Blindstelle hatte auch der Versuchsaufbau: er
+       zaehlte die Scheinscroller ebenfalls nur unterhalb des Dialogs. Beide
+       haben in dieselbe Richtung nicht geschaut.
+
+       Gefangen wird ein Wisch aber vom NAECHSTEN scrollbaren Vorfahren -
+       egal, ob er ueber oder unter der Marke sitzt. Deshalb laeuft die
+       Behandlung jetzt in beide Richtungen: alle Nachfahren, und der Weg
+       nach oben bis einschliesslich unseres Widget-Halters. Weiter nach oben
+       nicht: dort beginnt unsere eigene Seite, und die scrollt richtig. */
+    function zuBehandeln(root) {
+      var liste = [root];
+      var unten = root.querySelectorAll('*');
+      for (var i = 0; i < unten.length; i++) liste.push(unten[i]);
+      var n = root.parentElement;
+      while (n && n !== document.body) {
+        if (n.id === 'pt-cal-view') break;          /* ab hier gehoert es uns */
+        liste.push(n);
+        if (n.id && n.id.indexOf('bsport-widget-') === 0) break;   /* Halter mitnehmen, dann Schluss */
+        n = n.parentElement;
+      }
+      return liste;
+    }
+
+    /* ── DIE BEHANDLUNG WIEDERHOLT SICH, STATT SICH ETWAS ZU MERKEN ───────
+       Bisher trug jedes behandelte Element eine Merkmarke und wurde danach
+       uebersprungen. Das haelt nicht: Bsports Formular baut sich pro Schritt
+       neu auf, und React schreibt dabei style und class der Elemente neu -
+       die Marke bleibt, der Eingriff ist weg, und uebersprungen wird er
+       trotzdem. Genau dazu passt der Befund: Zaehler ungleich null, Falle
+       trotzdem offen.
+
+       Deshalb wird bei jedem Takt neu GEMESSEN und nur dann geschrieben,
+       wenn der berechnete Wert tatsaechlich falsch ist. Das ist von sich aus
+       wiederholbar, ueberlebt jedes Neuzeichnen - und loest keine
+       Endlosschleife aus, weil nach dem ersten Durchgang nichts mehr zu
+       schreiben ist und der Beobachter nichts mehr zu melden hat. */
     function einreihen(root) {
-      var alle = root.querySelectorAll('*');
-      for (var i = 0; i < alle.length; i++) {
-        var el = alle[i];
-        var ds = el.dataset;
-        if (!ds) continue;
+      var liste = zuBehandeln(root);
+      for (var i = 0; i < liste.length; i++) {
+        var el = liste[i];
+        if (!el.style) continue;
         var cs = window.getComputedStyle(el);
 
+        /* 1. aus dem Fluss genommen -> wieder eingereiht */
         var gespannt = cs.position === 'absolute'
                     && cs.top !== 'auto' && cs.bottom !== 'auto';
-        if (!ds[MARKER] && (cs.position === 'fixed' || gespannt)) {
+        if (cs.position === 'fixed' || gespannt) {
           el.style.setProperty('position', 'relative', 'important');
           el.style.setProperty('inset', 'auto', 'important');
-          ds[MARKER] = '1';
           _ptZaehler.fest++;
         }
 
-        if (!ds[MARKER_SCROLL] && (cs.overflowY === 'auto' || cs.overflowY === 'scroll')
+        /* 2. Scheinscroller -> entschaerft */
+        if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll')
             && el.scrollHeight - el.clientHeight <= 4) {
           if (el.scrollWidth - el.clientWidth > 4) {
             el.style.setProperty('overflow-y', 'hidden', 'important');
           } else {
             el.style.setProperty('overflow', 'visible', 'important');
           }
-          ds[MARKER_SCROLL] = '1';
           _ptZaehler.schein++;
         }
 
-        if (!ds[MARKER_GESTE] && !senkrechtErlaubt(cs.touchAction)) {
+        /* 3. Geste verboten -> wieder erlaubt */
+        if (!senkrechtErlaubt(cs.touchAction)) {
           el.style.setProperty('touch-action', 'pan-y', 'important');
-          ds[MARKER_GESTE] = '1';
           _ptZaehler.geste++;
         }
       }
@@ -962,12 +1034,24 @@
     /* Zaehlt die Scheinscroller, die gerade noch im Dialog stehen. Nach dem
        Eingriff muss hier 0 stehen - tut es das nicht, greift der Eingriff
        nicht oder Bsport baut sie schneller nach, als wir sie entschaerfen. */
+    /* Zaehlt in BEIDE Richtungen. Die erste Fassung zaehlte nur nach unten -
+       und meldete deshalb "offeneScheinscroller=0", waehrend .cleanslate als
+       VORFAHRE des Dialogs den Wisch fing. Dieselbe Blindstelle hatte der
+       Eingriff selbst; sie ist jetzt an beiden Stellen zu. */
     function scheinImDialog(el) {
       var n = 0;
+      function pruefe(k) {
+        if (!scrollbar(window.getComputedStyle(k))) return;
+        if (k.scrollHeight - k.clientHeight <= 4) n++;
+      }
+      pruefe(el);
       var alle = el.querySelectorAll('*');
-      for (var i = 0; i < alle.length; i++) {
-        if (!scrollbar(window.getComputedStyle(alle[i]))) continue;
-        if (alle[i].scrollHeight - alle[i].clientHeight <= 4) n++;
+      for (var i = 0; i < alle.length; i++) pruefe(alle[i]);
+      var v = el.parentElement;
+      while (v && v !== document.body) {
+        pruefe(v);
+        if (v.id === 'pt-cal-view') break;
+        v = v.parentElement;
       }
       return n;
     }
@@ -987,11 +1071,15 @@
       return 'Eingriffe: fest ' + _ptZaehler.fest
            + ' | schein ' + _ptZaehler.schein
            + ' | geste ' + _ptZaehler.geste
-           + ' | schleier ' + _ptZaehler.schleier;
+           + ' | schleier ' + _ptZaehler.schleier
+           + ' | marke ' + _ptZaehler.marke;
     }
 
     function zustand() {
-      var el = document.querySelector('.pt-bsport-dialog');
+      /* Dieselbe Quelle wie der Eingriff: das gehaltene Element. Die Klasse
+         allein hat im dritten Geraetetest gelogen, weil React sie zwischen
+         zwei Takten abgeraeumt hatte. */
+      var el = _ptDialog && document.body.contains(_ptDialog) ? _ptDialog : null;
       var doc = document.scrollingElement || document.documentElement;
       var gesperrt = document.body.style.position === 'fixed'
                   || document.documentElement.style.overflow === 'hidden'
@@ -1053,9 +1141,15 @@
       zeile4.textContent = 'body: ' + aus.join(' ');
     }
 
-    zustand();
-    landkarte();
-    setInterval(function () { zustand(); landkarte(); }, 500);
+    /* Wirft eine der beiden Funktionen, bliebe ihre Zeile sonst auf dem
+       letzten geglueckten Stand stehen - und zeigte eine Lage, die es
+       laengst nicht mehr gibt. Lieber der Fehler im Klartext. */
+    function takt() {
+      try { zustand(); } catch (e) { zeile1.textContent = 'zustand() Fehler: ' + e.message; }
+      try { landkarte(); } catch (e) { zeile4.textContent = 'landkarte() Fehler: ' + e.message; }
+    }
+    takt();
+    setInterval(takt, 500);
 
     zeile2.textContent = 'Noch nicht getippt (#0). Bleibt die Zahl stehen, waehrend '
       + 'der Finger auf dem Formular liegt: fremdes Dokument (iframe).';
