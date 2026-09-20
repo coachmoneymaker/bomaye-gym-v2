@@ -258,7 +258,7 @@
      diese Funktion nichts. */
   /* Was die Eingriffe am Bsport-Dialog tatsaechlich zu tun hatten. Wird von
      ?ptdebug=1 angezeigt - siehe _ptSetupTouchDebug. */
-  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0 };
+  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0, wisch: 0 };
 
   /* Der erkannte Dialog, als ELEMENT. Siehe dialogFinden(). */
   var _ptDialog = null;
@@ -457,16 +457,37 @@
        und bei jedem Takt nur noch geprueft; die Klasse wird neu gesetzt,
        wenn sie fehlt, damit das CSS weiter greift. Der Zaehler "marke" sagt
        auf dem Geraet, wie oft das noetig war. */
+    /* ── WARUM AUFGEBEN NUR EIN AUSWEG UND KEIN REFLEX IST ────────────────
+       Die vorige Fassung gab den Dialog auf, sobald er einmal unsichtbar
+       oder leer war - und das ist ein Einbahnweg: beim Aufgeben faellt die
+       Marke, und festerDialog() findet ihn nie wieder, weil wir ihm selbst
+       gerade das position: fixed genommen haben, nach dem gesucht wird.
+       Ein einziger Wimpernschlag beim Neuzeichnen - React haengt den Inhalt
+       kurz aus - reichte also, um bis zum Seitenneuladen blind zu sein. Ab
+       da lief kein Eingriff mehr, und die Zustandszeile meldete wieder
+       "Kein Bsport-Dialog offen", obwohl der Dialog dastand.
+
+       Verlassen wird sich jetzt nur noch auf eine Tatsache, die nicht
+       flackert: steht das Element noch im Dokument? Unsichtbar oder leer
+       darf es sein, solange es das nicht laenger als ZU_VERZUG bleibt. */
+    var ZU_VERZUG = 1500;
+    var _ptLeerSeit = 0;
+
     function dialogFinden() {
-      if (_ptDialog && document.body.contains(_ptDialog)
-          && sichtbar(_ptDialog) && hatInhalt(_ptDialog)) {
-        if (!_ptDialog.classList.contains(HAKEN)) {
-          _ptDialog.classList.add(HAKEN);
-          _ptZaehler.marke++;
+      if (_ptDialog && document.contains(_ptDialog)) {
+        if (sichtbar(_ptDialog) && hatInhalt(_ptDialog)) {
+          _ptLeerSeit = 0;
+          if (!_ptDialog.classList.contains(HAKEN)) {
+            _ptDialog.classList.add(HAKEN);
+            _ptZaehler.marke++;
+          }
+          return _ptDialog;
         }
-        return _ptDialog;
+        if (!_ptLeerSeit) _ptLeerSeit = Date.now();
+        if (Date.now() - _ptLeerSeit < ZU_VERZUG) return _ptDialog;
       }
       _ptDialog = null;
+      _ptLeerSeit = 0;
 
       /* Ein Ueberbleibsel von vorhin? Dann ist es zu. */
       var da = document.querySelector('.' + HAKEN);
@@ -945,6 +966,76 @@
       entsperren();
     }
 
+    /* ── DER WISCH, DER AUF EINEM KNOPF BEGINNT ───────────────────────────
+       Vierter Geraetetest, Wisch auf VERSENDEN/ZURUECK:
+
+         button.bs-button_base__container.ripple | ... | kein Faenger
+         Seite bewegt 0px | preventDefault: nein
+
+       Kein Scroll-Kasten in der Kette, kein abgefangenes Ereignis - und
+       trotzdem bewegt sich nichts. Daneben gewischt geht es. Es liegt also
+       am Startpunkt der Geste, nicht am Weg nach oben.
+
+       Zwei Ursachen kommen dafuer in Frage, und beide werden hier
+       abgedeckt, weil sich von hier aus nicht entscheiden laesst, welche es
+       ist (Bsports Quelltext ist nicht erreichbar):
+
+       a) touch-action auf dem Knopf verbietet dem Browser das Schieben.
+          Dagegen hilft CSS - siehe probetraining-page.css, .pt-bsport-dialog.
+
+       b) Bsports eigener Ripple hoert auf touchmove und ruft dort
+          preventDefault, um Geisterklicks zu vermeiden. Dagegen hilft kein
+          CSS: einmal abgefangen, ist die Geste verloren.
+
+       Gegen b) hilft nur, dass ihr Hoerer das Ereignis gar nicht erst
+       bekommt. Deshalb ein Hoerer in der EINFANGPHASE, also vor allen
+       anderen, der die Weitergabe stoppt - sobald klar ist, dass gewischt
+       und nicht getippt wird.
+
+       Eng gefasst, damit nichts kaputtgeht:
+         - nur Beruehrungen, die im Dialog beginnen,
+         - erst ab SCHWELLE Bewegung, also nie beim Tippen,
+         - nur wenn die Bewegung ueberwiegend senkrecht ist; ein seitliches
+           Ziehen bleibt unangetastet,
+         - preventDefault rufen wir selbst NICHT. Wir nehmen der Geste nur
+           die Zuhoerer, damit der Browser sie wie gewohnt ausfuehrt.
+       touchstart, touchend und click laufen unveraendert weiter - Ripple
+       und Klick bleiben also, wie sie sind. */
+    var SCHWELLE = 8;
+    var _startX = 0, _startY = 0, _imDialog = false, _entschieden = false;
+
+    function wischschutz() {
+      document.addEventListener('touchstart', function (e) {
+        var t = e.touches && e.touches[0];
+        if (!t) return;
+        _startX = t.clientX; _startY = t.clientY;
+        _entschieden = false;
+        var ziel = e.target;
+        _imDialog = !!(_ptDialog && ziel && _ptDialog.contains(ziel));
+      }, { passive: true, capture: true });
+
+      document.addEventListener('touchmove', function (e) {
+        if (!_imDialog || _entschieden) return;
+        var t = e.touches && e.touches[0];
+        if (!t) return;
+        var dx = Math.abs(t.clientX - _startX);
+        var dy = Math.abs(t.clientY - _startY);
+        if (dy < SCHWELLE || dy <= dx) return;
+        _entschieden = true;
+        _ptZaehler.wisch++;
+      }, { passive: true, capture: true });
+
+      /* Der eigentliche Schutz. Getrennt vom Messen oben, damit die
+         Entscheidung schon steht, wenn hier gestoppt wird. */
+      document.addEventListener('touchmove', function (e) {
+        if (_imDialog && _entschieden) e.stopPropagation();
+      }, { passive: true, capture: true });
+
+      document.addEventListener('touchend', function () {
+        _imDialog = false; _entschieden = false;
+      }, { passive: true, capture: true });
+    }
+
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
        Auf einen Bildaufbau zusammenfassen. */
     var _pending = false;
@@ -960,6 +1051,7 @@
        keine Mutation ausloesen - etwa eine Regel aus einem nachgeladenen
        Stylesheet. */
     ausloeserRuesten();
+    wischschutz();
     new MutationObserver(schedule).observe(document.documentElement, {
       childList: true, subtree: true,
       attributes: true, attributeFilter: ['style', 'class']
@@ -1072,7 +1164,8 @@
            + ' | schein ' + _ptZaehler.schein
            + ' | geste ' + _ptZaehler.geste
            + ' | schleier ' + _ptZaehler.schleier
-           + ' | marke ' + _ptZaehler.marke;
+           + ' | marke ' + _ptZaehler.marke
+           + ' | wisch ' + _ptZaehler.wisch;
     }
 
     function zustand() {
@@ -1190,7 +1283,10 @@
         n = n.parentElement;
       }
 
-      zeile2.textContent = '#' + tipps + ' ' + describe(el)
+      /* touch-action des beruehrten Elements: der Wert, der entscheidet, ob
+         der Browser die Geste ueberhaupt als Schieben annimmt. */
+      var ta = el ? window.getComputedStyle(el).touchAction : '-';
+      zeile2.textContent = '#' + tipps + ' ' + describe(el) + ' {ta:' + ta + '}'
         + ' | Kette: ' + (kette.length ? kette.join(' > ') : 'nichts Auffaelliges bis <body>')
         + (faenger
             ? ' | faengt: ' + describe(faenger.el)
@@ -1200,10 +1296,19 @@
             : ' | kein Faenger');
     }, { passive: true });
 
-    /* passive: true, damit dieser Hoerer selbst nichts blockieren kann.
-       defaultPrevented verraet trotzdem, ob ein ANDERER Hoerer die Geste
-       abgefangen hat - genau die Unterscheidung, die bisher fehlte. */
-    document.addEventListener('touchmove', function (e) {
+    /* AM FENSTER, NICHT AM DOKUMENT - und das ist der Unterschied zwischen
+       einer Auskunft und einer Falschauskunft.
+
+       Die vorige Fassung hing am Dokument. React 16, und darauf laeuft
+       Bsports MUI mit seinen JSS-Klassen, haengt SEINE Hoerer ebenfalls ans
+       Dokument. Unserer war zuerst da, lief also zuerst - und las
+       defaultPrevented, bevor Bsports Hoerer ueberhaupt die Gelegenheit
+       hatte, es zu setzen. "preventDefault: nein" war damit kein Befund,
+       sondern eine zu frueh gestellte Frage.
+
+       Am Fenster laeuft der Hoerer nach allen Hoerern des Dokuments. Erst
+       dort ist die Antwort belastbar. */
+    window.addEventListener('touchmove', function (e) {
       if (e.defaultPrevented) abgefangen = true;
     }, { passive: true });
 
@@ -1211,7 +1316,8 @@
       var weg = Math.round(window.scrollY - startY);
       zeile3.textContent = 'Letzter Wisch: Seite bewegt ' + weg + 'px'
         + ' | preventDefault: ' + (abgefangen ? 'JA — ein Skript hat abgefangen' : 'nein')
-        + (weg === 0 && !abgefangen ? ' | 0px ohne preventDefault = ein Scroll-Kasten hat geschluckt' : '');
+        + ' | Wischschutz: ' + (_ptZaehler.wisch ? 'hat ' + _ptZaehler.wisch + 'x gegriffen' : 'nicht gebraucht')
+        + (weg === 0 && !abgefangen ? ' | 0px ohne preventDefault: dann war es touch-action oder ein Scroll-Kasten' : '');
     }, { passive: true });
   }
 

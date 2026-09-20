@@ -380,6 +380,31 @@ body .pt-bsport-dialog * {
    siehe dort "SCHEINSCROLLER".
    ───────────────────────────────────────────────────────────────────────── */
 
+/* ─────────────────────────────────────────────────────────────────────────
+   SENKRECHT WISCHEN IST IM DIALOG IMMER ERLAUBT
+
+   Vierter Geraetetest: ein Wisch, der auf dem VERSENDEN-Knopf beginnt,
+   bewegt die Seite nicht - daneben begonnen schon. Kein Scroll-Kasten in der
+   Kette, kein abgefangenes Ereignis. Damit bleibt als Ursache der Startpunkt
+   der Geste, und dort entscheidet touch-action.
+
+   Was Bsport auf seinen Knoepfen setzt, ist von hier aus nicht nachlesbar -
+   cdn.bsport.io ist nicht erreichbar. Deshalb wird es nicht erraten, sondern
+   ueberschrieben: im Dialog darf ueberall senkrecht gewischt werden, auf
+   Knoepfen wie auf Text. pan-y erlaubt genau das und laesst Tippen und
+   Klicken unberuehrt.
+
+   Das !important ist noetig, weil ein Wert aus Bsports eigenem Stylesheet
+   sonst gewinnen koennte. Gegen einen Hoerer, der die Geste per
+   preventDefault abfaengt, hilft CSS allerdings nicht - dagegen steht der
+   Wischschutz in probetraining-page.js, Abschnitt "DER WISCH, DER AUF EINEM
+   KNOPF BEGINNT".
+   ───────────────────────────────────────────────────────────────────────── */
+body .pt-bsport-dialog,
+body .pt-bsport-dialog * {
+  touch-action: pan-y !important;
+}
+
 /* Wo doch ein Scroll-Kasten stehen bleibt, muss er den Wisch weiterreichen
    duerfen. contain oder none von MUI wuerden die Kette hier kappen. */
 body .pt-bsport-dialog,
