@@ -269,6 +269,136 @@
     var MARKER_SCROLL = 'ptScrollFrei';
     var MARKER_GESTE  = 'ptGesteFrei';
     var _huelle = null;   /* Bsports Wurzel, aus der wir den Dialog holen */
+    var HAKEN  = 'pt-bsport-dialog';   /* unsere eigene Marke am Dialog */
+
+    /* ── BSPORTS DIALOG FINDEN, OHNE AUF EINEN NAMEN ZU WETTEN ────────────
+       WAS DER GERAETETEST GEZEIGT HAT
+       Auf dem Anmeldeschritt (Adressfelder) meldete ?ptdebug=1 auf dem echten
+       iPhone: "Kein Bsport-Dialog offen", alle Zaehler auf 0 - waehrend der
+       Dialog sichtbar offen war. Die Kette unter dem Finger lautete:
+
+         div.bs-book-button__inner_text
+         > div#bs-activity--dialog__content.MuiDialogContent-root-917  [981px]
+         > div.MuiPaper-root-889.MuiDialog-paper-876      [SCHEINSCROLLER 0px]
+         > div.cleanslate                                 [SCHEINSCROLLER 0px]
+
+       Damit ist zweierlei belegt:
+
+       1. Dieser Dialog heisst nicht bsport-user-interaction-modal, sondern
+          bs-activity--dialog. Der fest verdrahtete Selektor traf nichts -
+          also lief KEIN einziger Eingriff, weder CSS noch JS. Die beiden
+          Scheinscroller in der Kette sind genau die, die PR #88 entschaerft
+          haette, wenn es den Dialog gesehen haette.
+       2. Bsports MUI-Klassen tragen laufende Nummern (MuiPaper-root-889).
+          Ein Selektor .MuiPaper-root trifft so etwas NICHT - es ist ein
+          anderer Klassenname, kein Praefix.
+
+       WAS DARAUS FOLGT
+       Auf einen Klassennamen zu wetten war der Fehler, nicht dieser eine
+       Name. Gesucht wird jetzt nach Bauart statt nach Beschriftung: ein
+       Kind von <body>, das uns nicht gehoert, sichtbar ist und Bsports
+       Handschrift traegt - cleanslate, bs-* oder bsport-*. Was davon
+       uebernommen wird, ist die .cleanslate-Huelle: sie umschliesst Bsports
+       Oberflaeche, waehrend die feste Wurzel darueber liegen bleibt und
+       entschaerft wird.
+
+       Und einmal uebernommen, traegt der Dialog UNSERE Marke (HAKEN).
+       Ab da haengt weder CSS noch JS an einem fremden Namen. */
+
+    function sichtbar(el) {
+      if (!el || !el.getBoundingClientRect) return false;
+      var r = el.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) return false;
+      var cs = window.getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+      return String(el.textContent || '').trim().length > 0;
+    }
+
+    /* Traegt das Element selbst Bsports Handschrift? */
+    function bsportZeichen(el) {
+      if (el.id && /^(bs-|bsport)/.test(el.id)) return true;
+      var k = el.classList;
+      for (var i = 0; i < k.length; i++) {
+        if (k[i] === 'cleanslate' || /^bs-/.test(k[i]) || /bsport/.test(k[i])) return true;
+      }
+      return false;
+    }
+
+    /* Auch der Inhalt zaehlt: die feste Huelle traegt auf dem Geraet
+       moeglicherweise gar keine bs-Klasse, das .cleanslate darin schon. */
+    function bsportEigen(el) {
+      if (bsportZeichen(el)) return true;
+      return !!el.querySelector('.cleanslate,[id^="bs-"],[id^="bsport"],[class^="bs-"],[class*=" bs-"],[class*="bsport"]');
+    }
+
+    /* Was uns gehoert, wird nie uebernommen - sonst haengt sich die Seite
+       in sich selbst ein. */
+    function unserEigen(el) {
+      if (!el || el.nodeType !== 1) return true;
+      var t = el.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'LINK' || t === 'NOSCRIPT'
+          || t === 'TEMPLATE' || t === 'IFRAME') return true;
+      if (el.id === 'pt-touch-debug' || el.id === 'pt-edge-hint') return true;
+      var view = document.getElementById('pt-cal-view');
+      if (view && el.contains(view)) return true;
+      return false;
+    }
+
+    function dialogWurzel() {
+      var kinder = document.body.children;
+      for (var i = 0; i < kinder.length; i++) {
+        var el = kinder[i];
+        if (unserEigen(el)) continue;
+        if (!bsportEigen(el)) continue;
+        if (!sichtbar(el)) continue;
+        return el;
+      }
+
+      /* Auffangnetz, falls Bsport sein Portal nicht an <body> haengt, sondern
+         irgendwo sonst. Die Terminliste ist ausgenommen - sie bringt ihr
+         eigenes .cleanslate mit und ist nicht der Anmeldeschritt. Verlangt
+         werden Eingabefelder, damit hier nicht irgendein Bsport-Baustein
+         eingesammelt wird. querySelectorAll liefert in Dokumentreihenfolge,
+         der erste Treffer ist also der aeusserste. */
+      var view = document.getElementById('pt-cal-view');
+      var k = document.querySelectorAll('.cleanslate,[id^="bs-"],[class*="bsport-"]');
+      for (var j = 0; j < k.length; j++) {
+        var c = k[j];
+        if (view && view.contains(c)) continue;
+        if (unserEigen(c)) continue;
+        if (!c.querySelector('input,select,textarea')) continue;
+        if (!sichtbar(c)) continue;
+        return c;
+      }
+      return null;
+    }
+
+    /* Uebernommen wird Bsports Oberflaeche, nicht ihre feste Huelle: die
+       bleibt liegen und wird durchlaessig gemacht. */
+    function adoptionsZiel(wurzel) {
+      if (wurzel.classList.contains('cleanslate')) return wurzel;
+      var cs = wurzel.querySelector('.cleanslate');
+      return cs || wurzel;
+    }
+
+    function dialogFinden() {
+      /* Schon uebernommen? Dann traegt er unsere Marke. Verschwindet der
+         Inhalt, gilt er als zu - sonst bliebe die Terminliste fuer immer
+         ausgeblendet, wenn React nur eine leere Huelle stehen laesst. */
+      var da = document.querySelector('.' + HAKEN);
+      if (da) {
+        if (sichtbar(da)) return da;
+        da.classList.remove(HAKEN);
+      }
+      var gefunden = document.querySelector(MODAL_SEL);
+      if (!gefunden) {
+        var w = dialogWurzel();
+        if (w) gefunden = adoptionsZiel(w);
+      }
+      if (!gefunden) return null;
+      gefunden.classList.add(HAKEN);
+      return gefunden;
+    }
 
     /* Wohin der Dialog gehoert: direkt neben den Kalender, in denselben
        Container - damit er dessen Breite und Raender erbt. */
@@ -584,7 +714,7 @@
     }
 
     function check() {
-      var el = document.querySelector(MODAL_SEL);
+      var el = dialogFinden();
       document.body.classList.toggle(BODY_CLASS, !!el);
 
       var sicher = !!el || formularfeldSichtbar();
@@ -661,11 +791,14 @@
     var zeile1 = document.createElement('div');
     var zeile2 = document.createElement('div');
     var zeile3 = document.createElement('div');
+    var zeile4 = document.createElement('div');
     zeile2.style.opacity = '0.8';
     zeile3.style.opacity = '0.8';
+    zeile4.style.opacity = '0.65';
     box.appendChild(zeile1);
     box.appendChild(zeile2);
     box.appendChild(zeile3);
+    box.appendChild(zeile4);
     var tipps = 0;
     var verlauf = [];
     var letzter = '';
@@ -717,7 +850,7 @@
     }
 
     function zustand() {
-      var el = document.querySelector('.bsport-user-interaction-modal__container');
+      var el = document.querySelector('.pt-bsport-dialog');
       var doc = document.scrollingElement || document.documentElement;
       var gesperrt = document.body.style.position === 'fixed'
                   || document.documentElement.style.overflow === 'hidden'
@@ -748,12 +881,45 @@
         + ' | ' + zaehlerText()
         + ' | Verlauf: ' + verlauf.join(' -> ');
     }
+    /* ── DIE LANDKARTE ───────────────────────────────────────────────────
+       Was haengt ausser unserer Seite noch an <body>? Genau diese Frage war
+       beim letzten Geraetetest nicht zu beantworten: der Dialog war offen,
+       aber der gesuchte Klassenname kam im Protokoll nicht vor, und damit
+       blieb unklar, WIE er stattdessen heisst. Diese Zeile beantwortet das
+       beim naechsten Mal ohne Rueckfrage. */
+    function landkarte() {
+      var aus = [];
+      var kinder = document.body.children;
+      for (var i = 0; i < kinder.length; i++) {
+        var el = kinder[i];
+        var t = el.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'LINK' || t === 'NOSCRIPT') continue;
+        if (el.id === 'pt-touch-debug') continue;
+        var cs = window.getComputedStyle(el);
+        var r = el.getBoundingClientRect();
+        /* Zeiger und Sichtbarkeit gehoeren dazu: eine feste Vollbildebene
+           sieht ohne sie nach Taeter aus, obwohl sie mit pointer-events none
+           keine einzige Beruehrung anfasst - .noise und #mobile-nav sind
+           genau solche Faelle auf dieser Seite. */
+        aus.push(describe(el) + '{' + cs.position
+          + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)
+          + (cs.display === 'none' ? ' aus' : '')
+          + (cs.visibility === 'hidden' ? ' unsichtbar' : '')
+          + (cs.pointerEvents === 'none' ? ' durchlaessig' : ' FAENGT')
+          + (el.classList.contains('pt-bsport-dialog') ? ' HAKEN' : '')
+          + '}');
+      }
+      zeile4.textContent = 'body: ' + aus.join(' ');
+    }
+
     zustand();
-    setInterval(zustand, 500);
+    landkarte();
+    setInterval(function () { zustand(); landkarte(); }, 500);
 
     zeile2.textContent = 'Noch nicht getippt (#0). Bleibt die Zahl stehen, waehrend '
       + 'der Finger auf dem Formular liegt: fremdes Dokument (iframe).';
     zeile3.textContent = 'Noch nicht gewischt.';
+    zeile4.textContent = 'Landkarte folgt.';
 
     document.addEventListener('touchstart', function (e) {
       var t = e.touches[0]; if (!t) return;
@@ -766,20 +932,25 @@
         return;
       }
 
-      /* Die Kette nach oben, aber nur die interessanten Glieder: alles, was
-         scrollen kann oder das Wischen einschraenkt. Ein Formular mit
-         dreissig unauffaelligen divs soll die Zeile nicht zumuellen. */
-      var n = el, kette = [], faenger = null;
-      while (n && n !== document.body) {
+      /* Die GANZE Kette nach oben, nicht nur die auffaelligen Glieder.
+         Genau daran ist der letzte Geraetetest gescheitert: die Kette endete
+         bei div.cleanslate, und was darueber lag - die feste Huelle, an der
+         die Erkennung haengt - blieb unsichtbar. Unauffaellige Glieder
+         stehen jetzt kurz drin, auffaellige ausfuehrlich. */
+      var n = el, kette = [], faenger = null, tiefe = 0;
+      while (n && n !== document.body && tiefe++ < 16) {
         var cs = window.getComputedStyle(n);
         var weg = n.scrollHeight - n.clientHeight;
+        var fest = cs.position === 'fixed' ? ',fixed' : '';
         if (scrollbar(cs)) {
           var art = weg > 4 ? 'scrollt ' + weg + 'px' : 'SCHEINSCROLLER 0px';
-          kette.push(describe(n) + '[' + art + ']');
+          kette.push(describe(n) + '[' + art + fest + ']');
           if (!faenger) faenger = { el: n, weg: weg };
         } else if (!senkrechtErlaubt(cs.touchAction)) {
-          kette.push(describe(n) + '[touch-action:' + cs.touchAction + ']');
+          kette.push(describe(n) + '[touch-action:' + cs.touchAction + fest + ']');
           if (!faenger) faenger = { el: n, weg: -1 };
+        } else {
+          kette.push(describe(n) + (fest ? '[fixed]' : ''));
         }
         n = n.parentElement;
       }

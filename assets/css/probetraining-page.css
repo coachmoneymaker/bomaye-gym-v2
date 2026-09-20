@@ -285,6 +285,18 @@
 /* ─────────────────────────────────────────────────────────────────────────
    Bsports Anmeldedialog in den Seitenfluss zwingen
 
+   WARUM HIER UNSERE EIGENE KLASSE STEHT UND NICHT BSPORTS
+   Bis hierher hingen diese Regeln an .bsport-user-interaction-modal__container.
+   Der Geraetetest hat gezeigt, dass der Anmeldeschritt gar nicht so heisst -
+   er heisst bs-activity--dialog, und Bsports MUI-Klassen tragen laufende
+   Nummern (MuiPaper-root-889, nicht MuiPaper-root). Der Selektor traf nichts,
+   also war dieser ganze Abschnitt auf der Seite wirkungslos.
+
+   .pt-bsport-dialog vergeben WIR selbst, sobald probetraining-page.js den
+   Dialog erkannt hat - nach Bauart, nicht nach Beschriftung. Damit kann kein
+   Umbenennen bei Bsport diese Regeln mehr aushebeln. Wie gesucht wird, steht
+   in probetraining-page.js beim Abschnitt "BSPORTS DIALOG FINDEN".
+
    Der Kalenderschritt scrollt einwandfrei, weil die Terminliste in unserem
    eigenen Markup haengt (#pt-cal-view) und das Dokument sie scrollt. Erst
    beim Tippen auf einen Termin baut Bsport seinen Dialog auf, haengt ihn an
@@ -303,7 +315,7 @@
    nichts - der Kalenderschritt bleibt unberuehrt.
    ───────────────────────────────────────────────────────────────────────── */
 
-body .bsport-user-interaction-modal__container {
+body .pt-bsport-dialog {
   position: relative !important;
   inset: auto !important;
   top: auto !important;
@@ -330,7 +342,7 @@ body .bsport-user-interaction-modal__container {
 
 /* Keine Hoehendeckelung im Dialog: er soll in voller Laenge im Seitenfluss
    stehen, damit ihn das Dokument scrollt. */
-body .bsport-user-interaction-modal__container * {
+body .pt-bsport-dialog * {
   max-height: none !important;
 }
 
@@ -370,8 +382,8 @@ body .bsport-user-interaction-modal__container * {
 
 /* Wo doch ein Scroll-Kasten stehen bleibt, muss er den Wisch weiterreichen
    duerfen. contain oder none von MUI wuerden die Kette hier kappen. */
-body .bsport-user-interaction-modal__container,
-body .bsport-user-interaction-modal__container * {
+body .pt-bsport-dialog,
+body .pt-bsport-dialog * {
   overscroll-behavior: auto !important;
 }
 
