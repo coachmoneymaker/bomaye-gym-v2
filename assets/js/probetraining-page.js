@@ -1586,13 +1586,30 @@
   }
 
   function _ptScrollHilfe() {
+    /* EIN Bauteil, nicht zwei Blasen.
+       Die Seite kennt keine Kreise - style.css setzt --radius: 0, und jede
+       Bsport-Schaltflaeche wird ausdruecklich auf border-radius: 0 gezwungen.
+       Zwei goldene Kreise waren deshalb Fremdkoerper, und das ausgefuellte
+       Gold stand ausserdem in Konkurrenz zum VERSENDEN-Knopf gleich daneben.
+
+       Stattdessen: eine schmale Leiste, buendig am rechten Rand, in Tinte
+       mit goldener Haarlinie - dieselbe Sprache wie die Abzeichen der Seite.
+       Links laeuft eine zwei Pixel schmale Schiene mit, die zeigt, wie weit
+       das Formular schon durchlaufen ist. Sie ersetzt jeden erklaerenden
+       Satz: man sieht, dass noch etwas kommt. */
     var HTML =
-      '<button type="button" class="pt-scroll-knopf pt-scroll-runter" aria-label="Weiter nach unten">' +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
-      '</button>' +
-      '<button type="button" class="pt-scroll-knopf pt-scroll-hoch" aria-label="Nach oben">' +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>' +
-      '</button>';
+      '<span class="pt-scroll-schiene" aria-hidden="true">' +
+        '<span class="pt-scroll-fortschritt"></span>' +
+      '</span>' +
+      '<span class="pt-scroll-saeule">' +
+        '<button type="button" class="pt-scroll-knopf pt-scroll-hoch" aria-label="Nach oben">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 14.5L12 9.5l-5 5"/></svg>' +
+        '</button>' +
+        '<span class="pt-scroll-trenner" aria-hidden="true"></span>' +
+        '<button type="button" class="pt-scroll-knopf pt-scroll-runter" aria-label="Weiter nach unten">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9.5l5 5 5-5"/></svg>' +
+        '</button>' +
+      '</span>';
 
     var kasten = document.createElement('div');
     kasten.id = 'pt-scroll-hilfe';
@@ -1600,8 +1617,16 @@
     kasten.innerHTML = HTML;
     document.body.appendChild(kasten);
 
-    var runter = kasten.querySelector('.pt-scroll-runter');
-    var hoch   = kasten.querySelector('.pt-scroll-hoch');
+    var runter      = kasten.querySelector('.pt-scroll-runter');
+    var hoch        = kasten.querySelector('.pt-scroll-hoch');
+    var fortschritt = kasten.querySelector('.pt-scroll-fortschritt');
+
+    /* Einmal auf sich aufmerksam machen, dann Ruhe. Ein Knopf, der
+       dauerhaft wackelt, wirkt billig; einer, der sich einmal meldet und
+       dann stillsteht, wirkt gemacht. Nach der ersten Benutzung endet die
+       Bewegung sofort. */
+    window.setTimeout(function () { kasten.classList.add('ist-ruhig'); }, 9000);
+    kasten.addEventListener('click', function () { kasten.classList.add('ist-ruhig'); });
 
     function stand(flaeche) {
       var doc = document.scrollingElement || document.documentElement;
@@ -1661,6 +1686,9 @@
       var ganzOben = z.oben <= 8;
       runter.classList.toggle('ist-fertig', amEnde);
       hoch.classList.toggle('ist-fertig', ganzOben);
+      /* Die Schiene sagt ohne ein Wort, wie weit es noch ist. */
+      var anteil = z.weg > 0 ? Math.min(1, Math.max(0, z.oben / z.weg)) : 0;
+      fortschritt.style.height = (anteil * 100).toFixed(1) + '%';
     }
 
     window.setInterval(auffrischen, 600);
