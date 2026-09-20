@@ -24,6 +24,9 @@
  *   BSPORT_STRICT            — set to "false" to skip fingerprint checks (local dev)
  *   META_PIXEL_ID            — Meta Pixel numeric ID
  *   META_ACCESS_TOKEN        — Meta Graph API system access token
+ *   META_CAPI_ENABLED        — set to "false" to stop sending server-side Meta
+ *                              events (dry run: the attempt is still logged).
+ *                              Unset = enabled. See the flag's comment below.
  *   TEST_EVENT_CODE          — optional; routes CAPI events to the Test Events
  *                              tab instead of live reporting. Unset in production.
  *   GOOGLE_CONVERSION_ID     — format: AW-XXXXXXXXX
@@ -272,7 +275,49 @@ export function buildMetaPayload({ eventName, invoiceId, customer, value, curren
   return payload;
 }
 
+/**
+ * Der Notausschalter fuer den serverseitigen Meta-Versand.
+ *
+ * WARUM ES IHN GIBT
+ * Bsport traegt unsere Pixel-ID in seinem eigenen Backoffice und schickt
+ * darueber Browser-Ereignisse auf dieselbe Pixel-ID - im September standen so
+ * 748 gemeldeten Leads rund 15 echte gegenueber. Wenn wir auf Bsports eigene
+ * Facebook-Anbindung umstellen, muss unser Server schweigen, sonst zaehlt jede
+ * Buchung doppelt. Umgekehrt darf der Weg nicht verloren gehen, falls sich
+ * Bsports Anbindung als der schlechtere Tausch erweist: PR #86 hat genau hier
+ * den festen Wert von 30 EUR aus dem Lead entfernt, diese Arbeit soll ein
+ * Versuch nicht wegwerfen.
+ *
+ * Deshalb ein Schalter und kein auskommentierter Block: umlegen in Vercel,
+ * zurueckdrehen ohne Deployment-Diff.
+ *
+ * VERHALTEN
+ * Nicht gesetzt = an, wie bisher. Nur die ausdrueckliche Absage ("false", "0",
+ * "off", "no", Gross-/Kleinschreibung egal) schaltet ab - dieselbe Bauart wie
+ * BSPORT_STRICT weiter oben. Ein Tippfehler laesst die Messung also laufen,
+ * statt sie still abzuschalten.
+ *
+ * Betroffen ist ausschliesslich der Meta-Versand: Google Ads, die interne
+ * Buchungsmail, die Rechnungsauswertung und die Doppel-Erkennung laufen
+ * unveraendert weiter.
+ */
+function metaCapiAktiv() {
+  const wert = String(process.env.META_CAPI_ENABLED ?? '').trim().toLowerCase();
+  return !(wert === 'false' || wert === '0' || wert === 'off' || wert === 'no');
+}
+
 async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, contentName, sourceUrl }) {
+  // Trockenlauf: nichts verlaesst den Server, aber das Protokoll zeigt, dass
+  // der Pfad erreicht wurde und was hinausgegangen waere.
+  if (!metaCapiAktiv()) {
+    return {
+      ok: false,
+      skipped: true,
+      reason: 'capi_disabled_for_pixel_test',
+      would_send: { event: eventName, value, currency },
+    };
+  }
+
   const pixelId = process.env.META_PIXEL_ID;
   const token   = process.env.META_ACCESS_TOKEN;
   if (!pixelId || !token) return { ok: false, reason: 'env-missing' };
@@ -594,7 +639,9 @@ export default async function handler(req, res) {
   const google = googleResult.status === 'fulfilled' ? googleResult.value : { ok: false, error: googleResult.reason?.message };
   const email  = emailResult.status  === 'fulfilled' ? emailResult.value  : { ok: false, error: emailResult.reason?.message };
 
-  console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, events_received: meta.events_received, fb_error: meta.fb_error, event_source_url: metaSourceUrl || (metaEventName ? buildEventSourceUrl({ eventName: metaEventName }) : null) }));
+  // Die drei Zusatzfelder haengen am Schalter: ohne ihn bleibt die Zeile in
+  // jedem Fall Zeichen fuer Zeichen die alte (gegen HEAD nachgemessen).
+  console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, ...(meta.skipped ? { skipped: true, reason: meta.reason, would_send: meta.would_send } : {}), events_received: meta.events_received, fb_error: meta.fb_error, event_source_url: metaSourceUrl || (metaEventName ? buildEventSourceUrl({ eventName: metaEventName }) : null) }));
   console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
   console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
 
