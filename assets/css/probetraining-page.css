@@ -328,12 +328,51 @@ body .bsport-user-interaction-modal__container {
   -webkit-backdrop-filter: none !important;
 }
 
-/* Kein Nachfahre darf eine eigene senkrechte Scroll-Flaeche oder eine
-   Hoehendeckelung aufmachen. Nur senkrecht: eine waagerechte Auswahl darf
-   weiter seitlich scrollen. */
+/* Keine Hoehendeckelung im Dialog: er soll in voller Laenge im Seitenfluss
+   stehen, damit ihn das Dokument scrollt. */
 body .bsport-user-interaction-modal__container * {
   max-height: none !important;
-  overflow-y: visible !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   WARUM HIER KEIN overflow MEHR STEHT
+
+   Bis hierher stand an dieser Stelle:
+
+     overflow-y: visible !important;
+
+   mit der Absicht, innere Scroll-Flaechen abzuschalten. Die Regel hat das
+   Gegenteil bewirkt. Nach CSS-Spezifikation kann overflow-y: visible nicht
+   neben einem nicht-sichtbaren overflow-x bestehen - der Wert wird zu auto
+   blockifiziert. Nachgemessen:
+
+     gesetzt                                  berechnet
+     overflow: hidden        (Bsports Karte)  hidden / hidden   kein Scroller
+     dieselbe Karte + unsere Regel            hidden / AUTO     Scroller
+     overflow-x: auto        + unsere Regel   auto   / AUTO     Scroller
+
+   Aus jedem Kasten, den Bsport nur beschneidet - auf MUIs Paper und Card die
+   Regel, nicht die Ausnahme -, wurde so ein beruehrungsscrollbarer Kasten.
+   Und weil dieselbe Regel mit max-height: none die Hoehendeckelung entfernt,
+   passt der Inhalt genau hinein: ein Scroll-Kasten mit null Scrollweg.
+
+   Das ist die bekannte iOS-Falle. WebKit uebergibt den Wisch an diesen
+   Kasten, der Kasten bewegt sich um 0 px, und weitergereicht wird nichts
+   mehr. Am Bildschirmrand liegt der Finger ausserhalb dieser Karten - dort
+   greift das Dokument. Genau das war die gemeldete Randleiste.
+
+   Eine reine CSS-Loesung gibt es nicht: ein Element kann nicht waagerecht
+   scrollen und gleichzeitig senkrecht kein Scroll-Container sein, weil jeder
+   nicht-sichtbare Wert die andere Achse mitzieht. Deshalb entscheidet
+   probetraining-page.js pro Element anhand des TATSAECHLICHEN Scrollwegs,
+   siehe dort "SCHEINSCROLLER".
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Wo doch ein Scroll-Kasten stehen bleibt, muss er den Wisch weiterreichen
+   duerfen. contain oder none von MUI wuerden die Kette hier kappen. */
+body .bsport-user-interaction-modal__container,
+body .bsport-user-interaction-modal__container * {
+  overscroll-behavior: auto !important;
 }
 
 /* Solange das Formular offen ist, tritt die Terminliste zurueck. Damit steht
