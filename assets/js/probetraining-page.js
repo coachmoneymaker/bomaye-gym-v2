@@ -249,10 +249,26 @@
 
      Der Kalenderschritt bleibt unberuehrt: solange kein Dialog da ist, tut
      diese Funktion nichts. */
+  /* Was die Eingriffe am Bsport-Dialog tatsaechlich zu tun hatten. Wird von
+     ?ptdebug=1 angezeigt - siehe _ptSetupTouchDebug. */
+  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0 };
+
+  /* Erlaubt der Wert senkrechtes Wischen? auto und manipulation ja, none und
+     ein reines pan-x nein. Steht hier oben, weil sowohl der Eingriff als auch
+     die Diagnose danach fragen. */
+  function senkrechtErlaubt(ta) {
+    var v = String(ta || 'auto');
+    if (v === 'auto' || v === 'manipulation') return true;
+    return /pan-y|pan-up|pan-down/.test(v);
+  }
+
   function _ptAdoptBsportDialog() {
     var MODAL_SEL = '.bsport-user-interaction-modal__container';
     var BODY_CLASS = 'bsport-modal-open';
     var MARKER = 'ptFlowFixed';
+    var MARKER_SCROLL = 'ptScrollFrei';
+    var MARKER_GESTE  = 'ptGesteFrei';
+    var _huelle = null;   /* Bsports Wurzel, aus der wir den Dialog holen */
 
     /* Wohin der Dialog gehoert: direkt neben den Kalender, in denselben
        Container - damit er dessen Breite und Raender erbt. */
@@ -261,18 +277,117 @@
       return view && view.parentElement ? view.parentElement : null;
     }
 
-    /* Fest positionierte Nachfahren einreihen. position: relative statt
-       static, damit absolut positionierte Kinder darin (Schliessen-Kreuz,
-       Auswahllisten) ihren Bezugsrahmen behalten. */
+    /* ── Drei chirurgische Eingriffe am Dialog ────────────────────────────
+       Jeder greift nur dort, wo er nachweislich noetig ist, und jeder zaehlt
+       mit. Die Zaehler stehen in ?ptdebug=1 - damit laesst sich auf dem
+       Geraet ablesen, WELCHER Eingriff ueberhaupt etwas zu tun hatte. Bei
+       diesem Fehler ist schon oft genug geraten worden.
+
+       1. FEST POSITIONIERT -> EINGEREIHT
+          position: relative statt static, damit absolut positionierte Kinder
+          darin (Schliessen-Kreuz, Auswahllisten) ihren Bezugsrahmen behalten.
+
+       2. SCHEINSCROLLER -> ENTSCHAERFT
+          Ein Element, dessen overflow-y auf auto oder scroll steht, dessen
+          Inhalt aber gar nicht ueberlaeuft. Es faengt den Wisch und bewegt
+          sich um 0 px; auf iOS endet die Geste damit im Nichts, statt an das
+          Dokument weitergereicht zu werden. Genau das erzeugte die
+          Randleiste: in der Mitte lagen diese Kaesten, am Rand nicht.
+
+          Woher sie kamen, steht in probetraining-page.css beim Abschnitt
+          "WARUM HIER KEIN overflow MEHR STEHT". Kurz: overflow-y: visible
+          wird neben einem nicht-sichtbaren overflow-x zu auto.
+
+          In CSS ist das nicht zu loesen - ein Element kann nicht waagerecht
+          scrollen und senkrecht kein Scroll-Container sein. Hier entscheidet
+          der TATSAECHLICHE Scrollweg:
+
+            kein echter Scrollweg, auch nicht waagerecht -> overflow: visible
+              auf beiden Achsen. Nichts wird beschnitten, nichts faengt mehr.
+            echter WAAGERECHTER Scrollweg -> nur die senkrechte Achse still-
+              legen. hidden ist kein beruehrungsscrollbarer Zustand, die
+              Querleiste bleibt also bedienbar und die Geste faellt trotzdem
+              an das Dokument durch.
+            echter SENKRECHTER Scrollweg -> unangetastet. Dort will jemand
+              wirklich scrollen, und das darf er.
+
+       3. GESTE VERBOTEN -> WIEDER ERLAUBT
+          touch-action: none (oder nur pan-x) verbietet dem Browser das
+          senkrechte Wischen ueber diesem Element. Ob Bsport das irgendwo
+          setzt, konnte von hier aus niemand pruefen - der Zaehler beantwortet
+          es auf dem Geraet. Ueberschrieben wird nur, was senkrechtes Wischen
+          tatsaechlich verbietet. */
+
+    /* ── DIE LEERE HUELLE, DIE UEBER DER SEITE LIEGEN BLEIBT ──────────────
+       Bsports Dialog ist zweistoeckig: aussen eine feste Wurzel ueber dem
+       ganzen Schirm (bei MUI mitsamt .MuiBackdrop-root), innen der
+       Container mit dem Formular. Umgehaengt wird nur der Container - die
+       Wurzel bleibt, wo sie war: fest positioniert, ueber der ganzen Seite,
+       und damit ueber dem Formular, das jetzt weiter unten im Seitenfluss
+       steht.
+
+       Damit liegt bei jeder Beruehrung in der Schirmmitte nicht das Formular
+       unter dem Finger, sondern ein leerer, fest positionierter Schleier.
+       Im Versuchsaufbau war genau das der Fall: elementFromPoint lieferte
+       div.MuiBackdrop-root, nicht das Eingabefeld.
+
+       Entfernt wird der Schleier nicht - React baut ihn beim naechsten
+       Neuzeichnen wieder auf. Er wird durchlaessig gemacht: pointer-events
+       none faengt nichts mehr, transparent verdunkelt nichts mehr.
+
+       Die Bedingung ist gemessen, nicht geraten: nur fest positioniert UND
+       fast schirmfuellend. Ein echtes Inhaltselement erfuellt das nicht, und
+       weil bei jedem Takt neu geprueft wird, heilt sich das von selbst,
+       falls Bsport dort spaeter doch etwas Sinnvolles hinsetzt. */
+    function schleierEntschaerfen(wurzel) {
+      if (!wurzel || wurzel === document.body || wurzel === document.documentElement) return;
+      var alle = [wurzel].concat([].slice.call(wurzel.querySelectorAll('*')));
+      for (var i = 0; i < alle.length; i++) {
+        var el = alle[i];
+        var cs = window.getComputedStyle(el);
+        if (cs.position !== 'fixed' || cs.pointerEvents === 'none') continue;
+        var r = el.getBoundingClientRect();
+        if (r.width < window.innerWidth * 0.8) continue;
+        if (r.height < window.innerHeight * 0.8) continue;
+        el.style.setProperty('pointer-events', 'none', 'important');
+        el.style.setProperty('background', 'transparent', 'important');
+        el.style.setProperty('backdrop-filter', 'none', 'important');
+        el.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
+        _ptZaehler.schleier++;
+      }
+    }
+
     function einreihen(root) {
       var alle = root.querySelectorAll('*');
       for (var i = 0; i < alle.length; i++) {
         var el = alle[i];
-        if (el.dataset && el.dataset[MARKER]) continue;
-        if (window.getComputedStyle(el).position !== 'fixed') continue;
-        el.style.setProperty('position', 'relative', 'important');
-        el.style.setProperty('inset', 'auto', 'important');
-        if (el.dataset) el.dataset[MARKER] = '1';
+        var ds = el.dataset;
+        if (!ds) continue;
+        var cs = window.getComputedStyle(el);
+
+        if (!ds[MARKER] && cs.position === 'fixed') {
+          el.style.setProperty('position', 'relative', 'important');
+          el.style.setProperty('inset', 'auto', 'important');
+          ds[MARKER] = '1';
+          _ptZaehler.fest++;
+        }
+
+        if (!ds[MARKER_SCROLL] && (cs.overflowY === 'auto' || cs.overflowY === 'scroll')
+            && el.scrollHeight - el.clientHeight <= 4) {
+          if (el.scrollWidth - el.clientWidth > 4) {
+            el.style.setProperty('overflow-y', 'hidden', 'important');
+          } else {
+            el.style.setProperty('overflow', 'visible', 'important');
+          }
+          ds[MARKER_SCROLL] = '1';
+          _ptZaehler.schein++;
+        }
+
+        if (!ds[MARKER_GESTE] && !senkrechtErlaubt(cs.touchAction)) {
+          el.style.setProperty('touch-action', 'pan-y', 'important');
+          ds[MARKER_GESTE] = '1';
+          _ptZaehler.geste++;
+        }
       }
     }
 
@@ -478,7 +593,11 @@
       if (!el) { entsperren(); return; }
 
       var ziel_ = ziel();
-      if (ziel_ && el.parentElement !== ziel_) ziel_.appendChild(el);
+      if (ziel_ && el.parentElement !== ziel_) {
+        if (el.parentElement) _huelle = el.parentElement;
+        ziel_.appendChild(el);
+      }
+      if (_huelle) schleierEntschaerfen(_huelle);
       einreihen(el);
       entsperren();
     }
@@ -509,18 +628,31 @@
   }
 
   /* ─────────────────── Diagnose ───────────────────
-     Nur mit ?ptdebug=1. Zwei Zeilen am unteren Rand:
+     Nur mit ?ptdebug=1. Drei Zeilen am unteren Rand, gedacht zum Abfoto-
+     grafieren auf dem Geraet:
 
-       Zeile 1  laufender Zustand von Bsports Dialog - Positionierung, Hoehe
-                gegen Schirmhoehe, eigener Scroller, ob wir gesperrt haben, wie
-                weit die Seite scrollen kann. Dazu die letzten Zustandswechsel,
-                damit auch der Formularschritt ablesbar ist und nicht nur der
-                Kalenderschritt.
-       Zeile 2  was der letzte Wisch getroffen hat und wer ihn geschluckt hat.
+       Zeile 1  laufender Zustand des Dialogs und die drei Eingriffszaehler.
+       Zeile 2  was die letzte Beruehrung getroffen hat, die Kette darueber
+                und wer den Wisch faengt.
+       Zeile 3  was aus dem letzten Wisch geworden ist: hat jemand
+                preventDefault gerufen, und wie weit hat sich die Seite
+                wirklich bewegt.
 
-     Bleibt der Tippzaehler bei #0, waehrend der Finger auf dem Formular liegt,
-     landet die Beruehrung in einem fremden Dokument (iframe) - das waere dann
-     Bsports Sache und von uns nicht loesbar. */
+     WARUM DIE ALTE FASSUNG DEN TAETER NICHT ZEIGEN KONNTE
+     Sie meldete nur Scroll-Kaesten mit scrollHeight - clientHeight > 4 -
+     also ausgerechnet NICHT den Scheinscroller mit null Scrollweg, der die
+     Randleiste verursacht hat. Ein Kasten, der die Geste frisst und sich
+     dabei nicht bewegt, sah in Zeile 2 aus wie "kein innerer Scroll-Kasten".
+     Genau dieser Fall heisst jetzt beim Namen.
+
+     Zeile 3 ist der eigentliche Beweis: "Seite bewegt 0px" bei einem langen
+     Wisch heisst, die Geste ist verpufft. Steht daneben "preventDefault JA",
+     hat ein Skript sie abgefangen; steht dort "nein", hat sie ein
+     Scroll-Kasten geschluckt.
+
+     Bleibt der Tippzaehler bei #0, waehrend der Finger auf dem Formular
+     liegt, landet die Beruehrung in einem fremden Dokument (iframe) - das
+     waere dann Bsports Sache und von uns nicht loesbar. */
   function _ptSetupTouchDebug() {
     if (!/[?&]ptdebug=1/.test(window.location.search)) return;
     var box = document.createElement('div');
@@ -528,12 +660,17 @@
     document.body.appendChild(box);
     var zeile1 = document.createElement('div');
     var zeile2 = document.createElement('div');
-    zeile2.style.opacity = '0.75';
+    var zeile3 = document.createElement('div');
+    zeile2.style.opacity = '0.8';
+    zeile3.style.opacity = '0.8';
     box.appendChild(zeile1);
     box.appendChild(zeile2);
+    box.appendChild(zeile3);
     var tipps = 0;
     var verlauf = [];
     var letzter = '';
+    var startY = 0;
+    var abgefangen = false;
 
     function describe(el) {
       if (!el) return '-';
@@ -542,32 +679,61 @@
       return (el.tagName || '?').toLowerCase() + (el.id ? '#' + el.id : '') + cls;
     }
 
-    function scrollerIn(el) {
+    /* auto oder scroll = der Browser darf hier scrollen. hidden zaehlt
+       bewusst nicht: daran kann kein Finger ziehen. */
+    function scrollbar(cs) {
+      return cs.overflowY === 'auto' || cs.overflowY === 'scroll';
+    }
+
+    /* Zaehlt die Scheinscroller, die gerade noch im Dialog stehen. Nach dem
+       Eingriff muss hier 0 stehen - tut es das nicht, greift der Eingriff
+       nicht oder Bsport baut sie schneller nach, als wir sie entschaerfen. */
+    function scheinImDialog(el) {
+      var n = 0;
+      var alle = el.querySelectorAll('*');
+      for (var i = 0; i < alle.length; i++) {
+        if (!scrollbar(window.getComputedStyle(alle[i]))) continue;
+        if (alle[i].scrollHeight - alle[i].clientHeight <= 4) n++;
+      }
+      return n;
+    }
+
+    function echterScrollerIn(el) {
       if (el.scrollHeight - el.clientHeight > 4) return 'selbst';
       var kids = el.querySelectorAll('*');
       for (var i = 0; i < kids.length; i++) {
         var k = kids[i];
         if (k.scrollHeight - k.clientHeight <= 4) continue;
-        var oy = window.getComputedStyle(k).overflowY;
-        if (oy === 'auto' || oy === 'scroll') return describe(k);
+        if (scrollbar(window.getComputedStyle(k))) return describe(k);
       }
       return 'KEINER';
+    }
+
+    function zaehlerText() {
+      return 'Eingriffe: fest ' + _ptZaehler.fest
+           + ' | schein ' + _ptZaehler.schein
+           + ' | geste ' + _ptZaehler.geste
+           + ' | schleier ' + _ptZaehler.schleier;
     }
 
     function zustand() {
       var el = document.querySelector('.bsport-user-interaction-modal__container');
       var doc = document.scrollingElement || document.documentElement;
-      var gesperrt = document.body.style.position === 'fixed';
+      var gesperrt = document.body.style.position === 'fixed'
+                  || document.documentElement.style.overflow === 'hidden'
+                  || document.body.style.overflow === 'hidden';
       var seite = doc.scrollHeight - doc.clientHeight;
       if (!el) {
         letzter = 'kein Dialog';
         zeile1.textContent = 'Kein Bsport-Dialog offen | Seite scrollbar ' + seite
           + 'px | Sperre ' + (gesperrt ? 'AN' : 'aus')
-          + ' | iframes: ' + document.querySelectorAll('iframe').length;
+          + ' | iframes: ' + document.querySelectorAll('iframe').length
+          + ' | ' + zaehlerText();
         return;
       }
       var pos = window.getComputedStyle(el).position;
       var h = Math.round(el.getBoundingClientRect().height);
+      var offen = scheinImDialog(el);
       var kurz = pos + ' ' + h + '/' + window.innerHeight + ' ' + (gesperrt ? 'gesperrt' : 'frei');
       if (kurz !== letzter) {
         letzter = kurz;
@@ -575,9 +741,11 @@
         if (verlauf.length > 3) verlauf.shift();
       }
       zeile1.textContent = 'Dialog ' + pos + ' h=' + h + '/' + window.innerHeight
-        + ' Scroller=' + scrollerIn(el)
+        + ' echterScroller=' + echterScrollerIn(el)
+        + ' offeneScheinscroller=' + offen
         + ' | Sperre ' + (gesperrt ? 'AN' : 'aus')
         + ' | Seite ' + seite + 'px'
+        + ' | ' + zaehlerText()
         + ' | Verlauf: ' + verlauf.join(' -> ');
     }
     zustand();
@@ -585,27 +753,59 @@
 
     zeile2.textContent = 'Noch nicht getippt (#0). Bleibt die Zahl stehen, waehrend '
       + 'der Finger auf dem Formular liegt: fremdes Dokument (iframe).';
+    zeile3.textContent = 'Noch nicht gewischt.';
 
     document.addEventListener('touchstart', function (e) {
       var t = e.touches[0]; if (!t) return;
       tipps++;
+      startY = window.scrollY;
+      abgefangen = false;
       var el = document.elementFromPoint(t.clientX, t.clientY);
       if (el && el.tagName === 'IFRAME') {
         zeile2.textContent = '#' + tipps + ' IFRAME — fremdes Dokument, nicht von uns loesbar.';
         return;
       }
-      var n = el, treffer = null;
+
+      /* Die Kette nach oben, aber nur die interessanten Glieder: alles, was
+         scrollen kann oder das Wischen einschraenkt. Ein Formular mit
+         dreissig unauffaelligen divs soll die Zeile nicht zumuellen. */
+      var n = el, kette = [], faenger = null;
       while (n && n !== document.body) {
         var cs = window.getComputedStyle(n);
-        if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll') && n.scrollHeight - n.clientHeight > 4) {
-          treffer = n; break;
+        var weg = n.scrollHeight - n.clientHeight;
+        if (scrollbar(cs)) {
+          var art = weg > 4 ? 'scrollt ' + weg + 'px' : 'SCHEINSCROLLER 0px';
+          kette.push(describe(n) + '[' + art + ']');
+          if (!faenger) faenger = { el: n, weg: weg };
+        } else if (!senkrechtErlaubt(cs.touchAction)) {
+          kette.push(describe(n) + '[touch-action:' + cs.touchAction + ']');
+          if (!faenger) faenger = { el: n, weg: -1 };
         }
         n = n.parentElement;
       }
+
       zeile2.textContent = '#' + tipps + ' ' + describe(el)
-        + (treffer
-            ? ' | schluckt: ' + describe(treffer) + ' (' + (treffer.scrollHeight - treffer.clientHeight) + 'px)'
-            : ' | kein innerer Scroll-Kasten');
+        + ' | Kette: ' + (kette.length ? kette.join(' > ') : 'nichts Auffaelliges bis <body>')
+        + (faenger
+            ? ' | faengt: ' + describe(faenger.el)
+              + (faenger.weg === -1 ? ' (verbietet Wischen)'
+                 : faenger.weg > 4 ? ' (echt, ' + faenger.weg + 'px)'
+                 : ' (SCHEIN, 0px — das ist die Falle)')
+            : ' | kein Faenger');
+    }, { passive: true });
+
+    /* passive: true, damit dieser Hoerer selbst nichts blockieren kann.
+       defaultPrevented verraet trotzdem, ob ein ANDERER Hoerer die Geste
+       abgefangen hat - genau die Unterscheidung, die bisher fehlte. */
+    document.addEventListener('touchmove', function (e) {
+      if (e.defaultPrevented) abgefangen = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function () {
+      var weg = Math.round(window.scrollY - startY);
+      zeile3.textContent = 'Letzter Wisch: Seite bewegt ' + weg + 'px'
+        + ' | preventDefault: ' + (abgefangen ? 'JA — ein Skript hat abgefangen' : 'nein')
+        + (weg === 0 && !abgefangen ? ' | 0px ohne preventDefault = ein Scroll-Kasten hat geschluckt' : '');
     }, { passive: true });
   }
 
