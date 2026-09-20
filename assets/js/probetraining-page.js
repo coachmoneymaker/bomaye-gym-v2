@@ -258,7 +258,7 @@
      diese Funktion nichts. */
   /* Was die Eingriffe am Bsport-Dialog tatsaechlich zu tun hatten. Wird von
      ?ptdebug=1 angezeigt - siehe _ptSetupTouchDebug. */
-  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0, wisch: 0, deckel: 0 };
+  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0, deckel: 0, entschaerft: 0 };
 
   /* Der erkannte Dialog, als ELEMENT. Siehe dialogFinden(). */
   var _ptDialog = null;
@@ -271,6 +271,95 @@
     if (v === 'auto' || v === 'manipulation') return true;
     return /pan-y|pan-up|pan-down/.test(v);
   }
+
+  /* ── DER WISCHSCHUTZ, ZWEITER ANLAUF ─────────────────────────────────
+     WAS DER VORIGE ANGERICHTET HAT
+     Er hat jedes touchmove im Dialog in der Einfangphase am Dokument
+     gestoppt - in der Absicht, Bsports Ripple die Gelegenheit zum
+     Abfangen zu nehmen. Auf dem Geraet war die Folge eindeutig und
+     reproduzierbar:
+
+       Beruehrung AUSSERHALB  Bewegungen 47, an Bsport 47, Seite 103px
+       Beruehrung IM DIALOG   Bewegungen  0, an Bsport  0, Seite   0px
+
+     Null Bewegungen, obwohl unser eigener Zaehler am selben Knoten
+     haengt. Die Geste war nicht entschaerft, sie war tot - samt dem
+     Schieben, das der Browser selbst gemacht haette, und samt unserer
+     Messung. Dass die Folge mit touchend endete statt mit touchcancel,
+     sagt dasselbe: iOS hat das Schieben nie uebernommen.
+
+     Einen Wisch anzuhalten, um ihn zu retten, war der Denkfehler.
+
+     WAS STATTDESSEN PASSIERT
+     Das Ereignis laeuft jetzt wieder ueberall hin - zu Bsport, zum
+     Browser, zu unserem Zaehler. Genommen wird Bsport nur eine einzige
+     Faehigkeit: waehrend SEINES Hoerers ist preventDefault ein leerer
+     Aufruf. Er darf alles tun, was er tut - Ripple zeichnen, mitzaehlen,
+     was er will -, nur das Schieben nicht mehr absagen.
+
+     Dafuer wird addEventListener einmalig umhuellt. Betroffen ist
+     ausschliesslich touchmove, und auch das nur, solange die Beruehrung
+     im erkannten Dialog liegt; sonst wird der Hoerer unveraendert
+     durchgereicht. removeEventListener findet seinen Hoerer ueber eine
+     WeakMap weiterhin.
+
+     Dieselbe Bauart benutzt bsport-gate.js seit jeher fuer
+     document.createElement - im Haus ist das kein Fremdkoerper. */
+  var _huellen = new WeakMap();
+
+  function _ptWischschutzSetzen() {
+    var echtesAdd = EventTarget.prototype.addEventListener;
+    var echtesRemove = EventTarget.prototype.removeEventListener;
+    if (echtesAdd.__ptUmhuellt) return;
+
+    function imDialog(e) {
+      return !!(_ptDialog && e && e.target && _ptDialog.contains(e.target));
+    }
+
+    function huelle(fn) {
+      var vorhanden = _huellen.get(fn);
+      if (vorhanden) return vorhanden;
+      var neu = function (e) {
+        if (!imDialog(e)) return fn.call(this, e);
+        /* Nur fuer die Dauer DIESES Aufrufs: preventDefault laeuft ins
+           Leere. Eine eigene Eigenschaft am Ereignis verdeckt die vom
+           Prototyp; danach wird sie wieder entfernt, damit kein anderer
+           Hoerer etwas davon merkt. */
+        var gerufen = false;
+        try {
+          Object.defineProperty(e, 'preventDefault', {
+            configurable: true, writable: true,
+            value: function () { gerufen = true; }
+          });
+        } catch (fehler) { return fn.call(this, e); }
+        try {
+          return fn.call(this, e);
+        } finally {
+          try { delete e.preventDefault; } catch (fehler) { /* egal */ }
+          if (gerufen) _ptZaehler.entschaerft++;
+        }
+      };
+      _huellen.set(fn, neu);
+      return neu;
+    }
+
+    EventTarget.prototype.addEventListener = function (typ, fn, opts) {
+      if (typ === 'touchmove' && typeof fn === 'function' && !fn.__ptEigen) {
+        return echtesAdd.call(this, typ, huelle(fn), opts);
+      }
+      return echtesAdd.call(this, typ, fn, opts);
+    };
+    EventTarget.prototype.addEventListener.__ptUmhuellt = true;
+
+    EventTarget.prototype.removeEventListener = function (typ, fn, opts) {
+      if (typ === 'touchmove' && typeof fn === 'function' && _huellen.get(fn)) {
+        return echtesRemove.call(this, typ, _huellen.get(fn), opts);
+      }
+      return echtesRemove.call(this, typ, fn, opts);
+    };
+
+  }
+
 
   function _ptAdoptBsportDialog() {
     var MODAL_SEL = '.bsport-user-interaction-modal__container';
@@ -1001,91 +1090,10 @@
           preventDefault, um Geisterklicks zu vermeiden. Dagegen hilft kein
           CSS: einmal abgefangen, ist die Geste verloren.
 
-       Gegen b) hilft nur, dass ihr Hoerer das Ereignis gar nicht erst
-       bekommt. Deshalb ein Hoerer in der EINFANGPHASE, also vor allen
-       anderen, der die Weitergabe stoppt - sobald klar ist, dass gewischt
-       und nicht getippt wird.
-
-       Eng gefasst, damit nichts kaputtgeht:
-         - nur Beruehrungen, die im Dialog beginnen,
-         - erst ab SCHWELLE Bewegung, also nie beim Tippen,
-         - nur wenn die Bewegung ueberwiegend senkrecht ist; ein seitliches
-           Ziehen bleibt unangetastet,
-         - preventDefault rufen wir selbst NICHT. Wir nehmen der Geste nur
-           die Zuhoerer, damit der Browser sie wie gewohnt ausfuehrt.
-       touchstart, touchend und click laufen unveraendert weiter - Ripple
-       und Klick bleiben also, wie sie sind. */
-    /* ── WARUM DER SCHUTZ AB DER ERSTEN BEWEGUNG GREIFT ───────────────────
-       Fuenfter Geraetetest, Wisch auf VERSENDEN: touch-action stand richtig
-       auf pan-y, kein Scroll-Kasten in der Kette, der Wischschutz hat
-       gegriffen ("wisch 1") - und die Seite bewegte sich trotzdem nicht.
-
-       Der Grund ist eine Eigenschaft der Beruehrungsereignisse, die keine
-       zweite Chance kennt: wird das erste touchmove einer Geste abgefangen,
-       gilt die GANZE Geste als nicht-scrollend. Wer die stoerenden Hoerer
-       danach abhaengt, kommt zu spaet - zurueckgenommen wird nichts mehr.
-
-       Die vorige Fassung wartete auf SCHWELLE Bewegung, um Tippen von
-       Wischen zu unterscheiden. In dieser Zeit sind ein, zwei touchmove
-       durchgegangen - und genau die hat Bsports Ripple abgefangen. Der
-       Schutz griff danach korrekt und vollkommen wirkungslos.
-
-       Jetzt wird ab der ERSTEN Bewegung gestoppt, ohne Schwelle und ohne
-       Richtungsfrage. Warten kostet die Geste.
-
-       UND WAS IST MIT SEITLICHEM ZIEHEN?
-       Die Richtung wird weiter bestimmt - nur nicht mehr, um mit dem Stoppen
-       anzufangen, sondern um damit AUFZUHOEREN. Stellt sich die Geste als
-       ueberwiegend waagerecht heraus, bekommt Bsport seine Ereignisse ab da
-       wieder. Ein seitliches Ziehen beginnt dann minimal spaeter; eine
-       senkrechte Geste ist gerettet. Bei zwei Fingern wird sofort
-       losgelassen, damit Zoomen unberuehrt bleibt.
-
-       Getippt wird ohne jedes touchmove - Tippen merkt von alledem nichts.
-       preventDefault rufen wir weiterhin selbst nicht. */
-    var SCHWELLE = 8;
-    var _startX = 0, _startY = 0, _imDialog = false, _blocken = false, _richtung = '';
-
-    function wischschutz() {
-      document.addEventListener('touchstart', function (e) {
-        var t = e.touches && e.touches[0];
-        if (!t) return;
-        _startX = t.clientX; _startY = t.clientY;
-        _richtung = '';
-        var ziel = e.target;
-        _imDialog = !!(_ptDialog && ziel && _ptDialog.contains(ziel));
-        /* Ab hier blockiert - nicht erst, wenn die Richtung feststeht. */
-        _blocken = _imDialog;
-        if (_blocken) _ptZaehler.wisch++;
-      }, { passive: true, capture: true });
-
-      document.addEventListener('touchmove', function (e) {
-        if (!_imDialog) return;
-        if (e.touches && e.touches.length > 1) { _blocken = false; return; }
-        var t = e.touches && e.touches[0];
-        if (!t || _richtung) return;
-        var dx = Math.abs(t.clientX - _startX);
-        var dy = Math.abs(t.clientY - _startY);
-        if (dx < SCHWELLE && dy < SCHWELLE) return;
-        _richtung = dy > dx ? 'senkrecht' : 'waagerecht';
-        /* Waagerecht gehoert Bsport - ab jetzt wieder durchlassen. */
-        if (_richtung === 'waagerecht') _blocken = false;
-      }, { passive: true, capture: true });
-
-      /* Der eigentliche Schutz. Getrennt vom Messen oben, damit im selben
-         Ereignis erst entschieden und dann gestoppt wird. */
-      document.addEventListener('touchmove', function (e) {
-        if (_blocken) e.stopPropagation();
-      }, { passive: true, capture: true });
-
-      document.addEventListener('touchend', function () {
-        _imDialog = false; _blocken = false; _richtung = '';
-      }, { passive: true, capture: true });
-      document.addEventListener('touchcancel', function () {
-        _imDialog = false; _blocken = false; _richtung = '';
-      }, { passive: true, capture: true });
-    }
-
+       Gegen b) hilft, dass ihr Hoerer das Abfangen nicht mehr
+       durchbringt - siehe den naechsten Abschnitt. Der erste Anlauf hat
+       stattdessen das Ereignis angehalten, und das hat den Wisch mit
+       erledigt; was daraus geworden ist, steht dort. */
     /* Mutationen kommen in Schueben, sobald React das Formular aufbaut.
        Auf einen Bildaufbau zusammenfassen. */
     var _pending = false;
@@ -1101,7 +1109,6 @@
        keine Mutation ausloesen - etwa eine Regel aus einem nachgeladenen
        Stylesheet. */
     ausloeserRuesten();
-    wischschutz();
     new MutationObserver(schedule).observe(document.documentElement, {
       childList: true, subtree: true,
       attributes: true, attributeFilter: ['style', 'class']
@@ -1165,7 +1172,7 @@
     /* Je Geste: wie viele Bewegungen kamen an, wie viele davon haben Bsports
        Hoerer erreicht, und bei der wievielten wurde zuerst abgefangen. Erst
        diese drei Zahlen zusammen unterscheiden die Fehlerarten. */
-    var bewegungen = 0, durchgelassen = 0, ersterBlock = 0, schutzAktiv = false;
+    var bewegungen = 0, durchgelassen = 0, ersterBlock = 0, schutzAktiv = false, entschaerftVorher = 0;
 
     function describe(el) {
       if (!el) return '-';
@@ -1222,8 +1229,8 @@
            + ' | geste ' + _ptZaehler.geste
            + ' | schleier ' + _ptZaehler.schleier
            + ' | marke ' + _ptZaehler.marke
-           + ' | wisch ' + _ptZaehler.wisch
-           + ' | deckel ' + _ptZaehler.deckel;
+           + ' | deckel ' + _ptZaehler.deckel
+           + ' | entschaerft ' + _ptZaehler.entschaerft;
     }
 
     function zustand() {
@@ -1371,6 +1378,7 @@
          fuer Beruehrungen ausserhalb des Dialogs, wo der Schutz gar nicht
          zustaendig ist. */
       schutzAktiv = !!(_ptDialog && e.target && _ptDialog.contains(e.target));
+      entschaerftVorher = _ptZaehler.entschaerft;
       var el = document.elementFromPoint(t.clientX, t.clientY);
       if (el && el.tagName === 'IFRAME') {
         zeile2.textContent = '#' + tipps + ' IFRAME — fremdes Dokument, nicht von uns loesbar.';
@@ -1425,9 +1433,10 @@
 
        Am Fenster laeuft der Hoerer nach allen Hoerern des Dokuments. Erst
        dort ist die Antwort belastbar. */
-    /* In der EINFANGPHASE kommt jede Bewegung an, auch die, die der
-       Wischschutz gleich darauf stoppt. stopPropagation haelt nur andere
-       KNOTEN auf, nicht weitere Hoerer am selben. */
+    /* In der EINFANGPHASE, also vor allem anderen. Hier wird nur gezaehlt -
+       angehalten wird nichts mehr. Dass ein frueherer Anlauf genau hier
+       gestoppt hat, hat auf dem Geraet die Geste samt Zaehlung erledigt;
+       nachzulesen beim Abschnitt "DER WISCHSCHUTZ, ZWEITER ANLAUF". */
     document.addEventListener('touchmove', function () {
       bewegungen++;
     }, { passive: true, capture: true });
@@ -1469,13 +1478,14 @@
       else if (ersterBlock) urteil = 'ab Bewegung #' + ersterBlock + ' abgefangen — Wischschutz zu spaet';
       else if (bewegungen === 0 && /touchcancel/.test(art)) urteil = 'iOS hat das Schieben uebernommen — das ist der Normalfall';
       else if (bewegungen === 0) urteil = 'gar keine Bewegung angekommen';
-      else if (durchgelassen === 0) urteil = 'Bsport hat nichts gesehen — dann war es touch-action oder ein Scroll-Kasten';
+      else if (durchgelassen === 0) urteil = 'kein Ereignis kam durch — etwas haelt die Geste an';
       else urteil = 'nichts abgefangen — dann war es touch-action oder ein Scroll-Kasten';
 
       zeile3.textContent = 'Wisch: Seite bewegt ' + weg + 'px'
         + ' | Bewegungen ' + bewegungen + ', an Bsport ' + durchgelassen
         + ' | erstes Abfangen ' + (ersterBlock ? '#' + ersterBlock : 'keins')
-        + ' | Wischschutz ' + (schutzAktiv ? 'ab #1' : 'nicht aktiv')
+        + ' | im Dialog ' + (schutzAktiv ? 'ja' : 'nein')
+        + ', preventDefault entschaerft ' + (_ptZaehler.entschaerft - entschaerftVorher) + 'x'
         + ' | Ende durch ' + art
         + ' | ' + urteil;
     }
@@ -1491,6 +1501,10 @@
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
+
+    /* Vor allem anderen: die Umhuellung muss stehen, bevor Bsports Skript
+       geladen wird und seine Hoerer setzt. */
+    _ptWischschutzSetzen();
 
     _ptMountCalendar();
     _ptAdoptBsportDialog();
