@@ -258,7 +258,7 @@
      diese Funktion nichts. */
   /* Was die Eingriffe am Bsport-Dialog tatsaechlich zu tun hatten. Wird von
      ?ptdebug=1 angezeigt - siehe _ptSetupTouchDebug. */
-  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0, wisch: 0 };
+  var _ptZaehler = { fest: 0, schein: 0, geste: 0, schleier: 0, marke: 0, wisch: 0, deckel: 0 };
 
   /* Der erkannte Dialog, als ELEMENT. Siehe dialogFinden(). */
   var _ptDialog = null;
@@ -677,7 +677,21 @@
           _ptZaehler.schein++;
         }
 
-        /* 3. Geste verboten -> wieder erlaubt */
+        /* 3. ABGESCHNITTENER INHALT -> wieder sichtbar
+           Ein Element mit overflow: hidden, dessen Inhalt hoeher ist als es
+           selbst, schneidet den Rest ab. Daran kann kein Finger ziehen, und
+           kein Scrollen der Seite holt ihn zurueck - der untere Teil des
+           Formulars waere schlicht weg. Unsere max-height-Regel im CSS
+           greift nur bei Nachfahren des Dialogs; die Vorfahren (.cleanslate,
+           die jss-Schichten) erreicht sie nicht. Deshalb hier, gemessen am
+           tatsaechlichen Ueberhang. */
+        if (cs.overflowY === 'hidden' && el.scrollHeight - el.clientHeight > 4) {
+          el.style.setProperty('overflow', 'visible', 'important');
+          el.style.setProperty('max-height', 'none', 'important');
+          _ptZaehler.deckel++;
+        }
+
+        /* 4. Geste verboten -> wieder erlaubt */
         if (!senkrechtErlaubt(cs.touchAction)) {
           el.style.setProperty('touch-action', 'pan-y', 'important');
           _ptZaehler.geste++;
@@ -1133,13 +1147,16 @@
     var zeile2 = document.createElement('div');
     var zeile3 = document.createElement('div');
     var zeile4 = document.createElement('div');
+    var zeile5 = document.createElement('div');
     zeile2.style.opacity = '0.8';
     zeile3.style.opacity = '0.8';
     zeile4.style.opacity = '0.65';
+    zeile5.style.color = '#F5F0E8';
     box.appendChild(zeile1);
     box.appendChild(zeile2);
     box.appendChild(zeile3);
     box.appendChild(zeile4);
+    box.appendChild(zeile5);
     var tipps = 0;
     var verlauf = [];
     var letzter = '';
@@ -1148,7 +1165,7 @@
     /* Je Geste: wie viele Bewegungen kamen an, wie viele davon haben Bsports
        Hoerer erreicht, und bei der wievielten wurde zuerst abgefangen. Erst
        diese drei Zahlen zusammen unterscheiden die Fehlerarten. */
-    var bewegungen = 0, durchgelassen = 0, ersterBlock = 0;
+    var bewegungen = 0, durchgelassen = 0, ersterBlock = 0, schutzAktiv = false;
 
     function describe(el) {
       if (!el) return '-';
@@ -1205,7 +1222,8 @@
            + ' | geste ' + _ptZaehler.geste
            + ' | schleier ' + _ptZaehler.schleier
            + ' | marke ' + _ptZaehler.marke
-           + ' | wisch ' + _ptZaehler.wisch;
+           + ' | wisch ' + _ptZaehler.wisch
+           + ' | deckel ' + _ptZaehler.deckel;
     }
 
     function zustand() {
@@ -1277,9 +1295,62 @@
     /* Wirft eine der beiden Funktionen, bliebe ihre Zeile sonst auf dem
        letzten geglueckten Stand stehen - und zeigte eine Lage, die es
        laengst nicht mehr gibt. Lieber der Fehler im Klartext. */
+    /* ── REICHT DIE SEITE BIS ZUM ABSENDEN-KNOPF? ────────────────────────
+       Die entscheidende Frage, wenn nach oben schieben geht und nach unten
+       nicht: ist der untere Teil des Formulars ueberhaupt im scrollbaren
+       Bereich des Dokuments - oder endet das Dokument vorher? Das eine ist
+       ein Gestenproblem, das andere ein Hoehenproblem, und die beiden
+       brauchen entgegengesetzte Loesungen.
+
+       Dazu: klemmt einer der Vorfahren? Ein Element mit overflow: hidden,
+       dessen Inhalt hoeher ist als es selbst, schneidet den Rest einfach ab
+       - unerreichbar, egal wie weit man scrollt. Genau danach wird hier
+       gesucht, samt Namen und Fehlbetrag. */
+    function reichweite() {
+      var doc = document.scrollingElement || document.documentElement;
+      var teile = ['Seite bei ' + Math.round(window.scrollY)
+                 + ' von ' + (doc.scrollHeight - doc.clientHeight) + 'px'
+                 + ' (Fenster ' + window.innerHeight + ')'];
+      var d = _ptDialog;
+      if (!d || !document.contains(d)) {
+        zeile5.textContent = teile.join(' | ') + ' | kein Dialog';
+        return;
+      }
+      var endeDoc = doc.scrollHeight;
+      var unten = Math.round(d.getBoundingClientRect().bottom + window.scrollY);
+      teile.push('Dialog ' + d.offsetHeight + '/' + d.scrollHeight + 'px');
+      teile.push('Unterkante ' + unten + ', Dokument endet ' + endeDoc);
+
+      var knoepfe = d.querySelectorAll('button,[role="button"],input[type="submit"]');
+      if (knoepfe.length) {
+        var letzter = knoepfe[knoepfe.length - 1];
+        var lb = Math.round(letzter.getBoundingClientRect().bottom + window.scrollY);
+        var txt = String(letzter.textContent || '').trim().slice(0, 12) || '(ohne Text)';
+        teile.push('letzter Knopf "' + txt + '" bei ' + lb
+          + (lb <= endeDoc + 2 ? ' — erreichbar' : ' — NICHT ERREICHBAR, fehlen ' + (lb - endeDoc) + 'px'));
+      }
+
+      /* Wer schneidet ab? */
+      var schuldig = '';
+      var n = d;
+      while (n && n !== document.body) {
+        var cs = window.getComputedStyle(n);
+        if ((cs.overflowY === 'hidden' || cs.overflowX === 'hidden')
+            && n.scrollHeight - n.clientHeight > 4) {
+          schuldig = describe(n) + ' schneidet ' + (n.scrollHeight - n.clientHeight) + 'px ab';
+          break;
+        }
+        if (n.id === 'pt-cal-view') break;
+        n = n.parentElement;
+      }
+      teile.push(schuldig || 'nichts schneidet ab');
+      zeile5.textContent = teile.join(' | ');
+    }
+
     function takt() {
       try { zustand(); } catch (e) { zeile1.textContent = 'zustand() Fehler: ' + e.message; }
       try { landkarte(); } catch (e) { zeile4.textContent = 'landkarte() Fehler: ' + e.message; }
+      try { reichweite(); } catch (e) { zeile5.textContent = 'reichweite() Fehler: ' + e.message; }
     }
     takt();
     setInterval(takt, 500);
@@ -1288,6 +1359,7 @@
       + 'der Finger auf dem Formular liegt: fremdes Dokument (iframe).';
     zeile3.textContent = 'Noch nicht gewischt.';
     zeile4.textContent = 'Landkarte folgt.';
+    zeile5.textContent = 'Reichweite folgt.';
 
     document.addEventListener('touchstart', function (e) {
       var t = e.touches[0]; if (!t) return;
@@ -1295,6 +1367,10 @@
       startY = window.scrollY;
       abgefangen = false;
       bewegungen = 0; durchgelassen = 0; ersterBlock = 0;
+      /* Je Geste, nicht kumulativ: die vorige Fassung meldete "ab #1" auch
+         fuer Beruehrungen ausserhalb des Dialogs, wo der Schutz gar nicht
+         zustaendig ist. */
+      schutzAktiv = !!(_ptDialog && e.target && _ptDialog.contains(e.target));
       var el = document.elementFromPoint(t.clientX, t.clientY);
       if (el && el.tagName === 'IFRAME') {
         zeile2.textContent = '#' + tipps + ' IFRAME — fremdes Dokument, nicht von uns loesbar.';
@@ -1368,12 +1444,30 @@
       }
     }, { passive: true });
 
-    document.addEventListener('touchend', function () {
+    /* ── WARUM touchcancel HIER DAZUGEHOERT ───────────────────────────────
+       Zwei Geraetetests hintereinander meldeten "Bewegungen 0", obwohl
+       gewischt wurde - einmal auf unserem eigenen Seitentext, weit
+       ausserhalb von Bsports Dialog. Ein Zaehler, der dort null zaehlt,
+       misst nichts.
+
+       Die Ursache lag nicht im Zaehlen, sondern im Ablesen. Sobald iOS eine
+       Geste als Schieben uebernimmt, hoert Safari auf, touchmove zu
+       schicken, und beendet die Folge mit touchcancel statt touchend. Die
+       Zeile wurde aber nur bei touchend geschrieben - also nie nach genau
+       den Gesten, die tatsaechlich gescrollt haben. Abgelesen hat man die
+       bei touchstart genullten Zaehler einer spaeteren, folgenlosen
+       Beruehrung.
+
+       Jetzt schliesst beides die Geste ab, und die Zeile sagt dazu, womit
+       sie geendet hat. touchcancel ist dabei die beste Nachricht, die es
+       gibt: iOS hat das Schieben uebernommen. */
+    function gesteFertig(art) {
       var weg = Math.round(window.scrollY - startY);
       var urteil;
       if (weg !== 0) urteil = 'in Ordnung';
       else if (ersterBlock === 1) urteil = 'ERSTES touchmove schon abgefangen — Wischschutz kam zu spaet';
       else if (ersterBlock) urteil = 'ab Bewegung #' + ersterBlock + ' abgefangen — Wischschutz zu spaet';
+      else if (bewegungen === 0 && /touchcancel/.test(art)) urteil = 'iOS hat das Schieben uebernommen — das ist der Normalfall';
       else if (bewegungen === 0) urteil = 'gar keine Bewegung angekommen';
       else if (durchgelassen === 0) urteil = 'Bsport hat nichts gesehen — dann war es touch-action oder ein Scroll-Kasten';
       else urteil = 'nichts abgefangen — dann war es touch-action oder ein Scroll-Kasten';
@@ -1381,9 +1475,12 @@
       zeile3.textContent = 'Wisch: Seite bewegt ' + weg + 'px'
         + ' | Bewegungen ' + bewegungen + ', an Bsport ' + durchgelassen
         + ' | erstes Abfangen ' + (ersterBlock ? '#' + ersterBlock : 'keins')
-        + ' | Wischschutz ' + (_ptZaehler.wisch ? 'ab #1' : 'nicht aktiv')
+        + ' | Wischschutz ' + (schutzAktiv ? 'ab #1' : 'nicht aktiv')
+        + ' | Ende durch ' + art
         + ' | ' + urteil;
-    }, { passive: true });
+    }
+    document.addEventListener('touchend',    function () { gesteFertig('touchend'); },    { passive: true });
+    document.addEventListener('touchcancel', function () { gesteFertig('touchcancel — iOS hat uebernommen'); }, { passive: true });
   }
 
   /* ─────────────────── Start ─────────────────── */
