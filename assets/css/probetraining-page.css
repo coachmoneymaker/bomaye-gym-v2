@@ -503,6 +503,11 @@ body.pt-form-step .pt-booking-section {
 #pt-touch-debug {
   position: fixed;
   left: 0; right: 0; bottom: 0;
+  /* Im Geraetetest hat dieser Kasten die halbe Seite verdeckt, samt der
+     Knoepfe, die gepruefte werden sollten. Er bleibt jetzt bei einem
+     Drittel des Schirms und scrollt in sich selbst. */
+  max-height: 33vh;
+  overflow-y: auto;
   z-index: 2147483000;
   padding: 8px 10px;
   background: rgba(10, 10, 8, 0.92);
@@ -510,4 +515,95 @@ body.pt-form-step .pt-booking-section {
   font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
   pointer-events: none;
   word-break: break-all;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════════
+   SCROLL-HILFE
+
+   Der Weg, der ohne Geste auskommt. Sechs Anlaeufe haben das Wischen im
+   Anmeldeformular auf iOS nicht verlaesslich zum Laufen gebracht; der letzte
+   Geraetetest zeigte null ankommende Beruehrungsereignisse, mit einem Stand,
+   der die Ereignisse gar nicht mehr anfasst. Was sie verschluckt, liegt
+   ausserhalb dessen, was von hier aus pruefbar ist.
+
+   Dieser Knopf ruft scrollBy. Er haengt an keiner Geste, an keinem
+   touch-action und an keinem fremden Hoerer.
+
+   Er ist bewusst gross, am rechten Rand ueber dem Daumen, und bewegt sich
+   ruhig auf und ab - damit ueberhaupt auffaellt, dass es weitergeht. Am Ende
+   des Formulars verschwindet er, sonst zeigte er nach unten ins Leere.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+#pt-scroll-hilfe {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  z-index: 2147482500;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+#pt-scroll-hilfe.ist-da { display: flex; }
+
+.pt-scroll-knopf {
+  pointer-events: auto;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0A0A08;
+  border-radius: 50%;
+  background: #C9A84C;
+  color: #0A0A08;
+  box-shadow: 0 6px 20px rgba(10, 10, 8, 0.4);
+  cursor: pointer;
+  /* Der Knopf selbst darf nie Teil des Problems werden. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.pt-scroll-knopf svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pt-scroll-knopf:active { transform: scale(0.92); }
+
+/* Fertig heisst: in diese Richtung geht es nicht weiter. Der Knopf bleibt
+   stehen, damit nichts springt, nimmt aber keine Beruehrung mehr an. */
+.pt-scroll-knopf.ist-fertig {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Der Knopf nach oben ist der kleinere Bruder - er wird seltener gebraucht. */
+.pt-scroll-hoch {
+  width: 44px;
+  height: 44px;
+  align-self: flex-end;
+  background: rgba(10, 10, 8, 0.82);
+  color: #C9A84C;
+  border-color: rgba(201, 168, 76, 0.5);
+}
+.pt-scroll-hoch svg { width: 22px; height: 22px; }
+
+/* Die Bewegung ist der eigentliche Hinweis: sie sagt "hier geht es weiter",
+   ohne einen Satz Text. Wer Bewegung abbestellt hat, bekommt sie nicht. */
+@keyframes pt-scroll-winken {
+  0%, 68%, 100% { transform: translateY(0); }
+  78%           { transform: translateY(6px); }
+  88%           { transform: translateY(0); }
+}
+.pt-scroll-runter:not(.ist-fertig) {
+  animation: pt-scroll-winken 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pt-scroll-runter { animation: none; }
 }

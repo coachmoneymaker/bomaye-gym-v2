@@ -1493,6 +1493,213 @@
     document.addEventListener('touchcancel', function () { gesteFertig('touchcancel — iOS hat uebernommen'); }, { passive: true });
   }
 
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     ZWEI WEGE, VON DENEN EINER IMMER FUNKTIONIERT
+     ═══════════════════════════════════════════════════════════════════════
+
+     STAND DER DINGE, EHRLICH
+     Sechs Anlaeufe haben das Wischen im Anmeldeformular auf iOS nicht
+     verlaesslich zum Laufen gebracht. Der letzte Geraetetest hat gezeigt,
+     warum weitere Anlaeufe nichts bringen: die Diagnose meldete
+
+       Bewegungen 0, an Bsport 0 | erstes Abfangen keins | Seite bewegt 0px
+
+     Null Beruehrungsereignisse - und das mit einem Stand, in dem unser Code
+     die Ereignisse gar nicht mehr anfasst. Es kommt also nichts an, was wir
+     aufhalten koennten. Was die Geste verschluckt, liegt ausserhalb dessen,
+     was von hier aus les- oder pruefbar ist: Bsports Skript ist nicht
+     abrufbar, und eine WebKit-Engine laesst sich hier nicht betreiben.
+     Weiterzuraten waere nur weiteres Warten.
+
+     DESHALB ZWEI WEGE STATT EINEM
+
+     1. NATIVER MODUS (neuer Standard)
+        Unsere gesamte Einmischung in Bsports Dialog ist aus. Er steht
+        wieder so da, wie Bsport ihn baut - genau so laeuft er bei den
+        anderen Studios, die dieses Problem nicht haben. Unsere Umbauten
+        waren das Einzige, was unsere Seite von deren unterscheidet.
+        Zurueckschalten: /probetraining?ptfix=1
+
+     2. DER SCROLL-KNOPF (die Zusage)
+        Ein sichtbarer Knopf am rechten Rand, der die Seite per JavaScript
+        weiterschiebt. Er haengt an keiner Geste, an keinem touch-action, an
+        keinem fremden Hoerer - er ruft scrollBy. Was auch immer die Wische
+        verschluckt, kann das nicht verhindern.
+
+        Er erscheint nur im Formularschritt, zeigt mit einer ruhigen
+        Bewegung, dass es weitergeht, und verschwindet am Ende des
+        Formulars. Er scrollt das, was wirklich scrollt: Bsports eigene
+        Scroll-Flaeche, wenn es eine gibt, sonst das Dokument.
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  var _ptScrollZiel = null;
+
+  /* Bsports Dialog, nach Bauart: fest positioniert, nicht von uns, mit
+     Inhalt. Dieselbe Regel wie in _ptAdoptBsportDialog, nur ohne Eingriff. */
+  function _ptDialogSuchen() {
+    var raeume = [];
+    var halter = document.querySelectorAll('[id^="bsport-widget-"]');
+    for (var i = 0; i < halter.length; i++) raeume.push(halter[i]);
+    var kinder = document.body.children;
+    for (var j = 0; j < kinder.length; j++) {
+      var k = kinder[j];
+      if (k.contains(document.getElementById('pt-cal-view'))) continue;
+      raeume.push(k);
+    }
+    for (var r = 0; r < raeume.length; r++) {
+      var alle = raeume[r].getElementsByTagName('*');
+      for (var n = 0; n < alle.length; n++) {
+        var el = alle[n];
+        if (el.offsetParent !== null) continue;            /* billiger Vorfilter */
+        if (el.id === 'pt-touch-debug' || el.id === 'pt-edge-hint') continue;
+        if (el.id === 'pt-scroll-hilfe' || (el.className + '').indexOf('pt-scroll') === 0) continue;
+        if (window.getComputedStyle(el).position !== 'fixed') continue;
+        var rr = el.getBoundingClientRect();
+        if (rr.width < 2 || rr.height < 2) continue;
+        if (String(el.textContent || '').trim().length < 20
+            && !el.querySelector('input,select,textarea,button')) continue;
+        return el;
+      }
+    }
+    return null;
+  }
+
+  /* Was scrollt hier tatsaechlich? Im nativen Modus hat Bsports Dialog eine
+     eigene Scroll-Flaeche; ohne Dialog ist es das Dokument. Genommen wird
+     die Flaeche mit dem groessten Weg - die traegt das Formular. */
+  function _ptScrollFlaeche(dialog) {
+    var doc = document.scrollingElement || document.documentElement;
+    if (!dialog) return doc;
+    var bester = null, bestWeg = 4;
+    var alle = dialog.querySelectorAll('*');
+    for (var i = 0; i < alle.length; i++) {
+      var el = alle[i];
+      var weg = el.scrollHeight - el.clientHeight;
+      if (weg <= bestWeg) continue;
+      var oy = window.getComputedStyle(el).overflowY;
+      if (oy !== 'auto' && oy !== 'scroll') continue;
+      bester = el; bestWeg = weg;
+    }
+    if (bester) return bester;
+    return doc;
+  }
+
+  function _ptScrollHilfe() {
+    var HTML =
+      '<button type="button" class="pt-scroll-knopf pt-scroll-runter" aria-label="Weiter nach unten">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
+      '</button>' +
+      '<button type="button" class="pt-scroll-knopf pt-scroll-hoch" aria-label="Nach oben">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>' +
+      '</button>';
+
+    var kasten = document.createElement('div');
+    kasten.id = 'pt-scroll-hilfe';
+    kasten.setAttribute('aria-hidden', 'true');
+    kasten.innerHTML = HTML;
+    document.body.appendChild(kasten);
+
+    var runter = kasten.querySelector('.pt-scroll-runter');
+    var hoch   = kasten.querySelector('.pt-scroll-hoch');
+
+    function stand(flaeche) {
+      var doc = document.scrollingElement || document.documentElement;
+      if (flaeche === doc || flaeche === document.documentElement || flaeche === document.body) {
+        return { oben: window.scrollY, weg: doc.scrollHeight - doc.clientHeight, fenster: window.innerHeight };
+      }
+      return { oben: flaeche.scrollTop, weg: flaeche.scrollHeight - flaeche.clientHeight,
+               fenster: flaeche.clientHeight };
+    }
+
+    /* Schieben, nicht wischen. scrollBy laeuft an jedem Hoerer und an jedem
+       touch-action vorbei - genau darum gibt es diesen Knopf. */
+    function schieben(richtung) {
+      var dialog = _ptDialogSuchen();
+      var flaeche = _ptScrollFlaeche(dialog);
+      _ptScrollZiel = flaeche;
+      var z = stand(flaeche);
+      var schritt = Math.max(160, Math.round(z.fenster * 0.72)) * richtung;
+      var doc = document.scrollingElement || document.documentElement;
+      if (flaeche === doc || flaeche === document.documentElement || flaeche === document.body) {
+        window.scrollBy({ top: schritt, behavior: 'smooth' });
+      } else if (typeof flaeche.scrollBy === 'function') {
+        flaeche.scrollBy({ top: schritt, behavior: 'smooth' });
+      } else {
+        flaeche.scrollTop = flaeche.scrollTop + schritt;
+      }
+      window.setTimeout(auffrischen, 420);
+    }
+
+    runter.addEventListener('click', function () { schieben(1); });
+    hoch.addEventListener('click',   function () { schieben(-1); });
+    /* Auch auf Beruehrung sofort reagieren, falls click auf diesem Geraet
+       aus irgendeinem Grund ausbleibt. Doppelausloesung verhindert die
+       kurze Sperre. */
+    var letzte = 0;
+    function sofort(richtung) {
+      return function (e) {
+        var jetzt = Date.now();
+        if (jetzt - letzte < 400) return;
+        letzte = jetzt;
+        e.preventDefault();
+        schieben(richtung);
+      };
+    }
+    runter.addEventListener('touchend', sofort(1), { passive: false });
+    hoch.addEventListener('touchend',   sofort(-1), { passive: false });
+
+    function auffrischen() {
+      var dialog = _ptDialogSuchen();
+      var imFormular = !!dialog || _ptFormularfeldSichtbar();
+      kasten.classList.toggle('ist-da', imFormular);
+      kasten.setAttribute('aria-hidden', imFormular ? 'false' : 'true');
+      if (!imFormular) return;
+      var flaeche = _ptScrollFlaeche(dialog);
+      var z = stand(flaeche);
+      var amEnde  = z.oben >= z.weg - 8;
+      var ganzOben = z.oben <= 8;
+      runter.classList.toggle('ist-fertig', amEnde);
+      hoch.classList.toggle('ist-fertig', ganzOben);
+    }
+
+    window.setInterval(auffrischen, 600);
+    window.addEventListener('scroll', auffrischen, { passive: true });
+    window.addEventListener('resize', auffrischen, { passive: true });
+    auffrischen();
+  }
+
+  /* Ein sichtbares Eingabefeld ausserhalb der Terminliste heisst: der
+     Anmeldeschritt laeuft. probetraining.html hat selbst kein einziges
+     Formularfeld, jedes Feld im Dokument gehoert Bsport. */
+  function _ptFormularfeldSichtbar() {
+    var view = document.getElementById('pt-cal-view');
+    var felder = document.querySelectorAll('input,select,textarea');
+    for (var i = 0; i < felder.length; i++) {
+      var f = felder[i];
+      if (f.type === 'hidden') continue;
+      if (view && view.contains(f) && !document.body.classList.contains('bsport-modal-open')) continue;
+      var r = f.getBoundingClientRect();
+      if (r.width > 40 && r.height > 12) return true;
+    }
+    return false;
+  }
+
+  /* Im nativen Modus wird an Bsports Dialog nichts veraendert. Nur der
+     Kopfbereich tritt zurueck, solange er offen ist - sonst liegt unsere
+     Leiste ueber seinem Formular. */
+  function _ptNativWacht() {
+    function takt() {
+      var offen = !!_ptDialogSuchen();
+      document.body.classList.toggle('bsport-modal-open', offen);
+      document.body.classList.toggle('pt-form-step', offen || _ptFormularfeldSichtbar());
+    }
+    window.setInterval(takt, 500);
+    new MutationObserver(takt).observe(document.documentElement,
+      { childList: true, subtree: true });
+    takt();
+  }
+
   /* ─────────────────── Start ─────────────────── */
   function _ptBoot() {
     /* Falls von einer vorherigen Seite eine Scroll-Sperre haengen geblieben
@@ -1502,12 +1709,20 @@
     document.body.style.top = '';
     document.body.style.width = '';
 
-    /* Vor allem anderen: die Umhuellung muss stehen, bevor Bsports Skript
-       geladen wird und seine Hoerer setzt. */
-    _ptWischschutzSetzen();
+    /* NATIVER MODUS ist der Standard: Bsports Dialog bleibt unangetastet,
+       wie bei den anderen Studios. ?ptfix=1 schaltet unsere Umbauten
+       wieder ein, falls sich das als der schlechtere Tausch erweist. */
+    var eingriffeAn = /[?&]ptfix=1/.test(window.location.search);
 
-    _ptMountCalendar();
-    _ptAdoptBsportDialog();
+    if (eingriffeAn) {
+      _ptWischschutzSetzen();
+      _ptMountCalendar();
+      _ptAdoptBsportDialog();
+    } else {
+      _ptMountCalendar();
+      _ptNativWacht();
+    }
+    _ptScrollHilfe();
     _ptSetupTouchDebug();
 
     /* Genau ein Ereignis pro Seitenaufruf. Der Name bleibt
