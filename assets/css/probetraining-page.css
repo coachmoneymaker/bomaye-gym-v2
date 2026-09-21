@@ -521,89 +521,149 @@ body.pt-form-step .pt-booking-section {
 /* ═════════════════════════════════════════════════════════════════════════
    SCROLL-HILFE
 
+   WOZU
    Der Weg, der ohne Geste auskommt. Sechs Anlaeufe haben das Wischen im
    Anmeldeformular auf iOS nicht verlaesslich zum Laufen gebracht; der letzte
    Geraetetest zeigte null ankommende Beruehrungsereignisse, mit einem Stand,
-   der die Ereignisse gar nicht mehr anfasst. Was sie verschluckt, liegt
-   ausserhalb dessen, was von hier aus pruefbar ist.
+   der die Ereignisse gar nicht mehr anfasst. Dieser Knopf ruft scrollBy und
+   haengt an keiner Geste, an keinem touch-action, an keinem fremden Hoerer.
 
-   Dieser Knopf ruft scrollBy. Er haengt an keiner Geste, an keinem
-   touch-action und an keinem fremden Hoerer.
+   WARUM SIE SO AUSSIEHT
+   Die erste Fassung waren zwei goldene Kreise. Das war aufgeklebt, und zwar
+   messbar: style.css setzt --radius: 0, und jede Bsport-Schaltflaeche wird
+   weiter oben ausdruecklich auf border-radius: 0 gezwungen. Diese Seite
+   kennt keine Kreise. Das gefuellte Gold stand ausserdem in direkter
+   Konkurrenz zum VERSENDEN-Knopf, der einen halben Daumen daneben liegt -
+   zwei gleich laute Goldflaechen, von denen nur eine die Buchung abschickt.
 
-   Er ist bewusst gross, am rechten Rand ueber dem Daumen, und bewegt sich
-   ruhig auf und ab - damit ueberhaupt auffaellt, dass es weitergeht. Am Ende
-   des Formulars verschwindet er, sonst zeigte er nach unten ins Leere.
+   Jetzt: EIN Bauteil statt zweier Blasen. Eine schmale Leiste, buendig am
+   rechten Rand, in Tinte mit goldener Haarlinie - dieselbe Sprache wie die
+   Abzeichen der Seite (rgba(10,8,4,0.68) auf 1px rgba(201,168,76,0.55)).
+   Gold liegt nur noch in den Pfeilen und in der Schiene, nicht in der
+   Flaeche. Buendig am Rand, weil es dann wie ein Teil der Seite sitzt und
+   nicht wie ein Widget, das jemand daraufgelegt hat.
+
+   Links laeuft eine zwei Pixel schmale Schiene mit, die zeigt, wie weit das
+   Formular durchlaufen ist. Sie ersetzt jeden erklaerenden Satz: man sieht,
+   dass noch etwas kommt.
+
+   Die Bewegung meldet sich einmal und hoert dann auf - nach neun Sekunden
+   oder nach der ersten Benutzung. Ein Knopf, der dauerhaft wackelt, wirkt
+   billig.
    ═════════════════════════════════════════════════════════════════════════ */
 
 #pt-scroll-hilfe {
   position: fixed;
-  right: max(14px, env(safe-area-inset-right));
-  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: 0;
+  /* MITTIG, NICHT UNTEN RECHTS
+     Unten rechts lag die Leiste am Ende des Formulars auf dem
+     VERSENDEN-Knopf - ausgerechnet auf der Schaltflaeche, um die es geht.
+     Auf halber Hoehe am rechten Rand kollidiert sie mit keiner Knopfreihe,
+     bleibt fuer den Daumen erreichbar und sitzt wie ein Teil der Seite. */
+  top: 50%;
   z-index: 2147482500;
   display: none;
-  flex-direction: column;
-  gap: 10px;
   pointer-events: none;
+  background: rgba(10, 8, 4, 0.82);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(14px) saturate(1.25);
+  border: 1px solid rgba(201, 168, 76, 0.34);
+  border-right: none;
+  border-radius: 0;
+  box-shadow: -10px 0 34px rgba(10, 10, 8, 0.3);
+  opacity: 0;
+  transform: translate(14px, -50%);
+  transition: opacity var(--dur-ruhig, 500ms) var(--ease-expo, cubic-bezier(0.16,1,0.3,1)),
+              transform var(--dur-ruhig, 500ms) var(--ease-expo, cubic-bezier(0.16,1,0.3,1));
 }
-#pt-scroll-hilfe.ist-da { display: flex; }
+#pt-scroll-hilfe.ist-da {
+  display: grid;
+  grid-template-columns: 2px auto;
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+/* Die Schiene: Fortschritt, nicht Zierde. */
+.pt-scroll-schiene {
+  position: relative;
+  display: block;
+  background: rgba(201, 168, 76, 0.16);
+}
+.pt-scroll-fortschritt {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0;
+  background: var(--gold, #C9A84C);
+  transition: height 0.3s var(--ease-expo, cubic-bezier(0.16,1,0.3,1));
+}
+
+.pt-scroll-saeule {
+  display: flex;
+  flex-direction: column;
+}
 
 .pt-scroll-knopf {
   pointer-events: auto;
-  width: 56px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #0A0A08;
-  border-radius: 50%;
-  background: #C9A84C;
-  color: #0A0A08;
-  box-shadow: 0 6px 20px rgba(10, 10, 8, 0.4);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--gold, #C9A84C);
   cursor: pointer;
   /* Der Knopf selbst darf nie Teil des Problems werden. */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.28s ease, background-color 0.2s ease;
 }
 .pt-scroll-knopf svg {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-width: 1.9;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
 }
-.pt-scroll-knopf:active { transform: scale(0.92); }
+.pt-scroll-knopf:active { background: rgba(201, 168, 76, 0.14); }
 
-/* Fertig heisst: in diese Richtung geht es nicht weiter. Der Knopf bleibt
-   stehen, damit nichts springt, nimmt aber keine Beruehrung mehr an. */
+/* Die Haarlinie zwischen den beiden Haelften - so weit eingerueckt wie die
+   Trennlinien im Formular daneben. */
+.pt-scroll-trenner {
+  display: block;
+  height: 1px;
+  margin: 0 12px;
+  background: rgba(201, 168, 76, 0.22);
+}
+
+/* In diese Richtung geht es nicht weiter. Der Knopf bleibt stehen, damit
+   nichts springt, tritt aber zurueck und nimmt nichts mehr an. */
 .pt-scroll-knopf.ist-fertig {
-  opacity: 0;
+  opacity: 0.18;
   pointer-events: none;
 }
-
-/* Der Knopf nach oben ist der kleinere Bruder - er wird seltener gebraucht. */
-.pt-scroll-hoch {
-  width: 44px;
-  height: 44px;
-  align-self: flex-end;
-  background: rgba(10, 10, 8, 0.82);
-  color: #C9A84C;
-  border-color: rgba(201, 168, 76, 0.5);
+/* Ganz oben gibt es nichts zurueckzugehen - dann faellt die obere Haelfte
+   samt Trennlinie weg, statt blass herumzustehen. */
+.pt-scroll-hoch.ist-fertig,
+.pt-scroll-hoch.ist-fertig + .pt-scroll-trenner {
+  display: none;
 }
-.pt-scroll-hoch svg { width: 22px; height: 22px; }
 
-/* Die Bewegung ist der eigentliche Hinweis: sie sagt "hier geht es weiter",
-   ohne einen Satz Text. Wer Bewegung abbestellt hat, bekommt sie nicht. */
+/* Meldet sich einmal, dann Ruhe. */
 @keyframes pt-scroll-winken {
-  0%, 68%, 100% { transform: translateY(0); }
-  78%           { transform: translateY(6px); }
-  88%           { transform: translateY(0); }
+  0%, 70%, 100% { transform: translateY(0); opacity: 1; }
+  80%           { transform: translateY(4px); opacity: 0.75; }
+  90%           { transform: translateY(0); opacity: 1; }
 }
-.pt-scroll-runter:not(.ist-fertig) {
-  animation: pt-scroll-winken 2.6s ease-in-out infinite;
+#pt-scroll-hilfe:not(.ist-ruhig) .pt-scroll-runter:not(.ist-fertig) svg {
+  animation: pt-scroll-winken 2.4s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .pt-scroll-runter { animation: none; }
+  #pt-scroll-hilfe,
+  #pt-scroll-hilfe .pt-scroll-runter svg,
+  .pt-scroll-fortschritt { animation: none; transition: none; }
 }
