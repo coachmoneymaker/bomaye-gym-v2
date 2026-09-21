@@ -528,66 +528,63 @@ body.pt-form-step .pt-booking-section {
    der die Ereignisse gar nicht mehr anfasst. Dieser Knopf ruft scrollBy und
    haengt an keiner Geste, an keinem touch-action, an keinem fremden Hoerer.
 
-   WARUM SIE SO AUSSIEHT
-   Die erste Fassung waren zwei goldene Kreise. Das war aufgeklebt, und zwar
-   messbar: style.css setzt --radius: 0, und jede Bsport-Schaltflaeche wird
-   weiter oben ausdruecklich auf border-radius: 0 gezwungen. Diese Seite
-   kennt keine Kreise. Das gefuellte Gold stand ausserdem in direkter
-   Konkurrenz zum VERSENDEN-Knopf, der einen halben Daumen daneben liegt -
-   zwei gleich laute Goldflaechen, von denen nur eine die Buchung abschickt.
+   WARUM SIE SO SCHMAL IST
+   Die zweite Fassung war 52 Pixel breit und lag auf halber Hoehe am rechten
+   Rand - dort, wo Bsport das Auge zum Einblenden des Passworts hinsetzt. Sie
+   hat es verdeckt. Jede schwebende Flaeche verdeckt irgendwann irgendetwas;
+   die Frage ist nur, wo am wenigsten steht.
 
-   Jetzt: EIN Bauteil statt zweier Blasen. Eine schmale Leiste, buendig am
-   rechten Rand, in Tinte mit goldener Haarlinie - dieselbe Sprache wie die
-   Abzeichen der Seite (rgba(10,8,4,0.68) auf 1px rgba(201,168,76,0.55)).
-   Gold liegt nur noch in den Pfeilen und in der Schiene, nicht in der
-   Flaeche. Buendig am Rand, weil es dann wie ein Teil der Seite sitzt und
-   nicht wie ein Widget, das jemand daraufgelegt hat.
+   Gemessen am Anmeldeformular: die Karte endet rund 76 Pixel vor dem rechten
+   Bildrand, das Augensymbol sitzt rund 134 Pixel davor. Die aeusseren knapp
+   zwanzig Pixel sind die einzige Zone, in der auf dieser Seite nie Inhalt
+   liegt. Genau dort sitzt die Leiste jetzt: 18 Pixel sichtbar.
 
-   Links laeuft eine zwei Pixel schmale Schiene mit, die zeigt, wie weit das
-   Formular durchlaufen ist. Sie ersetzt jeden erklaerenden Satz: man sieht,
-   dass noch etwas kommt.
+   Beruehrt wird trotzdem mehr, als man sieht - die Knoepfe greifen ueber ein
+   unsichtbares Feld 16 Pixel nach innen. Das bleibt immer noch weit vor dem
+   Augensymbol und macht aus 18 sichtbaren Pixeln ein Ziel von 34.
 
-   Die Bewegung meldet sich einmal und hoert dann auf - nach neun Sekunden
-   oder nach der ersten Benutzung. Ein Knopf, der dauerhaft wackelt, wirkt
-   billig.
+   Und sie ist leise: im Ruhezustand halb durchscheinend, damit sie mit der
+   Randkante verschmilzt. Wer sie benutzt oder scrollt, sieht sie deutlich.
    ═════════════════════════════════════════════════════════════════════════ */
 
 #pt-scroll-hilfe {
   position: fixed;
   right: 0;
-  /* MITTIG, NICHT UNTEN RECHTS
-     Unten rechts lag die Leiste am Ende des Formulars auf dem
-     VERSENDEN-Knopf - ausgerechnet auf der Schaltflaeche, um die es geht.
-     Auf halber Hoehe am rechten Rand kollidiert sie mit keiner Knopfreihe,
-     bleibt fuer den Daumen erreichbar und sitzt wie ein Teil der Seite. */
   top: 50%;
   z-index: 2147482500;
   display: none;
   pointer-events: none;
-  background: rgba(10, 8, 4, 0.82);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
-  backdrop-filter: blur(14px) saturate(1.25);
-  border: 1px solid rgba(201, 168, 76, 0.34);
-  border-right: none;
+  /* Bestimmt, nicht blass. Eine halbdurchsichtige dunkle Flaeche wird ueber
+     dem cremefarbenen Formular zu einem grauen Schlieren und sieht aus wie
+     ein Darstellungsfehler. Leise wird sie ueber ihre Breite, nicht ueber
+     ihre Deckkraft. */
+  background: rgba(10, 8, 4, 0.9);
+  border-left: 1px solid rgba(201, 168, 76, 0.4);
   border-radius: 0;
-  box-shadow: -10px 0 34px rgba(10, 10, 8, 0.3);
   opacity: 0;
-  transform: translate(14px, -50%);
-  transition: opacity var(--dur-ruhig, 500ms) var(--ease-expo, cubic-bezier(0.16,1,0.3,1)),
-              transform var(--dur-ruhig, 500ms) var(--ease-expo, cubic-bezier(0.16,1,0.3,1));
+  transform: translate(10px, -50%);
+  transition: opacity 0.4s var(--ease-expo, cubic-bezier(0.16,1,0.3,1)),
+              transform 0.4s var(--ease-expo, cubic-bezier(0.16,1,0.3,1)),
+              background-color 0.3s ease;
 }
 #pt-scroll-hilfe.ist-da {
   display: grid;
-  grid-template-columns: 2px auto;
+  grid-template-columns: 2px 16px;
   opacity: 1;
   transform: translateY(-50%);
 }
+/* Beim Antippen wird sie kurz ganz undurchsichtig - die einzige Rueckmeldung,
+   die es bei dieser Breite braucht. */
+#pt-scroll-hilfe.ist-da:active {
+  background: rgba(10, 8, 4, 1);
+}
 
-/* Die Schiene: Fortschritt, nicht Zierde. */
+/* Die Schiene ist bei dieser Breite das Hauptmerkmal: sie sagt ohne ein
+   Wort, wie weit das Formular durchlaufen ist. */
 .pt-scroll-schiene {
   position: relative;
   display: block;
-  background: rgba(201, 168, 76, 0.16);
+  background: rgba(201, 168, 76, 0.14);
 }
 .pt-scroll-fortschritt {
   position: absolute;
@@ -603,9 +600,10 @@ body.pt-form-step .pt-booking-section {
 }
 
 .pt-scroll-knopf {
+  position: relative;
   pointer-events: auto;
-  width: 50px;
-  height: 50px;
+  width: 16px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -618,32 +616,40 @@ body.pt-form-step .pt-booking-section {
   /* Der Knopf selbst darf nie Teil des Problems werden. */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.28s ease, background-color 0.2s ease;
+  transition: opacity 0.28s ease;
+}
+/* Das unsichtbare Ziel reicht nach innen, damit der Daumen trifft, ohne dass
+   die Leiste breiter aussieht. Nachgemessen am Anmeldeformular: mit 18 Pixel
+   Ueberhang begann es bei x=359 und lag damit zwei Pixel auf dem Augensymbol,
+   das bei x=361 endet - es haette dessen Antippen abgefangen. Mit 12 bleiben
+   vier Pixel Luft. Die fehlende Breite holt die Hoehe zurueck: 44 statt 38. */
+.pt-scroll-knopf::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  left: -12px;
 }
 .pt-scroll-knopf svg {
-  width: 22px;
-  height: 22px;
+  width: 11px;
+  height: 11px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.9;
+  stroke-width: 2.4;
   stroke-linecap: square;
   stroke-linejoin: miter;
 }
-.pt-scroll-knopf:active { background: rgba(201, 168, 76, 0.14); }
 
-/* Die Haarlinie zwischen den beiden Haelften - so weit eingerueckt wie die
-   Trennlinien im Formular daneben. */
+/* Die Haarlinie zwischen den beiden Haelften. */
 .pt-scroll-trenner {
   display: block;
   height: 1px;
-  margin: 0 12px;
-  background: rgba(201, 168, 76, 0.22);
+  margin: 0 4px;
+  background: rgba(201, 168, 76, 0.2);
 }
 
-/* In diese Richtung geht es nicht weiter. Der Knopf bleibt stehen, damit
-   nichts springt, tritt aber zurueck und nimmt nichts mehr an. */
+/* In diese Richtung geht es nicht weiter. */
 .pt-scroll-knopf.ist-fertig {
-  opacity: 0.18;
+  opacity: 0.16;
   pointer-events: none;
 }
 /* Ganz oben gibt es nichts zurueckzugehen - dann faellt die obere Haelfte
@@ -655,9 +661,9 @@ body.pt-form-step .pt-booking-section {
 
 /* Meldet sich einmal, dann Ruhe. */
 @keyframes pt-scroll-winken {
-  0%, 70%, 100% { transform: translateY(0); opacity: 1; }
-  80%           { transform: translateY(4px); opacity: 0.75; }
-  90%           { transform: translateY(0); opacity: 1; }
+  0%, 72%, 100% { transform: translateY(0); }
+  82%           { transform: translateY(3px); }
+  92%           { transform: translateY(0); }
 }
 #pt-scroll-hilfe:not(.ist-ruhig) .pt-scroll-runter:not(.ist-fertig) svg {
   animation: pt-scroll-winken 2.4s ease-in-out infinite;
