@@ -36,8 +36,9 @@
  *   RESEND_API_KEY
  *   BSPORT_BACKOFFICE_URL    — optional; Vorlage fuer den Knopf "In Bsport
  *                              oeffnen", mit {id} als Platzhalter fuer die
- *                              Kundennummer. Fehlt sie, steht die Nummer als
- *                              Text in der Mail.
+ *                              Kundennummer. Bestaetigte Adresse:
+ *                              https://backoffice.bsport.io/member/{id}/info
+ *                              Fehlt sie, steht die Nummer als Text in der Mail.
  *   ADMIN_EMAIL              — internal notification recipient
  *   FROM_EMAIL               — verified Resend sender address
  */
@@ -732,7 +733,8 @@ export default async function handler(req, res) {
      backoffice.bsport.io ist von aussen nicht einsehbar, und eine geratene
      Adresse waere ein Link ins Leere. Deshalb eine Vorlage aus der Umgebung
      mit {id} als Platzhalter; fehlt sie, steht die Kundennummer als Text da
-     und laesst sich im Backoffice suchen. */
+     und laesst sich im Backoffice suchen. Bestaetigt ist:
+     https://backoffice.bsport.io/member/{id}/info */
   const backofficeVorlage = process.env.BSPORT_BACKOFFICE_URL || '';
   const backofficeUrl = (backofficeVorlage && customer.id !== null)
     ? backofficeVorlage.replace('{id}', encodeURIComponent(String(customer.id)))
