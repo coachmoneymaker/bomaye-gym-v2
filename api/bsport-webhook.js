@@ -22,6 +22,11 @@
  *   // Unused — Bsport does not support secrets. Kept for future HMAC support.
  *   // BSPORT_WEBHOOK_SECRET
  *   BSPORT_STRICT            — set to "false" to skip fingerprint checks (local dev)
+ *   BSPORT_NEW_MEMBER_WINDOW_DAYS
+ *                            — optional; ab welchem Rechnungsalter eine
+ *                              Zahlung als wiederkehrend gilt. Voreinstellung
+ *                              14 Tage. "off" schaltet das Signal ab und
+ *                              laesst allein die KV-Merkliste entscheiden.
  *   META_PIXEL_ID            — Meta Pixel numeric ID
  *   META_ACCESS_TOKEN        — Meta Graph API system access token
  *   META_CAPI_ENABLED        — set to "false" to stop sending server-side Meta
@@ -343,16 +348,21 @@ async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, 
 }
 
 /**
- * Ein Datum aus Bsports Rechnung lesbar machen.
+ * Ein Datum aus Bsports Rechnung in Millisekunden umrechnen - oder null.
  *
  * Die Felder date_created, date_issued und date_due stehen im dokumentierten
  * Rumpf, ihr TYP steht dort nicht. Bsport spiegelt sonst Stripe, und Stripe
  * zaehlt Sekunden seit 1970 - aber ein ISO-String ist genauso moeglich.
  * Deshalb wird beides angenommen und im Zweifel nichts behauptet: ein
- * unlesbarer Wert wird zu einem Strich, nicht zu einem falschen Datum.
+ * unlesbarer Wert wird zu null, nicht zu einem falschen Datum.
+ *
+ * Zwei Aufrufer teilen sich diese Deutung, damit die Mail und die
+ * Verlaengerungs-Erkennung nie verschiedene Daten aus demselben Feld lesen:
+ * alsBerlinerZeit() fuer die Anzeige, rechnungsalterInTagen() fuer das
+ * zweite Erkennungssignal.
  */
-function alsBerlinerZeit(wert) {
-  if (wert === null || wert === undefined || wert === '') return '';
+function alsZeitstempel(wert) {
+  if (wert === null || wert === undefined || wert === '') return null;
   let d;
   if (typeof wert === 'number' || /^\d+$/.test(String(wert))) {
     const n = Number(wert);
@@ -362,12 +372,17 @@ function alsBerlinerZeit(wert) {
   } else {
     d = new Date(String(wert));
   }
-  if (isNaN(d.getTime())) return '';
+  return isNaN(d.getTime()) ? null : d.getTime();
+}
+
+function alsBerlinerZeit(wert) {
+  const ms = alsZeitstempel(wert);
+  if (ms === null) return '';
   return new Intl.DateTimeFormat('de-DE', {
     timeZone: 'Europe/Berlin',
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
-  }).format(d);
+  }).format(new Date(ms));
 }
 
 /** Betrag in Cent -> "89,00 EUR". Leer, wenn der Wert unbrauchbar ist. */
@@ -387,6 +402,11 @@ function alsBetrag(cents, waehrung) {
  * line_items. Kein subscription, kein billing_reason, kein is_first_payment,
  * keine laufende Nummer je Kunde, kein Mitgliedschaftsbeginn. Eine monatliche
  * Abbuchung sieht damit genauso aus wie eine Neuanmeldung.
+ *
+ * NACHTRAG: nicht ganz. date_created traegt einen verwertbaren Hinweis - siehe
+ * rechnungsalterInTagen() weiter unten. Das ist ein zweites Signal neben
+ * dieser Liste, kein Ersatz: es greift nur, wenn Bsport die Rechnung deutlich
+ * vor der Zahlung anlegt.
  * (Quelle: Bsport-Hilfeartikel "How to set up and use Invoice Webhooks". Die
  * Seite ist aus dieser Umgebung gesperrt und wurde ueber eine Suchzusammen-
  * fassung gelesen; line_items war darin abgeschnitten. Dort koennte ein
@@ -416,6 +436,62 @@ async function erstmalsGesehen(kv, kundenId) {
   } catch (err) {
     return { neu: true, grund: 'ablage-fehler:' + err.message };
   }
+}
+
+/**
+ * ZWEITES, UNABHAENGIGES SIGNAL: WIE ALT IST DIE RECHNUNG?
+ *
+ * Die Merkliste oben hat eine Luecke, die sie nicht selbst schliessen kann:
+ * Bestandsmitglieder stehen nicht darin. Bei ihrer ERSTEN Abbuchung nach dem
+ * Deployment sieht ein langjaehriges Mitglied aus wie eine Neuanmeldung -
+ * genau das ist am 24.09.2026 passiert (Mitglied seit Ende Juni, gemeldet als
+ * "Neue Mitgliedschaft").
+ *
+ * Der Payload verraet es trotzdem, nur nicht dort, wo wir zuerst gesucht
+ * haben. In diesem Fall stand in date_created der 30.06.2026 - die Rechnung
+ * war 86 Tage alt, als sie bezahlt wurde. Eine Neuanmeldung zahlt binnen
+ * Minuten (Karte) bis wenige Tage (SEPA, Rechnung). Ein grosser Abstand
+ * zwischen Anlage und Zahlung kann also keine Erstanmeldung sein.
+ *
+ * Das gilt unabhaengig davon, WIE Bsport die Rechnungen anlegt:
+ *   - legt Bsport je Abbuchung eine neue Rechnung an, ist der Abstand immer
+ *     klein und dieses Signal schweigt einfach (die Merkliste traegt dann);
+ *   - legt Bsport den ganzen Plan beim Vertragsstart an, wird der Abstand mit
+ *     jedem Monat groesser und das Signal greift ab der zweiten Abbuchung.
+ * Falsch melden kann es in keiner der beiden Varianten.
+ *
+ * DIE EINE FEHLERRICHTUNG, DIE BLEIBT: wer im Vorverkauf bucht und erst
+ * Wochen spaeter belastet wird, wird als Verlaengerung beschriftet. Deshalb
+ * wird hier nichts unterdrueckt - die Mail geht in jedem Fall raus, nur die
+ * Betreffzeile aendert sich. Ein falsches Etikett ist korrigierbar, ein
+ * verschwiegener Neukunde nicht.
+ *
+ * Rueckgabe: Alter in Tagen, oder null wenn kein brauchbares Datum vorliegt.
+ */
+function rechnungsalterInTagen(obj, jetztMs) {
+  const ms = alsZeitstempel(obj.date_created) ?? alsZeitstempel(obj.date_issued);
+  if (ms === null) return null;
+  const tage = (jetztMs - ms) / 86400000;
+  /* Eine Rechnung aus der Zukunft (Zeitzonen-Versatz, Vorausdatierung) sagt
+     nichts ueber Neu oder Alt - dann schweigt das Signal. */
+  return tage >= 0 ? tage : null;
+}
+
+/**
+ * Ab welchem Rechnungsalter gilt eine Zahlung als wiederkehrend?
+ *
+ * Voreinstellung 14 Tage: laenger als jede realistische Karten- oder
+ * SEPA-Verzoegerung, und deutlich kuerzer als der kuerzeste Abrechnungs-
+ * zyklus (28 Tage). BSPORT_NEW_MEMBER_WINDOW_DAYS=off schaltet das Signal
+ * ganz ab und laesst allein die Merkliste entscheiden; ein unbrauchbarer
+ * Wert faellt auf die Voreinstellung zurueck statt das Signal zu verstellen.
+ */
+function neukundenFensterTage() {
+  const roh = (process.env.BSPORT_NEW_MEMBER_WINDOW_DAYS || '').trim().toLowerCase();
+  if (roh === 'off' || roh === 'false' || roh === '0') return null;
+  if (roh === '') return 14;
+  const n = Number(roh);
+  return (Number.isFinite(n) && n >= 1) ? n : 14;
 }
 
 // ── Google Ads conversion pixel ───────────────────────────────────────────────
@@ -696,7 +772,23 @@ export default async function handler(req, res) {
   const mitgliedschaft = isPurchase
     ? await erstmalsGesehen(kv, customer.id)
     : { neu: true, grund: 'keine-mitgliedschaft' };
-  const istVerlaengerung = isPurchase && !mitgliedschaft.neu;
+
+  /* Zwei Signale, unabhaengig voneinander - siehe rechnungsalterInTagen().
+     Die Merkliste kennt Bestandsmitglieder nicht, das Rechnungsalter schon.
+     Eines von beiden genuegt; ein Treffer der Merkliste bleibt fuehrend. */
+  const fensterTage = neukundenFensterTage();
+  const alterTage   = rechnungsalterInTagen(obj, Date.now());
+  const alteRechnung = isPurchase && fensterTage !== null
+                    && alterTage !== null && alterTage > fensterTage;
+  const istVerlaengerung = isPurchase && (!mitgliedschaft.neu || alteRechnung);
+
+  /* Welches Signal hat entschieden - steht im Log und, bei Verlaengerungen,
+     als Hinweiszeile in der Mail. Damit ist der naechste echte Fall ohne
+     Nachfrage nachvollziehbar. */
+  const alterGerundet = alterTage === null ? null : Math.round(alterTage);
+  const erkennungsgrund = !mitgliedschaft.neu
+    ? mitgliedschaft.grund
+    : (alteRechnung ? `rechnung-${alterGerundet}-tage-alt` : mitgliedschaft.grund);
 
   const typeStr = isProbetraining
     ? 'Probetraining (Buchung)'
@@ -745,8 +837,17 @@ export default async function handler(req, res) {
     backofficeUrl,
     adresse,
     paket:         alleLeistungen.join(' · '),
-    angemeldetAm:  alsBerlinerZeit(obj.date_created) || alsBerlinerZeit(obj.date_issued),
+    /* Hiess vorher "angemeldetAm" und stand in der Mail als "Anmeldung".
+       Das war falsch und hat genau eine Fehldeutung verursacht: es ist das
+       Datum der RECHNUNG, nicht der Beitritt des Mitglieds. Der Beitritt
+       steht am Mitgliedsdatensatz, nicht an der Rechnung. */
+    rechnungVom:   alsBerlinerZeit(obj.date_created) || alsBerlinerZeit(obj.date_issued),
     faelligAm:     alsBerlinerZeit(obj.date_due),
+    /* Nur bei Verlaengerungen gesetzt: die Mail soll selbst sagen, woran sie
+       das erkannt hat - sonst landet die Frage wieder bei uns. */
+    erkennungsHinweis: (istVerlaengerung && alteRechnung)
+      ? `Rechnung ist ${alterGerundet} Tage alt — wiederkehrende Abbuchung`
+      : (istVerlaengerung ? 'Kunde ist in der Merkliste — wiederkehrende Abbuchung' : ''),
     bezahltStr,
     offenStr,
     rechnungStatus: status || '',
@@ -756,7 +857,18 @@ export default async function handler(req, res) {
     step: 'conversion',
     type: isProbetraining ? 'probetraining' : (isPurchase ? 'membership' : 'unclassified'),
     invoiceId, value, metaEventName,
-    ...(isPurchase ? { verlaengerung: istVerlaengerung, grund: mitgliedschaft.grund } : {}),
+    ...(isPurchase ? {
+      verlaengerung: istVerlaengerung,
+      grund: erkennungsgrund,
+      merkliste: mitgliedschaft.grund,
+      rechnungsalterTage: alterGerundet,
+      fensterTage,
+      /* Rohwerte mit, solange die Deutung von date_created nicht bestaetigt
+         ist: an der naechsten echten Verlaengerung laesst sich damit ohne
+         Rueckfrage nachlesen, was Bsport wirklich liefert. */
+      dateCreatedRoh: obj.date_created ?? null,
+      dateIssuedRoh: obj.date_issued ?? null,
+    } : {}),
     reason: metaEventName ? undefined
           : (!hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported'),
   }));
@@ -864,7 +976,7 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
     link('E-Mail', `mailto:${custEmail}`, custEmail),
     link('Telefon', telHref, custPhone),
     feld('Kurs / Termin', productDesc),
-    feld('Anmeldung', d.angemeldetAm),
+    feld('Rechnung vom', d.rechnungVom),
     feld('Ort', [customer.zip, customer.city].filter(Boolean).join(' ')),
     feld('Kundennr.', d.kundenId),
   ] : [
@@ -876,8 +988,9 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
     feld('Bezahlt', d.bezahltStr),
     feld('Noch offen', d.offenStr),
     feld('Fällig', d.faelligAm),
-    feld('Anmeldung', d.angemeldetAm),
+    feld('Rechnung vom', d.rechnungVom),
     feld('Adresse', d.adresse),
+    feld('Hinweis', d.erkennungsHinweis),
     feld('Kundennr.', d.kundenId),
   ]).filter(Boolean);
 
@@ -1024,11 +1137,13 @@ function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlin
   isProbetraining, details }) {
   const name = customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || '—';
   const d = details || {};
-  const zeile = (k, v) => (v ? `${(k + ':').padEnd(13)}${v}` : null);
+  /* 15 Zeichen, weil "Rechnung vom:" allein schon 13 belegt - mit 13 klebte
+     der Wert direkt am Doppelpunkt. */
+  const zeile = (k, v) => (v ? `${(k + ':').padEnd(15)}${v}` : null);
 
   const felder = isProbetraining ? [
     zeile('Kurs/Termin', productDesc),
-    zeile('Anmeldung',   d.angemeldetAm),
+    zeile('Rechnung vom', d.rechnungVom),
     zeile('Ort',         [customer.zip, customer.city].filter(Boolean).join(' ')),
   ] : [
     zeile('Paket',       d.paket || productDesc),
@@ -1036,8 +1151,9 @@ function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlin
     zeile('Bezahlt',     d.bezahltStr),
     zeile('Noch offen',  d.offenStr),
     zeile('Faellig',     d.faelligAm),
-    zeile('Anmeldung',   d.angemeldetAm),
+    zeile('Rechnung vom', d.rechnungVom),
     zeile('Adresse',     d.adresse),
+    zeile('Hinweis',     d.erkennungsHinweis),
   ];
 
   return [
