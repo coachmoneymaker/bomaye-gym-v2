@@ -425,14 +425,59 @@ function alsBetrag(cents, waehrung) {
  * IM ZWEIFEL NEU. Ohne Kundennummer oder ohne erreichbare Ablage melden wir
  * "neu". Eine Mail zu viel ist ein Aergernis, eine verpasste Anmeldung ein
  * verlorener Kunde.
+ *
+ * DIE BESTANDSLISTE, UND WARUM SIE NUR GELESEN WIRD
+ * Der Altbestand wird ueber scripts/bestand-einlesen.mjs einmalig eingelesen -
+ * aus einer Liste, die Bsports Backoffice ausgibt. Ob die Kundennummer in
+ * dieser Liste dieselbe ist wie obj.customer.id im Webhook, ist NICHT
+ * bestaetigt; Backoffice-Listen fuehren gern eine eigene Mitgliedsnummer. Die
+ * Mailadresse steht dagegen in beiden Quellen sicher. Deshalb legt das Skript
+ * zusaetzlich bsport:mitglied:mail:<sha256(mailadresse)> an - gehasht, damit
+ * keine Mailadressen als Schluesselnamen in der Ablage stehen.
+ *
+ * Diese Mailschluessel werden hier NUR GELESEN, nie geschrieben. Das ist der
+ * wichtige Teil: sie beantworten genau eine Frage - "war diese Person schon
+ * vor dem Einlesen Mitglied?" - und sind keine laufende Identitaet.
+ *
+ * Wuerden wir sie auch schreiben, waere die Mailadresse faktisch die
+ * Kundenkennung. Zwei Mitglieder unter einer Adresse (Eltern melden ein Kind
+ * mit der eigenen Mailadresse an) waeren dann dasselbe Mitglied, und die
+ * echte Neuanmeldung des Zweiten kaeme als "wiederkehrend" herein - genau der
+ * Fehler, den diese Erkennung verhindern soll, nur in der anderen Richtung.
+ * Laufend zaehlt deshalb allein die Kundennummer, die eindeutig ist.
+ *
+ * Die Reihenfolge ist Absicht: das SET NX auf die Kundennummer bleibt der
+ * erste Schritt und ist wie bisher atomar - zwei gleichzeitige Ereignisse
+ * koennen sich nicht gegenseitig als neu melden. Nur wenn dieser Schritt
+ * "neu" sagt, wird die Bestandsliste ueberhaupt befragt.
  */
-async function erstmalsGesehen(kv, kundenId) {
-  if (!kv || kundenId === null || kundenId === undefined || kundenId === '') {
+function mailSchluessel(email) {
+  const norm = String(email || '').trim().toLowerCase();
+  if (!norm) return null;
+  /* hash() ist derselbe SHA-256, den schon die Meta-Nutzerdaten benutzen -
+     kleingeschrieben wird davor, damit "Leon@..." und "leon@..." denselben
+     Schluessel ergeben wie in der eingelesenen Liste. */
+  return `bsport:mitglied:mail:${hash(norm)}`;
+}
+
+async function erstmalsGesehen(kv, kundenId, email) {
+  const mailKey = mailSchluessel(email);
+  const hatId = !(kundenId === null || kundenId === undefined || kundenId === '');
+  if (!kv || (!hatId && !mailKey)) {
     return { neu: true, grund: 'ohne-kundennummer-oder-ablage' };
   }
   try {
-    const gesetzt = await kv.set(`bsport:mitglied:${kundenId}`, Date.now(), { nx: true });
-    return { neu: !!gesetzt, grund: gesetzt ? 'erstmals' : 'schon-bekannt' };
+    if (hatId) {
+      const gesetzt = await kv.set(`bsport:mitglied:${kundenId}`, Date.now(), { nx: true });
+      if (!gesetzt) return { neu: false, grund: 'schon-bekannt' };
+    }
+    /* Die Kundennummer kannte ihn nicht (oder es gab keine). Letzte Frage:
+       stand die Mailadresse im eingelesenen Altbestand? Nur lesen - warum,
+       steht oben. */
+    if (mailKey && await kv.get(mailKey)) {
+      return { neu: false, grund: 'bestand-ueber-mailadresse' };
+    }
+    return { neu: true, grund: hatId ? 'erstmals' : 'ohne-kundennummer-oder-ablage' };
   } catch (err) {
     return { neu: true, grund: 'ablage-fehler:' + err.message };
   }
@@ -770,7 +815,7 @@ export default async function handler(req, res) {
 
      Steht bewusst VOR typeStr: die Beschriftung haengt vom Ergebnis ab. */
   const mitgliedschaft = isPurchase
-    ? await erstmalsGesehen(kv, customer.id)
+    ? await erstmalsGesehen(kv, customer.id, customer.email)
     : { neu: true, grund: 'keine-mitgliedschaft' };
 
   /* Zwei Signale, unabhaengig voneinander - siehe rechnungsalterInTagen().
