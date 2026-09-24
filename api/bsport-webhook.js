@@ -337,6 +337,47 @@ async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, 
   }
 }
 
+/**
+ * Ist das die erste bezahlte Rechnung dieses Kunden - oder eine Verlaengerung?
+ *
+ * WARUM WIR DAS SELBST FUEHREN MUESSEN
+ * Bsports Rechnungs-Webhook sagt es nicht. Der dokumentierte Rumpf von
+ * data.object ist: id, object, status, date_created, date_issued, date_due,
+ * date_cancelled, currency, total, amount_due, amount_paid, company, customer,
+ * line_items. Kein subscription, kein billing_reason, kein is_first_payment,
+ * keine laufende Nummer je Kunde, kein Mitgliedschaftsbeginn. Eine monatliche
+ * Abbuchung sieht damit genauso aus wie eine Neuanmeldung.
+ * (Quelle: Bsport-Hilfeartikel "How to set up and use Invoice Webhooks". Die
+ * Seite ist aus dieser Umgebung gesperrt und wurde ueber eine Suchzusammen-
+ * fassung gelesen; line_items war darin abgeschnitten. Dort koennte ein
+ * Zeitraum stehen, der ein zweites, unabhaengiges Signal waere - das ist an
+ * einer echten Verlaengerungsmail zu pruefen, nicht hier zu raten.)
+ *
+ * Also merken wir es uns. Beim ersten BEZAHLTEN Ereignis eines Kunden wird ein
+ * Schluessel gesetzt; ist er schon da, ist es eine Verlaengerung. Dieselbe
+ * Ablage, die schon die Doppel-Erkennung traegt - keine neuen Zugangsdaten,
+ * kein Netzaufruf zu Bsport, keine neue Fehlerquelle im Webhook.
+ *
+ * OHNE ABLAUFDATUM. Eine Mitgliedschaft laeuft Jahre; ein abgelaufener
+ * Schluessel wuerde ein langjaehriges Mitglied ploetzlich wieder als neu
+ * melden. Ein Schluessel je zahlendem Kunden ist vernachlaessigbar klein.
+ *
+ * IM ZWEIFEL NEU. Ohne Kundennummer oder ohne erreichbare Ablage melden wir
+ * "neu". Eine Mail zu viel ist ein Aergernis, eine verpasste Anmeldung ein
+ * verlorener Kunde.
+ */
+async function erstmalsGesehen(kv, kundenId) {
+  if (!kv || kundenId === null || kundenId === undefined || kundenId === '') {
+    return { neu: true, grund: 'ohne-kundennummer-oder-ablage' };
+  }
+  try {
+    const gesetzt = await kv.set(`bsport:mitglied:${kundenId}`, Date.now(), { nx: true });
+    return { neu: !!gesetzt, grund: gesetzt ? 'erstmals' : 'schon-bekannt' };
+  } catch (err) {
+    return { neu: true, grund: 'ablage-fehler:' + err.message };
+  }
+}
+
 // ── Google Ads conversion pixel ───────────────────────────────────────────────
 
 async function sendGoogleConversion({ invoiceId, value, currency }) {
@@ -370,15 +411,27 @@ async function sendGoogleConversion({ invoiceId, value, currency }) {
 
 // ── Admin email via Resend ────────────────────────────────────────────────────
 
-async function sendAdminEmail({ customer, transactionId, isProbetraining, typeStr, productDesc, amountStr, bookedAt }) {
+async function sendAdminEmail({ customer, transactionId, isProbetraining, istVerlaengerung, typeStr, productDesc, amountStr, bookedAt }) {
   const apiKey     = process.env.RESEND_API_KEY;
   const adminEmail = process.env.ADMIN_EMAIL;
   const fromEmail  = process.env.FROM_EMAIL;
   if (!apiKey || !adminEmail || !fromEmail) return { ok: false, reason: 'env-missing' };
 
+  /* Drei Betreffzeilen statt zweier. Eine wiederkehrende Abbuchung ist keine
+     Neuanmeldung und soll im Posteingang auch nicht so aussehen - genau das
+     war der Anlass: aus der Betreffzeile war nicht zu erkennen, ob jemand
+     neu unterschrieben hat oder ob nur der Monatsbeitrag durchgelaufen ist.
+
+     Unterdrueckt wird die Verlaengerungsmail bewusst NOCH NICHT. Solange die
+     Merkliste ihren ersten Abrechnungszyklus nicht hinter sich hat, ist eine
+     stille Mail das teurere Risiko: eine ignorierbare Mail kostet nichts,
+     eine faelschlich unterdrueckte Neuanmeldung einen Kunden. Zum Abschalten
+     genuegt spaeter eine Zeile an der Aufrufstelle. */
   const subject = isProbetraining
     ? `🥊 Neue Probetraining-Buchung: ${customer.name || customer.first_name}`
-    : `💰 Neue Mitgliedschaft: ${customer.name || customer.first_name} (${amountStr})`;
+    : (istVerlaengerung
+        ? `🔁 Zahlung erhalten: ${customer.name || customer.first_name} (${amountStr}), wiederkehrend`
+        : `💰 Neue Mitgliedschaft: ${customer.name || customer.first_name} (${amountStr})`);
 
   const berlinTime = new Intl.DateTimeFormat('de-DE', {
     timeZone: 'Europe/Berlin',
@@ -396,7 +449,7 @@ async function sendAdminEmail({ customer, transactionId, isProbetraining, typeSt
 
   const html = buildAdminEmailHtml({
     customer, transactionId, typeStr, productDesc, amountStr,
-    berlinTime, isProbetraining, welcomeSubject, welcomeBody,
+    berlinTime, isProbetraining, istVerlaengerung, welcomeSubject, welcomeBody,
   });
   const text = buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlinTime });
 
@@ -487,6 +540,10 @@ export default async function handler(req, res) {
   // difference degrades to a missing field instead of a wrong one.
   const addr = cust.address ?? {};
   const customer = {
+    /* Bsports Kundennummer. Sie ist der Schluessel, an dem sich eine
+       Verlaengerung von einer Erstanmeldung unterscheiden laesst - siehe
+       erstmalsGesehen(). Bei anonymen Kassenrechnungen fehlt sie. */
+    id:         cust.id ?? null,
     name:       cust.name || `${cust.first_name || ''} ${cust.last_name || ''}`.trim() || undefined,
     first_name: cust.first_name || '',
     last_name:  cust.last_name  || '',
@@ -587,9 +644,21 @@ export default async function handler(req, res) {
   const hatWert = !isProbetraining && hasTotal;
   const value         = hatWert ? totalEur : undefined;
   const valueCurrency = hatWert ? currency : undefined;
+  /* Nur bezahlte Rechnungen zaehlen fuer die Merkliste. Eine Gratisbuchung
+     setzt den Schluessel NICHT - wer erst zum Probetraining kommt und spaeter
+     Mitglied wird, loest dann korrekt "Neue Mitgliedschaft" aus.
+
+     Steht bewusst VOR typeStr: die Beschriftung haengt vom Ergebnis ab. */
+  const mitgliedschaft = isPurchase
+    ? await erstmalsGesehen(kv, customer.id)
+    : { neu: true, grund: 'keine-mitgliedschaft' };
+  const istVerlaengerung = isPurchase && !mitgliedschaft.neu;
+
   const typeStr = isProbetraining
     ? 'Probetraining (Buchung)'
-    : (isPurchase ? 'Mitgliedschaft' : 'Unklarer Rechnungsbetrag');
+    : (isPurchase
+        ? (istVerlaengerung ? 'Mitgliedschaft (Verlängerung)' : 'Mitgliedschaft (neu)')
+        : 'Unklarer Rechnungsbetrag');
   const amountStr = isProbetraining
     ? 'Kostenlos (0 €)'
     : (hasTotal ? `${totalEur.toFixed(2)} ${currency}` : 'Betrag unlesbar — bitte in Bsport prüfen');
@@ -598,6 +667,7 @@ export default async function handler(req, res) {
     step: 'conversion',
     type: isProbetraining ? 'probetraining' : (isPurchase ? 'membership' : 'unclassified'),
     invoiceId, value, metaEventName,
+    ...(isPurchase ? { verlaengerung: istVerlaengerung, grund: mitgliedschaft.grund } : {}),
     reason: metaEventName ? undefined
           : (!hasTotal ? 'total-unusable-not-reported' : 'negative-total-not-reported'),
   }));
@@ -628,6 +698,7 @@ export default async function handler(req, res) {
       customer,
       transactionId:   invoiceId,
       isProbetraining,
+      istVerlaengerung,
       typeStr,
       productDesc:     productName,
       amountStr,
@@ -673,10 +744,12 @@ function detailRow(label, valueHtml) {
 }
 
 function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, amountStr,
-  berlinTime, isProbetraining, welcomeSubject, welcomeBody }) {
+  berlinTime, isProbetraining, istVerlaengerung, welcomeSubject, welcomeBody }) {
 
   const icon      = isProbetraining ? '🥊' : '💰';
-  const headline  = isProbetraining ? 'Neue Probetraining-Buchung' : 'Neue Mitgliedschaft';
+  const headline  = isProbetraining
+    ? 'Neue Probetraining-Buchung'
+    : (istVerlaengerung ? 'Wiederkehrende Zahlung' : 'Neue Mitgliedschaft');
   const custName  = esc(customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || '—');
   const custEmail = customer.email || '';
   const custPhone = customer.phone || '';
