@@ -34,6 +34,10 @@
  *   KV_REST_API_URL          — auto-injected when Vercel KV is linked
  *   KV_REST_API_TOKEN        — auto-injected when Vercel KV is linked
  *   RESEND_API_KEY
+ *   BSPORT_BACKOFFICE_URL    — optional; Vorlage fuer den Knopf "In Bsport
+ *                              oeffnen", mit {id} als Platzhalter fuer die
+ *                              Kundennummer. Fehlt sie, steht die Nummer als
+ *                              Text in der Mail.
  *   ADMIN_EMAIL              — internal notification recipient
  *   FROM_EMAIL               — verified Resend sender address
  */
@@ -338,6 +342,41 @@ async function sendMetaEvent({ eventName, invoiceId, customer, value, currency, 
 }
 
 /**
+ * Ein Datum aus Bsports Rechnung lesbar machen.
+ *
+ * Die Felder date_created, date_issued und date_due stehen im dokumentierten
+ * Rumpf, ihr TYP steht dort nicht. Bsport spiegelt sonst Stripe, und Stripe
+ * zaehlt Sekunden seit 1970 - aber ein ISO-String ist genauso moeglich.
+ * Deshalb wird beides angenommen und im Zweifel nichts behauptet: ein
+ * unlesbarer Wert wird zu einem Strich, nicht zu einem falschen Datum.
+ */
+function alsBerlinerZeit(wert) {
+  if (wert === null || wert === undefined || wert === '') return '';
+  let d;
+  if (typeof wert === 'number' || /^\d+$/.test(String(wert))) {
+    const n = Number(wert);
+    /* Sekunden oder Millisekunden - alles unter dem Jahr 2100 in Sekunden
+       liegt unter 4e9, alles darueber ist bereits in Millisekunden. */
+    d = new Date(n < 4e9 ? n * 1000 : n);
+  } else {
+    d = new Date(String(wert));
+  }
+  if (isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  }).format(d);
+}
+
+/** Betrag in Cent -> "89,00 EUR". Leer, wenn der Wert unbrauchbar ist. */
+function alsBetrag(cents, waehrung) {
+  const c = parseInvoiceTotalCents(cents);
+  if (c === null) return '';
+  return `${(c / 100).toFixed(2)} ${waehrung}`;
+}
+
+/**
  * Ist das die erste bezahlte Rechnung dieses Kunden - oder eine Verlaengerung?
  *
  * WARUM WIR DAS SELBST FUEHREN MUESSEN
@@ -411,7 +450,7 @@ async function sendGoogleConversion({ invoiceId, value, currency }) {
 
 // ── Admin email via Resend ────────────────────────────────────────────────────
 
-async function sendAdminEmail({ customer, transactionId, isProbetraining, istVerlaengerung, typeStr, productDesc, amountStr, bookedAt }) {
+async function sendAdminEmail({ customer, transactionId, isProbetraining, istVerlaengerung, details, typeStr, productDesc, amountStr, bookedAt }) {
   const apiKey     = process.env.RESEND_API_KEY;
   const adminEmail = process.env.ADMIN_EMAIL;
   const fromEmail  = process.env.FROM_EMAIL;
@@ -449,9 +488,13 @@ async function sendAdminEmail({ customer, transactionId, isProbetraining, istVer
 
   const html = buildAdminEmailHtml({
     customer, transactionId, typeStr, productDesc, amountStr,
-    berlinTime, isProbetraining, istVerlaengerung, welcomeSubject, welcomeBody,
+    berlinTime, isProbetraining, istVerlaengerung, details: details || {},
+    welcomeSubject, welcomeBody,
   });
-  const text = buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlinTime });
+  const text = buildAdminEmailText({
+    customer, typeStr, productDesc, amountStr, berlinTime,
+    isProbetraining, details: details || {},
+  });
 
   try {
     const resend = new Resend(apiKey);
@@ -663,6 +706,50 @@ export default async function handler(req, res) {
     ? 'Kostenlos (0 €)'
     : (hasTotal ? `${totalEur.toFixed(2)} ${currency}` : 'Betrag unlesbar — bitte in Bsport prüfen');
 
+  /* ── WAS DIE MAIL AUSSER NAME UND BETRAG NOCH ZEIGEN KANN ──────────────
+     Alles hier stammt aus dem dokumentierten Rechnungsrumpf. Bewusst NICHT
+     dabei: official_document_id (Ausweis- bzw. Steuernummer) - die gehoert
+     nicht in eine Mail.
+
+     Und bewusst nicht versprochen: Geburtsdatum, Notfallkontakt und die
+     Einwilligungen aus dem Anmeldeformular stehen am MITGLIEDSDATENSATZ,
+     nicht an der Rechnung. Sie liessen sich nur ueber eine Bsport-API-
+     Abfrage holen, fuer die es in diesem Projekt keine Zugangsdaten gibt.
+     Dafuer gibt es den Knopf ins Backoffice: ein Tipp, und dort steht
+     alles vollstaendig. */
+  const alleLeistungen = lineItems
+    .map((z) => (z && z.description) || '')
+    .filter(Boolean);
+  const bezahltStr = alsBetrag(obj.amount_paid, currency);
+  const offenStr   = alsBetrag(obj.amount_due,  currency);
+
+  const strasse = [addr.line1 || addr.street || '', addr.line2 || '']
+    .filter(Boolean).join(', ');
+  const ortZeile = [customer.zip, customer.city].filter(Boolean).join(' ');
+  const adresse  = [strasse, ortZeile, customer.country].filter(Boolean).join(' · ');
+
+  /* Die Adresse der Kundenseite im Backoffice kennt dieser Code nicht -
+     backoffice.bsport.io ist von aussen nicht einsehbar, und eine geratene
+     Adresse waere ein Link ins Leere. Deshalb eine Vorlage aus der Umgebung
+     mit {id} als Platzhalter; fehlt sie, steht die Kundennummer als Text da
+     und laesst sich im Backoffice suchen. */
+  const backofficeVorlage = process.env.BSPORT_BACKOFFICE_URL || '';
+  const backofficeUrl = (backofficeVorlage && customer.id !== null)
+    ? backofficeVorlage.replace('{id}', encodeURIComponent(String(customer.id)))
+    : '';
+
+  const details = {
+    kundenId:      customer.id,
+    backofficeUrl,
+    adresse,
+    paket:         alleLeistungen.join(' · '),
+    angemeldetAm:  alsBerlinerZeit(obj.date_created) || alsBerlinerZeit(obj.date_issued),
+    faelligAm:     alsBerlinerZeit(obj.date_due),
+    bezahltStr,
+    offenStr,
+    rechnungStatus: status || '',
+  };
+
   console.log(JSON.stringify({
     step: 'conversion',
     type: isProbetraining ? 'probetraining' : (isPurchase ? 'membership' : 'unclassified'),
@@ -699,6 +786,7 @@ export default async function handler(req, res) {
       transactionId:   invoiceId,
       isProbetraining,
       istVerlaengerung,
+      details,
       typeStr,
       productDesc:     productName,
       amountStr,
@@ -744,7 +832,7 @@ function detailRow(label, valueHtml) {
 }
 
 function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, amountStr,
-  berlinTime, isProbetraining, istVerlaengerung, welcomeSubject, welcomeBody }) {
+  berlinTime, isProbetraining, istVerlaengerung, details, welcomeSubject, welcomeBody }) {
 
   const icon      = isProbetraining ? '🥊' : '💰';
   const headline  = isProbetraining
@@ -755,6 +843,41 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
   const custPhone = customer.phone || '';
   const telHref   = `tel:${custPhone.replace(/\s+/g, '')}`;
   const mailHref  = `mailto:${custEmail}?subject=${welcomeSubject}&body=${welcomeBody}`;
+  const d         = details || {};
+
+  /* ── ZWEI FELDLISTEN, WEIL ZWEI VERSCHIEDENE FRAGEN DAHINTERSTEHEN ─────
+     Beim Probetraining-Lead zaehlt die Kontaktaufnahme: wer, wie erreichbar,
+     zu welchem Termin, von wo. Bei einer Mitgliedschaft zaehlt der Vertrag:
+     welches Paket, wie viel, bezahlt oder offen, bis wann, wohin.
+
+     Leere Felder werden weggelassen statt als Strich gezeigt - eine Mail mit
+     vier Strichen liest sich wie ein Fehler. */
+  const feld = (name, wert) => (wert ? detailRow(name, esc(String(wert))) : '');
+  const link = (name, href, text) => (text
+    ? detailRow(name, `<a href="${esc(href)}" style="color:#C9A84C;text-decoration:none;">${esc(text)}</a>`)
+    : '');
+
+  const zeilen = (isProbetraining ? [
+    detailRow('Name', custName),
+    link('E-Mail', `mailto:${custEmail}`, custEmail),
+    link('Telefon', telHref, custPhone),
+    feld('Kurs / Termin', productDesc),
+    feld('Anmeldung', d.angemeldetAm),
+    feld('Ort', [customer.zip, customer.city].filter(Boolean).join(' ')),
+    feld('Kundennr.', d.kundenId),
+  ] : [
+    detailRow('Name', custName),
+    link('E-Mail', `mailto:${custEmail}`, custEmail),
+    link('Telefon', telHref, custPhone),
+    feld('Paket', d.paket || productDesc),
+    detailRow('Betrag', esc(amountStr)),
+    feld('Bezahlt', d.bezahltStr),
+    feld('Noch offen', d.offenStr),
+    feld('Fällig', d.faelligAm),
+    feld('Anmeldung', d.angemeldetAm),
+    feld('Adresse', d.adresse),
+    feld('Kundennr.', d.kundenId),
+  ]).filter(Boolean);
 
   return `<!DOCTYPE html>
 <html lang="de">
@@ -817,17 +940,7 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
                 <tr>
                   <td style="padding:28px 40px 4px;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-                      ${detailRow('Name',    custName)}
-                      ${detailRow('E-Mail',  custEmail
-                        ? `<a href="mailto:${esc(custEmail)}"
-                               style="color:#C9A84C;text-decoration:none;">${esc(custEmail)}</a>`
-                        : '—')}
-                      ${detailRow('Telefon', custPhone
-                        ? `<a href="${esc(telHref)}"
-                               style="color:#C9A84C;text-decoration:none;">${esc(custPhone)}</a>`
-                        : '—')}
-                      ${detailRow('Produkt', esc(productDesc))}
-                      ${detailRow('Betrag',  esc(amountStr))}
+                      ${zeilen.join('\n                      ')}
                     </table>
                   </td>
                 </tr>
@@ -862,6 +975,21 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
                             ✉ Begrüßungsmail
                           </a>
                         </td>
+                        ${d.backofficeUrl ? `
+                        <td width="12">&nbsp;</td>
+                        <!-- Alles Weitere steht im Backoffice: Geburtsdatum,
+                             Notfallkontakt, Einwilligungen. Die stehen am
+                             Mitgliedsdatensatz und nicht an der Rechnung. -->
+                        <td style="border:1px solid rgba(201,168,76,0.35);border-radius:2px;">
+                          <a href="${esc(d.backofficeUrl)}"
+                             style="display:inline-block;padding:12px 24px;
+                                    font-family:Arial,sans-serif;font-size:11px;
+                                    font-weight:700;letter-spacing:0.14em;
+                                    text-transform:uppercase;color:#C9A84C;
+                                    text-decoration:none;white-space:nowrap;">
+                            ↗ In Bsport öffnen
+                          </a>
+                        </td>` : ''}
                       </tr>
                     </table>
                   </td>
@@ -890,20 +1018,40 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
 </html>`;
 }
 
-function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlinTime }) {
+function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlinTime,
+  isProbetraining, details }) {
   const name = customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || '—';
+  const d = details || {};
+  const zeile = (k, v) => (v ? `${(k + ':').padEnd(13)}${v}` : null);
+
+  const felder = isProbetraining ? [
+    zeile('Kurs/Termin', productDesc),
+    zeile('Anmeldung',   d.angemeldetAm),
+    zeile('Ort',         [customer.zip, customer.city].filter(Boolean).join(' ')),
+  ] : [
+    zeile('Paket',       d.paket || productDesc),
+    zeile('Betrag',      amountStr),
+    zeile('Bezahlt',     d.bezahltStr),
+    zeile('Noch offen',  d.offenStr),
+    zeile('Faellig',     d.faelligAm),
+    zeile('Anmeldung',   d.angemeldetAm),
+    zeile('Adresse',     d.adresse),
+  ];
+
   return [
     'BOMAYE GYM — Interne Buchungsbenachrichtigung',
     '',
-    `Typ:     ${typeStr}`,
-    `Zeit:    ${berlinTime}`,
+    zeile('Typ',     typeStr),
+    zeile('Zeit',    berlinTime),
     '',
-    `Name:    ${name}`,
-    `E-Mail:  ${customer.email || '—'}`,
-    `Telefon: ${customer.phone || '—'}`,
-    `Produkt: ${productDesc}`,
-    `Betrag:  ${amountStr}`,
+    zeile('Name',    name),
+    zeile('E-Mail',  customer.email || '—'),
+    zeile('Telefon', customer.phone || '—'),
+    ...felder,
+    zeile('Kundennr.', d.kundenId),
+    d.backofficeUrl ? '' : null,
+    d.backofficeUrl ? `In Bsport oeffnen: ${d.backofficeUrl}` : null,
     '',
     'Nicht weiterleiten.',
-  ].join('\n');
+  ].filter((z) => z !== null && z !== undefined).join('\n');
 }
