@@ -44,6 +44,15 @@
  *                              Kundennummer. Bestaetigte Adresse:
  *                              https://backoffice.bsport.io/member/{id}/info
  *                              Fehlt sie, steht die Nummer als Text in der Mail.
+ *   GYM_LOCATION_NAME        — optional; Standortname in Betreff, Kopf und
+ *                              Fusszeile der internen Mail, z. B.
+ *                              "Bomaye Gym Munich". Ohne die Variable bleibt
+ *                              alles wie bisher: Kopf und Fusszeile nennen
+ *                              "Bomaye Gym", der Betreff nennt keinen Standort.
+ *   GYM_LOCATION_BADGE       — optional; kurzes Kuerzel, z. B. "MUC". Erscheint
+ *                              als Plakette im Mailkopf und, weil es kurz ist,
+ *                              anstelle des Namens als Vorsatz im Betreff.
+ *                              Unabhaengig von GYM_LOCATION_NAME setzbar.
  *   ADMIN_EMAIL              — internal notification recipient
  *   FROM_EMAIL               — verified Resend sender address
  */
@@ -588,11 +597,12 @@ async function sendAdminEmail({ customer, transactionId, isProbetraining, istVer
      stille Mail das teurere Risiko: eine ignorierbare Mail kostet nichts,
      eine faelschlich unterdrueckte Neuanmeldung einen Kunden. Zum Abschalten
      genuegt spaeter eine Zeile an der Aufrufstelle. */
-  const subject = isProbetraining
+  const ort = standort();
+  const subject = betreffVorsatz(ort) + (isProbetraining
     ? `🥊 Neue Probetraining-Buchung: ${customer.name || customer.first_name}`
     : (istVerlaengerung
         ? `🔁 Zahlung erhalten: ${customer.name || customer.first_name} (${amountStr}), wiederkehrend`
-        : `💰 Neue Mitgliedschaft: ${customer.name || customer.first_name} (${amountStr})`);
+        : `💰 Neue Mitgliedschaft: ${customer.name || customer.first_name} (${amountStr})`));
 
   const berlinTime = new Intl.DateTimeFormat('de-DE', {
     timeZone: 'Europe/Berlin',
@@ -968,6 +978,76 @@ export default async function handler(req, res) {
 
 // ── Email templates ───────────────────────────────────────────────────────────
 
+// ── Standort ─────────────────────────────────────────────────────────────────
+
+/**
+ * WELCHER STANDORT SCHICKT DIESE MAIL?
+ *
+ * Heute gibt es einen. Sobald es zwei gibt, muss im Posteingang OHNE Oeffnen
+ * erkennbar sein, aus welchem Studio eine Anmeldung kommt - sonst ist jede
+ * Mail erst nach einem Tipp verwertbar.
+ *
+ * Der Name kommt aus der UMGEBUNG, nicht aus Bsports Rechnungsdaten. Ob der
+ * Payload einen Standort ueberhaupt fuehrt, ist offen; eine Vermutung darueber
+ * waere eine Wette auf eine Architektur, die noch nicht entschieden ist. Eine
+ * Umgebungsvariable passt dagegen zu dem Fall, der bei kleinen Ketten der
+ * haeufigste ist: je Standort ein eigenes Deployment mit eigenem Webhook.
+ *
+ * Wird es doch ein gemeinsames Bsport-Konto mit Standortfeld in der Rechnung,
+ * aendert sich genau EINE Stelle - diese Funktion. Die Vorlagen darunter
+ * bleiben, wie sie sind.
+ *
+ * BEWUSST NICHT GEBAUT: kein Verteilen je Standort, kein ADMIN_EMAIL je
+ * Standort, keine Ablagestruktur je Standort. Das haengt alles an der
+ * Architekturentscheidung und waere heute geraten.
+ */
+const STANDORT_MARKE = 'Bomaye Gym';
+
+function standort() {
+  const name    = (process.env.GYM_LOCATION_NAME  || '').trim();
+  const kuerzel = (process.env.GYM_LOCATION_BADGE || '').trim();
+  return {
+    /* Ohne Variable bleibt es beim Markennamen - genau der Text, der bisher
+       fest im Kopf und in der Fusszeile stand. */
+    name: name || STANDORT_MARKE,
+    kuerzel,
+    /* Der Betreff nennt den Standort nur, wenn eine der beiden Variablen
+       ausdruecklich gesetzt ist. Ohne beide ist die Betreffzeile Zeichen fuer
+       Zeichen die von gestern. Beide wirken unabhaengig voneinander - wer nur
+       ein Kuerzel setzt, bekommt auch nur das Kuerzel zu sehen. */
+    gesetzt: name !== '' || kuerzel !== '',
+  };
+}
+
+/**
+ * Der Standort-Vorsatz fuer die Betreffzeile - vorn, nicht hinten.
+ *
+ * Auf dem iPhone schneidet die Mail-Liste den Betreff nach etwa 35 Zeichen ab.
+ * Ein Standort am Ende waere also genau dort unsichtbar, wo er gebraucht wird.
+ * Deshalb steht er vorn, und zwar in der kuerzesten verfuegbaren Form:
+ * GYM_LOCATION_BADGE, wenn gesetzt, sonst der vollstaendige Name.
+ *
+ *   ohne beides   "💰 Neue Mitgliedschaft: Max Muster (89.00 EUR)"
+ *   nur Name      "Bomaye Gym Munich · 💰 Neue Mitgliedschaft: …"
+ *   mit Kuerzel   "MUC · 💰 Neue Mitgliedschaft: …"
+ */
+/**
+ * Grossschreibung fuer die Kopfzeile.
+ *
+ * Das <p> traegt text-transform: uppercase, die Anzeige waere also auch ohne
+ * das hier gross. Aber der Text stand bisher ZUSAETZLICH fest in
+ * Grossbuchstaben im Quelltext, und genau darauf faellt ein Client zurueck,
+ * der Stile abschneidet. Diese Redundanz bleibt erhalten.
+ */
+function kopfGross(text) {
+  return String(text).toLocaleUpperCase('de-DE');
+}
+
+function betreffVorsatz(ort) {
+  if (!ort.gesetzt) return '';
+  return `${ort.kuerzel || ort.name} · `;
+}
+
 function esc(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -990,9 +1070,14 @@ function detailRow(label, valueHtml) {
   </tr>`;
 }
 
+/* standort() wird in beiden Vorlagen erneut gelesen statt durchgereicht: eine
+   Umgebungsvariable zu lesen kostet nichts, und so hat jede Vorlage ihre Quelle
+   direkt daneben - ein Parameter mehr in zwei Signaturen waere nur
+   Durchleitung. */
 function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, amountStr,
   berlinTime, isProbetraining, istVerlaengerung, details, welcomeSubject, welcomeBody }) {
 
+  const ort       = standort();
   const icon      = isProbetraining ? '🥊' : '💰';
   const headline  = isProbetraining
     ? 'Neue Probetraining-Buchung'
@@ -1055,12 +1140,16 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
         <table width="580" cellpadding="0" cellspacing="0" border="0" role="presentation"
                style="max-width:580px;width:100%;">
 
-          <!-- Eyebrow -->
+          <!-- Eyebrow: Standort, davor bei Bedarf das Kuerzel als Plakette.
+               Kein Radius - die Marke fuehrt --radius: 0, und ein abgerundetes
+               Schildchen waere der einzige runde Rand in der ganzen Mail. -->
           <tr>
             <td align="center" style="padding:0 0 24px;">
               <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.3em;
                         text-transform:uppercase;color:#C9A84C;font-family:Arial,sans-serif;">
-                BOMAYE GYM &mdash; INTERN
+                ${ort.kuerzel ? `<span style="display:inline-block;padding:3px 7px;margin-right:10px;
+                             border:1px solid #C9A84C;letter-spacing:0.18em;
+                             color:#C9A84C;">${esc(kopfGross(ort.kuerzel))}</span>` : ''}${esc(kopfGross(ort.name))} &mdash; INTERN
               </p>
             </td>
           </tr>
@@ -1164,7 +1253,7 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
             <td align="center" style="padding:24px 0 0;">
               <p style="margin:0;font-size:10px;letter-spacing:0.05em;
                         color:rgba(245,240,232,0.15);font-family:Arial,sans-serif;">
-                Bomaye Gym &mdash; Interne Benachrichtigung &mdash; Nicht weiterleiten
+                ${esc(ort.name)} &mdash; Interne Benachrichtigung &mdash; Nicht weiterleiten
               </p>
             </td>
           </tr>
@@ -1180,6 +1269,7 @@ function buildAdminEmailHtml({ customer, transactionId, typeStr, productDesc, am
 
 function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlinTime,
   isProbetraining, details }) {
+  const ort  = standort();
   const name = customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || '—';
   const d = details || {};
   /* 15 Zeichen, weil "Rechnung vom:" allein schon 13 belegt - mit 13 klebte
@@ -1201,8 +1291,11 @@ function buildAdminEmailText({ customer, typeStr, productDesc, amountStr, berlin
     zeile('Hinweis',     d.erkennungsHinweis),
   ];
 
+  /* Das Kuerzel bleibt der HTML-Fassung vorbehalten - es ist ein optischer
+     Akzent, und in reinem Text gibt es nichts zu akzentuieren. Im Betreff
+     steht es ohnehin, den sieht auch ein Textleser. */
   return [
-    'BOMAYE GYM — Interne Buchungsbenachrichtigung',
+    `${ort.name.toLocaleUpperCase('de-DE')} — Interne Buchungsbenachrichtigung`,
     '',
     zeile('Typ',     typeStr),
     zeile('Zeit',    berlinTime),
