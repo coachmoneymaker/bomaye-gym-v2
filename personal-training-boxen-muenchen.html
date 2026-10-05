@@ -338,6 +338,29 @@
     @media (max-width: 768px) {
       .pt-widget-wrapper { min-height: 1100px; }
       .pt-widget-wrapper iframe { height: 1100px; }
+
+      /* RANDLOS AUF DEM HANDY, wie beim Stundenplan.
+         Gemessen: der Buchungsrahmen bekam hier 342 von 390 Pixeln, weil das
+         Polster von .container (24px je Seite) abgeht. Das Stundenplan-Widget
+         auf derselben Seite bekommt 390 von 390 - es loest sich bei <=768px
+         mit genau diesen negativen Raendern aus dem Polster (.schedule-frame
+         in style.css). Der Wochenplan im Widget stellt drei Tagesspalten
+         nebeneinander; 48px weniger sind dort rund 16px je Spalte.
+
+         Der Wert spiegelt das Polster von .container. Nachgemessen betraegt
+         es bei JEDER Breite 24px - die 1.25rem-Regel unter 480px setzt sich
+         nicht durch -, deshalb ist -1.5rem hier ueberall richtig. */
+      .pt-widget-wrapper {
+        /* width: auto ist hier Pflicht, nicht Kosmetik: die Grundregel setzt
+           width: 100%, und 100% bezieht sich auf den Inhaltskasten des
+           Containers (342px). Mit width: 100% verschieben die negativen
+           Raender den Kasten nur nach links, ohne ihn zu verbreitern -
+           nachgemessen genau so passiert. Mit width: auto fuellt er die
+           vollen 390px. */
+        width: auto;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+      }
     }
     @media (max-width: 480px) {
       .pt-widget-wrapper { min-height: 1200px; }
