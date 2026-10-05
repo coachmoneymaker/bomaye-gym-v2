@@ -7,5 +7,8 @@
     "@vercel/kv": "^3.0.0",
     "resend": "^3.2.0",
     "sharp": "^0.35.1"
+  },
+  "scripts": {
+    "pruefen:reichweite": "node scripts/reichweite-pruefen.mjs"
   }
 }
