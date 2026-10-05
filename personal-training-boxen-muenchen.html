@@ -296,28 +296,52 @@
     .nav-link-active { color: var(--gold) !important; }
     #header .nav-link[href] { display: inline-flex; align-items: center; }
 
-    /* ── PT booking widget ────────────────────────── */
+    /* ── PT booking widget ──────────────────────────
+       Der Rahmen darf NICHT auf eine feste Hoehe geklammert werden. iOS
+       Safari ignoriert die Hoehe eines iframes und macht ihn so hoch wie
+       seinen Inhalt; er scrollt innen nicht. Mit overflow: hidden am Wrapper
+       und height: 100% am Rahmen wurde deshalb alles unterhalb der
+       reservierten Hoehe abgeschnitten - bei der Kasse der Bezahlknopf.
+
+       Jetzt steht der Rahmen im normalen Fluss und der Wrapper hat keine
+       feste Hoehe: auf iOS waechst der Wrapper mit dem aufgeblasenen Rahmen,
+       ganz ohne JavaScript. bsport-frame-hoehe.js zieht die Hoehe zusaetzlich
+       nach, damit auch Desktop-Browser die Seite scrollen statt einen
+       verschachtelten Bereich.
+
+       KEIN overflow hier. Weder hidden (das war der Fehler) noch
+       overflow-x: hidden: neben einem overflow-y: visible rechnet der
+       Standard daraus overflow-y: auto, und wir haetten uns genau die
+       Scroll-Falle zurueckgeholt, die auf Probetraining Wochen gekostet
+       hat. */
     .pt-widget-wrapper {
       position: relative;
       width: 100%;
       min-height: 900px;
       margin-top: 2rem;
-      overflow: hidden;
     }
     .pt-widget-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+      display: block;
       width: 100%;
-      height: 100%;
+      /* Startwert, bis gemessen ist. Auf iOS ohnehin unbeachtet. */
+      height: 900px;
       border: 0;
-      overflow-x: hidden !important;
+    }
+    /* Der Einwilligungs-Hinweis wird von bsport-gate.js in den Wrapper
+       gehaengt. Weil der Rahmen jetzt im Fluss steht, laege der Hinweis
+       darunter - also hier ueber die reservierte Flaeche legen, wie bisher. */
+    .pt-widget-wrapper .bomaye-consent-gate {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      justify-content: center;
     }
     @media (max-width: 768px) {
       .pt-widget-wrapper { min-height: 1100px; }
+      .pt-widget-wrapper iframe { height: 1100px; }
     }
     @media (max-width: 480px) {
       .pt-widget-wrapper { min-height: 1200px; }
+      .pt-widget-wrapper iframe { height: 1200px; }
     }
 
     /* ── Coach section ──────────────────────────── */
@@ -646,7 +670,7 @@
         <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Wähle deinen Coach. Wähle deinen Slot. Starte dein 1:1 Training auf höchstem Niveau.</p>
       </div>
       <div class="pt-widget-wrapper">
-        <iframe frameborder="0" allowfullscreen data-bsport-srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
+        <iframe frameborder="0" allowfullscreen data-bsport-hoehe data-bsport-srcdoc='<script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
         </iframe>
       </div>
     </div>
@@ -858,5 +882,7 @@ function toggleFaq(btn) {
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
+<!-- Rahmenhoehe: laedt nichts von bsport.io, misst nur unser eigenes iframe. -->
+<script data-cookieconsent="ignore" src="/assets/js/bsport-frame-hoehe.js"></script>
 </body>
 </html>
