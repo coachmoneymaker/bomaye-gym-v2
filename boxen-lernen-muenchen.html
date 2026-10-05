@@ -179,12 +179,26 @@
     }
 
     /* ── Content sections ───────────────────────── */
+    /* ── FLAECHEN AUS DEN MARKENTOKEN ────────────────────────────────────
+       Hier standen vier eigene Werte: #f5f4f0 als Creme, #111 als Rauch,
+       #F5F0E8 als Schriftfarbe und #b8963e als Akzentgold. Die sieben
+       Landingpages fuhren damit untereinander konsistent, gegenueber dem
+       Rest der Seite aber durchgehend daneben - wer von der Startseite
+       herkam, sah zwei verschiedene Cremetoene.
+
+       --smoke bleibt bewusst eine eigene Stufe und wird NICHT auf
+       --brand-dark gezogen: eine Rauch-Sektion steht hier direkt neben
+       einer Dark-Sektion, die Abstufung leistet also echte Arbeit. Mit
+       dem Token (#1a1a1a statt #111) wird die Trennung sogar deutlicher.
+
+       Das Akzentgold war mit #b8963e auf Creme bei rund 2.9:1 und damit
+       unter AA selbst fuer grosse Schrift; --gold-dark liegt darueber. */
     .seo-section {
       padding: var(--takt) 0;
     }
     .seo-section--dark  { background: var(--ink); }
-    .seo-section--smoke { background: #111; }
-    .seo-section--light { background: #f5f4f0; }
+    .seo-section--smoke { background: var(--smoke); }
+    .seo-section--light { background: var(--brand-cream); }
 
     .seo-section-inner {
       max-width: 760px;
@@ -203,11 +217,11 @@
       margin-bottom: 1rem;
     }
     .seo-section--dark h2,
-    .seo-section--smoke h2  { color: #F5F0E8; }
+    .seo-section--smoke h2  { color: var(--brand-cream); }
     .seo-section--light h2  { color: var(--ink); }
     .seo-section--dark h2 span,
     .seo-section--smoke h2 span { color: var(--gold); }
-    .seo-section--light h2 span { color: #b8963e; }
+    .seo-section--light h2 span { color: var(--gold-dark); }
 
     .seo-section p {
       font-family: var(--font-body);
