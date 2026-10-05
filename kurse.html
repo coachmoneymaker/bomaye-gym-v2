@@ -1504,7 +1504,12 @@ const COURSES = {
       { strong: 'Detaillierte Technikanalyse', span: 'Feedback von Weltklasse-Trainern' },
       { strong: 'Flexible Terminbuchung', span: 'Buchbar nach Verfügbarkeit' },
       { strong: 'Auf Anfrage', span: 'Kontaktiere uns direkt' },
-    ]
+    ],
+    /* Personal Training ist KEINE Mitgliedschaft, sondern eine einzeln
+       gebuchte 1:1-Leistung mit eigener Buchungsstrecke. Ohne dieses Ziel
+       fiel die Karte in die Voreinstellung /mitglied-werden - also auf die
+       Abo-Seite, auf der sich Personal Training gar nicht buchen laesst. */
+    cta: { type: 'link', href: '/personal-training-boxen-muenchen', text: 'PERSONAL TRAINING BUCHEN' },
   },
   women: {
     tag: "BOMAYE QUEENS",
@@ -1566,10 +1571,18 @@ function openCourse(id) {
   /* Update CTA button */
   const ctaBtn = document.getElementById('detail-cta-btn');
   if (ctaBtn) {
+    /* Das Ziel kommt aus den Kursdaten. Vorher stand hier fest
+       /mitglied-werden fuer alles ausser E-Mail-Anfragen - damit landete
+       auch Personal Training auf der Abo-Seite. Wer einen Kurs ergaenzt,
+       setzt sein Ziel jetzt in COURSES und nicht hier. */
     if (data.cta && data.cta.type === 'email') {
       ctaBtn.href = 'mailto:' + data.cta.email;
       ctaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i> ' + data.cta.text;
+    } else if (data.cta && data.cta.href) {
+      ctaBtn.href = data.cta.href;
+      ctaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> ' + (data.cta.text || 'JETZT ANMELDEN');
     } else {
+      /* Voreinstellung: Kurse, die ueber eine Mitgliedschaft laufen. */
       ctaBtn.href = '/mitglied-werden';
       ctaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN';
     }
@@ -1608,10 +1621,18 @@ function openMobileCourse(id, idx) {
   /* Update mobile CTA button */
   const mobCtaBtn = document.getElementById('mob-detail-cta-btn');
   if (mobCtaBtn) {
+    /* Das Ziel kommt aus den Kursdaten. Vorher stand hier fest
+       /mitglied-werden fuer alles ausser E-Mail-Anfragen - damit landete
+       auch Personal Training auf der Abo-Seite. Wer einen Kurs ergaenzt,
+       setzt sein Ziel jetzt in COURSES und nicht hier. */
     if (data.cta && data.cta.type === 'email') {
       mobCtaBtn.href = 'mailto:' + data.cta.email;
       mobCtaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i> ' + data.cta.text;
+    } else if (data.cta && data.cta.href) {
+      mobCtaBtn.href = data.cta.href;
+      mobCtaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> ' + (data.cta.text || 'JETZT ANMELDEN');
     } else {
+      /* Voreinstellung: Kurse, die ueber eine Mitgliedschaft laufen. */
       mobCtaBtn.href = '/mitglied-werden';
       mobCtaBtn.innerHTML = '<i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> JETZT ANMELDEN';
     }
