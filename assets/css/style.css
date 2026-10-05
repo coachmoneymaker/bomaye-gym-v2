@@ -160,10 +160,24 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 
 /* ── Tags ──────────────────────────────────────────────────── */
 .tag { display: inline-block; font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; padding: 4px 13px; border-radius: 0; }
-.tag--dark  { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+/* ── TAG: zwei Varianten, je eine pro Grund ───────────────────────────────
+   Gemessen wurde, was wirklich rendert: 43 Tags auf 23 Seiten ergaben NEUN
+   verschiedene Darstellungen, weil vier Seitenregeln gegen diese Grundregeln
+   ankaempften - eine davon mit dreimal !important. Zwei Tags standen dabei
+   bei Kontrast 2.01 auf cremefarbenem Grund, also unlesbar.
+
+   Die Variante sagt, auf WELCHEM GRUND der Tag steht - nicht, wie er
+   aussieht. Steht ein Tag auf der falschen Flaeche, wird im Markup die
+   Klasse getauscht, nicht hier eine Ausnahme angelegt.
+
+   Beide tragen dieselbe Handschrift: goldener Hauch, goldener Rahmen. Auf
+   hellem Grund traegt die SCHRIFT die Lesbarkeit (Tinte statt Gold, 18:1),
+   der Rahmen traegt die Marke. Gold auf Creme kaeme nur auf 3.3:1 und
+   verfehlt AA fuer Text dieser Groesse. */
+.tag--dark  { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.30); }
 
 .tag--gold      { background: var(--gold); color: var(--ink); }
-.tag--light-inv { background: rgba(8,8,8,0.08); color: var(--smoke); border: 1px solid rgba(8,8,8,0.15); }
+.tag--light-inv { background: rgba(201,168,76,0.10); color: var(--ink); border: 1px solid rgba(201,168,76,0.45); }
 .gold-dark  { color: var(--gold-dark); }
 
 /* ── Buttons ───────────────────────────────────────────────── */
@@ -1818,11 +1832,9 @@ footer {
 .mehr-preise-page p { color: rgba(8,8,8,0.55); }
 .mehr-preise-page .legal-back { color: rgba(8,8,8,0.8); font-size: 0.78rem; margin-bottom: 2.5rem; }
 .mehr-preise-page .legal-back:hover { color: var(--gold-dark); }
-.mehr-preise-page .tag--dark {
-  background: rgba(8,8,8,0.07);
-  color: rgba(8,8,8,0.6);
-  border-color: rgba(8,8,8,0.12);
-}
+/* Die frueher hier stehende Ausnahme fuer .tag--dark war ein Pflaster: der
+   Tag stand auf hellem Grund und trug die Variante fuer dunklen. Im Markup
+   steht jetzt .tag--light-inv, damit braucht es die Ausnahme nicht. */
 /* Table on light bg */
 .mehr-preise-page .mehr-preise-table-wrap {
   border-color: rgba(8,8,8,0.10);
@@ -1871,11 +1883,10 @@ footer {
 #pricing { background: #F5F0E8 !important; }
 
 /* Section header — premium gold badge for membership */
-#pricing .sec-header .tag {
-  background: rgba(201,168,76,0.12);
-  color: var(--gold-dark);
-  border-color: rgba(201,168,76,0.45);
-}
+/* Fuenfte Ausnahme fuer denselben Tag, hier mit --gold-dark auf Creme. Das
+   sind gemessene 3.34:1 und damit unter AA fuer Text dieser Groesse. Die
+   Grundregel .tag--light-inv traegt die Marke jetzt ueber Rahmen und Hauch
+   und die Lesbarkeit ueber die Schriftfarbe. */
 
 /* Divider above membership section */
 #pricing .sec-header::before {
@@ -2314,11 +2325,9 @@ footer .footer-grid + div {
 #testimonials { background: #F5F0E8 !important; }
 #testimonials::before { background: transparent !important; }
 
-#testimonials .tag--light-inv {
-  background: rgba(201,168,76,0.1);
-  color: var(--gold-dark);
-  border-color: rgba(201,168,76,0.25);
-}
+/* Diese Ausnahme hat .tag--light-inv ins Goldene gezogen - und damit das
+   vorweggenommen, was jetzt die Grundregel ist. Sie wird nicht mehr
+   gebraucht. */
 #testimonials .sec-header h2 { color: var(--ink) !important; }
 #testimonials .sec-header .gold-dark { color: var(--gold-dark) !important; }
 #testimonials .sec-header p { color: rgba(20,20,20,0.6) !important; }
@@ -4173,12 +4182,10 @@ a.mn-contact-text:hover { color: var(--gold); }
   }
 
   /* ── Tags / badges ── */
-  .tag {
-    font-size: 0.73rem;
-    padding: 5px 15px;
-  }
-  
-  
+  /* Hier stand .tag { font-size: 0.73rem; padding: 5px 15px } - groessere
+     Schrift bei schmalerem Polster als in der 768px-Regel darueber. Das
+     waechst in die falsche Richtung und war offensichtlich unbeabsichtigt;
+     der 768px-Wert gilt jetzt bis ganz nach unten durch. */
 }
 
 /* ── 375px: keep hero title strong on smallest phones ── */
@@ -4848,11 +4855,9 @@ a.mn-contact-text:hover { color: var(--gold); }
 #disciplines .sec-header .gold    { color: var(--gold-dark) !important; }
 #disciplines .sec-header p        { color: rgba(8,8,8,0.55) !important; }
 
-#disciplines .tag--dark {
-  background: rgba(201,168,76,0.12) !important;
-  color: var(--gold-dark) !important;
-  border-color: rgba(201,168,76,0.38) !important;
-}
+/* Hier stand dieselbe Ausnahme ein drittes Mal, mit drei !important. Drei
+   Stellen sind unabhaengig voneinander bei derselben Loesung gelandet - das
+   war das Signal, dass die Grundregel falsch war, nicht die Seiten. */
 
 /* ══════════════════════════════════════════════════════════════
    BSPORT REGISTRATION FORM — MOBILE LAYOUT FIX (v3)
