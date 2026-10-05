@@ -1158,20 +1158,16 @@
       border-radius: 0;
       text-transform: uppercase;
       white-space: nowrap;
-      /* EIGENSTAENDIG, bewusst nicht auf --glanz-eng gezogen.
-         Dieser Knopf steht auf cremefarbenem Grund, die Rollenwerte
-         sind fuer dunklen abgestimmt. Im Bildvergleich wirkte
-         --glanz-weit hier SCHWAECHER als der eigene Wert: 46px bei
-         0.70 streut auf hellem Grund weiter und damit duenner als
-         40px bei 0.65, dazu hellt der innere Lichtrand die Oberkante
-         auf. Vierte Rolle: Leuchten auf hellem Grund. */
-      box-shadow: 0 0 20px rgba(201,168,76,0.30), 0 4px 14px rgba(0,0,0,0.40);
+      /* Hier stand eine eigene, vierte Abstimmung desselben Goldscheins -
+         eigens fuer hellen Grund. Mit dem Leuchten faellt der Grund dafuer
+         weg; der Knopf nimmt dieselbe neutrale Tiefe wie ueberall. */
+      box-shadow: var(--knopf-tiefe);
       transition: all var(--dur-normal) var(--ease-out);
     }
     .ab-btn-primary:hover {
       transform: translateY(-2px) scale(1.04);
       filter: brightness(1.08);
-      box-shadow: 0 0 40px rgba(201,168,76,0.65), 0 10px 32px rgba(201,168,76,0.32);
+      box-shadow: var(--knopf-tiefe-hover);
     }
     .ab-btn-secondary {
       display: inline-flex;

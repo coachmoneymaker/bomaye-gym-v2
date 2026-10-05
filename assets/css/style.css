@@ -174,19 +174,20 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   transition: all var(--dur-normal) var(--ease-out); white-space: nowrap; text-decoration: none;
 }
 .btn--gold {
-  background: linear-gradient(135deg, #C9A84C 0%, #d4b472 52%, #A67C2E 100%);
+  /* FLACHE MARKENFLAECHE statt Verlauf.
+     Hier stand ein Dreistopp-Verlauf #C9A84C -> #d4b472 -> #A67C2E. Ein
+     Verlauf auf der Primaerfarbe liest sich als Knopfplastik aus einer
+     frueheren Stilepoche; die Marke fuehrt eine flache Goldflaeche, und
+     genau die steht jetzt hier. Hover und Druck wechseln die FARBE, nicht
+     die Tiefe - beide Werte sind die dokumentierten Abstufungen. */
+  background: var(--brand-gold);
   color: #0A0A08; border-color: transparent; font-weight: 700;
-  /* Kein box-shadow hier: der Wert wurde weiter unten im Block
-     "CONSISTENT BUTTON HIERARCHY" ohnehin ueberschrieben und hat nie
-     gerendert. Nachgemessen: der Knopf zeigt --glanz-eng. */
 }
 .btn--gold:hover {
-  background: linear-gradient(135deg, #d4b472 0%, #C9A84C 52%, #A67C2E 100%);
+  background: var(--gold-light);
   border-color: transparent;
   transform: translateY(-2px) scale(1.04);
   filter: brightness(1.08);
-  /* Ebenso: der frueher hier stehende 40px-Schatten wurde vom
-     46px-Wert weiter unten ueberschrieben und hat nie gerendert. */
 }
 .btn--outline-light { background: transparent; color: var(--white); border-color: rgba(245,240,232,0.4); }
 .btn--outline-light:hover { background: rgba(245,240,232,0.10); border-color: rgba(245,240,232,0.9); color: var(--white); transform: translateY(-1px); }
@@ -3016,7 +3017,8 @@ footer .footer-grid + div {
 /* Gold button: stronger active/press feedback */
 .btn--gold:active {
   transform: translateY(0) scale(0.98);
-  box-shadow: 0 0 12px rgba(201,168,76,0.25), 0 2px 8px rgba(0,0,0,0.4);
+  background: var(--gold-dark);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.32);
   transition-duration: 0.08s;
 }
 
@@ -3558,33 +3560,24 @@ img[loading="lazy"]:not(.logo-img):not(.intro-brand-logo):not(.dna-visual-logo):
      Diese drei loesen --sv/--sv-m/--sv-s NICHT ab: jene gelten
      weiterhin fuer die Grundregel an <section>. --takt wird dort
      gesetzt, wo eine Seite bisher einen eigenen Wert hatte. */
-  /* ── GLANZ: drei Gold-Leuchten nach Rolle ──────────────────────────
-     Gemessen wurde, was tatsaechlich rendert - nicht, was im Quelltext
-     steht. Im Quelltext stehen 62 Gold-Regeln, im geladenen Dokument
-     rendern 12 verschiedene Schattenwerte, und einer davon deckt 84 von
-     102 Vorkommen ab.
+  /* ── KANTE UND TIEFE ───────────────────────────────────────────────
+     Hier standen frueher drei Gold-Leuchten nach Rolle. Zwei davon,
+     --glanz-eng und --glanz-weit, trugen den Ruhe- und Hover-Zustand des
+     Gold-Buttons. Beide sind entfallen: ein goldener Schein um eine
+     goldene Flaeche ist der Stilmarker, den dieser Durchgang abraeumt,
+     und mit dem Leuchten faellt auch die Begruendung fuer zwei
+     Abstufungen davon weg. Der Knopf traegt jetzt eine neutrale Tiefe.
 
        --glanz-kante  1px-Ring statt Rahmen. Zeichnet eine Kante nach,
-                      leuchtet nicht.
-       --glanz-eng    Enges Leuchten am Element. Ruhezustand des
-                      Gold-Buttons - der mit Abstand haeufigste Schatten
-                      der Seite.
-       --glanz-weit   Weites Leuchten. Hover des Gold-Buttons.
+                      leuchtet nicht - bleibt unveraendert.
+       --knopf-tiefe  Ruhezustand des Primaerknopfs. Schwarz, nicht Gold.
+       --knopf-tiefe-hover  Derselbe Schatten, weiter und etwas tiefer.
 
-     eng und weit sind ZWEI ABSICHTEN, keine zwei Schreibweisen: das
-     eine haelt sich am Element, das andere greift in die Flaeche. Sie
-     werden nicht zusammengelegt.
-
-     Schwarze weiche Schatten auf hellem Grund sind hier bewusst NICHT
-     erfasst - sie leisten dort echte Arbeit und haben eine eigene
-     Rolle (Tiefe statt Leuchten). */
+     Schwarze weiche Schatten bleiben ueberall, wo sie stehen: sie
+     leisten echte Arbeit (Tiefe statt Leuchten). */
   --glanz-kante: 0 0 0 1px rgba(201,168,76,0.30);
-  --glanz-eng:   0 0 22px rgba(201,168,76,0.34),
-                 0 3px 12px rgba(0,0,0,0.32),
-                 inset 0 1px 0 rgba(245,240,232,0.10);
-  --glanz-weit:  0 0 46px rgba(201,168,76,0.70),
-                 0 10px 30px rgba(201,168,76,0.28),
-                 inset 0 1px 0 rgba(245,240,232,0.14);
+  --knopf-tiefe:       0 2px 8px rgba(0,0,0,0.28);
+  --knopf-tiefe-hover: 0 6px 20px rgba(0,0,0,0.34);
 
   --takt-eng:  clamp(2rem, 5vw, 4rem);
   --takt:      clamp(3rem, 7vw, 6rem);
@@ -3638,11 +3631,11 @@ section { padding: var(--sv) 0; }
 
 /* Primary: stronger ambient glow at rest — unmistakable lead action */
 .btn--gold {
-  box-shadow: var(--glanz-eng);
+  box-shadow: var(--knopf-tiefe);
 }
 .btn--gold:hover {
   transform: translateY(-3px) scale(1.03);
-  box-shadow: var(--glanz-weit);
+  box-shadow: var(--knopf-tiefe-hover);
 }
 
 /* Secondary: reduced visual weight — clearly subordinate */
@@ -3660,18 +3653,9 @@ section { padding: var(--sv) 0; }
 }
 
 /* Gold button on light bg (#pricing): use gold-dark tones */
-#pricing .btn--gold {
-  box-shadow:
-    0 0 18px rgba(160,124,58,0.30),
-    0 3px 12px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(245,240,232,0.10);
-}
-#pricing .btn--gold:hover {
-  box-shadow:
-    0 0 38px rgba(160,124,58,0.58),
-    0 8px 28px rgba(160,124,58,0.24),
-    inset 0 1px 0 rgba(245,240,232,0.14);
-}
+/* Die frueher hier stehende Sonderabstimmung war nur ein zweiter Satz
+   Leuchtwerte fuer denselben Knopf auf hellem Grund. Ohne Leuchten gibt es
+   nichts mehr abzustimmen - der Knopf erbt jetzt --knopf-tiefe wie ueberall. */
 
 /* Location white-bg: restore full-opacity on outline so it reads clearly */
 #location .btn--outline-dark,
@@ -5271,20 +5255,10 @@ a.mn-contact-text:hover { color: var(--gold); }
    Subtle glow pulse on primary CTA. Stops on hover.
 ══════════════════════════════════════════════════════════════ */
 
-.btn--hero-primary.btn--gold {
-  animation: hero-cta-glow 3.5s ease-in-out infinite;
-}
-.btn--hero-primary.btn--gold:hover {
-  animation: none;
-}
-@keyframes hero-cta-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(201,168,76,0.30), 0 4px 14px rgba(0,0,0,0.40);
-  }
-  50% {
-    box-shadow: 0 0 52px rgba(201,168,76,0.58), 0 8px 24px rgba(201,168,76,0.25), 0 4px 14px rgba(0,0,0,0.40);
-  }
-}
+/* Hier pulsierte der Hero-Knopf alle 3,5 Sekunden im Goldschein, endlos.
+   Eine Dauerbewegung, die nichts meldet, zieht Aufmerksamkeit ab, statt sie
+   zu fuehren - und sie ist das Gegenteil von ruhig. Der Knopf traegt jetzt
+   dieselbe flache Flaeche wie jeder andere Primaerknopf. */
 
 
 /* ══════════════════════════════════════════════════════════════
