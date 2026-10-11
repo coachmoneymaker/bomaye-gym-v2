@@ -9,7 +9,6 @@
     "sharp": "^0.35.1"
   },
   "scripts": {
-    "pruefen:reichweite": "node scripts/reichweite-pruefen.mjs",
-    "pruefen:reiter": "node scripts/reiter-pruefen.mjs"
+    "pruefen:reichweite": "node scripts/reichweite-pruefen.mjs"
   }
 }
