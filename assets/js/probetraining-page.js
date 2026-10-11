@@ -1749,19 +1749,39 @@
      dieser Datei). Die Bedienelemente sind also erreichbar - derselbe Weg,
      den kalender-tag.js auf /stundenplan schon geht.
 
-     DIE REGELN, DIE SICH DARAUS ERGEBEN
+     WAS DIE ERSTE FASSUNG (PR #112) FALSCH MACHTE
+     Sie lief vom Text nach OBEN, bis der Text nicht mehr passte, und tippte
+     dieses aeusserste Element an. Am Geraet ist die Leiste eine Reihe von
+     Chips, und ein Chip kann in einer eigenen Reihe stecken - getroffen
+     wurde dann die Reihe, ein Element ohne Hoerer. Gemessen:
+
+       Klick auf den inneren <span>   -> Hoerer am Reiter feuert       (1)
+       Klick auf den Wrapper darueber -> Hoerer am Reiter feuert NICHT (0)
+
+     Ereignisse steigen auf, sie steigen nicht ab. Deshalb wird jetzt das
+     TIEFSTE Element getippt: von dort erreicht der Klick den Reiter und
+     jeden Vorfahren. Dazu kamen drei Dinge, die denselben Ausgang hatten:
+     die Suche steckte in #bs-activity--dialog und den Widget-Haltern, obwohl
+     diese Kette am Buchungsdialog gemessen ist und nicht am Kaufschritt; der
+     Leistenbeweis galt nur fuer das Ziel selbst, nicht fuer seine Kette; und
+     "aktiv" war allein an ARIA gebunden, waehrend der aktive Chip an seiner
+     goldenen Fuellung zu erkennen ist.
+
+     DIE REGELN
      1. Gesucht wird am SICHTBAREN TEXT, nie an einer MUI-Klasse. Die tragen
         Zahlensuffixe (MuiPaper-root-889, jss417) und haben in PR #89 und
         #91 zweimal zu einer Erkennung gefuehrt, die nichts fand.
-     2. Geklickt wird EINMAL pro Oeffnung, und nur wenn der Reiter nicht
-        schon aktiv ist.
-     3. Bei der kleinsten Unklarheit wird NICHTS getan: kein Reiter gefunden,
-        mehrere gleich benannte, kein Text - dann bleibt der Schritt genau so,
-        wie er heute ist. Jeder unsichere Ausgang endet in "nichts tun".
-     4. Geklickt wird nur ein Reiter. Nie ein Kauf- oder Bestaetigen-Knopf:
+     2. Getippt wird das TIEFSTE Element, nie ein Wrapper darueber.
+     3. Getippt wird EINMAL pro Oeffnung, und nur wenn der Reiter nicht schon
+        aktiv ist - erkannt an ARIA, sonst an der abweichenden Fuellung.
+     4. Bei der kleinsten Unklarheit wird NICHTS getan: kein Reiter gefunden,
+        mehrere gleich benannte, nur Fliesstext - dann bleibt der Schritt
+        genau so, wie er heute ist. Jeder unsichere Ausgang endet in "nichts
+        tun".
+     5. Getippt wird nur ein Reiter. Nie ein Kauf- oder Bestaetigen-Knopf:
         das Ziel muss als ganzer Text genau einem der beiden Kategorienamen
-        entsprechen, und type="submit" ist ausgeschlossen.
-     5. Nichts wird eingefuegt, nichts gestylt, kein Ereignis gesendet. Das
+        entsprechen.
+     6. Nichts wird eingefuegt, nichts gestylt, kein Ereignis gesendet. Das
         Modul wechselt eine Ansicht, sonst nichts.
 
      GRENZEN DER WIRKUNG
@@ -1770,214 +1790,285 @@
      fuer uns unerreichbar.
 
      DIAGNOSE
-     ?ptdebug=1 schreibt unter [pt-gratis-reiter], was gefunden und was
-     geklickt wurde. Ohne den Schalter bleibt die Konsole still.
+     ?ptdebug=1 schreibt unter [pt-gratis-reiter] JEDEN Ausgang mit Grund,
+     jeden Grund einmal statt im Takt, und nach dem Tipp, ob die Leiste
+     wirklich umgeschaltet hat. Die erste Fassung meldete den Tipp als Erfolg
+     und verschwieg, dass sich nichts bewegt hatte - genau deshalb war am
+     Geraet nicht zu erkennen, was los war. Ohne den Schalter bleibt die
+     Konsole still.
      ═══════════════════════════════════════════════════════════════════════ */
   function _ptGratisReiter() {
-    /* Beide Namen: "Gratis Probetraining" ist der neue Kategoriename im
-       Bsport-Backoffice, "Free Training" der bisherige. Vergleich klein-
-       geschrieben, Leerraum zusammengezogen, Raender ab. */
+    /* Beide Namen: "Gratis Probetraining" ist der Kategoriename im Bsport-
+       Backoffice, "Free Training" der fruehere. Vergleich kleingeschrieben,
+       Leerraum zusammengezogen, Raender ab. */
     var NAMEN      = ['gratis probetraining', 'free training'];
     var KLICKS_MAX = 3;      /* harte Obergrenze pro Seitenaufruf */
-    var FEHL_MAX   = 20;     /* so oft wird vergeblich gesucht, dann Ruhe */
-    var KNOTEN_MAX = 4000;   /* Deckel fuer den Textdurchlauf */
+    var PAUSE_MS   = 250;    /* Mindestabstand zwischen zwei Durchlaeufen */
+    var KNOTEN_MAX = 20000;  /* Deckel fuer den Textknoten-Durchlauf */
+    var KETTE_MAX  = 4;      /* so weit wird fuer Leiste und Zustand hinaufgesehen */
+    var WIRKUNG_MS = 500;    /* danach wird nachgesehen, ob der Klick wirkte */
 
     var klicks   = 0;
-    var fehl     = 0;
-    var erledigt = null;     /* der schon geklickte Reiter, solange er steht */
+    var erledigt = null;     /* das schon getippte Ziel, solange es steht */
+    var letzter  = '';       /* letzter gemeldeter Grund, gegen Protokollfluten */
+    var zuletzt  = 0;        /* Zeitstempel des letzten Durchlaufs */
     var spur     = /[?&]ptdebug=1/.test(window.location.search);
 
-    function log() {
+    function log(text) {
       if (!spur) return;
-      var a = Array.prototype.slice.call(arguments);
-      a.unshift('[pt-gratis-reiter]');
-      console.log.apply(console, a);
+      console.log('[pt-gratis-reiter] ' + text);
+    }
+
+    /* Jeder Ausgang meldet seinen Grund, aber nur wenn er sich geaendert hat.
+       Vorher waren die beiden wahrscheinlichsten Ausgaenge still, und das war
+       der Grund, warum am Geraet nichts zu erkennen war. */
+    function grund(text) {
+      if (text === letzter) return;
+      letzter = text;
+      log(text);
     }
 
     function norm(s) {
       return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().toLowerCase();
     }
 
-    /* Nur in Bsports eigenen Teilbaeumen wird gesucht. Erst der Dialog unter
-       seiner stabilen ID (kein Zahlensuffix), dann die Widget-Halter - laut
-       gemessener Kette liegt der Dialog in einem von ihnen. */
-    function bereiche() {
-      var liste = [];
-      var dlg = document.getElementById('bs-activity--dialog');
-      if (dlg && document.contains(dlg)) liste.push(dlg);
-      var halter = document.querySelectorAll('[id^="bsport-widget-"]');
-      for (var i = 0; i < halter.length; i++) {
-        if (liste.indexOf(halter[i]) === -1) liste.push(halter[i]);
+    function fuellung(el) {
+      try { return window.getComputedStyle(el).backgroundColor; } catch (e) { return ''; }
+    }
+
+    /* ── WO GESUCHT WIRD ──────────────────────────────────────────────────
+       Im ganzen Dokument. Das ist geprueft, nicht leichtfertig: die Namen
+       "Free Training" und "Gratis Probetraining" kommen in unserem eigenen
+       Markup, CSS und JavaScript NULL Mal vor. Ein Element, dessen ganzer
+       Text genau so lautet, kann hier nur von Bsport stammen.
+
+       Vorher wurde nur in #bs-activity--dialog und in den Widget-Haltern
+       gesucht. Diese Kette ist am Buchungsdialog gemessen (PR #90), nicht am
+       Kaufschritt - ob der Kaufschritt unter derselben ID haengt, ist
+       UNBESTAETIGT. Die engere Suche konnte ihn also verfehlen, ohne dass es
+       auffiel.
+
+       Gegangen wird ueber die TEXTKNOTEN, nicht ueber die Elemente. Damit
+       liegt das Ziel von sich aus beim tiefsten Element, das den Text wirklich
+       traegt, und der Durchlauf kostet auf dieser Seite 0,23 ms. */
+    function ziele() {
+      var aus = [];
+      if (!document.body || !window.NodeFilter || !document.createTreeWalker) return aus;
+      var gehen = document.createTreeWalker(document.body, window.NodeFilter.SHOW_TEXT, null, false);
+      var n = 0, knoten;
+      while ((knoten = gehen.nextNode()) && ++n < KNOTEN_MAX) {
+        var t = norm(knoten.nodeValue);
+        if (!t || NAMEN.indexOf(t) === -1) continue;
+        var el = knoten.parentElement;
+        if (el && aus.indexOf(el) === -1) aus.push(el);
       }
-      return liste;
+      return aus;
     }
 
-    /* Aktiv ist nur, was sich BEWEISEN laesst. Wie Bsport den aktiven Reiter
-       sonst markiert, konnte hier nicht gemessen werden - das Widget rendert
-       in dieser Umgebung nicht. ARIA ist der einzige belastbare Hinweis;
-       fehlt er, wird geklickt. Ein Reiterklick wechselt nur die Ansicht und
-       ist auf dem aktiven Reiter ein Leerlauf. */
-    function aktiv(el) {
-      if (el.getAttribute('aria-selected') === 'true') return true;
-      var ac = el.getAttribute('aria-current');
-      return !!ac && ac !== 'false';
-    }
-
-    /* Vom Textknoten zum Reiter: so weit hinauf, wie der GANZE Text des
-       Elements noch genau der Name ist. Eine Stufe weiter steht die Leiste
-       mit allen Reitern, dort stimmt der Text nicht mehr - das ist die
-       natuerliche Grenze, und sie braucht keinen Klassennamen.
-
-       Ohne diesen Schritt bliebe die Suche am inneren <span> haengen, in dem
-       MUI den Text ablegt. Der traegt keinen Hoerer; der Klick gehoert dem
-       Element darueber. */
-    function aeusserster(el, bereich) {
+    /* Die Leiste, in der das Ziel steht - oder null. Gesucht wird auf der
+       KETTE nach oben, nicht nur am Ziel selbst: ein Reiter kann in einer
+       eigenen Reihe stecken, und mit zwei Reihen Chips ist genau das der
+       Normalfall. Als Beweis gilt role="tablist" oder ein Vorfahr, in dem
+       mindestens zwei gleich gebaute Geschwister mit kurzem eigenen Text
+       stehen. */
+    function leisteVon(el) {
       var z = el;
-      while (z.parentElement
-             && z.parentElement !== bereich
-             && bereich.contains(z.parentElement)
-             && NAMEN.indexOf(norm(z.parentElement.textContent)) !== -1) {
-        z = z.parentElement;
-      }
-      return z;
-    }
-
-    /* Steht das Element in einer Leiste? Verlangt werden mindestens zwei
-       Geschwister DERSELBEN Bauart, jedes mit eigenem, kurzem Text - so
-       sieht eine Reiterleiste aus.
-
-       Die Gleichheit des Tagnamens ist der Punkt: ohne sie zaehlt ein
-       Absatz, der zufaellig "Free Training" sagt, als Leistenteil, weil
-       neben ihm eine Ueberschrift und ein Knopf stehen. Dann waeren zwei
-       Ziele im Spiel, die Lage waere mehrdeutig und es passierte nichts -
-       der Reiter waere wegen eines Satzes unerreichbar. */
-    function inLeiste(el) {
-      var p = el.parentElement;
-      if (!p) return false;
-      var n = 0;
-      for (var i = 0; i < p.children.length; i++) {
-        var g = p.children[i];
-        if (g.tagName !== el.tagName) continue;
-        var t = norm(g.textContent);
-        if (t && t.length <= 40) n++;
-      }
-      return n >= 2;
-    }
-
-    function kandidaten(bereich) {
-      /* Weg 1: ARIA. role="tab" ist eine Rolle, kein Klassenname - sie
-         traegt kein Zahlensuffix und ist der Zweck des Elements. */
-      var reiter = bereich.querySelectorAll('[role="tab"]');
-      if (reiter.length >= 2) {
-        var aus = [];
-        for (var i = 0; i < reiter.length; i++) aus.push(reiter[i]);
-        return aus;
-      }
-
-      /* Weg 2: ohne ARIA ueber den Text. Genommen wird das TIEFSTE Element,
-         dessen ganzer Text der Name ist - sonst waere jeder Vorfahr bis zum
-         Dialog ein Treffer. */
-      var alle = bereich.getElementsByTagName('*');
-      var grenze = Math.min(alle.length, KNOTEN_MAX);
-      var roh = [];
-      for (var j = 0; j < grenze; j++) {
-        if (NAMEN.indexOf(norm(alle[j].textContent)) !== -1) roh.push(alle[j]);
-      }
-      var ziele = [];
-      for (var k = 0; k < roh.length; k++) {
-        var tiefer = false;
-        for (var m = 0; m < roh.length; m++) {
-          if (m !== k && roh[k].contains(roh[m])) { tiefer = true; break; }
+      for (var h = 0; h <= KETTE_MAX && z && z.parentElement; h++) {
+        var p = z.parentElement;
+        if (p.getAttribute && p.getAttribute('role') === 'tablist') return p;
+        var n = 0;
+        for (var i = 0; i < p.children.length; i++) {
+          var g = p.children[i];
+          if (g.tagName !== z.tagName) continue;
+          var t = norm(g.textContent);
+          if (t && t.length <= 40) n++;
         }
-        if (tiefer) continue;
-        var ziel = aeusserster(roh[k], bereich);
-        if (!inLeiste(ziel)) continue;
-        if (ziele.indexOf(ziel) === -1) ziele.push(ziel);
-      }
-      return ziele;
-    }
-
-    /* Genau einer, oder keiner. Der deutsche Name hat Vorrang; stehen zwei
-       Reiter mit demselben Namen da, ist die Lage unklar und es passiert
-       nichts. */
-    function waehlen(bereich) {
-      var liste = kandidaten(bereich);
-      if (!liste.length) return null;
-      for (var i = 0; i < NAMEN.length; i++) {
-        var treffer = [];
-        for (var j = 0; j < liste.length; j++) {
-          if (norm(liste[j].textContent) === NAMEN[i]) treffer.push(liste[j]);
-        }
-        if (treffer.length === 1) return treffer[0];
-        if (treffer.length > 1) { log('mehrdeutig:', NAMEN[i], treffer.length); return null; }
+        if (n >= 2) return p;
+        z = p;
       }
       return null;
     }
 
-    /* Letzte Sperre vor dem Klick: der ganze Text des Ziels muss genau einer
-       der beiden Kategorienamen sein. Ein Kauf- oder Bestaetigen-Knopf kann
-       das nicht passieren, seine Aufschrift ist nie "gratis probetraining"
-       oder "free training".
+    /* Aktiv? Erst ARIA auf der Kette - das ist beweisbar. Danach die
+       Fuellung: in einer Reiterleiste ist genau einer anders gefuellt als
+       alle uebrigen, am Geraet ist es der goldene. Gemessen wird die
+       errechnete Hintergrundfarbe, kein Klassenname.
 
-       Was hier bewusst NICHT geprueft wird: type === 'submit'. Ein <button>
-       ohne type-Attribut meldet von sich aus "submit" - die Pruefung haette
-       jeden echten Reiter verworfen. Im Test ist genau das passiert. */
-    function keinReiter(el) {
-      return NAMEN.indexOf(norm(el.textContent)) === -1;
+       Findet sich keine klare Mehrheit, lautet die Antwort "nicht aktiv".
+       Dann wird getippt, und ein Tipp auf den aktiven Reiter ist ein
+       Leerlauf - der sichere Ausgang in dieser Richtung. */
+    function aktiv(el) {
+      var z = el;
+      for (var h = 0; h <= KETTE_MAX && z; h++) {
+        if (z.getAttribute) {
+          var as = z.getAttribute('aria-selected');
+          if (as === 'true') return true;
+          if (as === 'false') return false;
+          var ac = z.getAttribute('aria-current');
+          if (ac && ac !== 'false') return true;
+        }
+        z = z.parentElement;
+      }
+      return fuellungAbweichend(el);
+    }
+
+    function fuellungAbweichend(el) {
+      var z = el;
+      for (var h = 0; h <= KETTE_MAX && z && z.parentElement; h++) {
+        var p = z.parentElement;
+        var geschw = [];
+        for (var i = 0; i < p.children.length; i++) {
+          if (p.children[i].tagName === z.tagName) geschw.push(p.children[i]);
+        }
+        if (geschw.length >= 3) {
+          var zaehl = {}, j;
+          for (j = 0; j < geschw.length; j++) {
+            var f = fuellung(geschw[j]);
+            zaehl[f] = (zaehl[f] || 0) + 1;
+          }
+          var meine = fuellung(z), haeufig = 0, farbe = '';
+          for (var f2 in zaehl) {
+            if (zaehl[f2] > haeufig) { haeufig = zaehl[f2]; farbe = f2; }
+          }
+          /* Alle bis auf einen teilen eine Fuellung, und der eine sind wir. */
+          if (haeufig >= geschw.length - 1 && farbe !== meine) return true;
+          return false;
+        }
+        z = p;
+      }
+      return false;
+    }
+
+    /* Abbild der Leiste: Fuellung und aria-selected jedes Eintrags. Damit
+       laesst sich nach dem Tipp sagen, ob sich wirklich etwas bewegt hat -
+       statt den Tipp als Erfolg zu melden, wie es die erste Fassung tat. */
+    function abbild(leiste) {
+      if (!leiste) return '';
+      var t = [];
+      for (var i = 0; i < leiste.children.length; i++) {
+        var c = leiste.children[i];
+        t.push(fuellung(c) + '/' + (c.getAttribute('aria-selected') || '-'));
+      }
+      return t.join(';');
+    }
+
+    /* ── WIE GETIPPT WIRD ─────────────────────────────────────────────────
+       Auf dem TIEFSTEN Element, nie auf einem Wrapper darueber. Das ist
+       gemessen, und es war der Fehler der ersten Fassung:
+
+         Klick auf den inneren <span>   -> Hoerer am Reiter feuert   (1)
+         Klick auf den Wrapper darueber -> Hoerer am Reiter feuert NICHT (0)
+
+       Ereignisse steigen auf, sie steigen nicht ab. Die erste Fassung ist
+       vom Text nach OBEN gelaufen, bis der Text nicht mehr passte, und hat
+       damit bei einem Reiter in eigener Reihe die Reihe getroffen - ein
+       Element ohne Hoerer. Das Protokoll meldete "umgeschaltet", auf dem
+       Schirm blieb alles stehen.
+
+       Der volle Zeigerablauf, weil Bedienelemente teils schon auf
+       pointerdown reagieren. Genau EIN Klick am Ende, damit ein Umschalter
+       nicht zweimal schaltet. */
+    function tippen(el) {
+      var folge = ['pointerdown', 'mousedown', 'pointerup', 'mouseup'];
+      for (var i = 0; i < folge.length; i++) {
+        var typ = folge[i];
+        var E = (typ.indexOf('pointer') === 0 && window.PointerEvent)
+          ? window.PointerEvent : window.MouseEvent;
+        try {
+          el.dispatchEvent(new E(typ, { bubbles: true, cancelable: true, composed: true }));
+        } catch (e) { /* alter Browser: der Klick unten genuegt */ }
+      }
+      if (typeof el.click === 'function') { el.click(); return true; }
+      try {
+        el.dispatchEvent(new window.MouseEvent('click',
+          { bubbles: true, cancelable: true, composed: true }));
+        return true;
+      } catch (e) { return false; }
     }
 
     function takt() {
-      if (klicks >= KLICKS_MAX) return;
+      if (klicks >= KLICKS_MAX) { grund('Grenze von ' + KLICKS_MAX + ' Klicks erreicht'); return; }
 
-      /* Billiger Vorfilter: steht einer der Namen ueberhaupt im Text? Ohne
-         Reiterleiste kostet dieser Takt damit einen Textvergleich und endet.
-         Das ist auch der Rueckstellpunkt - ist der Name weg, ist der Schritt
-         zu, und eine neue Oeffnung darf wieder umschalten. */
-      var feld = bereiche();
-      var bereich = null;
-      for (var i = 0; i < feld.length && !bereich; i++) {
-        var t = norm(feld[i].textContent);
-        for (var j = 0; j < NAMEN.length; j++) {
-          if (t.indexOf(NAMEN[j]) >= 0) { bereich = feld[i]; break; }
-        }
-      }
-      if (!bereich) { erledigt = null; fehl = 0; return; }
+      var jetzt = Date.now();
+      if (jetzt - zuletzt < PAUSE_MS) return;
+      zuletzt = jetzt;
 
-      /* Schon umgeschaltet und der Reiter steht noch: fertig. Damit bleibt
-         es bei einem Klick pro Oeffnung, auch wenn der Besucher danach
-         selbst einen anderen Reiter waehlt. */
+      /* Schon getippt und das Ziel steht noch: fertig. Damit bleibt es bei
+         einem Tipp pro Oeffnung, auch wenn der Besucher danach selbst einen
+         anderen Reiter waehlt. Verschwindet das Ziel, ist der Schritt zu und
+         eine neue Oeffnung darf wieder umschalten. */
       if (erledigt && document.contains(erledigt)) return;
+      erledigt = null;
 
-      /* Die Sperre nach FEHL_MAX vergeblichen Suchen gilt NUR fuer den
-         Textdurchlauf. Der kostet etwas, der ARIA-Weg ist ein einzelner
-         Selektoraufruf. Haengt die Sperre an beiden, entsteht eine stille
-         Sackgasse: steht der Name erst im Fliesstext und kommt die Leiste
-         spaeter, wird sie nicht mehr gesucht. */
-      var ariaDa = !!bereich.querySelector('[role="tab"]');
-      if (!ariaDa && fehl >= FEHL_MAX) return;
+      var gefunden = ziele();
+      if (!gefunden.length) { grund('kein Reiter mit diesem Text im Dokument'); return; }
 
-      var ziel = waehlen(bereich);
-      if (!ziel) { if (!ariaDa) fehl++; erledigt = null; return; }
-      fehl = 0;
-
-      if (aktiv(ziel)) { erledigt = ziel; log('schon aktiv, kein Klick'); return; }
-      if (keinReiter(ziel)) { log('kein Reiter, verworfen'); return; }
-
-      erledigt = ziel;
-      klicks++;
-      try {
-        ziel.click();
-      } catch (e) {
-        log('Klick nicht moeglich');
+      /* Nur Treffer, die in einer Leiste stehen. Ein Name im Fliesstext ist
+         keiner. */
+      var inLeiste = [], leisten = [];
+      for (var i = 0; i < gefunden.length; i++) {
+        var l = leisteVon(gefunden[i]);
+        if (!l) continue;
+        inLeiste.push(gefunden[i]);
+        leisten.push(l);
+      }
+      if (!inLeiste.length) {
+        grund('Text gefunden, aber in keiner Reiterleiste (' + gefunden.length + ' Treffer)');
         return;
       }
-      log('umgeschaltet auf', norm(ziel.textContent), '| Klicks:', klicks);
+
+      /* Der deutsche Name hat Vorrang. Zwei Reiter desselben Namens heissen:
+         Lage unklar, also nichts tun. */
+      var ziel = null, leiste = null;
+      for (var n = 0; n < NAMEN.length && !ziel; n++) {
+        var treffer = [];
+        for (var j = 0; j < inLeiste.length; j++) {
+          if (norm(inLeiste[j].textContent) === NAMEN[n]) treffer.push(j);
+        }
+        if (treffer.length === 1) { ziel = inLeiste[treffer[0]]; leiste = leisten[treffer[0]]; }
+        else if (treffer.length > 1) {
+          grund('mehrdeutig: ' + treffer.length + ' Reiter heissen "' + NAMEN[n] + '"');
+          return;
+        }
+      }
+      if (!ziel) { grund('kein Reiter mit passendem Namen in der Leiste'); return; }
+
+      /* Letzte Sperre: der ganze Text des Ziels muss genau einer der beiden
+         Kategorienamen sein. Ein Kauf- oder Bestaetigen-Knopf kann das nicht
+         passieren, seine Aufschrift lautet nie so.
+
+         Nicht geprueft wird type === 'submit': ein <button> ohne
+         type-Attribut meldet von sich aus "submit", die Pruefung hatte in
+         PR #112 jeden echten Reiter verworfen. */
+      if (NAMEN.indexOf(norm(ziel.textContent)) === -1) {
+        grund('Ziel traegt nicht genau den Kategorienamen, verworfen');
+        return;
+      }
+
+      if (aktiv(ziel)) { erledigt = ziel; grund('Reiter ist schon aktiv, kein Tipp'); return; }
+
+      var vorher = abbild(leiste);
+      erledigt = ziel;
+      klicks++;
+      if (!tippen(ziel)) { grund('Tipp nicht moeglich'); return; }
+      log('getippt auf "' + norm(ziel.textContent) + '" (Tipp ' + klicks + ' von ' + KLICKS_MAX + ')');
+      letzter = '';
+
+      /* Nachsehen, ob es gewirkt hat. Ohne das haette am Geraet nicht
+         auffallen koennen, dass ein Element ohne Hoerer getroffen wurde. */
+      window.setTimeout(function () {
+        var nachher = abbild(leiste);
+        if (!document.contains(ziel)) { log('Wirkung: der Schritt wurde verlassen'); return; }
+        log(nachher !== vorher
+          ? 'Wirkung: Leiste hat umgeschaltet'
+          : 'Wirkung: KEIN Wechsel erkennbar - Leiste unveraendert');
+      }, WIRKUNG_MS);
     }
 
     /* Beobachtet wird am ganzen Dokument, weil der Kaufschritt den Inhalt
        des Dialogs austauscht, ohne dass ein Kind von <body> dazukommt. Der
-       ruhige Takt faengt Aenderungen, die keine Mutation ausloesen. Beides
-       endet, sobald die Obergrenze erreicht ist. */
+       ruhige Takt faengt Aenderungen, die keine Mutation ausloesen. PAUSE_MS
+       deckelt die Haeufigkeit, beides endet an der Klickgrenze. */
     var geplant = false;
     function planen() {
       if (geplant) return;
@@ -1990,6 +2081,7 @@
       if (klicks >= KLICKS_MAX) {
         window.clearInterval(uhr);
         beob.disconnect();
+        grund('Grenze von ' + KLICKS_MAX + ' Klicks erreicht, Beobachtung beendet');
         return;
       }
       planen();

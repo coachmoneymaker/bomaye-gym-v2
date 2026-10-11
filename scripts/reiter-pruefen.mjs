@@ -148,7 +148,90 @@ const ATTRAPPE = () => {
     return true;
   };
 
+  /* Die Gestalt, die am Geraet wirklich dasteht (Bericht vom 11.10.2026):
+     zwei Reihen Chips, KEIN role="tab", der aktive Reiter allein an seiner
+     goldenen Fuellung zu erkennen, Text in einem inneren span, Klassennamen
+     mit Zahlensuffix. Genau daran ist PR #112 gescheitert. */
+  window.__bauenChips = function (opt) {
+    const chip = (txt, aktiv) => {
+      const c = document.createElement('div');
+      c.className = 'MuiChip-root-612 jss88';
+      c.style.cssText = 'display:inline-flex;padding:6px 12px;border-radius:16px;'
+        + (aktiv ? 'background:#C9A84C;color:#0A0A08;' : 'background:#F5F0E8;color:#0A0A08;');
+      const s = document.createElement('span');
+      s.className = 'MuiChip-label-620';
+      s.textContent = txt;
+      c.appendChild(s);
+      c.addEventListener('click', () => {
+        window.__klicks[txt] = (window.__klicks[txt] || 0) + 1;
+        /* Wie am Geraet: die goldene Fuellung wandert mit. */
+        const bar = c.closest('.bs-chipbar');
+        for (const k of bar.querySelectorAll('.MuiChip-root-612')) {
+          k.style.background = k === c ? '#C9A84C' : '#F5F0E8';
+        }
+      });
+      return c;
+    };
+
+    const dlg = document.createElement('div');
+    if (opt.id !== false) dlg.id = 'bs-activity--dialog';
+    const kopf = document.createElement('h2');
+    kopf.textContent = 'Neuen Kurspass kaufen';
+    dlg.appendChild(kopf);
+
+    const bar = document.createElement('div');
+    bar.className = 'bs-chipbar jss417';
+    bar.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;';
+    const namen = opt.namen || [
+      ['Empfehlungen', true], ['Alle', false], ['Verträge', false],
+      ['Gratis Probetraining', false], ['Andere Kurspässe', false]
+    ];
+    if (opt.reihen) {
+      /* Zwei echte DOM-Reihen, das Ziel ALLEIN in der zweiten - der Fall,
+         in dem PR #112 die Reihe statt des Chips getroffen hat. */
+      const r1 = document.createElement('div');
+      const r2 = document.createElement('div');
+      namen.forEach(([t, a], i) => (i === 3 ? r2 : r1).appendChild(chip(t, a)));
+      bar.appendChild(r1);
+      bar.appendChild(r2);
+    } else {
+      namen.forEach(([t, a]) => bar.appendChild(chip(t, a)));
+    }
+    dlg.appendChild(bar);
+
+    const karte = document.createElement('div');
+    karte.textContent = 'Bomaye Unlimited (Early Bird) 75,60 EUR / Monat';
+    dlg.appendChild(karte);
+    const kauf = document.createElement('button');
+    kauf.type = 'submit';
+    kauf.textContent = 'Jetzt kaufen';
+    kauf.addEventListener('click', () => {
+      window.__klicks['Jetzt kaufen'] = (window.__klicks['Jetzt kaufen'] || 0) + 1;
+    });
+    dlg.appendChild(kauf);
+
+    if (opt.amBody) {
+      /* Nicht im Widget-Halter, so wie Bsports alter Dialog. */
+      document.body.appendChild(dlg);
+      window.__weg = () => dlg.remove();
+    } else {
+      const h = document.createElement('div');
+      h.id = 'bsport-widget-880939';
+      h.appendChild(dlg);
+      document.getElementById('pt-cal-view').appendChild(h);
+      window.__weg = () => h.remove();
+    }
+    return true;
+  };
+
+  window.__goldener = function () {
+    const gold = [...document.querySelectorAll('.MuiChip-root-612')]
+      .filter((e) => getComputedStyle(e).backgroundColor === 'rgb(201, 168, 76)');
+    return gold.map((e) => e.textContent.trim()).join(',');
+  };
+
   window.__abbauen = function () {
+    if (window.__weg) { window.__weg(); window.__weg = null; return; }
     const h = document.getElementById('bsport-widget-880939');
     if (h) h.remove();
   };
@@ -172,6 +255,61 @@ const LEISTE_NORMAL = {
 };
 
 const FAELLE = [
+  /* ── Die Gestalt vom Geraet: Chips, zwei Reihen, Fuellung statt ARIA ──── */
+  {
+    name: 'CHIPS einreihig: wird genau einmal getippt',
+    async lauf(page) {
+      await page.evaluate(() => window.__bauenChips({}));
+      await page.waitForTimeout(1800);
+      const k = await page.evaluate(() => window.__klicks);
+      const gold = await page.evaluate(() => window.__goldener());
+      return [
+        [k['Gratis Probetraining'] === 1, `einmal getippt (war: ${k['Gratis Probetraining']})`],
+        [Object.keys(k).length === 1, `nichts sonst getippt (war: ${JSON.stringify(k)})`],
+        [gold === 'Gratis Probetraining', `goldene Fuellung ist gewandert (war: ${gold})`]
+      ];
+    }
+  },
+  {
+    name: 'CHIPS zweireihig, Ziel allein in Reihe 2: wird getippt (Fehler aus #112)',
+    async lauf(page) {
+      await page.evaluate(() => window.__bauenChips({ reihen: true }));
+      await page.waitForTimeout(1800);
+      const k = await page.evaluate(() => window.__klicks);
+      const gold = await page.evaluate(() => window.__goldener());
+      return [
+        [k['Gratis Probetraining'] === 1, `einmal getippt (war: ${k['Gratis Probetraining']})`],
+        [gold === 'Gratis Probetraining', `goldene Fuellung ist gewandert (war: ${gold})`]
+      ];
+    }
+  },
+  {
+    name: 'CHIPS am <body>, ohne die bekannte Dialog-ID: wird trotzdem gefunden',
+    async lauf(page) {
+      await page.evaluate(() => window.__bauenChips({ amBody: true, id: false }));
+      await page.waitForTimeout(1800);
+      const k = await page.evaluate(() => window.__klicks);
+      return [[k['Gratis Probetraining'] === 1, `einmal getippt (war: ${k['Gratis Probetraining']})`]];
+    }
+  },
+  {
+    name: 'CHIPS: Ziel ist schon der goldene, kein ARIA: kein Tipp',
+    async lauf(page, protokoll) {
+      await page.evaluate(() => window.__bauenChips({
+        namen: [
+          ['Empfehlungen', false], ['Alle', false], ['Verträge', false],
+          ['Gratis Probetraining', true], ['Andere Kurspässe', false]
+        ]
+      }));
+      await page.waitForTimeout(1800);
+      const k = await page.evaluate(() => window.__klicks);
+      const gruende = protokoll;
+      return [
+        [Object.keys(k).length === 0, `keine Klicks (war: ${JSON.stringify(k)})`],
+        [gruende.some((g) => /schon aktiv/.test(g)), `Grund "schon aktiv" gemeldet (war: ${gruende.join(' | ')})`]
+      ];
+    }
+  },
   {
     name: 'Leerlauf: keine Attrappe, nichts darf passieren',
     async lauf(page) {
@@ -377,6 +515,93 @@ const FAELLE = [
     }
   },
   {
+    name: 'Protokoll nennt jeden Ausgang mit Grund',
+    async lauf(page, protokoll) {
+      /* 1. nichts da */
+      await page.waitForTimeout(700);
+      /* 2. Name nur im Fliesstext */
+      await page.evaluate(() => window.__bauen({ leiste: false, fliesstext: 'Free Training' }));
+      await page.waitForTimeout(900);
+      /* 3. zwei gleich benannte Reiter */
+      await page.evaluate(() => {
+        window.__abbauen();
+        window.__bauen({ leiste: true, namen: [
+          { text: 'Empfehlungen', aktiv: true }, { text: 'Free Training' }, { text: 'Free Training' }
+        ] });
+      });
+      await page.waitForTimeout(900);
+      /* 4. schon aktiv */
+      await page.evaluate(() => {
+        window.__abbauen();
+        window.__bauen({ leiste: true, namen: [
+          { text: 'Empfehlungen' }, { text: 'Free Training', aktiv: true }, { text: 'Alle' }
+        ] });
+      });
+      await page.waitForTimeout(900);
+      /* 5. echter Wechsel, mit Wirkungskontrolle */
+      await page.evaluate((o) => { window.__abbauen(); window.__bauen(o); }, LEISTE_NORMAL);
+      await page.waitForTimeout(1600);
+
+      const p = protokoll.join(' | ');
+      return [
+        [/kein Reiter mit diesem Text im Dokument/.test(p), 'Grund "kein Reiter im Dokument"'],
+        [/in keiner Reiterleiste/.test(p), 'Grund "in keiner Reiterleiste"'],
+        [/mehrdeutig/.test(p), 'Grund "mehrdeutig"'],
+        [/schon aktiv/.test(p), 'Grund "schon aktiv"'],
+        [/getippt auf "free training"/.test(p), 'Meldung des Tipps'],
+        [/Wirkung: Leiste hat umgeschaltet/.test(p), 'Wirkungskontrolle bestaetigt den Wechsel'],
+        [protokoll.filter((z) => /kein Reiter mit diesem Text/.test(z)).length <= 3,
+         `kein Protokollfluten (Zeilen: ${protokoll.length})`]
+      ].map(([ok, text]) => [ok, `${text} (Protokoll: ${p.slice(0, 400)})`]);
+    }
+  },
+  {
+    name: 'Wirkungskontrolle meldet einen Tipp ohne Wirkung',
+    async lauf(page, protokoll) {
+      /* Eine Leiste ohne jeden Hoerer: der Tipp kann nichts bewirken. Genau
+         das muss das Protokoll sagen, statt Erfolg zu melden. */
+      await page.evaluate(() => {
+        const dlg = document.createElement('div');
+        dlg.id = 'bs-activity--dialog';
+        const bar = document.createElement('div');
+        bar.style.cssText = 'display:flex;gap:8px;';
+        for (const t of ['Empfehlungen', 'Alle', 'Free Training']) {
+          const c = document.createElement('div');
+          c.style.cssText = 'padding:6px;background:#F5F0E8;';
+          const s = document.createElement('span');
+          s.textContent = t;
+          c.appendChild(s);
+          bar.appendChild(c);
+        }
+        dlg.appendChild(bar);
+        document.body.appendChild(dlg);
+      });
+      await page.waitForTimeout(1800);
+      const p = protokoll.join(' | ');
+      return [
+        [/getippt auf "free training"/.test(p), `Tipp gemeldet (Protokoll: ${p.slice(0, 300)})`],
+        [/KEIN Wechsel erkennbar/.test(p), `kein Erfolg behauptet (Protokoll: ${p.slice(0, 300)})`]
+      ];
+    }
+  },
+  {
+    name: 'Klickgrenze: nach 3 Oeffnungen ist Schluss, mit Meldung',
+    async lauf(page, protokoll) {
+      for (let i = 0; i < 4; i++) {
+        await page.evaluate((o) => { window.__abbauen(); window.__bauenChips(o); }, {});
+        await page.waitForTimeout(1200);
+        await page.evaluate(() => window.__abbauen());
+        await page.waitForTimeout(700);
+      }
+      const k = await page.evaluate(() => window.__klicks);
+      const p = protokoll.join(' | ');
+      return [
+        [k['Gratis Probetraining'] === 3, `genau 3 Tipps (war: ${k['Gratis Probetraining']})`],
+        [/Grenze von 3 Klicks erreicht/.test(p), `Grenze gemeldet (Protokoll: ${p.slice(-200)})`]
+      ];
+    }
+  },
+  {
     name: 'Zu und wieder auf: wirkt erneut, aber nie zweimal pro Oeffnung',
     async lauf(page) {
       await page.evaluate((o) => window.__bauen(o), LEISTE_NORMAL);
@@ -425,16 +650,21 @@ for (const fall of FAELLE) {
 
   const page = await ctx.newPage();
   const konsolenFehler = [];
+  const protokoll = [];
   const egal = /Failed to load resource|net::ERR_|ERR_FAILED/;
   page.on('console', (m) => {
-    if (m.type() === 'error' && !egal.test(m.text())) konsolenFehler.push(m.text());
+    const t = m.text();
+    if (t.indexOf('[pt-gratis-reiter]') === 0) protokoll.push(t.replace('[pt-gratis-reiter] ', ''));
+    if (m.type() === 'error' && !egal.test(t)) konsolenFehler.push(t);
   });
   page.on('pageerror', (e) => konsolenFehler.push('pageerror: ' + e.message));
 
-  await page.goto(basis + 'probetraining.html', { waitUntil: 'load' });
+  /* ?ptdebug=1, damit die Gruende mitgeschrieben werden - jeder Ausgang des
+     Moduls muss sich benennen lassen. */
+  await page.goto(basis + 'probetraining.html?ptdebug=1', { waitUntil: 'load' });
   await page.evaluate(ATTRAPPE);
 
-  const ergebnisse = await fall.lauf(page);
+  const ergebnisse = await fall.lauf(page, protokoll);
   ergebnisse.push([konsolenFehler.length === 0,
                    `keine Konsolenfehler (war: ${konsolenFehler.slice(0, 3).join(' | ')})`]);
 
