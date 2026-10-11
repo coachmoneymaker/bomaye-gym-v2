@@ -207,6 +207,20 @@
     <h2>Wähle deinen Termin</h2>
     <p class="pt-booking-limit">Das kostenlose Probetraining gilt für Basic, Kids, Youth, Queens und Kickboxing.</p>
     <p>Fortgeschrittenen- und Wettkampftraining ist Mitgliedern vorbehalten.</p>
+    <!-- Steht hier und nicht erst im Buchungsfenster: der Kaufschritt von
+         Bsport oeffnet auf dem Reiter "Empfehlungen", und dort steht ein Abo
+         als erste Karte. Wer den Reiter mit dem Gratis-Pass nicht findet,
+         haelt das Abo fuer den einzigen Weg und bricht ab.
+
+         Gleiches Bauteil wie die Zeile oben (.pt-booking-limit): goldener
+         Randstrich, kein goldener Text. Gold auf Creme ergibt 2,01:1 und
+         waere derselbe Kontrastfehler, der in PR #106 und #107 gerade
+         beseitigt wurde. Auch --gold-dark kommt nur auf 3,34:1. -->
+    <!-- Geschuetztes Leerzeichen im Namen: bei 375px brach sonst genau der
+         Reitername um ("Gratis" / "Probetraining"), also das eine Wortpaar,
+         das der Besucher im Buchungsfenster wiedererkennen muss. Der Text
+         bleibt derselbe, nur die Umbruchstelle wandert. -->
+    <p class="pt-booking-limit">Nach der Anmeldung: Reiter „Gratis Probetraining“ antippen.</p>
   </div>
   <div class="container">
     <!-- Der Notbehelf-Hinweis ("am Bildschirmrand wischen") ist ersatzlos
