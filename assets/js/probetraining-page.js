@@ -1728,6 +1728,275 @@
     takt();
   }
 
+  /* ═════════════════════ GRATIS-REITER IM KAUFSCHRITT ═════════════════════
+     Nach der Anmeldung oeffnet Bsport "Neuen Kurspass kaufen" mit einer
+     Reiterleiste und zeigt zuerst "Empfehlungen". Dort steht als erste Karte
+     ein Abo (Bomaye Unlimited, Early Bird). Wer fuer das kostenlose
+     Probetraining gekommen ist, haelt das fuer den einzigen Weg und bricht
+     ab - der Reiter mit dem Gratis-Pass wird nicht gesehen. Das kostet
+     Anmeldungen.
+
+     WARUM DAS HIER STEHT UND NICHT IM MOUNT-AUFRUF
+     Der Kalender kennt keinen Schluessel fuer Reiter, Kategorie oder Pass.
+     Belegt: PR #42 nennt die vollstaendige Liste (coaches, establishments,
+     metaActivities, levels, variant, groupSessionByPeriod, todayOnly,
+     cardMode), und PR #79 hat gezeigt, dass das Widget unbekannte Schluessel
+     STILL ignoriert - config.calendar.date tat nichts. Ein geratener
+     Schluessel waere also nicht unsicher, sondern wirkungslos.
+
+     Auf dieser Seite laeuft das Widget mit dialogMode 3. Bsport rendert den
+     Dialog damit in UNSER Dokument (gemessene Kette in PR #90, oben in
+     dieser Datei). Die Bedienelemente sind also erreichbar - derselbe Weg,
+     den kalender-tag.js auf /stundenplan schon geht.
+
+     DIE REGELN, DIE SICH DARAUS ERGEBEN
+     1. Gesucht wird am SICHTBAREN TEXT, nie an einer MUI-Klasse. Die tragen
+        Zahlensuffixe (MuiPaper-root-889, jss417) und haben in PR #89 und
+        #91 zweimal zu einer Erkennung gefuehrt, die nichts fand.
+     2. Geklickt wird EINMAL pro Oeffnung, und nur wenn der Reiter nicht
+        schon aktiv ist.
+     3. Bei der kleinsten Unklarheit wird NICHTS getan: kein Reiter gefunden,
+        mehrere gleich benannte, kein Text - dann bleibt der Schritt genau so,
+        wie er heute ist. Jeder unsichere Ausgang endet in "nichts tun".
+     4. Geklickt wird nur ein Reiter. Nie ein Kauf- oder Bestaetigen-Knopf:
+        das Ziel muss als ganzer Text genau einem der beiden Kategorienamen
+        entsprechen, und type="submit" ist ausgeschlossen.
+     5. Nichts wird eingefuegt, nichts gestylt, kein Ereignis gesendet. Das
+        Modul wechselt eine Ansicht, sonst nichts.
+
+     GRENZEN DER WIRKUNG
+     Nur diese Seite. Auf /stundenplan und den Kursseiten laeuft das Widget
+     mit dialogMode 1, dort liegt der Dialog in einem fremden iframe und ist
+     fuer uns unerreichbar.
+
+     DIAGNOSE
+     ?ptdebug=1 schreibt unter [pt-gratis-reiter], was gefunden und was
+     geklickt wurde. Ohne den Schalter bleibt die Konsole still.
+     ═══════════════════════════════════════════════════════════════════════ */
+  function _ptGratisReiter() {
+    /* Beide Namen: "Gratis Probetraining" ist der neue Kategoriename im
+       Bsport-Backoffice, "Free Training" der bisherige. Vergleich klein-
+       geschrieben, Leerraum zusammengezogen, Raender ab. */
+    var NAMEN      = ['gratis probetraining', 'free training'];
+    var KLICKS_MAX = 3;      /* harte Obergrenze pro Seitenaufruf */
+    var FEHL_MAX   = 20;     /* so oft wird vergeblich gesucht, dann Ruhe */
+    var KNOTEN_MAX = 4000;   /* Deckel fuer den Textdurchlauf */
+
+    var klicks   = 0;
+    var fehl     = 0;
+    var erledigt = null;     /* der schon geklickte Reiter, solange er steht */
+    var spur     = /[?&]ptdebug=1/.test(window.location.search);
+
+    function log() {
+      if (!spur) return;
+      var a = Array.prototype.slice.call(arguments);
+      a.unshift('[pt-gratis-reiter]');
+      console.log.apply(console, a);
+    }
+
+    function norm(s) {
+      return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().toLowerCase();
+    }
+
+    /* Nur in Bsports eigenen Teilbaeumen wird gesucht. Erst der Dialog unter
+       seiner stabilen ID (kein Zahlensuffix), dann die Widget-Halter - laut
+       gemessener Kette liegt der Dialog in einem von ihnen. */
+    function bereiche() {
+      var liste = [];
+      var dlg = document.getElementById('bs-activity--dialog');
+      if (dlg && document.contains(dlg)) liste.push(dlg);
+      var halter = document.querySelectorAll('[id^="bsport-widget-"]');
+      for (var i = 0; i < halter.length; i++) {
+        if (liste.indexOf(halter[i]) === -1) liste.push(halter[i]);
+      }
+      return liste;
+    }
+
+    /* Aktiv ist nur, was sich BEWEISEN laesst. Wie Bsport den aktiven Reiter
+       sonst markiert, konnte hier nicht gemessen werden - das Widget rendert
+       in dieser Umgebung nicht. ARIA ist der einzige belastbare Hinweis;
+       fehlt er, wird geklickt. Ein Reiterklick wechselt nur die Ansicht und
+       ist auf dem aktiven Reiter ein Leerlauf. */
+    function aktiv(el) {
+      if (el.getAttribute('aria-selected') === 'true') return true;
+      var ac = el.getAttribute('aria-current');
+      return !!ac && ac !== 'false';
+    }
+
+    /* Vom Textknoten zum Reiter: so weit hinauf, wie der GANZE Text des
+       Elements noch genau der Name ist. Eine Stufe weiter steht die Leiste
+       mit allen Reitern, dort stimmt der Text nicht mehr - das ist die
+       natuerliche Grenze, und sie braucht keinen Klassennamen.
+
+       Ohne diesen Schritt bliebe die Suche am inneren <span> haengen, in dem
+       MUI den Text ablegt. Der traegt keinen Hoerer; der Klick gehoert dem
+       Element darueber. */
+    function aeusserster(el, bereich) {
+      var z = el;
+      while (z.parentElement
+             && z.parentElement !== bereich
+             && bereich.contains(z.parentElement)
+             && NAMEN.indexOf(norm(z.parentElement.textContent)) !== -1) {
+        z = z.parentElement;
+      }
+      return z;
+    }
+
+    /* Steht das Element in einer Leiste? Verlangt werden mindestens zwei
+       Geschwister DERSELBEN Bauart, jedes mit eigenem, kurzem Text - so
+       sieht eine Reiterleiste aus.
+
+       Die Gleichheit des Tagnamens ist der Punkt: ohne sie zaehlt ein
+       Absatz, der zufaellig "Free Training" sagt, als Leistenteil, weil
+       neben ihm eine Ueberschrift und ein Knopf stehen. Dann waeren zwei
+       Ziele im Spiel, die Lage waere mehrdeutig und es passierte nichts -
+       der Reiter waere wegen eines Satzes unerreichbar. */
+    function inLeiste(el) {
+      var p = el.parentElement;
+      if (!p) return false;
+      var n = 0;
+      for (var i = 0; i < p.children.length; i++) {
+        var g = p.children[i];
+        if (g.tagName !== el.tagName) continue;
+        var t = norm(g.textContent);
+        if (t && t.length <= 40) n++;
+      }
+      return n >= 2;
+    }
+
+    function kandidaten(bereich) {
+      /* Weg 1: ARIA. role="tab" ist eine Rolle, kein Klassenname - sie
+         traegt kein Zahlensuffix und ist der Zweck des Elements. */
+      var reiter = bereich.querySelectorAll('[role="tab"]');
+      if (reiter.length >= 2) {
+        var aus = [];
+        for (var i = 0; i < reiter.length; i++) aus.push(reiter[i]);
+        return aus;
+      }
+
+      /* Weg 2: ohne ARIA ueber den Text. Genommen wird das TIEFSTE Element,
+         dessen ganzer Text der Name ist - sonst waere jeder Vorfahr bis zum
+         Dialog ein Treffer. */
+      var alle = bereich.getElementsByTagName('*');
+      var grenze = Math.min(alle.length, KNOTEN_MAX);
+      var roh = [];
+      for (var j = 0; j < grenze; j++) {
+        if (NAMEN.indexOf(norm(alle[j].textContent)) !== -1) roh.push(alle[j]);
+      }
+      var ziele = [];
+      for (var k = 0; k < roh.length; k++) {
+        var tiefer = false;
+        for (var m = 0; m < roh.length; m++) {
+          if (m !== k && roh[k].contains(roh[m])) { tiefer = true; break; }
+        }
+        if (tiefer) continue;
+        var ziel = aeusserster(roh[k], bereich);
+        if (!inLeiste(ziel)) continue;
+        if (ziele.indexOf(ziel) === -1) ziele.push(ziel);
+      }
+      return ziele;
+    }
+
+    /* Genau einer, oder keiner. Der deutsche Name hat Vorrang; stehen zwei
+       Reiter mit demselben Namen da, ist die Lage unklar und es passiert
+       nichts. */
+    function waehlen(bereich) {
+      var liste = kandidaten(bereich);
+      if (!liste.length) return null;
+      for (var i = 0; i < NAMEN.length; i++) {
+        var treffer = [];
+        for (var j = 0; j < liste.length; j++) {
+          if (norm(liste[j].textContent) === NAMEN[i]) treffer.push(liste[j]);
+        }
+        if (treffer.length === 1) return treffer[0];
+        if (treffer.length > 1) { log('mehrdeutig:', NAMEN[i], treffer.length); return null; }
+      }
+      return null;
+    }
+
+    /* Letzte Sperre vor dem Klick: der ganze Text des Ziels muss genau einer
+       der beiden Kategorienamen sein. Ein Kauf- oder Bestaetigen-Knopf kann
+       das nicht passieren, seine Aufschrift ist nie "gratis probetraining"
+       oder "free training".
+
+       Was hier bewusst NICHT geprueft wird: type === 'submit'. Ein <button>
+       ohne type-Attribut meldet von sich aus "submit" - die Pruefung haette
+       jeden echten Reiter verworfen. Im Test ist genau das passiert. */
+    function keinReiter(el) {
+      return NAMEN.indexOf(norm(el.textContent)) === -1;
+    }
+
+    function takt() {
+      if (klicks >= KLICKS_MAX) return;
+
+      /* Billiger Vorfilter: steht einer der Namen ueberhaupt im Text? Ohne
+         Reiterleiste kostet dieser Takt damit einen Textvergleich und endet.
+         Das ist auch der Rueckstellpunkt - ist der Name weg, ist der Schritt
+         zu, und eine neue Oeffnung darf wieder umschalten. */
+      var feld = bereiche();
+      var bereich = null;
+      for (var i = 0; i < feld.length && !bereich; i++) {
+        var t = norm(feld[i].textContent);
+        for (var j = 0; j < NAMEN.length; j++) {
+          if (t.indexOf(NAMEN[j]) >= 0) { bereich = feld[i]; break; }
+        }
+      }
+      if (!bereich) { erledigt = null; fehl = 0; return; }
+
+      /* Schon umgeschaltet und der Reiter steht noch: fertig. Damit bleibt
+         es bei einem Klick pro Oeffnung, auch wenn der Besucher danach
+         selbst einen anderen Reiter waehlt. */
+      if (erledigt && document.contains(erledigt)) return;
+
+      /* Die Sperre nach FEHL_MAX vergeblichen Suchen gilt NUR fuer den
+         Textdurchlauf. Der kostet etwas, der ARIA-Weg ist ein einzelner
+         Selektoraufruf. Haengt die Sperre an beiden, entsteht eine stille
+         Sackgasse: steht der Name erst im Fliesstext und kommt die Leiste
+         spaeter, wird sie nicht mehr gesucht. */
+      var ariaDa = !!bereich.querySelector('[role="tab"]');
+      if (!ariaDa && fehl >= FEHL_MAX) return;
+
+      var ziel = waehlen(bereich);
+      if (!ziel) { if (!ariaDa) fehl++; erledigt = null; return; }
+      fehl = 0;
+
+      if (aktiv(ziel)) { erledigt = ziel; log('schon aktiv, kein Klick'); return; }
+      if (keinReiter(ziel)) { log('kein Reiter, verworfen'); return; }
+
+      erledigt = ziel;
+      klicks++;
+      try {
+        ziel.click();
+      } catch (e) {
+        log('Klick nicht moeglich');
+        return;
+      }
+      log('umgeschaltet auf', norm(ziel.textContent), '| Klicks:', klicks);
+    }
+
+    /* Beobachtet wird am ganzen Dokument, weil der Kaufschritt den Inhalt
+       des Dialogs austauscht, ohne dass ein Kind von <body> dazukommt. Der
+       ruhige Takt faengt Aenderungen, die keine Mutation ausloesen. Beides
+       endet, sobald die Obergrenze erreicht ist. */
+    var geplant = false;
+    function planen() {
+      if (geplant) return;
+      geplant = true;
+      window.requestAnimationFrame(function () { geplant = false; takt(); });
+    }
+    var beob = new MutationObserver(planen);
+    beob.observe(document.documentElement, { childList: true, subtree: true });
+    var uhr = window.setInterval(function () {
+      if (klicks >= KLICKS_MAX) {
+        window.clearInterval(uhr);
+        beob.disconnect();
+        return;
+      }
+      planen();
+    }, 500);
+    takt();
+  }
+
   /* ─────────────────── Start ─────────────────── */
   function _ptBoot() {
     /* Falls von einer vorherigen Seite eine Scroll-Sperre haengen geblieben
@@ -1750,6 +2019,10 @@
       _ptMountCalendar();
       _ptNativWacht();
     }
+    /* Laeuft in BEIDEN Modi: der Reiter-Wechsel haengt an keinem der
+       Eingriffe und darf nicht an ?ptfix haengen. */
+    _ptGratisReiter();
+
     _ptScrollHilfe();
     _ptSetupTouchDebug();
 
