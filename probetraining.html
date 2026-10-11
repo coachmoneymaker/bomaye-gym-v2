@@ -208,19 +208,22 @@
     <p class="pt-booking-limit">Das kostenlose Probetraining gilt für Basic, Kids, Youth, Queens und Kickboxing.</p>
     <p>Fortgeschrittenen- und Wettkampftraining ist Mitgliedern vorbehalten.</p>
     <!-- Steht hier und nicht erst im Buchungsfenster: der Kaufschritt von
-         Bsport oeffnet auf dem Reiter "Empfehlungen", und dort steht ein Abo
-         als erste Karte. Wer den Reiter mit dem Gratis-Pass nicht findet,
-         haelt das Abo fuer den einzigen Weg und bricht ab.
+         Bsport listet unter "Empfehlungen" zuerst das Abo (Bomaye Unlimited,
+         Early Bird) und darunter den Pass "Probetraining - Bomaye Gym" fuer
+         0,00 EUR. Wer den Gratis-Eintrag nicht bemerkt, haelt das Abo fuer
+         den einzigen Weg und bricht ab. Die Zeile benennt deshalb genau das,
+         was der Kunde dort sieht: den Namen und den Preis.
 
          Gleiches Bauteil wie die Zeile oben (.pt-booking-limit): goldener
          Randstrich, kein goldener Text. Gold auf Creme ergibt 2,01:1 und
          waere derselbe Kontrastfehler, der in PR #106 und #107 gerade
-         beseitigt wurde. Auch --gold-dark kommt nur auf 3,34:1. -->
-    <!-- Geschuetztes Leerzeichen im Namen: bei 375px brach sonst genau der
-         Reitername um ("Gratis" / "Probetraining"), also das eine Wortpaar,
-         das der Besucher im Buchungsfenster wiedererkennen muss. Der Text
-         bleibt derselbe, nur die Umbruchstelle wandert. -->
-    <p class="pt-booking-limit">Nach der Anmeldung: Reiter „Gratis Probetraining“ antippen.</p>
+         beseitigt wurde. Auch --gold-dark kommt nur auf 3,34:1.
+
+         Zwei geschuetzte Leerzeichen im Preis (vor 0,00 und vor dem
+         Eurozeichen): sonst kann "0,00" am Zeilenende stehen und das Zeichen
+         allein in der naechsten Zeile. Der Text bleibt derselbe, nur die
+         Umbruchstelle wandert. -->
+    <p class="pt-booking-limit">Im nächsten Schritt: „Probetraining“ für 0,00 € wählen.</p>
   </div>
   <div class="container">
     <!-- Der Notbehelf-Hinweis ("am Bildschirmrand wischen") ist ersatzlos
