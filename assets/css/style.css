@@ -187,6 +187,27 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   padding: 0.9rem 2.2rem; border-radius: 0; border: 1px solid transparent;
   transition: all var(--dur-normal) var(--ease-out); white-space: nowrap; text-decoration: none;
 }
+/* ── Sehr schmale Geraete: der Knopf darf umbrechen ────────────────────────
+   Auf 320px (Galaxy S9+, iPhone SE der ersten Reihe) ist "KOSTENLOS
+   PROBETRAINIEREN" mit white-space: nowrap und 2.2rem Polsterung 327px breit
+   und steht in einem 272px-Kasten. Gemessen auf /frauenboxen-muenchen:
+   Dokument 351px bei 320px Sichtbreite, die Seite liess sich waagerecht
+   schieben.
+
+   Polsterung allein reicht nicht: von 2.2rem auf 1.1rem spart 32px, der Knopf
+   bliebe mit 295px immer noch zu breit. Also beides, und nur hier unten.
+
+   Die Grenze liegt bei 360px, nicht hoeher: ab 360 passt der Knopf, und das
+   Aussehen oberhalb bleibt damit unangetastet. */
+@media (max-width: 360px) {
+  .btn {
+    white-space: normal;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+    max-width: 100%;
+  }
+}
+
 .btn--gold {
   /* FLACHE MARKENFLAECHE statt Verlauf.
      Hier stand ein Dreistopp-Verlauf #C9A84C -> #d4b472 -> #A67C2E. Ein
