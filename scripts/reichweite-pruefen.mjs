@@ -72,6 +72,12 @@ import { fileURLToPath } from 'node:url';
 const WURZEL = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const HANDY = { width: 390, height: 844 };   /* iPhone 14 */
 const BREIT = { width: 1440, height: 900 };
+/* Fuer die Ueberlaufpruefung, nicht fuer die Reichweite: die beiden Breiten,
+   an denen im Geraete-Audit etwas herausstand. 320 ist das schmalste noch
+   gebraeuchliche Geraet (Galaxy S9+), 1024x768 das iPad im Querformat - dort
+   greifen Tablett-Umbrueche, die auf dem Handy nie sichtbar werden. */
+const SCHMAL = { width: 320, height: 658 };
+const QUER   = { width: 1024, height: 768 };
 
 /* ── Playwright finden ──────────────────────────────────────────────────── */
 async function chromiumHolen() {
@@ -387,6 +393,54 @@ async function seitePruefen(browser, basis, datei, viewport) {
   return { datei, ...erg, jsFehler };
 }
 
+/* ── Waagerechter Ueberlauf ──────────────────────────────────────────────
+   Billige Zusatzpruefung: ist das Dokument breiter als der Sichtbereich,
+   laesst sich die Seite seitlich schieben. Auf dem Handy wirkt das wie ein
+   Fehler, und es verschiebt feste Leisten. Gemeldet wird der weiteste
+   Ausreisser zuerst, nicht jedes Kind, das mitgezogen wird.                */
+async function ueberlaufPruefen(browser, basis, datei, viewport) {
+  const ctx = await browser.newContext({ viewport, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(basis + datei, { waitUntil: 'load', timeout: 20000 });
+    await page.addStyleTag({ content: '*,*::before,*::after{transition:none !important;animation:none !important}' });
+    await page.evaluate(() => document.querySelectorAll('.reveal').forEach((e) => e.classList.add('visible')));
+    await page.waitForTimeout(250);
+    return await page.evaluate(() => {
+      const d = document.documentElement;
+      const vw = d.clientWidth;
+      if (d.scrollWidth <= vw + 1) return null;
+      const schuld = [];
+      for (const el of document.querySelectorAll('body *')) {
+        const cs = getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) continue;
+        if (r.right <= vw + 1 && r.left >= -1) continue;
+        /* Nur Blaetter: wer ein ueberlaufendes Kind hat, wird mitgezogen. */
+        if ([...el.querySelectorAll('*')].some((k) => {
+          const kr = k.getBoundingClientRect();
+          return kr.width > 1 && (kr.right > vw + 1 || kr.left < -1);
+        })) continue;
+        schuld.push({ weit: Math.max(r.right - vw, -r.left),
+          text: el.tagName.toLowerCase()
+            + (el.id ? '#' + el.id : '')
+            + (typeof el.className === 'string' && el.className
+                ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '')
+            + ` [${Math.round(r.left)}..${Math.round(r.right)}]` });
+      }
+      /* Der weiteste Ausreisser zuerst - das ist in aller Regel der
+         Verursacher, der Rest wird nur mitgezogen. */
+      schuld.sort((a, b) => b.weit - a.weit);
+      return { sw: d.scrollWidth, vw, schuld: schuld.slice(0, 3).map((x) => x.text) };
+    });
+  } catch (e) {
+    return { fehler: String(e.message).slice(0, 80) };
+  } finally {
+    await ctx.close();
+  }
+}
+
 /* ── Hauptlauf ──────────────────────────────────────────────────────────── */
 const argv = process.argv.slice(2);
 if (argv.includes('--help') || argv.includes('-h')) {
@@ -458,11 +512,32 @@ for (const viewport of auchBreit ? [HANDY, BREIT] : [HANDY]) {
   }
 }
 
+/* Zweiter Teil: waagerechter Ueberlauf bei 320px und im Tablett-Querformat. */
+let ueberlaeufe = 0;
+for (const viewport of [SCHMAL, QUER]) {
+  console.log(`\n━━━ waagerechter Überlauf · ${viewport.width}×${viewport.height} ━━━`);
+  let hier = 0;
+  for (const datei of seiten) {
+    const u = await ueberlaufPruefen(browser, basis, datei, viewport);
+    if (!u) continue;
+    hier++; ueberlaeufe++; befunde++;
+    if (u.fehler) { console.log(`✗  ${datei}: ${u.fehler}`); continue; }
+    console.log(`✗  ${datei.padEnd(40)} Dokument ${u.sw}px bei ${u.vw}px Sicht`);
+    u.schuld.forEach((z) => console.log(`      ${z}`));
+  }
+  if (!hier) console.log('   kein Überlauf');
+}
+
 await browser.close();
 srv.close();
 console.log(`\n═══ ${knoepfe} Knöpfe, ${container} Widget-Container · ${befunde} Befund(e)`);
 if (befunde) {
-  console.log('\nEin "✗" heißt: dieser Knopf ist durch Scrollen nicht zu erreichen.');
-  console.log('Erster Blick: hat ein Vorfahr overflow: hidden mit fester Höhe?');
+  console.log('\nIm Reichweitenteil heißt "✗": dieser Knopf ist durch Scrollen nicht');
+  console.log('zu erreichen. Erster Blick: hat ein Vorfahr overflow: hidden mit');
+  console.log('fester Höhe?');
+  console.log('Im Überlaufteil heißt "✗": das Dokument ist breiter als der');
+  console.log('Sichtbereich. Genannt ist der weiteste Ausreißer zuerst. Häufig:');
+  console.log('white-space: nowrap auf einem langen Knopf, oder ein Raster mit');
+  console.log('1fr-Spalten, deren Mindestinhalt breiter baut als ihr Anteil.');
 }
 process.exit(befunde ? 1 : 0);
