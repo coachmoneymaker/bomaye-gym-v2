@@ -1720,7 +1720,12 @@
     function takt() {
       var offen = !!_ptDialogSuchen();
       document.body.classList.toggle('bsport-modal-open', offen);
-      document.body.classList.toggle('pt-form-step', offen || _ptFormularfeldSichtbar());
+      /* pt-form-step wird hier nicht mehr gesetzt. Die einzige Regel, die
+         daran hing, rueckte den Buchungsbereich um 96px nach unten, um Platz
+         fuer den Notbehelf-Hinweis zu schaffen. Den gibt es seit dem Umbau
+         auf die Scroll-Hilfe nicht mehr, der Sprung blieb. Siehe
+         probetraining-page.css, Abschnitt "HIER STAND DER NOTBEHELF".
+         _ptFormularfeldSichtbar bleibt: die Scroll-Hilfe braucht es. */
     }
     window.setInterval(takt, 500);
     new MutationObserver(takt).observe(document.documentElement,

@@ -425,79 +425,25 @@ body .pt-bsport-dialog * {
    Gestalten das Richtige. */
 
 /* ─────────────────────────────────────────────────────────────────────────
-   NOTBEHELF: Hinweis auf das Wischen am Bildschirmrand
+/* ─────────────────────────────────────────────────────────────────────────
+   HIER STAND DER NOTBEHELF-HINWEIS ("am Bildschirmrand wischen")
 
-   KEINE Geraeteabfrage mehr. Die erste Fassung war mit @media (pointer:
-   coarse) abgeriegelt - und auf dem Geraet des Kunden blieb der Hinweis
-   unsichtbar. Die eigentliche Ursache lag zwar woanders (der Hinweis hing in
-   Bsports React-Portal und wurde dort laufend weggeraeumt, siehe
-   probetraining-page.js), aber die Lehre bleibt: ein Hinweis, der auf dem
-   Zeigergeraet ueberfluessig ist, kostet nichts. Einer, der genau dort
-   ausfaellt, wo er gebraucht wird, kostet die Buchung. Also wird er ueberall
-   angezeigt.
+   Das Element #pt-edge-hint ist aus probetraining.html entfernt worden, als
+   die Seite auf die Scroll-Hilfe umgestellt wurde (ein Knopf, der per
+   JavaScript weiterschiebt, statt einen Umweg zu erklaeren). Die drei Regeln
+   dazu blieben stehen und waren seitdem wirkungslos - bis auf eine:
 
-   ER BLEIBT WEG, BIS ES ETWAS ZU ERKLAEREN GIBT
-   Die vorige Fassung hatte hier gar keinen Standardzustand: der Hinweis stand
-   von der ersten Sekunde an im Seitenfluss ueber der Terminliste. Jeder
-   Besucher las "Falls sich das Formular nicht scrollen laesst", bevor es
-   ueberhaupt ein Formular gab - ein Umweg, den die meisten nie brauchen, als
-   Begruessung. Das war eine Ueberkorrektur: weil der Hinweis einmal
-   unsichtbar geblieben war, wurde er anschliessend gar nicht mehr
-   abgeriegelt. Die Ursache von damals lag aber nicht am Abriegeln, sondern
-   am Ort (React-Portal, siehe probetraining-page.js).
+     body.pt-form-step .pt-booking-section { padding-top: 96px }
 
-   Also: display none als Standard, sichtbar nur unter body.pt-form-step.
-   Der Schalter ist eine Klasse am <body> und liegt damit ausserhalb jedes
-   React-Baums - genau deshalb kann React ihn nicht wegraeumen. Welche drei
-   Signale die Klasse setzen, steht in probetraining-page.js.
+   Die rueckte den Buchungsbereich um 96px nach unten, sobald der
+   Anmeldeschritt lief, um Platz fuer einen Hinweis zu schaffen, den es nicht
+   mehr gibt. Auf dem Handy sprang der Kalender beim Oeffnen des Formulars
+   also sichtbar weg, fuer nichts.
 
-   pointer-events: none ist Pflicht - der Hinweis darf unter keinen Umstaenden
-   selbst Beruehrungen abfangen, sonst waere er Teil des Problems.
+   Die Klasse pt-form-step setzt probetraining-page.js weiterhin im
+   ?ptfix=1-Pfad; dort haengt noch anderes daran. In der Seite ohne Parameter
+   wird sie nicht mehr gesetzt.
    ───────────────────────────────────────────────────────────────────────── */
-
-/* Nur noch das Aussehen. Die Lage setzt die Regel darunter - der Hinweis
-   erscheint ausschliesslich angeheftet, einen Zustand im Seitenfluss gibt
-   es nicht mehr. */
-#pt-edge-hint {
-  display: none;
-  padding: 12px 14px;
-  background: #0A0A08;
-  color: #F5F0E8;
-  border: none;
-  border-left: 3px solid #C9A84C;
-  border-radius: 0;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  line-height: 1.45;
-  letter-spacing: 0.01em;
-  text-align: left;
-}
-
-/* Angeheftet, sobald der Buchungsschritt laeuft. Die Klasse setzt
-   probetraining-page.js - entweder weil Bsports Dialog erkannt wurde oder
-   weil in die Terminliste getippt wurde. */
-body.pt-form-step #pt-edge-hint {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2147482000;
-  margin: 0;
-  max-width: none;
-  pointer-events: none;
-  box-shadow: 0 2px 12px rgba(10, 10, 8, 0.35);
-  padding-top: max(12px, env(safe-area-inset-top));
-  /* Angeheftet steht der Hinweis auch mal ueber dunklem Grund - etwa dem
-     Footer. Ohne Abgrenzung verschwaende er dort. */
-  border-bottom: 1px solid rgba(201, 168, 76, 0.35);
-}
-
-/* Der angeheftete Hinweis liegt oben. Damit er die ersten Zeilen des
-   Formulars nicht verdeckt, rueckt der Buchungsbereich nach. */
-body.pt-form-step .pt-booking-section {
-  padding-top: 96px;
-}
 
 /* Nur mit ?ptdebug=1 sichtbar. */
 #pt-touch-debug {
