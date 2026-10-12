@@ -5723,7 +5723,25 @@ a.mn-contact-text:hover { color: var(--gold); }
   grid-template-columns: 1fr;
 }
 .doc-cards--4 {
-  grid-template-columns: repeat(4, 1fr);
+  /* Zwei Spalten statt vier. Vier passen in diesen Behaelter nicht.
+
+     Ein nacktes 1fr heisst minmax(auto, 1fr), und auto ist die
+     MINDESTINHALTSBREITE. Die Karte baut wegen ihres Download-Knopfes nicht
+     schmaler als 225px; vier solche Spalten plus drei Luecken brauchen
+     960px. Der Behaelter .u18-inner ist aber auf 800px gedeckelt, das Raster
+     also 736px breit. Die Spalten liefen deshalb heraus: gemessen auf /u18
+     bei 1024px Sicht endete die vierte Karte bei 1060 und das Dokument war
+     1061px breit - die Seite liess sich waagerecht schieben.
+
+     minmax(0, 1fr) waere der uebliche Griff, verschiebt den Ueberlauf hier
+     aber nur nach innen: bei 169px Spaltenbreite steht der Knopf aus der
+     Karte heraus, gemessen an allen vier.
+
+     Bleiben zwei oder drei Spalten. Bei drei steht die vierte Karte allein
+     in der zweiten Reihe; zwei ergeben 2x2 und entsprechen der Staffel, die
+     unterhalb 961px ohnehin schon gilt. Die Regel darunter wird damit
+     ueberfluessig, bleibt aber als Dokumentation der Staffel stehen. */
+  grid-template-columns: repeat(2, 1fr);
 }
 
 /* Individual card */
