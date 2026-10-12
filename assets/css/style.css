@@ -86,7 +86,17 @@ body {
   font-size: 18px;
   line-height: 1.7;
   overflow-x: visible; /* clip handled by html to avoid iOS Safari scroll-container BFC */
-  touch-action: pan-y; /* explicit vertical pan — removes 300ms tap delay on iOS Safari */
+  /* pan-y pinch-zoom statt nur pan-y: pan-y allein verbietet das
+     Aufziehen mit zwei Fingern auf der ganzen Seite. Wer schlecht sieht,
+     kann dann nichts vergroessern - WCAG 2.1, Erfolgskriterium 1.4.4.
+     Die viewport-Metaangaben erlauben den Zoom ausdruecklich
+     (user-scalable=yes, maximum-scale=5.0); allein diese Zeile stand
+     dagegen.
+
+     Die Tippverzoegerung bleibt weg: die 300ms haengen am Zoom per
+     Doppeltipp, und den erlaubt pinch-zoom nicht. Genau aus demselben
+     Grund ist manipulation (= pan-x pan-y pinch-zoom) verzoegerungsfrei. */
+  touch-action: pan-y pinch-zoom;
   -webkit-font-smoothing: antialiased;
 }
 img { display: block; max-width: 100%; height: auto; }
