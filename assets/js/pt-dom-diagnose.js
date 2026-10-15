@@ -20,10 +20,24 @@
  * oben, bis ein Vorfahr mindestens zwei verschiedene Tage enthaelt - das ist
  * das Raster. Diese Suche ueberlebt jede Umbenennung.
  *
+ * ZWEITER TEIL: DAS MODAL
+ * Der Buchungsdialog oeffnet am oberen Rand des Rahmens, nicht am oberen
+ * Rand des Fensters - der Rahmen ist hoeher als das Fenster (900px gegen
+ * 800px bei 1280 Breite), und gescrollt wird die SEITE, nicht der Rahmen.
+ * Wer in der Terminliste weiter unten tippt, steht damit zwangslaeufig
+ * unterhalb der Rahmenoberkante und sieht nur den Ladekringel.
+ *
+ * Um das zu beheben, muss ein Beobachter den Dialog ERKENNEN. Woran, ist
+ * ohne Messung geraten - und Raten ist auf Probetraining zweimal
+ * gescheitert. Deshalb schreibt diese Datei mit, was im Rahmen auftaucht:
+ * Rolle, ARIA, errechnete Position, Kasten, z-index, Klassen, dazu die Lage
+ * des Rahmens und der Scrollstand im selben Augenblick.
+ *
  * BEDIENUNG
- * /personal-training-boxen-muenchen?ptdom=1 aufrufen, im Widget bis zum
- * Wochenplan navigieren, dann unten auf AUSLESEN tippen. Der Bericht laesst
- * sich abfotografieren oder ueber KOPIEREN in die Zwischenablage legen.
+ * /personal-training-boxen-muenchen?ptdom=1 aufrufen.
+ *   WOCHENPLAN  liest das Terminraster aus (wie bisher)
+ *   MODAL       zeigt, was seit dem Seitenaufruf im Rahmen erschienen ist
+ *   KOPIEREN    legt den angezeigten Bericht in die Zwischenablage
  *
  * Ohne den Parameter laedt und tut diese Datei nichts. Sie laedt nichts von
  * bsport.io und misst nur unser eigenes iframe - deshalb ungated.
@@ -40,7 +54,10 @@
   leiste.id = 'pt-dom-leiste';
   var knopfLesen = document.createElement('button');
   knopfLesen.type = 'button';
-  knopfLesen.textContent = 'WOCHENPLAN AUSLESEN';
+  knopfLesen.textContent = 'WOCHENPLAN';
+  var knopfModal = document.createElement('button');
+  knopfModal.type = 'button';
+  knopfModal.textContent = 'MODAL';
   var knopfKopie = document.createElement('button');
   knopfKopie.type = 'button';
   knopfKopie.textContent = 'KOPIEREN';
@@ -49,6 +66,7 @@
   knopfZu.textContent = '×';
   knopfZu.setAttribute('aria-label', 'Diagnose schliessen');
   leiste.appendChild(knopfLesen);
+  leiste.appendChild(knopfModal);
   leiste.appendChild(knopfKopie);
   leiste.appendChild(knopfZu);
 
@@ -245,7 +263,189 @@
     return z.join('\n');
   }
 
+
+  /* ══════════════════ MODAL-BEOBACHTER IM RAHMEN ══════════════════════
+     Schreibt mit, was im inneren Dokument auftaucht. Laeuft nur unter
+     ?ptdom=1 - diese Datei kehrt sonst schon in Zeile 1 um.
+
+     Der Zugriff auf contentDocument ist moeglich, weil der Rahmen mit
+     srcdoc aus unserem eigenen Dokument stammt und kein sandbox-Attribut
+     traegt. bsport-frame-hoehe.js nutzt denselben Zugang, um die Hoehe
+     nachzuziehen.
+
+     Erfasst wird NICHT nach Klassennamen. Bsport baut mit MUI, die Klassen
+     tragen wechselnde Zahlensuffixe. Erkannt wird an Rolle, ARIA, der
+     errechneten Position und der Groesse - und genau diese Werte stehen
+     dann im Bericht, damit die spaetere Erkennung auf Gemessenem steht. */
+  var MODAL_MAX = 14;        /* so viele Ereignisse werden behalten */
+  var modalLog  = [];
+  var beobachtet = null;     /* das Dokument, an dem der Beobachter haengt */
+  var mo = null;
+
+  function attrListe(el) {
+    var aus = [];
+    try {
+      for (var i = 0; i < el.attributes.length; i++) {
+        var a = el.attributes[i];
+        if (a.name === 'role' || a.name.indexOf('aria-') === 0) {
+          aus.push(a.name + '="' + a.value + '"');
+        }
+      }
+    } catch (e) { /* egal */ }
+    return aus.join(' ');
+  }
+
+  function istSpinner(el) {
+    var n = (el.tagName + ' ' + (typeof el.className === 'string' ? el.className : '')).toLowerCase();
+    if (/spinner|loader|loading|circular|progressbar/.test(n)) return true;
+    try { if (el.getAttribute('role') === 'progressbar') return true; } catch (e) {}
+    return false;
+  }
+
+  /* Dialogverdacht, in dieser Reihenfolge: ausgesprochene Rolle, dann ARIA,
+     dann eine feste Lage mit Flaeche, zuletzt ein neues oberstes Element.
+     Die Groessenschranken halten Knoepfe und Kringel heraus. */
+  function dialogGrund(el, c) {
+    var rolle = '';
+    try { rolle = el.getAttribute('role') || ''; } catch (e) {}
+    if (rolle === 'dialog' || rolle === 'alertdialog') return 'role=' + rolle;
+    try { if (el.hasAttribute('aria-modal')) return 'aria-modal'; } catch (e) {}
+    var r = el.getBoundingClientRect();
+    if (c.position === 'fixed' && r.width > 120 && r.height > 120) return 'position:fixed';
+    if (el.parentElement && el.parentElement.tagName === 'BODY'
+        && r.width > 160 && r.height > 160) return 'neues Element an <body>';
+    return '';
+  }
+
+  function erfassen(art, grund, el, w, rahmen) {
+    if (modalLog.length >= MODAL_MAX) return;
+    if (el.__ptdomGesehen) return;
+    el.__ptdomGesehen = true;
+    var c, r;
+    try { c = w.getComputedStyle(el); r = el.getBoundingClientRect(); }
+    catch (e) { return; }
+    var rb = rahmen.getBoundingClientRect();
+    modalLog.push({
+      zeit: new Date().toLocaleTimeString('de-DE'),
+      art: art, grund: grund,
+      tag: el.tagName.toLowerCase(),
+      klassen: (typeof el.className === 'string' ? el.className : '') || '-',
+      aria: attrListe(el) || '-',
+      position: c.position,
+      z: c.zIndex,
+      display: c.display,
+      /* Koordinaten IM RAHMEN - der Rahmen ist das Fenster dieses Dokuments. */
+      top: Math.round(r.top), left: Math.round(r.left),
+      breite: Math.round(r.width), hoehe: Math.round(r.height),
+      eltern: el.parentElement ? el.parentElement.tagName.toLowerCase() : '-',
+      /* Lage des Rahmens und Scrollstand im selben Augenblick. */
+      rTop: Math.round(rb.top), rLeft: Math.round(rb.left),
+      rBreite: Math.round(rb.width), rHoehe: Math.round(rb.height),
+      scrollY: Math.round(window.scrollY || 0),
+      innerH: window.innerHeight, innerW: window.innerWidth
+    });
+  }
+
+  function pruefen(el, w, rahmen) {
+    if (!el || el.nodeType !== 1) return;
+    var c;
+    try { c = w.getComputedStyle(el); } catch (e) { return; }
+    if (c.display === 'none' || c.visibility === 'hidden') return;
+    if (istSpinner(el)) { erfassen('SPINNER', 'Name/Rolle', el, w, rahmen); return; }
+    var grund = dialogGrund(el, c);
+    if (grund) erfassen('DIALOG', grund, el, w, rahmen);
+  }
+
+  function anmelden() {
+    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
+    if (!rahmen) return;
+    var d;
+    try { d = rahmen.contentDocument; } catch (e) { return; }
+    if (!d || !d.body) return;
+    if (beobachtet === d) return;          /* schon dran */
+    beobachtet = d;
+    var w = rahmen.contentWindow;
+    if (mo) { try { mo.disconnect(); } catch (e) {} }
+    try {
+      mo = new MutationObserver(function (listen) {
+        for (var i = 0; i < listen.length; i++) {
+          var hinzu = listen[i].addedNodes;
+          for (var j = 0; j < hinzu.length; j++) pruefen(hinzu[j], w, rahmen);
+        }
+      });
+      mo.observe(d.body, { childList: true, subtree: true });
+    } catch (e) { beobachtet = null; }
+  }
+
+  /* Der Rahmen ist bis zur Einwilligung inert (data-bsport-srcdoc) und laedt
+     danach neu. Deshalb wird in Ruhe weiter nachgesehen, statt einmal zu
+     versuchen. Nur unter ?ptdom=1, also kein Dauerlauf im Normalbetrieb. */
+  function wacheStarten() {
+    anmelden();
+    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
+    if (rahmen) rahmen.addEventListener('load', function () { beobachtet = null; anmelden(); });
+    setInterval(anmelden, 1000);
+  }
+
+  function modalBericht() {
+    var z = [];
+    function schreib(s) { z.push(s); }
+    schreib('PTDOM MODAL  ' + new Date().toLocaleTimeString('de-DE'));
+    schreib('Fenster ' + window.innerWidth + 'x' + window.innerHeight +
+            '  scrollY ' + Math.round(window.scrollY || 0) +
+            '  dpr ' + (window.devicePixelRatio || 1));
+
+    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
+    if (rahmen) {
+      var rb = rahmen.getBoundingClientRect();
+      schreib('Rahmen jetzt  top=' + Math.round(rb.top) + '  ' +
+              Math.round(rb.width) + 'x' + Math.round(rb.height));
+    } else {
+      schreib('KEIN iframe gefunden.');
+    }
+    schreib('Beobachter ' + (beobachtet ? 'AKTIV' : 'NICHT aktiv'));
+    if (!beobachtet) {
+      schreib('  Einwilligung erteilt? Widget geladen? Erst dann greift er.');
+    }
+    schreib('Ereignisse: ' + modalLog.length + (modalLog.length >= MODAL_MAX ? ' (Deckel erreicht)' : ''));
+    if (!modalLog.length) {
+      schreib('');
+      schreib('Noch nichts erfasst. Im Widget einen Termin antippen,');
+      schreib('warten bis Dialog oder Kringel erscheint, dann erneut MODAL.');
+      return z.join('\n');
+    }
+
+    for (var i = 0; i < modalLog.length; i++) {
+      var e = modalLog[i];
+      schreib('');
+      schreib('[' + (i + 1) + '] ' + e.art + '  ' + e.zeit + '   (' + e.grund + ')');
+      schreib('    <' + e.tag + '> in <' + e.eltern + '>');
+      schreib('    class="' + String(e.klassen).slice(0, 90) + '"');
+      schreib('    ' + e.aria);
+      schreib('    position=' + e.position + '  z-index=' + e.z + '  display=' + e.display);
+      schreib('    im Rahmen: top=' + e.top + ' left=' + e.left +
+              '  ' + e.breite + 'x' + e.hoehe);
+      schreib('    Rahmen damals: top=' + e.rTop + ' ' + e.rBreite + 'x' + e.rHoehe +
+              '   scrollY=' + e.scrollY + '  Fenster ' + e.innerW + 'x' + e.innerH);
+      /* Die Zahl, auf die es ankommt: wo stand das Element im FENSTER?
+         Rahmenoberkante plus Lage im Rahmen. Negativ heisst oberhalb der
+         sichtbaren Kante - genau der gemeldete Fehler. */
+      var imFenster = e.rTop + e.top;
+      schreib('    >> im Fenster bei y=' + imFenster +
+              (imFenster < 0 ? '  ALSO ' + Math.abs(imFenster) + 'px UEBER der Kante'
+                             : '  (sichtbarer Bereich beginnt bei 0)'));
+    }
+    return z.join('\n');
+  }
+
   /* ── Verdrahtung ───────────────────────────────────────────────────── */
+  knopfModal.addEventListener('click', function () {
+    try { letzterText = modalBericht(); }
+    catch (e) { letzterText = 'FEHLER im Modal-Bericht: ' + (e && e.message); }
+    bericht.textContent = letzterText;
+    bericht.hidden = false;
+  });
+
   knopfLesen.addEventListener('click', function () {
     try { letzterText = auslesen(); }
     catch (e) { letzterText = 'FEHLER beim Auslesen: ' + (e && e.message); }
@@ -269,7 +469,14 @@
      Sonst muss man neu laden, nur um im Widget weiterzunavigieren. */
   knopfZu.addEventListener('click', function () {
     if (!bericht.hidden) { bericht.hidden = true; return; }
+    if (mo) { try { mo.disconnect(); } catch (e) {} }
     leiste.remove();
     bericht.remove();
   });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wacheStarten);
+  } else {
+    wacheStarten();
+  }
 })();
