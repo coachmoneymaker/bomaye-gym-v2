@@ -432,7 +432,18 @@
     /* ── Coach section ──────────────────────────── */
     .pt-coaches-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      /* Zwei Karten statt vier: Pavlos und Nima geben kein Personal
+         Training. Mit repeat(4, 1fr) blieben zwei Spalten leer und das Paar
+         klebte links. Stattdessen zwei Spalten, auf die halbe Rasterbreite
+         gedeckelt und mittig gestellt.
+
+         Der Deckel ist so gerechnet, dass die Karte genau so breit bleibt
+         wie zuvor: halbe Breite minus die halbe Luecke. Gemessen 226px bei
+         1024 und 270px bei 1280, vorher wie nachher. */
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: calc(50% - 0.75rem);
+      margin-left: auto;
+      margin-right: auto;
       gap: 1.5rem;
       margin-top: 3rem;
     }
@@ -505,7 +516,9 @@
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      .pt-coaches-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      /* Unter 901px standen ohnehin zwei Spalten. Der Deckel von oben wird
+         hier zurueckgenommen, sonst schrumpfte das Raster auf die Haelfte. */
+      .pt-coaches-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: none; }
     }
     @media (max-width: 480px) {
       .pt-coaches-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
@@ -724,24 +737,6 @@
           <div class="pt-coach-info">
             <h3 class="pt-coach-name">ALFONSO</h3>
             <span class="pt-coach-cred">KICKBOX WELTMEISTER</span>
-          </div>
-        </a>
-        <a href="#pt-booking" class="pt-coach-card reveal delay-2">
-          <div class="pt-coach-photo">
-            <img src="/assets/images/coach-pavlos.webp?v=2" alt="Pavlos, Boxing- und Athletik-Coach im Bomaye Gym München, vor dem Bomaye-Wandbild" loading="lazy" decoding="async" width="896" height="1195" />
-          </div>
-          <div class="pt-coach-info">
-            <h3 class="pt-coach-name">PAVLOS</h3>
-            <span class="pt-coach-cred">BOXING &amp; ATHLETIK</span>
-          </div>
-        </a>
-        <a href="#pt-booking" class="pt-coach-card reveal delay-3">
-          <div class="pt-coach-photo">
-            <img src="/assets/images/coach-nima.webp?v=3" alt="Nima, Boxing- und Kickboxing-Coach im Bomaye Gym München, vor dem Bomaye-Wandbild" loading="lazy" decoding="async" width="1200" height="1600" />
-          </div>
-          <div class="pt-coach-info">
-            <h3 class="pt-coach-name">NIMA</h3>
-            <span class="pt-coach-cred">BOXING &amp; KICKBOXING</span>
           </div>
         </a>
       </div>
