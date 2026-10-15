@@ -111,17 +111,180 @@
     } catch (e) { /* Takt unten faengt es auf. */ }
   }
 
+
+  /* ══════════════ DEN GEOEFFNETEN DIALOG INS BILD HOLEN ═══════════════
+     Bsport oeffnet seinen Buchungsdialog am oberen Rand des RAHMENS, nicht
+     am oberen Rand des Fensters. Der Rahmen ist hoeher als das Fenster und
+     gescrollt wird die SEITE - wer in der Terminliste weiter unten tippt,
+     steht damit zwangslaeufig unterhalb der Rahmenoberkante und sieht nur
+     den Ladekringel.
+
+     AM GERAET GEMESSEN (Chrome, Fenster 1400x726, ?ptdom=1):
+       <div class="widget-3 bsport-user-interaction-modal__container"
+            role="presentation">  position:fixed  z-index:1300
+            1152x1321 bei top=0 left=0 IM RAHMEN
+       Rahmen damals bei top=-421, scrollY 2524
+       -> der Dialog stand 421px ueber der sichtbaren Kante.
+
+     Diese Werte stehen hier, weil sie die Erkennung tragen. Geraten wird
+     nichts: weder Klassennamen allein (MUI vergibt Zahlensuffixe) noch
+     Zahlen ohne Messung - beides ist auf Probetraining gescheitert.
+
+     WAS HIER BEWUSST NICHT PASSIERT
+     Keine Aenderung an overflow, Hoehe oder CSS. Die Lehre aus PR #104
+     steht oben in dieser Datei: jedes overflow am Wrapper holt die
+     Scroll-Falle zurueck. Hier wird ausschliesslich die SEITE gescrollt. */
+
+  var DLG_WAHL  = '.bsport-user-interaction-modal__container';
+  var DLG_FRIST = 1500;   /* so lange wird auf den inneren Kasten gewartet */
+  var DLG_RAND  = 12;     /* Luft unter der Kopfleiste */
+
+  function kopfHoehe() {
+    try {
+      var h = document.getElementById('header');
+      if (!h) return 0;
+      var c = window.getComputedStyle(h);
+      if (c.position !== 'fixed' && c.position !== 'sticky') return 0;
+      return Math.round(h.getBoundingClientRect().height) || 0;
+    } catch (e) { return 0; }
+  }
+
+  function sanft() {
+    try {
+      return !(window.matchMedia &&
+               window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (e) { return true; }
+  }
+
+  /* Ist der Knoten der Dialogbehaelter? Erst der gemessene Klassenname,
+     sonst die Bauart: fest positioniert, hoch gestapelt, als Dialog
+     ausgewiesen. Die zweite Regel traegt, falls Bsport umbenennt. */
+  function istBehaelter(el, w) {
+    if (!el || el.nodeType !== 1) return false;
+    try {
+      if (el.matches && el.matches(DLG_WAHL)) return true;
+      var c = w.getComputedStyle(el);
+      if (c.position !== 'fixed') return false;
+      var z = parseInt(c.zIndex, 10);
+      if (!(z >= 1000)) return false;
+      var rolle = el.getAttribute('role');
+      return rolle === 'presentation' || rolle === 'dialog'
+          || el.getAttribute('aria-modal') === 'true';
+    } catch (e) { return false; }
+  }
+
+  /* Der sichtbare Kasten im Behaelter. Der Behaelter selbst ist so gross wie
+     der Rahmen (gemessen 1152x1321) - auf ihn zu zentrieren hiesse, auf den
+     Rahmen zu zentrieren. Gesucht ist das Fenster darin. */
+  function dialogKasten(behaelter) {
+    try {
+      var d = behaelter.querySelector('[role="dialog"], [aria-modal="true"]');
+      if (d && d !== behaelter) return d;
+      var br = behaelter.getBoundingClientRect();
+      var kinder = behaelter.querySelectorAll('*');
+      for (var i = 0; i < kinder.length && i < 400; i++) {
+        var r = kinder[i].getBoundingClientRect();
+        if (r.width < 80 || r.height < 80) continue;
+        /* Deutlich kleiner als der Behaelter - das ist das Fenster. */
+        if (r.height <= br.height * 0.9 || r.width <= br.width * 0.9) return kinder[i];
+      }
+    } catch (e) { /* Rueckfall unten */ }
+    return null;
+  }
+
+  /* Die eigentliche Rechnung. Alles in Koordinaten des AEUSSEREN Fensters:
+     der Kasten liegt im Rahmen, der Rahmen liegt im Fenster. */
+  function hinscrollen(rahmen, behaelter) {
+    var kasten = dialogKasten(behaelter) || behaelter;
+    var rb, kb;
+    try {
+      rb = rahmen.getBoundingClientRect();
+      kb = kasten.getBoundingClientRect();
+    } catch (e) { return; }
+    if (!kb.height) return;
+
+    var kopf    = kopfHoehe();
+    var oben    = rb.top + kb.top;              /* Oberkante im Fenster */
+    var unten   = oben + kb.height;
+    var sicht   = window.innerHeight;
+
+    /* Schon ganz zu sehen? Dann nichts tun - der Besucher soll nicht
+       grundlos verschoben werden. */
+    if (oben >= kopf + DLG_RAND && unten <= sicht) return;
+
+    var scrollY = window.scrollY || window.pageYOffset || 0;
+    var seite   = scrollY + oben;               /* Oberkante im Dokument */
+
+    /* Senkrecht mittig, aber nie so weit, dass die Oberkante unter die
+       Kopfleiste rutscht - und nie ueber die Oberkante hinaus. */
+    var ziel = seite - (sicht - kb.height) / 2;
+    var deckel = seite - kopf - DLG_RAND;
+    if (ziel > deckel) ziel = deckel;
+    if (ziel < 0) ziel = 0;
+
+    if (Math.abs(ziel - scrollY) < 8) return;   /* lohnt nicht */
+
+    try {
+      window.scrollTo({ top: Math.round(ziel), behavior: sanft() ? 'smooth' : 'instant' });
+    } catch (e) {
+      window.scrollTo(0, Math.round(ziel));     /* aeltere Browser */
+    }
+  }
+
+  /* Einmal je geoeffnetem Dialog. Der Behaelter bleibt stehen, waehrend
+     Bsport seinen Inhalt austauscht (Laden, Anmeldung, Formular) - ohne
+     diese Marke wuerde die Seite bei jedem Schritt erneut springen.
+     Verschwindet er und kommt spaeter ein neuer, traegt der keine Marke und
+     wird wieder angefahren. */
+  function dialogPruefen(el, rahmen, w) {
+    if (!istBehaelter(el, w)) return;
+    if (el.__bomayeDialog) return;
+    el.__bomayeDialog = true;
+
+    var versuche = 0;
+    (function warten() {
+      if (!el.isConnected) return;
+      var kasten = dialogKasten(el);
+      if (kasten || versuche * 300 >= DLG_FRIST) { hinscrollen(rahmen, el); return; }
+      versuche++;
+      setTimeout(warten, 300);
+    }());
+  }
+
+  function dialogWacheSetzen(rahmen) {
+    try {
+      var w = rahmen.contentWindow;
+      var d = rahmen.contentDocument;
+      if (!w || !d || !d.body) return;
+      if (rahmen.__bomayeDlgDoc === d) return;      /* schon an diesem Dokument */
+      rahmen.__bomayeDlgDoc = d;
+      if (rahmen.__bomayeDlgMO) rahmen.__bomayeDlgMO.disconnect();
+      var mo = new MutationObserver(function (listen) {
+        for (var i = 0; i < listen.length; i++) {
+          var neu = listen[i].addedNodes;
+          for (var j = 0; j < neu.length; j++) dialogPruefen(neu[j], rahmen, w);
+        }
+      });
+      /* Nur direkte Kinder von <body>: dort haengt Bsport den Behaelter ein
+         (gemessen). Ohne subtree bleibt es ein billiger Hoerer. */
+      mo.observe(d.body, { childList: true });
+      rahmen.__bomayeDlgMO = mo;
+    } catch (e) { /* fremde Herkunft oder noch nicht geladen */ }
+  }
+
   function anmelden(rahmen) {
     if (rahmen.__bomayeHoehe) return;
     rahmen.__bomayeHoehe = true;
     rahmen.addEventListener('load', function () {
       anpassen(rahmen);
       beobachten(rahmen);
+      dialogWacheSetzen(rahmen);
     });
     /* Schon geladen (z. B. bereits erteilte Einwilligung, Rahmen aus dem
        Cache) - das load-Ereignis kommt dann nicht mehr. */
     anpassen(rahmen);
     beobachten(rahmen);
+    dialogWacheSetzen(rahmen);
   }
 
   function alleAnmelden() {
@@ -142,7 +305,12 @@
     setInterval(function () {
       if (document.hidden) return;
       var l = document.querySelectorAll(MARKE);
-      for (var i = 0; i < l.length; i++) { anmelden(l[i]); anpassen(l[i]); }
+      for (var i = 0; i < l.length; i++) {
+        anmelden(l[i]); anpassen(l[i]);
+        /* Der Rahmen wird beim Freischalten komplett ersetzt - dann haengt
+           die Wache am alten Dokument und muss umziehen. */
+        dialogWacheSetzen(l[i]);
+      }
     }, TAKT_MS);
 
     /* Breitenwechsel aendert den Umbruch und damit die Hoehe. */
