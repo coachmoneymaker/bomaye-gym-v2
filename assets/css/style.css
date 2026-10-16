@@ -2136,7 +2136,17 @@ footer .footer-grid + div {
   border-radius: 0;
   padding: 0.65rem 0.85rem;
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  /* 1rem = 16px, NICHT 0.9rem = 14.4px.
+     iOS zoomt beim Fokus in jedes Feld hinein, dessen errechnete Schrift
+     unter 16px liegt, und zwar genau um 16/geteilt durch die Groesse. Auf
+     dem PT-Widget ist das gemessen worden: scale 1.1418 = 16/14. Danach
+     ist die Seite vergroessert und seitlich verschoben, beide Kanten sind
+     beschnitten, und zurueck kommt man nur von Hand.
+
+     Diese eine Regel traegt alle 32 eigenen Felder der Seite (beide
+     Formulare auf der Startseite, samt der zur Laufzeit erzeugten
+     Namensfelder) - nachgemessen, keines faellt durch eine andere Regel. */
+  font-size: 1rem;
   color: var(--ink);
   transition: border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
   outline: none;
