@@ -322,6 +322,12 @@
     schreib('  scrollLeft (de/body)     ' + Math.round(de.scrollLeft) +
             ' / ' + Math.round(bo.scrollLeft));
     schreib('  devicePixelRatio         ' + (window.devicePixelRatio || 1));
+    /* Der Inline-Block im Kopf schreibt auf iPhone und iPod
+       maximum-scale=1 hinein. Hier steht, was tatsaechlich drinsteht -
+       sonst bleibt offen, ob er gelaufen ist. */
+    var vm = document.querySelector('meta[name="viewport"]');
+    schreib('  VIEWPORT META: content=' +
+            (vm ? (vm.getAttribute('content') || '(leer)') : '(kein meta)'));
     schreib('  UA  ' + navigator.userAgent);
     schreib('');
     if (gezoomt) {
