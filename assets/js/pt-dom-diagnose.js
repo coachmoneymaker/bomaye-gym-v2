@@ -53,9 +53,26 @@
  * und keine feste Breite hat. Welches von beiden drueckt, ist ohne Messung
  * geraten.
  *
+ * WAS DIE ERSTE MESSUNG ERGEBEN HAT
+ * Keines von beiden. Das Telefon meldete scrollWidth = clientWidth = 402,
+ * also gar keinen Ueberlauf, dafuer visualViewport.scale 1.1418 und
+ * innerWidth 352. Die Seite war GEZOOMT, nicht verbreitert, und 1.1418 ist
+ * 16/14: der Fokuszoom von iOS auf ein Feld mit 14px Schrift.
+ *
+ * Der Bericht hatte daraus "50px zu breit" und 181 herausstehende Elemente
+ * gemacht, weil er gegen innerWidth gemessen hat - und innerWidth schrumpft
+ * beim Zoom. Falscher Massstab, lauter Fehlalarm. Jetzt zaehlt bei Zoom
+ * allein documentElement.clientWidth, und der Bericht nennt den Faktor
+ * samt der Schriftgroesse, die ihn ausgeloest hat.
+ *
+ * Dazu zwei Abschnitte, die auf das Feld zeigen statt auf die Breite: das
+ * fokussierte Element in beiden Dokumenten samt errechneter Schriftgroesse,
+ * und die letzten fuenf Zoomspruenge mit dem Feld, das jeweils im Fokus
+ * stand.
+ *
  * BEDIENUNG
  * /personal-training-boxen-muenchen?ptdom=1 aufrufen.
- *   BREITE      misst den waagerechten Ueberlauf in beiden Dokumenten
+ *   BREITE      Massstab, beide Dokumente, fokussiertes Feld, Zoomspruenge
  *   MODAL       zeigt, was seit dem Seitenaufruf im Rahmen erschienen ist
  *   KOPIEREN    legt den angezeigten Bericht in die Zwischenablage
  *
@@ -177,6 +194,76 @@
            ' max-width=' + c.maxWidth + ' position=' + c.position;
   }
 
+  /* DAS FOKUSSIERTE FELD.
+     iOS zoomt beim Fokus in jedes Feld hinein, dessen errechnete Schrift
+     unter 16px liegt, und zwar genau auf 16px. Welches Feld das war,
+     steht in keinem Screenshot - hier steht es.
+
+     Beide Dokumente werden gefragt: das aeussere kann ein eigenes
+     Formular im Fokus haben, das innere eines von Bsport. Im inneren ist
+     activeElement oft <body>, solange nichts fokussiert ist. */
+  function feldInfo(d, w) {
+    var el;
+    try { el = d && d.activeElement; } catch (e) { return 'nicht lesbar'; }
+    if (!el || el === d.body || el === d.documentElement) return 'nichts fokussiert';
+    var t = [];
+    t.push('<' + el.tagName.toLowerCase() + '>');
+    try { if (el.type) t.push('type=' + el.type); } catch (e) {}
+    try { if (el.name) t.push('name=' + el.name); } catch (e) {}
+    if (el.id) t.push('#' + el.id);
+    if (typeof el.className === 'string' && el.className) {
+      t.push('.' + el.className.trim().split(/\s+/).slice(0, 2).join('.'));
+    }
+    var px = null;
+    try { px = parseFloat(w.getComputedStyle(el).fontSize); } catch (e) {}
+    if (px !== null && !isNaN(px)) {
+      t.push('font-size=' + (Math.round(px * 100) / 100) + 'px');
+      if (px < 16) t.push('<< UNTER 16px, iOS ZOOMT HIER');
+    } else {
+      t.push('font-size=?');
+    }
+    return t.join(' ');
+  }
+
+  function rahmenJetzt() {
+    var wr = document.querySelector('.pt-widget-wrapper');
+    return wr ? wr.querySelector('iframe') : null;
+  }
+
+  /* ── ZOOM-EREIGNISSE ───────────────────────────
+     visualViewport feuert resize, wenn sich Zoom oder Ausschnitt aendern.
+     Wer im selben Augenblick den Fokus hat, ist der Ausloeser. Die letzten
+     fuenf reichen: mehr passt nicht auf einen Handyschirm, und der erste
+     Sprung ist ohnehin der interessante.
+
+     Nur unter ?ptdom=1 - diese Datei kehrt sonst in der ersten Zeile des
+     Rumpfs um, der Hoerer wird also nie angemeldet. */
+  var ZOOM_MAX = 5;
+  var zoomLog = [];
+
+  function zoomMerken() {
+    var vv = window.visualViewport;
+    if (!vv) return;
+    var rahmen = rahmenJetzt();
+    var id = null, iw = null;
+    try { id = rahmen && rahmen.contentDocument; iw = rahmen && rahmen.contentWindow; }
+    catch (e) { id = null; }
+    zoomLog.push({
+      zeit: new Date().toLocaleTimeString('de-DE'),
+      skala: Math.round(vv.scale * 10000) / 10000,
+      breite: Math.round(vv.width),
+      offsetLeft: Math.round(vv.offsetLeft),
+      aussen: feldInfo(document, window),
+      innen: (id && iw) ? feldInfo(id, iw) : 'Rahmen nicht lesbar'
+    });
+    if (zoomLog.length > ZOOM_MAX) zoomLog.shift();
+  }
+
+  function zoomWacheStarten() {
+    if (!window.visualViewport) return;
+    window.visualViewport.addEventListener('resize', zoomMerken);
+  }
+
   /* ── BREITE: WER MACHT DIE SEITE BREITER ALS DEN SCHIRM? ────────────
      Gemeldet vom iPhone 16 (Chrome iOS, Inkognito): nach der Terminwahl ist
      der Burger rechts halb abgeschnitten, die Preisknoepfe laufen rechts
@@ -199,18 +286,24 @@
     var de = document.documentElement, bo = document.body;
 
     /* WELCHE BREITE IST "DER SCHIRM"?
-       Nicht einfach innerWidth. Im Test mit absichtlich 470px breitem
-       Inhalt auf einem 390px-Schirm meldete Chromium innerWidth = 470:
-       der Browser hat die Layoutflaeche auf den Inhalt geweitet und
-       dafuer herausgezoomt. Gegen diesen Wert gemessen steht nichts mehr
-       heraus, obwohl sichtbar etwas abgeschnitten ist.
+       Die erste Fassung nahm den kleinsten aus innerWidth, clientWidth
+       und visualViewport.width. Das Telefon hat gezeigt, warum das falsch
+       ist: bei scale 1.1418 meldete innerWidth 352 statt 402, und der
+       Bericht schloss daraus "50px zu breit" und listete 181 angeblich
+       herausstehende Elemente. Alles Fehlalarm. Die Seite war nicht
+       breiter, sie war GEZOOMT - documentElement.scrollWidth und
+       clientWidth standen beide bei 402.
 
-       Darum der kleinste der drei Werte als Massstab, und alle drei im
-       Bericht: gehen sie auseinander, ist das selbst schon der Befund. */
+       Beim Zoom schrumpfen innerWidth und visualViewport.width um genau
+       den Zoomfaktor, waehrend documentElement.clientWidth die
+       Layoutbreite behaelt. Also: sobald gezoomt ist, zaehlt clientWidth
+       und sonst nichts. */
     var iw = window.innerWidth;
     var cw = de.clientWidth;
     var vw = vv ? Math.round(vv.width) : iw;
-    var bezug = Math.min(iw, cw, vw);
+    var skala = vv && vv.scale ? vv.scale : 1;
+    var gezoomt = skala > 1.01;
+    var bezug = gezoomt ? cw : Math.min(iw, cw, vw);
 
     schreib('PTDOM BREITE  ' + new Date().toLocaleTimeString('de-DE'));
     schreib('');
@@ -231,12 +324,29 @@
     schreib('  devicePixelRatio         ' + (window.devicePixelRatio || 1));
     schreib('  UA  ' + navigator.userAgent);
     schreib('');
-    schreib('  MASSSTAB ' + bezug + 'px   (innerWidth ' + iw +
-            ', documentElement.clientWidth ' + cw + ', visualViewport ' + vw + ')');
-    if (iw !== cw || iw !== vw) {
-      schreib('  !! Die drei Breiten gehen auseinander. Der Browser hat die');
-      schreib('     Layoutflaeche geweitet oder der Ausschnitt ist gezoomt.');
-      schreib('     Gemessen wird gegen den kleinsten Wert.');
+    if (gezoomt) {
+      schreib('  ZOOM: ' + (Math.round(skala * 10000) / 10000) +
+              ', Seite ist gezoomt, nicht verbreitert');
+      schreib('  Gemessen wird gegen documentElement.clientWidth (' + cw + 'px).');
+      schreib('  innerWidth ' + iw + ' und visualViewport ' + vw +
+              ' sind der gezoomte Ausschnitt, kein Massstab.');
+      /* 16 geteilt durch den Faktor ergibt die Schriftgroesse, die den
+         Zoom ausgeloest hat - iOS zoomt genau so weit, dass das Feld bei
+         16px steht. 1.1418 ergibt 14.01, also ein 14px-Feld. */
+      var quelle = Math.round((16 / skala) * 100) / 100;
+      schreib('  16 / ' + (Math.round(skala * 10000) / 10000) + ' = ' + quelle +
+              'px  <- so gross war die Schrift im fokussierten Feld');
+    } else {
+      schreib('  MASSSTAB ' + bezug + 'px   (innerWidth ' + iw +
+              ', documentElement.clientWidth ' + cw + ', visualViewport ' + vw + ')');
+      /* Ohne Zoom darf clientWidth nicht von der Layoutbreite abweichen.
+         Tut sie es doch, hat der Browser die Flaeche geweitet - das ist
+         ein echter Befund und kein Zoomartefakt. */
+      if (iw !== cw) {
+        schreib('  !! clientWidth weicht ohne Zoom von innerWidth ab. Der');
+        schreib('     Browser hat die Layoutflaeche geweitet. Gemessen wird');
+        schreib('     gegen den kleineren Wert.');
+      }
     }
 
     schreib('');
@@ -248,6 +358,10 @@
     var ueber = Math.max(de.scrollWidth, bo.scrollWidth) - bezug;
     schreib('  >> ' + (ueber > 1 ? ueber + 'px BREITER als der Massstab'
                                  : 'passt (' + ueber + 'px)'));
+
+    schreib('');
+    schreib('FOKUSSIERTES FELD');
+    schreib('  aussen  ' + feldInfo(document, window));
 
     schreib('');
     schreib('RAHMEN');
@@ -274,6 +388,7 @@
       schreib('  nicht lesbar oder leer. Einwilligung erteilt? Widget geladen?');
     } else {
       var ide = d.documentElement, ibo = d.body;
+      schreib('  fokussiert im Rahmen: ' + feldInfo(d, w));
       schreib('  documentElement  scrollWidth=' + ide.scrollWidth +
               ' clientWidth=' + ide.clientWidth);
       schreib('  body             scrollWidth=' + ibo.scrollWidth +
@@ -373,6 +488,22 @@
         schreib('  darin ' + kurz(kasten));
         schreib('  ' + rechteck(kasten.getBoundingClientRect()) + '  ' +
                 breiteVon(w.getComputedStyle(kasten)));
+      }
+    }
+
+    schreib('');
+    schreib('ZOOM-EREIGNISSE (letzte ' + ZOOM_MAX + ')');
+    if (!window.visualViewport) {
+      schreib('  visualViewport gibt es hier nicht, nichts aufgezeichnet.');
+    } else if (!zoomLog.length) {
+      schreib('  keine. Der Ausschnitt hat sich seit dem Aufruf nicht geaendert.');
+    } else {
+      for (var zz = 0; zz < zoomLog.length; zz++) {
+        var ev = zoomLog[zz];
+        schreib('  [' + (zz + 1) + '] ' + ev.zeit + '  scale=' + ev.skala +
+                '  Breite=' + ev.breite + '  offsetLeft=' + ev.offsetLeft);
+        schreib('      aussen: ' + ev.aussen);
+        schreib('      innen:  ' + ev.innen);
       }
     }
 
@@ -497,6 +628,7 @@
      danach neu. Deshalb wird in Ruhe weiter nachgesehen, statt einmal zu
      versuchen. Nur unter ?ptdom=1, also kein Dauerlauf im Normalbetrieb. */
   function wacheStarten() {
+    zoomWacheStarten();
     anmelden();
     var rahmen = document.querySelector('.pt-widget-wrapper iframe');
     if (rahmen) rahmen.addEventListener('load', function () { beobachtet = null; anmelden(); });
@@ -586,6 +718,9 @@
   knopfZu.addEventListener('click', function () {
     if (!bericht.hidden) { bericht.hidden = true; return; }
     if (mo) { try { mo.disconnect(); } catch (e) {} }
+    if (window.visualViewport) {
+      try { window.visualViewport.removeEventListener('resize', zoomMerken); } catch (e) {}
+    }
     leiste.remove();
     bericht.remove();
   });
