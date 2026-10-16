@@ -41,12 +41,12 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
   <meta name="theme-color" content="#0A0A08">
-  <meta name="description" content="Personal Training im Boxen in München im Bomaye Gym. Individuelles Coaching für Technik, Fitness und Performance." />
+  <meta name="description" content="Personal Training Boxen München: 1:1 Boxtraining mit Olympic Coach und Kickbox-Weltmeister. 60 Minuten 125 €, Mitglieder 90 €. Termin online buchen." />
   <meta name="robots" content="index, follow" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Personal Training Boxen München | BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Personal Training im Boxen in München im Bomaye Gym. Individuelles Coaching für Technik, Fitness und Performance." />
+  <meta property="og:description" content="Personal Training Boxen München: 1:1 Boxtraining mit Olympic Coach und Kickbox-Weltmeister. 60 Minuten 125 €, Mitglieder 90 €. Termin online buchen." />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/personal-training-boxen-muenchen" />
@@ -126,8 +126,69 @@
           "@type": "Answer",
           "text": "Eine Personal Training Einheit im Bomaye Gym beginnt mit einem kurzen Check-in zu deinen Zielen und deinem aktuellen Stand. Danach folgen Aufwärmen, Technikarbeit, Pad- oder Sandsacktraining und ein konditioneller Abschluss. Dein Coach gibt dir in jeder Einheit direktes Feedback und passt das Programm fortlaufend an."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Ich habe noch nie geboxt. Ist das okay?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Dein Coach passt jedes Training an dein Level an. Du musst nichts mitbringen außer Lust."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich absagen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja, bis 24 Stunden vor dem Termin mit Erstattung."
+        }
       }
     ]
+  }
+  </script>
+
+  <!-- ANGEBOTS-SCHEMA
+       Nur die oeffentlichen Paketpreise, also genau die Zahlen, die in der
+       Preistabelle stehen. Die Mitgliederpreise sind bewusst NICHT hier:
+       sie gelten erst nach Login und waeren fuer einen anonymen Crawler
+       eine Preisangabe, die er nie bestaetigt bekommt. Wer die Tabelle
+       aendert, aendert diesen Block mit. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Personal Training Boxen",
+    "name": "Personal Training Boxen München",
+    "provider": { "@id": "https://bomayegym.com/#gym" },
+    "areaServed": { "@type": "City", "name": "München" },
+    "url": "https://www.bomayegym.com/personal-training-boxen-muenchen",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Personal Training Pakete",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "name": "Einzelsession",
+          "price": "125.00",
+          "priceCurrency": "EUR",
+          "eligibleQuantity": { "@type": "QuantitativeValue", "value": 1, "unitText": "Session" }
+        },
+        {
+          "@type": "Offer",
+          "name": "5er Karte",
+          "price": "575.00",
+          "priceCurrency": "EUR",
+          "eligibleQuantity": { "@type": "QuantitativeValue", "value": 5, "unitText": "Session" }
+        },
+        {
+          "@type": "Offer",
+          "name": "10er Karte",
+          "price": "1090.00",
+          "priceCurrency": "EUR",
+          "eligibleQuantity": { "@type": "QuantitativeValue", "value": 10, "unitText": "Session" }
+        }
+      ]
+    }
   }
   </script>
 
@@ -168,8 +229,34 @@
       font-size: 1rem;
       color: rgba(245,240,232,0.55);
       max-width: 600px;
+      /* Nur 1rem statt 2rem: direkt darunter steht die Preiszeile, die den
+         Abstand zum Knopf uebernimmt. */
+      margin: 0 auto 1rem;
+      line-height: 1.7;
+    }
+    /* Die Preiszeile ist eine Angabe, keine Werbezeile: Oswald, gesperrt,
+       gold. Sie darf an den Mittelpunkten umbrechen, die Betraege selbst
+       nicht - darum geschuetzte Leerzeichen im Markup. */
+    .pt-hero-preis {
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      max-width: 600px;
       margin: 0 auto 2rem;
       line-height: 1.7;
+    }
+    /* Der Satz unter dem Knopf nimmt die Huerde weg, nicht die
+       Aufmerksamkeit: kleiner und blasser als die Subline, damit der Knopf
+       der helle Punkt bleibt. */
+    .pt-hero-micro {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: rgba(245,240,232,0.52);   /* 5.14:1 auf --ink; 0.48 lag bei 4.52 */
+      max-width: 420px;
+      margin: 1.25rem auto 0;
     }
     .seo-hero-btns {
       display: flex;
@@ -559,10 +646,163 @@
     @media (max-width: 768px) {
       .pt-mini-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
+    /* Dieselbe Dreier-Komponente traegt zwei Abschnitte: WARUM 1:1 auf
+       Creme und SO STARTEST DU auf Rauch. Die Grundregel oben schreibt die
+       Schrift auf --ink fest; auf dunklem Grund wird sie hier gedreht.
+       Ein zweiter Satz Klassen waere dieselbe Geometrie mit anderen Namen. */
+    .seo-section--smoke .pt-mini-title,
+    .seo-section--dark  .pt-mini-title { color: var(--brand-cream); }
+    .seo-section--smoke .pt-mini-text,
+    .seo-section--dark  .pt-mini-text  { color: rgba(245,240,232,0.62); opacity: 1; }
 
-    /* ── Smooth scroll + section offset ─────────── */
+    /* ── Schmale Baender (WANN, SCHLUSS-CTA) ─────── */
+    .pt-schmal { padding: var(--takt-eng) 0; }
+    .pt-band {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .pt-band h2 { margin-bottom: 1rem; }
+    .pt-band p  { margin-bottom: 1.75rem; }
+    .pt-band .btn { margin-top: 0.25rem; }
+
+    /* ── Preistabelle ────────────────── */
+    .pt-preise-inner { max-width: 760px; margin: 0 auto; }
+    .pt-preise {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2.25rem;
+      font-family: var(--font-body);
+    }
+    .pt-preise th,
+    .pt-preise td {
+      padding: 0.95rem 0.9rem;
+      text-align: right;
+      border-bottom: 1px solid rgba(10,10,8,0.10);
+    }
+    .pt-preise thead th {
+      font-family: var(--font-head);
+      font-size: 0.64rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      /* Gerechnet: 0.52 ergab auf Creme 3.91:1, bei 10px verlangt AA 4.5.
+         0.60 liegt bei 5.14:1. */
+      color: rgba(8,8,8,0.60);
+      border-bottom: 1px solid rgba(201,168,76,0.45);
+      white-space: nowrap;
+    }
+    .pt-preise thead th:first-child,
+    .pt-preise tbody th { text-align: left; }
+    .pt-preise tbody th {
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .pt-preise tbody td {
+      font-size: 0.97rem;
+      color: rgba(8,8,8,0.78);
+      /* Gleich breite Ziffern: sonst tanzen 125 und 1.090 untereinander. */
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    /* Die beiden Mitglieder-Spalten gehoeren zusammen. Eine Linie links
+       davon sagt das, ohne eine zweite Kopfzeile zu brauchen. */
+    .pt-preise .pt-preise-mg { border-left: 1px solid rgba(201,168,76,0.35); }
+    .pt-preise tbody tr:last-child th,
+    .pt-preise tbody tr:last-child td { border-bottom: 0; }
+    .pt-preise-inner .pt-preise-fuss {
+      margin: 1rem 0 0;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: rgba(8,8,8,0.58);
+    }
+    /* Nur fuer Vorleseprogramme. Die Kopfzeile sagt zweimal "pro Einheit";
+       sichtbar klaert das die Spaltenlinie, hoerbar dieser Zusatz. */
+    .pt-nur-sr {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+    /* UNTER 768px WIRD AUS DER TABELLE EIN STAPEL KARTEN.
+       Fuenf Spalten gehen auf 390px nicht auf, und waagerechtes Scrollen ist
+       auf dieser Seite ausgeschlossen. Jede Zeile wird zur Karte, der
+       Spaltenkopf wandert per data-spalte vor den Wert.
+
+       display: block nimmt der Tabelle in Chrome und Firefox die Rolle im
+       Baum fuer Vorleseprogramme - darum stehen die role-Angaben im Markup.
+       Ohne sie waere die Tabelle auf dem Handy nur noch eine Liste von
+       Absaetzen.
+
+       Die Grenze liegt bei 640px, nicht beim sonst ueblichen 768er Takt.
+       Nachgemessen braucht die Tabelle 480px: 144px fuer die Paketspalte
+       (Oswald, gesperrt, nowrap) und je 84px fuer die vier Betraege. Bei
+       641px stehen 593px Inhaltsbreite zur Verfuegung, sie passt also
+       bequem. Mit der Grenze bei 768px waeren die Karten auf dem iPad
+       720px breit gewesen, mit Marke links und Betrag rechts und einer
+       Handbreit Nichts dazwischen. */
+    @media (max-width: 640px) {
+      .pt-preise,
+      .pt-preise tbody,
+      .pt-preise tr,
+      .pt-preise th,
+      .pt-preise td { display: block; }
+      .pt-preise thead { display: none; }
+      .pt-preise tbody tr {
+        border: 1px solid rgba(201,168,76,0.25);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+      }
+      .pt-preise tbody tr:last-child { margin-bottom: 0; }
+      .pt-preise tbody th {
+        font-size: 1rem;
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid rgba(201,168,76,0.25);
+      }
+      .pt-preise tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        padding: 0.45rem 1rem;
+        border-bottom: 0;
+      }
+      .pt-preise tbody td::before {
+        content: attr(data-spalte);
+        font-family: var(--font-head);
+        font-size: 0.64rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: rgba(8,8,8,0.60);   /* wie der Tabellenkopf, 5.14:1 */
+        text-align: left;
+      }
+      /* Hier beginnt der Mitglieder-Block. Die Spaltenlinie von oben ergibt
+         im Stapel keinen Sinn, eine Trennlinie darueber schon. */
+      .pt-preise tbody td.pt-preise-mg {
+        border-left: 0;
+        border-top: 1px solid rgba(10,10,8,0.10);
+        margin-top: 0.4rem;
+        padding-top: 0.7rem;
+      }
+      .pt-preise tbody tr:last-child th { border-bottom: 1px solid rgba(201,168,76,0.25); }
+    }
+
+    /* ── Smooth scroll ─────────────────── */
     html { scroll-behavior: smooth; }
-    #pt-booking { scroll-margin-top: 80px; }
+    /* Hier stand scroll-margin-top: 80px und hat die Grundregel
+       (section[id] -> var(--nav-h)) ueberschrieben. Auf dem Schreibtisch ist
+       die Kopfleiste 130px hoch, es fehlten also 50px: wer auf SESSION
+       BUCHEN tippte, landete mit der Ueberschrift unter der Leiste. Die
+       Grundregel passt sich der Breite selbst an (130/80px), die Ausnahme
+       nicht, deshalb ist sie weg. */
   </style>
   <!-- BreadcrumbList -->
   <script type="application/ld+json">
@@ -658,36 +898,115 @@
   <!-- ── Hero ── -->
   <section class="seo-hero" aria-label="Personal Training Boxen München">
     <div class="container">
-      <div class="seo-hero-tag">PERSONAL TRAINING BOXEN MÜNCHEN</div>
+      <div class="seo-hero-tag">1:1 · PERSONAL TRAINING</div>
       <h1 class="seo-hero-h1">Personal Training<br><span>Boxen München</span></h1>
       <p class="seo-hero-sub">Olympic Coach. Kickbox-Weltmeister. Dein 1:1 Boxtraining.</p>
+      <p class="pt-hero-preis">60 Minuten · 125 € pro Session · Mitglieder 90 €</p>
       <div class="seo-hero-btns">
         <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
-          <i class="icon" aria-hidden="true"><svg><use href="#i-calendar-plus"/></svg></i> PERSONAL TRAINING BUCHEN
+          <i class="icon" aria-hidden="true"><svg><use href="#i-calendar-plus"/></svg></i> SESSION BUCHEN
         </a>
       </div>
+      <p class="pt-hero-micro">Du musst nichts können. Dein Coach holt dich dort ab, wo du stehst.</p>
     </div>
   </section>
 
-  <!-- ── Mini-bullets ── -->
+  <!-- ── WARUM 1:1 ── -->
   <section class="seo-section seo-section--light">
     <div class="container">
       <div class="pt-mini-grid reveal">
         <div class="pt-mini-card">
           <div class="pt-mini-icon">01</div>
-          <h3 class="pt-mini-title">1:1 COACHING</h3>
-          <p class="pt-mini-text">100% Aufmerksamkeit, voll auf dich abgestimmt.</p>
+          <h3 class="pt-mini-title">NUR DU UND DEIN COACH</h3>
+          <p class="pt-mini-text">60 Minuten volle Aufmerksamkeit. Jede Runde auf dich zugeschnitten.</p>
         </div>
         <div class="pt-mini-card">
           <div class="pt-mini-icon">02</div>
-          <h3 class="pt-mini-title">TECHNIK &amp; ATHLETIK</h3>
-          <p class="pt-mini-text">Boxtechnik, Kondition und Mindset — alles in einem.</p>
+          <h3 class="pt-mini-title">TECHNIK UND ATHLETIK</h3>
+          <p class="pt-mini-text">Boxen, Kickboxen, Kondition. Du setzt das Ziel, dein Coach baut den Plan.</p>
         </div>
         <div class="pt-mini-card">
           <div class="pt-mini-icon">03</div>
-          <h3 class="pt-mini-title">FLEXIBEL</h3>
-          <p class="pt-mini-text">Termine nach deinem Zeitplan, echte Coaches.</p>
+          <h3 class="pt-mini-title">DEINE ZEIT</h3>
+          <p class="pt-mini-text">Termine auch vormittags und mittags. Online buchen, in Minuten erledigt.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WANN ── -->
+  <section class="seo-section seo-section--dark pt-schmal" aria-labelledby="pt-wann-h2">
+    <div class="container">
+      <div class="pt-band reveal">
+        <h2 id="pt-wann-h2">TRAINIERE, WENN ES <span>RUHIG IST.</span></h2>
+        <p>Vormittags und mittags ist es ruhig im Studio. Die freien Zeiten siehst du direkt im Kalender.</p>
+        <a href="#pt-booking" class="btn btn--outline-gold" style="text-decoration:none;">ZEITEN ANSEHEN</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PREISE ──
+       Die Tabelle ist die einzige Preisquelle auf der Seite, auf die sich
+       etwas anderes stuetzt: die Preisfrage im FAQ, das Angebots-Schema im
+       Kopf und die Preiszeile im Hero nennen dieselben Zahlen. Wer hier
+       etwas aendert, aendert diese drei Stellen mit. -->
+  <section class="seo-section seo-section--light" aria-labelledby="pt-preise-h2">
+    <div class="container">
+      <div class="pt-preise-inner">
+        <div class="reveal">
+          <h2 id="pt-preise-h2" style="color:var(--ink);">PREISE</h2>
+        </div>
+        <table class="pt-preise reveal" role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th role="columnheader" scope="col">Paket</th>
+              <th role="columnheader" scope="col">Preis</th>
+              <th role="columnheader" scope="col">pro Einheit</th>
+              <th role="columnheader" scope="col" class="pt-preise-mg">Mitglieder</th>
+              <th role="columnheader" scope="col">pro Einheit<span class="pt-nur-sr"> für Mitglieder</span></th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <tr role="row">
+              <th role="rowheader" scope="row">Einzelsession</th>
+              <td role="cell" data-spalte="Preis">125 €</td>
+              <td role="cell" data-spalte="pro Einheit">125 €</td>
+              <td role="cell" data-spalte="Mitglieder" class="pt-preise-mg">90 €</td>
+              <td role="cell" data-spalte="pro Einheit">90 €</td>
+            </tr>
+            <tr role="row">
+              <th role="rowheader" scope="row">5er Karte</th>
+              <td role="cell" data-spalte="Preis">575 €</td>
+              <td role="cell" data-spalte="pro Einheit">115 €</td>
+              <td role="cell" data-spalte="Mitglieder" class="pt-preise-mg">425 €</td>
+              <td role="cell" data-spalte="pro Einheit">85 €</td>
+            </tr>
+            <tr role="row">
+              <th role="rowheader" scope="row">10er Karte</th>
+              <td role="cell" data-spalte="Preis">1.090 €</td>
+              <td role="cell" data-spalte="pro Einheit">109 €</td>
+              <td role="cell" data-spalte="Mitglieder" class="pt-preise-mg">800 €</td>
+              <td role="cell" data-spalte="pro Einheit">80 €</td>
+            </tr>
+            <!-- ═════ PLATZ FUER DAS PROBETRAINING ═════
+                 Sobald der Pass in bsport scharf ist, kommt die Zeile
+                 HIER hin, direkt vor dieses Ende des tbody. Aufbau genau
+                 wie die drei Zeilen darueber: ein <th role="rowheader"
+                 scope="row"> mit dem Paketnamen, danach vier <td
+                 role="cell"> mit den Attributen data-spalte="Preis",
+                 "pro Einheit", "Mitglieder" (plus class="pt-preise-mg")
+                 und "pro Einheit". Betraege mit geschuetztem Leerzeichen
+                 vor dem Eurozeichen.
+
+                 Am CSS ist nichts zu tun, die Zeile faellt in dieselben
+                 Regeln. Zu aendern sind danach nur noch die drei Stellen,
+                 die auf diese Tabelle zeigen: die Preisfrage im FAQ, das
+                 Angebots-Schema im Kopf und, falls der Preis nach aussen
+                 soll, die Preiszeile im Hero und die Meta-Beschreibung.
+                 ══════════════════════════════════════ -->
+          </tbody>
+        </table>
+        <p class="pt-preise-fuss reveal">Mitglieder zahlen automatisch ihren Preis, sobald sie eingeloggt buchen.</p>
       </div>
     </div>
   </section>
@@ -743,6 +1062,36 @@
     </div>
   </section>
 
+  <!-- ── SO STARTEST DU ──
+       Dieselbe Dreier-Komponente wie WARUM 1:1, nur auf Rauch statt Creme.
+       Rauch und nicht Creme, weil darueber die dunkle Coach-Wand steht und
+       darunter die cremefarbene Buchung beginnt: die Stufe fuehrt von einem
+       zum anderen, zwei Cremeflaechen hintereinander wuerden verschmelzen. -->
+  <section class="seo-section seo-section--smoke" aria-labelledby="pt-schritte-h2">
+    <div class="container">
+      <div class="seo-section-inner reveal" style="text-align:center;">
+        <h2 id="pt-schritte-h2">SO <span>STARTEST DU</span></h2>
+      </div>
+      <div class="pt-mini-grid reveal" style="margin-top:2rem;">
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">1</div>
+          <h3 class="pt-mini-title">TERMIN WÄHLEN</h3>
+          <p class="pt-mini-text">Coach und Uhrzeit im Kalender aussuchen.</p>
+        </div>
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">2</div>
+          <h3 class="pt-mini-title">BEZAHLEN</h3>
+          <p class="pt-mini-text">Online, sicher, in wenigen Klicks.</p>
+        </div>
+        <div class="pt-mini-card">
+          <div class="pt-mini-icon">3</div>
+          <h3 class="pt-mini-title">TRAINIEREN</h3>
+          <p class="pt-mini-text">Komm einfach vorbei. Alles Weitere klärt dein Coach mit dir vor Ort.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ── PT Booking Widget ── -->
   <section id="pt-booking" class="seo-section seo-section--light" aria-labelledby="pt-booking-h2">
     <div class="container">
@@ -786,7 +1135,7 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" role="region">
-              Ja, absolut. Personal Training ist gerade für Anfänger ideal, weil du von Anfang an individuelle Betreuung bekommst. Dein Coach passt das Training genau auf dein Level an und sorgt dafür, dass du von der ersten Minute an sauber und effektiv trainierst — ohne schlechte Gewohnheiten zu entwickeln.
+              Ja, absolut. Personal Training ist gerade für Anfänger ideal, weil du von Anfang an individuelle Betreuung bekommst. Dein Coach passt das Training genau auf dein Level an und sorgt dafür, dass du von der ersten Minute an sauber und effektiv trainierst.
             </div>
           </div>
 
@@ -800,7 +1149,42 @@
             </div>
           </div>
 
+          <div class="faq-item reveal delay-3" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Ich habe noch nie geboxt. Ist das okay?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Ja. Dein Coach passt jedes Training an dein Level an. Du musst nichts mitbringen außer Lust.
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Kann ich absagen?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Ja, bis 24 Stunden vor dem Termin mit Erstattung.
+            </div>
+          </div>
+
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCHLUSS-CTA ──
+       Creme zwischen dem dunklen FAQ und dem dunklen Footer: dieses Band
+       ist die letzte helle Flaeche der Seite und damit der Punkt, an dem
+       das Auge haengen bleibt. -->
+  <section class="seo-section seo-section--light pt-schmal" aria-labelledby="pt-final-h2">
+    <div class="container">
+      <div class="pt-band reveal">
+        <h2 id="pt-final-h2" style="color:var(--ink);">DEIN COACH. <span>DEINE ZEIT.</span></h2>
+        <a href="#pt-booking" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="icon" aria-hidden="true"><svg><use href="#i-calendar-plus"/></svg></i> JETZT BUCHEN
+        </a>
       </div>
     </div>
   </section>
