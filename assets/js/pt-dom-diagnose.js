@@ -33,11 +33,34 @@
  * Rolle, ARIA, errechnete Position, Kasten, z-index, Klassen, dazu die Lage
  * des Rahmens und der Scrollstand im selben Augenblick.
  *
+ * DRITTER TEIL: DIE BREITE
+ * Auf einem echten iPhone 16 (Chrome iOS, Inkognito) ist die Seite nach der
+ * Terminwahl BREITER als der Schirm: der Burger in der Kopfleiste ist rechts
+ * halb abgeschnitten, die Preisknoepfe im Widget laufen ueber die rechte
+ * Kante, und das Uhrensymbol links vom Datum ist links halb weg.
+ *
+ * Beide Kanten gleichzeitig beschnitten heisst: es wird nicht einfach nach
+ * rechts gescrollt, sondern der SICHTBARE Ausschnitt liegt woanders als der
+ * gerechnete. Was davon zutrifft, entscheidet sich an vier Zahlen, die kein
+ * Screenshot zeigt: visualViewport.offsetLeft, visualViewport.scale,
+ * window.scrollX und die scrollWidth der beiden Dokumente. Genau die
+ * schreibt BREITE auf, zusammen mit jedem Element, das rechts oder links
+ * heraussteht.
+ *
+ * Gemessen wird in BEIDEN Dokumenten. Das aeussere kann durch unser eigenes
+ * Markup zu breit sein, das innere durch Bsports Inhalt - und der Rahmen
+ * gibt die Breite des inneren nach aussen weiter, weil er im Fluss steht
+ * und keine feste Breite hat. Welches von beiden drueckt, ist ohne Messung
+ * geraten.
+ *
  * BEDIENUNG
  * /personal-training-boxen-muenchen?ptdom=1 aufrufen.
- *   WOCHENPLAN  liest das Terminraster aus (wie bisher)
+ *   BREITE      misst den waagerechten Ueberlauf in beiden Dokumenten
  *   MODAL       zeigt, was seit dem Seitenaufruf im Rahmen erschienen ist
  *   KOPIEREN    legt den angezeigten Bericht in die Zwischenablage
+ *
+ * Der frueher erste Knopf WOCHENPLAN ist entfallen. Begruendung steht
+ * unten bei der Oberflaeche.
  *
  * Ohne den Parameter laedt und tut diese Datei nichts. Sie laedt nichts von
  * bsport.io und misst nur unser eigenes iframe - deshalb ungated.
@@ -46,15 +69,24 @@
   'use strict';
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
 
-  var TAGE = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-  var ZEITEN = ['Morgens', 'Vormittags', 'Mittags', 'Nachmittags', 'Abends'];
+  /* ── Oberflaeche ──────────────────────────────────────────────────── */
+  /* DREI TEXTKNOEPFE, NICHT VIER.
+     Nachgemessen bei 320px mit dem echten CSS dieser Seite: fuenf Knoepfe
+     (WOCHENPLAN MODAL BREITE KOPIEREN x) ergeben 87+50+51+67+48 = 303px,
+     dazu vier Luecken und 12px Polster, macht 319 von 320. Abgeschnitten
+     wird nichts - aber ein Pixel Luft ist keine Luft. Eine Spur andere
+     Schriftmetrik auf dem echten Geraet, und die Leiste bricht um; das
+     faellt dann genau auf dem Telefon auf, auf dem gemessen werden soll.
 
-  /* ── Oberflaeche ───────────────────────────────────────────────────── */
+     WOCHENPLAN ist der richtige Verzicht: das Terminraster ist vermessen,
+     der Knopf hat seine Arbeit getan. Sein Code ist mit ihm entfallen,
+     damit nichts Unerreichbares stehenbleibt. Wer ihn zurueck will, holt
+     ihn aus der Historie. */
   var leiste = document.createElement('div');
   leiste.id = 'pt-dom-leiste';
-  var knopfLesen = document.createElement('button');
-  knopfLesen.type = 'button';
-  knopfLesen.textContent = 'WOCHENPLAN';
+  var knopfBreite = document.createElement('button');
+  knopfBreite.type = 'button';
+  knopfBreite.textContent = 'BREITE';
   var knopfModal = document.createElement('button');
   knopfModal.type = 'button';
   knopfModal.textContent = 'MODAL';
@@ -65,9 +97,11 @@
   knopfZu.type = 'button';
   knopfZu.textContent = '×';
   knopfZu.setAttribute('aria-label', 'Diagnose schliessen');
-  leiste.appendChild(knopfLesen);
+  leiste.appendChild(knopfBreite);
   leiste.appendChild(knopfModal);
   leiste.appendChild(knopfKopie);
+  /* x MUSS letztes Kind bleiben: #pt-dom-leiste button:last-child gibt ihm
+     seine feste Breite und die groessere Schrift. */
   leiste.appendChild(knopfZu);
 
   var bericht = document.createElement('pre');
@@ -93,173 +127,255 @@
     return el.tagName.toLowerCase() + k;
   }
 
-  function masse(el, fenster) {
-    var c = fenster.getComputedStyle(el);
-    var r = el.getBoundingClientRect();
-    var t = [];
-    t.push(c.display);
-    if (/grid/.test(c.display) && c.gridTemplateColumns !== 'none') {
-      t.push('cols=' + c.gridTemplateColumns.replace(/\s+/g, ' ').slice(0, 34));
-    }
-    var gap = (c.rowGap === c.columnGap) ? c.rowGap : (c.rowGap + '/' + c.columnGap);
-    if (gap && gap !== 'normal' && gap !== '0px') t.push('gap=' + gap);
-    else t.push('gap=' + (gap || '0px'));
-    var m = [c.marginTop, c.marginRight, c.marginBottom, c.marginLeft].join(' ');
-    if (m !== '0px 0px 0px 0px') t.push('m=' + m);
-    var p = [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft].join(' ');
-    if (p !== '0px 0px 0px 0px') t.push('p=' + p);
-    if (parseFloat(c.borderTopWidth) || parseFloat(c.borderLeftWidth)) {
-      t.push('border=' + c.borderTopWidth + ' ' + c.borderTopStyle + ' ' + c.borderTopColor);
-    }
-    t.push(Math.round(r.width) + 'x' + Math.round(r.height));
-    return t.join(' ');
+  /* WIE WEIT STEHT ES RAUS?
+     Positiv = ueber der rechten Kante, negativ = links davor. Gemessen
+     gegen innerWidth, nicht gegen scrollWidth: gesucht ist, was NICHT
+     mehr auf den Schirm passt. */
+  function ueberstand(r, fensterBreite) {
+    var rechts = r.right - fensterBreite;
+    var links  = -r.left;
+    return Math.max(rechts > 0 ? rechts : 0, links > 0 ? links : 0);
   }
 
-  function textVon(el) {
-    return (el.textContent || '').trim().replace(/\s+/g, ' ');
+  /* UEBERSTAND UEBER DIE ELTERN, nicht ueber das Fenster.
+     Das ist der Unterschied zwischen Taeter und Mitgezogenem. Ein
+     Element mit width: 100% in einem bereits zu breiten Elternteil steht
+     ueber das FENSTER hinaus, aber nicht ueber seine Eltern - es ist nur
+     mitgewachsen. Wer die Liste nach Fensterueberstand sortiert, bekommt
+     oben die Kopfleiste und sieben Menuepunkte und ganz unten die
+     Ursache. Genau dieser Fehler ist beim u18-Raster schon einmal
+     passiert: gemeldet war div.nav-inner, schuld war ein Rastermass.
+
+     Fuer fest und absolut positionierte Elemente ergibt der Vergleich
+     keinen Sinn - deren Bezugsrahmen sind nicht die Eltern. Die bekommen
+     -1 und werden als "Bezug anders" ausgewiesen. */
+  function ueberEltern(el, r, fenster) {
+    var p = el.parentElement;
+    if (!p) return -1;
+    var c;
+    try { c = fenster.getComputedStyle(el); } catch (e) { return -1; }
+    if (c.position === 'fixed' || c.position === 'absolute') return -1;
+    var pr = p.getBoundingClientRect();
+    var pc;
+    try { pc = fenster.getComputedStyle(p); } catch (e) { return -1; }
+    var links  = pr.left  + (parseFloat(pc.borderLeftWidth)  || 0) + (parseFloat(pc.paddingLeft)  || 0);
+    var rechts = pr.right - (parseFloat(pc.borderRightWidth) || 0) - (parseFloat(pc.paddingRight) || 0);
+    var raus = Math.max(r.right - rechts, links - r.left);
+    return raus > 0 ? raus : 0;
   }
 
-  /* Enthaelt der Knoten mindestens zwei VERSCHIEDENE Wochentage? Das
-     unterscheidet das Raster von einer einzelnen Tagesspalte. */
-  function tageDrin(el) {
-    var t = textVon(el);
-    var n = 0;
-    for (var i = 0; i < TAGE.length; i++) if (t.indexOf(TAGE[i]) !== -1) n++;
-    return n;
+  function rechteck(r) {
+    return 'l=' + Math.round(r.left) + ' r=' + Math.round(r.right) +
+           ' w=' + Math.round(r.width);
   }
 
-  /* ── Der eigentliche Bericht ───────────────────────────────────────── */
-  function auslesen() {
+  /* Die Breitenangaben aus der Rechnung des Browsers. min-width: auto ist
+     der haeufigste Taeter in einem Flex- oder Rasterkind: es verhindert
+     das Schrumpfen unter die Inhaltsbreite. */
+  function breiteVon(c) {
+    return 'width=' + c.width + ' min-width=' + c.minWidth +
+           ' max-width=' + c.maxWidth + ' position=' + c.position;
+  }
+
+  /* ── BREITE: WER MACHT DIE SEITE BREITER ALS DEN SCHIRM? ────────────
+     Gemeldet vom iPhone 16 (Chrome iOS, Inkognito): nach der Terminwahl ist
+     der Burger rechts halb abgeschnitten, die Preisknoepfe laufen rechts
+     heraus, das Uhrensymbol ist links halb weg.
+
+     BEIDE Kanten gleichzeitig beschnitten unterscheidet zwei Faelle, die
+     auf einem Screenshot gleich aussehen:
+       a) Das Dokument ist breiter als das Fenster und steht nach rechts
+          gescrollt. Dann ist scrollX > 0 und scrollWidth > clientWidth.
+       b) Der sichtbare Ausschnitt ist gezoomt oder verschoben. Dann ist
+          visualViewport.scale ungleich 1 oder offsetLeft ungleich 0,
+          waehrend scrollX bei 0 bleibt.
+     Die Kopfleiste steht fest (position: fixed). Im Fall b wandert sie mit
+     dem Ausschnitt, im Fall a nicht. Genau deshalb stehen hier beide
+     Koordinatensysteme nebeneinander. */
+  function breitenBericht() {
     var z = [];
     function schreib(s) { z.push(s); }
+    var vv = window.visualViewport;
+    var de = document.documentElement, bo = document.body;
 
-    schreib('PTDOM  ' + new Date().toLocaleTimeString('de-DE'));
-    schreib('Fenster ' + window.innerWidth + 'x' + window.innerHeight +
-            '  dpr ' + (window.devicePixelRatio || 1));
+    /* WELCHE BREITE IST "DER SCHIRM"?
+       Nicht einfach innerWidth. Im Test mit absichtlich 470px breitem
+       Inhalt auf einem 390px-Schirm meldete Chromium innerWidth = 470:
+       der Browser hat die Layoutflaeche auf den Inhalt geweitet und
+       dafuer herausgezoomt. Gegen diesen Wert gemessen steht nichts mehr
+       heraus, obwohl sichtbar etwas abgeschnitten ist.
 
-    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
-    if (!rahmen) { schreib('KEIN iframe gefunden.'); return z.join('\n'); }
-    var rb = rahmen.getBoundingClientRect();
-    schreib('Rahmen ' + Math.round(rb.width) + 'x' + Math.round(rb.height) +
-            ' bei x=' + Math.round(rb.left));
+       Darum der kleinste der drei Werte als Massstab, und alle drei im
+       Bericht: gehen sie auseinander, ist das selbst schon der Befund. */
+    var iw = window.innerWidth;
+    var cw = de.clientWidth;
+    var vw = vv ? Math.round(vv.width) : iw;
+    var bezug = Math.min(iw, cw, vw);
 
-    var d;
-    try { d = rahmen.contentDocument; } catch (e) { d = null; }
-    if (!d) {
-      schreib('contentDocument NICHT lesbar - fremde Herkunft oder noch nicht geladen.');
-      return z.join('\n');
-    }
-    var w = rahmen.contentWindow;
-    var koerper = d.body;
-    if (!koerper || !textVon(koerper)) {
-      schreib('Rahmen ist LEER. Einwilligung erteilt? Widget geladen?');
-      return z.join('\n');
-    }
-    schreib('Inhalt ' + Math.max(d.documentElement.scrollHeight, koerper.scrollHeight) + 'px hoch');
-
-    /* Startpunkt suchen: ein Element, dessen eigener Text eine Tageszeit
-       oder ein Wochentag IST (nicht nur enthaelt) - das ist ein Blatt. */
-    var alle = d.querySelectorAll('*');
-    var treffer = null, wort = '';
-    for (var i = 0; i < alle.length && !treffer; i++) {
-      var t = textVon(alle[i]);
-      if (t.length > 24) continue;
-      for (var j = 0; j < ZEITEN.length; j++) {
-        if (t === ZEITEN[j]) { treffer = alle[i]; wort = t; break; }
-      }
-      if (!treffer) for (var k = 0; k < TAGE.length; k++) {
-        if (t === TAGE[k]) { treffer = alle[i]; wort = t; break; }
-      }
-    }
-    if (!treffer) {
-      schreib('KEIN Wochenplan sichtbar. Erst im Widget bis zur');
-      schreib('Terminauswahl navigieren, dann erneut auslesen.');
-      schreib('Gesucht: ' + ZEITEN.join('/') + ' oder ' + TAGE.slice(0, 3).join('/') + '…');
-      return z.join('\n');
-    }
-    schreib('Gefunden ueber Text: "' + wort + '"');
-
-    /* Nach oben, bis zwei verschiedene Tage drin sind. */
-    var raster = treffer, hoch = 0;
-    while (raster.parentElement && tageDrin(raster) < 2 && hoch < 12) {
-      raster = raster.parentElement; hoch++;
-    }
-    schreib('Raster ' + hoch + ' Ebenen ueber dem Fund, ' + tageDrin(raster) + ' Tage drin');
+    schreib('PTDOM BREITE  ' + new Date().toLocaleTimeString('de-DE'));
     schreib('');
-
-    /* Kette vom Raster abwaerts, zwei Ebenen - mehr passt nicht aufs Bild. */
-    schreib('RASTER');
-    schreib('  ' + kurz(raster));
-    schreib('  ' + masse(raster, w));
-    var kinder = raster.children;
-    schreib('  Kinder: ' + kinder.length);
-    for (var c = 0; c < kinder.length && c < 4; c++) {
-      schreib('');
-      schreib('  [' + (c + 1) + '] ' + kurz(kinder[c]) + '  "' + textVon(kinder[c]).slice(0, 26) + '"');
-      schreib('      ' + masse(kinder[c], w));
-      var enkel = kinder[c].children;
-      for (var e = 0; e < enkel.length && e < 3; e++) {
-        schreib('      > ' + kurz(enkel[e]) + '  "' + textVon(enkel[e]).slice(0, 20) + '"');
-        schreib('        ' + masse(enkel[e], w));
-      }
-      if (enkel.length > 3) schreib('      > … ' + (enkel.length - 3) + ' weitere');
+    schreib('FENSTER');
+    schreib('  innerWidth/innerHeight   ' + iw + ' x ' + window.innerHeight);
+    if (vv) {
+      schreib('  visualViewport           w=' + Math.round(vv.width * 100) / 100 +
+              ' h=' + Math.round(vv.height * 100) / 100 + ' scale=' + vv.scale);
+      schreib('                           offsetLeft=' + vv.offsetLeft +
+              ' pageLeft=' + vv.pageLeft + ' offsetTop=' + vv.offsetTop);
+    } else {
+      schreib('  visualViewport           NICHT vorhanden');
     }
-    if (kinder.length > 4) schreib('  … ' + (kinder.length - 4) + ' weitere Kinder');
-
-    /* Beruehren sich zwei benachbarte Kaesten wirklich? Nachgemessen statt
-       vermutet: der Abstand zwischen Unterkante und Oberkante. */
+    schreib('  scrollX/scrollY          ' + Math.round(window.scrollX || 0) +
+            ' / ' + Math.round(window.scrollY || 0));
+    schreib('  scrollLeft (de/body)     ' + Math.round(de.scrollLeft) +
+            ' / ' + Math.round(bo.scrollLeft));
+    schreib('  devicePixelRatio         ' + (window.devicePixelRatio || 1));
+    schreib('  UA  ' + navigator.userAgent);
     schreib('');
-    schreib('ABSTAENDE zwischen benachbarten Kaesten');
-    var kaesten = [];
-    for (var q = 0; q < alle.length; q++) {
-      var tx = textVon(alle[q]);
-      for (var zz = 0; zz < ZEITEN.length; zz++) {
-        if (tx === ZEITEN[zz]) { kaesten.push(alle[q]); break; }
-      }
+    schreib('  MASSSTAB ' + bezug + 'px   (innerWidth ' + iw +
+            ', documentElement.clientWidth ' + cw + ', visualViewport ' + vw + ')');
+    if (iw !== cw || iw !== vw) {
+      schreib('  !! Die drei Breiten gehen auseinander. Der Browser hat die');
+      schreib('     Layoutflaeche geweitet oder der Ausschnitt ist gezoomt.');
+      schreib('     Gemessen wird gegen den kleinsten Wert.');
     }
-    if (kaesten.length < 2) { schreib('  weniger als zwei gefunden'); }
-    else {
-      /* Nur echte Nachbarn vergleichen. In Dokumentreihenfolge folgt auf den
-         letzten Kasten einer Spalte der erste der naechsten - deren Abstand
-         ist bedeutungslos und hat den Bericht im ersten Entwurf unlesbar
-         gemacht. Senkrechte Nachbarn teilen die linke Kante, waagerechte die
-         obere. */
-      var r = kaesten.map(function (el) {
-        var b3 = el.getBoundingClientRect();
-        return { el: el, t: Math.round(b3.top), l: Math.round(b3.left),
-                 b: Math.round(b3.bottom), r: Math.round(b3.right) };
+
+    schreib('');
+    schreib('AEUSSERES DOKUMENT');
+    schreib('  documentElement  scrollWidth=' + de.scrollWidth +
+            ' clientWidth=' + de.clientWidth + ' offsetWidth=' + de.offsetWidth);
+    schreib('  body             scrollWidth=' + bo.scrollWidth +
+            ' clientWidth=' + bo.clientWidth + ' offsetWidth=' + bo.offsetWidth);
+    var ueber = Math.max(de.scrollWidth, bo.scrollWidth) - bezug;
+    schreib('  >> ' + (ueber > 1 ? ueber + 'px BREITER als der Massstab'
+                                 : 'passt (' + ueber + 'px)'));
+
+    schreib('');
+    schreib('RAHMEN');
+    var wrapper = document.querySelector('.pt-widget-wrapper');
+    var rahmen = wrapper ? wrapper.querySelector('iframe') : null;
+    if (!rahmen) {
+      schreib('  KEIN iframe gefunden.');
+    } else {
+      schreib('  iframe    ' + rechteck(rahmen.getBoundingClientRect()));
+      schreib('            ' + breiteVon(window.getComputedStyle(rahmen)));
+      var cw = window.getComputedStyle(wrapper);
+      schreib('  wrapper   ' + rechteck(wrapper.getBoundingClientRect()));
+      schreib('            ' + breiteVon(cw));
+      schreib('            margin=' + cw.marginLeft + '/' + cw.marginRight +
+              ' overflow-x=' + cw.overflowX);
+    }
+
+    schreib('');
+    schreib('INNERES DOKUMENT (contentDocument)');
+    var d = null, w = null;
+    try { d = rahmen && rahmen.contentDocument; w = rahmen && rahmen.contentWindow; }
+    catch (e) { d = null; }
+    if (!d || !d.body || !w) {
+      schreib('  nicht lesbar oder leer. Einwilligung erteilt? Widget geladen?');
+    } else {
+      var ide = d.documentElement, ibo = d.body;
+      schreib('  documentElement  scrollWidth=' + ide.scrollWidth +
+              ' clientWidth=' + ide.clientWidth);
+      schreib('  body             scrollWidth=' + ibo.scrollWidth +
+              ' clientWidth=' + ibo.clientWidth);
+      var iUeber = Math.max(ide.scrollWidth, ibo.scrollWidth) - ide.clientWidth;
+      schreib('  >> ' + (iUeber > 1 ? iUeber + 'px breiter als der Rahmen'
+                                    : 'passt in den Rahmen (' + iUeber + 'px)'));
+      /* Rangfolge nach Ueberstand ueber EINE der beiden Kanten, erst
+         danach nach Breite. Nur nach der rechten Kante zu sortieren
+         wuerde einen Kasten uebersehen, der links heraushaengt - und
+         genau der ist gemeldet (Uhrensymbol links halb weg). */
+      schreib('  Die 8 weitesten Elemente (Ueberstand, dann Breite):');
+      var innen = [];
+      var alle = d.querySelectorAll('*');
+      for (var i = 0; i < alle.length && i < 4000; i++) {
+        var rr = alle[i].getBoundingClientRect();
+        if (rr.width < 1 || rr.height < 1) continue;
+        innen.push({ el: alle[i], r: rr, u: ueberstand(rr, ide.clientWidth) });
+      }
+      innen.sort(function (a2, b2) {
+        return (b2.u - a2.u) || (b2.r.width - a2.r.width) || (b2.r.right - a2.r.right);
       });
-      /* Je Kasten NUR den naechstliegenden Nachbarn. Ohne das meldet der
-         Bericht auch uebernaechste Kaesten ("Morgens/Nachmittags 37px") und
-         wird wieder unlesbar. */
-      var zeilen = 0;
-      for (var x = 0; x < r.length && zeilen < 6; x++) {
-        var untenBest = null, rechtsBest = null;
-        for (var y = 0; y < r.length; y++) {
-          if (x === y) continue;
-          if (Math.abs(r[y].l - r[x].l) <= 2 && r[y].t >= r[x].b - 2) {
-            if (!untenBest || r[y].t < untenBest.t) untenBest = r[y];
-          }
-          if (Math.abs(r[y].t - r[x].t) <= 2 && r[y].l >= r[x].r - 2) {
-            if (!rechtsBest || r[y].l < rechtsBest.l) rechtsBest = r[y];
-          }
+      /* Eine Kette aus Huellen hat dieselbe rechte Kante und dieselbe
+         Breite. Ohne diese Zusammenfassung gingen alle acht Plaetze an ein
+         und denselben Kasten in acht Ebenen. */
+      var gewaehlt = [];
+      for (var g = 0; g < innen.length && gewaehlt.length < 8; g++) {
+        var k = innen[g], doppelt = false;
+        for (var h = 0; h < gewaehlt.length; h++) {
+          var v = gewaehlt[h];
+          if (Math.abs(v.r.right - k.r.right) <= 1 &&
+              Math.abs(v.r.width - k.r.width) <= 1 &&
+              (v.el.contains(k.el) || k.el.contains(v.el))) { doppelt = true; break; }
         }
-        if (untenBest) {
-          schreib('  unter  "' + textVon(r[x].el).slice(0, 12) + '" / "' +
-                  textVon(untenBest.el).slice(0, 12) + '"  ' + (untenBest.t - r[x].b) + 'px');
-          zeilen++;
-        }
-        if (rechtsBest && zeilen < 6) {
-          schreib('  rechts "' + textVon(r[x].el).slice(0, 12) + '" / "' +
-                  textVon(rechtsBest.el).slice(0, 12) + '"  ' + (rechtsBest.l - r[x].r) + 'px');
-          zeilen++;
-        }
+        if (!doppelt) gewaehlt.push(k);
       }
-      if (!zeilen) schreib('  keine direkten Nachbarn erkannt');
+      for (var n = 0; n < gewaehlt.length; n++) {
+        schreib('   ' + (n + 1) + '. ' +
+                (gewaehlt[n].u > 1 ? '+' + Math.round(gewaehlt[n].u) + 'px  ' : '') +
+                kurz(gewaehlt[n].el));
+        schreib('      ' + rechteck(gewaehlt[n].r) + '  ' +
+                breiteVon(w.getComputedStyle(gewaehlt[n].el)));
+      }
+      if (!gewaehlt.length) schreib('   nichts messbar');
     }
 
     schreib('');
-    schreib('Stylesheets im Rahmen: ' + (d.styleSheets ? d.styleSheets.length : '?'));
+    schreib('UEBERLAUF AUSSEN (rechts > ' + (bezug + 1) + ' oder links < -1)');
+    var raus = [];
+    var aalle = document.querySelectorAll('body *');
+    for (var q = 0; q < aalle.length; q++) {
+      var el = aalle[q];
+      /* Unsere eigene Leiste und unser Bericht bleiben draussen: sie
+         gehoeren nicht zur Seite, die gemessen wird. */
+      if (el.id === 'pt-dom-leiste' || el.id === 'pt-dom-bericht') continue;
+      if (el.closest && el.closest('#pt-dom-leiste, #pt-dom-bericht')) continue;
+      var r2 = el.getBoundingClientRect();
+      if (r2.width < 1 && r2.height < 1) continue;
+      if (!(r2.right > bezug + 1 || r2.left < -1)) continue;
+      raus.push({ el: el, r: r2,
+                  u: ueberstand(r2, bezug),
+                  e: ueberEltern(el, r2, window) });
+    }
+    /* Erst nach Elternueberstand, dann nach Fensterueberstand. Oben steht
+       damit, was die Breite MACHT, nicht was sie erbt. */
+    raus.sort(function (a3, b3) { return (b3.e - a3.e) || (b3.u - a3.u); });
+    if (!raus.length) {
+      schreib('  nichts steht heraus.');
+    } else {
+      schreib('  ' + raus.length + ' Element(e), die 15 mit dem groessten');
+      schreib('  Ueberstand ueber die EIGENEN Eltern zuerst:');
+      for (var t = 0; t < raus.length && t < 15; t++) {
+        var x = raus[t];
+        var marke = x.e < 0 ? 'Eltern: Bezug anders'
+                  : (x.e > 1 ? 'Eltern +' + Math.round(x.e) + 'px'
+                             : 'nur mitgezogen');
+        schreib('   ' + (t + 1) + '. Fenster +' + Math.round(x.u) + 'px, ' + marke);
+        schreib('      ' + kurz(x.el) + (x.el.id ? ' #' + x.el.id : ''));
+        schreib('      ' + rechteck(x.r) + '  ' +
+                breiteVon(window.getComputedStyle(x.el)));
+      }
+    }
+
+    schreib('');
+    schreib('DIALOG');
+    var beh = null;
+    try { beh = d && d.querySelector('.bsport-user-interaction-modal__container'); }
+    catch (e2) { beh = null; }
+    if (!beh || !w) {
+      schreib('  kein .bsport-user-interaction-modal__container im Rahmen.');
+    } else {
+      schreib('  ' + kurz(beh));
+      schreib('  ' + rechteck(beh.getBoundingClientRect()) + '  ' +
+              breiteVon(w.getComputedStyle(beh)));
+      var kasten = beh.querySelector('[role="dialog"], [aria-modal="true"]');
+      if (kasten && kasten !== beh) {
+        schreib('  darin ' + kurz(kasten));
+        schreib('  ' + rechteck(kasten.getBoundingClientRect()) + '  ' +
+                breiteVon(w.getComputedStyle(kasten)));
+      }
+    }
+
     return z.join('\n');
   }
 
@@ -439,6 +555,13 @@
   }
 
   /* ── Verdrahtung ───────────────────────────────────────────────────── */
+  knopfBreite.addEventListener('click', function () {
+    try { letzterText = breitenBericht(); }
+    catch (e) { letzterText = 'FEHLER im Breiten-Bericht: ' + (e && e.message); }
+    bericht.textContent = letzterText;
+    bericht.hidden = false;
+  });
+
   knopfModal.addEventListener('click', function () {
     try { letzterText = modalBericht(); }
     catch (e) { letzterText = 'FEHLER im Modal-Bericht: ' + (e && e.message); }
@@ -446,15 +569,8 @@
     bericht.hidden = false;
   });
 
-  knopfLesen.addEventListener('click', function () {
-    try { letzterText = auslesen(); }
-    catch (e) { letzterText = 'FEHLER beim Auslesen: ' + (e && e.message); }
-    bericht.textContent = letzterText;
-    bericht.hidden = false;
-  });
-
   knopfKopie.addEventListener('click', function () {
-    if (!letzterText) { knopfKopie.textContent = 'ERST AUSLESEN'; return; }
+    if (!letzterText) { knopfKopie.textContent = 'ERST MESSEN'; return; }
     var fertig = function (ok) {
       knopfKopie.textContent = ok ? 'KOPIERT' : 'NICHT KOPIERT';
       setTimeout(function () { knopfKopie.textContent = 'KOPIEREN'; }, 1800);
