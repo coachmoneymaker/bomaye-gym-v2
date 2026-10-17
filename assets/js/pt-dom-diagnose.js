@@ -104,9 +104,9 @@
   var knopfBreite = document.createElement('button');
   knopfBreite.type = 'button';
   knopfBreite.textContent = 'BREITE';
-  var knopfModal = document.createElement('button');
-  knopfModal.type = 'button';
-  knopfModal.textContent = 'MODAL';
+  var knopfScroll = document.createElement('button');
+  knopfScroll.type = 'button';
+  knopfScroll.textContent = 'SCROLL';
   var knopfKopie = document.createElement('button');
   knopfKopie.type = 'button';
   knopfKopie.textContent = 'KOPIEREN';
@@ -115,7 +115,7 @@
   knopfZu.textContent = '×';
   knopfZu.setAttribute('aria-label', 'Diagnose schliessen');
   leiste.appendChild(knopfBreite);
-  leiste.appendChild(knopfModal);
+  leiste.appendChild(knopfScroll);
   leiste.appendChild(knopfKopie);
   /* x MUSS letztes Kind bleiben: #pt-dom-leiste button:last-child gibt ihm
      seine feste Breite und die groessere Schrift. */
@@ -517,192 +517,366 @@
   }
 
 
-  /* ══════════════════ MODAL-BEOBACHTER IM RAHMEN ══════════════════════
-     Schreibt mit, was im inneren Dokument auftaucht. Laeuft nur unter
-     ?ptdom=1 - diese Datei kehrt sonst schon in Zeile 1 um.
+  /* ═════════ GESTEN UND HOEHENWECHSEL MITSCHREIBEN ═════════
+     Gemeldet von einem echten iPhone, NUR in Safari, nicht in Chrome iOS:
+     im Buchungsbereich bewegt ein senkrechter Wisch die Seite manchmal
+     nicht. Erst ein Wisch seitlich oder an anderer Stelle loest es.
+     Layout ist in Ordnung (scrollX 0, scrollWidth = clientWidth = 402,
+     kein Zoom), es ist also keine Breitenfrage, sondern eine Frage, WER
+     die Beruehrung bekommt.
 
-     Der Zugriff auf contentDocument ist moeglich, weil der Rahmen mit
-     srcdoc aus unserem eigenen Dokument stammt und kein sandbox-Attribut
-     traegt. bsport-frame-hoehe.js nutzt denselben Zugang, um die Hoehe
-     nachzuziehen.
+     Drei Verdaechtige, und dieser Mitschnitt trennt sie:
 
-     Erfasst wird NICHT nach Klassennamen. Bsport baut mit MUI, die Klassen
-     tragen wechselnde Zahlensuffixe. Erkannt wird an Rolle, ARIA, der
-     errechneten Position und der Groesse - und genau diese Werte stehen
-     dann im Bericht, damit die spaetere Erkennung auf Gemessenem steht. */
-  var MODAL_MAX = 14;        /* so viele Ereignisse werden behalten */
-  var modalLog  = [];
-  var beobachtet = null;     /* das Dokument, an dem der Beobachter haengt */
-  var mo = null;
+       a) Scroll-Falle am Rahmen. Safari gibt die Beruehrung an das innere
+          Dokument und scrollt dort - wenn dort nichts zu scrollen ist,
+          passiert gar nichts. Erkennbar daran, dass der Startpunkt im
+          Rahmen liegt, dy gross ist und WEDER window.scrollY NOCH der
+          innere scrollTop sich bewegt. Das ist die Marke STUCK.
+       b) Hoehenwechsel waehrend der Geste. bsport-frame-hoehe.js zieht
+          die Rahmenhoehe nach, getrieben von einem ResizeObserver im
+          inneren Dokument und einem 750ms-Takt. Faellt das mitten in
+          einen Wisch, bricht Safari das Scrollen ab. Erkennbar an der
+          Marke HOEHE WAEHREND GESTE.
+       c) Nebenwirkung von heute. touch-action: manipulation im srcdoc
+          (#130) und maximum-scale=1 auf dem iPhone (#131). Beides steht
+          im Bericht, das errechnete touch-action des beruehrten Elements
+          ebenso.
 
-  function attrListe(el) {
-    var aus = [];
+     ALLES PASSIV. capture: true, passive: true, nirgends
+     preventDefault, kein Schreibzugriff auf Stile, keine Verhaltens-
+     aenderung. Ein Mitschnitt, der das Gemessene veraendert, ist
+     wertlos.
+
+     Darum liest touchmove auch NICHTS aus dem Layout - nur die
+     Koordinaten des Fingers. getComputedStyle und
+     getBoundingClientRect erzwingen eine Layoutberechnung; in einem
+     touchmove, das sechzigmal je Sekunde feuert, waere genau das die
+     Stockung, die gesucht wird. Gemessen wird am Anfang und am Ende. */
+  var GESTEN_MAX = 25;
+  var gesten = [];
+  var laufend = null;          /* die Geste, die gerade im Gang ist */
+  var hoehenLog = [];
+  var HOEHEN_MAX = 25;
+  var letzteQuelle = { was: '', zeit: 0 };
+
+  function pfad(el) {
+    var teile = [], n = el, i = 0;
     try {
-      for (var i = 0; i < el.attributes.length; i++) {
-        var a = el.attributes[i];
-        if (a.name === 'role' || a.name.indexOf('aria-') === 0) {
-          aus.push(a.name + '="' + a.value + '"');
-        }
+      while (n && n.nodeType === 1 && i < 4) {
+        teile.push(kurz(n));
+        n = n.parentElement; i++;
       }
     } catch (e) { /* egal */ }
-    return aus.join(' ');
+    return teile.join(' < ') || '-';
   }
 
-  function istSpinner(el) {
-    var n = (el.tagName + ' ' + (typeof el.className === 'string' ? el.className : '')).toLowerCase();
-    if (/spinner|loader|loading|circular|progressbar/.test(n)) return true;
-    try { if (el.getAttribute('role') === 'progressbar') return true; } catch (e) {}
-    return false;
-  }
-
-  /* Dialogverdacht, in dieser Reihenfolge: ausgesprochene Rolle, dann ARIA,
-     dann eine feste Lage mit Flaeche, zuletzt ein neues oberstes Element.
-     Die Groessenschranken halten Knoepfe und Kringel heraus. */
-  function dialogGrund(el, c) {
-    var rolle = '';
-    try { rolle = el.getAttribute('role') || ''; } catch (e) {}
-    if (rolle === 'dialog' || rolle === 'alertdialog') return 'role=' + rolle;
-    try { if (el.hasAttribute('aria-modal')) return 'aria-modal'; } catch (e) {}
-    var r = el.getBoundingClientRect();
-    if (c.position === 'fixed' && r.width > 120 && r.height > 120) return 'position:fixed';
-    if (el.parentElement && el.parentElement.tagName === 'BODY'
-        && r.width > 160 && r.height > 160) return 'neues Element an <body>';
-    return '';
-  }
-
-  function erfassen(art, grund, el, w, rahmen) {
-    if (modalLog.length >= MODAL_MAX) return;
-    if (el.__ptdomGesehen) return;
-    el.__ptdomGesehen = true;
-    var c, r;
-    try { c = w.getComputedStyle(el); r = el.getBoundingClientRect(); }
-    catch (e) { return; }
-    var rb = rahmen.getBoundingClientRect();
-    modalLog.push({
-      zeit: new Date().toLocaleTimeString('de-DE'),
-      art: art, grund: grund,
-      tag: el.tagName.toLowerCase(),
-      klassen: (typeof el.className === 'string' ? el.className : '') || '-',
-      aria: attrListe(el) || '-',
-      position: c.position,
-      z: c.zIndex,
-      display: c.display,
-      /* Koordinaten IM RAHMEN - der Rahmen ist das Fenster dieses Dokuments. */
-      top: Math.round(r.top), left: Math.round(r.left),
-      breite: Math.round(r.width), hoehe: Math.round(r.height),
-      eltern: el.parentElement ? el.parentElement.tagName.toLowerCase() : '-',
-      /* Lage des Rahmens und Scrollstand im selben Augenblick. */
-      rTop: Math.round(rb.top), rLeft: Math.round(rb.left),
-      rBreite: Math.round(rb.width), rHoehe: Math.round(rb.height),
-      scrollY: Math.round(window.scrollY || 0),
-      innerH: window.innerHeight, innerW: window.innerWidth
-    });
-  }
-
-  function pruefen(el, w, rahmen) {
-    if (!el || el.nodeType !== 1) return;
-    var c;
-    try { c = w.getComputedStyle(el); } catch (e) { return; }
-    if (c.display === 'none' || c.visibility === 'hidden') return;
-    if (istSpinner(el)) { erfassen('SPINNER', 'Name/Rolle', el, w, rahmen); return; }
-    var grund = dialogGrund(el, c);
-    if (grund) erfassen('DIALOG', grund, el, w, rahmen);
-  }
-
-  function anmelden() {
-    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
-    if (!rahmen) return;
-    var d;
-    try { d = rahmen.contentDocument; } catch (e) { return; }
-    if (!d || !d.body) return;
-    if (beobachtet === d) return;          /* schon dran */
-    beobachtet = d;
-    var w = rahmen.contentWindow;
-    if (mo) { try { mo.disconnect(); } catch (e) {} }
+  function innenDok() {
     try {
-      mo = new MutationObserver(function (listen) {
-        for (var i = 0; i < listen.length; i++) {
-          var hinzu = listen[i].addedNodes;
-          for (var j = 0; j < hinzu.length; j++) pruefen(hinzu[j], w, rahmen);
-        }
+      var wr = document.querySelector('.pt-widget-wrapper');
+      var f = wr && wr.querySelector('iframe');
+      if (!f) return null;
+      var d = f.contentDocument;
+      return (d && d.body) ? { f: f, d: d, w: f.contentWindow } : { f: f, d: null, w: null };
+    } catch (e) { return null; }
+  }
+
+  function innenOben(r) {
+    try {
+      if (!r || !r.d) return null;
+      var se = r.d.scrollingElement || r.d.documentElement;
+      return se ? Math.round(se.scrollTop) : null;
+    } catch (e) { return null; }
+  }
+
+  function start(ev, woher) {
+    var t = ev.touches && ev.touches[0];
+    if (!t) return;
+    /* In Chromium feuert bei einer Beruehrung IM Rahmen nur der Hoerer des
+       inneren Dokuments, nicht beide - gemessen. Sollte eine andere Engine
+       beide feuern, gewinnt der erste: sonst ueberschriebe der zweite
+       Aufruf die gerade begonnene Geste und der Mitschnitt verloere
+       Anfangswerte. */
+    if (laufend && Date.now() - laufend.ms < 50) return;
+    var r = innenDok();
+    var rb = null;
+    try { rb = r && r.f ? r.f.getBoundingClientRect() : null; } catch (e) {}
+    /* Bei einer Beruehrung im inneren Dokument sind die Koordinaten auf
+       dessen Fenster bezogen; fuer den Vergleich mit dem Rahmen muessen
+       sie in das aeussere Fenster umgerechnet werden. */
+    var x = t.clientX, y = t.clientY;
+    if (woher === 'innen' && rb) { x += rb.left; y += rb.top; }
+    var ta = '-';
+    try { ta = (woher === 'innen' && r && r.w ? r.w : window)
+                 .getComputedStyle(ev.target).touchAction; } catch (e) {}
+    laufend = {
+      zeit: new Date().toLocaleTimeString('de-DE'),
+      ms: Date.now(),
+      woher: woher,
+      x0: Math.round(x), y0: Math.round(y),
+      rx0: t.clientX, ry0: t.clientY,   /* roh, fuer den Versatz */
+      dx: 0, dy: 0,
+      imRahmen: !!(rb && x >= rb.left && x <= rb.right && y >= rb.top && y <= rb.bottom),
+      zielAussen: woher === 'aussen' ? pfad(ev.target) : '(Beruehrung kam im Rahmen an)',
+      zielInnen:  woher === 'innen'  ? pfad(ev.target) : '-',
+      yVor: Math.round(window.scrollY || 0),
+      innenVor: innenOben(r),
+      cancelable: !!ev.cancelable,
+      verhindert: false,
+      touchAction: ta,
+      hoehen: [],
+      ende: '-'
+    };
+  }
+
+  /* Nur Rechnen, kein Layoutzugriff. Die touchmove-Ereignisse einer Geste
+     kommen aus demselben Dokument wie ihr touchstart, also ist die rohe
+     Differenz der Koordinaten bereits der Versatz - ohne Umrechnung. */
+  function bewegen(ev) {
+    if (!laufend) return;
+    var t = ev.touches && ev.touches[0];
+    if (!t) return;
+    laufend.dx = Math.round(t.clientX - laufend.rx0);
+    laufend.dy = Math.round(t.clientY - laufend.ry0);
+  }
+
+  function schliessen(ev, art) {
+    if (!laufend) return;
+    var g = laufend;
+    laufend = null;
+    var r = innenDok();
+    g.ende = art;
+    if (ev && ev.defaultPrevented) g.verhindert = true;
+    g.yNach = Math.round(window.scrollY || 0);
+    g.innenNach = innenOben(r);
+    var bewegtAussen = g.yNach !== g.yVor;
+    var bewegtInnen = (g.innenVor !== null && g.innenNach !== null && g.innenNach !== g.innenVor);
+    g.marken = [];
+    if (Math.abs(g.dy) > 30 && !bewegtAussen && !bewegtInnen) g.marken.push('STUCK');
+    if (Math.abs(g.dx) > Math.abs(g.dy)) g.marken.push('SEITLICH');
+    if (g.hoehen.length) g.marken.push('HOEHE WAEHREND GESTE');
+    gesten.push(g);
+    if (gesten.length > GESTEN_MAX) gesten.shift();
+  }
+
+  function gestenWacheSetzen() {
+    var o = { capture: true, passive: true };
+    document.addEventListener('touchstart', function (e) { start(e, 'aussen'); }, o);
+    document.addEventListener('touchmove',  function (e) { bewegen(e); }, o);
+    document.addEventListener('touchend',   function (e) { schliessen(e, 'touchend'); }, o);
+    document.addEventListener('touchcancel',function (e) { schliessen(e, 'touchcancel'); }, o);
+    window.addEventListener('scroll', function () {
+      if (laufend) laufend.scrollGesehen = true;
+    }, o);
+  }
+
+  var innenVerdrahtet = null;
+  function innenWacheSetzen() {
+    var r = innenDok();
+    if (!r || !r.d) return;
+    if (innenVerdrahtet === r.d) return;
+    innenVerdrahtet = r.d;
+    var o = { capture: true, passive: true };
+    try {
+      r.d.addEventListener('touchstart', function (e) { start(e, 'innen'); }, o);
+      r.d.addEventListener('touchmove',  function (e) { bewegen(e); }, o);
+      r.d.addEventListener('touchend',   function (e) { schliessen(e, 'touchend'); }, o);
+      r.d.addEventListener('scroll', function () {
+        if (laufend) laufend.innenScrollGesehen = true;
+      }, o);
+    } catch (e) { innenVerdrahtet = null; }
+  }
+
+  /* HOEHENWECHSEL AM RAHMEN
+     Ein MutationObserver auf dem style-Attribut des iframes faengt jeden
+     Schreibzugriff von bsport-frame-hoehe.js. Wer geschrieben hat, laesst
+     sich von aussen nicht sehen; unterscheidbar sind nur load und resize,
+     weil deren Hoerer hier eine Marke setzen. Alles andere ist
+     ResizeObserver ODER der 750ms-Takt, und das steht dann auch so da
+     statt einer Vermutung. */
+  var hoehenMO = null;
+  function hoehenWacheSetzen() {
+    var r = innenDok();
+    if (!r || !r.f || hoehenMO) return;
+    var letzte = r.f.style.height || '(nicht gesetzt)';
+    try {
+      hoehenMO = new MutationObserver(function () {
+        var neu = r.f.style.height || '(nicht gesetzt)';
+        if (neu === letzte) return;
+        var jetzt = Date.now();
+        var quelle = (jetzt - letzteQuelle.zeit < 300 && letzteQuelle.was)
+          ? letzteQuelle.was
+          : 'ResizeObserver oder 750ms-Takt (von aussen nicht unterscheidbar)';
+        var e = { zeit: new Date().toLocaleTimeString('de-DE'),
+                  alt: letzte, neu: neu, quelle: quelle, inGeste: !!laufend };
+        letzte = neu;
+        hoehenLog.push(e);
+        if (hoehenLog.length > HOEHEN_MAX) hoehenLog.shift();
+        if (laufend) laufend.hoehen.push(e.alt + ' -> ' + e.neu);
       });
-      mo.observe(d.body, { childList: true, subtree: true });
-    } catch (e) { beobachtet = null; }
+      hoehenMO.observe(r.f, { attributes: true, attributeFilter: ['style'] });
+      r.f.addEventListener('load', function () {
+        letzteQuelle = { was: 'load des Rahmens', zeit: Date.now() };
+        innenVerdrahtet = null; innenWacheSetzen();
+      });
+      window.addEventListener('resize', function () {
+        letzteQuelle = { was: 'resize des Fensters', zeit: Date.now() };
+      }, { passive: true });
+    } catch (e) { hoehenMO = null; }
   }
 
-  /* Der Rahmen ist bis zur Einwilligung inert (data-bsport-srcdoc) und laedt
-     danach neu. Deshalb wird in Ruhe weiter nachgesehen, statt einmal zu
-     versuchen. Nur unter ?ptdom=1, also kein Dauerlauf im Normalbetrieb. */
-  function wacheStarten() {
-    zoomWacheStarten();
-    anmelden();
-    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
-    if (rahmen) rahmen.addEventListener('load', function () { beobachtet = null; anmelden(); });
-    setInterval(anmelden, 1000);
+  /* ── Der Bericht ──────────────────────────────── */
+  function eigen(el, w) {
+    var c;
+    try { c = w.getComputedStyle(el); } catch (e) { return 'nicht lesbar'; }
+    var t = ['overflow=' + c.overflowX + '/' + c.overflowY];
+    if (c.overscrollBehavior && c.overscrollBehavior !== 'auto') t.push('overscroll=' + c.overscrollBehavior);
+    t.push('touch-action=' + (c.touchAction || '-'));
+    var wos = c.webkitOverflowScrolling || c['-webkit-overflow-scrolling'];
+    if (wos) t.push('-webkit-overflow-scrolling=' + wos);
+    t.push('position=' + c.position);
+    if (c.transform && c.transform !== 'none') t.push('transform=' + c.transform);
+    t.push('height=' + c.height);
+    return t.join('  ');
   }
 
-  function modalBericht() {
+  function scrollBericht() {
     var z = [];
     function schreib(s) { z.push(s); }
-    schreib('PTDOM MODAL  ' + new Date().toLocaleTimeString('de-DE'));
-    schreib('Fenster ' + window.innerWidth + 'x' + window.innerHeight +
-            '  scrollY ' + Math.round(window.scrollY || 0) +
-            '  dpr ' + (window.devicePixelRatio || 1));
+    schreib('PTDOM SCROLL  ' + new Date().toLocaleTimeString('de-DE'));
+    var vm = document.querySelector('meta[name="viewport"]');
+    schreib('  VIEWPORT META: content=' +
+            (vm ? (vm.getAttribute('content') || '(leer)') : '(kein meta)'));
+    schreib('  UA  ' + navigator.userAgent);
 
-    var rahmen = document.querySelector('.pt-widget-wrapper iframe');
-    if (rahmen) {
-      var rb = rahmen.getBoundingClientRect();
-      schreib('Rahmen jetzt  top=' + Math.round(rb.top) + '  ' +
-              Math.round(rb.width) + 'x' + Math.round(rb.height));
+    var r = innenDok();
+    var rb = null;
+    try { rb = r && r.f ? r.f.getBoundingClientRect() : null; } catch (e) {}
+    schreib('  window.innerHeight=' + window.innerHeight +
+            '  Rahmenhoehe=' + (rb ? Math.round(rb.height) : '?') +
+            (rb && rb.height > window.innerHeight
+              ? '  (Rahmen ist hoeher als das Fenster)' : ''));
+
+    /* ── Gesten ── */
+    schreib('');
+    schreib('GESTEN (letzte ' + GESTEN_MAX + ', ' + gesten.length + ' aufgezeichnet)');
+    if (!gesten.length) {
+      schreib('  keine. Erst im Buchungsbereich wischen, dann SCROLL.');
     } else {
-      schreib('KEIN iframe gefunden.');
-    }
-    schreib('Beobachter ' + (beobachtet ? 'AKTIV' : 'NICHT aktiv'));
-    if (!beobachtet) {
-      schreib('  Einwilligung erteilt? Widget geladen? Erst dann greift er.');
-    }
-    schreib('Ereignisse: ' + modalLog.length + (modalLog.length >= MODAL_MAX ? ' (Deckel erreicht)' : ''));
-    if (!modalLog.length) {
-      schreib('');
-      schreib('Noch nichts erfasst. Im Widget einen Termin antippen,');
-      schreib('warten bis Dialog oder Kringel erscheint, dann erneut MODAL.');
-      return z.join('\n');
+      for (var i = 0; i < gesten.length; i++) {
+        var g = gesten[i];
+        schreib('');
+        schreib('  [' + (i + 1) + '] ' + g.zeit + '  ' + g.ende +
+                (g.marken.length ? '   >>> ' + g.marken.join(' + ') : ''));
+        schreib('      Start x=' + g.x0 + ' y=' + g.y0 +
+                '  im Rahmen: ' + (g.imRahmen ? 'JA' : 'nein') +
+                '  Beruehrung kam ' + (g.woher === 'innen' ? 'im RAHMEN an' : 'aussen an'));
+        schreib('      dx=' + g.dx + '  dy=' + g.dy);
+        schreib('      Seite  scrollY ' + g.yVor + ' -> ' + g.yNach +
+                (g.yNach === g.yVor ? '  (unbewegt)' : '  (bewegt ' + (g.yNach - g.yVor) + 'px)'));
+        schreib('      Rahmen scrollTop ' +
+                (g.innenVor === null ? 'nicht lesbar'
+                  : g.innenVor + ' -> ' + g.innenNach +
+                    (g.innenNach === g.innenVor ? '  (unbewegt)' : '  (bewegt)')));
+        schreib('      cancelable=' + g.cancelable + '  defaultPrevented=' + g.verhindert +
+                '  touch-action(Ziel)=' + g.touchAction);
+        schreib('      Ziel aussen: ' + g.zielAussen);
+        if (g.zielInnen !== '-') schreib('      Ziel innen:  ' + g.zielInnen);
+        if (g.hoehen.length) schreib('      Hoehe waehrend der Geste: ' + g.hoehen.join(' , '));
+      }
     }
 
-    for (var i = 0; i < modalLog.length; i++) {
-      var e = modalLog[i];
-      schreib('');
-      schreib('[' + (i + 1) + '] ' + e.art + '  ' + e.zeit + '   (' + e.grund + ')');
-      schreib('    <' + e.tag + '> in <' + e.eltern + '>');
-      schreib('    class="' + String(e.klassen).slice(0, 90) + '"');
-      schreib('    ' + e.aria);
-      schreib('    position=' + e.position + '  z-index=' + e.z + '  display=' + e.display);
-      schreib('    im Rahmen: top=' + e.top + ' left=' + e.left +
-              '  ' + e.breite + 'x' + e.hoehe);
-      schreib('    Rahmen damals: top=' + e.rTop + ' ' + e.rBreite + 'x' + e.rHoehe +
-              '   scrollY=' + e.scrollY + '  Fenster ' + e.innerW + 'x' + e.innerH);
-      /* Die Zahl, auf die es ankommt: wo stand das Element im FENSTER?
-         Rahmenoberkante plus Lage im Rahmen. Negativ heisst oberhalb der
-         sichtbaren Kante - genau der gemeldete Fehler. */
-      var imFenster = e.rTop + e.top;
-      schreib('    >> im Fenster bei y=' + imFenster +
-              (imFenster < 0 ? '  ALSO ' + Math.abs(imFenster) + 'px UEBER der Kante'
-                             : '  (sichtbarer Bereich beginnt bei 0)'));
+    /* ── Hoehenwechsel ── */
+    schreib('');
+    schreib('HOEHENWECHSEL AM RAHMEN (letzte ' + HOEHEN_MAX + ', ' + hoehenLog.length + ')');
+    if (!hoehenLog.length) {
+      schreib('  keiner aufgezeichnet.');
+    } else {
+      for (var h = 0; h < hoehenLog.length; h++) {
+        var e2 = hoehenLog[h];
+        schreib('  [' + (h + 1) + '] ' + e2.zeit + '  ' + e2.alt + ' -> ' + e2.neu +
+                (e2.inGeste ? '   >>> HOEHE WAEHREND GESTE' : ''));
+        schreib('      Quelle: ' + e2.quelle);
+      }
     }
+
+    /* ── Scrollbehaelter aussen ── */
+    schreib('');
+    schreib('SCROLLBEHAELTER AUSSEN (Rahmen und alle Vorfahren bis html)');
+    if (!r || !r.f) {
+      schreib('  kein iframe gefunden.');
+    } else {
+      var n = r.f, tiefe = 0;
+      while (n && tiefe < 12) {
+        schreib('  ' + kurz(n));
+        schreib('    ' + eigen(n, window));
+        if (n.tagName === 'HTML') break;
+        n = n.parentElement; tiefe++;
+      }
+    }
+
+    /* ── Inneres Dokument ── */
+    schreib('');
+    schreib('INNERES DOKUMENT');
+    if (!r || !r.d || !r.w) {
+      schreib('  nicht lesbar oder leer. Einwilligung erteilt? Widget geladen?');
+    } else {
+      var paare = [['html', r.d.documentElement], ['body', r.d.body]];
+      for (var q = 0; q < paare.length; q++) {
+        var el = paare[q][1];
+        if (!el) continue;
+        schreib('  ' + paare[q][0] + '  ' + eigen(el, r.w));
+        schreib('      scrollHeight=' + el.scrollHeight +
+                ' clientHeight=' + el.clientHeight +
+                ' scrollTop=' + Math.round(el.scrollTop) +
+                (el.scrollHeight > el.clientHeight + 1
+                  ? '   << scrollbar, hier kann Safari die Geste hinleiten' : ''));
+      }
+
+      schreib('');
+      schreib('  DIALOGBEHAELTER');
+      var beh = null;
+      try { beh = r.d.querySelector('.bsport-user-interaction-modal__container'); } catch (e3) {}
+      if (!beh) {
+        schreib('    keiner offen.');
+      } else {
+        schreib('    ' + kurz(beh));
+        schreib('    ' + eigen(beh, r.w));
+      }
+
+      schreib('');
+      schreib('  EIGENE SCROLLFLAECHEN IM RAHMEN (scrollHeight > clientHeight, overflow auto/scroll)');
+      var gefunden = 0;
+      try {
+        var alle = r.d.querySelectorAll('*');
+        for (var k = 0; k < alle.length && gefunden < 10; k++) {
+          var x = alle[k];
+          if (x.scrollHeight <= x.clientHeight + 1) continue;
+          var cx = r.w.getComputedStyle(x);
+          if (!/auto|scroll/.test(cx.overflowY) && !/auto|scroll/.test(cx.overflowX)) continue;
+          gefunden++;
+          schreib('    ' + gefunden + '. ' + kurz(x));
+          schreib('       ' + eigen(x, r.w) +
+                  '  scrollHeight=' + x.scrollHeight + ' clientHeight=' + x.clientHeight +
+                  ' scrollTop=' + Math.round(x.scrollTop));
+        }
+      } catch (e4) { schreib('    Fehler beim Durchsuchen: ' + (e4 && e4.message)); }
+      if (!gefunden) schreib('    keine.');
+    }
+
     return z.join('\n');
   }
 
   /* ── Verdrahtung ───────────────────────────────────────────────────── */
-  knopfBreite.addEventListener('click', function () {
-    try { letzterText = breitenBericht(); }
-    catch (e) { letzterText = 'FEHLER im Breiten-Bericht: ' + (e && e.message); }
+  knopfScroll.addEventListener('click', function () {
+    try { letzterText = scrollBericht(); }
+    catch (e) { letzterText = 'FEHLER im Scroll-Bericht: ' + (e && e.message); }
     bericht.textContent = letzterText;
     bericht.hidden = false;
   });
 
-  knopfModal.addEventListener('click', function () {
-    try { letzterText = modalBericht(); }
-    catch (e) { letzterText = 'FEHLER im Modal-Bericht: ' + (e && e.message); }
+  knopfBreite.addEventListener('click', function () {
+    try { letzterText = breitenBericht(); }
+    catch (e) { letzterText = 'FEHLER im Breiten-Bericht: ' + (e && e.message); }
     bericht.textContent = letzterText;
     bericht.hidden = false;
   });
@@ -723,13 +897,33 @@
      Sonst muss man neu laden, nur um im Widget weiterzunavigieren. */
   knopfZu.addEventListener('click', function () {
     if (!bericht.hidden) { bericht.hidden = true; return; }
-    if (mo) { try { mo.disconnect(); } catch (e) {} }
+    if (hoehenMO) { try { hoehenMO.disconnect(); } catch (e) {} }
     if (window.visualViewport) {
       try { window.visualViewport.removeEventListener('resize', zoomMerken); } catch (e) {}
     }
     leiste.remove();
     bericht.remove();
   });
+
+  /* Der Rahmen ist bis zur Einwilligung inert (data-bsport-srcdoc) und
+     laedt danach neu. Die Hoerer im inneren Dokument muessen also
+     umziehen koennen - darum wird in Ruhe nachgesehen statt einmal
+     versucht. Nur unter ?ptdom=1. */
+  function wacheStarten() {
+    /* Die Zoomwache aus PR #130 haengt hier mit dran. Sie stand frueher im
+       Block des MODAL-Knopfes; beim Entfernen waere sie sonst still
+       verschwunden und ZOOM-EREIGNISSE im BREITE-Bericht blieben fuer
+       immer leer. Beim Testen genau so aufgefallen: null Hoerer auf
+       visualViewport. */
+    zoomWacheStarten();
+    gestenWacheSetzen();
+    innenWacheSetzen();
+    hoehenWacheSetzen();
+    setInterval(function () {
+      innenWacheSetzen();
+      hoehenWacheSetzen();
+    }, 1000);
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', wacheStarten);
