@@ -33,6 +33,49 @@
   <!-- End Cookiebot CMP -->
   <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <!-- KEIN AUTOMATISCHER ZOOM AUF DEM iPHONE
+       Gemessen auf einem echten iPhone, nach PR #130: der Zoom steht
+       weiter bei 1.1418 (= 16/14), und die Zoom-Aufzeichnung nennt als
+       fokussiertes Element
+         iframe.widget-8.bsport-user-interaction-modal__iframe
+       Bsport haengt also in unser srcdoc noch einen EIGENEN Rahmen, und
+       der kommt von bsport.io. Fremde Herkunft: weder unser CSS noch die
+       Regel im srcdoc erreichen das Feld darin. Ueberlauf gibt es keinen,
+       scrollWidth und clientWidth standen beide bei 402.
+
+       Damit bleibt genau ein Hebel: das viewport-meta des obersten
+       Dokuments. maximum-scale=1 unterbindet den Fokuszoom, den iOS von
+       sich aus ausloest.
+
+       NUR auf iPhone und iPod, und nur zur Laufzeit. Im Markup bleibt das
+       meta unveraendert, damit Android, Schreibtisch, iPad und
+       Suchmaschinen genau das sehen wie bisher. user-scalable=no steht
+       hier NICHT: Zusammenziehen muss moeglich bleiben, und seit iOS 10
+       laesst Safari es ohnehin zu, egal was hier steht - genau darum ist
+       maximum-scale=1 vertretbar.
+
+       Steht so frueh wie moeglich: direkt hinter dem meta, vor dem ersten
+       Zeichnen. Die Reihenfolge der vorhandenen Skripte aendert sich
+       nicht, hier kommt nur ein Inline-Block zwischen zwei Metazeilen. -->
+  <script>
+    (function () {
+      try {
+        if (!/iPhone|iPod/.test(navigator.userAgent)) return;
+        var m = document.querySelector('meta[name="viewport"]');
+        if (!m) return;
+        var c = m.getAttribute('content') || '';
+        /* Es steht bereits maximum-scale=5.0 drin. Einfach ", maximum-scale=1"
+           anzuhaengen wuerde den Schluessel doppelt setzen und sich darauf
+           verlassen, dass der spaetere Wert gewinnt. Stattdessen wird der
+           vorhandene Wert ersetzt; gibt es keinen, wird angehaengt. Das
+           Ergebnis ist in beiden Faellen dasselbe und haengt von keiner
+           Auswertungsreihenfolge ab. */
+        m.setAttribute('content', /maximum-scale\s*=/.test(c)
+          ? c.replace(/maximum-scale\s*=\s*[^,;]*/, 'maximum-scale=1')
+          : c + ', maximum-scale=1');
+      } catch (e) { /* lieber kein Zoomschutz als ein Fehler im Kopf */ }
+    }());
+  </script>
   <title>Personal Training Boxen München | BOMAYE GYM MUNICH</title>
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
