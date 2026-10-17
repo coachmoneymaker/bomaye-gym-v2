@@ -198,13 +198,14 @@
   font-weight: 600;
 }
 
-/* Nur eine Untergrenze fuer den Ladezustand - niemals eine Obergrenze. */
+/* Die Untergrenze fuer den Ladezustand kommt jetzt aus style.css, von
+   .schedule-frame und .schedule-frame__widget - denselben Regeln, die auf
+   /stundenplan gelten (420px, ab 768px 380px, ab 480px 340px). Hier stand
+   eine eigene Staffelung mit anderen Zahlen; nachgemessen reservierte die
+   Seite dadurch bei 390px 380px, waehrend /stundenplan 340px reservierte.
+   Nur width bleibt, der Rest ist jetzt gemeinsam. */
 #pt-cal-view {
   width: 100%;
-  min-height: 420px;
-}
-#pt-cal-view:empty {
-  min-height: 420px;
 }
 
 .pt-booking-note {
@@ -219,8 +220,6 @@
 @media (max-width: 767px) {
   .pt-page-hero { padding: 84px 20px 44px; }
   .pt-booking-section { padding: 40px 0 56px; }
-  #pt-cal-view,
-  #pt-cal-view:empty { min-height: 380px; }
 
   /* Bsport setzt auf seinen Containern Seitenraender, die auf voller Breite
      als senkrechte Linien am Bildschirmrand erscheinen. Gleiche Behandlung
@@ -232,55 +231,20 @@
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Bsport-Widget — Markenoptik
-   Gilt nur fuer den Kalender, der inline in dieser Seite haengt. Bsports
-   eigener Anmeldedialog haengt an <body> und wird bewusst NICHT angefasst:
-   sein Aussehen und sein Scrollverhalten gehoeren ihm.
-   ───────────────────────────────────────────────────────────────────────── */
+/* HIER STAND DIE EIGENE MARKENOPTIK FUER DEN KALENDER
+   Rund fuenfzig Zeilen auf #pt-cal-view .MuiButton-*, .MuiCard-root,
+   .MuiPaper-root, .MuiInputBase-root und .MuiChip-root. Sie sind
+   ersatzlos weg, und zwar nicht aus Sparsamkeit: der Kalender haengt
+   jetzt in #bsport-widget-172485, derselben Kennung wie auf
+   /stundenplan, und bekommt damit dieselben rund 210 Regeln aus
+   style.css. Zwei Satz Regeln auf einem Widget waeren zwei Aussehen,
+   die um dieselben Elemente streiten - genau das sollte dieser PR
+   beenden.
 
-#pt-cal-view button,
-#pt-cal-view .MuiButton-root,
-#pt-cal-view [role="button"],
-#pt-cal-view .MuiButtonBase-root {
-  border-radius: 0 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
-}
-
-#pt-cal-view .MuiButton-contained,
-#pt-cal-view .MuiButton-containedPrimary {
-  background-color: #C9A84C !important;
-  color: #0A0A08 !important;
-  border: 2px solid #C9A84C !important;
-}
-
-#pt-cal-view .MuiButton-text,
-#pt-cal-view .MuiButton-outlined {
-  color: #0A0A08 !important;
-  background: transparent !important;
-  border: 2px solid rgba(10, 10, 8, 0.2) !important;
-}
-
-#pt-cal-view .MuiCard-root,
-#pt-cal-view .MuiPaper-root {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-#pt-cal-view .MuiInputBase-root,
-#pt-cal-view .MuiOutlinedInput-root {
-  border-radius: 0 !important;
-}
-
-#pt-cal-view .MuiChip-root {
-  border-radius: 0 !important;
-  background-color: rgba(201, 168, 76, 0.1) !important;
-  color: #0A0A08 !important;
-  border: 1px solid #C9A84C !important;
-}
+   Die Kontrastkorrekturen aus PR #106 und #107 gehen dabei nicht
+   verloren: sie betreffen den Text der Seite (.pt-booking-limit und
+   die Abzeichen), nicht die Schaltflaechen im Widget. Dieser Teil
+   steht weiter oben und ist unberuehrt. */
 
 /* ─────────────────────────────────────────────────────────────────────────
    Bsports Anmeldedialog in den Seitenfluss zwingen
