@@ -198,14 +198,61 @@
   font-weight: 600;
 }
 
-/* Die Untergrenze fuer den Ladezustand kommt jetzt aus style.css, von
+/* Die Untergrenze fuer den Ladezustand kommt aus style.css, von
    .schedule-frame und .schedule-frame__widget - denselben Regeln, die auf
-   /stundenplan gelten (420px, ab 768px 380px, ab 480px 340px). Hier stand
-   eine eigene Staffelung mit anderen Zahlen; nachgemessen reservierte die
-   Seite dadurch bei 390px 380px, waehrend /stundenplan 340px reservierte.
-   Nur width bleibt, der Rest ist jetzt gemeinsam. */
-#pt-cal-view {
-  width: 100%;
+   /stundenplan gelten (420px, ab 768px 380px, ab 480px 340px).
+
+   HIER STAND width: 100%, UND DAS WAR DER FEHLER.
+   .schedule-frame holt sich die volle Schirmbreite ueber negative
+   Seitenraender: sie ziehen den Kasten um genau das Polster des
+   Containers nach aussen. Das funktioniert aber nur bei width: auto.
+   Mit width: 100% rechnet der Browser die Breite gegen den INHALTSKASTEN
+   des Containers (bei 402px also 354px) und die negativen Raender
+   verschieben den Kasten dann bloss nach links, ohne ihn zu verbreitern.
+   Nachgemessen bei 402px: links 4 statt 0, breit 354 statt 402 - die
+   48px, die auf dem Telefon rechts leer blieben, und die 4px Versatz.
+
+   /stundenplan setzt an dieser Stelle keine Breite. Jetzt hier auch
+   nicht. Dasselbe Muster steht als Warnung schon in
+   personal-training-boxen-muenchen.html am .pt-widget-wrapper. */
+
+/* ────────────────────────────────────────────────────────────────────
+   POLSTER DES BUCHUNGS-CONTAINERS, WORTGLEICH ZU /stundenplan
+
+   Dort stehen diese Werte im Seitenkopf als section#schedule .container.
+   Sie muessen zu den negativen Raendern von .schedule-frame passen,
+   sonst bleibt ein Rest stehen: der Rahmen zieht bei <=768px um 24px
+   nach aussen und bei <=480px um 20px.
+
+   Die Grundregel .container gibt 24px, und die 480er-Regel in style.css
+   setzt ebenfalls 24px (Zeile 3324 gewinnt gegen Zeile 1605). Gegen
+   einen Rand von -20px bleiben so 4px stehen - genau der Versatz vom
+   Telefon. Mit 20px hier geht die Rechnung auf, wie drueben.
+
+   Nur die seitlichen Werte und die Hoechstbreite werden uebernommen.
+   Das padding-bottom von /stundenplan bleibt draussen: es gehoert zum
+   senkrechten Rhythmus jener Seite, und der ist hier ein anderer.
+
+   Betroffen ist ausschliesslich der Container um den Kalender. Der Text
+   darueber steht in .pt-booking-head, ausserhalb dieses Containers, mit
+   eigenem Polster von 24px - unveraendert.
+   ──────────────────────────────────────────────────────────────────── */
+section#pt-booking .container {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+@media (max-width: 480px) {
+  section#pt-booking .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  section#pt-booking .container {
+    max-width: 1280px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
 .pt-booking-note {
