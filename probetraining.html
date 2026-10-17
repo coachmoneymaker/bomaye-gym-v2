@@ -276,12 +276,27 @@
          JavaScript weiterschiebt, statt einen Umweg zu erklaeren, den die
          Leute selbst finden muessen. Aussehen in probetraining-page.css,
          Verhalten in probetraining-page.js beim Abschnitt "ZWEI WEGE". -->
-    <div id="pt-cal-view">
-      <noscript>
-        <p style="text-align:center;color:rgba(10,10,8,0.6);padding:2rem 0;">
-          Bitte JavaScript aktivieren, um die Terminauswahl zu laden — oder ruf uns einfach an.
-        </p>
-      </noscript>
+    <!-- DERSELBE AUFBAU WIE AUF /stundenplan
+         .schedule-frame > .schedule-frame__widget > #bsport-widget-172485.
+         Die Kennung ist bewusst dieselbe wie dort: an ihr haengen in
+         style.css rund 210 Regeln fuer das Aussehen des Kalenders. Mit
+         derselben Kennung gilt hier buchstaeblich dasselbe CSS, ohne eine
+         einzige Zeile zu verdoppeln. Zwei Seiten, zwei Dokumente - die
+         Kennung kollidiert nicht.
+
+         id="pt-cal-view" bleibt an der aeusseren Huelle: die
+         Einwilligungs-Bruecke bekommt genau dieses Element uebergeben
+         (bomayeGateBsport in probetraining-page.js) und haengt ihren
+         Hinweis hinein. Daran wird nichts geaendert. -->
+    <div class="schedule-frame" id="pt-cal-view">
+      <div class="schedule-frame__widget">
+        <div id="bsport-widget-172485"></div>
+        <noscript>
+          <p style="text-align:center;color:rgba(10,10,8,0.6);padding:2rem 0;">
+            Bitte JavaScript aktivieren, um die Terminauswahl zu laden — oder ruf uns einfach an.
+          </p>
+        </noscript>
+      </div>
     </div>
   </div>
   <p class="pt-booking-note">Die Buchung wird sicher über bsport.io abgewickelt — kostenlos und unverbindlich.</p>

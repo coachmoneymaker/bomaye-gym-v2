@@ -129,6 +129,96 @@
     }, 150);
   }
 
+  /* ?ptfix=1 ist ab jetzt der RUECKWEG, nicht die Haertung. Ohne den
+     Schalter laeuft die Seite wie /stundenplan; mit ihm wie bisher
+     (dialogMode 3 plus die eigenen Eingriffe am Dialog). Weil sich das
+     echte Widget hier nicht laden laesst, ist dieser Rueckweg der
+     wichtigste Teil der Aenderung: geht am Telefon etwas schief, haengt
+     man ?ptfix=1 an die Adresse und hat den heutigen Stand zurueck. */
+  function ptAltModus() {
+    return /[?&]ptfix=1/.test(window.location.search);
+  }
+  function ptDialogModus() {
+    return ptAltModus() ? 3 : 1;
+  }
+
+  /* ─── DIALOGWACHE, WORTGLEICH ZU /stundenplan ───
+     Dort steht dieser Block seit jeher am Seitenende und ist genau das,
+     was den Kunden auf dem iPhone durch Anmeldung und Registrierung
+     getragen hat: solange Bsports Dialog offen ist, bekommt <body> eine
+     Klasse (style.css blendet darueber die Kopfleiste aus) und die Seite
+     wird festgestellt; beim Schliessen wird beides zurueckgenommen und
+     die vorherige Scrollhoehe wiederhergestellt.
+
+     Das ist das Gegenteil dessen, was diese Seite bisher tat: sie hat
+     ausdruecklich NICHTS gesperrt und den Dialog stattdessen in den
+     Seitenfluss gezwungen. Mit dialogMode 1 gibt es in unserem Dokument
+     gar keinen Dialog mehr, den man zwingen koennte - er liegt in Bsports
+     eigenem iframe. Die Sperre ist dann richtig: ohne sie scrollt die
+     Seite UNTER dem Dialog weg.
+
+     Bewusst eine eigene Kopie und kein gemeinsames Modul: die Vorlage auf
+     /stundenplan ist erprobt, und ein Umbau beider Seiten in einem Zug
+     waere genau der Schritt, der die erprobte Seite mitgefaehrdet. */
+  function _ptDialogWache() {
+    var MODAL_SEL = '.bsport-user-interaction-modal__container';
+    var BODY_CLASS = 'bsport-modal-open';
+    var _scrollY = 0;
+    var _locked = false;
+
+    function lockScroll() {
+      if (_locked) return;
+      _locked = true;
+      _scrollY = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + _scrollY + 'px';
+      document.body.style.width = '100%';
+    }
+
+    function unlockScroll() {
+      if (!_locked) return;
+      _locked = false;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo({ top: _scrollY, behavior: 'instant' });
+    }
+
+    function check() {
+      var open = document.querySelector(MODAL_SEL) !== null;
+      document.body.classList.toggle(BODY_CLASS, open);
+      if (open) { lockScroll(); } else { unlockScroll(); }
+    }
+
+    new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
+    check();
+  }
+
+  /* Ebenfalls von /stundenplan: Angebotskarten wieder einblenden, die
+     React beim Neuzeichnen auf display:none setzt. Eng auf das Widget
+     begrenzt, NICHT auf document.body - sonst geraet man Bsports eigenem
+     display:none in die Quere (etwa der Bruecken-iframe des Dialogs). */
+  function _ptKartenWache() {
+    function fixSchedule() {
+      var widget = document.getElementById('bsport-widget-172485');
+      if (!widget) return;
+      widget.querySelectorAll('.bs-offer-list-item, .bs-card-offer, .bs-week__listMode__content__day')
+        .forEach(function (el) {
+          if (el.style && el.style.display === 'none') el.style.display = '';
+        });
+    }
+    fixSchedule();
+    var widget = document.getElementById('bsport-widget-172485');
+    if (!widget) return;
+    var _timer;
+    new MutationObserver(function () {
+      clearTimeout(_timer);
+      _timer = setTimeout(fixSchedule, 150);
+    }).observe(widget, { childList: true, subtree: true });
+  }
+
   var _ptMounted = false;
 
   function _ptMountCalendar() {
@@ -145,7 +235,11 @@
       if (_ptMounted) return;
       _ptMounted = true;
 
-      var holderId = 'bsport-widget-880939';
+      /* Die Kennung steht jetzt im Markup (probetraining.html), genau wie
+         auf /stundenplan. Sie wird nicht mehr zur Laufzeit erzeugt: an
+         ihr haengen die Aussehensregeln, und die sollen schon vor dem
+         Mounten greifen - sonst blitzt ein ungestylter Kalender auf. */
+      var holderId = 'bsport-widget-172485';
       if (!document.getElementById(holderId)) {
         var holder = document.createElement('div');
         holder.id = holderId;
@@ -158,21 +252,41 @@
           parentElement: holderId,
           companyId: 5473,
           franchiseId: null,
-          /* 3 = DIALOG_MODE_DEACTIVATED. Belegt aus Bsports eigenem Paket
-             @bsport/common, src/master-data/widget-dialog-mode.ts:
-             TAB 0 / IFRAME 1 / POPUP 2 / DEACTIVATED 3. Mit 1 wuerde Bsport
-             den Buchungsdialog in ein iframe legen - Beruehrungen landeten
-             dann in einem fremden Dokument und das Scrollen auf iOS waere
-             wieder kaputt (WebKit 149264). */
-          dialogMode: 3,
+          /* 1 = DIALOG_MODE_IFRAME, wie auf /stundenplan. Belegt aus
+             Bsports eigenem Paket @bsport/common,
+             src/master-data/widget-dialog-mode.ts:
+             TAB 0 / IFRAME 1 / POPUP 2 / DEACTIVATED 3.
+
+             HIER STAND 3, MIT DIESER BEGRUENDUNG: mit 1 lege Bsport den
+             Dialog in ein iframe, Beruehrungen landeten in einem fremden
+             Dokument, und das Scrollen auf iOS sei wieder kaputt
+             (WebKit 149264). Das war eine Vorhersage, keine Messung.
+
+             Widerlegt am Geraet: /stundenplan laeuft seit jeher mit 1,
+             und der Kunde hat dort auf einem echten iPhone Dialog,
+             Anmeldung und Registrierung vollstaendig durchlaufen - ohne
+             Scroll-Problem. Umgekehrt ist der Weg mit 3 derjenige, der
+             seither Schicht um Schicht an eigenen Eingriffen gebraucht
+             hat, und auf /personal-training-boxen-muenchen haengt noch
+             immer ein ungeklaertes Safari-Scrollproblem (PR #132) an
+             genau dieser Bauweise.
+
+             Zurueck geht es mit ?ptfix=1: dieser Schalter mountet weiter
+             mit 3 und schaltet die alten Eingriffe ein. */
+          dialogMode: ptDialogModus(),
           widgetType: 'calendar',
           showFab: false,
           fullScreenPopup: false,
           styles: undefined,
+          /* Wie auf /stundenplan: ausser dem Kursfilter steht hier nichts.
+             Dort lautet die Konfiguration schlicht {} beziehungsweise
+             { metaActivities: [...] }. Entfallen sind coaches, establishments,
+             levels, variant: 'time', groupSessionByPeriod, todayOnly und
+             cardMode - alles Schluessel, die das AUSSEHEN des Kalenders
+             veraendern und ihn damit von /stundenplan unterschieden haben.
+             Der Filter bleibt, er bestimmt WAS gezeigt wird. */
           config: {
             calendar: {
-              coaches: [],
-              establishments: [],
               /* Die meta_activity-IDs dieses Studios. Sie waren im Backoffice
                  nicht auffindbar und wurden ueber die temporaere Debug-Seite
                  aus den Termin-Objekten des Kalender-Widgets ausgelesen
@@ -204,12 +318,7 @@
                 244426,   /* BOXING BASICS            - "Basic"      */
                 244539,   /* BOMAYE QUEENS            - "Queens"     */
                 244563    /* BOXING YOUTH (10-17)     - "Youth"      */
-              ],
-              levels: [],
-              variant: 'time',
-              groupSessionByPeriod: true,
-              todayOnly: false,
-              cardMode: false
+              ]
             }
           }
         });
@@ -1742,20 +1851,24 @@
     document.body.style.top = '';
     document.body.style.width = '';
 
-    /* NATIVER MODUS ist der Standard: Bsports Dialog bleibt unangetastet,
-       wie bei den anderen Studios. ?ptfix=1 schaltet unsere Umbauten
-       wieder ein, falls sich das als der schlechtere Tausch erweist. */
-    var eingriffeAn = /[?&]ptfix=1/.test(window.location.search);
+    /* STANDARD IST JETZT DER WEG VON /stundenplan: dialogMode 1, Bsports
+       eigener Dialog, Seite feststellen solange er offen ist. Keine
+       Scroll-Hilfe und keine Wischschutz-Schicht - beide gab es nur, um
+       einen Dialog IN unserem Dokument bedienbar zu machen, und den gibt
+       es mit dialogMode 1 nicht mehr.
 
-    if (eingriffeAn) {
+       ?ptfix=1 bringt den heutigen Stand zurueck, vollstaendig. */
+    if (ptAltModus()) {
       _ptWischschutzSetzen();
       _ptMountCalendar();
       _ptAdoptBsportDialog();
+      _ptNativWacht();
+      _ptScrollHilfe();
     } else {
       _ptMountCalendar();
-      _ptNativWacht();
+      _ptDialogWache();
+      _ptKartenWache();
     }
-    _ptScrollHilfe();
     _ptSetupTouchDebug();
 
     /* Genau ein Ereignis pro Seitenaufruf. Der Name bleibt
