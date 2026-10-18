@@ -482,7 +482,21 @@ function toggleMobileMenu() {
 <!-- Nur mit ?ptdom=1: misst, was die Wache zu sehen bekommt und warum
      sie urteilt wie sie urteilt. Ohne den Parameter kehrt die Datei in
      ihrer ersten Zeile um. -->
-<script src="/assets/js/bsport-dialog-diagnose.js"></script>
+<!-- DIAGNOSE NUR MIT ?ptdom=1
+     Bewusst nachgeladen statt fest eingebunden: ohne den Parameter entsteht
+     keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
+     async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
+     Bericht laufen, der auf sie zugreift. -->
+<script>
+(function () {
+  if (!/[?&]ptdom=1/.test(window.location.search)) return;
+  ['/assets/js/bsport-diagnose-basis.js', '/assets/js/bsport-dialog-diagnose.js'].forEach(function (q) {
+    var t = document.createElement('script');
+    t.src = q; t.async = false;
+    document.head.appendChild(t);
+  });
+}());
+</script>
 <script src="/assets/js/menue-wache.js"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 </body>

@@ -3014,6 +3014,21 @@ function MountBsportWidget(config, repeat=1) {
      Knopf in der Ecke, 8px Polsterung, der Rahmen scrollte selbst. -->
 
 <script src="/assets/js/abo-embed.js"></script>
+<!-- DIAGNOSE NUR MIT ?ptdom=1
+     Bewusst nachgeladen statt fest eingebunden: ohne den Parameter entsteht
+     keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
+     async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
+     Bericht laufen, der auf sie zugreift. -->
+<script>
+(function () {
+  if (!/[?&]ptdom=1/.test(window.location.search)) return;
+  ['/assets/js/bsport-diagnose-basis.js', '/assets/js/abo-form-diagnose.js'].forEach(function (q) {
+    var t = document.createElement('script');
+    t.src = q; t.async = false;
+    document.head.appendChild(t);
+  });
+}());
+</script>
 <script>
   window.bomayeAbo.init({
     modalId:        'bsport-sub-modal',
