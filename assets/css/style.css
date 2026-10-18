@@ -268,6 +268,21 @@ body.bsport-modal-open #header {
   z-index: -1 !important;
   visibility: hidden;
 }
+/* Und die Filmkoernung mit. Sie liegt mit z-index 9999 (style.css:111) und
+   position: fixed im Wurzel-Stapelkontext, Bsports Modal mit z-index 1300
+   ebenfalls - beide sind direkte Kinder von <body>. Die groessere Zahl
+   gewinnt, also lag das Rauschen ueber dem Kurspass- und Zahlschritt und
+   machte ihn koernig und ausgewaschen. Am Geraet nachgemessen, PR #140.
+
+   display: none statt eines kleineren z-index: die Schicht ist rein
+   dekorativ und soll waehrend einer Zahlung schlicht weg sein. Kein
+   Uebergang - ein Verblassen waehrend des Oeffnens waere Unruhe ohne Zweck.
+
+   .noise selbst bleibt unangetastet. Auf den uebrigen zwoelf Seiten mit
+   Koernung gibt es diese Klasse an <body> nie, dort aendert sich nichts. */
+body.bsport-modal-open .noise {
+  display: none;
+}
 /* ZWEITE REIHE, falls das Skript ausfaellt
    Am Geraet gemessen traegt Bsports Kursdialog die stabile Kennung
    bs-activity--dialog. Faellt bsport-dialog-wache.js aus - Netzfehler,
