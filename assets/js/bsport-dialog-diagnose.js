@@ -47,6 +47,10 @@
  * Ohne den Parameter kehrt diese Datei in der ersten Zeile um: kein
  * Element, kein Hoerer, kein Beobachter, kein Takt.
  *
+ * Leiste, Berichtskasten und das Kopieren stehen seit dem Abo-Bericht in
+ * assets/js/bsport-diagnose-basis.js - diese Datei baut nur noch ihren
+ * eigenen Inhalt. Die Grundlage muss davor geladen sein.
+ *
  * Die Leiste traegt die Kennungen pt-dom-leiste und pt-dom-bericht.
  * Das ist Absicht: genau die stehen in der Ausnahmeliste der Wache, also
  * kann sie sich nicht selbst fuer einen Dialog halten - ohne dass an der
@@ -55,6 +59,14 @@
 (function () {
   'use strict';
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
+  var BASIS = window.bomayeDiagnoseBasis;
+  if (!BASIS) { try { console.warn('[ptdom] bsport-diagnose-basis.js fehlt'); } catch (e) {} return; }
+  var kurz         = BASIS.hilfen.kurz;
+  var vollKlasse   = BASIS.hilfen.vollKlasse;
+  var stabileTeile = BASIS.hilfen.stabileTeile;
+  var idKurz       = BASIS.hilfen.idKurz;
+  var eigenerText  = BASIS.hilfen.eigenerText;
+  var attrZeile    = BASIS.hilfen.attrZeile;
 
   /* ══════════ KOPIE DER REGELN AUS bsport-dialog-wache.js ══════════
      Wortgetreu. Nur lesend. Nicht veraendern, ohne das Original
@@ -146,22 +158,6 @@
   /* ════════════════ ENDE DER KOPIE ════════════════ */
 
   /* ── Hilfen ──────────────────────────────────────────────────────── */
-  function kurz(el) {
-    if (!el || el.nodeType !== 1) return '-';
-    var k = (typeof el.className === 'string' && el.className)
-      ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
-    if (k.length > 60) k = k.slice(0, 60) + '…';
-    return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + k;
-  }
-
-  function vollKlasse(el) {
-    try {
-      if (typeof el.className === 'string') return el.className || '-';
-      if (el.className && el.className.baseVal !== undefined) return el.className.baseVal || '-';
-    } catch (e) {}
-    return '-';
-  }
-
   function kette(el) {
     var t = [], n = el.parentElement, i = 0;
     while (n && n.tagName !== 'BODY' && i < 10) { t.push(kurz(n)); n = n.parentElement; i++; }
@@ -273,49 +269,6 @@
     if (klassenLog.length > KLASSE_MAX) klassenLog.shift();
   }
 
-  /* ── Oberflaeche ─────────────────────────────────────────────────── */
-  var leiste = document.createElement('div');
-  leiste.id = 'pt-dom-leiste';
-  leiste.setAttribute('data-diagnose', '1');
-  /* Umbruch, weil vier Knoepfe bei 320px nicht in eine Zeile passen. Ohne
-     flex-wrap ragte die Leiste aus dem Fenster und zoege waagerechten
-     Ueberlauf nach sich - genau das, was pruefen:reichweite meldet. */
-  leiste.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:2147483647;'
-    + 'display:flex;flex-wrap:wrap;justify-content:flex-end;'
-    + 'max-width:calc(100vw - 24px);gap:1px;background:rgba(10,10,8,0.96);'
-    + 'border:1px solid rgba(201,168,76,0.45);padding:6px;';
-  function knopf(text, breit) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = text;
-    b.style.cssText = 'min-height:40px;' + (breit ? 'padding:0 14px;' : 'width:40px;')
-      + 'background:#C9A84C;color:#0A0A08;border:0;border-radius:0;'
-      + 'font:700 11px/1 Oswald,sans-serif;letter-spacing:0.14em;cursor:pointer;';
-    return b;
-  }
-  var kDiag = knopf('DIAGNOSE', true);
-  var kKopie = knopf('KOPIEREN', true);
-  var kRausch = knopf('RAUSCHEN AUS', true);
-  var kZu = knopf('×', false);
-  kZu.setAttribute('aria-label', 'Diagnose schliessen');
-  leiste.appendChild(kDiag);
-  leiste.appendChild(kKopie);
-  leiste.appendChild(kRausch);
-  leiste.appendChild(kZu);
-
-  var bericht = document.createElement('pre');
-  bericht.id = 'pt-dom-bericht';
-  bericht.hidden = true;
-  /* Hoehe bewusst unter der Haelfte des Fensters: so kann die Bauart-Regel
-     der Wache diesen Kasten gar nicht erst fuer einen Dialog halten - auch
-     wenn die Ausnahmeliste einmal verlorengehen sollte. */
-  bericht.style.cssText = 'position:fixed;left:12px;right:12px;bottom:66px;z-index:2147483646;'
-    + 'max-height:45vh;overflow:auto;-webkit-overflow-scrolling:touch;margin:0;padding:10px 12px;'
-    + 'background:rgba(10,10,8,0.97);border:1px solid rgba(201,168,76,0.30);color:#C9A84C;'
-    + 'font:10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;';
-
-  var letzterText = '';
-
   /* ── Der Bericht ─────────────────────────────────────────────────── */
   function dialogWurzel() {
     /* Was WIR fuer den Dialog halten - absichtlich grosszuegiger als die
@@ -354,18 +307,6 @@
     return null;
   }
 
-  function attrZeile(el) {
-    var t = [];
-    try {
-      for (var i = 0; i < el.attributes.length; i++) {
-        var a = el.attributes[i];
-        var v = a.value.length > 120 ? a.value.slice(0, 120) + '…' : a.value;
-        t.push(a.name + '="' + v + '"');
-      }
-    } catch (e) {}
-    return '<' + el.tagName.toLowerCase() + (t.length ? ' ' + t.join(' ') : '') + '>';
-  }
-
   function punkte(x, y, name, z) {
     var l = [];
     try { l = document.elementsFromPoint(x, y) || []; } catch (e) {}
@@ -396,41 +337,11 @@
                 'ZURÜCK', 'SPEICHERN', 'KAUFEN', 'ZAHLEN'];
   var LABEL_MAX = 40;
 
-  /* Nur der EIGENE Text, ohne den der Kinder. Sonst meldete jede Huelle
-     bis hinauf zur Karte denselben Treffer. */
-  function eigenerText(el) {
-    var t = '';
-    try {
-      for (var i = 0; i < el.childNodes.length; i++) {
-        if (el.childNodes[i].nodeType === 3) t += el.childNodes[i].nodeValue;
-      }
-    } catch (e) { return ''; }
-    return t.replace(/\s+/g, ' ').trim();
-  }
-
-  /* Klassenteile ohne angehaengte Ziffernfolge. MuiButton-root-575 faellt
-     raus, bs-offer-list-item__content bleibt. */
-  function stabileTeile(el) {
-    var k = vollKlasse(el);
-    if (k === '-') return '-';
-    var aus = k.trim().split(/\s+/).filter(function (x) {
-      return x && !/-\d+$/.test(x) && !/^jss\d+$/.test(x);
-    });
-    return aus.length ? aus.join(' ') : '(alle mit Nummer)';
-  }
-
   function istKnopf(el) {
     try {
       return el.tagName === 'BUTTON' || el.tagName === 'A'
           || el.getAttribute('role') === 'button';
     } catch (e) { return false; }
-  }
-
-  function idKurz(el) {
-    try {
-      if (!el.id) return '';
-      return el.id.length > 40 ? el.id.slice(0, 40) + '…' : el.id;
-    } catch (e) { return ''; }
   }
 
   function stile(el) {
@@ -988,60 +899,35 @@
   }
 
   /* ── Verdrahtung ─────────────────────────────────────────────────── */
-  kDiag.addEventListener('click', function () {
-    try { letzterText = machBericht(); }
-    catch (e) { letzterText = 'FEHLER im Bericht: ' + (e && e.message) + '\n' + (e && e.stack); }
-    bericht.textContent = letzterText;
-    bericht.hidden = false;
-  });
-
-  kKopie.addEventListener('click', function () {
-    if (!letzterText) { kKopie.textContent = 'ERST DIAGNOSE'; 
-      setTimeout(function () { kKopie.textContent = 'KOPIEREN'; }, 1800); return; }
-    var fertig = function (ok) {
-      kKopie.textContent = ok ? 'KOPIERT' : 'NICHT KOPIERT';
-      setTimeout(function () { kKopie.textContent = 'KOPIEREN'; }, 1800);
-    };
-    try {
-      navigator.clipboard.writeText(letzterText).then(function () { fertig(true); },
-                                                      function () { fertig(false); });
-    } catch (e) { fertig(false); }
-  });
-
-  /* Die Rauschschicht zum Vergleich abschalten. Nur fuer das Auge, nichts
-     wird gemerkt: beim naechsten Laden ist sie wieder da. Geschaltet wird
-     die Anzeige am Element selbst, damit an style.css keine Zeile
-     angefasst werden muss. */
-  kRausch.addEventListener('click', function () {
-    var n = document.querySelector('.noise');
-    if (!n) { kRausch.textContent = 'KEIN RAUSCHEN'; 
-      setTimeout(function () { kRausch.textContent = 'RAUSCHEN AUS'; }, 1800); return; }
-    var aus = n.style.display === 'none';
-    n.style.display = aus ? '' : 'none';
-    kRausch.textContent = aus ? 'RAUSCHEN AUS' : 'RAUSCHEN AN';
-  });
-
-  kZu.addEventListener('click', function () {
-    if (!bericht.hidden) { bericht.hidden = true; return; }
-    if (mo) { try { mo.disconnect(); } catch (e) {} }
-    leiste.remove();
-    bericht.remove();
-  });
-
   var mo = null;
-  function starten() {
-    document.body.appendChild(bericht);
-    document.body.appendChild(leiste);
-    letzteKlasse = document.body.classList.contains(BODY_KLASSE);
-    /* Nur die Klasse an <body> wird beobachtet - ein schmaler Hoerer, der
-       das Gemessene nicht stoert. */
-    mo = new MutationObserver(klasseMerken);
-    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', starten);
-  } else {
-    starten();
-  }
+  BASIS.leisteBauen({
+    bericht: machBericht,
+    zusatz: [{
+      /* Die Rauschschicht zum Vergleich abschalten. Nur fuer das Auge, nichts
+         wird gemerkt: beim naechsten Laden ist sie wieder da. Geschaltet wird
+         die Anzeige am Element selbst, damit an style.css keine Zeile
+         angefasst werden muss. */
+      text: 'RAUSCHEN AUS',
+      klick: function (b) {
+        var n = document.querySelector('.noise');
+        if (!n) { b.textContent = 'KEIN RAUSCHEN';
+          setTimeout(function () { b.textContent = 'RAUSCHEN AUS'; }, 1800); return; }
+        var aus = n.style.display === 'none';
+        n.style.display = aus ? '' : 'none';
+        b.textContent = aus ? 'RAUSCHEN AUS' : 'RAUSCHEN AN';
+      }
+    }],
+    beimStart: function () {
+      letzteKlasse = document.body.classList.contains(BODY_KLASSE);
+      /* Nur die Klasse an <body> wird beobachtet - ein schmaler Hoerer, der
+         das Gemessene nicht stoert. */
+      mo = new MutationObserver(klasseMerken);
+      mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    },
+    beimSchliessen: function () {
+      if (mo) { try { mo.disconnect(); } catch (e) {} }
+    }
+  });
+
 }());
