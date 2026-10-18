@@ -1,6 +1,17 @@
 /**
- * ?ptdom=1 - WARUM BLEIBT DIE KOPFLEISTE UEBER DEM DIALOG?
- * ───────────────────────────────────────────────────────
+ * ?ptdom=1 - MESSLEISTE FUER DAS BSPORT-WIDGET
+ * ───────────────────────────────────────────
+ *
+ * Zwei Fragen stehen in diesem Bericht, beide nur lesend:
+ *
+ *   1. KOPFLEISTE UEBER DEM DIALOG (urspruenglicher Anlass, siehe unten)
+ *   2. BUTTONS UND LABELS - welches Element zeichnet eigentlich den
+ *      sichtbaren Buchungsknopf? Die Beschriftungen im Widget sollen
+ *      golden werden, und bevor dafuer eine Regel geschrieben wird, muss
+ *      das echte Markup auf dem Tisch liegen. Im Rechenzentrum laedt das
+ *      Widget nicht (cdn.bsport.io ist gesperrt), gemessen wird also auf
+ *      dem Geraet des Eigentuemers. Der Abschnitt steht weiter unten bei
+ *      knopfAbschnitt().
  *
  * BEFUND VOM GERAET (MacBook, Chrome, privates Fenster, nach PR #135)
  * Auf /probetraining oeffnet der Kursdialog, aber die feste Kopfleiste
@@ -357,6 +368,261 @@
     for (var i = 0; i < l.length && i < 10; i++) z.push('    ' + (i + 1) + '. ' + kurz(l[i]));
   }
 
+  /* ══════════ BUTTONS UND LABELS ══════════
+     Die Buchungsknoepfe im Widget sollen golden werden. Bevor dafuer
+     eine Regel geschrieben wird, muss klar sein, WELCHES Element den
+     sichtbaren Knopf zeichnet.
+
+     Die Falle: in der Kursliste ist die ganze KARTE selbst ein
+     <button> (button#bs-offer-list-item::offer_id-...). Eine Regel wie
+     "alle Knoepfe im Widget" faerbte damit ganze Karten golden. Deshalb
+     wird hier nicht nach Knoepfen gesucht, sondern nach BESCHRIFTUNGEN -
+     und zu jeder Beschriftung die Kette nach oben mitgeschrieben, samt
+     der Frage, welcher Vorfahr ein Knopf ist und welchen Hintergrund er
+     zeichnet.
+
+     MUI-Klassen tragen laufende Nummern (MuiButton-root-575, jss571).
+     Der Bericht trennt deshalb die stabil aussehenden Teile ab - alles
+     ohne angehaengte Ziffernfolge, vor allem die bs-...-Namen. Nur auf
+     die darf eine spaetere Regel sich stuetzen. */
+  var LABELS = ['BUCHEN', 'JETZT BUCHEN', 'WEITER', 'ANMELDEN', 'REGISTRIEREN',
+                'EINLOGGEN', 'LOGIN', 'BESTÄTIGEN', 'SCHLIESSEN', 'ABBRECHEN',
+                'ZURÜCK', 'SPEICHERN', 'KAUFEN', 'ZAHLEN'];
+  var LABEL_MAX = 40;
+
+  /* Nur der EIGENE Text, ohne den der Kinder. Sonst meldete jede Huelle
+     bis hinauf zur Karte denselben Treffer. */
+  function eigenerText(el) {
+    var t = '';
+    try {
+      for (var i = 0; i < el.childNodes.length; i++) {
+        if (el.childNodes[i].nodeType === 3) t += el.childNodes[i].nodeValue;
+      }
+    } catch (e) { return ''; }
+    return t.replace(/\s+/g, ' ').trim();
+  }
+
+  /* Klassenteile ohne angehaengte Ziffernfolge. MuiButton-root-575 faellt
+     raus, bs-offer-list-item__content bleibt. */
+  function stabileTeile(el) {
+    var k = vollKlasse(el);
+    if (k === '-') return '-';
+    var aus = k.trim().split(/\s+/).filter(function (x) {
+      return x && !/-\d+$/.test(x) && !/^jss\d+$/.test(x);
+    });
+    return aus.length ? aus.join(' ') : '(alle mit Nummer)';
+  }
+
+  function istKnopf(el) {
+    try {
+      return el.tagName === 'BUTTON' || el.tagName === 'A'
+          || el.getAttribute('role') === 'button';
+    } catch (e) { return false; }
+  }
+
+  function idKurz(el) {
+    try {
+      if (!el.id) return '';
+      return el.id.length > 40 ? el.id.slice(0, 40) + '…' : el.id;
+    } catch (e) { return ''; }
+  }
+
+  function stile(el) {
+    var c;
+    try { c = window.getComputedStyle(el); } catch (e) { return 'nicht lesbar'; }
+    var rand = [c.borderTopWidth + ' ' + c.borderTopStyle + ' ' + c.borderTopColor,
+                c.borderRightWidth, c.borderBottomWidth, c.borderLeftWidth].join(' / ');
+    return [
+      'color=' + c.color,
+      'background-color=' + c.backgroundColor,
+      'background-image=' + (c.backgroundImage === 'none' ? 'none' : c.backgroundImage.slice(0, 60)),
+      'border=' + rand,
+      'border-radius=' + c.borderRadius,
+      'font=' + c.fontFamily.split(',')[0] + ' ' + c.fontSize + ' ' + c.fontWeight,
+      'letter-spacing=' + c.letterSpacing,
+      'text-transform=' + c.textTransform,
+      'text-align=' + c.textAlign,
+      'padding=' + c.padding,
+      'min-height=' + c.minHeight,
+      'cursor=' + c.cursor,
+      'opacity=' + c.opacity
+    ].join('  ');
+  }
+
+  /* Begehung eines Baumes, die in offene Shadow Roots hineingeht.
+     Bsport nutzt heute keine, der Bericht soll es aber melden statt
+     stillschweigend daran vorbeizulaufen. Der Deckel haelt die Begehung
+     bei sehr grossen Baeumen kurz; wird er erreicht, steht es im Bericht. */
+  var SCAN_MAX = 6000;
+  var TIEF_MAX = 60;
+
+  /* Abstieg in Dokumentreihenfolge. Der Inhalt eines offenen Shadow Roots
+     kommt direkt hinter seinen Wirt, dort steht er auch auf dem Schirm. */
+  function tiefGehen(n, aus, z, tief) {
+    if (z.gedeckelt || tief > TIEF_MAX) return;
+    var kinder;
+    try { kinder = n.children; } catch (e) { return; }
+    for (var i = 0; i < kinder.length; i++) {
+      if (aus.length >= SCAN_MAX) { z.gedeckelt = true; return; }
+      var k = kinder[i];
+      aus.push(k);
+      try {
+        if (k.shadowRoot) { z.shadow++; tiefGehen(k.shadowRoot, aus, z, tief + 1); }
+      } catch (e) { /* geschlossen oder nicht lesbar */ }
+      tiefGehen(k, aus, z, tief + 1);
+    }
+  }
+
+  function sammleElemente(wurzel) {
+    var aus = [], z = { shadow: 0, gedeckelt: false };
+    tiefGehen(wurzel, aus, z, 0);
+    return { liste: aus, shadow: z.shadow, gedeckelt: z.gedeckelt };
+  }
+
+  /* Alles im Widget - und, falls der Dialog ausserhalb des Mountpunkts
+     haengt, auch dort. */
+  function knopfQuellen() {
+    var q = [];
+    var w = document.getElementById('bsport-widget-172485');
+    if (w) q.push({ wurzel: w, woher: 'Widget' });
+    var d = dialogWurzel();
+    if (d && (!w || !w.contains(d))) q.push({ wurzel: d, woher: 'Dialog (ausserhalb des Widgets)' });
+    return q;
+  }
+
+  function umfeld(el, grenze) {
+    /* Dialog zuerst: liegt die Beschriftung in einem Dialog, zaehlt das,
+       auch wenn sie zugleich im Widget haengt. */
+    var n = el, i = 0;
+    while (n && i < 24) {
+      try {
+        var r = n.getAttribute && n.getAttribute('role');
+        if (r === 'dialog' || r === 'alertdialog') return 'Dialog';
+        var k = vollKlasse(n);
+        if (/MuiDialog/.test(k) || (n.id && /--dialog$/.test(n.id))) return 'Dialog';
+        if (/bs-offer-list-item/.test(k) || (n.id && /bs-offer-list-item/.test(n.id))) {
+          return 'Karte in der Liste';
+        }
+      } catch (e) { /* weiter */ }
+      if (n === grenze) break;
+      n = n.parentElement; i++;
+    }
+    return 'anderes';
+  }
+
+  function knopfAbschnitt(z) {
+    function s(t) { z.push(t); }
+    s('');
+    s('BUTTONS UND LABELS');
+    var quellen = knopfQuellen();
+    if (!quellen.length) {
+      s('  Kein Widget und kein Dialog gefunden.');
+      return;
+    }
+    s('  Durchsucht: ' + quellen.map(function (q) { return q.woher; }).join(' + '));
+
+    var funde = [], gesehen = [], shadow = 0, gedeckelt = false, besucht = 0;
+    for (var q = 0; q < quellen.length; q++) {
+      var g = sammleElemente(quellen[q].wurzel);
+      var liste = g.liste;
+      shadow += g.shadow;
+      if (g.gedeckelt) gedeckelt = true;
+      besucht += liste.length;
+      for (var i = 0; i < liste.length && funde.length < LABEL_MAX; i++) {
+        var el = liste[i];
+        if (gesehen.indexOf(el) !== -1) continue;
+        /* Erst der Text: billig, und er siebt fast alles aus. Der
+           Stil wird nur fuer die Treffer gelesen, sonst kostete ein
+           Klick auf DIAGNOSE tausende Layout-Abfragen. */
+        var t = eigenerText(el);
+        if (!t || t.length > 40) continue;
+        var oben = t.toUpperCase();
+        var treffer = LABELS.indexOf(oben) !== -1;
+        /* Dazu: jeder Knopf, dessen eigener Text ein kurzes einzelnes
+           Wort ist. Faengt Beschriftungen, die oben fehlen. <button>
+           zaehlt mit, es ist von sich aus role=button. */
+        if (!treffer && t.length <= 20 && t.indexOf(' ') === -1
+            && (el.tagName === 'BUTTON'
+                || (el.getAttribute && el.getAttribute('role') === 'button'))) {
+          treffer = true;
+        }
+        if (!treffer) continue;
+        var c;
+        try { c = window.getComputedStyle(el); } catch (e) { continue; }
+        if (c.display === 'none' || c.visibility === 'hidden') continue;
+        gesehen.push(el);
+        funde.push({ el: el, text: t, grenze: quellen[q].wurzel });
+      }
+    }
+
+    s('  ' + besucht + ' Elemente durchgegangen'
+      + (gedeckelt ? ' (Begehungsdeckel ' + SCAN_MAX + ' erreicht)' : '')
+      + ', Shadow Roots: ' + shadow);
+    s('  ' + funde.length + ' Beschriftung(en)'
+      + (funde.length >= LABEL_MAX ? ' (Deckel ' + LABEL_MAX + ' erreicht)' : ''));
+    if (!funde.length) {
+      s('  Nichts gefunden. Zeigt der Kalender schon Kurse? Ist ein Dialog offen?');
+      return;
+    }
+
+    for (var f = 0; f < funde.length; f++) {
+      var e2 = funde[f].el;
+      var r2;
+      try { r2 = e2.getBoundingClientRect(); } catch (e) { r2 = { left: 0, top: 0, width: 0, height: 0 }; }
+      s('');
+      s('  [' + (f + 1) + '] "' + funde[f].text + '"   Umfeld: ' + umfeld(e2, funde[f].grenze));
+      s('      <' + e2.tagName.toLowerCase() + '>'
+        + (idKurz(e2) ? '  id=' + idKurz(e2) : '')
+        + '  role=' + (e2.getAttribute('role') || '-')
+        + '  type=' + (e2.getAttribute('type') || '-')
+        + '  disabled=' + (e2.hasAttribute && e2.hasAttribute('disabled') ? 'ja' : 'nein'));
+      s('      class="' + vollKlasse(e2) + '"');
+      s('      stabil: ' + stabileTeile(e2));
+      s('      rect l=' + Math.round(r2.left) + ' t=' + Math.round(r2.top)
+        + ' w=' + Math.round(r2.width) + ' h=' + Math.round(r2.height));
+      s('      ' + stile(e2));
+      /* Kette nach oben, bis zur Grenze, mit Knopfmarkierung. */
+      s('      Kette nach oben:');
+      var n2 = e2.parentElement, tief = 0, naechsterKnopf = null, knopfZahl = 0;
+      if (istKnopf(e2)) { naechsterKnopf = e2; knopfZahl++; }
+      while (n2 && tief < 12) {
+        var k2 = istKnopf(n2);
+        if (k2) knopfZahl++;
+        if (k2 && !naechsterKnopf) naechsterKnopf = n2;
+        s('        ' + (k2 ? '[KNOPF] ' : '        ')
+          + n2.tagName.toLowerCase() + (idKurz(n2) ? '#' + idKurz(n2) : '')
+          + '  class="' + vollKlasse(n2).slice(0, 80) + '"'
+          + '  stabil: ' + stabileTeile(n2));
+        if (n2 === funde[f].grenze) break;
+        n2 = n2.parentElement; tief++;
+      }
+      /* Die Zahl ist der Warnhinweis fuer die spaetere Regel: steht hier
+         mehr als 1, haengt die Beschriftung in einem Knopf, der selbst in
+         einem Knopf steckt - die ganze Karte. Eine Regel darf dann nur den
+         innersten treffen. */
+      s('      Knoepfe in der Kette (die Beschriftung mitgezaehlt): ' + knopfZahl
+        + (knopfZahl > 1 ? '   << ACHTUNG: Knopf im Knopf' : ''));
+      if (naechsterKnopf) {
+        var ck;
+        try { ck = window.getComputedStyle(naechsterKnopf); } catch (e) { ck = null; }
+        s('      Naechster Knopf in der Kette: '
+          + naechsterKnopf.tagName.toLowerCase()
+          + (idKurz(naechsterKnopf) ? '#' + idKurz(naechsterKnopf) : '')
+          + '  disabled=' + (naechsterKnopf.hasAttribute
+              && naechsterKnopf.hasAttribute('disabled') ? 'ja' : 'nein')
+          + (naechsterKnopf === e2 ? '  (die Beschriftung SELBST ist der Knopf)' : ''));
+        if (ck) {
+          s('        background-color=' + ck.backgroundColor
+            + '  background-image=' + (ck.backgroundImage === 'none' ? 'none' : 'gesetzt')
+            + '  border=' + ck.borderTopWidth + ' ' + ck.borderTopStyle + ' ' + ck.borderTopColor
+            + '  border-radius=' + ck.borderRadius);
+        }
+      } else {
+        s('      Kein Knopf in der Kette - die Flaeche zeichnet etwas anderes.');
+      }
+    }
+  }
+
   function machBericht() {
     var z = [];
     function s(t) { z.push(t); }
@@ -427,6 +693,8 @@
       s('        ' + stapelKette(el));
       s('      URTEIL DER WACHE: ' + (u.ja ? 'DIALOG' : 'kein Dialog') + ' - ' + u.grund);
     }
+
+    knopfAbschnitt(z);
 
     /* ── Treffer unter dem Finger ── */
     s('');
