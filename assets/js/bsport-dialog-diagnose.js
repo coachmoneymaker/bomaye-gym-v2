@@ -589,9 +589,16 @@
         var k2 = istKnopf(n2);
         if (k2) knopfZahl++;
         if (k2 && !naechsterKnopf) naechsterKnopf = n2;
+        /* Der Hintergrund JEDES Vorfahren, nicht nur des naechsten Knopfes.
+           Der Buchungsblock in der Kursliste (div.bs-book-button-card) ist
+           kein Knopf, sondern ein div - seine Flaeche stuende sonst in
+           keiner Zeile des Berichts, und genau sie ist die goldene. */
+        var hg2 = '?';
+        try { hg2 = window.getComputedStyle(n2).backgroundColor; } catch (e) {}
         s('        ' + (k2 ? '[KNOPF] ' : '        ')
           + n2.tagName.toLowerCase() + (idKurz(n2) ? '#' + idKurz(n2) : '')
           + '  class="' + vollKlasse(n2).slice(0, 80) + '"'
+          + '  bg=' + hg2
           + '  stabil: ' + stabileTeile(n2));
         if (n2 === funde[f].grenze) break;
         n2 = n2.parentElement; tief++;
