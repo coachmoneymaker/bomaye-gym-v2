@@ -277,8 +277,12 @@
   var leiste = document.createElement('div');
   leiste.id = 'pt-dom-leiste';
   leiste.setAttribute('data-diagnose', '1');
+  /* Umbruch, weil vier Knoepfe bei 320px nicht in eine Zeile passen. Ohne
+     flex-wrap ragte die Leiste aus dem Fenster und zoege waagerechten
+     Ueberlauf nach sich - genau das, was pruefen:reichweite meldet. */
   leiste.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:2147483647;'
-    + 'display:flex;gap:1px;background:rgba(10,10,8,0.96);'
+    + 'display:flex;flex-wrap:wrap;justify-content:flex-end;'
+    + 'max-width:calc(100vw - 24px);gap:1px;background:rgba(10,10,8,0.96);'
     + 'border:1px solid rgba(201,168,76,0.45);padding:6px;';
   function knopf(text, breit) {
     var b = document.createElement('button');
@@ -291,10 +295,12 @@
   }
   var kDiag = knopf('DIAGNOSE', true);
   var kKopie = knopf('KOPIEREN', true);
+  var kRausch = knopf('RAUSCHEN AUS', true);
   var kZu = knopf('×', false);
   kZu.setAttribute('aria-label', 'Diagnose schliessen');
   leiste.appendChild(kDiag);
   leiste.appendChild(kKopie);
+  leiste.appendChild(kRausch);
   leiste.appendChild(kZu);
 
   var bericht = document.createElement('pre');
@@ -630,6 +636,216 @@
     }
   }
 
+  /* ══════════ MODAL RAHMEN ══════════
+     Der Schritt "Neuen Kurspass kaufen" zeigt drei Fehler, und sie haben
+     nicht dieselbe Ursache:
+
+       1. Die Reiterzeile liegt ueber der Ueberschrift, die unten
+          abgeschnitten ist. Darueber ein leeres Band mit dem X.
+       2. Die ganze Flaeche wirkt koernig und ausgewaschen.
+       3. Der Knopf "Alle Produkte ansehen" ist unten abgeschnitten.
+
+     DIE TRENNLINIE IST DIE HERKUNFT
+     Was in Bsports eigenem Rahmen steht, koennen wir nicht anfassen -
+     weder mit CSS noch mit JS, der Browser laesst es nicht zu. Was in
+     UNSEREM Dokument darueber liegt, koennen wir sehr wohl anfassen.
+     Dieser Abschnitt zieht genau diese Linie, statt sie zu raten.
+
+     WARUM .noise NICHT IN elementsFromPoint AUFTAUCHT
+     Die Rauschschicht traegt pointer-events: none. Solche Elemente
+     liefert elementsFromPoint grundsaetzlich nicht mit - sie sind fuer
+     die Treffersuche durchsichtig. Ihr Fehlen in der Liste ist also
+     KEIN Beleg dafuer, dass sie unter dem Modal laege. Entschieden wird
+     das ueber den Stapelkontext, und zum Nachsehen mit eigenen Augen
+     gibt es den Knopf RAUSCHEN AUS. */
+  var MODAL_SUCHE = '.bsport-user-interaction-modal__container,'
+                  + ' [class*="bsport-user-interaction-modal__container"]';
+
+  function zahlZ(c) {
+    /* z-index als Zahl. auto zaehlt bei positionierten Elementen wie 0. */
+    if (!c) return 0;
+    var n = parseInt(c.zIndex, 10);
+    return isNaN(n) ? 0 : n;
+  }
+
+  /* Der naechste Vorfahr, der einen Stapelkontext aufmacht. Nur innerhalb
+     DESSELBEN Kontextes sagt ein Vergleich zweier z-index etwas aus. */
+  function stapelWurzel(el) {
+    var n = el.parentElement;
+    while (n && n !== document.documentElement) {
+      if (stapelt(n)) return n;
+      n = n.parentElement;
+    }
+    return document.documentElement;
+  }
+
+  function malUrteil(oben, unten) {
+    if (!oben || !unten) return 'nicht zu beurteilen, ein Element fehlt';
+    var wo, wu, co, cu;
+    try {
+      wo = stapelWurzel(oben); wu = stapelWurzel(unten);
+      co = window.getComputedStyle(oben); cu = window.getComputedStyle(unten);
+    } catch (e) { return 'nicht lesbar'; }
+    if (wo !== wu) {
+      return 'verschiedene Stapelkontexte (' + kurz(wo) + ' gegen ' + kurz(wu)
+           + ') - ein z-index-Vergleich sagt hier nichts';
+    }
+    var zo = zahlZ(co), zu = zahlZ(cu);
+    if (zo === zu) return 'gleicher z-index (' + zo + '), es entscheidet die Reihenfolge im Dokument';
+    return zo > zu
+      ? 'RAUSCHEN LIEGT DARUEBER (z-index ' + zo + ' gegen ' + zu + ', gleicher Kontext)'
+      : 'Rauschen liegt darunter (z-index ' + zo + ' gegen ' + zu + ')';
+  }
+
+  function quelle(rahmen) {
+    var src = rahmen.getAttribute('src');
+    if (!src) return rahmen.hasAttribute('srcdoc') ? '(srcdoc, kein src)' : '(kein src)';
+    /* Nur Host und Pfad. Eine Abfrage kann Kennungen tragen und hat in
+       einem Bericht nichts verloren, der verschickt wird. */
+    try {
+      var u = new URL(src, window.location.href);
+      return u.host + u.pathname;
+    } catch (e) { return '(nicht lesbar)'; }
+  }
+
+  function innenDok(rahmen) {
+    var d = null;
+    try { d = rahmen.contentDocument; } catch (e) { d = null; }
+    if (d) return { d: d, text: 'zugaenglich (gleiche Herkunft)' };
+    var h = '?';
+    try { h = new URL(rahmen.getAttribute('src') || '', window.location.href).host; } catch (e) {}
+    return { d: null, text: 'gesperrt (fremde Herkunft: ' + (h || 'unbekannt') + ')' };
+  }
+
+  function kastenZeile(el) {
+    var c, r;
+    try { c = window.getComputedStyle(el); r = el.getBoundingClientRect(); }
+    catch (e) { return 'nicht lesbar'; }
+    return 'rect l=' + Math.round(r.left) + ' t=' + Math.round(r.top)
+         + ' w=' + Math.round(r.width) + ' h=' + Math.round(r.height)
+         + '  position=' + c.position + '  z-index=' + c.zIndex
+         + '  overflow=' + c.overflowX + '/' + c.overflowY
+         + '  max-height=' + c.maxHeight + '  height=' + c.height
+         + '  transform=' + (c.transform === 'none' ? 'none' : c.transform.slice(0, 40));
+  }
+
+  /* Punkt 4: nur falls der Rahmen wider Erwarten gleichherkuenftig ist. */
+  function innenMessen(d, z) {
+    function zeile(name, el) {
+      if (!el) { z.push('      ' + name + ': nicht gefunden'); return; }
+      var c = d.defaultView.getComputedStyle(el);
+      var r = el.getBoundingClientRect();
+      z.push('      ' + name + ': ' + kurz(el));
+      z.push('        rect l=' + Math.round(r.left) + ' t=' + Math.round(r.top)
+        + ' w=' + Math.round(r.width) + ' h=' + Math.round(r.height)
+        + '  position=' + c.position + '  overflow=' + c.overflowX + '/' + c.overflowY
+        + '  line-height=' + c.lineHeight + '  margin=' + c.margin + '  padding=' + c.padding);
+    }
+    var reiter = null, ueber = null;
+    try {
+      reiter = d.querySelector('[role="tablist"]');
+      if (!reiter) {
+        var alle = d.querySelectorAll('*');
+        for (var i = 0; i < alle.length && i < 4000; i++) {
+          var t = eigenerText(alle[i]);
+          if (/^(Empfehlungen|Alle|Verträge|Kurspässe)$/i.test(t)) {
+            reiter = alle[i].parentElement; break;
+          }
+        }
+      }
+      var k = d.querySelectorAll('h1, h2, h3, h4, h5, h6, [class*="title"], [class*="Title"]');
+      for (var j = 0; j < k.length; j++) {
+        if (/kursp/i.test(k[j].textContent || '')) { ueber = k[j]; break; }
+      }
+      if (!ueber) ueber = k[0] || null;
+    } catch (e) { z.push('      (Innenmessung fehlgeschlagen: ' + (e && e.message) + ')'); return; }
+    z.push('    GLEICHE HERKUNFT - Innenmessung moeglich:');
+    zeile('Reiterzeile', reiter);
+    zeile('Ueberschrift', ueber);
+  }
+
+  function modalAbschnitt(z) {
+    function s(t) { z.push(t); }
+    s('');
+    s('MODAL RAHMEN');
+
+    var vv = window.visualViewport;
+    s('  Fenster: innerWidth=' + window.innerWidth + ' innerHeight=' + window.innerHeight
+      + '  visualViewport=' + (vv ? Math.round(vv.width) + 'x' + Math.round(vv.height)
+                                    + ' (scale ' + (Math.round(vv.scale * 1000) / 1000) + ')'
+                                  : 'nicht vorhanden'));
+
+    var rausch = document.querySelector('.noise');
+    s('');
+    s('  RAUSCHSCHICHT .noise: ' + (rausch ? kurz(rausch) : 'nicht vorhanden'));
+    if (rausch) {
+      s('    ' + kastenZeile(rausch));
+      var cr = window.getComputedStyle(rausch);
+      s('    opacity=' + cr.opacity + '  pointer-events=' + cr.pointerEvents
+        + '  display=' + cr.display
+        + '  Tiefe unter body: ' + tiefe(rausch));
+      s('    Stapelkette: ' + stapelKette(rausch));
+    }
+
+    var beh = null;
+    try { beh = document.querySelector(MODAL_SUCHE); } catch (e) {}
+    s('');
+    if (!beh) {
+      s('  BEHAELTER .bsport-user-interaction-modal__container: NICHT GEFUNDEN.');
+      s('  Ist der Schritt "Neuen Kurspass kaufen" wirklich offen?');
+      return;
+    }
+    s('  BEHAELTER: ' + kurz(beh));
+    s('    class="' + vollKlasse(beh) + '"');
+    s('    stabil: ' + stabileTeile(beh));
+    s('    ' + kastenZeile(beh));
+    s('    Tiefe unter body: ' + tiefe(beh));
+    s('    Stapelkette: ' + stapelKette(beh));
+
+    /* Das Urteil, auf das es ankommt. */
+    s('');
+    s('  LIEGT DAS RAUSCHEN UEBER DEM MODAL?');
+    s('    ' + malUrteil(rausch, beh));
+    s('    (.noise hat pointer-events:none und kann in der Trefferliste unten');
+    s('     gar nicht erscheinen. Zum Nachsehen: Knopf RAUSCHEN AUS.)');
+
+    var br = beh.getBoundingClientRect();
+    var sichtbar = Math.max(0, Math.min(br.bottom, window.innerHeight) - Math.max(br.top, 0));
+    s('');
+    s('  Sichtbare Hoehe des Behaelters: ' + Math.round(sichtbar) + 'px'
+      + ' (von ' + Math.round(br.height) + 'px Gesamthoehe)');
+
+    var rahmen = [];
+    try { rahmen = beh.querySelectorAll('iframe'); } catch (e) {}
+    s('  iframes im Behaelter: ' + rahmen.length);
+    for (var i = 0; i < rahmen.length && i < 5; i++) {
+      var f = rahmen[i];
+      var fr = f.getBoundingClientRect();
+      s('');
+      s('    [' + (i + 1) + '] ' + kurz(f));
+      s('        class="' + vollKlasse(f) + '"');
+      s('        stabil: ' + stabileTeile(f));
+      s('        ' + kastenZeile(f));
+      s('        src (nur Host und Pfad): ' + quelle(f));
+      s('        sandbox=' + (f.getAttribute('sandbox') === null ? '(nicht gesetzt)' : '"' + f.getAttribute('sandbox') + '"')
+        + '  scrolling=' + (f.getAttribute('scrolling') || '(nicht gesetzt)')
+        + '  allow=' + (f.getAttribute('allow') || '(nicht gesetzt)'));
+      var inn = innenDok(f);
+      s('        contentDocument: ' + inn.text);
+      var zuviel = Math.round(fr.height - sichtbar);
+      s('        Hoehenvergleich: Rahmen ' + Math.round(fr.height) + 'px gegen sichtbare'
+        + ' Behaelterhoehe ' + Math.round(sichtbar) + 'px -> '
+        + (zuviel > 1 ? zuviel + 'px RAGEN HINAUS' : 'passt'));
+      if (inn.d) innenMessen(inn.d, z);
+    }
+
+    s('');
+    s('  ELEMENTE AM PUNKT (ohne pointer-events:none, also ohne .noise)');
+    punkte(br.left + br.width / 2, br.top + br.height / 2, 'Mitte des Behaelters', z);
+    punkte(br.left + br.width / 2, Math.min(br.bottom, window.innerHeight) - 2,
+           'Unterkante des Behaelters', z);
+  }
+
   function machBericht() {
     var z = [];
     function s(t) { z.push(t); }
@@ -702,6 +918,7 @@
     }
 
     knopfAbschnitt(z);
+    modalAbschnitt(z);
 
     /* ── Treffer unter dem Finger ── */
     s('');
@@ -789,6 +1006,19 @@
       navigator.clipboard.writeText(letzterText).then(function () { fertig(true); },
                                                       function () { fertig(false); });
     } catch (e) { fertig(false); }
+  });
+
+  /* Die Rauschschicht zum Vergleich abschalten. Nur fuer das Auge, nichts
+     wird gemerkt: beim naechsten Laden ist sie wieder da. Geschaltet wird
+     die Anzeige am Element selbst, damit an style.css keine Zeile
+     angefasst werden muss. */
+  kRausch.addEventListener('click', function () {
+    var n = document.querySelector('.noise');
+    if (!n) { kRausch.textContent = 'KEIN RAUSCHEN'; 
+      setTimeout(function () { kRausch.textContent = 'RAUSCHEN AUS'; }, 1800); return; }
+    var aus = n.style.display === 'none';
+    n.style.display = aus ? '' : 'none';
+    kRausch.textContent = aus ? 'RAUSCHEN AUS' : 'RAUSCHEN AN';
   });
 
   kZu.addEventListener('click', function () {
