@@ -51,6 +51,11 @@
      entscheidet. */
   var BEKANNT = '.bsport-user-interaction-modal__container, .bs-activity--dialog,'
               + ' [class*="bsport-user-interaction-modal"]';
+  var SUCHE = '#bs-activity--dialog, [id$="--dialog"],'
+            + ' [class*="MuiDialog-root"], [class*="MuiModal-root"],'
+            + ' [role="presentation"], [role="dialog"], [role="alertdialog"],'
+            + ' [aria-modal="true"]';
+  var SUCHE_MAX = 200;
   var FREMD = '#header, .noise, .wa-float, #page-mobile-nav, #mobile-nav,'
             + ' #pt-dom-leiste, #pt-dom-bericht, #pt-touch-debug,'
             + ' [id^="Cybot"], [id^="Cookiebot"], #CookiebotWidget';
@@ -112,20 +117,21 @@
         }
       }
     } catch (e) { /* weiter */ }
+    /* Seit PR #137 sucht die Wache im ganzen Dokument statt die Kinder
+       von <body> abzugehen. Die Kopie muss das mitmachen, sonst meldet
+       sie "NICHTS", waehrend die Wache laengst zugegriffen hat - genau
+       das ist beim Testen passiert und waere im Bericht ein falscher
+       Befund gewesen. */
     try {
-      var b = document.body;
-      for (var x = 0; x < b.children.length; x++) {
-        var kind = b.children[x];
-        var u = urteil(kind);
-        if (u.ja) return { el: kind, grund: u.grund + ' (Tiefe 1)' };
-        for (var y = 0; y < kind.children.length && y < 24; y++) {
-          var u2 = urteil(kind.children[y]);
-          if (u2.ja) return { el: kind.children[y], grund: u2.grund + ' (Tiefe 2)' };
-        }
+      var liste = document.querySelectorAll(SUCHE);
+      for (var k2 = 0; k2 < liste.length && k2 < SUCHE_MAX; k2++) {
+        var u = urteil(liste[k2]);
+        if (u.ja) return { el: liste[k2], grund: u.grund };
       }
     } catch (e) { /* weiter */ }
     return null;
   }
+
   /* ════════════════ ENDE DER KOPIE ════════════════ */
 
   /* ── Hilfen ──────────────────────────────────────────────────────── */

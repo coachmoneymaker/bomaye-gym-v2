@@ -58,6 +58,32 @@
 
   var BEKANNT = '.bsport-user-interaction-modal__container, .bs-activity--dialog,'
               + ' [class*="bsport-user-interaction-modal"]';
+  /* WO GESUCHT WIRD, STATT WO ENTLANGGEGANGEN WIRD
+     Am Geraet gemessen (Chrome 155, 1440x726, beide Seiten gleich): der
+     echte Kursdialog ist
+
+       div#bs-activity--dialog.MuiDialog-root-NNNN  role="presentation"
+       position: fixed, inset 0, z-index 1300, 1440x726
+       TIEFE UNTER <body>: 11
+
+     Die Bauart-Regeln unten passen auf ihn, alle. Gescheitert ist die
+     Reichweite: die alte Fassung ging nur die Kinder von <body>, deren
+     Kinder und von den Enkeln die ersten 24 ab. Tiefe 11 kam dort nie
+     vor, die Pruefung fand also nie statt.
+
+     Jetzt wird gesucht statt gegangen. Die Zahlensuffixe der MUI-Klassen
+     (MuiDialog-root-1104) sind unbrauchbar, deshalb Teiltreffer. Die
+     Kennung bs-activity--dialog ist laut Messung stabil, steht aber
+     nicht allein: [id$="--dialog"] faengt auch eine Umbenennung in
+     derselben Schreibweise. */
+  var SUCHE = '#bs-activity--dialog, [id$="--dialog"],'
+            + ' [class*="MuiDialog-root"], [class*="MuiModal-root"],'
+            + ' [role="presentation"], [role="dialog"], [role="alertdialog"],'
+            + ' [aria-modal="true"]';
+  /* Deckel, damit ein Umbau bei Bsport nie zu einer teuren Schleife wird.
+     Gemessen auf beiden Seiten mit offenem Dialog: die Suche liefert eine
+     einstellige Zahl von Treffern. */
+  var SUCHE_MAX = 200;
   var BODY_KLASSE = 'bsport-modal-open';
   /* Nicht unsere eigenen festen Ebenen, und nicht der Einwilligungsbanner. */
   var FREMD = '#header, .noise, .wa-float, #page-mobile-nav, #mobile-nav,'
@@ -97,6 +123,7 @@
   }
 
   function offen() {
+    /* Erst die bekannten Klassennamen - billigster Treffer zuerst. */
     var kandidaten;
     try { kandidaten = document.querySelectorAll(BEKANNT); } catch (e) { kandidaten = []; }
     for (var i = 0; i < kandidaten.length; i++) {
@@ -106,20 +133,12 @@
         if (!cc || (cc.display !== 'none' && cc.visibility !== 'hidden')) return true;
       }
     }
-    /* Nach Bauart suchen: nur feste Ebenen, und die sind selten. Um die
-       Liste klein zu halten, wird nicht der ganze Baum befragt, sondern
-       die Kinder von <body> und deren Kinder - tiefer haengt ein
-       bildschirmfuellender fester Kasten in der Praxis nicht. */
-    try {
-      var b = document.body;
-      for (var k = 0; k < b.children.length; k++) {
-        var kind = b.children[k];
-        if (istDialog(kind)) return true;
-        for (var e2 = 0; e2 < kind.children.length && e2 < 24; e2++) {
-          if (istDialog(kind.children[e2])) return true;
-        }
-      }
-    } catch (e) { /* egal */ }
+    /* Dann die Bauart, ueberall im Dokument und in jeder Tiefe. */
+    var liste;
+    try { liste = document.querySelectorAll(SUCHE); } catch (e) { return false; }
+    for (var k = 0; k < liste.length && k < SUCHE_MAX; k++) {
+      if (istDialog(liste[k])) return true;
+    }
     return false;
   }
 
@@ -151,11 +170,22 @@
   }
 
   function angestossen() {
-    /* Entprellt: Bsport baut seinen Dialog in mehreren Schritten auf, und
-       die Pruefung liest Layoutwerte. Ohne Entprellung liefe sie bei jedem
-       einzelnen Knoten. */
+    /* Entprellt auf einen Bild pro Bild.
+       Das Widget zeichnet sich oft neu, und jede Pruefung liest
+       errechnete Stile - also Layout. Ohne Entprellung liefe sie bei
+       jedem einzelnen Knoten, den React anfasst.
+
+       requestAnimationFrame statt eines Zeitgebers: oefter als einmal je
+       Bild kann sich ohnehin nichts sichtbar aendern, und in einem
+       Hintergrundregister ruht die Pruefung ganz - dort gibt es keinen
+       Dialog zu sehen. */
     if (_takt) return;
-    _takt = setTimeout(function () { _takt = null; pruefen(); }, 60);
+    /* Losgeloest von window aufgerufen wirft requestAnimationFrame in
+       Chrome "Illegal invocation" - deshalb gebunden. */
+    var planen = window.requestAnimationFrame
+      ? window.requestAnimationFrame.bind(window)
+      : function (f) { return window.setTimeout(f, 16); };
+    _takt = planen(function () { _takt = null; pruefen(); });
   }
 
   function starten() {
@@ -168,6 +198,11 @@
         attributeFilter: ['class', 'style'] });
     window.addEventListener('resize', angestossen, { passive: true });
     pruefen();
+    /* ZULETZT, und nur wenn bis hierher alles stand: die Marke, an der
+       der CSS-Rueckfall erkennt, dass er nicht gebraucht wird. Siehe
+       style.css beim Abschnitt "ZWEITE REIHE". Faellt dieses Skript aus
+       oder wirft es vorher, bleibt die Marke weg und das CSS uebernimmt. */
+    document.documentElement.classList.add('bomaye-dialogwache-aktiv');
   }
 
   if (document.readyState === 'loading') {
