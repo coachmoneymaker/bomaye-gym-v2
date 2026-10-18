@@ -142,59 +142,17 @@
     return ptAltModus() ? 3 : 1;
   }
 
-  /* ─── DIALOGWACHE, WORTGLEICH ZU /stundenplan ───
-     Dort steht dieser Block seit jeher am Seitenende und ist genau das,
-     was den Kunden auf dem iPhone durch Anmeldung und Registrierung
-     getragen hat: solange Bsports Dialog offen ist, bekommt <body> eine
-     Klasse (style.css blendet darueber die Kopfleiste aus) und die Seite
-     wird festgestellt; beim Schliessen wird beides zurueckgenommen und
-     die vorherige Scrollhoehe wiederhergestellt.
+  /* HIER STAND DIE EIGENE DIALOGWACHE
+     Sie ist nach /assets/js/bsport-dialog-wache.js gewandert, gemeinsam
+     mit der Kopie von /stundenplan. Beide kannten nur einen Klassennamen
+     und nur direkte Kinder von <body>; den Kursdialog (bs-activity--dialog,
+     eine Ebene tiefer) sahen sie nicht, und die Kopfleiste deckte ihn am
+     Schreibtisch zu. Eine Datei fuer beide Seiten, damit das nicht wieder
+     auseinanderlaeuft.
 
-     Das ist das Gegenteil dessen, was diese Seite bisher tat: sie hat
-     ausdruecklich NICHTS gesperrt und den Dialog stattdessen in den
-     Seitenfluss gezwungen. Mit dialogMode 1 gibt es in unserem Dokument
-     gar keinen Dialog mehr, den man zwingen koennte - er liegt in Bsports
-     eigenem iframe. Die Sperre ist dann richtig: ohne sie scrollt die
-     Seite UNTER dem Dialog weg.
-
-     Bewusst eine eigene Kopie und kein gemeinsames Modul: die Vorlage auf
-     /stundenplan ist erprobt, und ein Umbau beider Seiten in einem Zug
-     waere genau der Schritt, der die erprobte Seite mitgefaehrdet. */
-  function _ptDialogWache() {
-    var MODAL_SEL = '.bsport-user-interaction-modal__container';
-    var BODY_CLASS = 'bsport-modal-open';
-    var _scrollY = 0;
-    var _locked = false;
-
-    function lockScroll() {
-      if (_locked) return;
-      _locked = true;
-      _scrollY = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = '-' + _scrollY + 'px';
-      document.body.style.width = '100%';
-    }
-
-    function unlockScroll() {
-      if (!_locked) return;
-      _locked = false;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo({ top: _scrollY, behavior: 'instant' });
-    }
-
-    function check() {
-      var open = document.querySelector(MODAL_SEL) !== null;
-      document.body.classList.toggle(BODY_CLASS, open);
-      if (open) { lockScroll(); } else { unlockScroll(); }
-    }
-
-    new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
-    check();
-  }
+     Im alten Modus (?ptfix=1) bleibt das Modul aus und _ptNativWacht setzt
+     die Klasse weiter selbst - deshalb steht die Abfrage dort oben in der
+     Datei und nicht hier. */
 
   /* Ebenfalls von /stundenplan: Angebotskarten wieder einblenden, die
      React beim Neuzeichnen auf display:none setzt. Eng auf das Widget
@@ -1866,7 +1824,7 @@
       _ptScrollHilfe();
     } else {
       _ptMountCalendar();
-      _ptDialogWache();
+      /* Die Dialogwache laeuft als eigenes Skript, siehe oben. */
       _ptKartenWache();
     }
     _ptSetupTouchDebug();
