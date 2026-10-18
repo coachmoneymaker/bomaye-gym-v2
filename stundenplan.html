@@ -1305,80 +1305,20 @@ function spKalender(kurs) {
 }());
 </script>
 
-<script>
-/* ── Scoped schedule fix ────────────────────────────────────────────────────
-   Only un-hides offer cards that React may have hidden during re-renders.
-   Observer is scoped to the widget element, NOT document.body, to avoid
-   interfering with Bsport's own internal display:none state (e.g. the
-   proxy-bridge iframe the modal uses). */
-(function () {
-  function fixSchedule() {
-    var widget = document.getElementById('bsport-widget-172485');
-    if (!widget) return;
-    widget.querySelectorAll('.bs-offer-list-item, .bs-card-offer, .bs-week__listMode__content__day').forEach(function (el) {
-      if (el.style && el.style.display === 'none') {
-        el.style.display = '';
-      }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    fixSchedule();
-    var widget = document.getElementById('bsport-widget-172485');
-    if (!widget) return;
-    var _timer;
-    var observer = new MutationObserver(function () {
-      clearTimeout(_timer);
-      _timer = setTimeout(fixSchedule, 150);
-    });
-    observer.observe(widget, { childList: true, subtree: true });
-  });
-}());
-
-/* ── Bsport modal detector ──────────────────────────────────────────────────
-   Watches document.body's direct children for Bsport's booking modal.
-   Adds/removes body.bsport-modal-open, which CSS uses to hide #header,
-   and locks/restores body scroll while the modal is open. */
-(function () {
-  var MODAL_SEL = '.bsport-user-interaction-modal__container';
-  var BODY_CLASS = 'bsport-modal-open';
-  var _scrollY = 0;
-  var _locked = false;
-
-  function lockScroll() {
-    if (_locked) return;
-    _locked = true;
-    _scrollY = window.scrollY;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = '-' + _scrollY + 'px';
-    document.body.style.width = '100%';
-  }
-
-  function unlockScroll() {
-    if (!_locked) return;
-    _locked = false;
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    window.scrollTo({ top: _scrollY, behavior: 'instant' });
-  }
-
-  function check() {
-    var open = document.querySelector(MODAL_SEL) !== null;
-    document.body.classList.toggle(BODY_CLASS, open);
-    if (open) { lockScroll(); } else { unlockScroll(); }
-  }
-
-  new MutationObserver(check).observe(document.body, { childList: true, subtree: false });
-  check();
-}());
-</script>
+<!-- Die Dialogwache steht jetzt in /assets/js/bsport-dialog-wache.js und
+     wird unten geladen - dieselbe Datei wie auf /probetraining. Hier stand
+     eine eigene Kopie, die nur .bsport-user-interaction-modal__container
+     und nur direkte Kinder von <body> kannte; den Kursdialog
+     (bs-activity--dialog, eine Ebene tiefer) hat sie nie gesehen, und die
+     Kopfleiste blieb am Schreibtisch darueber stehen. -->
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
+<!-- Dialogwache: blendet die Kopfleiste aus und stellt die Seite fest,
+     solange ein Bsport-Dialog offen ist. Dieselbe Datei auf beiden
+     Seiten, damit sie nicht wieder auseinanderlaufen. -->
+<script src="/assets/js/bsport-dialog-wache.js"></script>
 <script src="/assets/js/menue-wache.js"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 </body>
