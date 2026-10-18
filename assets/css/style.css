@@ -268,6 +268,30 @@ body.bsport-modal-open #header {
   z-index: -1 !important;
   visibility: hidden;
 }
+/* ZWEITE REIHE, falls das Skript ausfaellt
+   Am Geraet gemessen traegt Bsports Kursdialog die stabile Kennung
+   bs-activity--dialog. Faellt bsport-dialog-wache.js aus - Netzfehler,
+   Skriptblocker, ein Fehler weiter oben -, deckt die Kopfleiste den
+   Dialog zu und die Buchung ist am Schreibtisch nicht zu Ende zu
+   bringen. Dagegen diese Regel.
+
+   WARUM ALS EIGENER BLOCK UND NICHT IN DER LISTE OBEN
+   :has() kennen erst Chrome 105, Safari 15.4 und Firefox 121. Ein
+   ungueltiger Selektor macht nach CSS die GANZE Selektorliste
+   ungueltig - in der Liste oben haette ein aelterer Browser damit auch
+   die tragende Klassenregel verloren. Als eigener Block faellt nur
+   dieser hier weg.
+
+   WARUM NUR OHNE DIE MARKE
+   Laeuft das Skript, entscheidet das Skript. bsport-dialog-wache.js
+   setzt bomaye-dialogwache-aktiv an <html>, sobald es steht. Ohne diese
+   Einschraenkung bliebe die Kopfleiste verborgen, falls Bsport den
+   Dialogknoten nach dem Schliessen im Dokument stehen laesst - CSS kann
+   nicht sehen, ob er noch sichtbar ist, das Skript schon. */
+html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
+  z-index: -1 !important;
+  visibility: hidden;
+}
 .nav-inner {
   max-width: 1280px; margin: 0 auto; padding: 0 2.25rem;
   height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
