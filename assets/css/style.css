@@ -837,14 +837,161 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
   overflow: visible !important;
 }
 
-/* ── BUCHEN button: explicit no-clip ── */
-#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right button,
-#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right a,
-#bsport-widget-172485 .cleanslate .bs-offer-list-item__content__offer__right [role="button"] {
+/* ══════════════════════════════════════════════════════════════════════════
+   BUCHEN IN MARKENGOLD
+
+   GEMESSENES MARKUP (echtes Widget, Chrome 155, aus den ?ptdom=1-Berichten
+   des Eigentuemers - hier laedt cdn.bsport.io nicht)
+
+   Kursliste:
+     button.bs-offer-list-item              <- die KARTE ist der Knopf,
+                                               creme mit 2px goldenem Rand.
+                                               BLEIBT WIE SIE IST.
+       ...__content > ...__content__offer > ...__content__offer__right
+         div.bs-book-button-card            <- NUR DAS wird golden
+           div.bs-book-button-card__inner
+             div.bs-book-button-card__inner__text   <- Beschriftung
+
+   Dialog (#bs-activity--dialog, liegt in unserem Dokument, dialogMode 1):
+     button.bs-book-button                  <- wird golden
+       span.bs-button__text
+         div.bs-book-button__inner__text    <- Beschriftung
+     button.bs-activity__bottom__content__closeButton  <- bleibt sekundaer
+
+   WARUM DIE BESCHRIFTUNGEN AUSDRUECKLICH DURCHSICHTIG WERDEN
+   Bsport malt die creme Flaeche nicht nur auf den Knopf, sondern ein
+   zweites Mal auf die Beschriftung darin. Ohne die zweite Regel stuende
+   im Gold ein cremefarbenes Rechteck. Das kommt aus Bsports eigenem
+   Stylesheet auf cdn.bsport.io, nicht aus unserem - an der Quelle ist es
+   also nicht zu beheben, es bleibt das Ueberschreiben.
+
+   WARUM KEIN KLASSENNAME MIT NUMMER
+   MUI haengt laufende Nummern an (MuiButton-root-575, jss571). Die
+   wechseln bei jedem Bsport-Update. Hier stehen nur bs-...-Namen.
+
+   WARUM KEINE ID
+   id="book-button" und id="book-button__inner__text" kommen pro Karte
+   einmal vor, also mehrfach im Dokument. Als Haken unbrauchbar.
+
+   DIE FARBWERTE MIT RUECKFALL
+   .cleanslate ist Bsports Stil-Ruecksetzung. Eigenschaften wie
+   --brand-gold erbt sie zwar, aber ein Rueckfallwert kostet nichts und
+   verhindert den einen Fehlerfall, der nicht auffallen wuerde: ein
+   ungueltiges var() macht die Flaeche durchsichtig, nicht golden.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Die goldene Flaeche. Liste und Dialog, eine Deklaration ───────────
+   :not() schliesst gesperrte Knoepfe aus - siehe Abschnitt 5. */
+#bsport-widget-172485 .cleanslate .bs-book-button-card:not([aria-disabled="true"]),
+#bs-activity--dialog .bs-book-button:not([disabled]):not([aria-disabled="true"]) {
+  background-color: var(--brand-gold, #C9A84C) !important;
+  /* Falls Bsport je einen Verlauf darueber legt, waere die Farbe unsichtbar. */
+  background-image: none !important;
+  color: #0A0A08 !important;
+  border: 0 !important;
+  border-radius: 0 !important;   /* flach wie .btn--gold, siehe style.css:194 */
+  transition: background-color 0.15s ease-out !important;
+}
+
+/* ── 2. Im Gold malt nichts eine eigene Flaeche ───────────────────────────
+   Eng auf die gemessenen Ebenen begrenzt. .bs-button__text traegt auch der
+   SCHLIESSEN-Knopf, deshalb steht davor .bs-book-button - sonst verloere
+   der sekundaere Knopf seine Flaeche mit. */
+#bsport-widget-172485 .cleanslate .bs-book-button-card .bs-book-button-card__inner,
+#bsport-widget-172485 .cleanslate .bs-book-button-card .bs-book-button-card__inner__text,
+#bs-activity--dialog .bs-book-button .bs-button__text,
+#bs-activity--dialog .bs-book-button .bs-book-button__inner__text {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: #0A0A08 !important;
+}
+
+/* ── 3. Nicht beschneiden ─────────────────────────────────────────────────
+   ERSATZ FUER EINE REGEL, DIE NIE GEGRIFFEN HAT
+   Hier stand bis jetzt:
+
+     #bsport-widget-172485 .cleanslate
+       .bs-offer-list-item__content__offer__right button, a, [role="button"]
+
+   mit white-space: nowrap, overflow: visible, min-width: max-content,
+   width: auto. Die Absicht war richtig - BUCHEN darf nie abgeschnitten
+   werden, die Lehre aus #104. Nur steht in der rechten Spalte gar kein
+   button und kein a: der Buchungsblock ist ein div. Der Selektor hat also
+   seit seiner Einfuehrung nichts getroffen.
+
+   width: auto ist nicht uebernommen. Es wuerde eine Breite ueberschreiben,
+   die Bsport selbst setzt, und die Aufgabe lautet: Groesse und Anordnung
+   bleiben, nur die Farbe aendert sich. min-width: max-content genuegt,
+   es greift nur dann, wenn sonst abgeschnitten wuerde. */
+#bsport-widget-172485 .cleanslate .bs-book-button-card {
+  min-width: max-content !important;
+}
+#bsport-widget-172485 .cleanslate .bs-book-button-card,
+#bsport-widget-172485 .cleanslate .bs-book-button-card__inner,
+#bsport-widget-172485 .cleanslate .bs-book-button-card__inner__text {
   white-space: nowrap !important;
   overflow: visible !important;
-  min-width: max-content !important;
-  width: auto !important;
+}
+
+/* ── 4. Zustaende ─────────────────────────────────────────────────────────
+   Hover nur dort, wo es einen Zeiger gibt. Auf dem Telefon bliebe ein
+   Hover-Zustand sonst nach dem Tippen stehen.
+
+   Nur der Block selbst reagiert, nicht die ganze Karte: Karte und Block
+   sind zwei verschiedene Handlungen (Karte oeffnet den Dialog, Block
+   bucht). Faerbte die Karte den Block mit, versprach sie etwas Falsches.
+
+   Dass die Karte beim Ueberfahren das Gold nicht verliert, erledigt das
+   !important in Abschnitt 1 - es gewinnt gegen jede Hover-Regel von
+   Bsport auf dem Block. */
+@media (hover: hover) {
+  #bsport-widget-172485 .cleanslate .bs-book-button-card:not([aria-disabled="true"]):hover,
+  #bs-activity--dialog .bs-book-button:not([disabled]):not([aria-disabled="true"]):hover {
+    background-color: var(--gold-light, #d4b472) !important;
+  }
+}
+#bsport-widget-172485 .cleanslate .bs-book-button-card:not([aria-disabled="true"]):active,
+#bs-activity--dialog .bs-book-button:not([disabled]):not([aria-disabled="true"]):active {
+  background-color: var(--gold-dark, #A67C2E) !important;
+}
+/* Fokusring nur im Dialog: dort ist der goldene Knopf ein button und kann
+   den Fokus bekommen. In der Liste ist der Buchungsblock ein div, der Fokus
+   liegt auf der Karte - deren Ring ist Bsports und bleibt unberuehrt.
+   Dunkel auf Gold, 8.67:1. */
+#bs-activity--dialog .bs-book-button:focus-visible {
+  outline: 2px solid #0A0A08 !important;
+  outline-offset: 2px !important;
+}
+
+/* ── 5. Gesperrte Knoepfe bleiben creme ───────────────────────────────────
+   Ein gesperrter Knopf bekommt KEIN Gold. Gold ist auf dieser Seite die
+   Farbe der einen Handlung, die wir wollen; ein Knopf, der nicht buchen
+   kann, darf sie nicht tragen. Er behaelt Bsports creme Flaeche und wird
+   zusaetzlich gedaempft. Weil die Flaeche creme auf creme liegt, bleibt
+   der Text dabei lesbar: 5.99:1.
+
+   Erkannt wird nur, was in den Berichten wirklich stand: das Attribut
+   disabled und aria-disabled. Eine stabile Klasse fuer AUSGEBUCHT,
+   WARTELISTE oder STORNIEREN war in keinem der Berichte zu sehen. Darum
+   steht hier keine geratene. Taucht so ein Zustand am Geraet auf, liefert
+   ein ?ptdom=1-Bericht den Namen, und dann kommt er hier dazu. */
+#bsport-widget-172485 .cleanslate .bs-book-button-card[aria-disabled="true"],
+#bs-activity--dialog .bs-book-button[disabled],
+#bs-activity--dialog .bs-book-button[aria-disabled="true"] {
+  opacity: 0.65 !important;
+}
+
+/* ── 6. SCHLIESSEN bleibt sekundaer ───────────────────────────────────────
+   Keine Farbaenderung. Nur eine Haarlinie, damit der Knopf auf der cremen
+   Dialogflaeche ueberhaupt eine Kante hat.
+
+   Und zwar als inset-Schatten, nicht als border: ein Rand braucht Platz.
+   Der Dialog liegt AUSSERHALB von #bsport-widget-172485, also gilt dort
+   unsere box-sizing-Regel (style.css:713) nicht, und bei einer Hoehe von
+   auto waere der Knopf 2px hoeher geworden - neben BUCHEN in derselben
+   Reihe waere das sichtbar. Ein inset-Schatten belegt keinen Platz. */
+#bs-activity--dialog .bs-activity__bottom__content__closeButton {
+  box-shadow: inset 0 0 0 1px rgba(10, 10, 8, 0.35) !important;
 }
 
 /* ── Card text sizing: scoped to the left column only ──────────────────────
