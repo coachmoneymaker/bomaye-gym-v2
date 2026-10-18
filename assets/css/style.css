@@ -1603,6 +1603,106 @@ footer {
 /* ══════════════════════════════════════════════════════════════
    BOOKING MODAL
 ══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════
+   ABO-OVERLAY (Mitgliedschaft)
+
+   Das Fenster, in dem das Bsport-Abo-Widget laeuft: auf /mitglied-werden und
+   auf der Startseite. Beide oeffnen es ueber dieselbe Datei
+   (assets/js/abo-embed.js, [data-abo-contract]), mit derselben Sperre des
+   Seiten-Scrollens, demselben ESC und demselben Klick daneben.
+
+   NUR DAS AUSSEHEN WAR DOPPELT
+   Es stand als <style>-Block in mitglied-werden.html UND in index.html - und
+   die beiden Kopien waren auseinandergelaufen:
+
+     Wert               mitglied-werden      index
+     max-width          600px                920px
+     Hoehe              calc(100dvh - 48px)  90vh
+     Was scrollt        der Inhalt           der Rahmen
+     Schliessen-Knopf   44px, dunkle Flaeche transparent, in der Ecke
+     Polsterung oben    56px                 8px
+     Haltepunkt         768px                767px
+
+   Uebernommen ist durchgehend die Fassung von /mitglied-werden. Sie ist die
+   geprueftere und sie loest zugleich das gemeldete Problem: der Knopf auf der
+   Startseite war transparent und sass bei top:0 right:0 direkt auf dem
+   Inhalt. Hier hat er eine eigene Flaeche, 44px Kantenlaenge und Abstand zu
+   den Geraeteraendern - und die 56px Polsterung oben sorgen dafuer, dass er
+   nie auf dem Formular liegt.
+
+   WAS DIESE REGELN NICHT KOENNEN
+   Sie gestalten den RAHMEN, nicht das Formular darin. Das Registrierungs-
+   formular zeichnet Bsport selbst; dazu steht etwas in der PR-Beschreibung.
+   ══════════════════════════════════════════════════════════════════════════ */
+.bsport-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(10, 10, 8, 0.85);
+}
+.bsport-modal-overlay.is-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.bsport-modal-frame {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  background: var(--cream, #F5F0E8);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.bsport-modal-close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  width: 44px;
+  height: 44px;
+  background: #0A0A08;
+  color: var(--cream, #F5F0E8);
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  flex-shrink: 0;
+}
+/* Der Inhalt scrollt, nicht der Rahmen: so bleibt der Schliessen-Knopf an
+   seinem Platz, auch wenn das Formular lang wird. */
+.bsport-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 56px 16px 24px;
+}
+@media (max-width: 768px) {
+  .bsport-modal-overlay.is-open { padding: 0; }
+  .bsport-modal-frame {
+    max-height: 100vh;
+    max-height: 100dvh;
+    width: 100%;
+    height: 100%;
+  }
+  .bsport-modal-close {
+    width: 48px;
+    height: 48px;
+  }
+  /* Unterer Geraeterand (Home-Indikator) darf den letzten Knopf im Formular
+     nicht verdecken. */
+  .bsport-modal-content {
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+}
+
 #booking-modal {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(8,8,8,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
