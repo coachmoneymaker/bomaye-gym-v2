@@ -1747,6 +1747,90 @@ footer {
   padding: 75px 16px 24px;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   DETAILSCHIRM DES ABO-WIDGETS (nur mit ?dm=1 zu sehen)
+
+   WAS KAPUTT IST, UND WESSEN CSS ES IST
+   Bsport zeichnet die Tarif-Detailansicht nicht als MUI-Dialog, sondern
+   mit eigenen Klassen und eigenem <style> im <head>. Dort steht:
+
+     .bs-contract-details-dialog        position: fixed, inset 0,
+                                        display: flex, align-items: center,
+                                        overflow: hidden !important
+     .bs-contract-details-dialog__card  margin: 0 16px
+     ...__body                          max-height: calc(70vh - 200px)
+
+   Am Geraet gemessen (407x662): die Karte ist 727px hoch, also 65px
+   hoeher als der Schirm. Die Zentrierung legt je 32,6px oben und unten
+   nach draussen, overflow: hidden schneidet sie ab, und weil der Dialog
+   nicht scrollt, ist beides unerreichbar: oben der Titel, unten die
+   Knoepfe ABBRECHEN und ZUM WARENKORB HINZUFUEGEN. Die einzige
+   Scrollflaeche war der innere Koerper mit 7,5px Weg.
+
+   Alle drei Regeln kommen aus Bsports Stylesheet und tragen !important.
+   Dagegen hilft nur hoehere Spezifitaet: die Regeln hier tragen
+   zusaetzlich die id #bsport-sub-modal und schlagen damit auch die
+   staerkste Fassung, die Bsport benutzen koennte.
+
+   ALLES HIER IST AUF #bsport-sub-modal BEGRENZT.
+   Bsports Profil- und Registrierungsdialog
+   (.bsport-user-interaction-modal__container, z-index 1300) ist nicht
+   betroffen, der Kurskalender auf den anderen Seiten auch nicht.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Der Dialog scrollt selbst und setzt oben an, statt zu zentrieren.
+
+   align-items: flex-start statt center - eine zentrierte Flex-Zeile
+   schiebt den Ueberhang nach OBEN aus dem Scrollbereich heraus, und
+   genau der ist dann nicht mehr erreichbar.
+
+   Die Polsterung unten nimmt den Home-Balken des iPhones mit, damit die
+   beiden Knoepfe nicht darunter liegen. */
+#bsport-sub-modal [id*="bsport-widget"] .cleanslate .bs-contract-details-dialog {
+  overflow-y: auto !important;
+  align-items: flex-start !important;
+  padding: 16px 0 calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  -webkit-overflow-scrolling: touch;
+  /* Kein Weiterreichen an unsere Karte dahinter. */
+  overscroll-behavior: contain;
+}
+
+/* 2. margin: auto oben und unten. Passt die Karte, zentrieren die
+   automatischen Raender sie wie bisher; ist sie hoeher, loesen sie sich
+   zu 0 auf und die Karte beginnt oben. Die 16px seitlich bleiben - das
+   ist der graue Rand links und rechts. */
+#bsport-sub-modal [id*="bsport-widget"] .cleanslate .bs-contract-details-dialog__card {
+  margin: auto 16px !important;
+}
+
+/* 3. EINE Scrollflaeche, nicht zwei.
+
+   Bsport deckelt den inneren Koerper auf calc(70vh - 200px), damit die
+   Karte auf den Schirm passt. Jetzt scrollt der Dialog, also ist die
+   Deckelung nicht nur unnoetig, sondern schaedlich: sie erzeugte eine
+   zweite Scrollflaeche mit 7,5px Weg, die jeden Wisch verschluckt, der
+   dort beginnt. none macht die Karte um die wenigen Pixel hoeher, die
+   der Dialog ohnehin scrollt. */
+#bsport-sub-modal [id*="bsport-widget"] .cleanslate .bs-contract-details-dialog__body {
+  max-height: none !important;
+}
+
+/* 4. Unser X verschwindet, solange der Detailschirm offen ist.
+
+   Er liegt auf z-index 1001, Bsports Dialog auf 1000, beide im selben
+   Stapelkontext - unser X sass also obenauf und schloss das GANZE
+   Overlay, waehrend Bsports ABBRECHEN nur den Detailschirm schliesst.
+   Zwei Kreuze mit verschiedener Wirkung uebereinander sind eine Falle.
+
+   :has() kennen iOS 15.4+ und Chrome 105+. Wo es fehlt, wird die Regel
+   ignoriert und es bleibt beim heutigen Stand: das X ist sichtbar und
+   schliesst das ganze Overlay. Unschoen, aber nicht kaputt. Eigener
+   Block, damit ein ungueltiges :has() nicht die Regeln oben mitreisst. */
+#bsport-sub-modal:has(.bs-contract-details-dialog) .bsport-modal-close {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
   /* Volle Breite minus 20px, also 10px Rand ringsum wie beim Dialogpapier.
      EHRLICH: margin 10px, Radius 12px und 80vh stehen nicht im Quelltext
