@@ -67,12 +67,23 @@
   /* ── Overlay ────────────────────────────────────────────────────────────── */
   function overlay() { return document.getElementById(einst.modalId); }
 
+  /* bsport-modal-open ist die Klasse, an der die Kopfleiste haengt
+     (style.css: #header und der Block daneben fuer .mw-header). Gesetzt
+     wird sie hier und nirgends sonst: sperren() und entsperren() sind die
+     beiden einzigen Engstellen, durch die jedes Oeffnen und JEDES
+     Schliessen laeuft - X, ESC und Klick daneben enden alle in
+     schliessen(), und das ruft entsperren(). Haengenbleiben kann sie
+     damit nicht. Die Dialogwache setzt dieselbe Klasse, ist auf diesen
+     Seiten aber nicht geladen - es gibt keinen zweiten Schreiber. */
+  var BODY_KLASSE = 'bsport-modal-open';
+
   function sperren() {
     scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + scrollY + 'px';
     document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+    document.body.classList.add(BODY_KLASSE);
   }
 
   function entsperren() {
@@ -80,6 +91,7 @@
     document.body.style.top = '';
     document.body.style.width = '';
     document.body.style.overflow = '';
+    document.body.classList.remove(BODY_KLASSE);
     window.scrollTo(0, scrollY);
   }
 
