@@ -283,6 +283,18 @@ body.bsport-modal-open #header {
 body.bsport-modal-open .noise {
   display: none;
 }
+/* Die Mitgliedschaftsseiten tragen eine EIGENE Kopfleiste: <header
+   class="mw-header">, nicht #header. Die Regel oben konnte dort also nie
+   greifen - nachgesehen, nicht vermutet: mitglied-werden.html hat null
+   Treffer auf id="header". Dieselbe Deklaration, eigener Block, damit an
+   der geprueften Regel fuer #header keine Zeile geaendert wird.
+
+   Vorher fiel es nicht auf, weil die Abdunklung bei 0.85 lag. Mit der
+   Abdunklung des Bsport-Dialogs (0.2) schiene die dunkle Leiste durch. */
+body.bsport-modal-open .mw-header {
+  z-index: -1 !important;
+  visibility: hidden;
+}
 /* ZWEITE REIHE, falls das Skript ausfaellt
    Am Geraet gemessen traegt Bsports Kursdialog die stabile Kennung
    bs-activity--dialog. Faellt bsport-dialog-wache.js aus - Netzfehler,
@@ -1639,65 +1651,150 @@ footer {
   position: fixed;
   inset: 0;
   z-index: 1200;
-  background: rgba(10, 10, 8, 0.85);
+  /* Abdunklung des Bsport-Dialogs. Vorher rgba(10,10,8,0.85). */
+  background: rgba(0, 0, 0, 0.2);
 }
 .bsport-modal-overlay.is-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  /* Keine Polsterung mehr: die Karte bestimmt ihre Groesse selbst, genau
+     wie das Dialogpapier von Bsport. */
+  padding: 0;
 }
 .bsport-modal-frame {
   position: relative;
-  width: 100%;
-  max-width: 600px;
-  max-height: calc(100vh - 48px);
-  max-height: calc(100dvh - 48px);
-  background: var(--cream, #F5F0E8);
+  /* Gemessene Werte des Bsport-Dialogs: Karte weiss, 12px Radius, 75% der
+     Fensterbreite, mittig, overflow hidden. Vorher: creme, Radius 0,
+     600px fest. */
+  width: 75%;
+  max-width: none;
+  max-height: 80vh;
+  max-height: 80dvh;
+  background: #FFFFFF;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
+/* Schliessen-Knopf wie im Dialog: grauer X ohne Flaeche, 59x59 Trefferfeld,
+   oben rechts im Balken.
+
+   DAS z-index IST DER EIGENTLICHE FEHLER, DER HIER BEHOBEN WIRD
+   Bsports Behaelter im Formularschritt traegt z-index 1000 (am Geraet
+   gemessen). Der Knopf stand auf 10 und lag damit UNTER dem iframe - nur
+   ein Streifen war anklickbar. 1001 setzt ihn eine Stufe darueber.
+   Beide haengen im selben Stapelkontext (.bsport-modal-frame), die
+   Zahlen treten also wirklich gegeneinander an. */
 .bsport-modal-close {
   position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
-  width: 44px;
-  height: 44px;
-  background: #0A0A08;
-  color: var(--cream, #F5F0E8);
+  top: 8px;
+  right: 8px;
+  width: 59px;
+  height: 59px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.54);
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 1001;
   flex-shrink: 0;
 }
-/* Der Inhalt scrollt, nicht der Rahmen: so bleibt der Schliessen-Knopf an
-   seinem Platz, auch wenn das Formular lang wird. */
 .bsport-modal-content {
-  flex: 1;
+  flex: 1 1 auto;
+  /* Ohne min-height:0 waechst ein Flex-Kind ueber den Rahmen hinaus,
+     statt zu scrollen. */
+  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 56px 16px 24px;
+  /* 75px oben: der Balken, in dem der Schliessen-Knopf sitzt - dieselbe
+     Hoehe wie im Bsport-Dialog gemessen. */
+  padding: 75px 16px 24px;
 }
+
+/* ── NUR EINE SCROLLFLAECHE ───────────────────────────────────────────────
+   Zwei Schritte, zwei Beduerfnisse:
+
+     Tarifliste   steht direkt in unserem Behaelter  -> der muss scrollen
+     Formular     steckt in Bsports iframe           -> nur der iframe
+
+   Unterschieden wird am stabilen Klassennamen des Rahmens, nicht an
+   widget-3, widget-4 oder jssNN - die tragen laufende Nummern und wechseln
+   bei jedem Bsport-Update (Lehre aus PR #133).
+
+   :has() steht in EIGENEN Bloecken. In einer Selektorliste macht ein
+   ungueltiges :has() die ganze Liste ungueltig; ein aelterer Browser
+   verloere sonst auch die tragenden Regeln oben (Lehre aus PR #137).
+   Faellt :has() aus, bleibt es beim bisherigen Verhalten: unser Behaelter
+   scrollt. Kaputt ist dann nichts, nur doppelt gescrollt. */
+.bsport-modal-content:has(iframe.bsport-user-interaction-modal__iframe) {
+  overflow: hidden;
+  padding: 75px 0 0;
+}
+
+/* Im Formularschritt bekommt die Karte eine FESTE Hoehe, nicht nur eine
+   Deckelung. Ohne das klappt sie auf 225px zusammen - nachgemessen.
+
+   Der Grund ist eine Kette, die nur mit definiter Hoehe aufgeht: der
+   iframe soll die Hoehe seines Behaelters fuellen, der Behaelter die
+   unseres Inhalts, der Inhalt die der Karte. Eine Prozenthoehe loest sich
+   aber nur gegen einen Vorfahren mit DEFINITER Hoehe auf. Hat die Karte
+   nur max-height, ist ihre Hoehe auto, die Kette reisst, und der iframe
+   faellt auf seine Standardhoehe von 150px zurueck.
+
+   In der Tarifliste bleibt es bei max-height: dort soll die Karte mit
+   dem Inhalt wachsen und erst bei 80vh stehenbleiben, genau wie das
+   Dialogpapier. */
+.bsport-modal-frame:has(iframe.bsport-user-interaction-modal__iframe) {
+  height: 80vh;
+  height: 80dvh;
+}
+
+/* Bsport gibt seinem Behaelter im Formularschritt eine FESTE Hoehe - am
+   Geraet 1000px gemessen, hoeher als das Fenster. Daraus kam die zweite
+   Bildlaufleiste und die leere Flaeche unter dem Formular.
+
+   Ueberschrieben mit !important, und zwar ohne Beobachter: eine Regel des
+   Autors mit !important gewinnt nach der CSS-Kaskade gegen ein style-
+   Attribut am Element. Ein MutationObserver waere erst noetig, wenn Bsport
+   die Hoehe nach jedem Bild neu setzte - das tut es laut Messung nicht,
+   und auf Verdacht wird hier nichts beobachtet. */
+.bsport-modal-content div:has(> iframe.bsport-user-interaction-modal__iframe) {
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+}
+.bsport-modal-content iframe.bsport-user-interaction-modal__iframe {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+
 @media (max-width: 768px) {
-  .bsport-modal-overlay.is-open { padding: 0; }
+  /* Der Dialog laesst dem Papier rundherum 10px. Dieselbe Wirkung, anders
+     geschrieben, weil die Karte hier per Flex mittig sitzt.
+
+     EHRLICH: margin 10px, Radius 12px und max-height 80vh stehen NICHT im
+     Quelltext dieses Projekts - sie stammen aus der Messung am Geraet.
+     Darum hier die Fassung, die ausdruecklich vereinbart war: volle Breite
+     minus 20px. */
   .bsport-modal-frame {
-    max-height: 100vh;
-    max-height: 100dvh;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 20px);
+    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
   }
-  .bsport-modal-close {
-    width: 48px;
-    height: 48px;
+  .bsport-modal-frame:has(iframe.bsport-user-interaction-modal__iframe) {
+    height: calc(100vh - 20px);
+    height: calc(100dvh - 20px);
   }
-  /* Unterer Geraeterand (Home-Indikator) darf den letzten Knopf im Formular
-     nicht verdecken. */
+  /* Unterer Geraeterand darf den letzten Knopf im Formular nicht verdecken.
+     Gilt nur fuer die Tarifliste - im iframe polstert Bsport selbst. */
   .bsport-modal-content {
     padding-bottom: max(24px, env(safe-area-inset-bottom));
   }

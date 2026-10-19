@@ -67,12 +67,25 @@
   /* ── Overlay ────────────────────────────────────────────────────────────── */
   function overlay() { return document.getElementById(einst.modalId); }
 
+  /* bsport-modal-open ist die Klasse, an der auf /probetraining und
+     /stundenplan die Kopfleiste haengt (style.css:267 und der Block
+     daneben fuer .mw-header). Gesetzt wird sie hier und nirgends sonst:
+     sperren() und entsperren() sind die beiden einzigen Engstellen, durch
+     die jedes Oeffnen und JEDES Schliessen laeuft - der X-Knopf, ESC und
+     der Klick daneben enden alle in schliessen(), und das ruft
+     entsperren(). Damit kann die Klasse nicht haengenbleiben.
+
+     Die Dialogwache setzt dieselbe Klasse, ist auf diesen Seiten aber
+     nicht geladen - es gibt also keinen zweiten Schreiber. */
+  var BODY_KLASSE = 'bsport-modal-open';
+
   function sperren() {
     scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + scrollY + 'px';
     document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+    document.body.classList.add(BODY_KLASSE);
   }
 
   function entsperren() {
@@ -80,6 +93,7 @@
     document.body.style.top = '';
     document.body.style.width = '';
     document.body.style.overflow = '';
+    document.body.classList.remove(BODY_KLASSE);
     window.scrollTo(0, scrollY);
   }
 
