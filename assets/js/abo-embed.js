@@ -61,6 +61,16 @@
   var VERSUCHE = 12;      /* Sendeversuche, bis das Widget bereit ist */
   var ABSTAND  = 500;     /* ms zwischen den Versuchen */
 
+  /* Bsports eigenes Anmelde- und Profilfenster bei dialogMode 1. Belegt
+     im Repository sind nur __container und __iframe. */
+  var FREMD_FENSTER = '.bsport-user-interaction-modal__container,'
+                    + ' [class*="bsport-user-interaction-modal__container"]';
+  /* Breit gefasst, weil der Name des Schliessen-Knopfes nirgends belegt
+     ist. Siehe die ausfuehrliche Begruendung bei der Verdrahtung. */
+  var SCHLIESSER = '[class*="closeIcon"], [class*="CloseIcon"],'
+                 + ' [class*="close"], [class*="Close"],'
+                 + ' [aria-label*="close" i], [aria-label*="schlie" i]';
+
   var einst = null;       /* Einstellungen der Seite */
   var montiert = false;
   var scrollY = 0;
@@ -251,6 +261,51 @@
         schliessen();
       }
     });
+
+    /* ── Das X von Bsports Anmeldefenster schliesst auch unser Overlay ──
+       Mit dialogMode 1 legt Bsport sein eigenes Fenster
+       (.bsport-user-interaction-modal__container, z-index 1300) ueber
+       unseres. Wer dort auf das X tippt, schloss bisher nur dieses Fenster
+       und landete auf der Tarifliste dahinter - einem Schritt, der im
+       Ablauf erst NACH der Anmeldung kommt. Jetzt geht unser Overlay mit
+       zu und der Besucher steht wieder auf der Seite.
+
+       NUR EIN KLICK, KEIN BEOBACHTER
+       Verschwindet das Fenster von selbst - nach erfolgreicher Anmeldung,
+       wenn Bsport zur Vertragsansicht oder zur Kasse weitergeht -, bleibt
+       unser Overlay offen. Genau deshalb wird hier auf das Tippen gehoert
+       und nicht auf das Verschwinden des Knotens.
+
+       DER SELEKTOR IST NICHT BELEGT
+       Im Repository steht zu diesem Fenster nur __container und __iframe.
+       Wie der Schliessen-Knopf heisst, ist nirgends festgehalten. Darum
+       wird breit gesucht: irgendetwas mit close im Klassennamen oder ein
+       aria-label, das nach Schliessen klingt, UND innerhalb des Fensters.
+       Das Formular selbst steckt in einem fremden iframe, dessen Klicks
+       uns nie erreichen - anklickbar ist in unserem Dokument also nur
+       Bsports eigene Leiste. Trifft der Selektor daneben, passiert
+       schlicht nichts und es bleibt beim heutigen Verhalten.
+
+       NICHT ABGEFANGEN
+       Kein preventDefault, kein stopPropagation: Bsports eigener Hoerer
+       soll laufen und aufraeumen. Geschlossen wird erst im naechsten Takt
+       (setTimeout 0), weil unser Overlay beim Schliessen display:none
+       bekommt - laege Bsports Fenster darin, waere es sonst mitten im
+       eigenen Handler verschwunden. */
+    if (dialogModus() === 1) {
+      document.addEventListener('click', function (e) {
+        var auf = overlay();
+        if (!auf || !auf.classList.contains('is-open')) return;
+        var ziel = e.target;
+        if (!ziel || typeof ziel.closest !== 'function') return;
+        var fenster = ziel.closest(FREMD_FENSTER);
+        if (!fenster) return;
+        var knopf = ziel.closest(SCHLIESSER);
+        if (!knopf || !fenster.contains(knopf)) return;
+        spur('X im Bsport-Anmeldefenster getippt - Overlay geht mit zu');
+        setTimeout(schliessen, 0);
+      }, true);
+    }
 
     /* Antworten von Bsport mitschreiben - nur zur Diagnose. */
     if (spurAn) {
