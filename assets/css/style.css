@@ -283,6 +283,15 @@ body.bsport-modal-open #header {
 body.bsport-modal-open .noise {
   display: none;
 }
+/* Die Mitgliedschaftsseiten tragen eine EIGENE Kopfleiste: <header
+   class="mw-header">, nicht #header - nachgesehen, nicht vermutet:
+   mitglied-werden.html hat null Treffer auf id="header". Die Regel oben
+   konnte dort also nie greifen. Dieselbe Deklaration, eigener Block, damit
+   an der geprueften Regel fuer #header keine Zeile geaendert wird. */
+body.bsport-modal-open .mw-header {
+  z-index: -1 !important;
+  visibility: hidden;
+}
 /* ZWEITE REIHE, falls das Skript ausfaellt
    Am Geraet gemessen traegt Bsports Kursdialog die stabile Kennung
    bs-activity--dialog. Faellt bsport-dialog-wache.js aus - Netzfehler,
@@ -1634,70 +1643,119 @@ footer {
    Sie gestalten den RAHMEN, nicht das Formular darin. Das Registrierungs-
    formular zeichnet Bsport selbst; dazu steht etwas in der PR-Beschreibung.
    ══════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════
+   ABO-OVERLAY (Mitgliedschaft)
+
+   Aussehen wie Bsports eigener Dialog auf /probetraining und /stundenplan,
+   am Geraet gemessen: Abdunklung rgba(0,0,0,0.2), weisse Karte, 12px
+   Radius, 75% Breite, 80vh hoch, grauer X oben rechts in einem 75px-Balken.
+
+   WAS HIER BEWUSST NICHT STEHT - UND WARUM
+   In PR #144 stand hier zusaetzlich:
+
+     .bsport-modal-frame:has(iframe…)        { height: 80vh }
+     .bsport-modal-content:has(iframe…)      { overflow: hidden }
+     .bsport-modal-content div:has(> iframe…) { height: 100% !important }
+     .bsport-modal-content iframe…           { height: 100% !important }
+
+   Das hat die Anmeldung unbrauchbar gemacht. Bsport misst seinen Inhalt
+   und setzt die Hoehe seines Rahmens selbst. Die vier Regeln haben den
+   Rahmen auf die Kartenhoehe minus Balken gestaucht - am Fenster des
+   Eigentuemers (1030x443) auf 279px - und im selben Zug mit
+   overflow: hidden den einzigen Scrollweg entfernt, den es gab. Alles
+   unterhalb von 279px war damit weder sichtbar noch erreichbar: die
+   Ueberschrift stand da, darunter leere Flaeche.
+
+   Daraus die Regel fuer diesen Block: AN BSPORTS GROESSEN WIRD NICHTS
+   ANGEFASST. Kein height, kein max-height, kein overflow auf seinem
+   Behaelter oder seinem Rahmen. Die Karte bekommt eine Deckelung und
+   einen Scrollbereich, und was Bsport auch immer hineinrendert, ist durch
+   Scrollen erreichbar.
+
+   Die Karte bekommt KEINE feste Hoehe. Kurze Schritte wie die Anmeldung
+   zeigen dadurch etwas Leerraum darunter. Das ist hingenommen: eine
+   vollstaendig bedienbare Anmeldung ist mehr wert als eine exakte Hoehe.
+   ══════════════════════════════════════════════════════════════════════════ */
 .bsport-modal-overlay {
   display: none;
   position: fixed;
   inset: 0;
   z-index: 1200;
-  background: rgba(10, 10, 8, 0.85);
+  background: rgba(0, 0, 0, 0.2);
 }
 .bsport-modal-overlay.is-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
 }
 .bsport-modal-frame {
   position: relative;
-  width: 100%;
-  max-width: 600px;
-  max-height: calc(100vh - 48px);
-  max-height: calc(100dvh - 48px);
-  background: var(--cream, #F5F0E8);
+  width: 75%;
+  max-width: none;
+  /* NUR eine Deckelung, keine Hoehe: die Karte waechst mit dem Inhalt und
+     bleibt bei 80vh stehen - wie Bsports Dialogpapier. */
+  max-height: 80vh;
+  max-height: 80dvh;
+  background: #FFFFFF;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
+  /* Der RAHMEN scrollt nicht - sonst wanderte der Schliessen-Knopf mit
+     weg. Gescrollt wird eine Ebene tiefer, in .bsport-modal-content. */
   overflow: hidden;
 }
+/* Schliessen-Knopf wie im Dialog: grauer X ohne Flaeche, 59x59.
+
+   z-index 1001 ist die eigentliche Reparatur gegenueber heute: Bsports
+   Behaelter traegt z-index 1000, unser Knopf stand auf 10 und lag damit
+   UNTER dem iframe - nur ein Streifen war anklickbar. Beide haengen im
+   selben Stapelkontext (.bsport-modal-frame), die Zahlen treten also
+   wirklich gegeneinander an.
+
+   Er liegt ausserhalb des Scrollbereichs, absolut zur Karte: damit bleibt
+   er stehen, waehrend der Inhalt darunter scrollt. */
 .bsport-modal-close {
   position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
-  width: 44px;
-  height: 44px;
-  background: #0A0A08;
-  color: var(--cream, #F5F0E8);
+  top: 8px;
+  right: 8px;
+  width: 59px;
+  height: 59px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.54);
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 1001;
   flex-shrink: 0;
 }
-/* Der Inhalt scrollt, nicht der Rahmen: so bleibt der Schliessen-Knopf an
-   seinem Platz, auch wenn das Formular lang wird. */
+/* Der einzige Scrollbereich. Gilt fuer JEDEN Schritt gleich - Tarifliste,
+   Anmeldung, Registrierung -, es gibt keine Fallunterscheidung mehr.
+
+   min-height: 0, weil ein Flex-Kind sonst ueber den Rahmen hinauswaechst
+   statt zu scrollen. 75px oben: der Balken, in dem der X sitzt. */
 .bsport-modal-content {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 56px 16px 24px;
+  padding: 75px 16px 24px;
 }
+
 @media (max-width: 768px) {
-  .bsport-modal-overlay.is-open { padding: 0; }
+  /* Volle Breite minus 20px, also 10px Rand ringsum wie beim Dialogpapier.
+     EHRLICH: margin 10px, Radius 12px und 80vh stehen nicht im Quelltext
+     dieses Projekts - sie stammen aus der Messung am Geraet. */
   .bsport-modal-frame {
-    max-height: 100vh;
-    max-height: 100dvh;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 20px);
+    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
   }
-  .bsport-modal-close {
-    width: 48px;
-    height: 48px;
-  }
-  /* Unterer Geraeterand (Home-Indikator) darf den letzten Knopf im Formular
-     nicht verdecken. */
   .bsport-modal-content {
     padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
