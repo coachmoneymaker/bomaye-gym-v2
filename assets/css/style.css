@@ -1748,7 +1748,7 @@ footer {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   DETAILSCHIRM DES ABO-WIDGETS (nur mit ?dm=1 zu sehen)
+   DETAILSCHIRM DES ABO-WIDGETS (dialogMode 1, also der Standard)
 
    WAS KAPUTT IST, UND WESSEN CSS ES IST
    Bsport zeichnet die Tarif-Detailansicht nicht als MUI-Dialog, sondern

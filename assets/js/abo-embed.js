@@ -36,19 +36,25 @@
    ?bsdebug=1 protokolliert unter [bomaye-abo], was gesendet wurde und was
    Bsport zurueckmeldet.
 
-   VERSUCHSSCHALTER ?dm=1
-   Nur mit diesem Parameter laeuft das Abo-Widget mit dialogMode 1 - also
-   mit Bsports EIGENEM Dialog, so wie /probetraining und /stundenplan es
-   fahren. Ohne den Parameter bleibt es bei 3, und die Seite verhaelt sich
-   Zeile fuer Zeile wie bisher.
+   DIALOGMODUS: 1 IST DER STANDARD, ?dm=3 IST DER RUECKWEG
+   Das Abo-Widget laeuft mit dialogMode 1 - also mit Bsports EIGENEM
+   Dialog, so wie /probetraining und /stundenplan es fahren. Mit ?dm=3
+   kommt der alte Ablauf zurueck (dialogMode 3, Bsports Dialog aus).
+   Jeder andere Wert und kein Parameter bedeuten 1.
 
-   WOZU
+   WARUM 1 GEWONNEN HAT
    Auf dem iPhone scrollt ein Wisch nicht, der mitten auf dem Formular
    beginnt: der Rahmen ist so hoch wie sein Inhalt, gescrollt wird
    ausserhalb, und iOS reicht eine Beruehrung, die auf einem fremden
    Rahmen beginnt, nicht an den Elternteil weiter (Lehre aus #104). Mit
    dialogMode 1 deckelt Bsport die Hoehe seines Rahmens selbst, und
    gescrollt wird INNEN - dort funktioniert derselbe Wisch.
+
+   Der Eigentuemer hat 1 auf echten Geraeten durchgespielt, iPhone Safari
+   und Android Chrome, abgemeldet und mit Testkonto: Anmeldung und
+   Registrierung scrollen aus der Mitte, der Detailschirm ist vollstaendig
+   erreichbar (PR #148), Bsports X schliesst unser Overlay (PR #149).
+   Mit 3 war der Ablauf sichtbar schlechter.
 
    Der Schalter wird nirgends gemerkt: kein Speicher, kein Cookie. Er
    steht in der Adresse und sonst nirgends.
@@ -83,12 +89,20 @@
   }
   /* 1 = DIALOG_MODE_IFRAME, 3 = DIALOG_MODE_DEACTIVATED. Belegt aus
      Bsports eigenem Paket @bsport/common, siehe probetraining-page.js.
-     Gelesen wird bei jedem Montieren neu, gespeichert wird nichts. */
+
+     1 ist der Standard. NUR ?dm=3 bringt den alten Ablauf zurueck; jeder
+     andere Wert und kein Parameter bedeuten 1. Auch der Fehlerfall faellt
+     deshalb auf 1 zurueck - laesst sich die Adresse nicht lesen, soll der
+     geprueftere Weg laufen, nicht der verworfene.
+
+     Diese eine Funktion ist die einzige Stelle, die den Parameter liest.
+     Wer wissen will, welcher Modus gilt, ruft sie - sonst laufen
+     Konfiguration und Hoerer irgendwann auseinander. */
   function dialogModus() {
     try {
       var v = new URLSearchParams(window.location.search).get('dm');
-      return v === '1' ? 1 : 3;
-    } catch (e) { return 3; }
+      return v === '3' ? 3 : 1;
+    } catch (e) { return 1; }
   }
 
   var spurAn = false;
@@ -157,17 +171,16 @@
       parentElement:   einst.containerId,
       companyId:       5473,
       franchiseId:     null,
-      /* 3 = DIALOG_MODE_DEACTIVATED ist der Standard und bleibt es.
-         Nur mit ?dm=1 steht hier 1, Bsports eigener Dialog - siehe den
-         Abschnitt VERSUCHSSCHALTER oben. Alle uebrigen Schluessel sind in
-         beiden Faellen dieselben.
+      /* 1 = DIALOG_MODE_IFRAME, Bsports eigener Dialog, ist der Standard.
+         Mit ?dm=3 steht hier 3 - siehe den Abschnitt DIALOGMODUS oben.
+         Alle uebrigen Schluessel sind in beiden Faellen dieselben.
 
          Die alte Begruendung fuer 3 lautete: mit 1 legte Bsport seinen
          Dialog in ein iframe, Beruehrungen landeten in einem fremden
          Dokument, und das Scrollen auf iOS sei kaputt (WebKit 149264).
-         Das war eine Vorhersage, keine Messung - auf /probetraining ist
-         sie in PR #133 am Geraet widerlegt worden, dort laeuft 1. Ob das
-         fuer das Abo-Widget ebenso gilt, entscheidet der Versuch. */
+         Das war eine Vorhersage, keine Messung - zuerst auf
+         /probetraining in PR #133 widerlegt, jetzt auch hier: der
+         Eigentuemer hat 1 auf iPhone und Android durchgespielt. */
       dialogMode:      dialogModus(),
       widgetType:      'subscription',
       showFab:         false,
