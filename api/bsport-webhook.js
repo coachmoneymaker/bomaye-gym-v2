@@ -15,7 +15,17 @@
  * the payload shape can be inspected. Same for a negative total (credit note,
  * refund). The admin email still goes out in both cases.
  *
- * Processed events: "invoice-finalize" and "invoice-pay" (all invoices, paid and free).
+ * Processed events: "invoice-finalize" and "invoice-pay". Ein Kauf (total > 0)
+ * wird nur gemeldet, wenn die Rechnung bezahlt ist - siehe
+ * istRechnungBezahlt(): "invoice-pay" ist selbst der Nachweis und gilt als
+ * bezahlt, solange kein klares Gegensignal dagegensteht (date_cancelled,
+ * void, storniert, erstattet, uncollectible); "invoice-finalize" braucht
+ * einen positiven Nachweis (status "paid" oder amount_paid deckt total).
+ * Eine unbezahlte Rechnung beantwortet der Webhook mit 200, ohne Meldung und
+ * ohne Doppel-Schluessel, damit dieselbe Rechnung bei der Zahlung noch genau
+ * einmal gemeldet werden kann. Gratisrechnungen (total = 0, Probetraining)
+ * laufen unveraendert durch; dort gibt es nichts zu bezahlen. Jede
+ * Entscheidung steht als Log-Zeile "zahlungspruefung" in den Vercel-Logs.
  * booking-create, invoice-revert, and invoice-dispute are gracefully skipped.
  *
  * Required env vars:
@@ -548,6 +558,98 @@ function neukundenFensterTage() {
   return (Number.isFinite(n) && n >= 1) ? n : 14;
 }
 
+/**
+ * Ist diese Rechnung wirklich BEZAHLT?
+ *
+ * WARUM DAS GEBRAUCHT WIRD
+ * Bsport schickt zwei Ereignisse je Rechnung: "invoice-finalize", wenn die
+ * Rechnung entsteht, und "invoice-pay", wenn das Geld da ist. Beide liefen
+ * hier bisher in denselben Pfad, und wer zuerst kam, hat gewonnen (siehe
+ * Doppel-Erkennung). Bei Abos entsteht die Rechnung Tage vor der Abbuchung -
+ * damit war der Kauf an Meta gemeldet, bevor irgendetwas bezahlt war. Offene,
+ * stornierte und zurueckerstattete Rechnungen zaehlten mit.
+ *
+ * WIE ENTSCHIEDEN WIRD - JE EREIGNIS VERSCHIEDEN
+ * Die Status-Namen sind nicht gemessen (siehe unten). Deshalb haengt die
+ * Entscheidung nicht allein am Status, sondern zuerst am Ereignis:
+ *
+ *   "invoice-pay" IST der Zahlungsnachweis. Bsport schickt dieses Ereignis,
+ *   weil Geld geflossen ist. Es gilt als bezahlt, solange kein klares
+ *   Gegensignal dagegensteht - ein noch nicht umgestellter Status wie "open"
+ *   oder "pending" blockiert es NICHT. Eine verpasste Meldung ist hier der
+ *   teurere Fehler: sie fehlt in Metas Optimierung und im Posteingang.
+ *
+ *   "invoice-finalize" braucht einen positiven Nachweis: Status "paid" oder
+ *   amount_paid deckt total (bei total > 0). Sonst gilt die Rechnung als
+ *   nicht bezahlt. Genau hier entstand der Fehler, und genau hier bleibt es
+ *   streng.
+ *
+ * Reihenfolge:
+ *   1. date_cancelled gesetzt      -> nein, egal welches Ereignis
+ *   2. Status aus HART_NEIN        -> nein (void, storniert, erstattet,
+ *                                     uncollectible ...), vor jedem Betrag,
+ *                                     weil eine erstattete Rechnung ebenfalls
+ *                                     amount_paid > 0 tragen kann
+ *   3. Ereignis "invoice-pay"      -> ja
+ *   4. status === "paid"           -> ja
+ *   5. total > 0 und amount_paid >= total -> ja
+ *   6. sonst                       -> nein
+ *
+ * GEMESSEN IST DAVON NICHTS. Der dokumentierte Rechnungsrumpf nennt die
+ * Felder status, date_cancelled, amount_due und amount_paid, nicht aber ihre
+ * Werte; api-docs.dev.bsport.io ist aus dieser Umgebung nicht erreichbar
+ * (HTTP 000), und im Projekt liegen keine echten Beispiel-Payloads. Die
+ * Status-Namen in HART_NEIN sind deshalb Stripes Namen, weil Bsport sonst
+ * Stripe spiegelt, plus die naheliegenden Schreibweisen. Ein Name, der dort
+ * fehlt, kostet bei "invoice-pay" nichts mehr: das Ereignis entscheidet. Er
+ * kostet nur bei "invoice-finalize" - und dort ist Zurueckhaltung richtig.
+ * Jede Entscheidung steht als Zeile "zahlungspruefung" im Log, mit Status und
+ * allen drei Betraegen, sodass der erste echte Fall zeigt, was Bsport
+ * wirklich schickt.
+ *
+ * Rueckgabe: { bezahlt, grund } - der Grund steht im Log.
+ */
+const HART_NEIN = [
+  'void', 'voided', 'cancelled', 'canceled', 'storniert',
+  'refunded', 'partially_refunded', 'partially-refunded', 'erstattet',
+  'uncollectible', 'disputed', 'chargeback',
+];
+
+export function istRechnungBezahlt(obj = {}, eventType = '') {
+  const status = typeof obj.status === 'string' ? obj.status.trim().toLowerCase() : '';
+
+  const storniert = obj.date_cancelled !== null && obj.date_cancelled !== undefined
+                 && obj.date_cancelled !== '';
+  if (storniert) return { bezahlt: false, grund: 'date_cancelled-gesetzt' };
+
+  if (HART_NEIN.includes(status)) return { bezahlt: false, grund: `status-${status}` };
+
+  /* Das Zahlungsereignis selbst. Ein weicher Status wie "open" haelt es
+     nicht auf - Bsport stellt den Status moeglicherweise erst nach dem
+     Versand des Webhooks um, und darauf darf eine echte Zahlung nicht
+     verloren gehen. */
+  if (eventType === 'invoice-pay') {
+    return {
+      bezahlt: true,
+      grund: status ? `ereignis-invoice-pay-status-${status}` : 'ereignis-invoice-pay',
+    };
+  }
+
+  /* Ab hier nur noch "invoice-finalize": positiver Nachweis oder nichts. */
+  if (status === 'paid') return { bezahlt: true, grund: 'status-paid' };
+
+  const total   = parseInvoiceTotalCents(obj.total);
+  const gezahlt = parseInvoiceTotalCents(obj.amount_paid);
+  if (total !== null && total > 0 && gezahlt !== null && gezahlt >= total) {
+    return { bezahlt: true, grund: 'amount_paid-deckt-total' };
+  }
+
+  return {
+    bezahlt: false,
+    grund: status ? `status-${status}` : 'kein-zahlungsnachweis',
+  };
+}
+
 // ── Google Ads conversion pixel ───────────────────────────────────────────────
 
 async function sendGoogleConversion({ invoiceId, value, currency }) {
@@ -769,6 +871,74 @@ export default async function handler(req, res) {
     }));
   }
 
+  // Classification is positive, not residual: an invoice is a Probetraining
+  // only when it carries a total we could actually read AND that total is
+  // exactly zero. Everything we cannot price — missing, null, empty or
+  // unparseable — falls through to no classification at all.
+  const isProbetraining = hasTotal && totalEur === 0;
+  const isPurchase      = hasTotal && totalEur > 0;
+
+  // Lead is the free Probetraining booking, Purchase the paid membership.
+  // Anything else is not reported to any ad platform: a negative total (credit
+  // note, refund) would corrupt reported revenue, and an unreadable total is an
+  // unknown amount rather than a free one.
+  const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
+
+  /* ── KAUF ERST MELDEN, WENN BEZAHLT IST ───────────────────────────────
+     Steht mit Absicht VOR der Doppel-Erkennung und vor jedem Versand: eine
+     unbezahlte Rechnung darf den Schluessel NICHT setzen, sonst sperrt sie
+     die spaetere Zahlung aus (erstes Ereignis gewinnt). Ohne Schluessel ist
+     derselbe Vorgang spaeter als "invoice-pay" noch meldbar - und dann genau
+     einmal, weil erst dieser Durchlauf den Schluessel setzt.
+
+     Gilt nur fuer Kaeufe. Der Lead-Pfad (Rechnung ueber 0 EUR, Probetraining)
+     laeuft unveraendert weiter: dort gibt es nichts zu bezahlen.
+
+     Die interne Mail geht damit ebenfalls erst bei der Zahlung raus statt
+     schon beim Anlegen der Rechnung. Pro bezahlter Rechnung bleibt es bei
+     genau einer Mail; eine Rechnung, die nie bezahlt wird, loest keine mehr
+     aus. Das ist eine bewusste Folge dieser Reihenfolge, keine Nebenwirkung. */
+  const zahlung = istRechnungBezahlt(obj, eventType);
+
+  /* Eine Zeile JE Ereignis, auch wenn alles glatt laeuft. Sie ist der einzige
+     Weg, an dem sich die ungemessenen Status-Namen an echten Rechnungen
+     nachlesen lassen: steht hier ein Status, den HART_NEIN nicht kennt, oder
+     ein Betragsfeld, das anders aussieht als erwartet, zeigt es dieses Log -
+     ohne dass dafuer eine Zahlung verloren gehen muss.
+
+     Nur Rechnungsfelder, keine Kundendaten. */
+  const zahlungsLog = {
+    step: 'zahlungspruefung',
+    ok: true,
+    eventType,
+    invoiceId,
+    status: status ?? null,
+    totalRoh:         obj.total          ?? null,
+    amountPaidRoh:    obj.amount_paid    ?? null,
+    amountDueRoh:     obj.amount_due     ?? null,
+    dateCancelledRoh: obj.date_cancelled ?? null,
+    totalEur,
+    entscheidung: zahlung.bezahlt ? 'bezahlt' : 'nicht-bezahlt',
+    grund: zahlung.grund,
+    /* Zur Einordnung der Zeile: geprueft wird die Zahlung nur bei Kaeufen.
+       Beim Probetraining (0 EUR) gibt es nichts zu bezahlen, die
+       Entscheidung oben bleibt dort folgenlos. */
+    geprueft: isPurchase,
+  };
+  console.log(JSON.stringify(zahlungsLog));
+
+  if (isPurchase && !zahlung.bezahlt) {
+    console.log(JSON.stringify({
+      ...zahlungsLog,
+      step: 'invoice-unbezahlt',
+      skipped: true,
+    }));
+    return res.status(200).json({
+      ok: true, skipped: true, invoiceId,
+      reason: `invoice-not-paid: ${zahlung.grund}`,
+    });
+  }
+
   // Idempotency — same key for both finalize and pay on the same invoice;
   // first event to arrive wins, second is deduped.
   if (kv) {
@@ -790,19 +960,6 @@ export default async function handler(req, res) {
       }));
     }
   }
-
-  // Classification is positive, not residual: an invoice is a Probetraining
-  // only when it carries a total we could actually read AND that total is
-  // exactly zero. Everything we cannot price — missing, null, empty or
-  // unparseable — falls through to no classification at all.
-  const isProbetraining = hasTotal && totalEur === 0;
-  const isPurchase      = hasTotal && totalEur > 0;
-
-  // Lead is the free Probetraining booking, Purchase the paid membership.
-  // Anything else is not reported to any ad platform: a negative total (credit
-  // note, refund) would corrupt reported revenue, and an unreadable total is an
-  // unknown amount rather than a free one.
-  const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
 
   // Das Probetraining ist kostenlos - der Code sagt das zwei Zeilen weiter
   // unten selbst ("Kostenlos (0 €)"). Trotzdem stand hier fest 30. Damit trug
