@@ -15,7 +15,13 @@
  * the payload shape can be inspected. Same for a negative total (credit note,
  * refund). The admin email still goes out in both cases.
  *
- * Processed events: "invoice-finalize" and "invoice-pay" (all invoices, paid and free).
+ * Processed events: "invoice-finalize" and "invoice-pay". Ein Kauf (total > 0)
+ * wird nur gemeldet, wenn die Rechnung bezahlt ist - siehe
+ * istRechnungBezahlt(). Eine unbezahlte Rechnung (open, void, storniert,
+ * erstattet) beantwortet der Webhook mit 200, ohne Meldung und ohne
+ * Doppel-Schluessel, damit dieselbe Rechnung bei der Zahlung noch genau
+ * einmal gemeldet werden kann. Gratisrechnungen (total = 0, Probetraining)
+ * laufen unveraendert durch; dort gibt es nichts zu bezahlen.
  * booking-create, invoice-revert, and invoice-dispute are gracefully skipped.
  *
  * Required env vars:
@@ -548,6 +554,87 @@ function neukundenFensterTage() {
   return (Number.isFinite(n) && n >= 1) ? n : 14;
 }
 
+/**
+ * Ist diese Rechnung wirklich BEZAHLT?
+ *
+ * WARUM DAS GEBRAUCHT WIRD
+ * Bsport schickt zwei Ereignisse je Rechnung: "invoice-finalize", wenn die
+ * Rechnung entsteht, und "invoice-pay", wenn das Geld da ist. Beide liefen
+ * hier bisher in denselben Pfad, und wer zuerst kam, hat gewonnen (siehe
+ * Doppel-Erkennung). Bei Abos entsteht die Rechnung Tage vor der Abbuchung -
+ * damit war der Kauf an Meta gemeldet, bevor irgendetwas bezahlt war. Offene,
+ * stornierte und zurueckerstattete Rechnungen zaehlten mit.
+ *
+ * WIE ENTSCHIEDEN WIRD
+ * Positiv, nicht uebrig gelassen: gemeldet wird nur, wofuer es einen
+ * Zahlungsnachweis im Payload gibt. Alles Unklare gilt als nicht bezahlt -
+ * eine verpasste Meldung laesst sich nachtragen, eine falsche nicht.
+ *
+ *   1. date_cancelled gesetzt      -> nein, egal was der Status sagt
+ *   2. Status aus HART_NEIN        -> nein (void, storniert, erstattet ...)
+ *   3. status === "paid"           -> ja
+ *   4. amount_due 0 UND amount_paid > 0 -> ja (Betrag ausgeglichen)
+ *   5. Status aus WEICH_NEIN       -> nein (open, draft, unbezahlt ...)
+ *   6. kein Status, Ereignis invoice-pay -> ja
+ *   7. sonst                       -> nein
+ *
+ * Reihenfolge mit Absicht: der Betragsvergleich (4) steht VOR den weichen
+ * Nein-Status (5), damit eine Rechnung mit ausgeglichenem Betrag auch dann
+ * zaehlt, wenn Bsport den Status noch nicht umgestellt hat - aber NACH den
+ * harten Nein-Status (2), weil eine erstattete Rechnung ebenfalls
+ * amount_paid > 0 tragen kann.
+ *
+ * GEMESSEN IST DAVON NICHTS. Der dokumentierte Rechnungsrumpf nennt die
+ * Felder status, date_cancelled, amount_due und amount_paid, nicht aber ihre
+ * Werte; api-docs.dev.bsport.io ist aus dieser Umgebung nicht erreichbar
+ * (HTTP 000), und im Projekt liegen keine echten Beispiel-Payloads. Die
+ * Status-Namen sind deshalb Stripes Namen, weil Bsport sonst Stripe spiegelt,
+ * plus die naheliegenden Schreibweisen. Trifft keiner davon zu, greift Regel
+ * 7 und es wird nichts gemeldet; der Log-Eintrag "invoice-unbezahlt" nennt
+ * dann Status und Betraege, sodass der erste echte Fall zeigt, was Bsport
+ * wirklich schickt.
+ *
+ * Rueckgabe: { bezahlt, grund } - der Grund steht im Log.
+ */
+const HART_NEIN = [
+  'void', 'voided', 'cancelled', 'canceled', 'storniert',
+  'refunded', 'partially_refunded', 'partially-refunded',
+  'uncollectible', 'disputed', 'chargeback',
+];
+const WEICH_NEIN = [
+  'open', 'draft', 'unpaid', 'not_paid', 'pending', 'pending_payment',
+  'processing', 'failed', 'overdue', 'finalized', 'issued', 'sent',
+];
+
+export function istRechnungBezahlt(obj = {}, eventType = '') {
+  const status = typeof obj.status === 'string' ? obj.status.trim().toLowerCase() : '';
+
+  const storniert = obj.date_cancelled !== null && obj.date_cancelled !== undefined
+                 && obj.date_cancelled !== '';
+  if (storniert) return { bezahlt: false, grund: 'date_cancelled-gesetzt' };
+
+  if (HART_NEIN.includes(status)) return { bezahlt: false, grund: `status-${status}` };
+
+  if (status === 'paid') return { bezahlt: true, grund: 'status-paid' };
+
+  const offen   = parseInvoiceTotalCents(obj.amount_due);
+  const bezahlt = parseInvoiceTotalCents(obj.amount_paid);
+  if (offen === 0 && bezahlt !== null && bezahlt > 0) {
+    return { bezahlt: true, grund: 'betrag-ausgeglichen' };
+  }
+
+  if (WEICH_NEIN.includes(status)) return { bezahlt: false, grund: `status-${status}` };
+
+  if (status === '' && eventType === 'invoice-pay') {
+    return { bezahlt: true, grund: 'ereignis-invoice-pay-ohne-status' };
+  }
+
+  return {
+    bezahlt: false,
+    grund: status ? `status-unbekannt-${status}` : 'kein-zahlungsnachweis',
+  };
+}
+
 // ── Google Ads conversion pixel ───────────────────────────────────────────────
 
 async function sendGoogleConversion({ invoiceId, value, currency }) {
@@ -769,6 +856,51 @@ export default async function handler(req, res) {
     }));
   }
 
+  // Classification is positive, not residual: an invoice is a Probetraining
+  // only when it carries a total we could actually read AND that total is
+  // exactly zero. Everything we cannot price — missing, null, empty or
+  // unparseable — falls through to no classification at all.
+  const isProbetraining = hasTotal && totalEur === 0;
+  const isPurchase      = hasTotal && totalEur > 0;
+
+  // Lead is the free Probetraining booking, Purchase the paid membership.
+  // Anything else is not reported to any ad platform: a negative total (credit
+  // note, refund) would corrupt reported revenue, and an unreadable total is an
+  // unknown amount rather than a free one.
+  const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
+
+  /* ── KAUF ERST MELDEN, WENN BEZAHLT IST ───────────────────────────────
+     Steht mit Absicht VOR der Doppel-Erkennung und vor jedem Versand: eine
+     unbezahlte Rechnung darf den Schluessel NICHT setzen, sonst sperrt sie
+     die spaetere Zahlung aus (erstes Ereignis gewinnt). Ohne Schluessel ist
+     derselbe Vorgang spaeter als "invoice-pay" noch meldbar - und dann genau
+     einmal, weil erst dieser Durchlauf den Schluessel setzt.
+
+     Gilt nur fuer Kaeufe. Der Lead-Pfad (Rechnung ueber 0 EUR, Probetraining)
+     laeuft unveraendert weiter: dort gibt es nichts zu bezahlen.
+
+     Die interne Mail geht damit ebenfalls erst bei der Zahlung raus statt
+     schon beim Anlegen der Rechnung. Pro bezahlter Rechnung bleibt es bei
+     genau einer Mail; eine Rechnung, die nie bezahlt wird, loest keine mehr
+     aus. Das ist eine bewusste Folge dieser Reihenfolge, keine Nebenwirkung. */
+  if (isPurchase) {
+    const zahlung = istRechnungBezahlt(obj, eventType);
+    if (!zahlung.bezahlt) {
+      console.log(JSON.stringify({
+        step: 'invoice-unbezahlt', ok: true, skipped: true,
+        invoiceId, eventType, status, grund: zahlung.grund,
+        totalEur,
+        amountDueRoh:  obj.amount_due  ?? null,
+        amountPaidRoh: obj.amount_paid ?? null,
+        dateCancelledRoh: obj.date_cancelled ?? null,
+      }));
+      return res.status(200).json({
+        ok: true, skipped: true, invoiceId,
+        reason: `invoice-not-paid: ${zahlung.grund}`,
+      });
+    }
+  }
+
   // Idempotency — same key for both finalize and pay on the same invoice;
   // first event to arrive wins, second is deduped.
   if (kv) {
@@ -790,19 +922,6 @@ export default async function handler(req, res) {
       }));
     }
   }
-
-  // Classification is positive, not residual: an invoice is a Probetraining
-  // only when it carries a total we could actually read AND that total is
-  // exactly zero. Everything we cannot price — missing, null, empty or
-  // unparseable — falls through to no classification at all.
-  const isProbetraining = hasTotal && totalEur === 0;
-  const isPurchase      = hasTotal && totalEur > 0;
-
-  // Lead is the free Probetraining booking, Purchase the paid membership.
-  // Anything else is not reported to any ad platform: a negative total (credit
-  // note, refund) would corrupt reported revenue, and an unreadable total is an
-  // unknown amount rather than a free one.
-  const metaEventName = isProbetraining ? 'Lead' : (isPurchase ? 'Purchase' : null);
 
   // Das Probetraining ist kostenlos - der Code sagt das zwei Zeilen weiter
   // unten selbst ("Kostenlos (0 €)"). Trotzdem stand hier fest 30. Damit trug
