@@ -46,6 +46,18 @@
  *                              tab instead of live reporting. Unset in production.
  *   GOOGLE_CONVERSION_ID     — format: AW-XXXXXXXXX
  *   GOOGLE_CONVERSION_LABEL  — Google Ads conversion label
+ *   GOOGLE_DM_UPLOAD_ENABLED — Schalter fuer den Data-Manager-Upload des
+ *                              Leads. Fehlt sie oder steht etwas anderes
+ *                              darin: AUS, kein Netzaufruf. "validate":
+ *                              Google prueft die Anfrage und speichert
+ *                              nichts. "true": echter Upload. Siehe den
+ *                              Abschnitt "Google Data Manager API" unten.
+ *   GOOGLE_DM_SA_JSON        — Schluessel des Dienstkontos als eine Zeile
+ *                              JSON. Wird nie geloggt, auch nicht gekuerzt.
+ *   GOOGLE_DM_CUSTOMER_ID    — Google-Ads-Kundennummer, nur Ziffern
+ *   GOOGLE_DM_CONVERSION_ACTION_ID
+ *                            — ID der Conversion-Action, an die der Lead
+ *                              geht (productDestinationId)
  *   KV_REST_API_URL          — auto-injected when Vercel KV is linked
  *   KV_REST_API_TOKEN        — auto-injected when Vercel KV is linked
  *   RESEND_API_KEY
@@ -67,7 +79,7 @@
  *   FROM_EMAIL               — verified Resend sender address
  */
 
-import { createHash } from 'node:crypto';
+import { createHash, createSign } from 'node:crypto';
 import { Resend } from 'resend';
 
 // Keep body parser disabled so raw bytes are available for any future HMAC support.
@@ -681,6 +693,286 @@ async function sendGoogleConversion({ invoiceId, value, currency }) {
   }
 }
 
+// ── Google Data Manager API: Lead-Upload ─────────────────────────────────────
+
+/**
+ * WARUM ES DIESEN ZWEITEN WEG ZU GOOGLE GIBT
+ *
+ * sendGoogleConversion() oben schickt einen GET auf den alten
+ * Conversion-Endpunkt von googleadservices.com. Dieser Weg lebt davon, dass
+ * im Aufruf eine Klick-Kennung steckt - gclid oder wbraid. Aus dem
+ * Bsport-Widget kommt keine: die Buchung passiert in einem fremden iframe,
+ * und die Rechnung, die dieser Webhook bekommt, traegt kein Klick-Feld.
+ * Deshalb kann Google die Buchung keiner Anzeige zuordnen.
+ *
+ * Der Data-Manager-Weg loest das anders: statt der Klick-Kennung gehen
+ * gehashte Nutzerdaten hoch (das, was Google "enhanced conversions for leads"
+ * nennt). Google sucht den Klick selbst.
+ *
+ * DER ALTE WEG BLEIBT IN DIESEM STAND UNANGETASTET. Beide koennen
+ * gleichzeitig laufen; ob das in Google Ads zu Doppelzaehlung fuehrt, haengt
+ * an der Conversion-Action, die im Konto eingestellt ist, und ist von hier
+ * aus nicht einsehbar. Deshalb steht der neue Weg hinter einem Schalter, der
+ * standardmaessig AUS ist.
+ *
+ * WAS GEPRUEFT IST UND WAS NICHT
+ * Die Feldnamen stammen aus Googles eigenem Discovery-Dokument, das aus
+ * dieser Umgebung abrufbar war:
+ *   https://datamanager.googleapis.com/$discovery/rest?version=v1
+ * Daraus sind belegt: der Endpunkt v1/events:ingest, die Felder destinations,
+ * encoding, validateOnly, events, und in Destination/ProductAccount/Event/
+ * UserData/UserIdentifier alle unten verwendeten Namen.
+ *
+ * NICHT belegt, weil developers.google.com aus dieser Umgebung nicht
+ * aufloest (DNS, ENOTFOUND): die Normalisierungs- und Hash-Regeln der
+ * Anleitung, und ob ProductAccount das Feld "product" oder "accountType"
+ * erwartet. Beide existieren im Schema und sind hier beide auf GOOGLE_ADS
+ * gesetzt - zwei gleiche Werte koennen sich nicht widersprechen. Was der
+ * Dienst wirklich verlangt, zeigt der Validierungslauf
+ * (GOOGLE_DM_UPLOAD_ENABLED=validate), nicht eine Vermutung an dieser Stelle.
+ */
+const DM_SCOPE      = 'https://www.googleapis.com/auth/datamanager';
+const DM_TOKEN_URL  = 'https://oauth2.googleapis.com/token';
+const DM_INGEST_URL = 'https://datamanager.googleapis.com/v1/events:ingest';
+
+/**
+ * Der Schalter. Drei Zustaende, alles andere ist aus.
+ *
+ *   unset / "false" / irgendwas -> 'aus'      : kein Netzaufruf
+ *   "validate"                  -> 'validate' : Google prueft, speichert nichts
+ *   "true"                      -> 'live'     : echter Upload
+ */
+export function dmModus() {
+  const roh = String(process.env.GOOGLE_DM_UPLOAD_ENABLED ?? '').trim().toLowerCase();
+  if (roh === 'validate') return 'validate';
+  if (roh === 'true') return 'live';
+  return 'aus';
+}
+
+/** base64url ohne Polsterung - fuer die drei JWT-Teile. */
+function dmB64Url(wert) {
+  return Buffer.from(wert).toString('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+/**
+ * E-Mail normalisieren: trimmen und klein schreiben.
+ *
+ * UNGEPRUEFT, und zwar genau an einem Punkt: Googles Hilfeseite zum Data
+ * Manager nennt zusaetzlich das Entfernen der Punkte vor dem @ bei
+ * gmail.com und googlemail.com, andere Quellen widersprechen dem. Die
+ * Originalseite ist von hier nicht lesbar. Punkte bleiben deshalb stehen -
+ * die Variante, die nichts an der Adresse veraendert. Sollte sich das
+ * Entfernen als richtig bestaetigen, ist es eine Zeile hier.
+ */
+export function dmNormalisierteEmail(roh) {
+  const wert = String(roh ?? '').trim().toLowerCase();
+  return wert.includes('@') ? wert : '';
+}
+
+/**
+ * Telefonnummer in E.164: dieselbe Normalisierung wie fuer Meta, plus das
+ * Pluszeichen, das E.164 verlangt. normalizePhone() liefert reine Ziffern
+ * mit Landesvorwahl ("4989123456"), Meta will es ohne Plus, Google mit.
+ */
+export function dmNormalisierteTelefon(roh) {
+  const ziffern = normalizePhone(roh);
+  return ziffern ? `+${ziffern}` : '';
+}
+
+/** SHA-256, hex - dazu passt encoding: 'HEX' im Rumpf. */
+export function dmHash(wert) {
+  return createHash('sha256').update(String(wert), 'utf8').digest('hex');
+}
+
+/**
+ * Den Anfragerumpf bauen. Eigene Funktion, damit die Form ohne Netz und ohne
+ * Zugangsdaten pruefbar ist.
+ */
+export function buildDataManagerRequest({
+  invoiceId, email, phone, eventTimestamp, validateOnly, customerId, conversionActionId,
+}) {
+  const kennungen = [];
+  const em = dmNormalisierteEmail(email);
+  if (em) kennungen.push({ emailAddress: dmHash(em) });
+  const tel = dmNormalisierteTelefon(phone);
+  if (tel) kennungen.push({ phoneNumber: dmHash(tel) });
+
+  return {
+    destinations: [{
+      operatingAccount: {
+        /* Beide Felder stehen im Schema, beide mit demselben Wert. Siehe
+           den Abschnitt "WAS GEPRUEFT IST UND WAS NICHT" oben. */
+        product:     'GOOGLE_ADS',
+        accountType: 'GOOGLE_ADS',
+        accountId:   String(customerId),
+      },
+      productDestinationId: String(conversionActionId),
+    }],
+    /* Unsere Hashes sind Hex. Ohne diese Angabe muesste Google raten. */
+    encoding: 'HEX',
+    validateOnly: !!validateOnly,
+    events: [{
+      /* Die Rechnungs-ID. Ein zweiter Upload derselben Rechnung ist damit
+         fuer Google dieselbe Conversion, kein zweiter Lead. */
+      transactionId: String(invoiceId),
+      eventTimestamp,
+      eventSource: 'WEB',
+      /* Kein conversionValue: das Probetraining ist kostenlos. Derselbe
+         Grund, aus dem der Meta-Lead ohne Wert rausgeht. */
+      userData: { userIdentifiers: kennungen },
+    }],
+  };
+}
+
+/* Ein Auszug fuer das Log - gekuerzt und ohne die Felder, die Zugangsdaten
+   tragen koennen. access_token und assertion duerfen nie in ein Log. */
+function dmAuszug(wert, laenge = 300) {
+  const GEHEIM = ['access_token', 'id_token', 'refresh_token', 'assertion', 'private_key'];
+  try {
+    const text = typeof wert === 'string'
+      ? wert
+      : JSON.stringify(wert, (k, v) => (GEHEIM.includes(k) ? '[entfernt]' : v));
+    return String(text ?? '').slice(0, laenge);
+  } catch {
+    return '[nicht lesbar]';
+  }
+}
+
+/* Der Dienstkontoschluessel aus der Umgebung. Nichts davon wird geloggt -
+   auch nicht gekuerzt, auch nicht im Fehlerfall. */
+function dmDienstkonto() {
+  const roh = process.env.GOOGLE_DM_SA_JSON || '';
+  if (!roh.trim()) return null;
+  try {
+    const sa = JSON.parse(roh);
+    if (!sa || !sa.client_email || !sa.private_key) return null;
+    return sa;
+  } catch {
+    return null;
+  }
+}
+
+/* Das Zugriffstoken im Arbeitsspeicher, solange die Funktionsinstanz lebt.
+   Eine Minute Sicherheitsabstand vor dem Ablauf. */
+let _dmToken = null;
+
+export function dmTokenZuruecksetzen() { _dmToken = null; }
+
+async function dmZugriffstoken(jetztMs = Date.now()) {
+  if (_dmToken && _dmToken.ablaufMs - 60000 > jetztMs) {
+    return { ok: true, token: _dmToken.token, cached: true };
+  }
+
+  const sa = dmDienstkonto();
+  if (!sa) return { ok: false, reason: 'sa-json-fehlt-oder-unbrauchbar' };
+
+  const aud = sa.token_uri || DM_TOKEN_URL;
+  const iat = Math.floor(jetztMs / 1000);
+  const anspruch = { iss: sa.client_email, scope: DM_SCOPE, aud, iat, exp: iat + 3600 };
+  const kopf = dmB64Url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))
+             + '.' + dmB64Url(JSON.stringify(anspruch));
+
+  let jwt;
+  try {
+    /* In Vercel-Umgebungsvariablen stehen Zeilenumbrueche oft als \n im Text. */
+    const schluessel = String(sa.private_key).replace(/\\n/g, '\n');
+    const signatur = createSign('RSA-SHA256').update(kopf).sign(schluessel);
+    jwt = `${kopf}.${dmB64Url(signatur)}`;
+  } catch (err) {
+    return { ok: false, reason: 'jwt-signatur-fehlgeschlagen', auszug: dmAuszug(err.message, 120) };
+  }
+
+  let res;
+  let json = {};
+  try {
+    res = await fetch(aud, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        assertion: jwt,
+      }).toString(),
+    });
+    json = await res.json().catch(() => ({}));
+  } catch (err) {
+    return { ok: false, reason: 'token-netzfehler', auszug: dmAuszug(err.message, 120) };
+  }
+
+  if (!res.ok || !json.access_token) {
+    return { ok: false, status: res.status, reason: 'token-abgelehnt', auszug: dmAuszug(json) };
+  }
+
+  const sekunden = Number(json.expires_in);
+  _dmToken = {
+    token: json.access_token,
+    ablaufMs: jetztMs + (Number.isFinite(sekunden) && sekunden > 0 ? sekunden : 3600) * 1000,
+  };
+  return { ok: true, token: json.access_token, cached: false };
+}
+
+/**
+ * Den Lead hochladen. Darf NIE werfen: der Webhook antwortet in jedem Fall
+ * mit 200, und Meta und die interne Mail laufen unabhaengig davon.
+ */
+async function sendDataManagerLead({ invoiceId, customer, eventTimestamp }) {
+  const modus = dmModus();
+  if (modus === 'aus') return { ok: true, skipped: true, reason: 'schalter-aus' };
+
+  const customerId = (process.env.GOOGLE_DM_CUSTOMER_ID || '').replace(/[^0-9]/g, '');
+  const actionId   = (process.env.GOOGLE_DM_CONVERSION_ACTION_ID || '').trim();
+  if (!customerId || !actionId) {
+    return { ok: false, skipped: true, reason: 'env-missing' };
+  }
+
+  const token = await dmZugriffstoken();
+  if (!token.ok) return { ok: false, status: token.status, reason: token.reason, auszug: token.auszug };
+
+  const rumpf = buildDataManagerRequest({
+    invoiceId,
+    email: customer?.email,
+    phone: customer?.phone,
+    eventTimestamp,
+    validateOnly: modus === 'validate',
+    customerId,
+    conversionActionId: actionId,
+  });
+
+  if (!rumpf.events[0].userData.userIdentifiers.length) {
+    /* Ohne E-Mail und ohne Telefonnummer gibt es nichts, womit Google
+       jemanden finden koennte. Dann lieber nichts senden als einen Datensatz
+       ohne Kennung. */
+    return { ok: false, skipped: true, reason: 'keine-kennung' };
+  }
+
+  try {
+    const res = await fetch(DM_INGEST_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.token}`,
+      },
+      body: JSON.stringify(rumpf),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, status: res.status, reason: 'ingest-abgelehnt', auszug: dmAuszug(json) };
+    }
+    return {
+      ok: true,
+      status: res.status,
+      requestId: json?.requestId,
+      /* Googles Hinweise auf Felder, die es nicht mochte - genau die Stelle,
+         an der sich die ungepruefte Namensfrage zeigen wird. */
+      fieldWarnings: Array.isArray(json?.fieldWarnings) && json.fieldWarnings.length
+        ? dmAuszug(json.fieldWarnings)
+        : undefined,
+    };
+  } catch (err) {
+    return { ok: false, reason: 'ingest-netzfehler', auszug: dmAuszug(err.message, 120) };
+  }
+}
+
 // ── Admin email via Resend ────────────────────────────────────────────────────
 
 async function sendAdminEmail({ customer, transactionId, isProbetraining, istVerlaengerung, details, typeStr, productDesc, amountStr, bookedAt }) {
@@ -1129,6 +1421,37 @@ export default async function handler(req, res) {
   console.log(JSON.stringify({ step: 'meta',   invoiceId, event: metaEventName, ok: meta.ok, ...(meta.skipped ? { skipped: true, reason: meta.reason, would_send: meta.would_send } : {}), events_received: meta.events_received, fb_error: meta.fb_error, event_source_url: metaSourceUrl || (metaEventName ? buildEventSourceUrl({ eventName: metaEventName }) : null) }));
   console.log(JSON.stringify({ step: 'google', invoiceId, ok: google.ok, status: google.status }));
   console.log(JSON.stringify({ step: 'email',  invoiceId, ok: email.ok }));
+
+  /* ── Google Data Manager: der Lead mit gehashten Nutzerdaten ───────────
+     NACH Meta, nicht davor: der Meta-Weg laeuft heute und darf von einem
+     neuen, noch unbestaetigten Aufruf nicht aufgehalten werden. Steht der
+     Schalter aus, kostet das hier einen Vergleich und eine Log-Zeile.
+
+     Nur Leads. Ein Kauf geht diesen Weg nicht: fuer Mitgliedschaften ist
+     die Zuordnung eine andere Frage als fuer die kostenlose Probestunde,
+     und dieser Stand aendert an Kaeufen nichts.
+
+     Jeder Fehler bleibt hier: der Webhook hat oben schon alles getan, was
+     er tun muss, und antwortet unten in jedem Fall mit 200. */
+  if (metaEventName === 'Lead') {
+    const dmZeit = new Date(
+      alsZeitstempel(obj.date_created) ?? alsZeitstempel(obj.date_issued) ?? Date.now()
+    ).toISOString();
+    const dm = await sendDataManagerLead({ invoiceId, customer, eventTimestamp: dmZeit })
+      .catch((err) => ({ ok: false, reason: 'unerwartet', auszug: String(err?.message || '').slice(0, 120) }));
+    console.log(JSON.stringify({
+      step: 'google-dm',
+      ok: dm.ok,
+      mode: dmModus(),
+      invoiceId,
+      ...(dm.skipped ? { skipped: true } : {}),
+      ...(dm.status !== undefined ? { status: dm.status } : {}),
+      ...(dm.reason ? { reason: dm.reason } : {}),
+      ...(dm.requestId ? { requestId: dm.requestId } : {}),
+      ...(dm.fieldWarnings ? { fieldWarnings: dm.fieldWarnings } : {}),
+      ...(dm.auszug ? { auszug: dm.auszug } : {}),
+    }));
+  }
 
   return res.status(200).json({ ok: true, invoiceId, eventType });
 }
