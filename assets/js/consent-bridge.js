@@ -101,8 +101,30 @@
     return (o.em || o.ph) ? o : null;
   }
 
+  /* ── NUR AUF DEN PRODUKTIONSDOMAINS ──────────────────────────────────
+     Metas Events Manager hat Pixeldaten von einer Vercel-Vorschaudomain
+     gemeldet (bomaye-gym-v2-....vercel.app). Jede Auslieferung dieser
+     Dateien startete bisher denselben Pixel: Produktion, jede Vorschau,
+     jeder Branch-Deploy, auch localhost. Damit war jede Zahl im Events
+     Manager mit Testverkehr vermischt - auch die Lead-Zahlen.
+
+     Genau zwei Namen sind erlaubt, nichts mit Platzhalter: eine Regel wie
+     "endet auf bomayegym.com" liesse auch
+     vorschau-bomayegym.com oder bomayegym.com.beispiel.net durch. */
+  var PIXEL_DOMAINS = ['bomayegym.com', 'www.bomayegym.com'];
+
+  function aufProduktion() {
+    try {
+      return PIXEL_DOMAINS.indexOf(window.location.hostname) !== -1;
+    } catch (e) { return false; }
+  }
+
   function loadMetaPixel() {
     if (_pixelLoaded) return;
+    /* Steht VOR jeder Nebenwirkung: kein Skript, kein fbq, kein
+       _pixelLoaded, keine Meldung in der Konsole. Auf einer Vorschau soll
+       schlicht nichts geschehen. */
+    if (!aufProduktion()) return;
     if (!marketingConsented()) return;   /* harte Sperre, zweite Verteidigungslinie */
     _pixelLoaded = true;
     window._metaPixelLoaded = true;
