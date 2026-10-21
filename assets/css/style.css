@@ -1845,6 +1845,39 @@ footer {
   }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   ANMELDEFORMULAR AUF DEM HANDY: BREITE
+
+   GEMESSEN (Chromium, mitglied-werden.html, Pseudo-iframe im Behaelter):
+   von 390px Fensterbreite kamen bei bsport nur 338px an. 20px gehen an den
+   Rand der Karte (die Regel direkt darueber, <=768px), weitere 32px an das
+   waagerechte Polster des Scrollbereichs. Bei 320px bleiben 268px uebrig.
+
+   In diesen 338px legt bsports Registrierung "Passwort" und "Passwort
+   bestaetigen" nebeneinander, und die zweite Spalte laeuft rechts hinaus.
+
+   Das Formular liegt in einem iframe fremder Herkunft. Wir koennen darin
+   nichts setzen und versuchen es auch nicht - der einzige Hebel ist unsere
+   Huelle. Bis 480px bekommt die Karte deshalb 8px Rand statt 10px, und der
+   Scrollbereich gibt sein waagerechtes Polster ab. Damit kommen bei 390px
+   374px bei bsport an statt 338px; was es damit macht, entscheidet bsport.
+
+   ALLES HIER IST AUF #bsport-sub-modal BEGRENZT und gilt nur bis 480px.
+   Oberhalb aendert sich keine Zahl.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  #bsport-sub-modal .bsport-modal-frame {
+    width: calc(100% - 16px);
+  }
+  /* Senkrecht bleibt alles: 75px oben fuer den Balken mit dem X, unten der
+     Abstand aus der Regel darueber. Nur links und rechts faellt das Polster
+     weg - mit Notch-Reserve fuer das Querformat. */
+  #bsport-sub-modal .bsport-modal-content {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+}
+
 #booking-modal {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(8,8,8,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
