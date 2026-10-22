@@ -973,6 +973,190 @@ async function sendDataManagerLead({ invoiceId, customer, eventTimestamp }) {
   }
 }
 
+/* ── Dauerhaftes Protokoll der Data-Manager-Versuche ─────────────────────────
+
+   WARUM ES DIESES PROTOKOLL GIBT
+   Google Ads zeigt nur Zahlen: am 21.10. zwei Uploads fehlgeschlagen, am
+   22.10. einer erfolgreich. Den Fehlertext zeigt es nirgends. Die eine
+   console-Zeile unten steht in den Vercel-Logs, und die halten im
+   Hobby-Tarif etwa 30 Minuten - wer am naechsten Tag nachsieht, findet
+   nichts mehr.
+
+   Deshalb wandert je Versuch eine Zeile in dieselbe Ablage, die schon die
+   Doppel-Erkennung traegt: LPUSH auf gdm:log, LTRIM auf die neuesten 200,
+   EXPIRE auf 30 Tage. Keine neue Abhaengigkeit, kein neuer Zugang.
+
+   Gelesen wird sie in der Upstash-Konsole:  LRANGE gdm:log 0 19
+
+   WAS NICHT HINEINGEHOERT
+   Keine E-Mail, keine Telefonnummer, kein Name, kein Hash, kein Token, kein
+   Dienstkontoschluessel, kein Anfragerumpf. Von E-Mail und Telefon bleibt
+   nur ja/nein. Alles, was aus Googles Antwort stammt, laeuft vorher durch
+   gdmSaeubern().
+
+   Das Protokoll darf nichts kaputt machen: jeder Fehler wird gefangen, und
+   eine haengende Ablage wird nach kurzer Frist abgebrochen, damit die
+   200-Antwort nicht darauf wartet. */
+const GDM_LOG_KEY = 'gdm:log';
+const GDM_LOG_MAX = 200;
+const GDM_LOG_TTL = 60 * 60 * 24 * 30;
+const GDM_LOG_FRIST_MS = 1500;
+
+/**
+ * Text aus fremder Hand entschaerfen, bevor er in die Ablage geht.
+ *
+ * Drei Regeln, in dieser Reihenfolge: E-Mail-Adressen, dann Hex-Ketten ab
+ * 32 Zeichen (das waeren unsere SHA-256-Werte), dann Ziffernfolgen ab sieben
+ * Ziffern (eine Telefonnummer).
+ *
+ * NEBENWIRKUNG, bewusst hingenommen: die Ziffernregel trifft auch ein
+ * ISO-Datum und eine lange Kontonummer, wenn Google sie in den Fehlertext
+ * schreibt. Lieber eine unleserliche Zahl im Text als eine Nummer in der
+ * Ablage; Zeitstempel und Betrag stehen ohnehin als eigene Felder daneben.
+ */
+export function gdmSaeubern(wert, laenge = 300) {
+  let text;
+  try {
+    text = typeof wert === 'string' ? wert : JSON.stringify(wert);
+  } catch {
+    return '[nicht lesbar]';
+  }
+  if (text === undefined || text === null) return undefined;
+  return String(text)
+    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, '[email]')
+    .replace(/\b[0-9a-fA-F]{32,}\b/g, '[hash]')
+    .replace(/\+?\d[\d\s().-]{5,}\d/g, (treffer) => (
+      treffer.replace(/\D/g, '').length >= 7 ? '[nummer]' : treffer
+    ))
+    .slice(0, laenge);
+}
+
+/**
+ * Status, Code und Meldung aus Googles Antwort holen.
+ *
+ * Grundlage ist der Auszug, den sendDataManagerLead schon gebildet hat - ein
+ * auf 300 Zeichen gekuerzter JSON-Text. Gekuerzt heisst: er ist oft kein
+ * gueltiges JSON mehr. Laesst er sich nicht lesen, wandert er als Meldung
+ * durch, statt die Information wegzuwerfen.
+ */
+export function gdmFehlerTeile(auszug) {
+  if (auszug === undefined || auszug === null || auszug === '') return {};
+  try {
+    const gelesen = JSON.parse(auszug);
+    /* Zwei Formen: die Ingest-API antwortet { error: { code, status,
+       message } }, der OAuth-Endpunkt { error: "invalid_grant",
+       error_description: "..." }. Im zweiten Fall ist error ein String und
+       die Felder stehen eine Ebene hoeher. */
+    const f = (gelesen && typeof gelesen === 'object'
+            && gelesen.error && typeof gelesen.error === 'object')
+      ? gelesen.error : gelesen;
+    const teile = {};
+    if (f && typeof f === 'object') {
+      if (typeof f.status === 'string') teile.errorStatus = gdmSaeubern(f.status, 60);
+      if (f.code !== undefined && f.code !== null) teile.errorCode = f.code;
+      if (typeof f.message === 'string') teile.errorMessage = gdmSaeubern(f.message);
+      /* Der OAuth-Endpunkt antwortet anders als die Ingest-API. */
+      if (!teile.errorStatus && typeof f.error === 'string') teile.errorStatus = gdmSaeubern(f.error, 60);
+      if (!teile.errorMessage && typeof f.error_description === 'string') {
+        teile.errorMessage = gdmSaeubern(f.error_description);
+      }
+    }
+    if (!teile.errorStatus && !teile.errorCode && !teile.errorMessage) {
+      teile.errorMessage = gdmSaeubern(auszug);
+    }
+    return teile;
+  } catch {
+    return { errorMessage: gdmSaeubern(auszug) };
+  }
+}
+
+/** In welchem Schritt ist es passiert: beim Token oder beim Senden? */
+export function gdmSchritt(grund) {
+  const OAUTH = ['token-abgelehnt', 'token-netzfehler', 'jwt-signatur-fehlgeschlagen',
+    'sa-json-fehlt-oder-unbrauchbar'];
+  return OAUTH.includes(grund) ? 'oauth' : 'ingest';
+}
+
+/**
+ * Wurde ueberhaupt ein Netzaufruf versucht? Nur dann gibt es etwas zu
+ * protokollieren. Die drei Abbrueche davor (Schalter aus, Umgebungsvariable
+ * fehlt, Schluessel unbrauchbar) erreichen Google nie.
+ */
+export function gdmVersuchStattgefunden(ergebnis) {
+  const OHNE_AUFRUF = ['schalter-aus', 'env-missing', 'sa-json-fehlt-oder-unbrauchbar'];
+  return !OHNE_AUFRUF.includes(ergebnis?.reason);
+}
+
+/** Ein Versprechen mit kurzer Frist - eine haengende Ablage haelt nichts auf. */
+function gdmMitFrist(versprechen, ms) {
+  let uhr;
+  const frist = new Promise((_, ab) => {
+    uhr = setTimeout(() => ab(new Error('kv-timeout')), ms);
+  });
+  return Promise.race([versprechen, frist]).finally(() => clearTimeout(uhr));
+}
+
+/**
+ * Eine Zeile anhaengen. Gibt immer zurueck, wirft nie.
+ */
+export async function gdmLogSchreiben(kv, eintrag) {
+  if (!kv) return { ok: false, reason: 'kv-fehlt' };
+  try {
+    const text = JSON.stringify(eintrag);
+    await gdmMitFrist((async () => {
+      await kv.lpush(GDM_LOG_KEY, text);
+      await kv.ltrim(GDM_LOG_KEY, 0, GDM_LOG_MAX - 1);
+      await kv.expire(GDM_LOG_KEY, GDM_LOG_TTL);
+    })(), GDM_LOG_FRIST_MS);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, reason: String(err?.message || 'unbekannt').slice(0, 120) };
+  }
+}
+
+/**
+ * Den Eintrag bauen. Eigene Funktion, damit die Form ohne Ablage und ohne
+ * Netz pruefbar ist.
+ *
+ * identifiersSent wird aus denselben Normalisierern gerechnet, die
+ * buildDataManagerRequest benutzt - der Anfragerumpf selbst wird hier nicht
+ * angefasst. Zwei Kennungen sind das Maximum: E-Mail und Telefon.
+ */
+export function gdmEintragBauen({
+  ergebnis, invoiceId, modus, email, phone, eventTimestamp, typ, invoiceTotal, jetztMs = Date.now(),
+}) {
+  const hasEmail = !!dmNormalisierteEmail(email);
+  const hasPhone = !!dmNormalisierteTelefon(phone);
+  const gesendetMs = eventTimestamp ? Date.parse(eventTimestamp) : NaN;
+
+  const eintrag = {
+    ts: new Date(jetztMs).toISOString(),
+    invoiceId: invoiceId === undefined || invoiceId === null ? null : String(invoiceId),
+    mode: modus,
+    stage: gdmSchritt(ergebnis?.reason),
+    httpStatus: ergebnis?.status ?? null,
+    ok: !!ergebnis?.ok,
+    /* Unser eigenes Kuerzel - es unterscheidet "keine-kennung" von einem
+       echten Fehler, was aus httpStatus allein nicht hervorgeht. */
+    reason: ergebnis?.reason ?? null,
+    requestId: ergebnis?.requestId ?? null,
+    ...gdmFehlerTeile(ergebnis?.auszug),
+    fieldWarnings: ergebnis?.fieldWarnings ? gdmSaeubern(ergebnis.fieldWarnings) : null,
+    hasEmail,
+    hasPhone,
+    identifiersSent: (hasEmail ? 1 : 0) + (hasPhone ? 1 : 0),
+    eventTimestamp: eventTimestamp ?? null,
+    /* Negativ, wenn der Zeitstempel in der Zukunft liegt. */
+    eventAgeSeconds: Number.isFinite(gesendetMs) ? Math.round((jetztMs - gesendetMs) / 1000) : null,
+    type: typ,
+    invoiceTotal: invoiceTotal === undefined ? null : invoiceTotal,
+  };
+  if (eintrag.errorStatus === undefined) eintrag.errorStatus = null;
+  if (eintrag.errorCode === undefined) eintrag.errorCode = null;
+  if (eintrag.errorMessage === undefined) eintrag.errorMessage = null;
+  return eintrag;
+}
+
 // ── Admin email via Resend ────────────────────────────────────────────────────
 
 async function sendAdminEmail({ customer, transactionId, isProbetraining, istVerlaengerung, details, typeStr, productDesc, amountStr, bookedAt }) {
@@ -1451,6 +1635,30 @@ export default async function handler(req, res) {
       ...(dm.fieldWarnings ? { fieldWarnings: dm.fieldWarnings } : {}),
       ...(dm.auszug ? { auszug: dm.auszug } : {}),
     }));
+
+    /* Dasselbe noch einmal, haltbar: die Zeile oben ist nach etwa 30 Minuten
+       aus den Vercel-Logs verschwunden, und Google Ads zeigt nur Zahlen ohne
+       Fehlertext. Geschrieben wird nur, wenn wirklich ein Aufruf stattfand -
+       Schalter aus, fehlende Umgebungsvariable und unbrauchbarer Schluessel
+       erreichen Google nie und fuellen die Liste nicht.
+
+       Kein Abbruch durch diesen Block: gdmLogSchreiben faengt jeden Fehler
+       und bricht nach 1,5 s ab, danach geht es weiter zur 200-Antwort. */
+    if (gdmVersuchStattgefunden(dm)) {
+      const gdmLog = await gdmLogSchreiben(kv, gdmEintragBauen({
+        ergebnis: dm,
+        invoiceId,
+        modus: dmModus(),
+        email: customer?.email,
+        phone: customer?.phone,
+        eventTimestamp: dmZeit,
+        typ: isProbetraining ? 'lead' : (isPurchase ? 'purchase' : 'unklar'),
+        invoiceTotal: totalEur,
+      }));
+      if (!gdmLog.ok) {
+        console.log(JSON.stringify({ step: 'gdm-log', ok: false, invoiceId, reason: gdmLog.reason }));
+      }
+    }
   }
 
   return res.status(200).json({ ok: true, invoiceId, eventType });
