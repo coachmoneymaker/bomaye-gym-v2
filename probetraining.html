@@ -6,6 +6,36 @@
        Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
        wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
   <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
+  <!-- ═══ FRUEHSTART DES KALENDERS ═══
+       Nur auf dieser Seite. Wer schon eingewilligt hat, soll nicht warten,
+       bis consent.cookiebot.com geladen, ausgewertet und gemeldet hat: im
+       Livetest vom 26.10. vergingen 15 bis 25 Sekunden bis zum ersten
+       Termin.
+
+       Die Sperre darueber entscheidet weiterhin allein, OB geladen wird.
+       Ohne Einwilligung faengt sie dieses Skript-Tag ab und haelt es
+       zurueck. Dieses Stueck entscheidet nur, WANN angefangen wird, und
+       fragt dafuer Cookiebots eigenen Keks, der sofort da ist.
+
+       preconnect baut die Verbindung zu cdn.bsport.io auf, waehrend das
+       Skript noch geholt wird. Auch das nur mit Einwilligung, darum in
+       derselben Bedingung. -->
+  <script data-cookieconsent="ignore">
+    (function () {
+      try {
+        var keks = /(?:^|;\s*)CookieConsent=([^;]*)/.exec(document.cookie || '');
+        if (!keks || !/marketing\s*:\s*true/i.test(decodeURIComponent(keks[1]))) return;
+        var k = document.createElement('link');
+        k.rel = 'preconnect'; k.href = 'https://cdn.bsport.io'; k.crossOrigin = '';
+        document.head.appendChild(k);
+        if (document.getElementById('bsport-cdn')) return;
+        var sc = document.createElement('script');
+        sc.id = 'bsport-cdn';
+        sc.src = 'https://cdn.bsport.io/scripts/widget.js';
+        document.head.appendChild(sc);
+      } catch (e) {}
+    }());
+  </script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -365,6 +395,10 @@
          data-gate-knopf="TERMINE ANZEIGEN">
       <div class="schedule-frame__widget">
         <div id="bsport-widget-172485"></div>
+      <!-- Sichtbar zwischen Einwilligung und erstem Termin. pt-einstieg.js
+           blendet ihn ein, sobald der Platzhalter weg ist, und wieder aus,
+           sobald der Kalender steht. -->
+      <p class="pt-laedt" id="pt-laedt" hidden>Termine werden geladen</p>
         <noscript>
           <p style="text-align:center;color:rgba(10,10,8,0.6);padding:2rem 0;">
             Bitte JavaScript aktivieren, um die Terminauswahl zu laden, oder ruf uns einfach an.
