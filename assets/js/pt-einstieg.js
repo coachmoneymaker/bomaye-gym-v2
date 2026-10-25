@@ -58,9 +58,59 @@
 
   var WIDGET_ID   = 'bsport-widget-172485';
   var PROBE_TAGE  = [1, 2, 3, 4, 5];          /* Mo bis Fr, 0 = Sonntag */
-  var MAX_VORLAUF = 7;                        /* Sicherheitsnetz, in Tagen */
+  var MAX_VORLAUF = 14;                       /* Sicherheitsnetz, in Tagen */
 
-  function istProbetag(d) { return PROBE_TAGE.indexOf(d.getDay()) !== -1; }
+  /* ── An welchen Tagen welcher Kurs stattfindet ─────────────────────────
+     DER FEHLER AUS DEM LIVETEST VOM 26.10.: der Rueckfall nahm den
+     naechsten allgemeinen Probetag. Mit ?kurs=queens landete er damit auf
+     Dienstag, und Queens gibt es nur mittwochs. Der Kalender blieb leer.
+
+     Diese Tabelle steht in unserem eigenen Wochenplan (stundenplan.html,
+     die Panels .sp-day[data-day] und die ?kurs=-Kuerzel an den
+     BUCHEN-Links):
+
+       Mo  kids, youth, basics        Di  kickboxing
+       Mi  basics, kids, queens, youth   Do  kickboxing
+       Fr  basics, kids, youth        Sa, So  nichts
+
+     Aendert sich der Plan, muss sie mitwandern. Sie ist die einzige
+     Stelle, an der das steht.
+
+     Bsports eigener Datumsstreifen markiert Tage mit Terminen angeblich
+     mit einem Punkt. Das waere die Quelle aus erster Hand, aber wie
+     dieser Punkt im Markup aussieht, ist von hier nicht einsehbar
+     (cdn.bsport.io gesperrt). Darauf zu raten hiesse, denselben Fehler
+     noch einmal zu machen; die Tabelle ist pruefbar, der Punkt nicht. */
+  var KURS_TAGE = {
+    kickboxing: [2, 4],
+    kids:       [1, 3, 5],
+    basics:     [1, 3, 5],
+    basic:      [1, 3, 5],
+    queens:     [3],
+    youth:      [1, 3, 5]
+  };
+
+  /* Welcher Kurs ist gerade gefiltert? Dieselben Kuerzel wie in
+     probetraining-page.js und auf /stundenplan. */
+  function aktiverKurs() {
+    try {
+      var roh = new URLSearchParams(window.location.search).get('kurs');
+      if (!roh) return null;
+      roh = String(roh).toLowerCase();
+      return Object.prototype.hasOwnProperty.call(KURS_TAGE, roh) ? roh : null;
+    } catch (e) { return null; }
+  }
+
+  /* Tage, an denen es etwas zu buchen gibt: fuer den gefilterten Kurs nur
+     dessen Tage, sonst alle Probetage. */
+  function tageFuerFilter() {
+    var kurs = aktiverKurs();
+    return kurs ? KURS_TAGE[kurs] : PROBE_TAGE;
+  }
+
+  function istProbetag(d, tage) {
+    return (tage || tageFuerFilter()).indexOf(d.getDay()) !== -1;
+  }
 
   /* Mittags rechnen: um Mitternacht landet +1 Tag an Zeitumstellungstagen
      auf 23:00 des Vortags. Gleiche Begruendung wie in kurs-datum.js. */
@@ -73,9 +123,10 @@
   /* Der naechste Tag mit Probetraining, heute eingeschlossen. Ist heute
      schon einer, kommt heute zurueck - dann wird nichts umgestellt. */
   function naechsterProbetag(heute) {
+    var tage = tageFuerFilter();
     var d = mittags(heute || new Date());
     for (var i = 0; i <= MAX_VORLAUF; i++) {
-      if (istProbetag(d)) return d;
+      if (istProbetag(d, tage)) return d;
       d.setDate(d.getDate() + 1);
     }
     return null;
@@ -93,10 +144,14 @@
     var heute = new Date();
     var ziel  = naechsterProbetag(heute);
     if (!ziel) return;
-    if (ziel.getDay() === heute.getDay() && istProbetag(heute)) return;   /* heute passt */
+    if (istProbetag(heute)) return;   /* heute hat den gesuchten Kurs */
 
+    /* Der Hinweis gilt dem Wochenende. Wer mit ?kurs=queens an einem
+       Montag kommt, bekommt keinen falschen Satz ueber das Wochenende zu
+       lesen - der Kalender springt trotzdem auf den richtigen Tag. */
+    var amWochenende = heute.getDay() === 0 || heute.getDay() === 6;
     var hinweis = document.getElementById('pt-wochenend-hinweis');
-    if (hinweis) hinweis.hidden = false;
+    if (hinweis && amWochenende) hinweis.hidden = false;
 
     if (!window.bomayeKalenderTag || typeof window.bomayeKalenderTag.starte !== 'function') return;
 
@@ -182,8 +237,9 @@
      PR #46 in unserem CSS, der Datumswaehler
      (.bs-marketplace-date-picker__placeholder) stammt aus der Livediagnose
      in kalender-tag.js. */
-  var MAX_KORREKTUREN = 6;
+  var MAX_KORREKTUREN = 8;
   var ABKUEHLUNG_MS = 2500;
+  var NACHFASSEN_MS = 3500;
 
   function leereListeWache() {
     var wurzel = document.getElementById(WIDGET_ID);
@@ -192,6 +248,7 @@
 
     var korrekturen = 0;
     var ruhe = null;
+    var nachfassen = null;
     var zuletzt = null;        /* zuletzt gesetzter Zieltag, als JJJJ-MM-TT */
     var zuletztMs = 0;
     var versucheProZiel = 0;
@@ -244,6 +301,16 @@
       zuletztMs = Date.now();
       korrekturen++;
       try { window.bomayeKalenderTag.starte(WIDGET_ID, ziel, debugAn()); } catch (e) {}
+
+      /* NACHFASSEN, und zwar mit der Uhr statt mit dem Beobachter.
+
+         Der Livetest vom 26.10. zeigt den Fall: der Kalender stand ueber
+         50 Sekunden auf einem leeren Tag und ruehrte sich nicht mehr.
+         Bleibt der Versuch wirkungslos, aendert sich auch nichts im Baum,
+         der MutationObserver schweigt, und es gab keinen zweiten Anlauf.
+         Jetzt kommt der naechste Blick von selbst. */
+      clearTimeout(nachfassen);
+      nachfassen = setTimeout(pruefen, NACHFASSEN_MS);
     }
 
     /* Laeuft weiter, solange die Seite offen ist: ein Wochensprung ist
@@ -254,6 +321,10 @@
       clearTimeout(ruhe);
       ruhe = setTimeout(pruefen, 600);
     }).observe(wurzel, { childList: true, subtree: true });
+
+    /* Und ein erster Blick von der Uhr aus, falls das Widget schon fertig
+       war, bevor diese Wache stand. */
+    nachfassen = setTimeout(pruefen, NACHFASSEN_MS);
   }
 
   /* ── 4. Filterleiste und Teilnehmerzaehler ausblenden ─────────────────
@@ -335,7 +406,44 @@
     lauf();
   }
 
+  /* ── 5. "Termine werden geladen" ──────────────────────────────────────
+     Zwischen dem Tipp auf den Einwilligungsknopf und dem ersten Termin
+     liegen im Livetest 15 bis 25 Sekunden. In dieser Zeit stand dort
+     nichts. Der Hinweis erscheint, sobald der Platzhalter weg ist, und
+     verschwindet, sobald der Kalender etwas zeigt.
+
+     Nach 40 Sekunden geht er auch ohne Kalender weg: ein Hinweis, der
+     ewig steht, ist selbst eine Fehlermeldung, nur eine unehrliche. */
+  var LADE_DECKEL_MS = 40000;
+
+  function ladeHinweis() {
+    var hinweis = document.getElementById('pt-laedt');
+    var wurzel = document.getElementById(WIDGET_ID);
+    var rahmen = document.getElementById('pt-cal-view');
+    if (!hinweis || !wurzel || !rahmen) return;
+    if (typeof MutationObserver !== 'function') return;
+
+    var fertig = false;
+    function aus() {
+      if (fertig) return;
+      fertig = true;
+      hinweis.hidden = true;
+    }
+    function pruefen() {
+      if (fertig) return;
+      var sperreSteht = !!rahmen.querySelector('.bomaye-consent-gate');
+      var kalenderDa = wurzel.children.length > 0;
+      hinweis.hidden = sperreSteht || kalenderDa;
+      if (kalenderDa) aus();
+    }
+
+    new MutationObserver(pruefen).observe(rahmen, { childList: true, subtree: true });
+    pruefen();
+    setTimeout(aus, LADE_DECKEL_MS);
+  }
+
   function start() {
+    try { ladeHinweis(); } catch (e) {}
     try { aufraeumen(); } catch (e) {}
     try { wochenende(); } catch (e) {}
     try { leereListeWache(); } catch (e) {}

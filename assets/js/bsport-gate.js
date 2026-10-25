@@ -44,9 +44,35 @@
 
   function isBsport(v) { return BSPORT.test(String(v == null ? '' : v)); }
 
+  /* Cookiebots eigener Eintrag, erste Hand und sofort da.
+
+     WOZU: window.Cookiebot entsteht erst, wenn consent.cookiebot.com
+     geladen hat. Bis dahin gilt ein Besucher mit laengst erteilter
+     Einwilligung als nicht eingewilligt, und alles von bsport.io wartet.
+     Im Livetest vom 26.10. vergingen so 15 bis 25 Sekunden bis zum ersten
+     Termin.
+
+     Der Keks CookieConsent wird von Cookiebot selbst gesetzt, als Erstdaten
+     dieser Domain, und ist genau die Quelle, aus der window.Cookiebot
+     seinen Stand spaeter ableitet. Ihn zu lesen ist keine Abkuerzung an der
+     Einwilligung vorbei, sondern dieselbe Auskunft frueher. Widerruft
+     jemand, schreibt Cookiebot den Keks um; der Stand bleibt also richtig.
+
+     Laesst er sich nicht lesen, bleibt es beim bisherigen Weg. */
+  function einwilligungAusKeks() {
+    try {
+      var treffer = /(?:^|;\s*)CookieConsent=([^;]*)/.exec(document.cookie || '');
+      if (!treffer) return false;
+      var wert = decodeURIComponent(treffer[1]);
+      return /marketing\s*:\s*true/i.test(wert);
+    } catch (e) { return false; }
+  }
+
   function consented() {
     var cb = window.Cookiebot;
-    return !!(cb && cb.consent && cb.consent.marketing);
+    if (cb && cb.consent) return !!cb.consent.marketing;
+    /* Cookiebot ist noch nicht da: dann entscheidet sein Keks. */
+    return einwilligungAusKeks();
   }
 
   /* Alles, was ohne Einwilligung abgefangen wurde, wartet hier auf die
