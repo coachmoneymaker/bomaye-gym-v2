@@ -962,3 +962,57 @@ body.bsport-modal-open .pt-sticky {
   height: 0 !important;
   overflow: hidden !important;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   EINGABEFELDER IM BSPORT-DIALOG BLEIBEN UNBERUEHRT
+
+   BEFUND vom iPhone, 1.11.: im Express-Checkout sitzt der Textcursor
+   deutlich unter dem Eingabefeld, sichtbar im E-Mail-Feld.
+
+   WOHER DAS KOMMT, ist von hier nicht zu beweisen: der Dialog gehoert
+   Bsport, sein Markup ist aus dieser Umgebung nicht einsehbar, und
+   WebKit laesst sich hier nicht installieren (der Download ist gesperrt).
+   Belegbar ist nur, WAS WIR anfassen - und genau das endet hier.
+
+   Die Regel nimmt unsere Eingriffe zurueck und setzt NICHTS Eigenes:
+   keine Zeilenhoehe, keine Hoehe, keine Schriftgroesse. Genau danach war
+   gefragt, und es ist auch das Richtige - eine eigene Hoehe waere wieder
+   ein Eingriff in fremdes Layout.
+
+   NICHT gesetzt, obwohl es nahelaege: font-size 16px. iOS Safari zoomt
+   jedes Feld mit kleinerer Schrift beim Antippen heran und verschiebt
+   dabei die Seite. Das waere aber eine Aenderung an der Schriftgroesse im
+   Dialog, und die war ausdruecklich ausgenommen. Falls der Zoom stoert,
+   ist es eine Zeile.
+
+   Nur der Dialog, nicht die Terminliste: #bs-activity--dialog ist aus der
+   Livediagnose belegt (dieselbe Kennung traegt den goldenen Buchen-Knopf).
+   Die Karten im Kalender behalten ihr Aussehen.
+   ══════════════════════════════════════════════════════════════════════════ */
+#bs-activity--dialog input:not([type="checkbox"]):not([type="radio"]),
+#bs-activity--dialog textarea,
+#bs-activity--dialog select {
+  /* NUR zuruecknehmen, nichts Eigenes setzen. Beides sind Werte, die wir
+     an anderer Stelle vergeben (Mindesthoehen fuer Tippflaechen, eine
+     Verschiebung fuer das Augensymbol im Passwortfeld); Bsport baut seine
+     Felder nicht darauf auf. */
+  min-height: 0 !important;
+  transform: none !important;
+}
+
+/* ── Cookiebot-Knopf stoert den Dialog ────────────────────────────────────
+   Der runde schwarze Knopf unten links ist Cookiebots eigenes Symbol. Auf
+   dem Handy liegt er ueber den Formularfeldern und ueber "Abmelden".
+
+   Solange ein Bsport-Dialog offen ist, ist er weg. Dieselbe Klasse, mit
+   der auch die Kopfleiste verschwindet (bsport-dialog-wache.js). Die
+   Cookie-Einstellungen bleiben ueber den Link im Fussbereich erreichbar,
+   und sobald der Dialog zu ist, ist auch das Symbol wieder da.
+
+   UNGEPRUEFT ist allein die Kennung: consent.cookiebot.com ist aus dieser
+   Umgebung gesperrt, #CookiebotWidget stammt aus Cookiebots Doku. Trifft
+   sie nicht, passiert nichts - dann bleibt es beim heutigen Stand.     */
+body.bsport-modal-open #CookiebotWidget,
+body.bsport-modal-open [id^="CookiebotWidget"] {
+  display: none !important;
+}
