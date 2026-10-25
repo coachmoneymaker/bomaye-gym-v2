@@ -273,19 +273,30 @@
          zusaetzlich hinter die Einwilligung gehoert. Fuer eine Zahl, die
          sich selten aendert, waere das zu viel.
 
-         Der Link ist Googles dokumentierte Suchadresse (Maps URLs,
-         maps/search/?api=1&query=...), gebaut aus Name und Anschrift, die
-         zwanzig Zeilen weiter oben auch im strukturierten Datensatz stehen.
-         Bewusst KEINE geratene Profiladresse und keine Orts-ID: beides
-         waere erfunden. Nachteil der Suchadresse: sie landet auf dem
-         Eintrag, nicht direkt im Reiter mit den Rezensionen. Liegt der
-         kurze Link aus dem Google-Unternehmensprofil vor, wird er hier
-         eingesetzt und fuehrt direkt zu den Bewertungen.
+         Das Ziel ist der kurze Maps-Link des Betreibers, von ihm selbst
+         aus seinem Eintrag geteilt. Davor stand hier Googles
+         dokumentierte Suchadresse nach Name und Anschrift; der kurze Link
+         ist genauer, weil er auf den Eintrag selbst zeigt und nicht auf
+         eine Suche.
+
+         UNGEPRUEFT: wohin er fuehrt, konnte diese Umgebung nicht
+         nachsehen. maps.app.goo.gl ist gesperrt (CONNECT 403 ueber den
+         Proxy, kein DNS ueber den Abruf). Der Link stammt vom Betreiber,
+         die Weiterleitung selbst ist also nicht nachgemessen.
+
+         Der Parameter ?g_st=ic aus der Teilen-Funktion ist weggelassen; er
+         vermerkt nur, aus welcher App geteilt wurde, und gehoert nicht in
+         ein Markup, das jeder Besucher aufruft.
+
+         ZUM BEWERTEN waere es ein anderer Link: Google liefert dafuer im
+         Unternehmensprofil eine eigene kurze Adresse der Form
+         g.page/r/<kennung>/review. Die laesst sich aus dem Teilen-Link
+         nicht ableiten, und erraten wird sie nicht.
 
          role="img" samt aria-label, damit Vorleseprogramme einen ganzen
          Satz hoeren statt "fuenf Komma null 204". -->
     <a class="pt-hero__google"
-       href="https://www.google.com/maps/search/?api=1&amp;query=BOMAYE%20GYM%20MUNICH%20Wilhelm-Hale-Stra%C3%9Fe%2044%2080639%20M%C3%BCnchen"
+       href="https://maps.app.goo.gl/F7YnjmTwWbeLzYRS7"
        target="_blank" rel="noopener"
        aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google. Öffnet das Profil bei Google Maps in einem neuen Tab.">
       <svg class="pt-hero__sterne" viewBox="0 0 120 24" width="100" height="20" aria-hidden="true" focusable="false">
