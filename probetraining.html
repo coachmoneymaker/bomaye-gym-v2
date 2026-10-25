@@ -273,30 +273,32 @@
          zusaetzlich hinter die Einwilligung gehoert. Fuer eine Zahl, die
          sich selten aendert, waere das zu viel.
 
-         Das Ziel ist der kurze Maps-Link des Betreibers, von ihm selbst
-         aus seinem Eintrag geteilt. Davor stand hier Googles
-         dokumentierte Suchadresse nach Name und Anschrift; der kurze Link
-         ist genauer, weil er auf den Eintrag selbst zeigt und nicht auf
-         eine Suche.
+         Das Ziel ist Googles dokumentierte Adresse fuer einen Eintrag
+         nach Orts-ID (Maps URLs, maps/place/?q=place_id:...). Die Orts-ID
+         ChIJS-tzVKp3nkcRbCHhKzfqVQQ stammt aus dem Bewertungslink des
+         eigenen Unternehmensprofils, also aus erster Hand.
 
-         UNGEPRUEFT: wohin er fuehrt, konnte diese Umgebung nicht
-         nachsehen. maps.app.goo.gl ist gesperrt (CONNECT 403 ueber den
-         Proxy, kein DNS ueber den Abruf). Der Link stammt vom Betreiber,
-         die Weiterleitung selbst ist also nicht nachgemessen.
+         Davor standen hier nacheinander eine Suche nach Name und
+         Anschrift und der kurze Teilen-Link maps.app.goo.gl. Diese Form
+         ist beiden vorzuziehen: sie benennt den Eintrag eindeutig, ist
+         lesbar und dokumentiert, und sie haengt nicht an einer
+         undurchsichtigen Weiterleitung.
 
-         Der Parameter ?g_st=ic aus der Teilen-Funktion ist weggelassen; er
-         vermerkt nur, aus welcher App geteilt wurde, und gehoert nicht in
-         ein Markup, das jeder Besucher aufruft.
+         UNGEPRUEFT bleibt, wohin sie im Browser fuehrt. Google ist aus
+         der Bauumgebung gesperrt (CONNECT 403 ueber den Proxy, kein DNS
+         ueber den Abruf), die Weiterleitung ist also nicht nachgemessen.
 
-         ZUM BEWERTEN waere es ein anderer Link: Google liefert dafuer im
-         Unternehmensprofil eine eigene kurze Adresse der Form
-         g.page/r/<kennung>/review. Die laesst sich aus dem Teilen-Link
-         nicht ableiten, und erraten wird sie nicht.
+         ZUM BEWERTEN ist es ein anderer Link
+         (search.google.com/local/writereview?placeid=...). Der gehoert
+         nicht hierher: wer aus einer Anzeige auf diese Seite kommt, war
+         noch nie da und kann nichts bewerten. Er gehoert in die Mail nach
+         dem Training, auf einen Aushang im Gym oder in den
+         Mitgliederbereich.
 
          role="img" samt aria-label, damit Vorleseprogramme einen ganzen
          Satz hoeren statt "fuenf Komma null 204". -->
     <a class="pt-hero__google"
-       href="https://maps.app.goo.gl/F7YnjmTwWbeLzYRS7"
+       href="https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ"
        target="_blank" rel="noopener"
        aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google. Öffnet das Profil bei Google Maps in einem neuen Tab.">
       <svg class="pt-hero__sterne" viewBox="0 0 120 24" width="100" height="20" aria-hidden="true" focusable="false">
