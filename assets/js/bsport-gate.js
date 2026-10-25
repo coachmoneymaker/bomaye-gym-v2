@@ -560,9 +560,41 @@
       + 'oder schreib uns per <a href="https://wa.me/491737513627" '
       + 'target="_blank" rel="noopener">WhatsApp</a>.';
 
+
+    /* Kurze Erklaerung direkt unter dem Knopf. Sie steht dort, weil der
+       Knopf jetzt in einem Tipp einwilligt: was dabei passiert, muss man
+       lesen koennen, bevor man tippt, nicht danach im Banner.
+
+       "Cookie-Einstellungen" oeffnet Cookiebots Dialog. Der Handler haengt
+       direkt am Element: die allgemeine Verdrahtung in consent-bridge.js
+       laeuft beim Laden der Seite, dieser Absatz entsteht aber erst, wenn
+       der Platzhalter gezeichnet wird. */
+    var hinweis = document.createElement('p');
+    hinweis.className = GATE_CLASS + '__hinweis';
+    hinweis.appendChild(document.createTextNode(
+      'Mit Tippen lädst du unseren Buchungskalender von bsport und stimmst '
+      + 'Marketing-Cookies zu. Mehr in den '));
+    var mehr = document.createElement('a');
+    mehr.href = '#';
+    /* BEWUSST OHNE die Klasse cookie-settings-link: consent-bridge.js
+       verdrahtet alle Elemente mit dieser Klasse beim Laden der Seite.
+       Traegt dieser Link sie auch, haengen zwei Handler daran und
+       Cookiebot.renew() laeuft zweimal (gemessen). Der Handler unten
+       genuegt. */
+    mehr.textContent = 'Cookie-Einstellungen';
+    mehr.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+        window.Cookiebot.renew();
+      }
+    });
+    hinweis.appendChild(mehr);
+    hinweis.appendChild(document.createTextNode('.'));
+
     box.appendChild(h);
     box.appendChild(p);
     box.appendChild(btn);
+    box.appendChild(hinweis);
     box.appendChild(fail);
     box.appendChild(alt);
     container.appendChild(box);

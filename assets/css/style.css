@@ -6495,6 +6495,31 @@ a.mn-contact-text:hover { color: var(--gold); }
   text-decoration: underline;
 }
 
+/* Die Zeile unter dem Knopf. Kleiner als der Haupttext, aber nicht
+   verschaemt: sie sagt, was beim Tippen passiert, und muss lesbar sein.
+   0.82rem auf Creme ergibt mit dieser Deckkraft 4,9:1. */
+.bomaye-consent-gate__hinweis {
+  margin: 10px 0 0;
+  font-family: 'DM Sans', 'DM Sans Fallback', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: rgba(245, 240, 232, 0.78);
+  max-width: 42ch;
+}
+
+.bomaye-consent-gate__hinweis a {
+  color: #C9A84C;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  /* Die Tippflaeche muss 44px hoch sein, der Text soll aber in der Zeile
+     bleiben. Das Polster macht die Flaeche gross, der negative Aussenabstand
+     nimmt sie optisch wieder zurueck: gemessen 130x17 vorher, 130x45 jetzt,
+     ohne dass sich die Zeile verschiebt. */
+  display: inline-block;
+  padding: 14px 2px;
+  margin: -14px 0;
+}
+
 .bomaye-consent-gate__btn {
   display: inline-flex;
   align-items: center;
