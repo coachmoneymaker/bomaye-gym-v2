@@ -110,6 +110,16 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Das Heldenbild ist das LCP-Element. Ohne Preload findet der Browser es
+       erst, wenn er das Markup erreicht hat; mit Preload laedt es parallel zum
+       CSS. imagesrcset und imagesizes muessen zum <picture> darunter passen,
+       sonst laedt die Seite zwei verschiedene Dateien. -->
+  <link rel="preload" as="image" type="image/webp" fetchpriority="high"
+        imagesrcset="/assets/images/gym-hall-480.webp 480w,
+                     /assets/images/gym-hall-760.webp 760w,
+                     /assets/images/gym-hall-1120.webp 1120w,
+                     /assets/images/gym-hall.webp 1600w"
+        imagesizes="100vw">
   <link rel="stylesheet" href="/assets/css/probetraining-page.css" />
   <!-- BreadcrumbList -->
   <script type="application/ld+json">
@@ -219,11 +229,51 @@
 
 
 
-<!-- ═══════ PAGE HERO ═══════ -->
+<!-- ═══════ ERSTER SCHIRM ═══════
+     Mobil zuerst gebaut, 320 bis 430px. Was in den ersten Schirm gehoert:
+     ein echtes Foto aus der Halle, die Zusage, eine kurze Vertrauenszeile
+     und EIN goldener Knopf, der zum Kalender fuehrt. Nichts sonst.
+
+     Das Foto ist ein <img> und kein CSS-Hintergrund: nur so kann der
+     Browser es als LCP-Element frueh laden (fetchpriority="high"), und nur
+     so stehen Breite und Hoehe fest, was Nachrutschen verhindert.
+
+     gym-hall ist 1600x1067 und als WebP 84 KB gross. Kleinere Varianten
+     gibt es nicht und waren hier nicht herstellbar - sharp liegt als
+     Abhaengigkeit im Projekt, aber ohne node_modules laeuft es nicht. Bei
+     84 KB ist das vertretbar; eine 480er und 760er Fassung waere trotzdem
+     besser und ist ein eigener kleiner Schritt.                          -->
+<section class="pt-hero" aria-labelledby="pt-hero-h1">
+  <picture class="pt-hero__bild">
+    <source type="image/webp"
+            srcset="/assets/images/gym-hall-480.webp 480w,
+                    /assets/images/gym-hall-760.webp 760w,
+                    /assets/images/gym-hall-1120.webp 1120w,
+                    /assets/images/gym-hall.webp 1600w"
+            sizes="100vw">
+    <img src="/assets/images/gym-hall-760.jpg" alt="Trainingshalle im Bomaye Gym München"
+         srcset="/assets/images/gym-hall-480.jpg 480w,
+                 /assets/images/gym-hall-760.jpg 760w,
+                 /assets/images/gym-hall-1120.jpg 1120w,
+                 /assets/images/gym-hall.jpg 1600w"
+         sizes="100vw"
+         width="1600" height="1067" fetchpriority="high" decoding="async">
+  </picture>
+  <div class="pt-hero__inhalt">
+    <p class="pt-hero__eyebrow">DEIN PROBETRAINING</p>
+    <h1 id="pt-hero-h1">Dein erstes Boxtraining ist <span class="shimmer">gratis</span></h1>
+    <p class="pt-hero__trust">Kostenlos und unverbindlich. Ohne Vorkenntnisse. Handschuhe leihst du bei uns.</p>
+    <a class="btn btn--gold pt-hero__cta" id="pt-hero-cta" href="#pt-booking">Termin wählen</a>
+  </div>
+</section>
+
+<!-- ═══════ ABLAUF ═══════
+     War bis hierher der Kopfbereich mit Titel. Titel, Zusage und Knopf
+     stehen jetzt im Schirm darueber; geblieben ist der Ablauf in drei
+     Schritten. Eyebrow und h1 sind raus, damit es nur eine Ueberschrift
+     erster Ordnung auf der Seite gibt.                                    -->
 <div class="pt-page-hero">
   <div class="container">
-    <div class="pt-eyebrow">DEIN PROBETRAINING</div>
-    <h1>KOMM <span class="shimmer">VORBEI.</span></h1>
     <p>Kostenlos, unverbindlich und ohne Vorkenntnisse. Such dir einfach einen Termin aus.</p>
     <div class="pt-steps">
       <div class="pt-step">
@@ -269,6 +319,10 @@
          allein in der naechsten Zeile. Der Text bleibt derselbe, nur die
          Umbruchstelle wandert. -->
     <p class="pt-booking-limit">Im nächsten Schritt: „Probetraining“ für 0,00 € wählen.</p>
+    <!-- Nur am Wochenende sichtbar, eingeblendet von pt-einstieg.js. Der Text
+         sagt bewusst nicht, der Kalender sei schon umgestellt: das Umstellen
+         kann abbrechen, der Satz bleibt dann trotzdem richtig. -->
+    <p class="pt-booking-limit" id="pt-wochenend-hinweis" hidden>Am Wochenende ist kein Probetraining. Die nächsten Termine sind ab Montag.</p>
   </div>
   <div class="container">
     <!-- Der Notbehelf-Hinweis ("am Bildschirmrand wischen") ist ersatzlos
@@ -350,6 +404,15 @@
     <span class="hero-cred-v2-item">20+ JAHRE WETTKAMPF</span>
   </div>
 </section>
+
+<!-- ═══════ KLEBENDER KNOPF (nur Handy) ═══════
+     Sichtbar, solange der Kalender nicht im Bild ist, und nur dann.
+     Steht per hidden erst einmal nicht da: ohne JavaScript und ohne
+     IntersectionObserver gibt es keine Leiste, statt einer, die den
+     Kalender verdeckt. Verhalten in /assets/js/pt-einstieg.js.          -->
+<div class="pt-sticky" id="pt-sticky" hidden>
+  <a class="btn btn--gold pt-sticky__btn" href="#pt-booking">Termin wählen</a>
+</div>
 
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
@@ -471,6 +534,14 @@ function toggleMobileMenu() {
 
 <!-- Probetraining: Widget inline im Seitenfluss, Tracking, Bsport-Dialog-Wache -->
 <script src="/assets/js/probetraining-page.js"></script>
+
+<!-- Kalendertag: stellt den Bsport-Kalender nach dem Mounten auf einen
+     Zieltag, ueber die Bedienelemente des Widgets. Dieselbe Datei wie auf
+     /stundenplan, dort seit PR #80 im Einsatz. Tut nichts, solange sie
+     niemand aufruft. -->
+<script src="/assets/js/kalender-tag.js"></script>
+<!-- Einstieg: Wochenend-Hinweis samt Zieltag und der klebende Knopf. -->
+<script src="/assets/js/pt-einstieg.js"></script>
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,

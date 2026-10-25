@@ -630,3 +630,160 @@ body .pt-bsport-dialog * {
   #pt-scroll-hilfe .pt-scroll-runter svg,
   .pt-scroll-fortschritt { animation: none; transition: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ERSTER SCHIRM (mobil zuerst)
+
+   Diese Datei wird nur von probetraining.html geladen - alles hier gilt
+   ausschliesslich auf dieser Seite. Keine gemeinsame Klasse, kein Token
+   und keine Variable wird angefasst; .btn--gold und .shimmer kommen
+   unveraendert aus style.css.
+
+   Aufbau: ein Foto als eigenes Element, darueber eine dunkle Schicht fuer
+   den Kontrast, darauf der Text. Die Hoehe ist nicht fest, sondern
+   min-height - damit laeuft nichts ueber, wenn die Schrift groesser
+   gestellt ist.
+   ══════════════════════════════════════════════════════════════════════════ */
+.pt-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 78svh;
+  min-height: 78vh;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--nav-h, 72px) + 24px) 20px 32px;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  background: #0A0A08;
+  overflow: hidden;
+}
+.pt-hero__bild {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: block;
+}
+.pt-hero__bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  display: block;
+}
+/* Dunkle Schicht: unten dicht, oben duenner. Der Text steht unten, die
+   Halle bleibt oben sichtbar. */
+.pt-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 8, 0.45) 0%,
+    rgba(10, 10, 8, 0.60) 45%,
+    rgba(10, 10, 8, 0.88) 100%
+  );
+}
+.pt-hero__inhalt {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+.pt-hero__eyebrow {
+  font-family: var(--font-head);
+  font-size: 0.68rem;
+  letter-spacing: 0.34em;
+  color: #C9A84C;
+  margin: 0 0 12px;
+}
+.pt-hero h1 {
+  font-family: var(--font-display);
+  /* 1.9rem bei 320px: "Boxtraining" ist das laengste Wort und passt damit
+     in eine Zeile. Gemessen, nicht geschaetzt. */
+  font-size: clamp(1.9rem, 7.4vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #F5F0E8;
+  margin: 0;
+}
+.pt-hero__trust {
+  font-family: var(--font-body);
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: rgba(245, 240, 232, 0.82);
+  margin: 14px auto 22px;
+  max-width: 34ch;
+}
+/* Ein Knopf, voll in der Breite bis 480px. 52px hoch, also deutlich ueber
+   den 44px, die als kleinste Tippflaeche gelten. */
+.pt-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 28px;
+  width: 100%;
+  max-width: 320px;
+  text-decoration: none;
+}
+
+@media (min-width: 769px) {
+  .pt-hero {
+    min-height: 60vh;
+    padding: calc(var(--nav-h, 72px) + 48px) 24px 56px;
+    align-items: center;
+  }
+  .pt-hero__trust { font-size: 1rem; }
+}
+
+/* Der Ablauf darunter traegt keinen Titel mehr, deshalb oben weniger Luft. */
+.pt-page-hero { padding-top: 48px; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   KLEBENDER KNOPF
+
+   Nur unter 769px, nur wenn pt-einstieg.js die Klasse setzt, und nie
+   waehrend der Kalender im Bild ist. Die Leiste faengt keine Tipps ab, wo
+   sie leer ist: pointer-events liegt nur auf dem Knopf.
+   ══════════════════════════════════════════════════════════════════════════ */
+.pt-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;              /* unter der Kopfleiste (1000) und unter jedem
+                                Bsport-Dialog */
+  display: none;
+  justify-content: center;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(10, 10, 8, 0) 0%, rgba(10, 10, 8, 0.92) 55%);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-normal, 0.25s) var(--ease-out, ease),
+              transform var(--dur-normal, 0.25s) var(--ease-out, ease);
+}
+.pt-sticky__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  width: 100%;
+  max-width: 420px;
+  padding: 0 24px;
+  text-decoration: none;
+  pointer-events: auto;
+}
+@media (max-width: 768px) {
+  .pt-sticky { display: flex; }
+  .pt-sticky.pt-sticky--an {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Solange ein Bsport-Dialog offen ist, ist die Leiste weg. Dieselbe Klasse,
+   mit der die Kopfleiste verschwindet - gesetzt von bsport-dialog-wache.js. */
+body.bsport-modal-open .pt-sticky {
+  display: none !important;
+}
