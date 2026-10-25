@@ -979,11 +979,11 @@ body.bsport-modal-open .pt-sticky {
    gefragt, und es ist auch das Richtige - eine eigene Hoehe waere wieder
    ein Eingriff in fremdes Layout.
 
-   NICHT gesetzt, obwohl es nahelaege: font-size 16px. iOS Safari zoomt
-   jedes Feld mit kleinerer Schrift beim Antippen heran und verschiebt
-   dabei die Seite. Das waere aber eine Aenderung an der Schriftgroesse im
-   Dialog, und die war ausdruecklich ausgenommen. Falls der Zoom stoert,
-   ist es eine Zeile.
+   EINE AUSNAHME: font-size 16px, auf Wunsch des Betreibers. iOS Safari
+   zoomt jedes Feld mit kleinerer Schrift beim Antippen heran und
+   verschiebt dabei die Seite - eine bekannte Ursache fuer einen Cursor,
+   der neben dem Feld zu stehen scheint. Sonst wird an der Schrift nichts
+   gedreht.
 
    Nur der Dialog, nicht die Terminliste: #bs-activity--dialog ist aus der
    Livediagnose belegt (dieselbe Kennung traegt den goldenen Buchen-Knopf).
@@ -992,12 +992,17 @@ body.bsport-modal-open .pt-sticky {
 #bs-activity--dialog input:not([type="checkbox"]):not([type="radio"]),
 #bs-activity--dialog textarea,
 #bs-activity--dialog select {
-  /* NUR zuruecknehmen, nichts Eigenes setzen. Beides sind Werte, die wir
-     an anderer Stelle vergeben (Mindesthoehen fuer Tippflaechen, eine
-     Verschiebung fuer das Augensymbol im Passwortfeld); Bsport baut seine
-     Felder nicht darauf auf. */
+  /* Zuruecknehmen, was wir an anderer Stelle vergeben: Mindesthoehen fuer
+     Tippflaechen und die Verschiebung fuer das Augensymbol im
+     Passwortfeld. Bsport baut seine Felder nicht darauf auf. */
   min-height: 0 !important;
   transform: none !important;
+  /* Die einzige eigene Angabe, und zwar mit Absicht: iOS Safari zoomt
+     jedes Feld mit weniger als 16px beim Antippen heran und verschiebt
+     dabei die ganze Seite. Genau dieses Verschieben sieht aus wie ein
+     Cursor, der unter dem Feld sitzt. 16px ist die Grenze, ab der Safari
+     es laesst. */
+  font-size: 16px !important;
 }
 
 /* ── Cookiebot-Knopf stoert den Dialog ────────────────────────────────────
