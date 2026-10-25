@@ -787,11 +787,3 @@ body .pt-bsport-dialog * {
 body.bsport-modal-open .pt-sticky {
   display: none !important;
 }
-
-/* Die Bewertung tritt in der Vertrauenszeile hervor. Gold auf dem dunklen
-   Foto, nicht auf Creme: auf Creme ergaebe Gold 2,01:1 und waere derselbe
-   Kontrastfehler, der in PR #106 und #107 beseitigt wurde. */
-.pt-hero__sterne {
-  color: #C9A84C;
-  font-weight: 600;
-}
