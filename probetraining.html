@@ -273,13 +273,21 @@
          zusaetzlich hinter die Einwilligung gehoert. Fuer eine Zahl, die
          sich selten aendert, waere das zu viel.
 
-         Kein Link: eine Adresse zum Profil liegt im Projekt nicht vor, und
-         eine geratene waere ein Link ins Leere. Mit der echten Adresse ist
-         es ein <a> um diesen Block.
+         Der Link ist Googles dokumentierte Suchadresse (Maps URLs,
+         maps/search/?api=1&query=...), gebaut aus Name und Anschrift, die
+         zwanzig Zeilen weiter oben auch im strukturierten Datensatz stehen.
+         Bewusst KEINE geratene Profiladresse und keine Orts-ID: beides
+         waere erfunden. Nachteil der Suchadresse: sie landet auf dem
+         Eintrag, nicht direkt im Reiter mit den Rezensionen. Liegt der
+         kurze Link aus dem Google-Unternehmensprofil vor, wird er hier
+         eingesetzt und fuehrt direkt zu den Bewertungen.
 
          role="img" samt aria-label, damit Vorleseprogramme einen ganzen
          Satz hoeren statt "fuenf Komma null 204". -->
-    <p class="pt-hero__google" role="img" aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google">
+    <a class="pt-hero__google"
+       href="https://www.google.com/maps/search/?api=1&amp;query=BOMAYE%20GYM%20MUNICH%20Wilhelm-Hale-Stra%C3%9Fe%2044%2080639%20M%C3%BCnchen"
+       target="_blank" rel="noopener"
+       aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google. Öffnet das Profil bei Google Maps in einem neuen Tab.">
       <svg class="pt-hero__sterne" viewBox="0 0 120 24" width="100" height="20" aria-hidden="true" focusable="false">
         <defs>
           <path id="pt-stern" d="M12 2.6l2.83 6.13 6.67.78-4.95 4.55 1.35 6.57L12 17.3l-5.9 3.33 1.35-6.57L2.5 9.51l6.67-.78z"/>
@@ -291,7 +299,7 @@
         <use href="#pt-stern" x="96"></use>
       </svg>
       <span class="pt-hero__note"><b>5,0</b> · 204 Bewertungen auf Google</span>
-    </p>
+    </a>
     <p class="pt-hero__trust">Kostenlos und unverbindlich. Ohne Vorkenntnisse. Handschuhe leihst du bei uns.</p>
     <a class="btn btn--gold pt-hero__cta" id="pt-hero-cta" href="#pt-booking">Termin wählen</a>
   </div>

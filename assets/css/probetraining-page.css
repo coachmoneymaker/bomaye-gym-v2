@@ -803,6 +803,20 @@ body.bsport-modal-open .pt-sticky {
   justify-content: center;
   gap: 6px 10px;
   margin: 14px 0 0;
+  /* Der Block ist ein Link: 44px hoch, damit der Daumen ihn trifft, und
+     ohne Unterstreichung, weil die Sterne sonst mitgestrichen waeren. */
+  min-height: 44px;
+  padding: 4px 8px;
+  text-decoration: none;
+}
+.pt-hero__google:hover .pt-hero__note,
+.pt-hero__google:focus-visible .pt-hero__note {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pt-hero__google:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 3px;
 }
 .pt-hero__sterne {
   display: block;
