@@ -270,6 +270,10 @@
                  ueber dem Kalender zusagt. Wer den Filter aendert, muss den
                  Text in probetraining.html mitaendern - sonst verspricht die
                  Seite etwas, das nicht buchbar ist, oder umgekehrt. */
+              /* Reihenfolge wie im Einbettungscode aus dem Bsport-Backoffice
+                 (geliefert am 1.11.), damit sich beide Listen Zeile fuer
+                 Zeile vergleichen lassen. Die Reihenfolge ist fuer das
+                 Widget ohne Bedeutung, fuer den naechsten Abgleich nicht. */
               metaActivities: _ptKurse()
             }
           }
@@ -1806,7 +1810,14 @@
      Kalender waere schlimmer als ein ungefilterter.
 
      Die IDs stehen oben im Block mit der vollstaendigen Zuordnung. */
-  var PT_ALLE = [236751, 244420, 244426, 244539, 244563];
+  /* Reihenfolge wie im gelieferten Einbettungscode. */
+  var PT_ALLE = [
+    236751,   /* Bomaye Kickboxing        - "Kickboxing" */
+    244539,   /* BOMAYE QUEENS            - "Queens"     */
+    244426,   /* BOXING BASICS            - "Basic"      */
+    244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"       */
+    244563    /* BOXING YOUTH (10-17)     - "Youth"      */
+  ];
   var PT_KURSE = {
     kickboxing: 236751,
     kids:       244420,

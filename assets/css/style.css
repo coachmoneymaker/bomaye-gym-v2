@@ -6493,6 +6493,13 @@ a.mn-contact-text:hover { color: var(--gold); }
 .bomaye-consent-gate__alt a {
   color: #C9A84C;
   text-decoration: underline;
+  /* Telefonnummer und WhatsApp waren 105x18 beziehungsweise 69x18 und
+     damit die beiden einzigen Tippflaechen der Seite unter 44px. Polster
+     plus negativer Aussenabstand macht sie 46px hoch, ohne dass sich die
+     Zeile verschiebt - derselbe Weg wie beim Link in der Hinweiszeile. */
+  display: inline-block;
+  padding: 14px 2px;
+  margin: -14px 0;
 }
 
 /* Die Zeile unter dem Knopf. Kleiner als der Haupttext, aber nicht
