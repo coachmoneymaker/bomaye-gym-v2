@@ -888,10 +888,31 @@ body.bsport-modal-open .pt-sticky {
   text-underline-offset: 3px;
 }
 
-/* Von pt-einstieg.js gesetzt: Filterleiste und Teilnehmerzaehler im
-   Bsport-Kalender. Eine eigene Klasse statt style.display, damit im
-   Browser sichtbar bleibt, WER etwas versteckt hat. Nur innerhalb des
-   Widget-Containers gueltig. */
+/* ── Filterleiste im Kalender ──────────────────────────────────────────────
+   Bsport bietet keinen Schalter dafuer, bestaetigt vom Betreiber nach
+   Durchsicht der Einstellungen. Also auf unserer Seite, und ausschliesslich
+   innerhalb des Widget-Containers.
+
+   ZWEI WEGE, weil der eine allein nicht reicht:
+
+   1. Nach Klassennamen. style.css versteckt auf Mobil seit Laengerem
+      [class*="filter"], nimmt dabei aber die Suchzeile aus. Hier faellt
+      die Ausnahme weg und die Regel gilt in jeder Breite - die Leiste
+      gehoert auf dieser Seite ganz weg, auch am Schreibtisch.
+
+   2. Nach Beschriftung, in pt-einstieg.js, das .pt-aus setzt. Der
+      Livetest zeigt die Leiste trotz Regel 1, die echten Klassennamen
+      enthalten also kein "filter". Regel 2 findet sie ueber die Woerter
+      Suche, Aktivitaet, Niveau, Lehrkraft, Einrichtung.
+
+   Teilnehmer- und Geschlechterzaehler stehen hier bewusst NICHT: die
+   schaltet der Betreiber in den Bsport-Einstellungen ab. Eine Einstellung
+   an der Quelle ist besser als eine Regel, die im Nachhinein etwas
+   verdeckt.                                                              */
+#bsport-widget-172485 .cleanslate [class*="filter"],
+#bsport-widget-172485 .cleanslate [class*="Filter"] {
+  display: none !important;
+}
 #bsport-widget-172485 .pt-aus {
   display: none !important;
 }

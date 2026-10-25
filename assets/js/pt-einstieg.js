@@ -182,8 +182,8 @@
      PR #46 in unserem CSS, der Datumswaehler
      (.bs-marketplace-date-picker__placeholder) stammt aus der Livediagnose
      in kalender-tag.js. */
-  var MAX_KORREKTUREN = 2;
-  var WACHE_FENSTER_MS = 30000;
+  var MAX_KORREKTUREN = 6;
+  var ABKUEHLUNG_MS = 2500;
 
   function leereListeWache() {
     var wurzel = document.getElementById(WIDGET_ID);
@@ -191,8 +191,10 @@
     if (!window.bomayeKalenderTag || typeof window.bomayeKalenderTag.starte !== 'function') return;
 
     var korrekturen = 0;
-    var beginn = 0;
     var ruhe = null;
+    var zuletzt = null;        /* zuletzt gesetzter Zieltag, als JJJJ-MM-TT */
+    var zuletztMs = 0;
+    var versucheProZiel = 0;
 
     function listeLeer() {
       var waehler = wurzel.querySelector('[class*="date-picker"], [class*="datePicker"]');
@@ -200,25 +202,55 @@
       return wurzel.querySelectorAll('[class*="offer-list-item"]').length === 0;
     }
 
+    function iso(d) {
+      function z(n) { return (n < 10 ? '0' : '') + n; }
+      return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate());
+    }
+
     function pruefen() {
       if (korrekturen >= MAX_KORREKTUREN) return;
-      if (beginn && Date.now() - beginn > WACHE_FENSTER_MS) return;
+      if (Date.now() - zuletztMs < ABKUEHLUNG_MS) return;
       if (document.body.classList.contains('bsport-modal-open')) return;
       if (!listeLeer()) return;
 
-      /* Ist heute selbst ein Probetag, ist er offenbar durch - dann zaehlt
-         erst der naechste Tag. */
-      var ab = mittags(new Date());
-      if (istProbetag(ab)) ab.setDate(ab.getDate() + 1);
-      var ziel = naechsterProbetag(ab);
+      /* Ab wann gesucht wird:
+           - noch nichts versucht: ab morgen, wenn heute selbst ein
+             Probetag ist (dann sind seine Kurse offenbar durch), sonst ab
+             heute;
+           - schon versucht und immer noch leer: ab dem Tag NACH dem
+             zuletzt gesetzten Ziel. So wandert die Suche vorwaerts, statt
+             denselben leeren Tag erneut anzusteuern. Genau das deckt den
+             Fall ab, dass in der angezeigten Woche nichts mehr kommt.
+
+         Zweimal dasselbe Ziel ist die Grenze: greift es dann immer noch
+         nicht, liegt es nicht am Tag, und weitere Klicks helfen nicht. */
+      var ziel;
+      if (!zuletzt) {
+        var ab = mittags(new Date());
+        if (istProbetag(ab)) ab.setDate(ab.getDate() + 1);
+        ziel = naechsterProbetag(ab);
+      } else if (versucheProZiel < 2) {
+        ziel = mittags(new Date(zuletzt + 'T12:00:00'));      /* noch einmal */
+      } else {
+        var weiter = mittags(new Date(zuletzt + 'T12:00:00'));
+        weiter.setDate(weiter.getDate() + 1);
+        ziel = naechsterProbetag(weiter);
+      }
       if (!ziel) return;
 
+      var zielIso = iso(ziel);
+      versucheProZiel = (zielIso === zuletzt) ? versucheProZiel + 1 : 1;
+      zuletzt = zielIso;
+      zuletztMs = Date.now();
       korrekturen++;
       try { window.bomayeKalenderTag.starte(WIDGET_ID, ziel, debugAn()); } catch (e) {}
     }
 
+    /* Laeuft weiter, solange die Seite offen ist: ein Wochensprung ist
+       eine Aenderung im Baum wie jede andere, und genau danach steht der
+       Kalender wieder auf einem Tag, den das Widget sich selbst gemerkt
+       hat. Die Abkuehlung und der Deckel oben halten das in Grenzen. */
     new MutationObserver(function () {
-      if (!beginn && wurzel.children.length) beginn = Date.now();
       clearTimeout(ruhe);
       ruhe = setTimeout(pruefen, 600);
     }).observe(wurzel, { childList: true, subtree: true });
@@ -241,17 +273,14 @@
      kann die Regel nicht den halben Kalender mitnehmen, wenn Bsport
      umbaut. Findet sie nichts, passiert nichts.
 
-     Zaehler: Elemente, deren ganzer Text wie "0/20" aussieht. Nur
-     exakt dieses Muster, nichts in der Naehe, und nur wenn kein Knopf
-     darin steckt.
-
-     Die Geschlechterzaehler aus dem Bericht sind NICHT abgedeckt: wie sie
-     im Markup aussehen, ist von hier nicht zu sehen. Dafuer braucht es
-     einmal den Bericht aus /probetraining?ptdom=1 von einem echten Geraet.
+     Teilnehmer- und Geschlechterzaehler stehen hier NICHT mehr: der
+     Betreiber schaltet sie in den Bsport-Einstellungen ab. Das ist der
+     richtige Ort dafuer - eine Einstellung an der Quelle schlaegt jede
+     Regel, die im Nachhinein etwas versteckt. Die frueheren Zeilen dazu
+     sind ersatzlos raus.
 
      Abschalten zum Nachsehen: /probetraining?ptfilter=0 */
   var FILTER_WOERTER = ['suche', 'aktivität', 'aktivitaet', 'niveau', 'lehrkraft', 'einrichtung'];
-  var ZAEHLER = /^\d{1,3}\s*\/\s*\d{1,3}$/;
 
   function ausblendenAn() {
     try {
@@ -291,18 +320,6 @@
     return true;
   }
 
-  function zaehlerVerstecken(wurzel) {
-    var alle = wurzel.querySelectorAll('span, div, p, small, b, strong');
-    for (var i = 0; i < alle.length && i < 800; i++) {
-      var el = alle[i];
-      if (el.classList.contains('pt-aus')) continue;
-      var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!ZAEHLER.test(txt)) continue;
-      if (el.querySelector('button, a, input')) continue;
-      el.classList.add('pt-aus');
-    }
-  }
-
   function aufraeumen() {
     if (!ausblendenAn()) return;
     var wurzel = document.getElementById(WIDGET_ID);
@@ -310,7 +327,6 @@
     var ruhe = null;
     function lauf() {
       try { filterleisteVerstecken(wurzel); } catch (e) {}
-      try { zaehlerVerstecken(wurzel); } catch (e) {}
     }
     new MutationObserver(function () {
       clearTimeout(ruhe);
