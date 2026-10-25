@@ -262,6 +262,36 @@
   <div class="pt-hero__inhalt">
     <p class="pt-hero__eyebrow">DEIN PROBETRAINING</p>
     <h1 id="pt-hero-h1">Dein erstes Boxtraining ist <span class="shimmer">gratis</span></h1>
+    <!-- ── Bewertung ──────────────────────────────────────────────────
+         Fuenf Sterne als SVG, danach Wert und Anzahl. Die Zahlen kommen
+         vom Betreiber: 204 Bewertungen, Durchschnitt 5,0. Aendern sie
+         sich, aendert sich diese Zeile mit - sie wird nirgends automatisch
+         nachgezogen.
+
+         Kein fremdes Skript und kein Google-Abruf: das waere die Places
+         API mit Schluessel, Abrechnungskonto und einer Einbettung, die
+         zusaetzlich hinter die Einwilligung gehoert. Fuer eine Zahl, die
+         sich selten aendert, waere das zu viel.
+
+         Kein Link: eine Adresse zum Profil liegt im Projekt nicht vor, und
+         eine geratene waere ein Link ins Leere. Mit der echten Adresse ist
+         es ein <a> um diesen Block.
+
+         role="img" samt aria-label, damit Vorleseprogramme einen ganzen
+         Satz hoeren statt "fuenf Komma null 204". -->
+    <p class="pt-hero__google" role="img" aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google">
+      <svg class="pt-hero__sterne" viewBox="0 0 120 24" width="100" height="20" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="pt-stern" d="M12 2.6l2.83 6.13 6.67.78-4.95 4.55 1.35 6.57L12 17.3l-5.9 3.33 1.35-6.57L2.5 9.51l6.67-.78z"/>
+        </defs>
+        <use href="#pt-stern" x="0"></use>
+        <use href="#pt-stern" x="24"></use>
+        <use href="#pt-stern" x="48"></use>
+        <use href="#pt-stern" x="72"></use>
+        <use href="#pt-stern" x="96"></use>
+      </svg>
+      <span class="pt-hero__note"><b>5,0</b> · 204 Bewertungen auf Google</span>
+    </p>
     <p class="pt-hero__trust">Kostenlos und unverbindlich. Ohne Vorkenntnisse. Handschuhe leihst du bei uns.</p>
     <a class="btn btn--gold pt-hero__cta" id="pt-hero-cta" href="#pt-booking">Termin wählen</a>
   </div>
