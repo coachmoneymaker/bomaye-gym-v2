@@ -1021,3 +1021,30 @@ body.bsport-modal-open #CookiebotWidget,
 body.bsport-modal-open [id^="CookiebotWidget"] {
   display: none !important;
 }
+
+/* Ladehinweis zwischen Einwilligung und erstem Termin. Bewusst schlicht:
+   er steht hoechstens ein paar Sekunden. */
+.pt-laedt {
+  margin: 0;
+  padding: 28px 16px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(10, 10, 8, 0.6);
+}
+.pt-laedt::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  vertical-align: -2px;
+  border: 2px solid rgba(10, 10, 8, 0.2);
+  border-top-color: #C9A84C;
+  border-radius: 50%;
+  animation: pt-laedt-dreh 0.9s linear infinite;
+}
+@keyframes pt-laedt-dreh { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .pt-laedt::after { animation: none; }
+}
