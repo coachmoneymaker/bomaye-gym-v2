@@ -76,6 +76,11 @@
  *                              anstelle des Namens als Vorsatz im Betreff.
  *                              Unabhaengig von GYM_LOCATION_NAME setzbar.
  *   ADMIN_EMAIL              — internal notification recipient
+ *   PROBE_ALERT_EMAIL        — optional; Empfaenger der Sofortmeldung bei
+ *                              jeder Probetraining-Buchung. Ohne die
+ *                              Variable geht sie an support@bomayegym.com.
+ *                              Sie ersetzt die Mail an ADMIN_EMAIL nicht,
+ *                              sie kommt daneben und nur beim Lead.
  *   FROM_EMAIL               — verified Resend sender address
  */
 
@@ -1618,6 +1623,22 @@ export default async function handler(req, res) {
      Jeder Fehler bleibt hier: der Webhook hat oben schon alles getan, was
      er tun muss, und antwortet unten in jedem Fall mit 200. */
   if (metaEventName === 'Lead') {
+    /* Sofortmeldung ans Gym. Steht vor dem Google-Upload, weil sie fuer den
+       Betrieb zaehlt und der Upload nur fuer die Auswertung. Faellt sie aus,
+       laeuft alles andere weiter. */
+    const alarm = await sendProbetrainingAlarm({
+      customer,
+      invoiceId,
+      kurs: alleLeistungen.join(' · ') || productName,
+      zeitpunkt: alsBerlinerZeit(obj.date_created) || alsBerlinerZeit(obj.date_issued),
+      backofficeUrl,
+    }).catch((err) => ({ ok: false, error: String(err && err.message || err).slice(0, 120) }));
+    console.log(JSON.stringify({
+      step: 'probe-alarm', ok: alarm.ok, invoiceId,
+      ...(alarm.reason ? { reason: alarm.reason } : {}),
+      ...(alarm.error ? { error: String(alarm.error).slice(0, 120) } : {}),
+    }));
+
     const dmZeit = new Date(
       alsZeitstempel(obj.date_created) ?? alsZeitstempel(obj.date_issued) ?? Date.now()
     ).toISOString();
@@ -1662,6 +1683,112 @@ export default async function handler(req, res) {
   }
 
   return res.status(200).json({ ok: true, invoiceId, eventType });
+}
+
+// ── Sofortmeldung bei jeder Probetraining-Buchung ────────────────────────────
+
+/**
+ * WOZU NOCH EINE MAIL?
+ * Die bestehende Mail an ADMIN_EMAIL meldet jede Rechnung, Kauf wie
+ * Probetraining, und ist auf Vollstaendigkeit gebaut. Fuer den Trainer zaehlt
+ * beim Probetraining etwas anderes: Name, Nummer, Kurs, Termin, und ein Weg,
+ * sofort zu antworten. Genau das steht hier drin, sonst nichts.
+ *
+ * Sie geht an PROBE_ALERT_EMAIL, voreingestellt support@bomayegym.com, und
+ * nur beim Lead-Pfad (Rechnung ueber 0 EUR). Kaeufe loesen sie nicht aus.
+ *
+ * WAS DIE RECHNUNG NICHT HERGIBT
+ * Kurs und Termin stehen so nicht im Rumpf. Was es gibt:
+ *   - line_items[].description: der gekaufte Eintrag, meist der Name des
+ *     Passes ("Probetraining"), nicht der Kurs am Dienstag um 18:30.
+ *   - date_created / date_issued: wann die RECHNUNG entstand. Das ist in
+ *     aller Regel der Buchungszeitpunkt, nicht der Kurstermin.
+ * Beides steht deshalb unter dem Namen, unter dem es wirklich steht, und die
+ * Mail sagt klar, dass der Kurstermin im Backoffice steht. Geraten wird
+ * nichts: eine falsche Uhrzeit in dieser Mail waere schlimmer als keine.
+ *
+ * Der Kurstermin liesse sich holen, wenn der Webhook auch "booking-create"
+ * verarbeiten wuerde - dort duerfte er stehen. Dieses Ereignis wird heute
+ * bewusst uebersprungen, und das zu aendern ist ein eigener Schritt mit
+ * eigener Pruefung.
+ *
+ * Diese Mail darf nichts aufhalten: jeder Fehler wird gefangen, der Webhook
+ * antwortet in jedem Fall mit 200, und am Meta-Pfad aendert sie nichts.
+ */
+const PROBE_ALERT_STANDARD = 'support@bomayegym.com';
+
+/** Nummer fuer wa.me: nur Ziffern mit Landesvorwahl, kein Plus. */
+export function waLink(telefon) {
+  const ziffern = normalizePhone(telefon);
+  return ziffern ? `https://wa.me/${ziffern}` : '';
+}
+
+export function buildProbeAlarm({ customer, invoiceId, kurs, zeitpunkt, backofficeUrl }) {
+  const name = (customer?.name || `${customer?.first_name || ''} ${customer?.last_name || ''}`.trim()) || 'Ohne Namen';
+  const telefon = (customer?.phone || '').trim();
+  const wa = waLink(telefon);
+  const ort = standort();
+
+  const betreff = betreffVorsatz(ort) + `🥊 Probetraining gebucht: ${name}`;
+
+  const zeilen = [
+    ['Name', name],
+    ['Telefon', telefon || 'nicht hinterlegt'],
+    ['E-Mail', (customer?.email || '').trim() || 'nicht hinterlegt'],
+    ['Gebucht', kurs || 'steht nicht in der Rechnung'],
+    ['Eingegangen', zeitpunkt || 'unbekannt'],
+  ];
+
+  const text = [
+    `Neue Probetraining-Buchung`,
+    '',
+    ...zeilen.map(([k, v]) => `${k}: ${v}`),
+    wa ? `WhatsApp: ${wa}` : 'WhatsApp: keine Nummer hinterlegt',
+    backofficeUrl ? `Im Backoffice: ${backofficeUrl}` : '',
+    '',
+    'Kurs und Uhrzeit des Termins stehen nicht in der Rechnung.',
+    'Sie stehen im Backoffice beim Mitglied.',
+    `Rechnung: ${invoiceId}`,
+  ].filter(Boolean).join('\n');
+
+  const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:24px;background:#0A0A08;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+  <div style="max-width:520px;margin:0 auto;background:#F5F0E8;padding:28px;">
+    <p style="margin:0 0 18px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#A67C2E;">Probetraining gebucht</p>
+    <p style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0A0A08;">${esc(name)}</p>
+    <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;color:#0A0A08;">
+      ${zeilen.slice(1).map(([k, v]) => `<tr>
+        <td style="padding:6px 0;color:rgba(10,10,8,0.55);width:40%;">${esc(k)}</td>
+        <td style="padding:6px 0;">${esc(v)}</td></tr>`).join('')}
+    </table>
+    ${wa ? `<p style="margin:22px 0 0;"><a href="${esc(wa)}" style="display:inline-block;padding:14px 22px;background:#C9A84C;color:#0A0A08;text-decoration:none;font-weight:700;letter-spacing:1px;">PER WHATSAPP ANTWORTEN</a></p>` : ''}
+    ${backofficeUrl ? `<p style="margin:14px 0 0;font-size:13px;"><a href="${esc(backofficeUrl)}" style="color:#0A0A08;">Im Backoffice öffnen</a></p>` : ''}
+    <p style="margin:22px 0 0;font-size:12px;line-height:1.6;color:rgba(10,10,8,0.55);">
+      Kurs und Uhrzeit des Termins stehen nicht in der Rechnung, sondern im Backoffice beim Mitglied.<br>
+      Rechnung: ${esc(String(invoiceId))}
+    </p>
+  </div>
+</body></html>`;
+
+  return { betreff, text, html, wa };
+}
+
+async function sendProbetrainingAlarm({ customer, invoiceId, kurs, zeitpunkt, backofficeUrl }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const an = (process.env.PROBE_ALERT_EMAIL || PROBE_ALERT_STANDARD).trim();
+  const fromEmail = process.env.FROM_EMAIL;
+  if (!apiKey || !an || !fromEmail) return { ok: false, reason: 'env-missing' };
+
+  const { betreff, text, html } = buildProbeAlarm({ customer, invoiceId, kurs, zeitpunkt, backofficeUrl });
+
+  try {
+    const resend = new Resend(apiKey);
+    const from = fromEmail.includes('<') ? fromEmail : `Bomaye Gym <${fromEmail}>`;
+    const { data, error } = await resend.emails.send({ from, to: an, subject: betreff, html, text });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, id: data?.id };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
 }
 
 // ── Email templates ───────────────────────────────────────────────────────────
