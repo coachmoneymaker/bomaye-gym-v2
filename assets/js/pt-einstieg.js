@@ -160,8 +160,185 @@
     pruefen();
   }
 
+  /* ── 3. Leerer Tag trotz allem ────────────────────────────────────────
+     Der Livetest vom 25.10. zeigt zwei Faelle, die der Wochenend-Weg oben
+     nicht abdeckt:
+
+       - Das Widget oeffnet auf heute, und heute ist leer, weil die Kurse
+         des Tages schon gelaufen sind.
+       - Ein Wochensprung landet wieder auf einem leeren Tag, weil das
+         Widget seinen gewaehlten Wochentag ueber den Sprung mitnimmt.
+
+     Deshalb diese Wache: bleibt die Terminliste leer, obwohl der
+     Datumswaehler steht, wird EINMAL auf den naechsten Tag mit
+     Probetraining gestellt. Danach hoechstens noch ein zweites Mal, und
+     nur innerhalb der ersten halben Minute nach dem Mounten - wer danach
+     selbst blaettert, soll in Ruhe gelassen werden.
+
+     Gegriffen wird nur in einen Zustand, in dem nichts zu verlieren ist:
+     eine leere Liste. Ist ein Bsport-Dialog offen, passiert gar nichts.
+
+     Die beiden Klassenmuster sind belegt: .bs-offer-list-item steht seit
+     PR #46 in unserem CSS, der Datumswaehler
+     (.bs-marketplace-date-picker__placeholder) stammt aus der Livediagnose
+     in kalender-tag.js. */
+  var MAX_KORREKTUREN = 6;
+  var ABKUEHLUNG_MS = 2500;
+
+  function leereListeWache() {
+    var wurzel = document.getElementById(WIDGET_ID);
+    if (!wurzel || typeof MutationObserver !== 'function') return;
+    if (!window.bomayeKalenderTag || typeof window.bomayeKalenderTag.starte !== 'function') return;
+
+    var korrekturen = 0;
+    var ruhe = null;
+    var zuletzt = null;        /* zuletzt gesetzter Zieltag, als JJJJ-MM-TT */
+    var zuletztMs = 0;
+    var versucheProZiel = 0;
+
+    function listeLeer() {
+      var waehler = wurzel.querySelector('[class*="date-picker"], [class*="datePicker"]');
+      if (!waehler) return false;                       /* noch nicht fertig */
+      return wurzel.querySelectorAll('[class*="offer-list-item"]').length === 0;
+    }
+
+    function iso(d) {
+      function z(n) { return (n < 10 ? '0' : '') + n; }
+      return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate());
+    }
+
+    function pruefen() {
+      if (korrekturen >= MAX_KORREKTUREN) return;
+      if (Date.now() - zuletztMs < ABKUEHLUNG_MS) return;
+      if (document.body.classList.contains('bsport-modal-open')) return;
+      if (!listeLeer()) return;
+
+      /* Ab wann gesucht wird:
+           - noch nichts versucht: ab morgen, wenn heute selbst ein
+             Probetag ist (dann sind seine Kurse offenbar durch), sonst ab
+             heute;
+           - schon versucht und immer noch leer: ab dem Tag NACH dem
+             zuletzt gesetzten Ziel. So wandert die Suche vorwaerts, statt
+             denselben leeren Tag erneut anzusteuern. Genau das deckt den
+             Fall ab, dass in der angezeigten Woche nichts mehr kommt.
+
+         Zweimal dasselbe Ziel ist die Grenze: greift es dann immer noch
+         nicht, liegt es nicht am Tag, und weitere Klicks helfen nicht. */
+      var ziel;
+      if (!zuletzt) {
+        var ab = mittags(new Date());
+        if (istProbetag(ab)) ab.setDate(ab.getDate() + 1);
+        ziel = naechsterProbetag(ab);
+      } else if (versucheProZiel < 2) {
+        ziel = mittags(new Date(zuletzt + 'T12:00:00'));      /* noch einmal */
+      } else {
+        var weiter = mittags(new Date(zuletzt + 'T12:00:00'));
+        weiter.setDate(weiter.getDate() + 1);
+        ziel = naechsterProbetag(weiter);
+      }
+      if (!ziel) return;
+
+      var zielIso = iso(ziel);
+      versucheProZiel = (zielIso === zuletzt) ? versucheProZiel + 1 : 1;
+      zuletzt = zielIso;
+      zuletztMs = Date.now();
+      korrekturen++;
+      try { window.bomayeKalenderTag.starte(WIDGET_ID, ziel, debugAn()); } catch (e) {}
+    }
+
+    /* Laeuft weiter, solange die Seite offen ist: ein Wochensprung ist
+       eine Aenderung im Baum wie jede andere, und genau danach steht der
+       Kalender wieder auf einem Tag, den das Widget sich selbst gemerkt
+       hat. Die Abkuehlung und der Deckel oben halten das in Grenzen. */
+    new MutationObserver(function () {
+      clearTimeout(ruhe);
+      ruhe = setTimeout(pruefen, 600);
+    }).observe(wurzel, { childList: true, subtree: true });
+  }
+
+  /* ── 4. Filterleiste und Teilnehmerzaehler ausblenden ─────────────────
+     WAS OFFIZIELL MOEGLICH WAERE, WEISS NIEMAND HIER
+     api-docs.dev.bsport.io, cdn.bsport.io und das Hilfecenter sind aus der
+     Bauumgebung nicht erreichbar (alle HTTP 000). Ob die Konfiguration
+     Schalter fuer Filter oder Zaehler kennt, ist damit nicht feststellbar.
+     Belegt ist nur das Gegenteil fuer einen anderen Schluessel:
+     config.calendar.date wird ignoriert (PR #79, Livetest).
+
+     DESHALB DIESER WEG, und zwar so vorsichtig wie moeglich:
+
+     Filterleiste: gesucht werden die Beschriftungen aus dem Livetest vom
+     25.10. - Suche, Aktivitaet, Niveau, Lehrkraft, Einrichtung. Versteckt
+     wird der kleinste gemeinsame Kasten, der MINDESTENS ZWEI davon
+     enthaelt und weder den Datumswaehler noch eine Terminkarte. Damit
+     kann die Regel nicht den halben Kalender mitnehmen, wenn Bsport
+     umbaut. Findet sie nichts, passiert nichts.
+
+     Teilnehmer- und Geschlechterzaehler stehen hier NICHT mehr: der
+     Betreiber schaltet sie in den Bsport-Einstellungen ab. Das ist der
+     richtige Ort dafuer - eine Einstellung an der Quelle schlaegt jede
+     Regel, die im Nachhinein etwas versteckt. Die frueheren Zeilen dazu
+     sind ersatzlos raus.
+
+     Abschalten zum Nachsehen: /probetraining?ptfilter=0 */
+  var FILTER_WOERTER = ['suche', 'aktivität', 'aktivitaet', 'niveau', 'lehrkraft', 'einrichtung'];
+
+  function ausblendenAn() {
+    try {
+      return new URLSearchParams(window.location.search).get('ptfilter') !== '0';
+    } catch (e) { return true; }
+  }
+
+  function istGeschuetzt(el) {
+    return !!(el.querySelector('[class*="date-picker"], [class*="datePicker"], [class*="offer-list-item"]'));
+  }
+
+  function filterleisteVerstecken(wurzel) {
+    var treffer = [];
+    var alle = wurzel.querySelectorAll('label, span, p, div, input, button');
+    for (var i = 0; i < alle.length && i < 600; i++) {
+      var el = alle[i];
+      var txt = (el.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      var platz = (el.getAttribute && el.getAttribute('placeholder') || '').toLowerCase();
+      var wort = txt.length <= 16 ? txt : '';
+      if (FILTER_WOERTER.indexOf(wort) === -1 && FILTER_WOERTER.indexOf(platz) === -1) continue;
+      treffer.push(el);
+    }
+    if (treffer.length < 2) return false;
+
+    /* Kleinster Kasten, der mindestens zwei der Beschriftungen traegt. */
+    var kandidat = treffer[0];
+    while (kandidat && kandidat !== wurzel) {
+      var drin = 0;
+      for (var j = 0; j < treffer.length; j++) if (kandidat.contains(treffer[j])) drin++;
+      if (drin >= 2) break;
+      kandidat = kandidat.parentElement;
+    }
+    if (!kandidat || kandidat === wurzel) return false;
+    if (istGeschuetzt(kandidat)) return false;
+    if (kandidat.classList.contains('pt-aus')) return true;
+    kandidat.classList.add('pt-aus');
+    return true;
+  }
+
+  function aufraeumen() {
+    if (!ausblendenAn()) return;
+    var wurzel = document.getElementById(WIDGET_ID);
+    if (!wurzel || typeof MutationObserver !== 'function') return;
+    var ruhe = null;
+    function lauf() {
+      try { filterleisteVerstecken(wurzel); } catch (e) {}
+    }
+    new MutationObserver(function () {
+      clearTimeout(ruhe);
+      ruhe = setTimeout(lauf, 250);
+    }).observe(wurzel, { childList: true, subtree: true });
+    lauf();
+  }
+
   function start() {
+    try { aufraeumen(); } catch (e) {}
     try { wochenende(); } catch (e) {}
+    try { leereListeWache(); } catch (e) {}
     try { klebeKnopf(); } catch (e) {}
   }
 

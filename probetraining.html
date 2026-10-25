@@ -84,11 +84,11 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
   <meta name="theme-color" content="#0A0A08">
-  <meta name="description" content="Buche dein kostenloses Probetraining im Bomaye Gym München. Termin wählen, anmelden, loslegen — unverbindlich und in wenigen Minuten." />
+  <meta name="description" content="Buche dein kostenloses Probetraining im Bomaye Gym München. Termin wählen, anmelden, loslegen. Unverbindlich und in wenigen Minuten." />
   <meta name="robots" content="index, follow" />
 
   <meta property="og:title" content="Kostenloses Probetraining buchen | BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Buche dein kostenloses Probetraining im Bomaye Gym München. Termin wählen, anmelden, loslegen — unverbindlich und in wenigen Minuten." />
+  <meta property="og:description" content="Buche dein kostenloses Probetraining im Bomaye Gym München. Termin wählen, anmelden, loslegen. Unverbindlich und in wenigen Minuten." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/probetraining" />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
@@ -194,7 +194,7 @@
       <a class="nav-link" href="/coaches">COACHES</a>
       <a class="nav-link" href="/about">ABOUT US</a>
       <a class="nav-link" href="/faq">FAQ</a>
-      <a class="btn btn--gold btn--sm" href="/mitglied-werden"><span class="nav-cta-text">MITGLIED WERDEN<span class="nav-cta-preis"> — AB 14,90€</span></span></a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden"><span class="nav-cta-text">MITGLIED WERDEN<span class="nav-cta-preis"> AB 14,90€</span></span></a>
     </nav>
 
     <button class="burger" onclick="toggleMobileMenu()" aria-label="Menü" aria-expanded="false" id="burger-btn" type="button">
@@ -262,35 +262,34 @@
   <div class="pt-hero__inhalt">
     <p class="pt-hero__eyebrow">DEIN PROBETRAINING</p>
     <h1 id="pt-hero-h1">Dein erstes Boxtraining ist <span class="shimmer">gratis</span></h1>
-    <p class="pt-hero__trust">Kostenlos und unverbindlich. Ohne Vorkenntnisse. Handschuhe leihst du bei uns.</p>
-    <a class="btn btn--gold pt-hero__cta" id="pt-hero-cta" href="#pt-booking">Termin wählen</a>
+    <p class="pt-hero__trust">Ohne Vorkenntnisse. Handschuhe bekommst du von uns.</p>
+    <!-- Bewertung als Vertrauenszeile. Die Zahlen kommen vom Betreiber
+         (204 Bewertungen, Durchschnitt 5,0) und stehen im Markup; sie
+         werden nirgends automatisch nachgezogen. Ziel ist Googles
+         dokumentierte Adresse nach Orts-ID; die ID stammt aus dem
+         Bewertungslink des eigenen Unternehmensprofils.
+
+         role="img" samt aria-label, damit Vorleseprogramme einen Satz
+         hoeren statt "fuenf Komma null 204". -->
+    <a class="pt-hero__google"
+       href="https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ"
+       target="_blank" rel="noopener"
+       aria-label="5,0 von 5 Sternen bei 204 Bewertungen auf Google. Öffnet das Profil bei Google Maps in einem neuen Tab.">
+      <svg class="pt-hero__sterne" viewBox="0 0 120 24" width="100" height="20" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="pt-stern" d="M12 2.6l2.83 6.13 6.67.78-4.95 4.55 1.35 6.57L12 17.3l-5.9 3.33 1.35-6.57L2.5 9.51l6.67-.78z"/>
+        </defs>
+        <use href="#pt-stern" x="0"></use>
+        <use href="#pt-stern" x="24"></use>
+        <use href="#pt-stern" x="48"></use>
+        <use href="#pt-stern" x="72"></use>
+        <use href="#pt-stern" x="96"></use>
+      </svg>
+      <span class="pt-hero__note"><b>5,0</b> · 204 Bewertungen auf Google</span>
+    </a>
+    <a class="btn btn--gold pt-hero__cta" id="pt-hero-cta" href="#pt-cal-view">Termin wählen</a>
   </div>
 </section>
-
-<!-- ═══════ ABLAUF ═══════
-     War bis hierher der Kopfbereich mit Titel. Titel, Zusage und Knopf
-     stehen jetzt im Schirm darueber; geblieben ist der Ablauf in drei
-     Schritten. Eyebrow und h1 sind raus, damit es nur eine Ueberschrift
-     erster Ordnung auf der Seite gibt.                                    -->
-<div class="pt-page-hero">
-  <div class="container">
-    <p>Kostenlos, unverbindlich und ohne Vorkenntnisse. Such dir einfach einen Termin aus.</p>
-    <div class="pt-steps">
-      <div class="pt-step">
-        <div class="pt-step-num">01</div>
-        <p>Termin auswählen, der dir passt.</p>
-      </div>
-      <div class="pt-step">
-        <div class="pt-step-num">02</div>
-        <p>Kurz anmelden — dauert zwei Minuten.</p>
-      </div>
-      <div class="pt-step">
-        <div class="pt-step-num">03</div>
-        <p>Sportsachen einpacken und loslegen.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════ BUCHUNG ═══════
      Das Widget haengt hier direkt im Seitenfluss. Kein Overlay, keine
@@ -323,6 +322,20 @@
          sagt bewusst nicht, der Kalender sei schon umgestellt: das Umstellen
          kann abbrechen, der Satz bleibt dann trotzdem richtig. -->
     <p class="pt-booking-limit" id="pt-wochenend-hinweis" hidden>Am Wochenende ist kein Probetraining. Die nächsten Termine sind ab Montag.</p>
+    <!-- Drei Schritte, direkt ueber dem Kalender. Sie standen vorher weiter
+         oben in einem eigenen Abschnitt; dort kosteten sie einen halben
+         Bildschirm Weg bis zum Kalender. Hier beantworten sie die Frage,
+         die beim Hinsehen entsteht: was passiert, wenn ich tippe.
+
+         Schritt 3 nennt den Gratis-Eintrag beim Namen. Bsports Kaufschritt
+         listet unter "Empfehlungen" zuerst das Abo; wer den Eintrag fuer
+         0 Euro nicht bemerkt, haelt das Abo fuer den einzigen Weg und
+         bricht ab. -->
+    <ol class="pt-ablauf">
+      <li><span class="pt-ablauf__nr">1</span>Termin wählen</li>
+      <li><span class="pt-ablauf__nr">2</span>Kurz registrieren</li>
+      <li><span class="pt-ablauf__nr">3</span>Probetraining für 0 € auswählen</li>
+    </ol>
   </div>
   <div class="container">
     <!-- Der Notbehelf-Hinweis ("am Bildschirmrand wischen") ist ersatzlos
@@ -342,18 +355,32 @@
          Einwilligungs-Bruecke bekommt genau dieses Element uebergeben
          (bomayeGateBsport in probetraining-page.js) und haengt ihren
          Hinweis hinein. Daran wird nichts geaendert. -->
-    <div class="schedule-frame" id="pt-cal-view">
+    <!-- Die drei data-gate-Attribute beschriften nur den Platzhalter der
+         Einwilligungssperre (consent-bridge.js). Ohne sie steht dort der
+         allgemeine Text wie auf den uebrigen Seiten. An der Sperre selbst
+         aendert sich nichts: ohne Einwilligung laedt nichts von bsport.io. -->
+    <div class="schedule-frame" id="pt-cal-view"
+         data-gate-titel="Termine anzeigen"
+         data-gate-text="Die Terminauswahl kommt von bsport und setzt dabei Marketing-Cookies. Wir laden sie erst, wenn du tippst."
+         data-gate-knopf="TERMINE ANZEIGEN">
       <div class="schedule-frame__widget">
         <div id="bsport-widget-172485"></div>
         <noscript>
           <p style="text-align:center;color:rgba(10,10,8,0.6);padding:2rem 0;">
-            Bitte JavaScript aktivieren, um die Terminauswahl zu laden — oder ruf uns einfach an.
+            Bitte JavaScript aktivieren, um die Terminauswahl zu laden, oder ruf uns einfach an.
           </p>
         </noscript>
       </div>
     </div>
   </div>
-  <p class="pt-booking-note">Die Buchung wird sicher über bsport.io abgewickelt — kostenlos und unverbindlich.</p>
+  <p class="pt-booking-note">Die Buchung wird sicher über bsport.io abgewickelt, kostenlos und unverbindlich.</p>
+  <!-- Rueckfall fuer alle, die im Kalender nichts Passendes finden. Der Text
+       ist vorbelegt, damit niemand selbst formulieren muss. -->
+  <p class="pt-whatsapp">
+    Kein passender Termin?
+    <a href="https://wa.me/491737513627?text=Hallo%2C%20ich%20m%C3%B6chte%20ein%20Probetraining%20machen."
+       target="_blank" rel="noopener">Schreib uns auf WhatsApp</a>
+  </p>
 </section>
 
 <!-- ═══════ DEIN ERSTES MAL ═══════
@@ -368,7 +395,7 @@
 <section class="pt-erstes" aria-labelledby="pt-erstes-h2">
   <div class="pt-erstes-head">
     <h2 id="pt-erstes-h2">So läuft dein erstes Mal</h2>
-    <p>Damit du weißt, was dich erwartet — bevor du kommst.</p>
+    <p>Damit du weißt, was dich erwartet, bevor du kommst.</p>
   </div>
   <div class="pt-steps">
     <div class="pt-step">
@@ -395,13 +422,13 @@
      sichtbar. Dieses Element gibt es hier nicht, die Zeile bliebe also
      unsichtbar. Deshalb eine eigene Huelle, die nur das Flex-Layout
      macht.                                                          -->
-<section class="pt-cred" aria-label="Trainer-Qualifikationen">
+<section class="pt-cred" aria-label="Was dich erwartet">
   <div class="pt-cred-row">
-    <span class="hero-cred-v2-item">LANDESTRAINER BAYERN</span>
+    <span class="hero-cred-v2-item">LIZENZIERTE TRAINER</span>
     <span class="hero-cred-v2-divider" aria-hidden="true"></span>
-    <span class="hero-cred-v2-item">DBV A-LIZENZ</span>
+    <span class="hero-cred-v2-item">OLYMPISCHES BOXEN</span>
     <span class="hero-cred-v2-divider" aria-hidden="true"></span>
-    <span class="hero-cred-v2-item">20+ JAHRE WETTKAMPF</span>
+    <span class="hero-cred-v2-item">FÜR ANFÄNGER GEMACHT</span>
   </div>
 </section>
 
@@ -411,7 +438,7 @@
      IntersectionObserver gibt es keine Leiste, statt einer, die den
      Kalender verdeckt. Verhalten in /assets/js/pt-einstieg.js.          -->
 <div class="pt-sticky" id="pt-sticky" hidden>
-  <a class="btn btn--gold pt-sticky__btn" href="#pt-booking">Termin wählen</a>
+  <a class="btn btn--gold pt-sticky__btn" href="#pt-cal-view">Termin wählen</a>
 </div>
 
 <!-- ═══════ FOOTER ═══════ -->

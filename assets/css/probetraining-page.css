@@ -787,3 +787,178 @@ body .pt-bsport-dialog * {
 body.bsport-modal-open .pt-sticky {
   display: none !important;
 }
+
+/* ── Bewertung im ersten Schirm ────────────────────────────────────────────
+   Sterne und Text in einer Reihe, bei schmalen Schirmen umbrechend: auf
+   320px stehen die Sterne dann oben und die Zahl darunter, statt dass die
+   Zeile hinauslaeuft.
+
+   Der Block ist ein Link auf den Google-Eintrag, deshalb 44px hoch. Gold
+   liegt auf dem dunklen Foto; der Text daneben steht in Creme, weil Gold
+   auf Creme nur 2,01:1 ergaebe (siehe PR #106 und #107).                  */
+.pt-hero__google {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  margin: 12px 0 0;
+  min-height: 44px;
+  padding: 4px 8px;
+  text-decoration: none;
+}
+.pt-hero__sterne { display: block; flex: 0 0 auto; fill: #C9A84C; }
+.pt-hero__note {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  line-height: 1.3;
+  color: rgba(245, 240, 232, 0.88);
+  white-space: nowrap;
+}
+.pt-hero__note b { font-weight: 700; color: #F5F0E8; }
+.pt-hero__google:hover .pt-hero__note,
+.pt-hero__google:focus-visible .pt-hero__note {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pt-hero__google:focus-visible { outline: 2px solid #C9A84C; outline-offset: 3px; }
+
+/* ── Drei Schritte ueber dem Kalender ──────────────────────────────────────
+   Eine Liste, keine Spalten: auf dem Handy liest sich untereinander
+   schneller als drei Kaestchen nebeneinander, und der Kalender rueckt
+   dadurch nicht nach unten.                                               */
+.pt-ablauf {
+  list-style: none;
+  margin: 18px auto 0;
+  padding: 0;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+.pt-ablauf li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(10, 10, 8, 0.72);
+}
+.pt-ablauf__nr {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0A0A08;
+  background: #C9A84C;
+}
+@media (min-width: 769px) {
+  .pt-ablauf {
+    flex-direction: row;
+    justify-content: center;
+    max-width: none;
+    gap: 28px;
+  }
+}
+
+/* ── Rueckfall unter dem Kalender ──────────────────────────────────────── */
+.pt-whatsapp {
+  margin: 10px auto 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(10, 10, 8, 0.6);
+}
+.pt-whatsapp a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 4px;
+  color: #0A0A08;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Filterleiste im Kalender ──────────────────────────────────────────────
+   Bsport bietet keinen Schalter dafuer, bestaetigt vom Betreiber nach
+   Durchsicht der Einstellungen. Also auf unserer Seite, und ausschliesslich
+   innerhalb des Widget-Containers.
+
+   ZWEI WEGE, weil der eine allein nicht reicht:
+
+   1. Nach Klassennamen. style.css versteckt auf Mobil seit Laengerem
+      [class*="filter"], nimmt dabei aber die Suchzeile aus. Hier faellt
+      die Ausnahme weg und die Regel gilt in jeder Breite - die Leiste
+      gehoert auf dieser Seite ganz weg, auch am Schreibtisch.
+
+   2. Nach Beschriftung, in pt-einstieg.js, das .pt-aus setzt. Der
+      Livetest zeigt die Leiste trotz Regel 1, die echten Klassennamen
+      enthalten also kein "filter". Regel 2 findet sie ueber die Woerter
+      Suche, Aktivitaet, Niveau, Lehrkraft, Einrichtung.
+
+   Teilnehmer- und Geschlechterzaehler stehen hier bewusst NICHT: die
+   schaltet der Betreiber in den Bsport-Einstellungen ab. Eine Einstellung
+   an der Quelle ist besser als eine Regel, die im Nachhinein etwas
+   verdeckt.                                                              */
+#bsport-widget-172485 .cleanslate [class*="filter"],
+#bsport-widget-172485 .cleanslate [class*="Filter"] {
+  display: none !important;
+}
+#bsport-widget-172485 .pt-aus {
+  display: none !important;
+}
+
+/* Beide goldenen Knoepfe zielen auf den Kalender selbst, nicht auf den
+   Abschnitt darueber: nach einem Tipp soll der Kalender im Bild stehen,
+   nicht nur seine Ueberschrift. Der Abstand nach oben laesst die drei
+   Schritte sichtbar, damit klar bleibt, was als Naechstes passiert.
+   .schedule-frame bringt bereits scroll-margin-top: var(--nav-h) mit,
+   hier kommt der Platz fuer die Schritte dazu. */
+#pt-cal-view {
+  scroll-margin-top: calc(var(--nav-h, 72px) + 150px);
+}
+
+/* ── Der Ladeschimmer darf den Einwilligungsknopf nicht wegschieben ───────
+   GEMESSEN: nach dem Tipp auf "Termin wählen" stand der Kalenderrahmen bei
+   230px, der Platzhalter mit dem Knopf aber erst bei 570px und der Knopf
+   selbst bei 740px, also deutlich unter dem Rand jedes geprueften Handys.
+   Dazwischen lagen 420px leerer Ladeschimmer: #bsport-widget-172485:empty
+   und .schedule-frame__widget bringen je min-height: 420px mit, und der
+   Platzhalter haengt daruNTER.
+
+   Solange der Platzhalter steht, ist dieser Schimmer nur Leerraum. Also
+   weg damit, aber ausschliesslich in diesem Zustand: sobald eingewilligt
+   ist, verschwindet der Platzhalter, die Regeln greifen nicht mehr und das
+   Widget bekommt seine Mindesthoehe zurueck.
+
+   Jede :has()-Regel steht in einem eigenen Block. In einer Liste wuerde ein
+   nicht unterstuetztes :has() die ganze Liste ungueltig machen (Lehre aus
+   PR #137). Browser ohne :has() zeigen schlicht den heutigen Stand. */
+#pt-cal-view:has(.bomaye-consent-gate) .schedule-frame__widget {
+  min-height: 0;
+}
+/* Ohne :empty, weil der Mountpunkt in der Messung nicht als leer galt und
+   die Regel damit ins Leere lief. Solange der Platzhalter steht, ist dort
+   ohnehin nichts montiert. */
+#pt-cal-view:has(.bomaye-consent-gate) #bsport-widget-172485 {
+  /* Nur die Mindesthoehe faellt weg, der Kasten selbst bleibt im Baum.
+     display: none waere einfacher, nimmt aber der Reichweitenpruefung
+     ihren Pruefkoerper: sie zaehlt die Widget-Container und legt in jeden
+     einen hohen Testblock. Mit min-height: 0 bleibt der Container zaehlbar
+     und ist trotzdem 0 hoch, solange nichts darin steht.
+
+     !important, weil die Grundregeln in style.css mit !important arbeiten;
+     ohne Gegengewicht blieben 340px leerer Schimmer stehen (gemessen). */
+  min-height: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}

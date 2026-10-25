@@ -202,23 +202,60 @@
     box.className = PLACEHOLDER_CLASS;
     box.setAttribute('role', 'note');
 
+    /* Beschriftung je Seite ueberschreibbar. Ohne die Attribute steht hier
+       Wort fuer Wort der bisherige Text; nur die Buchungsseiten setzen sie. */
+    var titel = container.getAttribute('data-gate-titel')
+      || 'Buchungssystem benötigt deine Einwilligung';
+    var text  = container.getAttribute('data-gate-text')
+      || 'Unser Buchungssystem wird von bsport bereitgestellt und setzt dabei '
+       + 'Marketing-Cookies. Wir laden es erst, wenn du dem zugestimmt hast.';
+    var knopf = container.getAttribute('data-gate-knopf')
+      || 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+
     var h = document.createElement('p');
     h.className = PLACEHOLDER_CLASS + '__title';
-    h.textContent = 'Buchungssystem benötigt deine Einwilligung';
+    h.textContent = titel;
 
     var p = document.createElement('p');
     p.className = PLACEHOLDER_CLASS + '__text';
-    p.textContent = 'Unser Buchungssystem wird von bsport bereitgestellt und setzt dabei '
-      + 'Marketing-Cookies. Wir laden es erst, wenn du dem zugestimmt hast.';
+    p.textContent = text;
 
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = PLACEHOLDER_CLASS + '__btn';
-    btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+    btn.textContent = knopf;
     btn.addEventListener('click', function () {
-      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
-        window.Cookiebot.renew();
-      }
+      var cb = window.Cookiebot;
+      if (!cb) return;
+      /* EIN Tipp statt zwei.
+
+         Bisher oeffnete der Knopf Cookiebots Banner, in dem noch einmal
+         "Alle akzeptieren" getippt werden musste. Zwei Tipps, und der
+         zweite steht in einer fremden Oberflaeche mit viel Text - genau
+         dort bricht ein Teil der Besucher ab.
+
+         submitCustomConsent(Praeferenzen, Statistik, Marketing) ist
+         Cookiebots eigene Schnittstelle dafuer. Sie protokolliert die
+         Einwilligung wie jede andere auch. Erteilt wird NUR Marketing,
+         also das Minimum, das Bsport braucht; Statistik und Praeferenzen
+         bleiben aus.
+
+         Rechtlich aendert das nichts: ohne Einwilligung laedt weiterhin
+         nichts von bsport.io. Was sich aendert, ist der Weg dorthin. Der
+         Text ueber dem Knopf sagt, was geladen wird und was dabei gesetzt
+         wird; der Knopf benennt beides. Damit ist die Einwilligung
+         informiert, ausdruecklich und auf diesen einen Dienst bezogen.
+
+         Faellt die Schnittstelle aus oder gibt es sie in dieser
+         Cookiebot-Fassung nicht, bleibt es beim alten Weg ueber renew().
+         Schlimmstenfalls also der heutige Stand, nie weniger. */
+      try {
+        if (typeof cb.submitCustomConsent === 'function') {
+          cb.submitCustomConsent(false, false, true);
+          return;
+        }
+      } catch (e) { /* weiter unten mit renew() */ }
+      if (typeof cb.renew === 'function') cb.renew();
     });
 
     var alt = document.createElement('p');
@@ -228,9 +265,41 @@
       + 'oder schreib uns per <a href="https://wa.me/491737513627" '
       + 'target="_blank" rel="noopener">WhatsApp</a>.';
 
+
+    /* Kurze Erklaerung direkt unter dem Knopf. Sie steht dort, weil der
+       Knopf jetzt in einem Tipp einwilligt: was dabei passiert, muss man
+       lesen koennen, bevor man tippt, nicht danach im Banner.
+
+       "Cookie-Einstellungen" oeffnet Cookiebots Dialog. Der Handler haengt
+       direkt am Element: die allgemeine Verdrahtung in consent-bridge.js
+       laeuft beim Laden der Seite, dieser Absatz entsteht aber erst, wenn
+       der Platzhalter gezeichnet wird. */
+    var hinweis = document.createElement('p');
+    hinweis.className = PLACEHOLDER_CLASS + '__hinweis';
+    hinweis.appendChild(document.createTextNode(
+      'Mit Tippen lädst du unseren Buchungskalender von bsport und stimmst '
+      + 'Marketing-Cookies zu. Mehr in den '));
+    var mehr = document.createElement('a');
+    mehr.href = '#';
+    /* BEWUSST OHNE die Klasse cookie-settings-link: consent-bridge.js
+       verdrahtet alle Elemente mit dieser Klasse beim Laden der Seite.
+       Traegt dieser Link sie auch, haengen zwei Handler daran und
+       Cookiebot.renew() laeuft zweimal (gemessen). Der Handler unten
+       genuegt. */
+    mehr.textContent = 'Cookie-Einstellungen';
+    mehr.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+        window.Cookiebot.renew();
+      }
+    });
+    hinweis.appendChild(mehr);
+    hinweis.appendChild(document.createTextNode('.'));
+
     box.appendChild(h);
     box.appendChild(p);
     box.appendChild(btn);
+    box.appendChild(hinweis);
     box.appendChild(alt);
     container.appendChild(box);
   }

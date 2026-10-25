@@ -362,15 +362,26 @@
     box.className = GATE_CLASS;
     box.setAttribute('role', 'note');
 
+    /* Beschriftung je Seite ueberschreibbar. Ohne die Attribute steht hier
+       Wort fuer Wort der bisherige Text. Gesetzt werden sie nur dort, wo der
+       Platzhalter nicht irgendein Buchungssystem ankuendigt, sondern etwas
+       Konkretes - auf /probetraining die Terminauswahl. */
+    var TITEL = container.getAttribute('data-gate-titel')
+      || 'Buchungssystem benötigt deine Einwilligung';
+    var TEXT = container.getAttribute('data-gate-text')
+      || 'Bitte akzeptiere Marketing-Cookies, um das Buchungssystem zu laden. '
+       + 'Es wird von bsport bereitgestellt und setzt dabei Cookies, die eine '
+       + 'Einwilligung brauchen.';
+    var KNOPF = container.getAttribute('data-gate-knopf')
+      || 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+
     var h = document.createElement('p');
     h.className = GATE_CLASS + '__title';
-    h.textContent = 'Buchungssystem benötigt deine Einwilligung';
+    h.textContent = TITEL;
 
     var p = document.createElement('p');
     p.className = GATE_CLASS + '__text';
-    p.textContent = 'Bitte akzeptiere Marketing-Cookies, um das Buchungssystem zu laden. '
-      + 'Es wird von bsport bereitgestellt und setzt dabei Cookies, die eine '
-      + 'Einwilligung brauchen.';
+    p.textContent = TEXT;
 
     var btn = document.createElement('button');
     btn.type = 'button';
@@ -446,7 +457,7 @@
     function armButton() {
       if (cookiebotReady()) {
         btn.disabled = false;
-        btn.textContent = 'MARKETING-COOKIES ERLAUBEN UND BUCHUNG LADEN';
+        btn.textContent = KNOPF;
         return true;
       }
       btn.disabled = true;
@@ -470,6 +481,52 @@
         if (!cookiebotReady()) {
           showFailure('Cookiebot.renew ist nicht verfuegbar');
           return;
+        }
+
+        /* EIN TIPP STATT ZWEI.
+
+           Bisher ging hier Cookiebots Banner auf, und dort musste ein
+           zweites Mal getippt werden. Zwei Tipps, der zweite in einer
+           fremden Oberflaeche mit viel Text - an dieser Stelle bricht ein
+           Teil der Besucher ab, und genau dieser Schritt steht zwischen
+           einer Anzeige und einer Buchung.
+
+           submitCustomConsent(Praeferenzen, Statistik, Marketing) ist
+           Cookiebots eigene Schnittstelle. Sie protokolliert die
+           Einwilligung wie jede andere. Erteilt wird NUR Marketing, also
+           das Minimum, das Bsport braucht.
+
+           Rechtlich aendert sich nichts: ohne Einwilligung laedt weiterhin
+           nichts von bsport.io. Was sich aendert, ist der Weg dorthin. Der
+           Text darueber sagt, was geladen wird und was dabei gesetzt wird,
+           der Knopf benennt beides - die Einwilligung ist damit informiert,
+           ausdruecklich und auf diesen einen Dienst bezogen.
+
+           Das ganze iOS-Vorgeplaenkel darunter (Modal schliessen, Overlays
+           unterdruecken) braucht dieser Weg nicht: es gibt keinen Dialog,
+           der sichtbar werden muesste. Deshalb steht er davor.
+
+           Schlaegt der Aufruf fehl oder kennt diese Cookiebot-Fassung die
+           Schnittstelle nicht, laeuft unveraendert der alte Weg. */
+        if (typeof window.Cookiebot.submitCustomConsent === 'function') {
+          var direkt = false;
+          try {
+            window.Cookiebot.submitCustomConsent(false, false, true);
+            direkt = true;
+          } catch (e) { direkt = false; }
+          if (direkt) {
+            btn.disabled = true;
+            btn.textContent = 'WIRD GELADEN …';
+            window.setTimeout(function () {
+              if (consented()) return;
+              /* Nichts passiert: zurueck auf den alten Weg, nicht
+                 stumm stehen bleiben. */
+              btn.disabled = false;
+              btn.textContent = KNOPF;
+              showFailure('submitCustomConsent lief, die Einwilligung wurde aber nicht gesetzt');
+            }, 2000);
+            return;
+          }
         }
         /* Das Buchungs-Modal aus dem Weg raeumen, BEVOR der Dialog aufgeht.
            Es liegt bildschirmfuellend bei z-index 9000, sperrt den Body per
@@ -503,9 +560,41 @@
       + 'oder schreib uns per <a href="https://wa.me/491737513627" '
       + 'target="_blank" rel="noopener">WhatsApp</a>.';
 
+
+    /* Kurze Erklaerung direkt unter dem Knopf. Sie steht dort, weil der
+       Knopf jetzt in einem Tipp einwilligt: was dabei passiert, muss man
+       lesen koennen, bevor man tippt, nicht danach im Banner.
+
+       "Cookie-Einstellungen" oeffnet Cookiebots Dialog. Der Handler haengt
+       direkt am Element: die allgemeine Verdrahtung in consent-bridge.js
+       laeuft beim Laden der Seite, dieser Absatz entsteht aber erst, wenn
+       der Platzhalter gezeichnet wird. */
+    var hinweis = document.createElement('p');
+    hinweis.className = GATE_CLASS + '__hinweis';
+    hinweis.appendChild(document.createTextNode(
+      'Mit Tippen lädst du unseren Buchungskalender von bsport und stimmst '
+      + 'Marketing-Cookies zu. Mehr in den '));
+    var mehr = document.createElement('a');
+    mehr.href = '#';
+    /* BEWUSST OHNE die Klasse cookie-settings-link: consent-bridge.js
+       verdrahtet alle Elemente mit dieser Klasse beim Laden der Seite.
+       Traegt dieser Link sie auch, haengen zwei Handler daran und
+       Cookiebot.renew() laeuft zweimal (gemessen). Der Handler unten
+       genuegt. */
+    mehr.textContent = 'Cookie-Einstellungen';
+    mehr.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+        window.Cookiebot.renew();
+      }
+    });
+    hinweis.appendChild(mehr);
+    hinweis.appendChild(document.createTextNode('.'));
+
     box.appendChild(h);
     box.appendChild(p);
     box.appendChild(btn);
+    box.appendChild(hinweis);
     box.appendChild(fail);
     box.appendChild(alt);
     container.appendChild(box);
