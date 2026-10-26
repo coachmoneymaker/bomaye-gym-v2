@@ -1092,6 +1092,18 @@ export function gdmVersuchStattgefunden(ergebnis) {
   return !OHNE_AUFRUF.includes(ergebnis?.reason);
 }
 
+/* Haengt die Ablage einmal, haengt sie gleich wieder.
+
+   GEMESSEN: mit zwei Protokollen (gdm:log und wh:log) summierten sich die
+   Fristen auf 3 Sekunden, bevor die 200er-Antwort rausging. Das ist zu
+   lang fuer einen Webhook. Nach dem ersten Zeitablauf wird deshalb nicht
+   mehr geschrieben, solange diese Funktionsinstanz lebt. */
+let _kvLahmBis = 0;
+const KV_LAHM_PAUSE_MS = 60000;
+
+/** Nur fuer Pruefungen: die Pause sofort beenden. */
+export function kvLahmZuruecksetzen() { _kvLahmBis = 0; }
+
 /** Ein Versprechen mit kurzer Frist - eine haengende Ablage haelt nichts auf. */
 function gdmMitFrist(versprechen, ms) {
   let uhr;
@@ -1104,8 +1116,44 @@ function gdmMitFrist(versprechen, ms) {
 /**
  * Eine Zeile anhaengen. Gibt immer zurueck, wirft nie.
  */
+/**
+ * Dasselbe Protokoll, aber fuer den ganzen Webhook.
+ *
+ * WARUM NOCH EINES: die Vercel-Logs halten im Hobby-Tarif etwa 30 Minuten.
+ * Die Frage "ist das Lead-Ereignis rausgegangen, und was hat Meta
+ * geantwortet" laesst sich danach nicht mehr beantworten - genau das war
+ * der Fall bei der Testbuchung am 1.11. um 00:20 Uhr.
+ *
+ * Je verarbeitetem Ereignis eine Zeile in wh:log, neueste zuerst, 200
+ * Stueck, 30 Tage. Lesen in der Upstash-Konsole:  LRANGE wh:log 0 19
+ *
+ * Keine personenbezogenen Daten: keine Adresse, kein Name, keine Nummer,
+ * keine Hashes. Alles aus fremder Hand laeuft durch gdmSaeubern().
+ */
+const WH_LOG_KEY = 'wh:log';
+
+export async function whLogSchreiben(kv, eintrag) {
+  if (!kv) return { ok: false, reason: 'kv-fehlt' };
+  if (Date.now() < _kvLahmBis) return { ok: false, reason: 'kv-lahm' };
+  try {
+    const text = JSON.stringify(eintrag);
+    await gdmMitFrist((async () => {
+      await kv.lpush(WH_LOG_KEY, text);
+      await kv.ltrim(WH_LOG_KEY, 0, GDM_LOG_MAX - 1);
+      await kv.expire(WH_LOG_KEY, GDM_LOG_TTL);
+    })(), GDM_LOG_FRIST_MS);
+    return { ok: true };
+  } catch (err) {
+    const grund = String(err?.message || 'unbekannt').slice(0, 120);
+    /* Eine Minute Ruhe, dann darf die Ablage sich wieder beweisen. */
+    if (grund.indexOf('kv-timeout') !== -1) _kvLahmBis = Date.now() + KV_LAHM_PAUSE_MS;
+    return { ok: false, reason: grund };
+  }
+}
+
 export async function gdmLogSchreiben(kv, eintrag) {
   if (!kv) return { ok: false, reason: 'kv-fehlt' };
+  if (Date.now() < _kvLahmBis) return { ok: false, reason: 'kv-lahm' };
   try {
     const text = JSON.stringify(eintrag);
     await gdmMitFrist((async () => {
@@ -1115,7 +1163,10 @@ export async function gdmLogSchreiben(kv, eintrag) {
     })(), GDM_LOG_FRIST_MS);
     return { ok: true };
   } catch (err) {
-    return { ok: false, reason: String(err?.message || 'unbekannt').slice(0, 120) };
+    const grund = String(err?.message || 'unbekannt').slice(0, 120);
+    /* Eine Minute Ruhe, dann darf die Ablage sich wieder beweisen. */
+    if (grund.indexOf('kv-timeout') !== -1) _kvLahmBis = Date.now() + KV_LAHM_PAUSE_MS;
+    return { ok: false, reason: grund };
   }
 }
 
@@ -1292,6 +1343,18 @@ export default async function handler(req, res) {
     const gemerkt = await merkeTermin(kv, data)
       .catch((err) => ({ ok: false, error: String(err && err.message || err).slice(0, 120) }));
     console.log(JSON.stringify({ step: 'booking-create', ...gemerkt }));
+    await whLogSchreiben(kv, {
+      ts: new Date().toISOString(),
+      eventType,
+      schritt: 'booking-create',
+      gemerkt: !!gemerkt.ok,
+      hatSchluessel: gemerkt.hatSchluessel,
+      hatKurs: gemerkt.hatKurs,
+      hatStart: gemerkt.hatStart,
+      /* Die SCHLUESSEL des Rumpfes, nicht die Werte: damit laesst sich
+         nachlesen, wie Bsports Buchung wirklich aussieht. */
+      bookingKeys: gemerkt.bookingKeys,
+    });
     return res.status(200).json({ ok: true, gemerkt: !!gemerkt.ok });
   }
 
@@ -1637,6 +1700,9 @@ export default async function handler(req, res) {
 
      Jeder Fehler bleibt hier: der Webhook hat oben schon alles getan, was
      er tun muss, und antwortet unten in jedem Fall mit 200. */
+  /* Ergebnis der Sofortmeldung, damit es unten ins Protokoll kann. */
+  let probeAlarmOk = null;
+
   if (metaEventName === 'Lead') {
     /* Sofortmeldung ans Gym. Steht vor dem Google-Upload, weil sie fuer den
        Betrieb zaehlt und der Upload nur fuer die Auswertung. Faellt sie aus,
@@ -1651,6 +1717,7 @@ export default async function handler(req, res) {
       zeitpunkt: alsBerlinerZeit(obj.date_created) || alsBerlinerZeit(obj.date_issued),
       backofficeUrl,
     }).catch((err) => ({ ok: false, error: String(err && err.message || err).slice(0, 120) }));
+    probeAlarmOk = !!alarm.ok;
     console.log(JSON.stringify({
       step: 'probe-alarm', ok: alarm.ok, invoiceId,
       mitTermin: !!(termin && termin.startMs),
@@ -1700,6 +1767,33 @@ export default async function handler(req, res) {
       }
     }
   }
+
+  /* Das haltbare Protokoll. Steht am Ende, wenn alle Ergebnisse vorliegen.
+     Es darf nichts aufhalten: Fehler werden gefangen, die Frist liegt bei
+     1,5 Sekunden, danach geht die 200er-Antwort raus. */
+  await whLogSchreiben(kv, {
+    ts: new Date().toISOString(),
+    eventType,
+    schritt: 'invoice',
+    invoiceId,
+    status: status ?? null,
+    totalEur,
+    art: isProbetraining ? 'lead' : (isPurchase ? 'purchase' : 'unklar'),
+    metaEvent: metaEventName,
+    /* Beantwortet die Frage "warum kommt im Events Manager nichts an"
+       ohne Rateerei: steht hier capiAktiv false, ist der Schalter schuld. */
+    capiAktiv: metaCapiAktiv(),
+    hatPixelId: !!process.env.META_PIXEL_ID,
+    hatToken: !!process.env.META_ACCESS_TOKEN,
+    metaOk: meta.ok,
+    metaStatus: meta.status ?? null,
+    metaSkipped: meta.skipped ? meta.reason : null,
+    eventsReceived: meta.events_received ?? null,
+    fbError: meta.fb_error ? gdmSaeubern(meta.fb_error, 200) : null,
+    mailAdmin: email.ok,
+    mailProbe: probeAlarmOk,
+    googleOk: google.ok,
+  });
 
   return res.status(200).json({ ok: true, invoiceId, eventType });
 }

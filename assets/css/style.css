@@ -756,12 +756,14 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
   top: var(--nav-h) !important;
 }
 
-/* ── Touch-friendly tap targets ── */
+/* ── Touch-friendly tap targets ──
+   OHNE input und select. Der Livetest auf dem iPhone vom 1.11. zeigt den
+   Textcursor deutlich unter dem Eingabefeld; eine von uns gesetzte
+   Mindesthoehe auf einem Feld, dessen Innenleben Bsport selbst
+   positioniert, ist genau die Art Eingriff, die das macht. Knoepfe
+   bleiben, die haben kein Innenleben, das verrutschen kann. */
 #bsport-widget-172485 button,
-#bsport-widget-172485 [role="button"],
-#bsport-widget-172485 select,
-#bsport-widget-172485 input[type="text"],
-#bsport-widget-172485 input[type="search"] {
+#bsport-widget-172485 [role="button"] {
   min-height: 40px;
 }
 #bsport-widget-172485 [class*="close"],
