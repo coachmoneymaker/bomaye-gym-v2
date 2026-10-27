@@ -62,6 +62,40 @@
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
   <!-- End Cookiebot CMP -->
   <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+  <!-- ZWEI TESTSCHALTER FUER DEN VERSETZTEN CURSOR IM EXPRESS-CHECKOUT
+       Beide sind reine Vergleichsschalter fuer den Test am echten iPhone.
+       Ohne sie aendert sich an der Seite nichts - die Abfrage unten ist der
+       einzige Ort, an dem sie gelesen werden, ausser in den drei Skripten,
+       die in ihrem Kopf dieselbe Klasse pruefen.
+
+       ?ptplain=1  Die Seite laedt den Kalender OHNE unsere eigenen
+                   Widget-Styles (der Einhaengepunkt bekommt eine andere
+                   Kennung, damit die rund 210 Regeln an
+                   #bsport-widget-172485 nicht greifen), ohne das
+                   Leertag-Skript, ohne die Sticky-Leiste, ohne unsere
+                   Scroll-Sperre und ohne die Zoomsperre darunter. Die
+                   Einwilligungssperre bleibt: ohne Tipp laedt nichts von
+                   bsport.io.
+
+       ?ptzoom=1   Nur die Zoomsperre darunter bleibt aus, sonst ist alles
+                   wie im Alltag. Damit laesst sich die eine Ursache
+                   einzeln pruefen, ohne alles andere mit abzuschalten.
+
+       Sitzt der Cursor mit ?ptplain=1 richtig, liegt es an uns. Sitzt er
+       schon mit ?ptzoom=1 allein richtig, ist die Zoomsperre die Ursache.
+       Sitzt er in beiden Faellen falsch, liegt es an bsport. -->
+  <script>
+    (function () {
+      try {
+        var s = window.location.search || '';
+        if (/[?&]ptplain=1/.test(s)) {
+          window.__ptPlain = 1;
+          document.documentElement.className += ' pt-plain';
+        }
+        if (/[?&]ptzoom=1/.test(s)) window.__ptZoom = 1;
+      } catch (e) { /* ein Testschalter darf die Seite nie aufhalten */ }
+    }());
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <!-- KEIN AUTOMATISCHER ZOOM AUF DEM iPHONE
        Gemessen auf einem echten iPhone, nach PR #130: der Zoom steht
@@ -90,6 +124,10 @@
   <script>
     (function () {
       try {
+        /* Testschalter: ?ptplain=1 und ?ptzoom=1 lassen die Zoomsperre aus.
+           Sie ist der erste Verdaechtige fuer den versetzten Cursor, siehe
+           den Block darueber. */
+        if (window.__ptPlain || window.__ptZoom) return;
         if (!/iPhone|iPod/.test(navigator.userAgent)) return;
         var m = document.querySelector('meta[name="viewport"]');
         if (!m) return;

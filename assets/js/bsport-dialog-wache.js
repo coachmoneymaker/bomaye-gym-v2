@@ -142,24 +142,68 @@
     return false;
   }
 
+  /* ─────────────────── DIE SPERRE OHNE position: fixed ───────────────────
+     HIER STAND BIS JETZT DIE UEBLICHE VARIANTE:
+
+       body { overflow: hidden; position: fixed; top: -<scrollY>px;
+              width: 100% }
+
+     und beim Loesen ein window.scrollTo zurueck auf die gemerkte Hoehe.
+
+     WARUM SIE WEG IST
+     position: fixed am <body> mit einem negativen top verschiebt das ganze
+     Dokument gegen den Ursprung des Layout-Viewports. WebKit auf iOS
+     zeichnet den Textcursor eines fokussierten Feldes aber weiter im alten
+     Bezugssystem - und bei einem Feld in einem Unterrahmen (bsports
+     Express-Checkout laeuft in einem iframe von bsport.io, am Geraet
+     nachgemessen, siehe probetraining.html) rechnet es den Versatz des
+     Rahmens nicht mit. Der Strich sitzt dann neben oder unter dem Feld,
+     obwohl das Feld selbst richtig steht. Genau dieses Bild ist gemeldet.
+
+     WAS JETZT PASSIERT
+     overflow: hidden an <html> UND <body>. <html> ist der Scroll-Container
+     der Seite; steht dort hidden, bewegt sich nichts mehr. Der Ursprung des
+     Dokuments bleibt dabei unberuehrt, es gibt keinen Versatz und damit
+     keinen falschen Bezugsrahmen fuer den Cursor.
+
+     Nebenwirkung, und zwar eine gute: die Scrollhoehe aendert sich nicht,
+     also braucht es beim Loesen kein Zurueckspringen mehr. Der kleine
+     Ruck, mit dem die Seite nach dem Schliessen des Dialogs an ihren Platz
+     sprang, faellt weg.
+
+     UNGEPRUEFT von hier aus: ob iOS die Sperre allein mit overflow haelt,
+     ist auf WebKit nicht nachzumessen - in dieser Umgebung laeuft nur
+     Chromium. Haelt sie nicht, scrollt die Seite hinter dem Dialog mit.
+     Das ist sichtbar, aber nicht kaputt, und der Vergleich mit ?ptplain=1
+     (dort gibt es gar keine Sperre) zeigt es sofort.
+
+     ?ptplain=1 schaltet die Sperre ganz aus. Der Schalter wird im Kopf von
+     probetraining.html gesetzt; auf den uebrigen Seiten mit diesem Modul
+     gibt es ihn nicht, dort bleibt es bei der Sperre.
+     ───────────────────────────────────────────────────────────────────── */
   function sperren() {
     if (_locked) return;
+    if (window.__ptPlain) return;
     _locked = true;
     _scrollY = window.scrollY;
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = '-' + _scrollY + 'px';
-    document.body.style.width = '100%';
   }
 
   function loesen() {
     if (!_locked) return;
     _locked = false;
+    document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    window.scrollTo({ top: _scrollY, behavior: 'instant' });
+    /* Haengt aus einer frueheren Fassung oder von einer anderen Seite noch
+       ein position: fixed am body, wird es hier mit aufgeraeumt - sonst
+       bliebe die Seite stehen. */
+    if (document.body.style.position === 'fixed') {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo({ top: _scrollY, behavior: 'instant' });
+    }
   }
 
   var _takt = null;

@@ -267,6 +267,12 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 body.bsport-modal-open #header {
   z-index: -1 !important;
   visibility: hidden;
+  /* will-change: background, backdrop-filter (Zeile 255) haelt die
+     Kopfleiste auch unsichtbar als eigene Kompositionsschicht im
+     Schichtbaum. Auf iOS ist jede zusaetzliche Schicht ein moeglicher
+     Grund fuer einen versetzten Textcursor im Dialog darueber. Unsichtbar
+     braucht sie keine Schicht. */
+  will-change: auto !important;
 }
 /* Und die Filmkoernung mit. Sie liegt mit z-index 9999 (style.css:111) und
    position: fixed im Wurzel-Stapelkontext, Bsports Modal mit z-index 1300
@@ -5595,7 +5601,10 @@ a.mn-contact-text:hover { color: var(--gold); }
     box-sizing: border-box !important;
   }
 
-  /* 10. Inner popup/modal content box */
+  /* 10. Inner popup/modal content box
+     Breite und Polster gelten weiter immer. Das overflow-x: hidden steht
+     seit der Cursor-Suche im eigenen Block darunter und nur ohne offenen
+     Dialog - Begruendung bei der .cleanslate-Regel im 480px-Abschnitt. */
   .cleanslate [class*="popup-inner"],
   .cleanslate [class*="popupInner"],
   .cleanslate [class*="popup-content"],
@@ -5612,6 +5621,19 @@ a.mn-contact-text:hover { color: var(--gold); }
     max-width:  100vw !important;
     padding:    1rem !important;
     box-sizing: border-box !important;
+  }
+  body:not(.bsport-modal-open) .cleanslate [class*="popup-inner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="popupInner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="popup-content"],
+  body:not(.bsport-modal-open) .cleanslate [class*="popupContent"],
+  body:not(.bsport-modal-open) .cleanslate [class*="modal-inner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="modalInner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="modal-content"],
+  body:not(.bsport-modal-open) .cleanslate [class*="modalContent"],
+  body:not(.bsport-modal-open) .cleanslate [class*="dialog-inner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="dialogInner"],
+  body:not(.bsport-modal-open) .cleanslate [class*="dialog-content"],
+  body:not(.bsport-modal-open) .cleanslate [class*="dialogContent"] {
     overflow-x: hidden !important;
   }
 
@@ -5645,8 +5667,27 @@ a.mn-contact-text:hover { color: var(--gold); }
     min-height: 620px !important;
   }
 
-  /* Ensure Bsport widget dialog doesn't clip horizontally */
-  .cleanslate {
+  /* Ensure Bsport widget dialog doesn't clip horizontally.
+
+     DAS body:not(.bsport-modal-open) IST DER PUNKT DIESER REGEL
+     overflow-x: hidden macht ein Element zum Scroll-Container, und zwar auf
+     BEIDEN Achsen: ein overflow-y: visible daneben kann nach Spezifikation
+     nicht bestehen und wird zu auto. .cleanslate ist bsports eigene
+     Wurzelklasse und steht auch IM Buchungsdialog, oberhalb der
+     Formularfelder (am Geraet belegte Kette, siehe probetraining-page.js,
+     Abschnitt "DER FEHLER, DEN DER DRITTE GERAETETEST GEZEIGT HAT").
+
+     Ein Eingabefeld in einem Scroll-Container ist auf iOS WebKit eine
+     bekannte Ursache fuer einen versetzten Textcursor: das Feld wird im
+     Koordinatenraum des Scrollers gezeichnet, der Cursor im Raum des
+     Viewports. Deshalb gilt die Regel jetzt nur noch, solange kein Dialog
+     offen ist - also genau dort, wofuer sie gedacht war: am Kalender.
+
+     Mit offenem Dialog faellt sie weg statt ueberschrieben zu werden. So
+     wird auch keine Regel von bsport ausgehebelt; es bleibt schlicht bei
+     dem, was ohne uns gelten wuerde. Waagerecht beschnitten wird die Seite
+     weiter von <html> (overflow-x: hidden, Zeile 80), das bleibt. */
+  body:not(.bsport-modal-open) .cleanslate {
     max-width:  100vw !important;
     overflow-x: hidden !important;
   }
