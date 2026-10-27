@@ -989,9 +989,12 @@ body.bsport-modal-open .pt-sticky {
    Livediagnose belegt (dieselbe Kennung traegt den goldenen Buchen-Knopf).
    Die Karten im Kalender behalten ihr Aussehen.
    ══════════════════════════════════════════════════════════════════════════ */
-#bs-activity--dialog input:not([type="checkbox"]):not([type="radio"]),
-#bs-activity--dialog textarea,
-#bs-activity--dialog select {
+/* html:not(.pt-plain): im Vergleichsmodus ?ptplain=1 bleibt auch dieser
+   Block aus, damit dort wirklich keine eigene Regel mehr am Formular
+   haengt. Siehe probetraining.html, Abschnitt "ZWEI TESTSCHALTER". */
+html:not(.pt-plain) #bs-activity--dialog input:not([type="checkbox"]):not([type="radio"]),
+html:not(.pt-plain) #bs-activity--dialog textarea,
+html:not(.pt-plain) #bs-activity--dialog select {
   /* Zuruecknehmen, was wir an anderer Stelle vergeben: Mindesthoehen fuer
      Tippflaechen und die Verschiebung fuer das Augensymbol im
      Passwortfeld. Bsport baut seine Felder nicht darauf auf. */
@@ -1047,4 +1050,22 @@ body.bsport-modal-open [id^="CookiebotWidget"] {
 @keyframes pt-laedt-dreh { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .pt-laedt::after { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VERGLEICHSMODUS ?ptplain=1
+
+   pt-einstieg.js bleibt in diesem Modus ganz aus, und damit auch der Griff,
+   der das hidden-Attribut von der Sticky-Leiste nimmt. Das genuegt nicht:
+   unter 769px setzt .pt-sticky selbst display: flex, und eine Autorenregel
+   gewinnt gegen das display: none, das der Browser fuer [hidden] mitbringt.
+   Ohne diese Zeile stuende die Leiste also da - durchsichtig, aber mit
+   einem tippbaren Knopf darin. Deshalb hier ausdruecklich weg.
+
+   Alles andere am Vergleichsmodus steht in den Skripten: die eigene Kennung
+   des Einhaengepunkts in probetraining-page.js, die Scroll-Sperre in
+   bsport-dialog-wache.js, die Zoomsperre in probetraining.html.
+   ══════════════════════════════════════════════════════════════════════════ */
+html.pt-plain .pt-sticky {
+  display: none !important;
 }

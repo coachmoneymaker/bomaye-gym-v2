@@ -443,6 +443,13 @@
   }
 
   function start() {
+    /* ?ptplain=1 - VERGLEICHSSCHALTER FUER DEN VERSETZTEN CURSOR
+       In diesem Modus bleibt dieses Modul vollstaendig aus: kein
+       Leertag-Skript, keine Sticky-Leiste, keine versteckte Filterleiste,
+       kein Wochenendhinweis, kein Ladehinweis. Damit ist der Kalender im
+       Vergleich frei von allem, was wir an ihm tun. Der Schalter wird im
+       Kopf von probetraining.html gesetzt. */
+    if (window.__ptPlain) return;
     try { ladeHinweis(); } catch (e) {}
     try { aufraeumen(); } catch (e) {}
     try { wochenende(); } catch (e) {}

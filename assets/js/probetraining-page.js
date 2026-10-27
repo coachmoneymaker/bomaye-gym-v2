@@ -142,6 +142,20 @@
     return ptAltModus() ? 3 : 1;
   }
 
+  /* ?ptplain=1 - VERGLEICHSSCHALTER FUER DEN VERSETZTEN CURSOR
+     Gesetzt wird das Merkmal im Kopf von probetraining.html, damit die
+     Klasse pt-plain schon vor dem ersten Zeichnen an <html> haengt. Hier
+     wird es nur gelesen.
+
+     Was in diesem Modus wegfaellt, steht an den drei Stellen, die darauf
+     abfragen: hier die eigene Kennung des Einhaengepunkts (und damit alle
+     Aussehensregeln daran), in pt-einstieg.js das Leertag-Skript samt
+     Sticky-Leiste, in bsport-dialog-wache.js die Scroll-Sperre. Die
+     Einwilligungssperre bleibt in jedem Fall. */
+  function ptSchlicht() {
+    return !!window.__ptPlain;
+  }
+
   /* HIER STAND DIE EIGENE DIALOGWACHE
      Sie ist nach /assets/js/bsport-dialog-wache.js gewandert, gemeinsam
      mit der Kopie von /stundenplan. Beide kannten nur einen Klassennamen
@@ -198,6 +212,16 @@
          ihr haengen die Aussehensregeln, und die sollen schon vor dem
          Mounten greifen - sonst blitzt ein ungestylter Kalender auf. */
       var holderId = 'bsport-widget-172485';
+      /* Im Vergleichsmodus bekommt der Einhaengepunkt eine andere Kennung.
+         Die rund 210 Regeln in style.css haengen alle an
+         #bsport-widget-172485; mit einer anderen Kennung greift keine
+         einzige, ohne dass eine Zeile CSS angefasst wird. Bsport bekommt
+         die neue Kennung als parentElement und merkt nichts davon. */
+      if (ptSchlicht()) {
+        var alt = document.getElementById(holderId);
+        holderId = 'bsport-widget-schlicht';
+        if (alt) alt.id = holderId;
+      }
       if (!document.getElementById(holderId)) {
         var holder = document.createElement('div');
         holder.id = holderId;
@@ -1847,6 +1871,9 @@
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
+    /* Seit die Dialogwache ohne position: fixed sperrt, kann auch an <html>
+       ein overflow haengen bleiben. */
+    document.documentElement.style.overflow = '';
 
     /* STANDARD IST JETZT DER WEG VON /stundenplan: dialogMode 1, Bsports
        eigener Dialog, Seite feststellen solange er offen ist. Keine
@@ -1864,7 +1891,10 @@
     } else {
       _ptMountCalendar();
       /* Die Dialogwache laeuft als eigenes Skript, siehe oben. */
-      _ptKartenWache();
+      /* Die Kartenwache greift per Kennung in das Widget; im
+         Vergleichsmodus bleibt sie aus, damit dort wirklich nichts von uns
+         am Kalender haengt. */
+      if (!ptSchlicht()) _ptKartenWache();
     }
     _ptSetupTouchDebug();
 
