@@ -41,7 +41,13 @@
 
   var MAX_TAGE      = 14;    /* realistischer Buchungshorizont, in Tagen */
   var MAX_KLICKS    = 4;     /* Wochenschritte; 14 Tage sind hoechstens 3 */
-  var MAX_MS        = 15000; /* Gesamtdeckel, danach ist Schluss */
+  var TAG_VERSUCHE_MAX = 2;  /* Anlaeufe auf den Tagesreiter, je bis zu 3 Klicks */
+  /* Gesamtdeckel, danach ist Schluss. 15000 waren zu knapp: die Uhr laeuft
+     ab dem Aufruf, und der Aufruf kommt beim ERSTEN Kind des Containers -
+     meist ein Ladezustand. Im Livetest vom 26.10. lagen zwischen Tipp und
+     fertigem Kalender 15 bis 25 Sekunden; der Datumswaehler war dann noch
+     nicht lesbar, wenn der Deckel schon fiel. */
+  var MAX_MS        = 25000;
   var RUHE_MS       = 400;   /* so lange muss der DOM still sein = fertig */
   var RUHE_MAX_MS   = 4000;  /* falls er nie still wird */
 
@@ -168,10 +174,40 @@
   var VOR  = /(next|suivant|weiter|vorwaerts|vorwärts|forward|›|→|»|>)/i;
   var ZURUECK = /(prev|previous|precedent|précédent|zurueck|zurück|back|‹|←|«|<)/i;
 
-  function istInKarte(el) {
-    return !!(el.closest && el.closest(
+  /* ── DER FEHLER, DER DEN SPRUNG AUF /probetraining UNMOEGLICH MACHTE ────
+     Diese Pruefung soll Bedienelemente aussortieren, die INNERHALB einer
+     Termin-Karte sitzen - ein BUCHEN-Knopf ist kein Wochentagsreiter.
+     Gesucht wurde mit closest() nach oben, ohne Halt.
+
+     Auf /probetraining liegt das Widget aber in unserem eigenen Abschnitt:
+
+       section.pt-booking-section  >  div.container
+         >  div.schedule-frame#pt-cal-view  >  div.schedule-frame__widget
+         >  div#bsport-widget-172485
+
+     closest('[class*="booking"]') laeuft bis zu section.pt-booking-section
+     und findet dort einen Treffer. Also galt JEDES Element im Widget als
+     "in einer Karte": tagKandidaten lieferte null Reiter, wochenKnopf
+     keinen Knopf, und starte() endete ohne eine einzige Aktion. Auf
+     /stundenplan gibt es oberhalb des Widgets keine Klasse mit "booking",
+     dort lief es deshalb immer.
+
+     Die Kette wird jetzt am Widget-Container abgeschnitten: nur ein
+     Treffer INNERHALB des Containers zaehlt. Was oberhalb liegt, ist
+     unser eigenes Markup und sagt nichts darueber, was das Element im
+     Widget ist. Ohne uebergebenen Container bleibt es beim alten
+     Verhalten.
+     ───────────────────────────────────────────────────────────────────── */
+  function istInKarte(el, wurzel) {
+    if (!el || !el.closest) return false;
+    var treffer = el.closest(
       '.bs-offer-list-item, .bs-card-offer, [class*="offer"], [class*="Offer"], ' +
-      '[class*="booking"], [class*="Booking"], [class*="checkout"]'));
+      '[class*="booking"], [class*="Booking"], [class*="checkout"]');
+    if (!treffer) return false;
+    if (!wurzel) return true;
+    /* Der Container selbst ist keine Karte, und alles oberhalb gehoert uns. */
+    if (treffer === wurzel) return false;
+    return wurzel.contains(treffer);
   }
 
   function merkmale(el) {
@@ -185,7 +221,7 @@
     var out = [];
     for (var i = 0; i < roh.length && i < 300; i++) {
       var el = roh[i];
-      if (istInKarte(el)) continue;
+      if (istInKarte(el, wurzel)) continue;
       var r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) continue;
       if (r.width > 120) continue;                     /* kein Buchungsknopf */
@@ -271,7 +307,7 @@
     var roh = wurzel.querySelectorAll('button, [role="button"], a, [class*="arrow"], [class*="Arrow"], svg');
     for (i = 0; i < roh.length && bedien.length < 60; i++) {
       el = roh[i];
-      if (istInKarte(el)) continue;
+      if (istInKarte(el, wurzel)) continue;
       bedien.push(zeile(el));
     }
 
@@ -346,9 +382,22 @@
   }
 
   /* ── Ablauf ───────────────────────────────────────────────────────────── */
-  function starte(wurzelId, ziel, debug) {
+  /* melden(ok) ist freiwillig und wird GENAU EINMAL gerufen, sobald
+     entschieden ist, ob der Kalender auf dem Zieltag steht. true heisst
+     "steht", false heisst "aufgegeben". Daran haengt auf /probetraining die
+     Hinweiszeile mit dem naechsten Termin, damit niemand vor einem leeren
+     Tag ohne Auskunft sitzt. Ohne Rueckmeldung aendert sich nichts, deshalb
+     bleibt /stundenplan unberuehrt. */
+  function starte(wurzelId, ziel, debug, melden) {
+    var gemeldet = false;
+    function melde(ok) {
+      if (gemeldet) return;
+      gemeldet = true;
+      if (typeof melden === 'function') { try { melden(!!ok); } catch (e) {} }
+    }
+
     var wurzel = document.getElementById(wurzelId);
-    if (!wurzel) return;
+    if (!wurzel) { melde(false); return; }
 
     /* Diagnose zuerst und bedingungslos. Genau hier lag der Fehler: sie
        stand hinter der Datumspruefung und den Tagesgrenzen und lief
@@ -357,14 +406,17 @@
     if (debug) starteDiagnose(wurzelId);
 
     spur('starte: ziel =', ziel ? iso(ziel) : null, '| heute =', iso(new Date()));
-    if (!ziel) { spur('ABBRUCH: kein gueltiges Datum in der Adresse'); return; }
+    if (!ziel) { spur('ABBRUCH: kein gueltiges Datum in der Adresse'); melde(false); return; }
 
     var start = Date.now();
     var abstand = tagesAbstand(new Date(), ziel);
     spur('Abstand in Tagen:', abstand);
-    if (abstand === 0) { spur('ABBRUCH: Zieltag ist heute, nichts zu tun'); return; }
+    /* Zieltag ist heute: nichts zu tun, aber der Kalender steht richtig -
+       also eine Erfolgsmeldung, nicht die Hinweiszeile. */
+    if (abstand === 0) { spur('ABBRUCH: Zieltag ist heute, nichts zu tun'); melde(true); return; }
     if (abstand < 0 || abstand > MAX_TAGE) {
       spur('ABBRUCH: ausserhalb des Horizonts (0 <', abstand, '<=', MAX_TAGE, 'verlangt)');
+      melde(false);
       return;
     }
 
@@ -380,9 +432,15 @@
        Jetzt wird bis zum Gesamtdeckel alle 1,2 s neu angesetzt, bis ein
        Versuch greift. */
     var laeuft = false;
+    var aufgegeben = false;
     (function versuch() {
+      if (aufgegeben) { melde(false); return; }
       if (laeuft) return;
-      if (Date.now() - start > MAX_MS) { spur('ABBRUCH: Zeitdeckel', MAX_MS, 'ms erreicht'); return; }
+      if (Date.now() - start > MAX_MS) {
+        spur('ABBRUCH: Zeitdeckel', MAX_MS, 'ms erreicht');
+        melde(false);
+        return;
+      }
       if (wurzel.children.length === 0) {
         spur('warte: Container noch leer');
         setTimeout(versuch, 250);
@@ -390,9 +448,18 @@
       }
       wennRuhig(wurzel, function () {
         if (laeuft) return;
-        var fertig = losBlaettern();
-        if (fertig) { laeuft = true; return; }
-        setTimeout(versuch, 1200);
+        /* HIER STAND EIN SYNCHRONES losBlaettern(): es galt schon als
+           erledigt, sobald der Wochentext lesbar war - auch dann, wenn die
+           Tagesauswahl danach scheiterte. Dann war Schluss, ohne zweiten
+           Anlauf und ohne dass jemand davon erfuhr. Jetzt meldet der
+           Ablauf zurueck, und nur ein wirklich erreichter Zieltag beendet
+           die Wiederholung. */
+        losBlaettern(function (ok) {
+          if (laeuft) return;
+          if (ok) { laeuft = true; melde(true); return; }
+          if (aufgegeben) { melde(false); return; }
+          setTimeout(versuch, 1200);
+        });
       });
     }());
 
@@ -436,7 +503,7 @@
       for (var q = 0; q < quellen.length; q++) {
         var treffer = wurzel.querySelectorAll(quellen[q]);
         for (var i = 0; i < treffer.length; i++) {
-          if (istInKarte(treffer[i])) continue;
+          if (istInKarte(treffer[i], wurzel)) continue;
           if (treffer[i].getBoundingClientRect().height <= 0) continue;
           spur('Knopf gefunden ueber', q === 0 ? 'festen Selektor' : 'Muster',
                ':', treffer[i].className);
@@ -496,7 +563,7 @@
         '[class*="day"],[class*="Day"]');
       for (var i = 0; i < roh.length && i < 400; i++) {
         var el = roh[i];
-        if (istInKarte(el)) continue;
+        if (istInKarte(el, wurzel)) continue;
         var r = el.getBoundingClientRect();
         if (r.width === 0 || r.height === 0 || r.width > 220) continue;
         var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
@@ -550,60 +617,82 @@
       }());
     }
 
-    /* Richtige Woche erreicht: erst den Tag waehlen, dann hinscrollen. */
-    function tagFestlegen() {
+    /* Richtige Woche erreicht: erst den Tag waehlen, dann hinscrollen.
+
+       Der Zaehler begrenzt die Anlaeufe. tagWaehlen klickt pro Anlauf bis
+       zu drei Kandidaten; ohne Grenze wuerde die Wiederholung oben bis zum
+       Zeitdeckel immer neue Klicks in ein fremdes Buchungssystem setzen. */
+    var tagVersuche = 0;
+    function tagFestlegen(fertig) {
+      if (tagVersuche >= TAG_VERSUCHE_MAX) {
+        var gescrollt0 = zumTagScrollen();
+        spur('FERTIG: Tagesreiter nach', tagVersuche, 'Anlaeufen aufgegeben',
+             '| gescrollt:', gescrollt0);
+        /* Endgueltig: die Woche steht richtig, nur der Reiter geht nicht.
+           Daran aendert ein weiterer Anlauf nichts, und er wuerde die
+           Hinweiszeile bis zum Zeitdeckel hinauszoegern. */
+        if (!gescrollt0) aufgegeben = true;
+        return fertig(gescrollt0);
+      }
+      tagVersuche++;
       tagWaehlen(function (ok) {
         var gescrollt = zumTagScrollen();
         spur('FERTIG: Woche richtig, Tag', ok ? 'gewaehlt' : 'nicht gewaehlt',
              '| gescrollt:', gescrollt);
+        /* Steht der Zieltag im Bild, zaehlt das als erreicht - auch ohne
+           bestaetigten Reiter. Der Besucher sieht dann den richtigen Tag. */
+        fertig(ok || gescrollt);
       });
     }
 
     /* Liefert true, wenn dieser Versuch etwas erreicht hat oder endgueltig
        entschieden ist - dann wird nicht erneut angesetzt. */
-    function losBlaettern() {
+    function losBlaettern(fertig) {
       var woche = angezeigteWoche();
       if (woche) {
         spur('Woche gelesen:', woche.text, '=>', iso(woche.von), 'bis', iso(woche.bis));
-        wocheSchritt(woche, 0);
-        return true;
+        wocheSchritt(woche, 0, fertig);
+        return;
       }
       /* Kein lesbarer Datumswaehler: dann bleibt nur der alte Weg - liegt
          der Zieltag schon im DOM, dorthin scrollen. */
-      if (zumTagScrollen()) { spur('FERTIG: kein Wochentext, aber Zieltag im DOM - hingescrollt'); return true; }
+      if (zumTagScrollen()) {
+        spur('FERTIG: kein Wochentext, aber Zieltag im DOM - hingescrollt');
+        return fertig(true);
+      }
       spur('warte: Wochentext noch nicht lesbar');
-      return false;
+      fertig(false);
     }
 
-    function wocheSchritt(woche, runde) {
+    function wocheSchritt(woche, runde, fertig) {
       var vorSchluss = tagesAbstand(woche.von, ziel) >= 0;
       var nachAnfang = tagesAbstand(ziel, woche.bis) >= 0;
       spur('Runde', runde, '| Ziel in dieser Woche?', vorSchluss && nachAnfang);
       if (vorSchluss && nachAnfang) {
-        tagFestlegen();
+        tagFestlegen(fertig);
         return;
       }
-      if (runde >= MAX_KLICKS) { spur('ABBRUCH: mehr als', MAX_KLICKS, 'Wochenschritte'); return; }
-      if (Date.now() - start > MAX_MS) { spur('ABBRUCH: Zeitdeckel erreicht'); return; }
+      if (runde >= MAX_KLICKS) { spur('ABBRUCH: mehr als', MAX_KLICKS, 'Wochenschritte'); return fertig(false); }
+      if (Date.now() - start > MAX_MS) { spur('ABBRUCH: Zeitdeckel erreicht'); return fertig(false); }
 
       var vorwaerts = tagesAbstand(woche.bis, ziel) > 0;
       spur('Richtung:', vorwaerts ? 'vorwaerts' : 'zurueck');
       var knopf = wochenKnopf(vorwaerts);
-      if (!knopf) { spur('ABBRUCH: kein Wochenknopf gefunden'); return; }
+      if (!knopf) { spur('ABBRUCH: kein Wochenknopf gefunden'); return fertig(false); }
 
       try { knopf.click(); spur('Klick abgesetzt'); }
-      catch (e) { spur('ABBRUCH: Klick warf', e && e.message); return; }
+      catch (e) { spur('ABBRUCH: Klick warf', e && e.message); return fertig(false); }
 
       wennRuhig(wurzel, function () {
         var neu = angezeigteWoche();
-        if (!neu) { spur('ABBRUCH: Wochentext nach dem Klick nicht lesbar'); return; }
+        if (!neu) { spur('ABBRUCH: Wochentext nach dem Klick nicht lesbar'); return fertig(false); }
         var bewegt = tagesAbstand(woche.von, neu.von);
         var erwartet = vorwaerts ? 7 : -7;
         spur('Woche nach Klick:', neu.text, '| verschoben um', bewegt, 'Tage, erwartet', erwartet);
         /* Nur weiter, wenn der Klick die Woche nachweislich um genau sieben
            Tage in die richtige Richtung geschoben hat. Sonst Schluss. */
-        if (bewegt !== erwartet) { spur('ABBRUCH: Klick hat die Woche nicht wie erwartet bewegt'); return; }
-        wocheSchritt(neu, runde + 1);
+        if (bewegt !== erwartet) { spur('ABBRUCH: Klick hat die Woche nicht wie erwartet bewegt'); return fertig(false); }
+        wocheSchritt(neu, runde + 1, fertig);
       });
     }
   }

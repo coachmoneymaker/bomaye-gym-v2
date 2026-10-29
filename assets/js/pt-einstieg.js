@@ -59,6 +59,10 @@
   var WIDGET_ID   = 'bsport-widget-172485';
   var PROBE_TAGE  = [1, 2, 3, 4, 5];          /* Mo bis Fr, 0 = Sonntag */
   var MAX_VORLAUF = 14;                       /* Sicherheitsnetz, in Tagen */
+  /* So lange wird auf das Widget gewartet, bevor die Hinweiszeile mit dem
+     naechsten Termin von selbst erscheint. Etwas mehr als der Zeitdeckel in
+     kalender-tag.js, damit dessen Rueckmeldung zuerst kommt. */
+  var NETZ_FRIST_MS = 28000;
 
   /* ── An welchen Tagen welcher Kurs stattfindet ─────────────────────────
      DER FEHLER AUS DEM LIVETEST VOM 26.10.: der Rueckfall nahm den
@@ -87,8 +91,42 @@
     basics:     [1, 3, 5],
     basic:      [1, 3, 5],
     queens:     [3],
-    youth:      [1, 3, 5]
+    youth:      [1, 3, 5],
+    /* Zielgruppen: die Vereinigung der Tage ihrer Kurse. Welche IDs dazu
+       gehoeren, steht in probetraining-page.js in PT_KURSE.
+         erwachsene = Kickboxing [2,4] + Queens [3] + Basic [1,3,5]
+         kinder     = Kids [1,3,5] + Youth [1,3,5]                      */
+    erwachsene: [1, 2, 3, 4, 5],
+    adults:     [1, 2, 3, 4, 5],
+    kinder:     [1, 3, 5],
+    familie:    [1, 3, 5]
   };
+
+  /* ── Die Zeile ueber dem Kalender ──────────────────────────────────────
+     Im Markup steht die ungefilterte Fassung: alle fuenf Kurse. Mit einem
+     Filter wuerde sie Kurse versprechen, die der Kalender gar nicht zeigt.
+     Deshalb wird sie pro Kuerzel ersetzt. Ohne Filter und bei einem
+     unbekannten Kuerzel bleibt der Satz aus dem Markup stehen - dort ist
+     er richtig.
+
+     Die Kursnamen sind die aus dem Buchungssystem (siehe die Zuordnung in
+     probetraining-page.js), damit der Besucher im Kalender dasselbe Wort
+     wiederfindet. */
+  var KURS_TEXT = {
+    kickboxing: 'Kickboxing',
+    kids:       'Kids',
+    basics:     'Basic',
+    basic:      'Basic',
+    queens:     'Queens',
+    youth:      'Youth',
+    erwachsene: 'Basic, Queens und Kickboxing',
+    adults:     'Basic, Queens und Kickboxing',
+    kinder:     'Kids und Youth',
+    familie:    'Kids und Youth'
+  };
+
+  var WOCHENTAGE = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch',
+                    'Donnerstag', 'Freitag', 'Samstag'];
 
   /* Welcher Kurs ist gerade gefiltert? Dieselben Kuerzel wie in
      probetraining-page.js und auf /stundenplan. */
@@ -139,6 +177,17 @@
     } catch (e) { return false; }
   }
 
+  /* ── 0. Einleitungszeile an den Filter anpassen ───────────────────────── */
+  function einleitung() {
+    var kurs = aktiverKurs();
+    if (!kurs) return;
+    if (!Object.prototype.hasOwnProperty.call(KURS_TEXT, kurs)) return;
+    var zeile = document.getElementById('pt-kurs-hinweis');
+    if (!zeile) return;
+    zeile.textContent = 'Das kostenlose Probetraining gilt für '
+      + KURS_TEXT[kurs] + '.';
+  }
+
   /* ── 1. Wochenende ───────────────────────────────────────────────────── */
   function wochenende() {
     var heute = new Date();
@@ -153,7 +202,28 @@
     var hinweis = document.getElementById('pt-wochenend-hinweis');
     if (hinweis && amWochenende) hinweis.hidden = false;
 
-    if (!window.bomayeKalenderTag || typeof window.bomayeKalenderTag.starte !== 'function') return;
+    /* ── DAS NETZ UNTER DEM SPRUNG ──────────────────────────────────────
+       Der Sprung auf den naechsten Termin kann scheitern: Bsport benennt
+       etwas um, der Datumswaehler bleibt unlesbar, das Widget kommt zu
+       spaet. Ohne Netz sieht der Besucher dann einen leeren Tag und nichts
+       weiter. Diese Zeile nennt den naechsten Termin fuer genau den
+       Filter, mit dem er gekommen ist.
+
+       Sie erscheint nur, wenn der Sprung nachweislich nicht geklappt hat -
+       kalender-tag.js meldet das jetzt zurueck. Sie wird nie wieder
+       versteckt, denn gemeldet wird erst, wenn entschieden ist. */
+    function netzAn() {
+      var zeile = document.getElementById('pt-naechster-termin');
+      if (!zeile) return;
+      zeile.textContent = 'Nächster Termin: ' + WOCHENTAGE[ziel.getDay()]
+        + ', ' + ziel.getDate() + '.' + (ziel.getMonth() + 1) + '.';
+      zeile.hidden = false;
+    }
+
+    if (!window.bomayeKalenderTag || typeof window.bomayeKalenderTag.starte !== 'function') {
+      netzAn();
+      return;
+    }
 
     /* Erst anstossen, wenn das Widget wirklich etwas gebaut hat. kalender-tag
        haelt einen leeren Container selbst aus, aber seine Frist laeuft ab dem
@@ -165,8 +235,18 @@
     function los() {
       if (gestartet) return;
       gestartet = true;
-      try { window.bomayeKalenderTag.starte(WIDGET_ID, ziel, debugAn()); } catch (e) {}
+      try {
+        window.bomayeKalenderTag.starte(WIDGET_ID, ziel, debugAn(), function (ok) {
+          if (!ok) netzAn();
+        });
+      } catch (e) { netzAn(); }
     }
+
+    /* Kommt das Widget gar nicht, laeuft auch keine Rueckmeldung. Dann
+       entscheidet diese Frist. Sie greift nur, wenn nie angestossen wurde:
+       sonst koennte die Zeile erscheinen, waehrend der Sprung noch laeuft,
+       und gleich wieder falsch sein. */
+    window.setTimeout(function () { if (!gestartet) netzAn(); }, NETZ_FRIST_MS);
 
     if (wurzel.children.length) { los(); return; }
     if (typeof MutationObserver !== 'function') return;
@@ -450,6 +530,7 @@
        Vergleich frei von allem, was wir an ihm tun. Der Schalter wird im
        Kopf von probetraining.html gesetzt. */
     if (window.__ptPlain) return;
+    try { einleitung(); } catch (e) {}
     try { ladeHinweis(); } catch (e) {}
     try { aufraeumen(); } catch (e) {}
     try { wochenende(); } catch (e) {}
