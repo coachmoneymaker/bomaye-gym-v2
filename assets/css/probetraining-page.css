@@ -189,6 +189,16 @@
 }
 /* Die Einschraenkung steht vor der Terminliste, nicht darunter: wer erst
    scrollt und dann liest, hat sich den falschen Kurs schon ausgesucht. */
+/* DAS [hidden] IST KEINE KOSMETIK, ES WAR EIN FEHLER
+   .pt-booking-limit setzt display: inline-block. Eine Autorenregel gewinnt
+   gegen das display: none, das der Browser fuer [hidden] mitbringt - also
+   stand der Wochenendhinweis am Donnerstag mitten auf der Seite, obwohl
+   pt-einstieg.js das Attribut nie entfernt hatte. Gemeldet vom iPhone, im
+   Instagram-Browser. Gilt fuer jede Zeile dieser Klasse, auch fuer die
+   neue mit dem naechsten Termin. */
+.pt-booking-limit[hidden] {
+  display: none;
+}
 .pt-booking-limit {
   display: inline-block;
   border-left: 2px solid #C9A84C;

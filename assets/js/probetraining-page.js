@@ -1824,9 +1824,10 @@
 
   /* ─────────────────── Kurse im Kalender ───────────────────
      Standard sind die fuenf Kurse, fuer die das Probetraining gilt. Mit
-     ?kurs=<kuerzel> zeigt der Kalender nur einen davon - damit kann eine
-     Anzeige direkt auf "Kickboxing" oder "Kids" fuehren, statt den
-     Besucher im vollen Kalender suchen zu lassen.
+     ?kurs=<kuerzel> zeigt der Kalender nur einen davon oder eine
+     Zielgruppe - damit kann eine Anzeige direkt auf "Kickboxing", "Kids"
+     oder auf alles fuer Erwachsene fuehren, statt den Besucher im vollen
+     Kalender suchen zu lassen.
 
      Dieselben Kuerzel wie auf /stundenplan (dort SP_KURSE), damit ein
      Link auf beiden Seiten dasselbe bedeutet. Ein unbekanntes Kuerzel
@@ -1842,13 +1843,31 @@
     244420,   /* BOXING KIDS (6-9 Jahre)  - "Kids"       */
     244563    /* BOXING YOUTH (10-17)     - "Youth"      */
   ];
+  /* Ein Kuerzel zeigt entweder EINEN Kurs oder eine ZIELGRUPPE.
+
+     Die Zielgruppen gibt es, weil die Anzeigen so geschnitten sind: eine
+     laeuft auf Eltern, eine auf Erwachsene. "kids" allein laesst Youth
+     liegen, obwohl dieselben Eltern dafuer in Frage kommen, und ohne
+     Filter steht in der Anzeige fuer Erwachsene auch das Kindertraining.
+
+       erwachsene (adults)   Kickboxing, Queens, Basic
+       kinder     (familie)  Kids, Youth
+
+     Reihenfolge wie in PT_ALLE, also wie im gelieferten Einbettungscode.
+     Die Einzelkuerzel bleiben unveraendert, damit bestehende Anzeigen und
+     Links weiterlaufen. Dieselben Kuerzel stehen in pt-einstieg.js in
+     KURS_TAGE - wer hier eines hinzufuegt, muss es dort auch tun. */
   var PT_KURSE = {
     kickboxing: 236751,
     kids:       244420,
     basics:     244426,
     basic:      244426,
     queens:     244539,
-    youth:      244563
+    youth:      244563,
+    erwachsene: [236751, 244539, 244426],
+    adults:     [236751, 244539, 244426],
+    kinder:     [244420, 244563],
+    familie:    [244420, 244563]
   };
 
   function _ptKurse() {
@@ -1860,7 +1879,10 @@
     slug = String(slug).toLowerCase();
     /* hasOwnProperty, damit ?kurs=constructor nicht im Prototyp landet. */
     if (!Object.prototype.hasOwnProperty.call(PT_KURSE, slug)) return PT_ALLE;
-    return [PT_KURSE[slug]];
+    /* concat macht aus einer Zahl eine Liste und laesst eine Liste eine
+       Liste - und gibt in beiden Faellen eine eigene Kopie zurueck, damit
+       niemand versehentlich in PT_KURSE schreibt. */
+    return [].concat(PT_KURSE[slug]);
   }
 
   /* ─────────────────── Start ─────────────────── */

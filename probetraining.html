@@ -367,7 +367,10 @@
 <section class="pt-booking-section" id="pt-booking" aria-label="Probetraining buchen">
   <div class="pt-booking-head">
     <h2>Wähle deinen Termin</h2>
-    <p class="pt-booking-limit">Das kostenlose Probetraining gilt für Basic, Kids, Youth, Queens und Kickboxing.</p>
+    <!-- Die id braucht pt-einstieg.js: mit einem Filter (?kurs=) nennt die
+         Zeile nur die Kurse, die der Kalender dann wirklich zeigt. Ohne
+         Filter bleibt dieser Satz stehen. -->
+    <p class="pt-booking-limit" id="pt-kurs-hinweis">Das kostenlose Probetraining gilt für Basic, Kids, Youth, Queens und Kickboxing.</p>
     <p>Fortgeschrittenen- und Wettkampftraining ist Mitgliedern vorbehalten.</p>
     <!-- Steht hier und nicht erst im Buchungsfenster: der Kaufschritt von
          Bsport listet unter "Empfehlungen" zuerst das Abo (Bomaye Unlimited,
@@ -390,6 +393,11 @@
          sagt bewusst nicht, der Kalender sei schon umgestellt: das Umstellen
          kann abbrechen, der Satz bleibt dann trotzdem richtig. -->
     <p class="pt-booking-limit" id="pt-wochenend-hinweis" hidden>Am Wochenende ist kein Probetraining. Die nächsten Termine sind ab Montag.</p>
+    <!-- Das Netz unter dem Tagessprung. Leer im Markup, gefuellt und
+         eingeblendet von pt-einstieg.js, und nur dann: wenn der Kalender
+         nachweislich nicht auf den naechsten Termin gesprungen ist. Sonst
+         saehe der Besucher einen leeren Tag ohne jede Auskunft. -->
+    <p class="pt-booking-limit" id="pt-naechster-termin" hidden></p>
     <!-- Drei Schritte, direkt ueber dem Kalender. Sie standen vorher weiter
          oben in einem eigenen Abschnitt; dort kosteten sie einen halben
          Bildschirm Weg bis zum Kalender. Hier beantworten sie die Frage,
