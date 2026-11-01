@@ -250,7 +250,14 @@ export const SEITEN = {
   },
   'kickboxen-muenchen.html': {
     titel: 'Kickboxen München',
-    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene — Training mit Kickbox-Weltmeister Alfonso Fusco. Jetzt Early-Bird-Platz im Bomaye Gym sichern.',
+    /* Hier stand "Training mit Kickbox-Weltmeister Alfonso Fusco". Eine
+       Aussage ueber eine einzelne Person mit Titel, und zwar in der
+       Beschreibung, die Google als Textauszug zeigt. Sie faellt nach
+       derselben Regel weg wie der alte Titel von /coaches: nicht
+       nachpruefbar aus dem Repo, und sie veraltet still, wenn der Trainer
+       geht. Die Early-Bird-Erwaehnung bleibt OHNE Zahl, sonst muesste der
+       Preis hier gepflegt werden. */
+    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit und Kondition. Early-Bird, solange Plätze frei sind.',
   },
   'personal-training-boxen-muenchen.html': {
     titel: 'Personal Training Boxen München',
