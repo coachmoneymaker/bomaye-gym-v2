@@ -29,9 +29,12 @@
   --muted:      rgba(245,240,232,0.65);
   --border:     rgba(201,168,76,0.25);
 
-  --font-display: 'Bebas Neue', 'Oswald', sans-serif;
-  --font-head:    'Oswald', sans-serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
+  /* Die Rueckfallschriften mit size-adjust stehen in fonts.css und sind
+     breitengleich zur jeweiligen Webschrift. Damit bricht der Text vor dem
+     Austausch genauso um wie danach, und die Seite springt nicht. */
+  --font-display: 'Bebas Neue', 'Bebas Rueckfall', 'Oswald', sans-serif;
+  --font-head:    'Oswald', 'Oswald Rueckfall', sans-serif;
+  --font-body:    'DM Sans', 'DM Sans Rueckfall', system-ui, sans-serif;
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   /* Verzoegerung des Sekundaerblocks im Mobilmenue (Info-Links, Konto,

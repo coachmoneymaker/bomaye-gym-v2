@@ -249,7 +249,21 @@
     document.documentElement.classList.add('bomaye-dialogwache-aktiv');
   }
 
-  if (document.readyState === 'loading') {
+  /* defer: DIESE BEDINGUNG MUSSTE MIT
+     Mit defer laeuft ein Skript, wenn das Parsen fertig ist. Dann steht
+     readyState schon auf "interactive", nicht mehr auf "loading" - der
+     alte Zweig haette also sofort losgelegt, noch bevor die uebrigen
+     deferred Skripte dran waren. Auf dieser Seite haette das
+     die Reihenfolge zerlegt: es braucht
+     window.bomayeGateBsport aus consent-bridge.js, und das steht in der
+     Reihenfolge weiter hinten. Ergebnis waere "Consent-Bruecke nicht
+     geladen" und ein Kalender, der nie laedt.
+
+     Mit !== 'complete' wird in beiden Faellen auf DOMContentLoaded
+     gewartet. Dann sind alle deferred Skripte durch, und die Reihenfolge
+     ist dieselbe wie vorher: alle haengen am selben Ereignis, in der
+     Reihenfolge, in der sie im Markup stehen. */
+  if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', starten);
   } else {
     starten();
