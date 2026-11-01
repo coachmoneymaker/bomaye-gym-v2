@@ -9,6 +9,9 @@
     "sharp": "^0.35.1"
   },
   "scripts": {
-    "pruefen:reichweite": "node scripts/reichweite-pruefen.mjs"
+    "pruefen:reichweite": "node scripts/reichweite-pruefen.mjs",
+    "pruefen:seo": "node scripts/seo-pruefen.mjs",
+    "bauen:seo": "node scripts/seo-bauen.mjs && node scripts/faq-bauen.mjs",
+    "pruefen:alles": "node scripts/seo-bauen.mjs --pruefen && node scripts/faq-bauen.mjs --pruefen && node scripts/seo-pruefen.mjs && node scripts/reichweite-pruefen.mjs"
   }
 }

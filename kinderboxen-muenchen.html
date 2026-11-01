@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
+       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
+       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+  <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
+  <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
+       Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
+       die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
+       data-cookieconsent="ignore" ist zwingend: dieser Block darf von Cookiebot NICHT
+       blockiert werden, sonst gaebe es keinen Default, gegen den das Update laufen kann. -->
+  <script data-cookieconsent="ignore">
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("consent", "default", {
+      ad_personalization: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500,
+    });
+    gtag("set", "ads_data_redaction", true);
+    gtag("set", "url_passthrough", false);
+  </script>
+  <!-- End Google Consent Mode v2 -->
+  <!-- Cookiebot CMP — muss direkt nach dem Consent-Default und VOR GTM/gtag.js stehen. -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
+  <!-- End Cookiebot CMP -->
+  <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Kinder Boxen München: Kids Boxing ab 6 | Bomaye Boxgym</title>
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <meta name="theme-color" content="#0A0A08">
+  <meta name="description" content="Kinderboxen in München: Kids Boxing ab 6 Jahren, Youth ab 10. Altersgerechtes Training in Kleingruppen im Bomaye Boxgym. Erstes Training kostenlos." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Kinder Boxen München: Kids Boxing ab 6 | Bomaye Boxgym" />
+  <meta property="og:description" content="Kinderboxen in München: Kids Boxing ab 6 Jahren, Youth ab 10. Altersgerechtes Training in Kleingruppen im Bomaye Boxgym. Erstes Training kostenlos." />
+  <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bomayegym.com/kinderboxen-muenchen" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:site_name" content="Bomaye Boxgym Munich" />
+
+  <link rel="canonical" href="https://www.bomayegym.com/kinderboxen-muenchen" />
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/css/style.css" as="style" />
+
+  <!-- Schriften: selbst gehostet (kein Google-Request, LG Muenchen I).
+       Preload der latin-Dateien, damit sie vor dem ersten Paint da sind. -->
+  <link rel="preload" href="/assets/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <!-- Schema.org -->
+  <!-- SEO:GRAPH -->
+  <!-- ERZEUGT - NICHT VON HAND AENDERN.
+       Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
+       Aenderungen hier gehen beim naechsten Lauf verloren. Dort aendern,
+       dann "node scripts/seo-bauen.mjs" und "node scripts/seo-pruefen.mjs".
+
+       Ein @graph fuer die ganze Seite: #organization ist die Firma,
+       #gym der Ort. Alles andere im Repo verweist per @id darauf, statt
+       die Knoten zu wiederholen. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.bomayegym.com/#organization",
+        "name": "Bomaye Boxgym Munich",
+        "legalName": "Bomaye Gym GmbH",
+        "alternateName": [
+          "Bomaye Gym Munich",
+          "Bomaye Boxgym München"
+        ],
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      },
+      {
+        "@type": [
+          "LocalBusiness",
+          "SportsActivityLocation"
+        ],
+        "@id": "https://www.bomayegym.com/#gym",
+        "name": "Bomaye Boxgym Munich",
+        "description": "Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxen, Kickboxen und Kurse für Kinder und Jugendliche.",
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 48.1472,
+          "longitude": 11.5235
+        },
+        "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday"
+            ],
+            "opens": "13:00",
+            "closes": "22:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Saturday"
+            ],
+            "opens": "10:00",
+            "closes": "14:00"
+          }
+        ],
+        "priceRange": "€€",
+        "parentOrganization": {
+          "@id": "https://www.bomayegym.com/#organization"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      }
+    ]
+  }
+  </script>
+  <!-- /SEO:GRAPH -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Startseite",
+        "item": "https://www.bomayegym.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boxen München",
+        "item": "https://www.bomayegym.com/boxen-muenchen"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Kinderboxen München",
+        "item": "https://www.bomayegym.com/kinderboxen-muenchen"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Kids Boxing und Youth Boxing",
+    "description": "Boxtraining für Kinder und Jugendliche ab 6 Jahren im Bomaye Boxgym München. Altersgerechtes Training in Kleingruppen, getrennt von den Erwachsenenkursen.",
+    "url": "https://www.bomayegym.com/kinderboxen-muenchen",
+    "provider": {
+      "@id": "https://www.bomayegym.com/#gym"
+    },
+    "inLanguage": "de",
+    "typicalAgeRange": "6-17",
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "student",
+      "suggestedMinAge": 6
+    },
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "onsite",
+      "location": {
+        "@id": "https://www.bomayegym.com/#gym"
+      }
+    }
+  }
+  </script>
+
+  <!-- FAQ Schema -->
+
+  <style>
+    /* ── Page hero ──────────────────────────────── */
+    .seo-hero {
+      background: var(--ink);
+      padding: clamp(100px, 14vw, 160px) 0 clamp(48px, 7vw, 80px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .seo-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .seo-hero-tag {
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+    .seo-hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      color: #F5F0E8;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .seo-hero-h1 span { color: var(--gold); }
+    .seo-hero-sub {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: rgba(245,240,232,0.55);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .seo-hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Content sections ───────────────────────── */
+    /* ── FLAECHEN AUS DEN MARKENTOKEN ────────────────────────────────────
+       Hier standen vier eigene Werte: #f5f4f0 als Creme, #111 als Rauch,
+       #F5F0E8 als Schriftfarbe und #b8963e als Akzentgold. Die sieben
+       Landingpages fuhren damit untereinander konsistent, gegenueber dem
+       Rest der Seite aber durchgehend daneben - wer von der Startseite
+       herkam, sah zwei verschiedene Cremetoene.
+
+       --smoke bleibt bewusst eine eigene Stufe und wird NICHT auf
+       --brand-dark gezogen: eine Rauch-Sektion steht hier direkt neben
+       einer Dark-Sektion, die Abstufung leistet also echte Arbeit. Mit
+       dem Token (#1a1a1a statt #111) wird die Trennung sogar deutlicher.
+
+       Das Akzentgold war mit #b8963e auf Creme bei rund 2.9:1 und damit
+       unter AA selbst fuer grosse Schrift; --gold-dark liegt darueber. */
+    .seo-section {
+      padding: var(--takt) 0;
+    }
+    .seo-section--dark  { background: var(--ink); }
+    .seo-section--smoke { background: var(--smoke); }
+    .seo-section--light { background: var(--brand-cream); }
+
+    .seo-section-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .seo-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .seo-section--dark h2,
+    .seo-section--smoke h2  { color: var(--brand-cream); }
+    .seo-section--light h2  { color: var(--ink); }
+    .seo-section--dark h2 span,
+    .seo-section--smoke h2 span { color: var(--gold); }
+    .seo-section--light h2 span { color: var(--gold-dark); }
+
+    .seo-section p {
+      font-family: var(--font-body);
+      font-size: 0.97rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .seo-section--dark p,
+    .seo-section--smoke p  { color: rgba(245,240,232,0.62); }
+    .seo-section--light p  { color: rgba(8,8,8,0.65); }
+
+    /* ── Feature grid ───────────────────────────── */
+    .seo-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .seo-feature-card {
+      background: rgba(245,240,232,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 0;
+      padding: 1.75rem 1.5rem;
+    }
+    .seo-feature-card-icon {
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 0.85rem;
+    }
+    .seo-feature-card h3 {
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: #F5F0E8;
+      margin-bottom: 0.6rem;
+    }
+    .seo-feature-card p {
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.52);
+      margin: 0;
+    }
+
+    /* ── FAQ ────────────────────────────────────── */
+    .faq-list {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .faq-item {
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 0;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      background: rgba(245,240,232,0.03);
+      border: none;
+      padding: 1.1rem 1.4rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      color: #F5F0E8;
+      transition: background var(--dur-normal) var(--ease-out);
+    }
+    .faq-q:hover { background: rgba(201,168,76,0.07); }
+    .faq-q i { color: var(--gold); transition: transform var(--dur-normal) var(--ease-out); flex-shrink: 0; }
+    .faq-item.open .faq-q i { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--dur-ruhig) var(--ease-out), padding var(--dur-ruhig) var(--ease-out);
+      padding: 0 1.4rem;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: rgba(245,240,232,0.58);
+    }
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding: 0.75rem 1.4rem 1.25rem;
+    }
+
+    /* Nav active */
+    .nav-link-active { color: var(--gold) !important; }
+    #header .nav-link[href] { display: inline-flex; align-items: center; }
+  
+    /* ── Brotkrumen ──────────────────────────────────────────────────────
+       Sichtbar, nicht nur im Schema: eine BreadcrumbList, die es im Markup
+       nicht gibt, beschreibt eine Navigation, die der Besucher nicht hat.
+       Auf dieser Seite fuehrt sie zugleich zur Uebersicht zurueck. */
+    .seo-krumen {
+      font-family: var(--font-head);
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: calc(var(--nav-h, 72px) + 18px) 24px 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .seo-krumen ol { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+    .seo-krumen li { display: flex; align-items: center; gap: 8px; color: rgba(245,240,232,0.55); }
+    .seo-krumen li + li::before { content: '/'; color: rgba(201,168,76,0.5); }
+    .seo-krumen a { color: #C9A84C; text-decoration: none; padding: 10px 0; display: inline-block; }
+    .seo-krumen a:hover { text-decoration: underline; }
+    .seo-krumen [aria-current="page"] { color: rgba(245,240,232,0.75); padding: 10px 0; }
+    /* Der Held beginnt sonst mit demselben Abstand nach oben; mit Krumen
+       darueber waere es doppelt. */
+    .seo-krumen + .seo-hero { padding-top: 24px; }
+
+    /* ── Aufzaehlung ─────────────────────────────────────────────────────
+       Die Vorlage hat keine Liste, deshalb hier. Farben wie .seo-section p,
+       damit die Liste auf hellem und dunklem Grund denselben Kontrast hat
+       wie der Fliesstext daneben. */
+    .seo-liste {
+      list-style: none;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      font-family: var(--font-body);
+      font-size: 0.97rem;
+      line-height: 1.75;
+    }
+    .seo-liste li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 0.85rem;
+    }
+    .seo-liste li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.72em;
+      width: 8px; height: 1px;
+      background: #C9A84C;
+    }
+    .seo-section--dark .seo-liste,
+    .seo-section--smoke .seo-liste { color: rgba(245,240,232,0.62); }
+    .seo-section--light .seo-liste { color: rgba(8,8,8,0.65); }
+    .seo-liste strong { color: inherit; }
+    .seo-section--dark .seo-liste strong,
+    .seo-section--smoke .seo-liste strong { color: #F5F0E8; }
+    .seo-section--light .seo-liste strong { color: #0A0A08; }
+    /* 44px Tippflaeche fuer die Verweise in der Uebersicht, ohne dass die
+       Zeilen auseinanderlaufen. */
+    .seo-liste a {
+      color: #C9A84C;
+      text-decoration: none;
+      display: inline-block;
+      padding: 12px 2px;
+      margin: -12px 0;
+    }
+    .seo-liste a:hover { text-decoration: underline; }
+  </style>
+  <!-- BreadcrumbList -->
+  <!-- Course -->
+</head>
+
+<body>
+<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
+     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
+     https://fontawesome.com/license/free -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol><symbol id="i-calendar" viewBox="0 0 448 512"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></symbol><symbol id="i-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol><symbol id="i-instagram" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></symbol><symbol id="i-location-dot" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol><symbol id="i-lock" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></symbol><symbol id="i-phone" viewBox="0 0 512 512"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></symbol><symbol id="i-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></symbol><symbol id="i-shield-halved" viewBox="0 0 512 512"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z"/></symbol><symbol id="i-shoe-prints" viewBox="0 0 640 512"><path d="M416 0C352.3 0 256 32 256 32V160c48 0 76 16 104 32s56 32 104 32c56.4 0 176-16 176-96S512 0 416 0zM128 96c0 35.3 28.7 64 64 64h32V32H192c-35.3 0-64 28.7-64 64zM288 512c96 0 224-48 224-128s-119.6-96-176-96c-48 0-76 16-104 32s-56 32-104 32V480s96.3 32 160 32zM0 416c0 35.3 28.7 64 64 64H96V352H64c-35.3 0-64 28.7-64 64z"/></symbol><symbol id="i-tiktok" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></symbol><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-users" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></symbol><symbol id="i-xmark" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></symbol><symbol id="i-youtube" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></symbol></svg>
+
+
+<!-- Noise texture -->
+<div class="noise" aria-hidden="true"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header id="header" role="banner">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img site-logo" decoding="async" width="720" height="360" />
+      <span class="logo-text">BOMAYE</span>
+    </a>
+
+    <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
+      <i class="icon" aria-hidden="true"><svg><use href="#i-arrow-left-long"/></svg></i> <span>ZURÜCK</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a class="nav-link" href="/">HOME</a>
+      <a class="nav-link" href="/kurse">KURSE</a>
+      <a class="nav-link" href="/personal-training-boxen-muenchen">PERSONAL TRAINING</a>
+      <a class="nav-link" href="/stundenplan">SCHEDULE</a>
+
+      <a class="nav-link" href="/coaches">COACHES</a>
+      <a class="nav-link" href="/about">ABOUT US</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <a class="btn btn--gold btn--sm" href="/mitglied-werden" style="text-decoration:none;display:inline-flex;align-items:center;"><span class="nav-cta-text">MITGLIED WERDEN<span class="nav-cta-preis"> — AB 14,90€</span></span></a>
+    </nav>
+
+    <button class="burger" onclick="togglePageMenu()" aria-label="Menü" aria-expanded="false" id="page-burger-btn" type="button">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div id="page-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
+     style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:0.25rem;">
+  <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
+  <a class="mn-item" href="/kurse" style="--mn-i:1">KURSE</a>
+  <a class="mn-item" href="/personal-training-boxen-muenchen" style="--mn-i:2">PERSONAL TRAINING</a>
+  <a class="mn-item" href="/stundenplan" style="--mn-i:3">SCHEDULE</a>
+  <a class="mn-item" href="/coaches" style="--mn-i:4">COACHES</a>
+  <a class="mn-item" href="/about" style="--mn-i:5">ABOUT US</a>
+  <a class="mn-item" href="/faq" style="--mn-i:6">FAQ</a>
+  <div class="mn-divider"></div>
+  <a href="/mitgliederbereich" class="mn-account" aria-label="Mein Konto" style="--mn-i:7"><i class="icon" aria-hidden="true"><svg><use href="#i-user"/></svg></i> Mein Konto</a>
+  <a class="btn btn--gold mn-cta" href="/mitglied-werden" onclick="togglePageMenu();" style="--mn-i:8;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
+</div>
+
+<!-- ═══════ WHATSAPP FLOAT ═══════ -->
+<a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
+   class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
+  <i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i>
+</a>
+
+<!-- ═══════ BOOKING MODAL ═══════ -->
+<div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
+  <div class="modal-header">
+    <span class="modal-header-title">JETZT BUCHEN</span>
+    <button class="modal-close" onclick="closeBooking()" type="button" aria-label="Schließen">
+      <i class="icon" aria-hidden="true"><svg><use href="#i-xmark"/></svg></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="bsport-widget-464090"></div>
+  </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+  <nav class="seo-krumen" aria-label="Brotkrumen">
+    <ol>
+        <li><a href="/">Startseite</a></li>
+        <li><a href="/boxen-muenchen">Boxen München</a></li>
+        <li><span aria-current="page">Kinderboxen München</span></li>
+    </ol>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="seo-hero" aria-label="Kinderboxen München">
+    <div class="container">
+      <div class="seo-hero-tag">KINDERBOXEN MÜNCHEN</div>
+      <h1 class="seo-hero-h1">Kinderboxen<br><span>München</span></h1>
+      <p class="seo-hero-sub">
+        Kids Boxing ab 6 Jahren, Youth Boxing ab 10 Jahren.<br>
+        Altersgerechtes Training in Kleingruppen, im Bomaye Boxgym in Neuhausen-Nymphenburg.
+      </p>
+      <div class="seo-hero-btns">
+        <a href="/probetraining?kurs=kinder" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;"><i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> KOSTENLOS PROBETRAINIEREN</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Was Kinder hier lernen ── -->
+  <section class="seo-section seo-section--smoke" aria-labelledby="lernen-h2">
+    <div class="container">
+      <div class="seo-section-inner">
+        <div class="reveal">
+          <span class="tag tag--dark">AB 6 JAHREN</span>
+          <h2 id="lernen-h2" style="margin-top:1.25rem;">BOXEN LEHRT NICHT GEWALT.<br><span>ES LEHRT HALTUNG.</span></h2>
+          <p>
+            Unser Youth-Boxing-Programm richtet sich an Kinder und Jugendliche ab 6 Jahren.
+            Boxen lehrt nicht Gewalt — es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist,
+            in einem sicheren, professionellen Umfeld mit erfahrenen Trainern.
+          </p>
+          <ul class="seo-liste">
+            <li><strong>Kursplan speziell für Kinder</strong> — eigene Gruppen, keine gemischten Erwachsenenkurse.</li>
+            <li><strong>Kleingruppen</strong> — damit jedes Kind einzeln korrigiert wird.</li>
+            <li><strong>Sicheres, geführtes Boxen lernen</strong> — Technik und Deckung zuerst.</li>
+            <li><strong>Strukturiertes Training mit echten Coaches</strong> — kein Beiprogramm.</li>
+          </ul>
+          <p>
+            <!-- TODO-OWNER: Zwei Angaben, nach denen Eltern zuerst fragen, stehen
+                 im Repo nicht belastbar und fehlen hier deshalb:
+                   1. an welchen Wochentagen und zu welchen Uhrzeiten Kids und
+                      Youth trainieren (der Stundenplan kommt aus bsport, eine
+                      feste Zeile hier wuerde veralten)
+                   2. die Gruppengroesse als Zahl ("Kleingruppen" steht so auf
+                      /mitglied-werden, eine Obergrenze nicht)
+                 Beides bitte ergaenzen oder bestaetigen. -->
+            Welche Gruppe wann trainiert, steht im <a href="/stundenplan">Stundenplan</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Für Eltern ── -->
+  <section class="seo-section seo-section--light" aria-labelledby="eltern-h2">
+    <div class="container">
+      <div class="seo-section-inner">
+        <div class="reveal">
+          <span class="tag">FÜR ELTERN</span>
+          <h2 id="eltern-h2" style="margin-top:1.25rem;">WAS DU VORHER<br><span>WISSEN SOLLTEST</span></h2>
+          <p>
+            <strong>Alter.</strong> Kids Boxing ist für 6 bis 9 Jahre, Youth Boxing für 10 bis 17 Jahre.
+            Ab 18 geht es in die Erwachsenenkurse.
+          </p>
+          <p>
+            <strong>Anmeldung.</strong> Für Minderjährige brauchen wir die Unterschrift eines
+            Erziehungsberechtigten. Die Einverständniserklärung, die Sparring-Freigabe und die
+            Anmeldungen für Wettkampf und Reisen stehen zum Download unter
+            <a href="/u18">Eltern-Dokumente (U18)</a>.
+          </p>
+          <p>
+            <strong>Ausrüstung.</strong> Sportkleidung, saubere Hallenschuhe, ein Handtuch und
+            eine Trinkflasche. Boxhandschuhe kann sich dein Kind beim ersten Training leihen.
+          </p>
+          <p>
+            <strong>Preis.</strong> Die Wochenpreise für Kids und Youth stehen auf
+            <a href="/mitglied-werden">Mitglied werden</a> — dort immer der aktuelle Stand.
+            <!-- TODO-OWNER: Preis steht mit Absicht NICHT hier und NICHT im
+                 Schema. Zwei Stellen mit Preisen laufen auseinander, und ein
+                 veralteter Preis im Schema ist ein Verstoss gegen Googles
+                 Richtlinien. -->
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Einstieg: zum kostenlosen Probetraining ── -->
+  <section class="seo-section seo-section--smoke" style="text-align:center;" aria-labelledby="probe-h2">
+    <div class="container">
+      <div class="reveal">
+        <span class="tag tag--dark">DEIN EINSTIEG</span>
+        <h2 id="probe-h2" style="margin-top:1.25rem;">ERST TESTEN,<br><span>DANN ENTSCHEIDEN</span></h2>
+        <p style="max-width:560px;margin:0 auto 2rem;">Dein Kind kann einmal kostenlos mittrainieren, unverbindlich. Termin online wählen, kurz anmelden, vorbeikommen.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="/probetraining" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;"><i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> PROBETRAINING BUCHEN</a>
+          <a href="/mitglied-werden" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">PREISE ANSEHEN</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="seo-section seo-section--dark" aria-labelledby="faq-h2">
+    <div class="container">
+      <div class="seo-section-inner">
+        <div class="reveal">
+          <span class="tag tag--dark">FAQ</span>
+          <h2 id="faq-h2" style="margin-top:1.25rem;">HÄUFIGE FRAGEN ZUM<br><span>KINDERBOXEN IN MÜNCHEN</span></h2>
+        </div>
+        <div class="faq-list" role="list">
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Ab welchem Alter kann mein Kind boxen?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Kids Boxing beginnt mit 6 Jahren, Youth Boxing mit 10 Jahren. Trainiert wird in eigenen Gruppen, nicht gemeinsam mit Erwachsenen.
+            </div>
+          </div>
+
+          <div class="faq-item reveal delay-1" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Ist Boxen für Kinder nicht zu gefährlich?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Im Kindertraining geht es um Technik, Deckung und Beinarbeit, nicht um harte Schläge. Trainiert wird an Pratzen und Sack. Sparring gibt es nur mit ausdrücklicher Freigabe der Eltern und nur unter Aufsicht; die Freigabe liegt als eigenes Dokument unter <a href="/u18">Eltern-Dokumente</a>.
+            </div>
+          </div>
+
+          <div class="faq-item reveal delay-2" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Was braucht mein Kind für das erste Training?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Sportkleidung, saubere Hallenschuhe, ein Handtuch und eine Trinkflasche. Boxhandschuhe kann es sich beim ersten Training leihen. Eigene Handschuhe lohnen sich erst, wenn es regelmäßig trainiert.
+            </div>
+          </div>
+
+          <div class="faq-item reveal delay-3" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Kann mein Kind erst einmal unverbindlich mitmachen?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Ja. Das erste Training ist kostenlos. Du wählst online einen Termin für den Kinderkurs und kommst mit. Zur Buchung: <a href="/probetraining?kurs=kinder">Probetraining</a>.
+            </div>
+          </div>
+
+          <div class="faq-item reveal delay-3" role="listitem">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false" type="button">
+              <span>Welche Unterlagen brauchen wir für die Anmeldung?</span>
+              <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
+            </button>
+            <div class="faq-a" role="region">
+              Eine von einem Erziehungsberechtigten unterschriebene Einverständniserklärung. Dazu, je nach Fall, die Sparring-Freigabe sowie Anmeldungen für Wettkampf und Reisen. Alles zum Download unter <a href="/u18">Eltern-Dokumente (U18)</a>.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img" onerror="this.style.display='none';" width="720" height="360" loading="lazy" />
+          <span class="logo-text">BOMAYE</span>
+          <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
+          <p class="brand-line">Pineapple Park · 80639 München</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i></a>
+            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="icon" aria-hidden="true"><svg><use href="#i-youtube"/></svg></i></a>
+            <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i></a>
+            <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>TRAINING</h4>
+          <ul class="footer-links">
+            <li><a href="/kurse#kursdetail-olympic">Olympic Boxing</a></li>
+            <li><a href="/kickboxen-muenchen">Kickboxing</a></li>
+            <li><a href="/frauenboxen-muenchen">Women's Boxing</a></li>
+            <li><a href="/kurse#kursdetail-youth">Youth Boxing</a></li>
+            <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>GYM</h4>
+          <ul class="footer-links">
+            <li><a href="/about">Unsere DNA</a></li>
+            <li><a href="/coaches">Coaches</a></li>
+            <li><a href="/mitglied-werden">Preise</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/#location">Standort</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+        <h4>APP</h4>
+        <div class="footer-app-badges">
+          <a href="https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484" target="_blank" rel="noopener" aria-label="Laden im App Store"><img src="/assets/badges/app-store-badge-de.svg" alt="Laden im App Store" decoding="async" width="135" height="40" loading="lazy"></a>
+          <a href="https://play.google.com/store/apps/details?id=com.bsport_799__5473" target="_blank" rel="noopener" aria-label="Jetzt bei Google Play"><img src="/assets/badges/google-play-badge-de.svg" alt="Jetzt bei Google Play" decoding="async" width="300" height="89" loading="lazy"></a>
+        </div>
+        <h4 class="footer-partner-h">PARTNER</h4>
+        <div class="footer-partner-row">
+          <a class="partner-link" href="https://locations.egym.com/embed/web/wellpass/muenchen-bomayegym" target="_blank" rel="noopener" aria-label="EGYM Wellpass"><img class="partner-logo" src="/assets/badges/wellpass-logo.svg" alt="EGYM Wellpass – Partnerstudio Bomaye Gym München" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" width="717" height="294" loading="lazy"><span class="partner-name">EGYM WELLPASS</span></a>
+          <a class="partner-link" href="https://classpass.com/studios/bomaye-gym-wilhelm-hale-str-mnchen" target="_blank" rel="noopener" aria-label="ClassPass"><img class="partner-logo" src="/assets/badges/classpass-logo.svg" alt="ClassPass – Partnerstudio Bomaye Gym München" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" width="2016" height="546" loading="lazy"><span class="partner-name">CLASSPASS</span></a>
+        </div>
+      </div>
+      <div class="footer-col">
+          <h4>KONTAKT</h4>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-location-dot"/></svg></i><span>Pineapple Park, 80639 München</span></div>
+        <div class="footer-pineapple" style="display:flex;align-items:center;gap:9px;margin:-0.35rem 0 0.95rem;">
+          <a href="https://www.pineapplepark-munich.com/" target="_blank" rel="noopener" aria-label="Pineapple Park München" style="display:inline-flex;"><span role="img" aria-label="Pineapple Park" style="display:block;width:18px;height:20px;background:#F5F0E8;-webkit-mask:url('/assets/badges/pineapplepark-logo.svg') no-repeat center / contain;mask:url('/assets/badges/pineapplepark-logo.svg') no-repeat center / contain;"></span></a>
+          <span class="footer-pineapple-label" style="font-family:'Oswald',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.45);line-height:1.3;">IM PINEAPPLE PARK AREAL</span>
+        </div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-phone"/></svg></i><a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-envelope"/></svg></i><a href="mailto:support@bomayegym.com">support@bomayegym.com</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i><a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+          <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(245,240,232,0.08);padding:2rem 0 1rem;">
+        <p style="font-size:0.8rem;color:rgba(245,240,232,0.35);line-height:1.7;">
+          Bomaye Gym München – professionelles Boxtraining in München für Anfänger, Fitnesssportler und Wettkämpfer.
+          Klassisches Boxtraining, Fitness Boxtraining und Techniktraining im Pineapple Park, Wilhelm-Hale-Straße 44, 80639 München.
+        </p>
+        <p style="font-size:0.78rem;color:rgba(245,240,232,0.45);line-height:1.7;max-width:680px;margin-top:0.75rem;">Als <a href="/about" class="footer-seo-link">Boxgym in München</a> bieten wir <a href="/boxtraining-muenchen" class="footer-seo-link">Boxtraining</a> für Einsteiger, die <a href="/boxen-lernen-muenchen" class="footer-seo-link">Boxen lernen</a> wollen, <a href="/fitnessboxen-muenchen" class="footer-seo-link">Fitnessboxen</a> für ambitionierte Hobbysportler, <a href="/kickboxen-muenchen" class="footer-seo-link">Kickboxen</a> und <a href="/frauenboxen-muenchen" class="footer-seo-link">Frauenboxen</a> in eigenen Kursen sowie <a href="/personal-training-boxen-muenchen" class="footer-seo-link">Personal Training</a> auf Wettkampfniveau – in unserem <a href="/boxgym-muenchen" class="footer-seo-link">Boxgym in Neuhausen-Nymphenburg</a>, 5 Minuten vom S-Bahnhof Hirschgarten.</p>
+      </div>
+      <div class="footer-contactbar">
+        <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer">+49 173 7513627</a>
+        <span class="dot">•</span>
+        <a href="mailto:support@bomayegym.com">support@bomayegym.com</a>
+        <span class="dot">•</span>
+        <span>Wilhelm-Hale-Str. 44, Pineapple Park, 80639 München</span>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 BOMAYE GYM MUNICH. ALL RIGHTS RESERVED.</span>
+        <div class="footer-legal">
+        <span class="footer-trust"><i class="icon" aria-hidden="true"><svg><use href="#i-lock"/></svg></i> Sichere Buchung über <a href="https://bsport.io" target="_blank" rel="noopener" aria-label="bsport" style="display:inline-flex;align-items:center;"><span role="img" aria-label="bsport" style="display:block;width:39px;height:14px;background:#F5F0E8;opacity:0.45;-webkit-mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;mask:url('/assets/badges/bsport-logo.svg') no-repeat center / contain;"></span></a></span>
+        <a href="/impressum">IMPRESSUM</a>
+          <a href="/datenschutz">DATENSCHUTZ</a>
+          <a href="/agb">AGB</a>
+          <a href="/hausordnung">Hausordnung</a>
+          <a href="/downloads">Downloads</a>
+          <a href="#" class="cookie-settings-link">COOKIE-EINSTELLUNGEN</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+/* ── Header scroll styling ── */
+(function () {
+  const header = document.getElementById('header');
+  if (!header) return;
+  function onScroll() { header.classList.toggle('scrolled', window.scrollY > 20); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ── iOS-compatible scroll lock ── */
+let _scrollLockY = 0;
+function lockBodyScroll() {
+  _scrollLockY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollLockY}px`;
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo({ top: _scrollLockY, behavior: 'instant' });
+}
+
+/* ── Mobile nav toggle ── */
+function togglePageMenu() {
+  const nav = document.getElementById('page-mobile-nav');
+  const btn = document.getElementById('page-burger-btn');
+  if (!nav) return;
+  const open = nav.classList.toggle('open');
+  if (open) { lockBodyScroll(); } else { unlockBodyScroll(); }
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('open', open);
+  }
+}
+
+/* ── Booking modal ── */
+let _bsportMounted = false;
+function openBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  modal.classList.add('open');
+  lockBodyScroll();
+  if (!_bsportMounted) { _mountBsport(); _bsportMounted = true; }
+}
+function closeBooking() {
+  const modal = document.getElementById('booking-modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  unlockBodyScroll();
+}
+function _mountBsport() {
+  if (!document.getElementById('bsport-cdn')) {
+    const s = document.createElement('script');
+    s.id  = 'bsport-cdn';
+    s.src = 'https://cdn.bsport.io/scripts/widget.js';
+    document.head.appendChild(s);
+  }
+  _waitBsport(1);
+}
+function _waitBsport(attempt) {
+  if (attempt > 50) return;
+  if (typeof window.BsportWidget === 'undefined')
+    return setTimeout(() => _waitBsport(attempt + 1), 150);
+  BsportWidget.mount({
+    parentElement: 'bsport-widget-464090',
+    companyId: 5473, franchiseId: null,
+    dialogMode: 1, widgetType: 'calendar',
+    showFab: false, fullScreenPopup: false,
+  });
+}
+document.addEventListener('click',  e => { if (e.target.id === 'booking-modal') closeBooking(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking(); });
+
+/* ── FAQ accordion ── */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => {
+    el.classList.remove('open');
+    el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+<!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
+<!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
+     wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
+<script src="/assets/js/menue-wache.js"></script>
+<script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
+</body>
+</html>

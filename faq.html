@@ -33,8 +33,8 @@
   <!-- End Cookiebot CMP -->
   <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <title>FAQ | BOMAYE GYM MUNICH</title>
-  <meta name="description" content="Antworten auf die häufigsten Fragen zum Bomaye Gym in München: Standort und Anfahrt, Buchung und Mitgliedschaft, Training, Ausstattung und Kontakt zum Team." />
+  <title>FAQ zum Boxtraining in München | Bomaye Boxgym Munich</title>
+  <meta name="description" content="Antworten auf die häufigsten Fragen zum Bomaye Boxgym München: Standort und Anfahrt, Buchung, Mitgliedschaft, Training, Ausstattung und Kontakt." />
   <meta name="robots" content="index, follow" />
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
@@ -45,8 +45,8 @@
   <meta name="theme-color" content="#0A0A08">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="FAQ | BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Antworten auf die häufigsten Fragen zum Bomaye Gym in München: Standort und Anfahrt, Buchung und Mitgliedschaft, Training, Ausstattung und Kontakt zum Team." />
+  <meta property="og:title" content="FAQ zum Boxtraining in München | Bomaye Boxgym Munich" />
+  <meta property="og:description" content="Antworten auf die häufigsten Fragen zum Bomaye Boxgym München: Standort und Anfahrt, Buchung, Mitgliedschaft, Training, Ausstattung und Kontakt." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/faq" />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
@@ -106,14 +106,30 @@
     }
     .faqp-hero-h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.8rem, 9vw, 6.5rem);
-      line-height: 0.95;
+      /* Kleiner als vorher, siehe Kommentar an der H1: der Text ist
+         deutlich laenger als "ALLE FRAGEN." */
+      font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+      line-height: 1.05;
       color: #0A0A08;
       text-transform: uppercase;
       letter-spacing: 0.02em;
       margin-bottom: 1.25rem;
     }
     .faqp-hero-gold { color: #a07c3a; }
+    /* Der frueher als H1 gesetzte Slogan. */
+    .faqp-hero-slogan {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3.4vw, 1.7rem);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      /* HIER STAND CREME AUF CREME: der Held dieser Seite ist hell
+         (#F5F0E8), und "ALLE FRAGEN." war damit unsichtbar - nur der
+         goldene Teil war zu lesen. Gesehen im Screenshot, nicht im Kopf. */
+      color: #0A0A08;
+      margin: 0.6rem 0 0;
+      text-transform: uppercase;
+    }
+
     .faqp-hero-sub {
       font-family: var(--font-body);
       font-size: clamp(0.88rem, 2vw, 1rem);
@@ -236,6 +252,62 @@
       margin: 0;
     }
 
+    /* ══════════════════════════════════════════════════════════════════════
+       details/summary STATT KNOPF UND PANEL
+
+       Das Markup kommt jetzt fertig aus dem Quelltext (scripts/faq-bauen.mjs)
+       und ist ein <details> mit <summary>. Damit klappt es ohne JavaScript
+       auf und zu, und die Antworten stehen im HTML, nicht nur im Skript.
+
+       Die Regeln darueber bleiben unangetastet: sie haengen an denselben
+       Klassen (.faqp-item, .faqp-item-btn, .faqp-question, .faqp-panel,
+       .faqp-answer), die auch das neue Markup traegt. Hier kommt nur dazu,
+       was <details> zusaetzlich braucht:
+
+         1. Das native Dreieck weg - wir haben einen eigenen Pfeil.
+         2. summary ist von sich aus kein Flex-Element.
+         3. Was vorher an [data-open="true"] hing, haengt jetzt an [open].
+            Beide Schreibweisen stehen nebeneinander, damit keine der
+            geprueften Regeln angefasst werden muss.
+         4. Ohne JavaScript muss das Panel beim Oeffnen wirklich aufgehen.
+            max-height: none ist der Rueckfall; mit JavaScript setzt das
+            Skript eine gemessene Hoehe fuer die Animation.
+       ══════════════════════════════════════════════════════════════════════ */
+    details.faqp-item > summary.faqp-item-btn {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 28px 0;
+    }
+    details.faqp-item > summary.faqp-item-btn::-webkit-details-marker { display: none; }
+    details.faqp-item > summary.faqp-item-btn::marker { content: ''; }
+    details.faqp-item > summary.faqp-item-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .faqp-item[open] .faqp-question { color: #C9A84C; }
+    .faqp-item[open] > .faqp-item-btn::after { transform: rotate(90deg); }
+    .faqp-item[open] .faqp-panel { max-height: none; }
+    .faqp-item[open] .faqp-answer { opacity: 1; transform: translateY(0); }
+
+    /* Die Kategorie ist jetzt eine h2. Sichtbar bleibt nur die Pille darin,
+       also werden die Ueberschriftenmasse aus style.css hier neutralisiert. */
+    h2.faqp-category {
+      margin: 0 0 0.75rem;
+      font-size: inherit;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      font-family: inherit;
+    }
+
+    @media (max-width: 600px) {
+      details.faqp-item > summary.faqp-item-btn { padding: 20px 0; }
+    }
+
     /* ── CTA section ───────────────────────────────── */
     .faqp-cta {
       background: #0A0A08;
@@ -308,95 +380,211 @@
     }
   </style>
   <!-- Schema.org -->
+  <!-- SEO:GRAPH -->
+  <!-- ERZEUGT - NICHT VON HAND AENDERN.
+       Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
+       Aenderungen hier gehen beim naechsten Lauf verloren. Dort aendern,
+       dann "node scripts/seo-bauen.mjs" und "node scripts/seo-pruefen.mjs".
+
+       Ein @graph fuer die ganze Seite: #organization ist die Firma,
+       #gym der Ort. Alles andere im Repo verweist per @id darauf, statt
+       die Knoten zu wiederholen. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "SportsActivityLocation"],
-    "@id": "https://bomayegym.com/#gym",
-    "name": "BOMAYE GYM MUNICH",
-    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
-    "url": "https://www.bomayegym.com",
-    "email": "support@bomayegym.com",
-    "telephone": "+491737513627",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
-      "addressLocality": "Munich",
-      "postalCode": "80639",
-      "addressCountry": "DE"
-    },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
-    "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "13:00", "closes": "22:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "14:00" }
-    ],
-    "priceRange": "€€"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "@id": "https://bomayegym.com/faq#faqpage",
-    "mainEntity": [
+    "@graph": [
       {
-        "@type": "Question",
-        "name": "Wo ist Bomaye Gym Munich und wie finde ich euch?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bomaye Gym Munich liegt im Pineapple Park – einer der spannendsten Locations Münchens. Die genaue Adresse und eine Routenplanung per Google Maps findest du direkt auf unserer Website. Wir sind mit dem ÖPNV (S-Bahn Hirschgarten, ca. 5 Minuten zu Fuß) und dem Auto gut erreichbar – Parkplätze im Areal sind vorhanden." }
+        "@type": "Organization",
+        "@id": "https://www.bomayegym.com/#organization",
+        "name": "Bomaye Boxgym Munich",
+        "legalName": "Bomaye Gym GmbH",
+        "alternateName": [
+          "Bomaye Gym Munich",
+          "Bomaye Boxgym München"
+        ],
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
       },
       {
-        "@type": "Question",
-        "name": "Wie werde ich Mitglied und starte mit dem Training?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Wochenpreise: Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt einmalig der Fighter-Kit (100€) beim Start. Alle Details findest du auf der Mitglied-werden-Seite." }
-      },
-      {
-        "@type": "Question",
-        "name": "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja. Tageskarte 18 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja. Eine Pause ist in begründeten Ausnahmefällen möglich – zum Beispiel bei einer nachgewiesenen Verletzung oder einem vorübergehenden Umzug. Melde dich einfach bei unserem Team, wir finden gemeinsam eine faire Lösung." }
-      },
-      {
-        "@type": "Question",
-        "name": "Welche Trainingsangebote gibt es bei Bomaye (Boxen, Kickboxen, Strength & Conditioning)?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bomaye Gym Munich bietet Olympic Boxing, Kickboxen, Women's Boxing, Youth Boxing (Kids 6–9 und Jugend 10–17), Executive Boxing, Personal Training, Corporate Boxing und Mind & Body. Ob du Anfänger oder Wettkämpfer bist – für jedes Ziel und jeden Level ist das passende Programm dabei." }
-      },
-      {
-        "@type": "Question",
-        "name": "Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein erster Kurs ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern." }
-      },
-      {
-        "@type": "Question",
-        "name": "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Vor Ort gibt's Wasser, Schorlen, Softdrinks und Heißgetränke." }
-      },
-      {
-        "@type": "Question",
-        "name": "Gibt es Umkleiden und Duschen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kann ich mit Bargeld bezahlen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an support@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website." }
+        "@type": [
+          "LocalBusiness",
+          "SportsActivityLocation"
+        ],
+        "@id": "https://www.bomayegym.com/#gym",
+        "name": "Bomaye Boxgym Munich",
+        "description": "Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxen, Kickboxen und Kurse für Kinder und Jugendliche.",
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 48.1472,
+          "longitude": 11.5235
+        },
+        "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday"
+            ],
+            "opens": "13:00",
+            "closes": "22:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Saturday"
+            ],
+            "opens": "10:00",
+            "closes": "14:00"
+          }
+        ],
+        "priceRange": "€€",
+        "parentOrganization": {
+          "@id": "https://www.bomayegym.com/#organization"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
       }
     ]
   }
   </script>
+  <!-- /SEO:GRAPH -->
+  <!-- FAQ:SCHEMA -->
+  <!-- ERZEUGT - NICHT VON HAND AENDERN. Dieselbe Quelle wie das Markup
+       unten: assets/js/faq-data.js. seo-pruefen.mjs vergleicht beide. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://www.bomayegym.com/faq#faqpage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wo ist Bomaye Gym Munich und wie finde ich euch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bomaye Gym Munich liegt im Pineapple Park – einer der spannendsten Locations Münchens. Die genaue Adresse und eine Routenplanung per Google Maps findest du direkt auf unserer Website. Wir sind mit dem ÖPNV (S-Bahn Hirschgarten, ca. 5 Minuten zu Fuß) und dem Auto gut erreichbar – Parkplätze im Areal sind vorhanden."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie werde ich Mitglied und starte mit dem Training?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Wochenpreise: Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt einmalig der Fighter-Kit (100€) beim Start. Alle Details findest du auf der Mitglied-werden-Seite."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Tageskarte 18 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Eine Pause ist in begründeten Ausnahmefällen möglich – zum Beispiel bei einer nachgewiesenen Verletzung oder einem vorübergehenden Umzug. Melde dich einfach bei unserem Team, wir finden gemeinsam eine faire Lösung."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Welche Trainingsangebote gibt es bei Bomaye (Boxen, Kickboxen, Strength & Conditioning)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bomaye Gym Munich bietet Olympic Boxing, Kickboxen, Women's Boxing, Youth Boxing (Kids 6–9 und Jugend 10–17), Executive Boxing, Personal Training, Corporate Boxing und Mind & Body. Ob du Anfänger oder Wettkämpfer bist – für jedes Ziel und jeden Level ist das passende Programm dabei."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein erster Kurs ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Vor Ort gibt's Wasser, Schorlen, Softdrinks und Heißgetränke."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es Umkleiden und Duschen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich mit Bargeld bezahlen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie erreiche ich euch bei Fragen (Kontakt / Support)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an support@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website."
+        }
+      }
+    ]
+  }
+  </script>
+  <!-- /FAQ:SCHEMA -->
   <!-- BreadcrumbList -->
   <script type="application/ld+json">
   {
@@ -434,7 +622,7 @@
 <header id="header" class="header-solid" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" id="faq-logo-img" width="720" height="360" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img site-logo" id="faq-logo-img" width="720" height="360" />
       <span class="logo-text" id="faq-logo-text">BOMAYE</span>
     </a>
 
@@ -519,7 +707,9 @@
   <section class="faqp-hero" aria-label="FAQ Übersicht">
     <div class="container">
       <div class="faqp-hero-tag">SUPPORT</div>
-      <h1 class="faqp-hero-h1">ALLE FRAGEN.<br><span class="faqp-hero-gold">KLARE ANTWORTEN.</span></h1>
+      <!-- Suchwort in die H1, Slogan als Unterzeile. -->
+      <h1 class="faqp-hero-h1">FAQ zum Boxtraining in München</h1>
+      <p class="faqp-hero-slogan">ALLE FRAGEN. <span class="faqp-hero-gold">KLARE ANTWORTEN.</span></p>
       <p class="faqp-hero-sub">Alles über Bomaye Gym Munich — kompakt und ehrlich.</p>
     </div>
   </section>
@@ -527,9 +717,127 @@
   <!-- ── FAQ Accordion (rendered from faq-data.js) ── -->
   <section class="faqp-content" aria-label="Häufige Fragen">
     <div class="container faqp-container">
+      <!-- FAQ:HTML -->
+      <!-- ERZEUGT - NICHT VON HAND AENDERN.
+           Quelle: assets/js/faq-data.js, geschrieben von
+           scripts/faq-bauen.mjs. Dort aendern, dann
+           "node scripts/faq-bauen.mjs". -->
       <div id="faqp-accordion" class="faqp-accordion">
-        <!-- Populated by the script below -->
+        <div class="faqp-section">
+          <h2 class="faqp-category"><span class="faqp-category-pill">Standort &amp; Anfahrt</span></h2>
+          <div class="faqp-list">
+            <details class="faqp-item" id="faqp-standort-0">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Wo ist Bomaye Gym Munich und wie finde ich euch?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Bomaye Gym Munich liegt im Pineapple Park – einer der spannendsten Locations Münchens. Die genaue Adresse und eine Routenplanung per Google Maps findest du direkt auf unserer Website. Wir sind mit dem ÖPNV (S-Bahn Hirschgarten, ca. 5 Minuten zu Fuß) und dem Auto gut erreichbar – Parkplätze im Areal sind vorhanden.</p></div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="faqp-section">
+          <h2 class="faqp-category"><span class="faqp-category-pill">Buchung &amp; Mitgliedschaft</span></h2>
+          <div class="faqp-list">
+            <details class="faqp-item" id="faqp-buchung-0">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Wie werde ich Mitglied und starte mit dem Training?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Ganz einfach online über unsere Buchungsseite (powered by Bsport). Wähle dein Programm, trag dich ein – fertig. Alternativ kannst du uns auch direkt per WhatsApp oder E-Mail anfragen.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-buchung-1">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Wochenpreise: Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt einmalig der Fighter-Kit (100€) beim Start. Alle Details findest du auf der Mitglied-werden-Seite.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-buchung-2">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Ja. Tageskarte 18 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-buchung-3">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Ja. Eine Pause ist in begründeten Ausnahmefällen möglich – zum Beispiel bei einer nachgewiesenen Verletzung oder einem vorübergehenden Umzug. Melde dich einfach bei unserem Team, wir finden gemeinsam eine faire Lösung.</p></div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="faqp-section">
+          <h2 class="faqp-category"><span class="faqp-category-pill">Training &amp; Angebote</span></h2>
+          <div class="faqp-list">
+            <details class="faqp-item" id="faqp-training-0">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Welche Trainingsangebote gibt es bei Bomaye (Boxen, Kickboxen, Strength &amp; Conditioning)?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Bomaye Gym Munich bietet Olympic Boxing, Kickboxen, Women's Boxing, Youth Boxing (Kids 6–9 und Jugend 10–17), Executive Boxing, Personal Training, Corporate Boxing und Mind &amp; Body. Ob du Anfänger oder Wettkämpfer bist – für jedes Ziel und jeden Level ist das passende Programm dabei.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-training-1">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Ist Bomaye für Anfänger geeignet oder nur für Fortgeschrittene?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Absolut für Anfänger. Kein Vorwissen nötig – wir holen dich genau dort ab, wo du stehst. Dein erster Kurs ist der ideale Einstieg, ganz ohne Erwartungen oder Druck. Gleichzeitig bieten wir anspruchsvolles Training für erfahrene Boxerinnen und Boxer bis hin zu Wettkämpfern.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-training-2">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Was muss ich zum Training mitbringen (Handschuhe, Bandagen, Schuhe)?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Sportkleidung, saubere Hallenschuhe, ein Handtuch und deine eigene Trinkflasche. Boxhandschuhe kannst du dir beim ersten Training kostenlos leihen. Wenn du regelmäßig trainierst, empfehlen wir eigene Handschuhe (10–14 Oz). Vor Ort gibt's Wasser, Schorlen, Softdrinks und Heißgetränke.</p></div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="faqp-section">
+          <h2 class="faqp-category"><span class="faqp-category-pill">Ausstattung &amp; Services</span></h2>
+          <div class="faqp-list">
+            <details class="faqp-item" id="faqp-ausstattung-0">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Gibt es Umkleiden und Duschen?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Ja, Umkleiden sind vorhanden. Detaillierte Informationen zur Ausstattung des Gyms findest du auf unserer Website.</p></div>
+              </div>
+            </details>
+            <details class="faqp-item" id="faqp-ausstattung-1">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Kann ich mit Bargeld bezahlen?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>In der Regel cashless (Karte / Apple Pay / Google Pay). Für aktuelle Zahlungsoptionen wende dich an unser Team – wir helfen gerne weiter.</p></div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="faqp-section">
+          <h2 class="faqp-category"><span class="faqp-category-pill">Kontakt &amp; Support</span></h2>
+          <div class="faqp-list">
+            <details class="faqp-item" id="faqp-kontakt-0">
+              <summary class="faqp-item-btn">
+                <span class="faqp-question faq-q">Wie erreiche ich euch bei Fragen (Kontakt / Support)?</span>
+              </summary>
+              <div class="faqp-panel">
+                <div class="faqp-answer"><p>Am schnellsten per WhatsApp unter +49 173 7513627 – wir antworten in der Regel sehr schnell. Alternativ per E-Mail an support@bomayegym.com oder auf Instagram unter @bomayegym_munich. Alle Kontaktmöglichkeiten findest du auch auf unserer Website.</p></div>
+              </div>
+            </details>
+          </div>
+        </div>
       </div>
+      <!-- /FAQ:HTML -->
     </div>
   </section>
 
@@ -556,7 +864,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" width="720" height="360" loading="lazy" />
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img" onerror="this.style.display='none';" width="720" height="360" loading="lazy" />
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
@@ -575,6 +883,8 @@
             <li><a href="/frauenboxen-muenchen">Women's Boxing</a></li>
             <li><a href="/kurse#kursdetail-youth">Youth Boxing</a></li>
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
+            <li><a href="/kinderboxen-muenchen">Kinderboxen</a></li>
+            <li><a href="/boxen-muenchen">Boxen München</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -734,91 +1044,57 @@ function _waitBsport(attempt) {
 document.addEventListener('click',   e => { if (e.target.id === 'booking-modal') closeBooking(); });
 document.addEventListener('keydown',  e => { if (e.key === 'Escape') closeBooking(); });
 /* ════════════════════════════════════════════════
-   FAQ ACCORDION — rendered from faq-data.js
+   FAQ — NUR NOCH VERBESSERUNG, KEIN AUFBAU
+
+   HIER STAND buildFaq(): es las BOMAYE_FAQ und schrieb die ganze Liste per
+   innerHTML in die Seite. Im ausgelieferten HTML stand an ihrer Stelle ein
+   leeres div - eine FAQ-Seite ohne eine einzige Frage, fuer jeden Crawler,
+   der kein JavaScript ausfuehrt.
+
+   Das Markup kommt jetzt aus scripts/faq-bauen.mjs und steht fest im
+   Quelltext, als <details>/<summary>. Damit klappt es ohne JavaScript auf
+   und zu. Dieses Stueck macht genau zwei Dinge dazu, und beide sind
+   Beiwerk:
+
+     1. Es schliesst die anderen Eintraege, wenn einer geoeffnet wird -
+        das ist die Gestalt, die die Seite vorher hatte.
+     2. Es setzt max-height fuer das Aufschieben. Ohne JavaScript greift
+        die Regel [open] .faqp-panel { max-height: none } und es klappt
+        ohne Animation auf. Auch gut.
+
+   Faellt das Skript aus, bleibt alles bedienbar - dann eben mit mehreren
+   offenen Eintraegen gleichzeitig.
 ════════════════════════════════════════════════ */
-(function buildFaq() {
-  const root = document.getElementById('faqp-accordion');
-  if (!root || typeof BOMAYE_FAQ === 'undefined') return;
+(function faqVerbessern() {
+  var wurzel = document.getElementById('faqp-accordion');
+  if (!wurzel) return;
+  var alle = [].slice.call(wurzel.querySelectorAll('details.faqp-item'));
+  if (!alle.length) return;
 
-  let html = '';
+  function hoeheSetzen(d) {
+    var panel = d.querySelector('.faqp-panel');
+    if (!panel) return;
+    if (d.open) panel.style.maxHeight = panel.scrollHeight + 'px';
+    else panel.style.maxHeight = '';
+  }
 
-  BOMAYE_FAQ.forEach(function (section) {
-    html += '<div class="faqp-section">';
-    html += '<div class="faqp-category">';
-    html += '<span class="faqp-category-pill">' + escHtml(section.category) + '</span>';
-    html += '</div>';
-    html += '<div class="faqp-list" role="list">';
-
-    section.items.forEach(function (item, idx) {
-      var panelId = 'faqp-' + section.id + '-' + idx;
-      var btnId   = 'faqpbtn-' + section.id + '-' + idx;
-      // Replace \n in answer with paragraph breaks
-      var answerHtml = escHtml(item.a)
-        .split('\\n')
-        .map(function (p) { return p.trim(); })
-        .filter(Boolean)
-        .map(function (p) { return '<p>' + p + '</p>'; })
-        .join('');
-      if (!answerHtml) answerHtml = '<p>' + escHtml(item.a) + '</p>';
-
-      html += '<div class="faqp-item" role="listitem" data-open="false">';
-      html += '<button class="faqp-item-btn" id="' + btnId + '"'
-            + ' aria-expanded="false" aria-controls="' + panelId + '"'
-            + ' type="button">';
-      html += '<span class="faqp-question">' + escHtml(item.q) + '</span>';
-      html += '<span class="faqp-icon" aria-hidden="true">'
-            + '<i class="icon faqp-icon-plus" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>'
-            + '<i class="icon faqp-icon-minus" aria-hidden="true"><svg><use href="#i-minus"/></svg></i>'
-            + '</span>';
-      html += '</button>';
-      html += '<div class="faqp-panel" id="' + panelId + '"'
-            + ' role="region" aria-labelledby="' + btnId + '">';
-      html += '<div class="faqp-answer">' + answerHtml + '</div>';
-      html += '</div>';
-      html += '</div>';
-    });
-
-    html += '</div></div>'; // .faqp-list + .faqp-section
-  });
-
-  root.innerHTML = html;
-
-  /* Attach click listeners */
-  root.querySelectorAll('.faqp-item-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var item    = btn.closest('.faqp-item');
-      var panel   = document.getElementById(btn.getAttribute('aria-controls'));
-      var isOpen  = btn.getAttribute('aria-expanded') === 'true';
-
-      /* Close all */
-      root.querySelectorAll('.faqp-item').forEach(function (el) {
-        el.setAttribute('data-open', 'false');
-      });
-      root.querySelectorAll('.faqp-item-btn').forEach(function (b) {
-        b.setAttribute('aria-expanded', 'false');
-      });
-      root.querySelectorAll('.faqp-panel').forEach(function (p) {
-        p.style.maxHeight = null;
-      });
-
-      /* Open clicked one if it was closed */
-      if (!isOpen) {
-        item.setAttribute('data-open', 'true');
-        btn.setAttribute('aria-expanded', 'true');
-        panel.style.maxHeight = panel.scrollHeight + 'px';
+  alle.forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (d.open) {
+        alle.forEach(function (x) { if (x !== d && x.open) { x.open = false; hoeheSetzen(x); } });
       }
+      hoeheSetzen(d);
     });
   });
-})();
 
-/* ── HTML escape helper ───────────────────────── */
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+  /* Beim Aendern der Fenstergroesse passt die gemerkte Hoehe nicht mehr. */
+  window.addEventListener('resize', function () {
+    alle.forEach(function (d) { if (d.open) hoeheSetzen(d); });
+  }, { passive: true });
+}());
+
+/* escHtml ist weg: es diente nur buildFaq(), und das Markup wird jetzt
+   beim Bauen erzeugt (scripts/faq-bauen.mjs escapet dort). */
 </script>
 
 

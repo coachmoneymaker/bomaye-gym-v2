@@ -38,8 +38,8 @@
   <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
   <!-- Google Tag Manager --><script data-cookieconsent="ignore">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-W2T9NXMN');</script><!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <title>Boxgym &amp; Boxtraining in München | BOMAYE GYM MUNICH</title>
-  <meta name="description" content="Bomaye Gym München – modernes Boxgym für Anfänger, Fitnesssportler und Wettkämpfer. Professionelles Boxtraining und Personal Training im Pineapple Park München." />
+  <title>Boxgym und Boxtraining München | Bomaye Boxgym Munich</title>
+  <meta name="description" content="Bomaye ist dein Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxtraining, Kickboxen und Personal Training im Pineapple Park." />
   <meta name="robots" content="index, follow" />
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
@@ -50,8 +50,8 @@
   <meta name="theme-color" content="#0A0A08">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Boxgym &amp; Boxtraining in München | BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Bomaye Gym München – modernes Boxgym für Anfänger, Fitnesssportler und Wettkämpfer. Professionelles Boxtraining und Personal Training im Pineapple Park München." />
+  <meta property="og:title" content="Boxgym und Boxtraining München | Bomaye Boxgym Munich" />
+  <meta property="og:description" content="Bomaye ist dein Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxtraining, Kickboxen und Personal Training im Pineapple Park." />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/" />
@@ -80,31 +80,110 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <!-- Schema.org -->
+  <!-- SEO:GRAPH -->
+  <!-- ERZEUGT - NICHT VON HAND AENDERN.
+       Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
+       Aenderungen hier gehen beim naechsten Lauf verloren. Dort aendern,
+       dann "node scripts/seo-bauen.mjs" und "node scripts/seo-pruefen.mjs".
+
+       Ein @graph fuer die ganze Seite: #organization ist die Firma,
+       #gym der Ort. Alles andere im Repo verweist per @id darauf, statt
+       die Knoten zu wiederholen. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "SportsActivityLocation"],
-    "@id": "https://bomayegym.com/#gym",
-    "name": "BOMAYE GYM MUNICH",
-    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
-    "url": "https://www.bomayegym.com",
-    "email": "support@bomayegym.com",
-    "telephone": "+491737513627",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
-      "addressLocality": "Munich",
-      "postalCode": "80639",
-      "addressCountry": "DE"
-    },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
-    "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "13:00", "closes": "22:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "14:00" }
-    ],
-    "priceRange": "€€"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.bomayegym.com/#organization",
+        "name": "Bomaye Boxgym Munich",
+        "legalName": "Bomaye Gym GmbH",
+        "alternateName": [
+          "Bomaye Gym Munich",
+          "Bomaye Boxgym München"
+        ],
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      },
+      {
+        "@type": [
+          "LocalBusiness",
+          "SportsActivityLocation"
+        ],
+        "@id": "https://www.bomayegym.com/#gym",
+        "name": "Bomaye Boxgym Munich",
+        "description": "Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxen, Kickboxen und Kurse für Kinder und Jugendliche.",
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 48.1472,
+          "longitude": 11.5235
+        },
+        "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday"
+            ],
+            "opens": "13:00",
+            "closes": "22:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Saturday"
+            ],
+            "opens": "10:00",
+            "closes": "14:00"
+          }
+        ],
+        "priceRange": "€€",
+        "parentOrganization": {
+          "@id": "https://www.bomayegym.com/#organization"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      }
+    ]
   }
   </script>
+  <!-- /SEO:GRAPH -->
 
 <!-- ══════════════════════════════════════════════════════
      HOMEPAGE UPDATES — scoped CSS overrides
@@ -648,33 +727,6 @@
   @media (min-width: 900px) { #pricing { padding: var(--takt) 40px; } }
 </style>
   <!-- Organization — Identitaet der Marke, sameAs verknuepft Social und App-Stores -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": "https://bomayegym.com/#organization",
-    "name": "BOMAYE GYM MUNICH",
-    "alternateName": "Bomaye Gym München",
-    "url": "https://www.bomayegym.com/",
-    "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
-    "email": "support@bomayegym.com",
-    "telephone": "+491737513627",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
-      "addressLocality": "München",
-      "postalCode": "80639",
-      "addressCountry": "DE"
-    },
-    "sameAs": [
-      "https://www.instagram.com/bomayegym_munich",
-      "https://www.tiktok.com/@bomayegym_munich",
-      "https://www.youtube.com/@bomayegym",
-      "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
-      "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
-    ]
-  }
-  </script>
 </head>
 
 <body>
@@ -703,7 +755,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="#" class="logo" onclick="event.preventDefault(); nav('home')" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" width="720" height="360" decoding="async" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img site-logo" width="720" height="360" decoding="async" />
       <span class="logo-text">BOMAYE</span>
     </a>
 
@@ -2098,7 +2150,10 @@ body[data-modal-open="true"] { overflow: hidden; }
         <!-- Right column: logo brand visual — desktop only -->
         <div class="dna-visual dna-brand-moment reveal delay-2" aria-hidden="true">
           <div class="dna-brand-line dna-brand-line--top" aria-hidden="true"></div>
-          <img src="/assets/images/bomaye-logo.webp" alt="" class="dna-visual-logo"
+          <!-- Rein dekorativ: der Block darueber traegt aria-hidden, und das
+               Logo steht hier als Gestaltungselement, nicht als Information.
+               alt="" plus aria-hidden sagt das ausdruecklich. -->
+          <img src="/assets/images/bomaye-logo.webp" alt="" aria-hidden="true" class="dna-visual-logo"
                width="720" height="360" loading="lazy" decoding="async"
                onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
           <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
@@ -2133,7 +2188,13 @@ body[data-modal-open="true"] { overflow: hidden; }
              die drei Rezensionstexte darunter. -->
         <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">4.9</span>
       </div>
-
+      <!-- Der Stand stand bisher NUR im Kommentar darueber, also nur fuer
+           uns. Jetzt steht er fuer den Besucher da: eine Bewertung ohne
+           Datum liest sich wie ein Live-Wert, und das ist sie nicht.
+           Aendert sich die Zahl, aendern sich hier BEIDE Angaben. -->
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(245,240,232,0.45);letter-spacing:0.02em;">
+        Google-Bewertung, Stand 16.09.2026
+      </span>
     </div>
 
     <!-- 3 Cards — CSS Grid desktop, scroll snap mobile -->
@@ -2334,6 +2395,14 @@ body[data-modal-open="true"] { overflow: hidden; }
         <a href="/kurse" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="icon" aria-hidden="true"><svg><use href="#i-dumbbell"/></svg></i> ALLE PROGRAMME
         </a>
+        <!-- Verweis auf die Uebersichtsseite. Sie fuehrt zu allen Themenseiten
+             (Boxen lernen, Boxtraining, Kickboxen, Frauenboxen, Kinderboxen,
+             Personal Training) und ist damit der Einstieg fuer alles, was
+             nicht in die drei Programme oben passt. -->
+        <p style="margin:1.25rem 0 0;font-family:var(--font-body);font-size:0.95rem;color:rgba(245,240,232,0.6);">
+          Du suchst ein bestimmtes Thema?
+          <a href="/boxen-muenchen" style="color:#C9A84C;text-decoration:none;display:inline-block;padding:12px 2px;margin:-12px 0;">Zur Übersicht Boxen in München</a>
+        </p>
       </div>
     </div>
   </section>
@@ -2575,7 +2644,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <i class="icon" aria-hidden="true"><svg><use href="#i-location-dot"/></svg></i>
           <div class="location-detail-text">
             <strong>Adresse</strong>
-            <a href="https://www.google.com/maps/search/?api=1&query=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen" target="_blank" rel="noopener" class="location-address-link">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen" target="_blank" rel="noopener" class="location-address-link">
               <span>Wilhelm-Hale-Straße 44<br>Tiefhof Pineapple Park<br>80639 München</span>
             </a>
           </div>
@@ -2599,7 +2668,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           </div>
         </div>
         <div class="location-btns">
-          <a href="https://www.google.com/maps/dir/?api=1&destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Wilhelm-Hale-Stra%C3%9Fe+44%2C+80639+M%C3%BCnchen"
              target="_blank" rel="noopener" class="btn btn--gold btn--sm">
             <i class="icon" aria-hidden="true"><svg><use href="#i-diamond-turn-right"/></svg></i> ROUTE PLANEN
           </a>
@@ -2679,7 +2748,7 @@ body[data-modal-open="true"] { overflow: hidden; }
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="/" aria-label="Zur Startseite" class="footer-logo-link">
-            <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" width="720" height="360" loading="lazy" decoding="async" />
+            <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img site-logo" width="720" height="360" loading="lazy" decoding="async" />
           </a>
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
@@ -2698,6 +2767,8 @@ body[data-modal-open="true"] { overflow: hidden; }
             <li><a href="/kurse#kursdetail-youth">Youth Boxing</a></li>
             <li><a href="/kurse#kursdetail-women">Bomaye Queens</a></li>
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
+            <li><a href="/kinderboxen-muenchen">Kinderboxen</a></li>
+            <li><a href="/boxen-muenchen">Boxen München</a></li>
           </ul>
         </div>
         <div class="footer-col">
