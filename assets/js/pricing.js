@@ -147,14 +147,14 @@ const BOMAYE_PRICING = {
      sichtbaren Preistabelle auf /personal-training-boxen-muenchen. Diese
      Seite ist die massgebliche Quelle, nicht diese Datei.
 
-     HIER STANDEN FUER NICHTMITGLIEDER ANDERE ZAHLEN. Dreimal angefasst,
-     alle drei Male am 01.11.2026 und jedes Mal vom Betreiber bestaetigt:
+     HIER STANDEN FUER NICHTMITGLIEDER ANDERE ZAHLEN. Viermal angefasst,
+     alle vier Male am 01.11.2026 und jedes Mal vom Betreiber bestaetigt:
        pricePerSession      110  ->  125
-       tenCardPrice         950  ->  1090  ->  1150  ->  1050
-       tenCardPricePerUnit   95  ->   109  ->   115  ->   105
+       tenCardPrice         950  ->  1090  ->  1150  ->  1050  ->  1090
+       tenCardPricePerUnit   95  ->   109  ->   115  ->   105  ->   109
      Die Mitgliederpreise (90 / 800 / 80) stimmten von Anfang an.
 
-     Warum dreimal:
+     Warum viermal:
        1. Lauf  Die Datei trug 110 / 950 / 95 und stimmte mit keiner
                 sichtbaren Stelle ueberein. Nachgezogen auf die PT-Seite:
                 125 / 1090 / 109.
@@ -164,15 +164,19 @@ const BOMAYE_PRICING = {
                 wurde 1.150 €, die PT-Seite wurde nachgezogen. Fuer die
                 Mitglieder-Zehnerkarte lief es andersherum: Startseite
                 1.000 €, PT-Seite 800 €, richtig ist 800 €.
-       3. Lauf  Endgueltige Entscheidung des Betreibers: 1.050 €, also
-                105 € je Einheit. Beide sichtbaren Tabellen sind darauf
-                gesetzt.
+       3. Lauf  Entscheidung des Betreibers: 1.050 €, also 105 € je
+                Einheit. Beide sichtbaren Tabellen wurden darauf gesetzt.
+       4. Lauf  Zurueck auf 1.090 €, also 109 € je Einheit: bsport
+                bleibt auf 1.090 € stehen, und ein Preis im
+                Buchungsfenster, der von der Seite abweicht, ist
+                schlimmer als eine runde Zahl. Damit ist der Wert
+                wieder derselbe wie nach dem 1. Lauf.
 
-     DER GUELTIGE STAND, gleichlautend auf der PT-Seite und in der
-     Preistabelle der Startseite:
+     DER GUELTIGE STAND, gleichlautend auf der PT-Seite, in der
+     Preistabelle der Startseite und auf /preise:
        Einzelsession    125 €  |  Mitglieder  90 €
        Fuenferkarte     575 €  (115 € je Einheit)  |  425 €  (85 €)
-       Zehnerkarte    1.050 €  (105 € je Einheit)  |  800 €  (80 €)
+       Zehnerkarte    1.090 €  (109 € je Einheit)  |  800 €  (80 €)
 
      ZWEI DINGE, DIE MAN WISSEN MUSS:
      1. DIESE WERTE WERDEN VON NICHTS GELESEN. BOMAYE_PRICING wird nur in
@@ -198,8 +202,8 @@ const BOMAYE_PRICING = {
     forNonMembers: {
       pricePerSession:     125,
       comparePrice:        null,
-      tenCardPrice:        1050,
-      tenCardPricePerUnit: 105,
+      tenCardPrice:        1090,
+      tenCardPricePerUnit: 109,
       note:                null,
     },
   },

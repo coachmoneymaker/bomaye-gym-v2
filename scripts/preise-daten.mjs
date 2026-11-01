@@ -141,18 +141,19 @@ export const MITGLIEDSCHAFTEN = [
    Stand 01.11.2026, gleichlautend mit der sichtbaren Preistabelle auf
    /personal-training-boxen-muenchen und mit assets/js/pricing.js.
 
-   Die Zehnerkarte der Nichtmitglieder lief dreimal: 950 € im alten
-   pricing.js, 1.090 € auf der PT-Seite, dann 1.150 €. Der Betreiber hat am
-   01.11.2026 endgueltig 1.050 € entschieden; Repo und Seite stehen darauf.
-   Den Wert im bsport-Backoffice pflegt der Betreiber selbst, er ist von
-   hier aus nicht pruefbar.                                                */
+   Die Zehnerkarte der Nichtmitglieder lief viermal: 950 € im alten
+   pricing.js, 1.090 € auf der PT-Seite, dann 1.150 €, dann 1.050 €.
+   Am 01.11.2026 hat der Betreiber zurueck auf 1.090 € entschieden, also
+   109 € je Einheit, weil bsport auf 1.090 € stehen bleibt. Damit stimmen
+   Buchungsfenster und Seite wieder ueberein. Die Mitgliederzehnerkarte
+   bleibt bei 800 €.                                                      */
 export const PT = {
   nicht: {
     label: 'Nichtmitglieder',
     zeilen: [
       { id: 'einzel', name: 'Einzelsession', preis: 125,  einheiten: 1,  proEinheit: 125 },
       { id: 'fuenf',  name: '5er Karte',     preis: 575,  einheiten: 5,  proEinheit: 115 },
-      { id: 'zehn',   name: '10er Karte',    preis: 1050, einheiten: 10, proEinheit: 105 },
+      { id: 'zehn',   name: '10er Karte',    preis: 1090, einheiten: 10, proEinheit: 109 },
     ],
   },
   mitglied: {
