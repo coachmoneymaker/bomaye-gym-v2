@@ -20,7 +20,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, writeFile } from 'node:fs/promises';
 import { readdirSync } from 'node:fs';
-import { graph, ALTE_IDS, ORG_ID, ADRESSE, SEITEN, MARKE } from './seo-daten.mjs';
+import { graph, ALTE_IDS, ORG_ID, ADRESSE, SEITEN, MARKE, BEWERTUNG } from './seo-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const NUR_PRUEFEN = process.argv.includes('--pruefen');
@@ -187,11 +187,17 @@ for (const name of dateien) {
     text = text.replace(/<title>[\s\S]*?<\/title>/, `<title>${attr(titel)}</title>`);
     if (text !== vorTitel && !vorTitel.includes(`<title>${attr(titel)}</title>`)) tat.push('Titel gesetzt');
 
+    /* HIER STAND EINE FALSCHMELDUNG: "keine Aenderung" wurde als "nicht
+       gefunden" gemeldet. Keine Aenderung heisst aber meistens, dass der
+       Wert schon stimmt. Gemeldet wurde das erst, als index.html und
+       probetraining.html wegen der Bewertung neu geschrieben wurden,
+       waehrend ihre Metas laengst richtig waren - drei ACHTUNG-Zeilen fuer
+       nichts. Jetzt wird zuerst geprueft, OB das Muster ueberhaupt trifft. */
     const setzeMeta = (muster, ersatz, was) => {
+      if (!muster.test(text)) { tat.push(`ACHTUNG: ${was} nicht gefunden`); return; }
       const davor = text;
       text = text.replace(muster, ersatz);
-      if (text === davor) tat.push(`ACHTUNG: ${was} nicht gefunden`);
-      else if (!davor.includes(ersatz)) tat.push(`${was} gesetzt`);
+      if (text !== davor) tat.push(`${was} gesetzt`);
     };
     setzeMeta(/<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/,
       `<meta name="description" content="${attr(beschr)}" />`, 'description');
@@ -203,6 +209,27 @@ for (const name of dateien) {
       setzeMeta(/<meta\s+property="og:description"\s+content="[\s\S]*?"\s*\/?>/,
         `<meta property="og:description" content="${attr(beschr)}" />`, 'og:description');
     }
+  }
+
+
+  /* 8. Die Google-Bewertung aus BEWERTUNG eintragen.
+        Sie stand an zwei Stellen mit zwei verschiedenen Zahlen (Startseite
+        4.9, /probetraining 5,0). Jetzt kommt beides aus einer Konstante.
+        KEIN AggregateRating im Schema - die Zahl ist von Hand gepflegt. */
+  if (name === 'index.html') {
+    const vorZahl = text;
+    text = text.replace(
+      /(<span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">)[^<]*(<\/span>)/,
+      `$1${BEWERTUNG.wert}$2`);
+    text = text.replace(/Google-Bewertung, Stand [0-9.]+/, `Google-Bewertung, Stand ${BEWERTUNG.stand}`);
+    if (text !== vorZahl) tat.push('Bewertung auf der Startseite gesetzt');
+  }
+  if (name === 'probetraining.html') {
+    const vorZahl = text;
+    text = text.replace(
+      /(<span class="pt-hero__note">)<b>[^<]*<\/b>[^<]*(<\/span>)/,
+      `$1<b>${BEWERTUNG.wert}</b> · ${BEWERTUNG.anzahl} Bewertungen auf Google$2`);
+    if (text !== vorZahl) tat.push('Bewertung auf /probetraining gesetzt');
   }
 
   if (text !== vorher) {

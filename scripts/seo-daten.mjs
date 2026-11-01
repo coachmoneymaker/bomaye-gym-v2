@@ -70,7 +70,11 @@ export const EMAIL = 'support@bomayegym.com';
 
    Bis das geprueft ist, bleibt beides unangetastet: lieber der bekannte
    Stand als ein geratener neuer. */
-export const GEO = { '@type': 'GeoCoordinates', latitude: 48.1472, longitude: 11.5235 };
+/* Gebaut aus GEO_BREITE und GEO_LAENGE ganz unten in dieser Datei -
+   dort stehen die zwei Zahlen, die der Betreiber setzt. */
+export const GEO = { '@type': 'GeoCoordinates',
+  get latitude() { return GEO_BREITE; },
+  get longitude() { return GEO_LAENGE; } };
 
 export const OEFFNUNGSZEITEN = [
   { '@type': 'OpeningHoursSpecification',
@@ -293,4 +297,49 @@ SEITEN['kinderboxen-muenchen.html'] = {
   titel: 'Kinder Boxen München: Kids Boxing ab 6',
   marke: 'Bomaye Boxgym',
   beschr: 'Kinderboxen in München: Kids Boxing ab 6 Jahren, Youth ab 10. Altersgerechtes Training in Kleingruppen im Bomaye Boxgym. Erstes Training kostenlos.',
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ZWEI WERTE, DIE DER BETREIBER SETZT
+   ═══════════════════════════════════════════════════════════════════════════
+   Beide standen vorher an mehreren Stellen im Markup und liefen auseinander.
+   Hier stehen sie einmal; scripts/seo-bauen.mjs traegt sie ueberall ein.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Der Standort ─────────────────────────────────────────────────────
+   TODO-OWNER: DIESE ZWEI ZAHLEN AUS DEM GOOGLE-UNTERNEHMENSPROFIL EINTRAGEN.
+   Das Profil ist die maßgebliche Quelle - weicht das Schema davon ab, wertet
+   Google das als Zeichen fuer veraltete Daten.
+
+   Die Zahlen unten sind der ALTE Stand aus dem Repo und noch nicht geprueft.
+   Zum Vergleich: der Kartenlink der Startseite zeigt auf
+   48.147356 / 11.5224959, also rund 30 m daneben. Eine der beiden Angaben
+   ist falsch.
+
+   Sonst ist nichts zu tun: GEO und der hasMap-Link weiter unten werden
+   daraus gebaut, danach einmal
+     node scripts/seo-bauen.mjs && node scripts/seo-pruefen.mjs           */
+export const GEO_BREITE = 48.1472;    /* TODO-OWNER: Wert aus dem Profil */
+export const GEO_LAENGE = 11.5235;    /* TODO-OWNER: Wert aus dem Profil */
+
+/* ── 2. Die Google-Bewertung ─────────────────────────────────────────────
+   TODO-OWNER: WERT, ANZAHL UND STAND EINTRAGEN.
+
+   Vorher stand die Bewertung an zwei Stellen mit zwei verschiedenen Zahlen:
+   die Startseite zeigte 4.9 ohne sichtbares Datum, /probetraining
+   "5,0 · 204 Bewertungen auf Google". Mindestens eine davon war falsch, und
+   gemerkt haette es niemand.
+
+   Jetzt stehen sie hier, und seo-bauen.mjs traegt sie auf beiden Seiten ein.
+   Der Stand steht auf beiden Seiten sichtbar: eine Bewertung ohne Datum
+   liest sich wie ein Live-Wert, und das ist sie nicht - abgerufen wird
+   nichts, die Zahl ist von Hand gepflegt.
+
+   Deutsche Schreibweise mit Komma. KEIN AggregateRating im Schema: dafuer
+   muesste die Zahl nachpruefbar aus einer Quelle kommen, und sie kommt von
+   Hand.                                                                   */
+export const BEWERTUNG = {
+  wert:   '4,9',          /* TODO-OWNER: Durchschnitt aus dem Profil */
+  anzahl: '204',          /* TODO-OWNER: Anzahl der Bewertungen */
+  stand:  '16.09.2026',   /* TODO-OWNER: Datum des Abrufs */
 };
