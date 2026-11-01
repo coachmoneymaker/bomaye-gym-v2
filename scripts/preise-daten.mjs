@@ -252,3 +252,68 @@ export const FRAGEN = [
     verweis: { text: 'Zur Buchung: Probetraining', ziel: '/probetraining' },
   },
 ];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. BOMAYE FLEX, MONATLICH KUENDBAR
+   ═══════════════════════════════════════════════════════════════════════════
+   Zweiter Weg neben Early Bird, bewusst NACHRANGIG. Early Bird bleibt der
+   Hauptweg: drei schwarze Karten mit goldenem Knopf. Flex steht darunter,
+   kleiner, mit Umrissknopf.
+
+   DER SCHALTER
+   FLEX_AKTIV steuert, ob irgendetwas davon gerendert wird. Steht er auf
+   false, schreibt preise-bauen.mjs an allen Flex-Stellen nichts, und
+   preise.html wie index.html sind byte-gleich mit dem Stand ohne Flex. Der
+   Betreiber schaltet ihn um, nicht das Bauskript.
+
+   DIE ERSPARNIS WIRD GERECHNET, NIE GETIPPT
+   ersparnis() nimmt den Monatsbetrag von Flex minus den von Early Bird mal
+   zwoelf. Damit kann die Zahl nicht veralten, wenn ein Preis sich aendert.
+   Gerundet wird auf Cent, weil 129 - 75.60 in Gleitkomma 53.400000000000006
+   ergibt und daraus 640.8000000000001 wuerde.
+
+   DIE DREI KAUFADRESSEN
+   Vom Betreiber geliefert, Vertragskennungen 59649, 59651 und 59650. Sie
+   stehen hier wortgleich und werden von preise-pruefen.mjs gegen die
+   gerenderte Seite geprueft. Nicht raten, nicht ableiten: die Kennungen der
+   Early-Bird-Vertraege (45432 bis 45434) haben mit diesen nichts zu tun.  */
+export const FLEX_AKTIV = false;
+
+export const FLEX = [
+  { id: 'unlimited-flex', name: 'Unlimited Flex', bezug: 'erwachsene', monat: 129,
+    contract: '59649',
+    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59649?force=true' },
+  { id: 'youth-flex',     name: 'Youth Flex',     bezug: 'youth',      monat: 109,
+    contract: '59651',
+    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59651?force=true' },
+  { id: 'kids-flex',      name: 'Kids Flex',      bezug: 'kids',       monat: 99,
+    contract: '59650',
+    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59650?force=true' },
+];
+
+/* Was Early Bird gegenueber Flex im Jahr spart. Immer gerechnet. */
+export function ersparnis(f) {
+  const eb = MITGLIEDSCHAFTEN.find((m) => m.id === f.bezug);
+  if (!eb) throw new Error(`Flex "${f.id}" verweist auf kein Early-Bird-Paket: ${f.bezug}`);
+  return Math.round((f.monat - eb.monat) * 12 * 100) / 100;
+}
+
+/* Die Flex-Bedingungen, Wort fuer Wort vom Betreiber. */
+export const FLEX_BEDINGUNGEN = [
+  'Keine Mindestlaufzeit.',
+  'Der Vertrag verlängert sich jeweils um einen Monat.',
+  'Kündbar jederzeit mit einer Frist von 14 Tagen zum Monatsende.',
+  `Aufnahmegebühr ${euro(AUFNAHME)} einmalig, bei Kündigung nicht erstattbar.`,
+  'Die Ausstattung bleibt dein Eigentum.',
+];
+
+/* Die FAQ-Antwort nennt alle drei Betraege aus den Daten oben. */
+export const FLEX_FRAGE = {
+  f: 'Gibt es auch eine Mitgliedschaft ohne Bindung?',
+  get a() {
+    const b = (id) => euro(FLEX.find((x) => x.id === id).monat);
+    return `Ja, Bomaye Flex, monatlich kündbar, ab ${b('kids-flex')} im Monat (Kids), `
+         + `${b('youth-flex')} (Youth), ${b('unlimited-flex')} (Unlimited), plus `
+         + `${euro(AUFNAHME)} einmalig. Early Bird ist günstiger, solange Plätze frei sind.`;
+  },
+};
