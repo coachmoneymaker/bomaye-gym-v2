@@ -71,7 +71,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",
-        a: "Ja. Tageskarte 18 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr."
+        a: "Ja. Tageskarte 20 € · 10er-Karte 150 €. Ideal zum Reinschnuppern oder für unregelmäßiges Training. Bei regelmäßigem Training lohnt sich eine Mitgliedschaft jedoch deutlich mehr."
       },
       {
         q: "Kann ich meine Mitgliedschaft pausieren (z. B. bei Umzug oder Verletzung)?",

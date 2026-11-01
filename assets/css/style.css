@@ -356,7 +356,13 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
 .nav-links { display: flex; align-items: center; gap: 0.35rem; }
 .nav-link {
   font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 2.5px;
-  color: rgba(245,240,232,0.58); padding: 0.45rem 0.85rem; border-radius: 0;
+  /* Waagerechtes Polster von 0.85 auf 0.55rem. Seit PREISE in der
+     Navigation steht, sind es acht Punkte. .nav-inner ist auf 1280px
+     gedeckelt, davon gehen 72px Innenabstand und rund 240px Logo ab; es
+     bleiben etwa 950px. Mit 0.85rem brauchte die Leiste 998px und lief
+     damit auf JEDER Breite aus dem Kasten, mit 0.55rem sind es 921px.
+     Gemessen auf /preise bei 901 bis 1600px. */
+  color: rgba(245,240,232,0.58); padding: 0.45rem 0.55rem; border-radius: 0;
   transition: color var(--dur-normal) var(--ease-out); white-space: nowrap;
 }
 .nav-link:hover { color: var(--white); }
@@ -5108,7 +5114,15 @@ a.mn-contact-text:hover { color: var(--gold); }
    Dazu die Kurzfassung des CTA-Textes, die im Mobile-Menue ohnehin
    die uebliche ist. Ab 1200px greift wieder die volle Darstellung.
 ══════════════════════════════════════════════════════════════ */
-@media (min-width: 901px) and (max-width: 1199px) {
+@media (min-width: 901px) and (max-width: 1365px) {
+  /* OBERGRENZE VON 1199 AUF 1299 GEZOGEN, UND DAS POLSTER VON 0.6 AUF
+     0.45rem: seit PREISE in der Navigation steht, sind es acht Punkte
+     statt sieben. Gemessen auf /preise:
+       1024px  Platz 792, Leiste braucht 817  ->  ohne das Polster zu
+               kuerzen laeuft der Gold-CTA 25px aus dem Bild
+       1200px  Platz 936, Leiste braucht 998 mit Preiszusatz, 911 ohne
+     Mit beiden Aenderungen passt jede Breite ab 901px. Der Preiszusatz
+     kommt ab 1300px zurueck, vorher stand er ab 1200px. */
   .nav-inner .logo-img { height: 104px; }
 
   /* Zurueck-Button ist unter 768px ohnehin ausgeblendet; das Logo
@@ -5127,11 +5141,41 @@ a.mn-contact-text:hover { color: var(--gold); }
   .mw-header-inner .mw-back-link { display: none; }
 
   .nav-links            { gap: 0.15rem; }
-  .nav-links .nav-link  { padding-left: 0.6rem; padding-right: 0.6rem; }
+  .nav-links .nav-link  { padding-left: 0.45rem; padding-right: 0.45rem; }
   .nav-links > .btn     { margin-left: 0.6rem; }
 
-  /* CTA auf "MITGLIED WERDEN" kuerzen — der Preis kommt ab 1200px zurueck */
+  /* CTA auf "MITGLIED WERDEN" kuerzen — der Preis kommt ab 1366px zurueck */
   .nav-cta-preis        { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   901 BIS 1099px: DIE ENGSTE STUFE
+   ══════════════════════════════════════════════════════════════
+   Zwischen 901 und 1099px steht die Leiste schon auf Desktop-Art, hat
+   aber am wenigsten Platz. Gemessen auf /preise bei 901px:
+
+     Logo 208 + Leiste 779 + Innenabstand 72 = 1059  bei 901px Platz
+
+   Das lief 138px aus dem Bild. Und zwar NICHT erst seit PREISE: auf
+   main waren es hier schon 109px, der achte Punkt hat es vertieft.
+
+   Zurueckgeholt wird es mit denselben Mitteln wie eine Stufe hoeher,
+   nur eine Nummer kleiner: Logo 72px statt 104px, Schrift 0.64rem statt
+   0.72rem, Sperrung 1.4px statt 2.5px, Polster 0.35rem. Damit passt die
+   Leiste ab 901px wieder vollstaendig ins Bild.
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 901px) and (max-width: 1099px) {
+  .nav-inner .logo-img { height: 72px; }
+  .nav-link {
+    font-size: 0.64rem;
+    letter-spacing: 1.4px;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+  .nav-links            { gap: 0.1rem; }
+  /* 0.25rem statt 0.4rem: auf der schlanken Leiste von /mitgliederbereich
+     (1.5rem Innenabstand statt 2.25rem) fehlten bei 901px sonst 2px. */
+  .nav-links > .btn     { margin-left: 0.25rem; }
 }
 
 /* Legal pages header: always show the dark glass background */

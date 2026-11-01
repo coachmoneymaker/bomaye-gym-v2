@@ -308,6 +308,19 @@ SEITEN['boxen-muenchen.html'] = {
   titel: 'Boxen München: Boxgym in Neuhausen',
   beschr: 'Boxen in München: Bomaye Boxgym im Pineapple Park, Neuhausen-Nymphenburg. Boxen, Kickboxen, Kinderboxen und Personal Training. Erstes Training kostenlos.',
 };
+/* ── /preise ─────────────────────────────────────────────────────────────
+   Titel und Beschreibung hat der Betreiber am 01.11.2026 wortgenau
+   vorgegeben. Der Titel traegt "Bomaye" statt der vollen Marke, sonst
+   laege er ueber 60 Zeichen. Die Zahlen in der Beschreibung stehen
+   gleichlautend in scripts/preise-daten.mjs und damit auf der Seite:
+   59,60 € ist der Monatsbetrag von Kids, 90 € der Mitgliederpreis einer
+   PT-Einheit, 20 € die Tageskarte.                                      */
+SEITEN['preise.html'] = {
+  titel: 'Boxen München Preise: Mitgliedschaft & PT',
+  marke: 'Bomaye',
+  beschr: 'Boxen München Preise: Early Bird ab 59,60 € im Monat, Personal Training ab 90 € pro Session, Tageskarte 20 €. Erstes Training gratis.',
+};
+
 SEITEN['kinderboxen-muenchen.html'] = {
   titel: 'Kinder Boxen München: Kids Boxing ab 6',
   marke: 'Bomaye Boxgym',
