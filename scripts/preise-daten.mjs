@@ -277,7 +277,7 @@ export const FRAGEN = [
    stehen hier wortgleich und werden von preise-pruefen.mjs gegen die
    gerenderte Seite geprueft. Nicht raten, nicht ableiten: die Kennungen der
    Early-Bird-Vertraege (45432 bis 45434) haben mit diesen nichts zu tun.  */
-export const FLEX_AKTIV = false;
+export const FLEX_AKTIV = true;
 
 export const FLEX = [
   { id: 'unlimited-flex', name: 'Unlimited Flex', bezug: 'erwachsene', monat: 129,
