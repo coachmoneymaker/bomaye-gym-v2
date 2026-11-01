@@ -25,9 +25,16 @@ const BOMAYE = {
     phoneHref:     '+491737513627',
     whatsappHref:  '491737513627',
     email:         'info@bomayegym.com',
+    /* ACHTUNG: Diese drei Adressen liest derzeit kein Skript. Die
+       sichtbaren Symbole im Seitenfuss stehen fest im HTML, und die
+       maschinenlesbare Liste steht in SAME_AS in scripts/seo-daten.mjs.
+       Hier standen deshalb unbemerkt zwei falsche Adressen:
+         youtube.com/@bomayegym          ein 404, richtig: @BomayeGymMunich
+         tiktok.com/@bomayegym           ein 404, richtig: @bomayegym_munich
+       Wer hier etwas aendert, aendert es in SAME_AS und im Fuss mit. */
     instagram:     'https://www.instagram.com/bomayegym_munich',
-    youtube:       'https://www.youtube.com/@bomayegym',
-    tiktok:        'https://www.tiktok.com/@bomayegym',
+    youtube:       'https://www.youtube.com/@BomayeGymMunich',
+    tiktok:        'https://www.tiktok.com/@bomayegym_munich',
   },
 
   /* ── Address ─────────────────────────────────────────────── */
@@ -36,8 +43,14 @@ const BOMAYE = {
     area:      'Tiefhof Pineapple Park',
     city:      '80639 München',
     transport: 'S-Bahn Hirschgarten (5 Min.)',
-    mapLat:    48.1408,
-    mapLon:    11.5358,
+    /* Stecknadel der OpenStreetMap-Karte auf der Startseite. Dieselbe
+       Koordinate wie GEO_BREITE/GEO_LAENGE in scripts/seo-daten.mjs - dort
+       steht sie fuer das Schema, hier fuer die Karte. Wer eine aendert,
+       aendert beide.
+       HIER STAND 48.1408 / 11.5358, rund 1,2 km vom Gym entfernt. Die
+       Stecknadel zeigte also seit jeher auf die falsche Stelle. */
+    mapLat:    48.145755,
+    mapLon:    11.5227558,
   },
 
   /* ── Opening Hours ───────────────────────────────────────── */

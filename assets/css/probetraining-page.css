@@ -708,14 +708,29 @@ body .pt-bsport-dialog * {
 }
 .pt-hero h1 {
   font-family: var(--font-display);
-  /* 1.9rem bei 320px: "Boxtraining" ist das laengste Wort und passt damit
-     in eine Zeile. Gemessen, nicht geschaetzt. */
-  font-size: clamp(1.9rem, 7.4vw, 3.1rem);
+  /* 1.6rem bei 320px: die Ueberschrift traegt jetzt das Suchwort
+     ("Kostenloses Probetraining Boxen München") und ist damit laenger als
+     der Zusagesatz davor. Bei 1.9rem lief sie auf 320px ueber vier Zeilen
+     und schob den goldenen Knopf aus dem ersten Bildschirm. Gemessen, nicht
+     geschaetzt - siehe die Geraete-QA in der PR. */
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
   line-height: 1.08;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #F5F0E8;
   margin: 0;
+}
+/* Der frueher als H1 gesetzte Zusagesatz. Etwas kleiner als die
+   Ueberschrift, damit die Rangfolge im Bild der Rangfolge im Markup
+   entspricht, und mit demselben Glanz auf "gratis" wie vorher. */
+.pt-hero__slogan {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 4.2vw, 1.7rem);
+  line-height: 1.12;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #F5F0E8;
+  margin: 10px 0 0;
 }
 .pt-hero__trust {
   font-family: var(--font-body);
@@ -826,6 +841,24 @@ body.bsport-modal-open .pt-sticky {
   white-space: nowrap;
 }
 .pt-hero__note b { font-weight: 700; color: #F5F0E8; }
+
+/* Der Stand der Bewertung, sichtbar statt nur im Kommentar. Eine Zahl ohne
+   Datum liest sich wie ein Live-Wert; abgerufen wird hier nichts, die Zahl
+   steht fest in scripts/seo-daten.mjs und wird von Hand gepflegt.
+
+   flex: 0 0 100% erzwingt die eigene Zeile. In derselben Zeile ginge es
+   nicht: .pt-hero__note traegt white-space: nowrap und braucht auf 320px
+   schon fast die ganze Breite, das Datum daneben wuerde ueberlaufen.
+   Kleiner und blasser als die Zahl selbst, damit die Zeile die Bewertung
+   nicht ueberschreit.                                                      */
+.pt-hero__stand {
+  flex: 0 0 100%;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: rgba(245, 240, 232, 0.7);
+  letter-spacing: 0.02em;
+}
 .pt-hero__google:hover .pt-hero__note,
 .pt-hero__google:focus-visible .pt-hero__note {
   text-decoration: underline;

@@ -33,8 +33,8 @@
   <!-- End Cookiebot CMP -->
   <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <title>Kurse — Boxing, Kickboxing, Youth &amp; Mental | BOMAYE GYM MUNICH</title>
-  <meta name="description" content="Alle Kurse bei Bomaye Gym Munich: Boxing, Kickboxing, Youth Boxing, Olympisches Boxen und Mental Coaching. Professionelles Training für alle Level in München." />
+  <title>Kurse: Boxen und Kickboxen München | Bomaye Boxgym Munich</title>
+  <meta name="description" content="Alle Kurse im Bomaye Boxgym München: Boxen, Kickboxen, Youth Boxing, olympisches Boxen und Mental Coaching. Für jedes Level, vom Anfang an." />
   <meta name="robots" content="index, follow" />
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
@@ -43,13 +43,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
   <meta name="theme-color" content="#0A0A08">
-  <meta property="og:title" content="Kurse — Boxing, Kickboxing, Youth &amp; Mental | BOMAYE GYM MUNICH" />
-  <meta property="og:description" content="Boxing, Kickboxing, Youth Boxing, Olympisches Boxen, Mental Coaching. Training für alle Level." />
+  <meta property="og:title" content="Kurse: Boxen und Kickboxen München | Bomaye Boxgym Munich" />
+  <meta property="og:description" content="Alle Kurse im Bomaye Boxgym München: Boxen, Kickboxen, Youth Boxing, olympisches Boxen und Mental Coaching. Für jedes Level, vom Anfang an." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.bomayegym.com/kurse" />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
   <meta property="og:locale" content="de_DE" />
-  <meta property="og:site_name" content="BOMAYE GYM MUNICH" />
+  <meta property="og:site_name" content="Bomaye Boxgym Munich" />
   <link rel="canonical" href="https://www.bomayegym.com/kurse" />
 
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
@@ -86,11 +86,27 @@
     }
     .kp-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.4rem,7vw,5rem);
-      color: #F5F0E8; text-transform: uppercase; line-height: 1;
+      /* Kleiner als vorher: aus "TRAIN LIKE A FIGHTER." sind sechs Woerter
+         mit Suchwort geworden, und bei 5rem liefe das auf dem Schreibtisch
+         ueber drei Zeilen. */
+      font-size: clamp(1.9rem,5vw,3.4rem);
+      color: #F5F0E8; text-transform: uppercase; line-height: 1.05;
       margin-bottom: 0.75rem;
     }
     .kp-hero h1 span { color: var(--gold); }
+    /* Der frueher als H1 gesetzte Slogan. Gleiche Schrift wie die
+       Ueberschrift, kleiner, damit die Rangfolge im Bild der Rangfolge im
+       Markup entspricht. */
+    .kp-hero-slogan {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3.4vw, 1.8rem);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      color: var(--cream, #F5F0E8);
+      margin: 0.6rem 0 0;
+    }
+    .kp-hero-slogan span { color: #C9A84C; }
+
     .kp-hero-sub {
       font-family: var(--font-body);
       font-size: 0.92rem; color: rgba(245,240,232,0.45);
@@ -613,31 +629,112 @@
   </style>
 
   <!-- Schema.org -->
+  <!-- SEO:GRAPH -->
+  <!-- ERZEUGT - NICHT VON HAND AENDERN.
+       Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
+       Aenderungen hier gehen beim naechsten Lauf verloren. Dort aendern,
+       dann "node scripts/seo-bauen.mjs" und "node scripts/seo-pruefen.mjs".
+
+       Ein @graph fuer die ganze Seite: #organization ist die Firma,
+       #gym der Ort. Alles andere im Repo verweist per @id darauf, statt
+       die Knoten zu wiederholen. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "SportsActivityLocation"],
-    "@id": "https://bomayegym.com/#gym",
-    "name": "BOMAYE GYM MUNICH",
-    "description": "Professionelles Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer — It's not a gym. It's passion.",
-    "url": "https://www.bomayegym.com",
-    "email": "support@bomayegym.com",
-    "telephone": "+491737513627",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Wilhelm-Hale-Straße 44, Pineapple Park",
-      "addressLocality": "Munich",
-      "postalCode": "80639",
-      "addressCountry": "DE"
-    },
-    "geo": { "@type": "GeoCoordinates", "latitude": 48.1472, "longitude": 11.5235 },
-    "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "13:00", "closes": "22:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "10:00", "closes": "14:00" }
-    ],
-    "priceRange": "€€"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.bomayegym.com/#organization",
+        "name": "Bomaye Boxgym Munich",
+        "legalName": "Bomaye Gym GmbH",
+        "alternateName": [
+          "Bomaye Gym Munich",
+          "Bomaye Boxgym München"
+        ],
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://www.youtube.com/@BomayeGymMunich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      },
+      {
+        "@type": [
+          "LocalBusiness",
+          "SportsActivityLocation"
+        ],
+        "@id": "https://www.bomayegym.com/#gym",
+        "name": "Bomaye Boxgym Munich",
+        "description": "Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxen, Kickboxen und Kurse für Kinder und Jugendliche.",
+        "url": "https://www.bomayegym.com/",
+        "logo": "https://www.bomayegym.com/assets/images/bomaye-logo.webp",
+        "image": "https://www.bomayegym.com/assets/images/gym-hall.webp",
+        "email": "support@bomayegym.com",
+        "telephone": "+491737513627",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Wilhelm-Hale-Straße 44, Tiefhof Pineapple Park",
+          "addressLocality": "München",
+          "postalCode": "80639",
+          "addressCountry": "DE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 48.145755,
+          "longitude": 11.5227558
+        },
+        "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday"
+            ],
+            "opens": "13:00",
+            "closes": "22:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Saturday"
+            ],
+            "opens": "10:00",
+            "closes": "14:00"
+          }
+        ],
+        "priceRange": "€€",
+        "parentOrganization": {
+          "@id": "https://www.bomayegym.com/#organization"
+        },
+        "sameAs": [
+          "https://www.instagram.com/bomayegym_munich",
+          "https://www.tiktok.com/@bomayegym_munich",
+          "https://www.youtube.com/@BomayeGymMunich",
+          "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
+          "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
+        ]
+      }
+    ]
   }
   </script>
+  <!-- /SEO:GRAPH -->
   <!-- BreadcrumbList -->
   <script type="application/ld+json">
   {
@@ -675,14 +772,14 @@
           "description": "Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs — es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-boxing",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -696,14 +793,14 @@
           "description": "Kickboxing bei Bomaye Gym Munich verbindet Schlag- und Tritttechnik zu einem Handwerk, das den ganzen Körper fordert. Der Einstieg läuft über Stand, Gleichgewicht und Deckung — die Tritte kommen dazu, sobald die Basis sitzt. Unter der Leitung von Alfonso Fusco, Kickbox-Weltmeister.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-kickboxing",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -717,14 +814,14 @@
           "description": "Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt — es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-youth",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -738,14 +835,14 @@
           "description": "Olympisches Boxen nach AIBA-Regeln — das Original. Unser wettkampforientiertes Programm bereitet Athleten gezielt auf Meisterschaften, Turniere und Ausscheidungskämpfe vor. Raschad Pekpassi als Landestrainer des BABV führt dich durch diesen Weg.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-olympic",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -759,14 +856,14 @@
           "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs — es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-firmenfitness",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -780,14 +877,14 @@
           "description": "Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-executive",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -801,14 +898,14 @@
           "description": "Bomaye Queens ist dein exklusiver Safe Space — speziell zugeschnittenes Training, erfahrenes Coaching und eine starke Community. Egal ob Anfängerin oder mit Erfahrung: hier bist du richtig.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-women",
           "provider": {
-            "@id": "https://bomayegym.com/#gym"
+            "@id": "https://www.bomayegym.com/#gym"
           },
           "inLanguage": "de",
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "onsite",
             "location": {
-              "@id": "https://bomayegym.com/#gym"
+              "@id": "https://www.bomayegym.com/#gym"
             }
           }
         }
@@ -830,7 +927,7 @@
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
-      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img site-logo" decoding="async" width="720" height="360" />
+      <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img site-logo" decoding="async" width="720" height="360" />
       <span class="logo-text">BOMAYE</span>
     </a>
     <a href="/" class="back-btn visible" aria-label="Zurück" onclick="event.preventDefault(); history.back();">
@@ -908,7 +1005,11 @@
   <section class="kp-hero" aria-label="Unsere Kurse">
     <div class="container">
       <div class="kp-hero-tag">TRAINING</div>
-      <h1>TRAIN LIKE A FIGHTER.<br><span>START WHERE YOU ARE.</span></h1>
+      <!-- Die H1 traegt das Suchwort, nicht den Slogan: "Kurse" allein sagt
+           weder, worum es geht, noch wo. Der Slogan steht als Unterzeile
+           direkt darunter und behaelt seine Gestalt. -->
+      <h1>Kurse: Boxen und Kickboxen in München</h1>
+      <p class="kp-hero-slogan">TRAIN LIKE A FIGHTER. <span>START WHERE YOU ARE.</span></p>
       <p class="kp-hero-sub">Sechs Programme. Vom ersten Jab bis zum Wettkampf — strukturiertes Boxtraining für jedes Level.</p>
     </div>
   </section>
@@ -1313,13 +1414,13 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Gym Logo" class="logo-img" onerror="this.style.display='none';" width="720" height="360" loading="lazy" />
+          <img src="/assets/images/bomaye-logo.webp" alt="Bomaye Boxgym Munich Logo" class="logo-img" onerror="this.style.display='none';" width="720" height="360" loading="lazy" />
           <span class="logo-text">BOMAYE</span>
           <p style="margin-top:0.75rem;">It's not a gym. It's passion. Professionelles Boxen im Herzen Münchens.</p>
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">
             <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i></a>
-            <a href="https://www.youtube.com/@bomayegym" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="icon" aria-hidden="true"><svg><use href="#i-youtube"/></svg></i></a>
+            <a href="https://www.youtube.com/@BomayeGymMunich" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="icon" aria-hidden="true"><svg><use href="#i-youtube"/></svg></i></a>
             <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i></a>
             <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i></a>
           </div>
@@ -1333,6 +1434,8 @@
             <li><a href="/kurse#kursdetail-women">Bomaye Queens</a></li>
             <li><a href="/kurse#kursdetail-firmenfitness">Corporate Boxing</a></li>
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
+            <li><a href="/kinderboxen-muenchen">Kinderboxen</a></li>
+            <li><a href="/boxen-muenchen">Boxen München</a></li>
           </ul>
         </div>
         <div class="footer-col">
