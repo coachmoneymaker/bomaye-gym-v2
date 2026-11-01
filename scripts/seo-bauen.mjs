@@ -199,6 +199,18 @@ for (const name of dateien) {
       text = text.replace(muster, ersatz);
       if (text !== davor) tat.push(`${was} gesetzt`);
     };
+    /* og:site_name traegt den Markennamen und stand auf 23 Seiten noch in
+       Versalien ("BOMAYE GYM MUNICH"), waehrend die zwei neuen Seiten schon
+       die neue Schreibweise hatten - eine Ungleichheit, die ich selbst
+       hineingetragen habe. Auch das kommt jetzt aus MARKE. */
+    if (/property="og:site_name"/.test(text)) {
+      setzeMeta(/<meta\s+property="og:site_name"\s+content="[\s\S]*?"\s*\/?>/,
+        /* MARKE, nicht marke: og:site_name ist der Name der SEITE, nicht der
+           gekuerzte Zusatz im Titel. Mit marke stand auf /probetraining
+           "Bomaye" und auf /kinderboxen-muenchen "Bomaye Boxgym" - beim
+           ersten Lauf gesehen und sofort korrigiert. */
+        `<meta property="og:site_name" content="${attr(MARKE)}" />`, 'og:site_name');
+    }
     setzeMeta(/<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/,
       `<meta name="description" content="${attr(beschr)}" />`, 'description');
     if (/property="og:title"/.test(text)) {
