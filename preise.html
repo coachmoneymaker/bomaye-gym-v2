@@ -246,6 +246,56 @@
           "@type": "Answer",
           "text": "Ja. Das erste Training ist kostenlos und unverbindlich. Du wählst online einen Termin, meldest dich kurz an und kommst vorbei."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es auch eine Mitgliedschaft ohne Bindung?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja, Bomaye Flex, monatlich kündbar, ab 99 € im Monat (Kids), 109 € (Youth), 129 € (Unlimited), plus 100 € einmalig. Early Bird ist günstiger, solange Plätze frei sind."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Bomaye Flex",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@type": "Offer",
+          "name": "Unlimited Flex",
+          "price": "129.00",
+          "priceCurrency": "EUR",
+          "url": "https://backoffice.bsport.io/checkout/5473/subscription/59649?force=true"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "Offer",
+          "name": "Youth Flex",
+          "price": "109.00",
+          "priceCurrency": "EUR",
+          "url": "https://backoffice.bsport.io/checkout/5473/subscription/59651?force=true"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@type": "Offer",
+          "name": "Kids Flex",
+          "price": "99.00",
+          "priceCurrency": "EUR",
+          "url": "https://backoffice.bsport.io/checkout/5473/subscription/59650?force=true"
+        }
       }
     ]
   }
@@ -1481,6 +1531,131 @@
           </article>
         </div>
         <!-- /PREISE:KARTEN -->
+        <!-- PREISE:FLEX -->
+        <style>
+        /* Kommt und geht mit dem Block. Steht der Schalter auf false, ist
+           auch diese Regel weg und preise.html byte-gleich mit dem Stand
+           ohne Flex. Deshalb hier und nicht im Seitenkopf.
+
+           Jede Regel hat ".seo-section" vorangestellt: die Vorlage traegt
+           ".seo-section p" (0,1,1), eine einzelne Klasse (0,1,0) verliert
+           dagegen und die Textfarben kippten. */
+        .seo-section .pr-flex {
+          max-width: 1100px;
+          margin: clamp(36px, 5vw, 60px) auto 0;
+          padding-top: clamp(28px, 4vw, 44px);
+          border-top: 1px solid rgba(8,8,8,0.12);
+        }
+        /* Dasselbe Mass wie ".seo-section h2" der Vorlage. Vorher stand hier
+           clamp(1.9rem, 5vw, 2.6rem); gemessen war die Flex-Ueberschrift
+           dadurch bei 390px mit 30,4px GROESSER als die Early-Bird-
+           Ueberschrift mit 25,6px, und das kehrt die Rangfolge um. */
+        .seo-section .pr-flex__h2 {
+          font-family: var(--font-display);
+          font-size: clamp(1.6rem, 4vw, 2.6rem);
+          letter-spacing: 0.02em;
+          line-height: 1.1;
+          text-transform: uppercase;
+          color: var(--ink);
+          margin: 1rem 0 0;
+        }
+        .seo-section .pr-flex__sub {
+          font-family: var(--font-body);
+          font-size: 0.92rem;
+          line-height: 1.75;
+          color: rgba(8,8,8,0.55);
+          margin: 10px 0 0;
+          max-width: 640px;
+        }
+        .seo-section .pr-flex__liste { margin-top: 22px; }
+        /* Zwischenueberschrift im Vertragsblock. Steht dort nur, solange
+           Flex laeuft, deshalb auch die Regel nur hier. */
+        .seo-section .pr-vertrag__h4 {
+          font-family: var(--font-head);
+          font-size: 0.74rem;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--gold-dark);
+          margin: 22px 0 10px;
+        }
+        /* Early Bird bleibt der lautere Weg: die Flex-Zeile traegt einen
+           kleineren Betrag als die Kartenpreise (1,6rem gegen 2,6rem). */
+        .seo-section .pr-flex .pr-option__preis {
+          font-size: 1.6rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          line-height: 1.05;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__promonat {
+          font-family: var(--font-body);
+          font-size: 0.74rem;
+          letter-spacing: 0.02em;
+          color: rgba(8,8,8,0.5);
+          margin-top: 2px;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__zusatz {
+          font-family: var(--font-body);
+          font-size: 0.82rem;
+          line-height: 1.6;
+          color: rgba(8,8,8,0.55);
+          margin: 4px 0 0;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__spar {
+          font-family: var(--font-body);
+          font-size: 0.82rem;
+          line-height: 1.6;
+          color: var(--gold-dark);
+          margin: 2px 0 0;
+        }
+        /* 48px Tiefe statt der 44px der uebrigen Zeilenknoepfe. */
+        .seo-section .pr-flex .pr-zeilenknopf { min-height: 48px; }
+        @media (max-width: 379px) {
+          .seo-section .pr-flex .pr-option__zusatz { white-space: normal; }
+        }
+        </style>
+        <div class="pr-flex reveal" id="flex">
+          <span class="tag tag--light-inv">FLEXIBEL</span>
+          <h2 class="pr-flex__h2" id="flex-h2">LIEBER OHNE <span class="gold-dark">BINDUNG?</span></h2>
+          <p class="pr-flex__sub">Monatlich kündbar. Keine Mindestlaufzeit.</p>
+          <ul class="pr-optionen pr-flex__liste" aria-labelledby="flex-h2">
+            <li class="pr-option">
+              <div class="pr-option__text">
+                <h3 class="pr-option__name">Unlimited Flex</h3>
+                <p class="pr-option__zusatz">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+                <p class="pr-option__spar">Early Bird spart dir 640,80 € im Jahr</p>
+              </div>
+              <p class="pr-option__preis">129 €<span class="pr-option__promonat">im Monat</span></p>
+              <a href="https://backoffice.bsport.io/checkout/5473/subscription/59649?force=true" rel="noopener" data-abo-contract="59649"
+                 class="pr-zeilenknopf pr-zeilenknopf--hell">FLEX STARTEN</a>
+            </li>
+            <li class="pr-option">
+              <div class="pr-option__text">
+                <h3 class="pr-option__name">Youth Flex</h3>
+                <p class="pr-option__zusatz">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+                <p class="pr-option__spar">Early Bird spart dir 544,80 € im Jahr</p>
+              </div>
+              <p class="pr-option__preis">109 €<span class="pr-option__promonat">im Monat</span></p>
+              <a href="https://backoffice.bsport.io/checkout/5473/subscription/59651?force=true" rel="noopener" data-abo-contract="59651"
+                 class="pr-zeilenknopf pr-zeilenknopf--hell">FLEX STARTEN</a>
+            </li>
+            <li class="pr-option">
+              <div class="pr-option__text">
+                <h3 class="pr-option__name">Kids Flex</h3>
+                <p class="pr-option__zusatz">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+                <p class="pr-option__spar">Early Bird spart dir 472,80 € im Jahr</p>
+              </div>
+              <p class="pr-option__preis">99 €<span class="pr-option__promonat">im Monat</span></p>
+              <a href="https://backoffice.bsport.io/checkout/5473/subscription/59650?force=true" rel="noopener" data-abo-contract="59650"
+                 class="pr-zeilenknopf pr-zeilenknopf--hell">FLEX STARTEN</a>
+            </li>
+          </ul>
+        </div>
+        <!-- /PREISE:FLEX -->
         <!-- PREISE:BEDINGUNGEN -->
         <div class="pr-vertrag reveal" id="vertrag">
           <h3 class="pr-vertrag__h3">So läuft dein Vertrag</h3>
@@ -1491,6 +1666,14 @@
             <li>Die Kündigung geht schriftlich per E-Mail oder Brief.</li>
             <li>Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.</li>
             <li>Early Bird gilt für die gesamte Vertragslaufzeit.</li>
+          </ul>
+          <h4 class="pr-vertrag__h4">Flex</h4>
+          <ul class="pr-vertrag__liste">
+            <li>Keine Mindestlaufzeit.</li>
+            <li>Der Vertrag verlängert sich jeweils um einen Monat.</li>
+            <li>Kündbar jederzeit mit einer Frist von 14 Tagen zum Monatsende.</li>
+            <li>Aufnahmegebühr 100 € einmalig, bei Kündigung nicht erstattbar.</li>
+            <li>Die Ausstattung bleibt dein Eigentum.</li>
           </ul>
           <p class="pr-vertrag__fuss">Alle Preise inklusive Mehrwertsteuer. Die vollständigen Bedingungen stehen in den <a href="/agb">AGB</a>.</p>
         </div>
@@ -1667,6 +1850,10 @@
             <summary class="faq-q faq-q--light">Kann ich vorher kostenlos testen?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
             <div class="faq-a-inner">Ja. Das erste Training ist kostenlos und unverbindlich. Du wählst online einen Termin, meldest dich kurz an und kommst vorbei. <a href="/probetraining">Zur Buchung: Probetraining</a>.</div>
           </details>
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Gibt es auch eine Mitgliedschaft ohne Bindung?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Ja, Bomaye Flex, monatlich kündbar, ab 99 € im Monat (Kids), 109 € (Youth), 129 € (Unlimited), plus 100 € einmalig. Early Bird ist günstiger, solange Plätze frei sind.</div>
+          </details>
         </div>
         <!-- /PREISE:FAQ -->
       </div>
@@ -1838,16 +2025,88 @@ function toggleFaq(btn) {
   }
 }
 
-/* ── Scroll reveal ── */
+/* ── Scroll reveal ───────────────────────────────────────────────────────
+   WAS HIER SCHIEFGING
+   Vorher stand hier threshold: 0.08. Ein Element gilt damit erst als
+   sichtbar, wenn ACHT PROZENT SEINER EIGENEN FLAECHE im Bild stehen. Fuer
+   kleine Bloecke faellt das nicht auf, fuer hohe schon: der Flex-Abschnitt
+   ist 729px hoch, bei 390px Bildbreite stand er mit 32px im Bild, das sind
+   4,4 Prozent. Er haette 58px gebraucht. Der Beobachter meldete nie, das
+   Element blieb auf opacity 0 stehen, und zwar fuer immer.
+
+   Dazu kam ein zweiter Fall, unabhaengig von der Schwelle: wer schnell
+   springt oder die Seite mitten im Dokument neu laedt, hat Elemente OBER
+   der Bildkante. Ein IntersectionObserver meldet die nie mehr, weil sie
+   nie wieder hineinlaufen. Nach einem Neuladen bei scrollY 3000 blieben so
+   sechs Bloecke unsichtbar.
+
+   WAS JETZT GILT
+   1. threshold: 0. Jedes angeschnittene Pixel zaehlt, die Hoehe des
+      Elements spielt keine Rolle mehr. Der Ausloesepunkt bleibt derselbe
+      wie bisher, nur ohne die Flaechenbedingung.
+   2. Beim Start wird alles sichtbar gemacht, was schon ueber der Bildkante
+      liegt. Das faengt die Wiederherstellung der Scrollposition ab.
+   3. Ein Sicherheitsnetz am Scrollereignis holt nach, was der Beobachter
+      verpasst hat: alles, dessen Oberkante ueber der Unterkante des Bildes
+      steht. Passiv, einmal je Bild ueber requestAnimationFrame, und es
+      haengt sich selbst ab, sobald nichts mehr offen ist.
+   4. Wer Bewegung abbestellt hat, bekommt alles sofort und ohne
+      Beobachter. Ohne JavaScript greift die noscript-Regel im Kopf.
+
+   Das Aussehen beim normalen Scrollen aendert sich nicht: die Elemente
+   werden weiterhin erst beim Eintreten sichtbar und blenden ueber die
+   CSS-Transition ein.                                                   */
 (function () {
-  const els = document.querySelectorAll('.reveal');
-  if (!els.length) return;
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  var offen = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (!offen.length) return;
+  var RAND = 20;   /* wie bisher: 20px Luft an der Unterkante */
+
+  function zeigen(el) { el.classList.add('visible'); }
+
+  var ruhig = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ruhig || !('IntersectionObserver' in window)) {
+    offen.forEach(zeigen);
+    return;
+  }
+
+  var io = new IntersectionObserver(function (eintraege) {
+    eintraege.forEach(function (e) {
+      if (e.isIntersecting) { zeigen(e.target); io.unobserve(e.target); }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
-  els.forEach(el => io.observe(el));
+  }, { threshold: 0, rootMargin: '0px 0px -' + RAND + 'px 0px' });
+  offen.forEach(function (el) { io.observe(el); });
+
+  function ab() {
+    window.removeEventListener('scroll', takt);
+    window.removeEventListener('resize', takt);
+  }
+  /* Nachziehen: alles, was ueber der Unterkante steht, ist faellig. */
+  function nachziehen(nurDarueber) {
+    var grenze = nurDarueber ? 0 : window.innerHeight - RAND;
+    for (var i = offen.length - 1; i >= 0; i--) {
+      var el = offen[i];
+      if (el.classList.contains('visible')) { offen.splice(i, 1); continue; }
+      var r = el.getBoundingClientRect();
+      var faellig = nurDarueber ? r.bottom <= grenze : r.top < grenze;
+      if (faellig) { zeigen(el); io.unobserve(el); offen.splice(i, 1); }
+    }
+    if (!offen.length) ab();
+  }
+
+  var wartet = false;
+  function takt() {
+    if (wartet) return;
+    wartet = true;
+    requestAnimationFrame(function () { wartet = false; nachziehen(false); });
+  }
+  window.addEventListener('scroll', takt, { passive: true });
+  window.addEventListener('resize', takt, { passive: true });
+
+  /* Beim Start nur das, was schon durchgelaufen ist. Was gerade im Bild
+     steht, uebernimmt der Beobachter, damit es einblendet statt zu
+     erscheinen. */
+  nachziehen(true);
 })();
 </script>
 

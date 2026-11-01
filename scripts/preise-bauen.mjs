@@ -29,7 +29,8 @@
    BEDINGUNGEN, wortgleich.
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, writeFile } from 'node:fs/promises';
-import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro }
+import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro,
+         FLEX_AKTIV, FLEX, FLEX_BEDINGUNGEN, FLEX_FRAGE, ersparnis }
   from './preise-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
@@ -98,6 +99,12 @@ function bedingungen() {
     + '          <ul class="pr-vertrag__liste">\n'
     + BEDINGUNGEN.map((b) => `            <li>${esc(b)}</li>`).join('\n')
     + '\n          </ul>\n'
+    + (FLEX_AKTIV
+        ? '          <h4 class="pr-vertrag__h4">Flex</h4>\n'
+          + '          <ul class="pr-vertrag__liste">\n'
+          + FLEX_BEDINGUNGEN.map((b) => `            <li>${esc(b)}</li>`).join('\n')
+          + '\n          </ul>\n'
+        : '')
     + '          <p class="pr-vertrag__fuss">'
     + 'Alle Preise inklusive Mehrwertsteuer. Die vollständigen Bedingungen stehen in den '
     + '<a href="/agb">AGB</a>.</p>\n'
@@ -154,15 +161,146 @@ function weitere() {
     + '\n        </ul>';
 }
 
+/* Die Fragenliste, einmal fuer sichtbares HTML und Schema. Mit Flex kommt
+   genau eine Frage dazu, und zwar am Ende. */
+function fragenAlle() {
+  return FLEX_AKTIV ? FRAGEN.concat([{ f: FLEX_FRAGE.f, a: FLEX_FRAGE.a }]) : FRAGEN;
+}
+
 /* ── FAQ ───────────────────────────────────────────────────────────────────
    Aufklappen mit <details>, nicht mit einem Knopf und JavaScript wie auf der
    Startseite: ohne JavaScript bliebe dort jede Antwort zu. Das Aussehen ist
    dasselbe, die Mechanik die robustere.                                   */
 function faq() {
-  return '        <div class="pr-faq faq-list faq-list--light reveal">\n' + FRAGEN.map((q) => `          <details class="faq-item">
+  return '        <div class="pr-faq faq-list faq-list--light reveal">\n' + fragenAlle().map((q) => `          <details class="faq-item">
             <summary class="faq-q faq-q--light">${esc(q.f)}<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
             <div class="faq-a-inner">${esc(q.a)}${q.verweis ? ` <a href="${esc(q.verweis.ziel)}">${esc(q.verweis.text)}</a>.` : ''}</div>
           </details>`).join('\n') + '\n        </div>';
+}
+
+/* ── Bomaye Flex ───────────────────────────────────────────────────────────
+   NACHRANGIG, mit Absicht. Early Bird behaelt die drei schwarzen Karten mit
+   goldenem Knopf; Flex steht darunter als schmale Zeilen mit Umrissknopf,
+   damit beide Wege nicht um denselben Blick streiten.
+
+   WIEDERVERWENDET, NICHTS NEU ERFUNDEN
+   Die Zeilen tragen .pr-option, .pr-option__name, .pr-option__preis und
+   .pr-zeilenknopf - dieselben Klassen wie die Einzelangebote weiter unten
+   auf derselben Seite. Dazu kommen genau zwei Zeilen, die es dort nicht
+   gibt: die Aufnahmegebuehr und die gerechnete Ersparnis.
+
+   DER KNOPF ARBEITET WIE DIE EARLY-BIRD-KNOEPFE
+   data-abo-contract traegt die Vertragskennung, abo-embed.js faengt den
+   Klick ab und oeffnet das Overlay auf unserer Domain. Das href ist der
+   Rueckweg ohne JavaScript und zeigt auf die Kaufadresse des Betreibers.  */
+function flex() {
+  if (!FLEX_AKTIV) return '';
+  return `        <!-- PREISE:FLEX -->
+        <style>
+        /* Kommt und geht mit dem Block. Steht der Schalter auf false, ist
+           auch diese Regel weg und preise.html byte-gleich mit dem Stand
+           ohne Flex. Deshalb hier und nicht im Seitenkopf.
+
+           Jede Regel hat ".seo-section" vorangestellt: die Vorlage traegt
+           ".seo-section p" (0,1,1), eine einzelne Klasse (0,1,0) verliert
+           dagegen und die Textfarben kippten. */
+        .seo-section .pr-flex {
+          max-width: 1100px;
+          margin: clamp(36px, 5vw, 60px) auto 0;
+          padding-top: clamp(28px, 4vw, 44px);
+          border-top: 1px solid rgba(8,8,8,0.12);
+        }
+        /* Dasselbe Mass wie ".seo-section h2" der Vorlage. Vorher stand hier
+           clamp(1.9rem, 5vw, 2.6rem); gemessen war die Flex-Ueberschrift
+           dadurch bei 390px mit 30,4px GROESSER als die Early-Bird-
+           Ueberschrift mit 25,6px, und das kehrt die Rangfolge um. */
+        .seo-section .pr-flex__h2 {
+          font-family: var(--font-display);
+          font-size: clamp(1.6rem, 4vw, 2.6rem);
+          letter-spacing: 0.02em;
+          line-height: 1.1;
+          text-transform: uppercase;
+          color: var(--ink);
+          margin: 1rem 0 0;
+        }
+        .seo-section .pr-flex__sub {
+          font-family: var(--font-body);
+          font-size: 0.92rem;
+          line-height: 1.75;
+          color: rgba(8,8,8,0.55);
+          margin: 10px 0 0;
+          max-width: 640px;
+        }
+        .seo-section .pr-flex__liste { margin-top: 22px; }
+        /* Zwischenueberschrift im Vertragsblock. Steht dort nur, solange
+           Flex laeuft, deshalb auch die Regel nur hier. */
+        .seo-section .pr-vertrag__h4 {
+          font-family: var(--font-head);
+          font-size: 0.74rem;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--gold-dark);
+          margin: 22px 0 10px;
+        }
+        /* Early Bird bleibt der lautere Weg: die Flex-Zeile traegt einen
+           kleineren Betrag als die Kartenpreise (1,6rem gegen 2,6rem). */
+        .seo-section .pr-flex .pr-option__preis {
+          font-size: 1.6rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          line-height: 1.05;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__promonat {
+          font-family: var(--font-body);
+          font-size: 0.74rem;
+          letter-spacing: 0.02em;
+          color: rgba(8,8,8,0.5);
+          margin-top: 2px;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__zusatz {
+          font-family: var(--font-body);
+          font-size: 0.82rem;
+          line-height: 1.6;
+          color: rgba(8,8,8,0.55);
+          margin: 4px 0 0;
+          white-space: nowrap;
+        }
+        .seo-section .pr-flex .pr-option__spar {
+          font-family: var(--font-body);
+          font-size: 0.82rem;
+          line-height: 1.6;
+          color: var(--gold-dark);
+          margin: 2px 0 0;
+        }
+        /* 48px Tiefe statt der 44px der uebrigen Zeilenknoepfe. */
+        .seo-section .pr-flex .pr-zeilenknopf { min-height: 48px; }
+        @media (max-width: 379px) {
+          .seo-section .pr-flex .pr-option__zusatz { white-space: normal; }
+        }
+        </style>
+        <div class="pr-flex reveal" id="flex">
+          <span class="tag tag--light-inv">FLEXIBEL</span>
+          <h2 class="pr-flex__h2" id="flex-h2">LIEBER OHNE <span class="gold-dark">BINDUNG?</span></h2>
+          <p class="pr-flex__sub">Monatlich kündbar. Keine Mindestlaufzeit.</p>
+          <ul class="pr-optionen pr-flex__liste" aria-labelledby="flex-h2">
+${FLEX.map((f) => `            <li class="pr-option">
+              <div class="pr-option__text">
+                <h3 class="pr-option__name">${esc(f.name)}</h3>
+                <p class="pr-option__zusatz">+ ${esc(euro(AUFNAHME))} einmalig, inkl. ${FIGHTER_KIT}</p>
+                <p class="pr-option__spar">Early Bird spart dir ${esc(euro(ersparnis(f)))} im Jahr</p>
+              </div>
+              <p class="pr-option__preis">${esc(euro(f.monat))}<span class="pr-option__promonat">im Monat</span></p>
+              <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}"
+                 class="pr-zeilenknopf pr-zeilenknopf--hell">FLEX STARTEN</a>
+            </li>`).join('\n')}
+          </ul>
+        </div>
+        <!-- /PREISE:FLEX -->
+`;
 }
 
 /* ── Schema ────────────────────────────────────────────────────────────── */
@@ -176,14 +314,82 @@ function schema() {
   };
   const fragen = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: FRAGEN.map((q) => ({
+    mainEntity: fragenAlle().map((q) => ({
       '@type': 'Question', name: text(q.f),
       acceptedAnswer: { '@type': 'Answer', text: text(q.a) },
     })),
   };
+  /* Die Flex-Angebote kommen als eigener Block dazu, damit die beiden
+     bestehenden Bloecke byte-gleich bleiben, solange der Schalter aus ist. */
+  const angebote = {
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    name: 'Bomaye Flex',
+    itemListElement: FLEX.map((f, i) => ({
+      '@type': 'ListItem', position: i + 1,
+      item: {
+        '@type': 'Offer', name: text(f.name),
+        price: f.monat.toFixed(2), priceCurrency: 'EUR', url: f.url,
+      },
+    })),
+  };
   const j = (o) => '  <script type="application/ld+json">\n  '
     + JSON.stringify(o, null, 2).split('\n').join('\n  ') + '\n  </script>';
-  return j(krumen) + '\n' + j(fragen);
+  return j(krumen) + '\n' + j(fragen) + (FLEX_AKTIV ? '\n' + j(angebote) : '');
+}
+
+/* ── Flex ein- und ausbauen ────────────────────────────────────────────────
+   Flex arbeitet NICHT mit einer festen Marke in der Datei, anders als die
+   uebrigen Bloecke. Grund: eine Marke waere auch dann vorhanden, wenn der
+   Schalter aus ist, und preise.html waere nicht mehr byte-gleich mit dem
+   Stand ohne Flex. Stattdessen wird der ganze Block samt seiner Marken
+   eingesetzt oder restlos entfernt. Schalter aus heisst: keine Spur.     */
+function flexEinbauen(t, block, vorMarke) {
+  const auf = '        <!-- PREISE:FLEX -->';
+  const zu = '        <!-- /PREISE:FLEX -->\n';
+  const a = t.indexOf(auf);
+  if (a >= 0) {
+    const b = t.indexOf(zu, a);
+    if (b < 0) throw new Error('PREISE:FLEX ist geoeffnet, aber nicht geschlossen');
+    t = t.slice(0, a) + t.slice(b + zu.length);
+  }
+  if (!block) return t;
+  const i = t.indexOf(vorMarke);
+  if (i < 0) throw new Error(`Einfuegepunkt fehlt: ${vorMarke}`);
+  return t.slice(0, i) + block + t.slice(i);
+}
+
+/* ── Preistabelle der Startseite ───────────────────────────────────────────
+   #view-mehr-preise ist von Hand gepflegt. Die drei Flex-Zeilen kommen aus
+   derselben Quelle wie alles andere, damit kein Betrag zweimal getippt
+   wird. Gleiche Technik wie oben: eingesetzt oder restlos entfernt.      */
+function startseiteFlex() {
+  if (!FLEX_AKTIV) return '';
+  return '            <!-- PREISE:FLEX -->\n'
+    + FLEX.map((f) => `            <tr>
+              <td><strong>${esc(f.name)}</strong></td>
+              <td><span class="price-em">${esc(euro(f.monat))}</span> / Monat</td>
+              <td>Monatlich kündbar</td>
+              <td>${esc(f.name.replace(/ Flex$/, ''))} ohne Mindestlaufzeit</td>
+              <td>Auf Anfrage</td>
+            </tr>`).join('\n')
+    + '\n            <!-- /PREISE:FLEX -->\n';
+}
+function startseiteEinbauen(t) {
+  const auf = '            <!-- PREISE:FLEX -->';
+  const zu = '            <!-- /PREISE:FLEX -->\n';
+  const a = t.indexOf(auf);
+  if (a >= 0) {
+    const b = t.indexOf(zu, a);
+    if (b < 0) throw new Error('PREISE:FLEX in index.html ist nicht geschlossen');
+    t = t.slice(0, a) + t.slice(b + zu.length);
+  }
+  const block = startseiteFlex();
+  if (!block) return t;
+  /* Vor die Zeile "Day Pass", damit Flex oben in der Tabelle steht. */
+  const anker = '            <tr>\n              <td><strong>Day Pass</strong></td>';
+  const i = t.indexOf(anker);
+  if (i < 0) throw new Error('Zeile "Day Pass" in index.html nicht gefunden');
+  return t.slice(0, i) + block + t.slice(i);
 }
 
 /* ── Lauf ──────────────────────────────────────────────────────────────── */
@@ -195,6 +401,23 @@ t = ersetze(t, 'BEDINGUNGEN', bedingungen());
 t = ersetze(t, 'PT', pt());
 t = ersetze(t, 'WEITERE', weitere());
 t = ersetze(t, 'FAQ', faq());
+t = flexEinbauen(t, flex(), '        <!-- PREISE:BEDINGUNGEN -->');
+
+/* Die Startseite wird nur angefasst, wenn sich dort wirklich etwas
+   aendert. Mit ausgeschaltetem Flex ist das nie der Fall. */
+const STARTSEITE = WURZEL + '/index.html';
+let h = await readFile(STARTSEITE, 'utf8');
+const hVorher = h;
+h = startseiteEinbauen(h);
+if (h !== hVorher) {
+  if (NUR_PRUEFEN) {
+    console.log('index.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
+    process.exitCode = 1;
+  } else {
+    await writeFile(STARTSEITE, h);
+    console.log(`index.html: ${FLEX_AKTIV ? FLEX.length + ' Flex-Zeilen geschrieben' : 'Flex-Zeilen entfernt'}.`);
+  }
+}
 
 if (t === vorher) {
   console.log('preise.html ist auf dem Stand von preise-daten.mjs.');
