@@ -147,11 +147,21 @@ const BOMAYE_PRICING = {
      sichtbaren Preistabelle auf /personal-training-boxen-muenchen. Diese
      Seite ist die massgebliche Quelle, nicht diese Datei.
 
-     HIER STANDEN FUER NICHTMITGLIEDER ANDERE ZAHLEN:
-       pricePerSession      110  ->  125
-       tenCardPrice         950  ->  1090
-       tenCardPricePerUnit   95  ->  109
-     Die Mitgliederpreise (90 / 800 / 80) stimmten bereits.
+     HIER STANDEN FUER NICHTMITGLIEDER ANDERE ZAHLEN. Zweimal angefasst,
+     beide Male vom Betreiber bestaetigt:
+       pricePerSession      110  ->  125        (01.11.2026)
+       tenCardPrice         950  ->  1090       (01.11.2026)
+                                 ->  1150       (01.11.2026, zweiter Lauf)
+       tenCardPricePerUnit   95  ->  109        (01.11.2026)
+                                 ->  115        (01.11.2026, zweiter Lauf)
+     Die Mitgliederpreise (90 / 800 / 80) stimmten von Anfang an.
+
+     Warum zweimal: die Zehnerkarte stand an zwei sichtbaren Stellen
+     verschieden - 1.090 € auf der PT-Seite, 1.150 € in der Preistabelle
+     der Startseite. Der Betreiber hat 1.150 € als richtig bestaetigt; die
+     PT-Seite ist entsprechend nachgezogen, und 1.150 / 10 = 115 € je
+     Einheit. Fuer die Mitglieder-Zehnerkarte lief es andersherum: die
+     Startseite sagte 1.000 €, die PT-Seite 800 €, richtig ist 800 €.
 
      ZWEI DINGE, DIE MAN WISSEN MUSS:
      1. DIESE WERTE WERDEN VON NICHTS GELESEN. BOMAYE_PRICING wird nur in
@@ -162,7 +172,10 @@ const BOMAYE_PRICING = {
         hat.
      2. Die Fuenferkarte (575 € / 115 € je Einheit, Mitglieder 425 € / 85 €)
         steht auf der Seite, aber nicht hier. Nicht ergaenzt, weil der
-        Auftrag nur die drei Zahlen oben nannte.                           */
+        Auftrag nur die Zahlen oben nannte. ACHTUNG: seit dem zweiten Lauf
+        kostet die Zehnerkarte fuer Nichtmitglieder je Einheit genauso viel
+        wie die Fuenferkarte, naemlich 115 €. Ein Mengenvorteil besteht
+        dort nur noch gegenueber der Einzelsession (125 €).                           */
   personalTraining: {
     label: 'Personal Training',
     icon:  'fa-user-check',
@@ -177,8 +190,8 @@ const BOMAYE_PRICING = {
     forNonMembers: {
       pricePerSession:     125,
       comparePrice:        null,
-      tenCardPrice:        1090,
-      tenCardPricePerUnit: 109,
+      tenCardPrice:        1150,
+      tenCardPricePerUnit: 115,
       note:                null,
     },
   },
