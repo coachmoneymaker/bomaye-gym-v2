@@ -35,52 +35,57 @@ export function euro(n) {
    ═══════════════════════════════════════════════════════════════════════════
 
    WOCHENPREISE stehen seit jeher sichtbar auf /mitglied-werden und auf der
-   Startseite. Sie sind die Grundlage: die AGB (§ 4 Abs. 1) sagt, der
+   Startseite. Sie sind die Grundlage: § 3 Abs. 1 der AGB sagt, der
    Mitgliedsbeitrag wird WOECHENTLICH berechnet und monatlich im Voraus
    entrichtet.
 
-   TODO-OWNER, UND ZWAR EIN WICHTIGER: DIE MONATSBETRAEGE UNTEN PASSEN
-   NICHT ZUR AGB.
-   Die Monatsbetraege hat der Betreiber am 01.11.2026 so vorgegeben. Sie
-   sind das VIERFACHE des Wochenpreises:
-       18,90 x 4 = 75,60      15,90 x 4 = 63,60      14,90 x 4 = 59,60
-   § 4 Abs. 1 der AGB rechnet aber mit dem FAKTOR 4,33:
-       18,90 x 4,33 = 81,84   15,90 x 4,33 = 68,85   14,90 x 4,33 = 64,52
-   Das sind 6 bis 7 Euro Unterschied im Monat. Steht auf der Seite ein
-   Monatsbetrag, der niedriger ist als der, der abgebucht wird, ist das eine
-   irrefuehrende Preisangabe.
+   MONATSBETRAG: DAS IST DER BETRAG, DER ABGEBUCHT WIRD.
+   Vom Betreiber am 01.11.2026 bestaetigt: in bsport stehen je Paket
+   75,60 / 63,60 / 59,60 € im Monat, also der Wochenpreis mal vier. Das
+   ist der Betrag, den das Mitglied tatsaechlich zahlt, und deshalb steht
+   er auf der Seite gross.
 
-   BIS DAS GEKLAERT IST, macht die Seite zweierlei:
-     - sie nennt den Wochenpreis gleichwertig neben dem Monatsbetrag, denn
-       der Wochenpreis ist der Wert, der in der AGB und in bsport steht
-     - sie nennt KEINEN Rechenfaktor, weil jeder genannte Faktor einer der
-       beiden Angaben widersprechen wuerde
-   Zu klaeren ist: gilt 4 oder 4,33? Danach gehoert entweder diese Datei
-   oder § 4 Abs. 1 der AGB angepasst.
+   AUF DER SEITE STEHT KEIN RECHENFAKTOR, und das ist Absicht. § 3 Abs. 1
+   der AGB nennt den Faktor 4,33; der Betreiber hat die Formulierung
+   rechtlich pruefen lassen, sie bleibt unveraendert. Ein zweiter Faktor
+   auf der Preisseite wuerde dem nur widersprechen. Die Seite nennt
+   deshalb Monatsbetrag und Wochenpreis, beide als Zahl, und rechnet
+   nichts vor. Die AGB wird von hier aus nicht angefasst.
 
-   ZWEITER TODO-OWNER, DERSELBE RECHTLICHE PUNKT: DER WOCHENPREIS HAENGT
-   AN DER LAUFZEIT.
-   assets/js/pricing.js fuehrt je Paket VIER Early-Bird-Wochenpreise, einen
-   je Laufzeit. Fuer Kids zum Beispiel:
-       1 Monat 19,90   3 Monate 17,90   6 Monate 15,90   12 Monate 14,90
-   Sichtbar ist auf /mitglied-werden und auf der Startseite seit jeher nur
-   die 12-Monats-Spalte, also 14,90. Diese Seite zeigt dieselbe Zahl, damit
-   beide Seiten nicht auseinanderlaufen.
+   LAUFZEIT: ES GIBT NUR ZWOELF MONATE.
+   Verkauft werden ausschliesslich die drei Vertraege mit 12 Rechnungen
+   und automatischer Verlaengerung. Die Early-Bird-Preise oben gelten fuer
+   genau diese Laufzeit. § 2 Abs. 2 der AGB zaehlt zwar vier moegliche
+   Laufzeiten auf (1, 3, 6, 12 Monate), im Verkauf steht aber nur die
+   zwoelfmonatige; die Seite nennt deshalb keine andere. Belegt ist das
+   auch im Repo: das Angebots-Schema auf /mitglied-werden traegt je Paket
+   "Mindestlaufzeit 12 Monate" und eligibleQuantity 12 MON, und
+   /boxtraining-muenchen schreibt "bei 12-monatiger Laufzeit".
 
-   Daneben steht hier aber "Laufzeit nach Wahl: 1, 3, 6 oder 12 Monate"
-   (AGB § 3 Abs. 2). Zusammengelesen heisst das: 14,90 bei jeder Laufzeit.
-   Nach pricing.js stimmt das nicht.
+   Der Vertrag "Bomaye Fighter" (50 €) wird nicht verkauft und kommt auf
+   dieser Seite nicht vor.
 
-   HIER IST BEWUSST NICHTS ERFUNDEN WORDEN. Weder ist ein Zusatz wie "bei
-   12 Monaten Laufzeit" ergaenzt (er stuende dann nur auf dieser einen
-   Seite und widerspraeche der Darstellung auf /mitglied-werden), noch ist
-   die Laufzeitzeile weggelassen (sie steht so in der AGB). Zu klaeren
-   ist: gilt der Early-Bird-Preis unabhaengig von der Laufzeit, oder
-   gehoert die Staffel auf beide Seiten? Danach gehoert entweder diese
-   Datei oder /mitglied-werden angepasst.
+   AUCH DIE PARAGRAPHEN STIMMEN JETZT. Hier stand vorher "§ 4 Abs. 1" fuer
+   die Beitragsregel und "§ 3 Abs. 3" fuer die Aufnahmegebuehr. In agb.html
+   sind es § 3 Abs. 1 (Beitrag, Faktor 4,33), § 2 Abs. 3 (Aufnahmegebuehr),
+   § 2 Abs. 2 (Laufzeit und Verlaengerung), § 4 Abs. 2 (Early Bird) und
+   § 6 Abs. 1 (Kuendigung).
    ═══════════════════════════════════════════════════════════════════════ */
 
-export const AUFNAHME = 100;          /* AGB § 3 Abs. 3, einmalig, inkl. MwSt. */
+export const AUFNAHME = 100;          /* AGB § 2 Abs. 3, einmalig, inkl. MwSt. */
+
+/* Woertlich aus § 2 Abs. 2 und § 6 Abs. 1 der AGB, nur in die du-Form
+   gebracht. Nichts dazuerfunden, nichts weggelassen ausser den drei
+   Laufzeiten, die nicht verkauft werden. */
+export const LAUFZEIT = {
+  kurz:        'bei 12 Monaten Laufzeit',
+  rechnungen:  '12 monatliche Rechnungen.',
+  verlaengerung:
+    'Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, '
+    + 'sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst.',
+  kuendigung:
+    'Die Kündigung geht schriftlich per E-Mail oder Brief.',
+};
 
 export const MITGLIEDSCHAFTEN = [
   {
@@ -196,8 +201,9 @@ export const WEITERE = [
    § 6 der AGB nennen. Wer die AGB aendert, aendert diese Zeilen mit.       */
 export const BEDINGUNGEN = [
   'Abrechnung monatlich im Voraus per SEPA-Lastschrift.',
-  'Laufzeit nach Wahl: 1, 3, 6 oder 12 Monate.',
-  'Danach läuft der Vertrag monatlich weiter, Kündigung mit einem Monat Frist zum Laufzeitende.',
+  `Laufzeit 12 Monate, ${LAUFZEIT.rechnungen.replace(/\.$/, '')}.`,
+  LAUFZEIT.verlaengerung,
+  LAUFZEIT.kuendigung,
   `Einmalig ${euro(AUFNAHME)} Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.`,
   'Early Bird gilt für die gesamte Vertragslaufzeit.',
 ];
@@ -223,10 +229,11 @@ export const FRAGEN = [
   },
   {
     f: 'Wie lange läuft der Vertrag und wie kündige ich?',
-    /* AGB § 3 Abs. 2 und § 6 Abs. 1 */
-    a: 'Du wählst 1, 3, 6 oder 12 Monate. Danach verlängert sich der Vertrag jeweils um '
-     + 'einen Monat, wenn du nicht mit einer Frist von einem Monat zum Laufzeitende '
-     + 'kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.',
+    /* AGB § 2 Abs. 2 und § 6 Abs. 1. Die drei kuerzeren Laufzeiten, die
+       § 2 Abs. 2 ebenfalls nennt, stehen hier nicht: verkauft wird nur
+       der Zwoelfmonatsvertrag. */
+    a: `Die Laufzeit beträgt 12 Monate, abgerechnet in 12 monatlichen Rechnungen. `
+     + `${LAUFZEIT.verlaengerung} ${LAUFZEIT.kuendigung}`,
   },
   {
     f: 'Wie lange gilt der Early-Bird-Preis?',

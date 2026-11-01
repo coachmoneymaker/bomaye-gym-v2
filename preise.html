@@ -228,7 +228,7 @@
         "name": "Wie lange läuft der Vertrag und wie kündige ich?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Du wählst 1, 3, 6 oder 12 Monate. Danach verlängert sich der Vertrag jeweils um einen Monat, wenn du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief."
+          "text": "Die Laufzeit beträgt 12 Monate, abgerechnet in 12 monatlichen Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief."
         }
       },
       {
@@ -605,10 +605,30 @@
     line-height: 0.9;
     color: var(--gold);
   }
-  .pr-karte__proMonat { font-family: var(--font-body); font-size: 0.9rem; color: rgba(245,240,232,0.72); }
-  .pr-karte__woche { font-family: var(--font-body); font-size: 0.92rem; color: rgba(245,240,232,0.8); margin: 8px 0 0; }
+  .pr-karte .pr-karte__proMonat { font-family: var(--font-body); font-size: 0.9rem; color: rgba(245,240,232,0.72); }
+  /* WARUM DIE SELEKTOREN EINEN ELTERNTEIL TRAGEN
+     Der Stilblock der Landeseiten weiter oben setzt ".seo-section p"
+     (Spezifitaet 0,1,1) auf 0.97rem und rgba(245,240,232,0.62). Eine
+     einzelne Klasse (0,1,0) verliert dagegen, und die ganze Karte stand
+     in einer Groesse: Monatsbetrag, Wochenpreis und Vertragstext sahen
+     gleich wichtig aus. Mit dem Elternteil davor gewinnen die Regeln hier.
+
+     Die Laufzeit steht direkt unter dem Monatsbetrag, nicht erst in den
+     Bedingungen: der Preis gilt nur fuer sie, und das muss am Preis
+     stehen, nicht zwanzig Zeilen tiefer. */
+  .pr-karte .pr-karte__laufzeit {
+    font-family: var(--font-body); font-size: 0.86rem; color: var(--gold);
+    margin: 4px 0 0; letter-spacing: 0.01em;
+  }
+  .pr-karte .pr-karte__woche { font-family: var(--font-body); font-size: 0.92rem; color: rgba(245,240,232,0.8); margin: 8px 0 0; }
+  /* Was der Vertrag bedeutet, woertlich aus § 2 Abs. 2 und § 6 Abs. 1. */
+  .pr-karte .pr-karte__vertrag {
+    font-family: var(--font-body); font-size: 0.8rem; line-height: 1.55;
+    color: rgba(245,240,232,0.55); margin: 10px 0 0;
+    padding: 10px 0 0; border-top: 1px solid rgba(245,240,232,0.1);
+  }
   .pr-karte__alt { color: rgba(245,240,232,0.45); text-decoration: line-through; }
-  .pr-karte__zusatz { font-family: var(--font-body); font-size: 0.86rem; color: rgba(245,240,232,0.62); margin: 10px 0 0; }
+  .pr-karte .pr-karte__zusatz { font-family: var(--font-body); font-size: 0.86rem; color: rgba(245,240,232,0.62); margin: 10px 0 0; }
   .pr-karte__marke {
     display: inline-block; margin: 14px 0 0; padding: 4px 10px;
     font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.12em;
@@ -684,7 +704,7 @@
   @media (min-width: 700px) {
     .pr-tab--dunkel thead th { color: rgba(245,240,232,0.55); border-bottom-color: rgba(245,240,232,0.2); }
   }
-  .pr-hinweis { font-family: var(--font-body); font-size: 0.86rem; line-height: 1.6; margin: 16px 0 0; }
+  .seo-section .pr-hinweis { font-family: var(--font-body); font-size: 0.86rem; line-height: 1.6; margin: 16px 0 0; }
 
   /* Drei Zusagen */
   .pr-zusagen { display: grid; gap: 14px; margin: 26px 0 0; }
@@ -873,11 +893,13 @@
               <span class="pr-karte__monat">75,60 €</span>
               <span class="pr-karte__proMonat">im Monat</span>
             </p>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
             <p class="pr-karte__woche">
               18,90 € pro Woche,
               <span class="pr-karte__alt">regulär 22,90 € pro Woche</span>
             </p>
             <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
+            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
             <span class="pr-karte__marke">EARLY BIRD, DAUERHAFT</span>
             <ul>
               <li>Unbegrenzter Zugang zu allen Kursen</li>
@@ -898,11 +920,13 @@
               <span class="pr-karte__monat">63,60 €</span>
               <span class="pr-karte__proMonat">im Monat</span>
             </p>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
             <p class="pr-karte__woche">
               15,90 € pro Woche,
               <span class="pr-karte__alt">regulär 18,90 € pro Woche</span>
             </p>
             <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
+            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
             <span class="pr-karte__marke">EARLY BIRD, DAUERHAFT</span>
             <ul>
               <li>Kursplan für Jugendliche</li>
@@ -923,11 +947,13 @@
               <span class="pr-karte__monat">59,60 €</span>
               <span class="pr-karte__proMonat">im Monat</span>
             </p>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
             <p class="pr-karte__woche">
               14,90 € pro Woche,
               <span class="pr-karte__alt">regulär 17,90 € pro Woche</span>
             </p>
             <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
+            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
             <span class="pr-karte__marke">EARLY BIRD, DAUERHAFT</span>
             <ul>
               <li>Kursplan speziell für Kinder</li>
@@ -944,8 +970,9 @@
         <!-- PREISE:BEDINGUNGEN -->
         <ul class="pr-bedingungen reveal" aria-label="Vertragsbedingungen">
           <li>Abrechnung monatlich im Voraus per SEPA-Lastschrift.</li>
-          <li>Laufzeit nach Wahl: 1, 3, 6 oder 12 Monate.</li>
-          <li>Danach läuft der Vertrag monatlich weiter, Kündigung mit einem Monat Frist zum Laufzeitende.</li>
+          <li>Laufzeit 12 Monate, 12 monatliche Rechnungen.</li>
+          <li>Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst.</li>
+          <li>Die Kündigung geht schriftlich per E-Mail oder Brief.</li>
           <li>Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.</li>
           <li>Early Bird gilt für die gesamte Vertragslaufzeit.</li>
         </ul>
@@ -983,19 +1010,19 @@
                   <th scope="row">Einzelsession</th>
                   <td data-spalte="Preis">125 €</td>
                   <td data-spalte="pro Einheit">125 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">5er Karte</th>
                   <td data-spalte="Preis">575 €</td>
                   <td data-spalte="pro Einheit">115 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">10er Karte</th>
                   <td data-spalte="Preis">1.050 €</td>
                   <td data-spalte="pro Einheit">105 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
               </tbody>
             </table>
@@ -1010,19 +1037,19 @@
                   <th scope="row">Einzelsession</th>
                   <td data-spalte="Preis">90 €</td>
                   <td data-spalte="pro Einheit">90 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">5er Karte</th>
                   <td data-spalte="Preis">425 €</td>
                   <td data-spalte="pro Einheit">85 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">10er Karte</th>
                   <td data-spalte="Preis">800 €</td>
                   <td data-spalte="pro Einheit">80 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
               </tbody>
             </table>
@@ -1112,7 +1139,7 @@
           </details>
           <details>
             <summary>Wie lange läuft der Vertrag und wie kündige ich?</summary>
-            <div class="pr-faq__a">Du wählst 1, 3, 6 oder 12 Monate. Danach verlängert sich der Vertrag jeweils um einen Monat, wenn du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</div>
+            <div class="pr-faq__a">Die Laufzeit beträgt 12 Monate, abgerechnet in 12 monatlichen Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</div>
           </details>
           <details>
             <summary>Wie lange gilt der Early-Bird-Preis?</summary>

@@ -9,7 +9,7 @@
      node scripts/preise-bauen.mjs --pruefen  meldet nur, was sich aendern wuerde
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, writeFile } from 'node:fs/promises';
-import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, euro }
+import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro }
   from './preise-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
@@ -42,11 +42,13 @@ function karten() {
               <span class="pr-karte__monat">${esc(euro(m.monat))}</span>
               <span class="pr-karte__proMonat">im Monat</span>
             </p>
+            <p class="pr-karte__laufzeit">${esc(LAUFZEIT.kurz)}</p>
             <p class="pr-karte__woche">
               ${esc(euro(m.woche))} pro Woche,
               <span class="pr-karte__alt">regulär ${esc(euro(m.regulaer))} pro Woche</span>
             </p>
             <p class="pr-karte__zusatz">+ ${esc(euro(AUFNAHME))} einmalig, inkl. Fighter-Kit</p>
+            <p class="pr-karte__vertrag">${esc(LAUFZEIT.rechnungen)} ${esc(LAUFZEIT.verlaengerung)} ${esc(LAUFZEIT.kuendigung)}</p>
             <span class="pr-karte__marke">EARLY BIRD, DAUERHAFT</span>
             <ul>
 ${m.leistungen.map((l) => `              <li>${esc(l)}</li>`).join('\n')}
@@ -80,7 +82,7 @@ ${gruppe.zeilen.map((z) => `                <tr>
                   <th scope="row">${esc(z.name)}</th>
                   <td data-spalte="Preis">${esc(euro(z.preis))}</td>
                   <td data-spalte="pro Einheit">${esc(euro(z.proEinheit))}</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>`).join('\n')}
               </tbody>
             </table>
