@@ -241,7 +241,12 @@ for (const name of dateien) {
     text = text.replace(
       /(<span class="pt-hero__note">)<b>[^<]*<\/b>[^<]*(<\/span>)/,
       `$1<b>${BEWERTUNG.wert}</b> · ${BEWERTUNG.anzahl} Bewertungen auf Google$2`);
-    if (text !== vorZahl) tat.push('Bewertung auf /probetraining gesetzt');
+    /* Der Stand steht auch hier sichtbar, nicht nur auf der Startseite.
+       Eigene Zeile, siehe .pt-hero__stand in probetraining-page.css. */
+    text = text.replace(
+      /(<span class="pt-hero__stand">)[^<]*(<\/span>)/,
+      `$1Stand ${BEWERTUNG.stand}$2`);
+    if (text !== vorZahl) tat.push('Bewertung und Stand auf /probetraining gesetzt');
   }
 
   if (text !== vorher) {

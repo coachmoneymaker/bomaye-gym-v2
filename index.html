@@ -117,6 +117,7 @@
         "sameAs": [
           "https://www.instagram.com/bomayegym_munich",
           "https://www.tiktok.com/@bomayegym_munich",
+          "https://www.youtube.com/@BomayeGymMunich",
           "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
           "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
         ]
@@ -143,8 +144,8 @@
         },
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": 48.1472,
-          "longitude": 11.5235
+          "latitude": 48.145755,
+          "longitude": 11.5227558
         },
         "hasMap": "https://www.google.com/maps/place/?q=place_id:ChIJS-tzVKp3nkcRbCHhKzfqVQQ",
         "openingHoursSpecification": [
@@ -176,6 +177,7 @@
         "sameAs": [
           "https://www.instagram.com/bomayegym_munich",
           "https://www.tiktok.com/@bomayegym_munich",
+          "https://www.youtube.com/@BomayeGymMunich",
           "https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484",
           "https://play.google.com/store/apps/details?id=com.bsport_799__5473"
         ]
@@ -2181,19 +2183,26 @@ body[data-modal-open="true"] { overflow: hidden; }
       <div style="display:flex;align-items:baseline;gap:14px;justify-content:center;">
         <span style="color:#C9A84C;font-size:22px;letter-spacing:4px;">★★★★★</span>
         <!-- HANDWERT — keine Live-Daten. Diese Zahl wird NICHT von Google
-             abgerufen, sie steht hier fest im Quelltext. Ändert sich die
-             Bewertung im Google-Unternehmensprofil, muss sie hier von Hand
-             nachgezogen werden; sonst steht auf der Startseite eine Zahl,
-             die es so nicht mehr gibt. Stand: 16.09.2026. Dasselbe gilt für
-             die drei Rezensionstexte darunter. -->
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">4,9</span>
+             abgerufen. Sie steht einmal in BEWERTUNG in
+             scripts/seo-daten.mjs und wird von dort hierher und nach
+             /probetraining geschrieben:
+                 node scripts/seo-bauen.mjs
+             Von Hand geändert gehört sie also dort, nicht hier — hier wird
+             sie beim nächsten Lauf überschrieben. Der Stand steht sichtbar
+             in der Zeile darunter, damit niemand die Zahl für einen
+             Live-Wert hält. Dasselbe gilt für die drei Rezensionstexte
+             darunter: auch die sind von Hand gepflegt. -->
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">5,0</span>
       </div>
       <!-- Der Stand stand bisher NUR im Kommentar darueber, also nur fuer
            uns. Jetzt steht er fuer den Besucher da: eine Bewertung ohne
            Datum liest sich wie ein Live-Wert, und das ist sie nicht.
-           Aendert sich die Zahl, aendern sich hier BEIDE Angaben. -->
+           Zahl und Datum kommen beide aus BEWERTUNG in
+           scripts/seo-daten.mjs und koennen deshalb nicht auseinander
+           laufen. Dieselben zwei Angaben stehen im ersten Bildschirm von
+           /probetraining. -->
       <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(245,240,232,0.45);letter-spacing:0.02em;">
-        Google-Bewertung, Stand 16.09.2026
+        Google-Bewertung, Stand 01.11.2026
       </span>
     </div>
 
@@ -2315,7 +2324,7 @@ body[data-modal-open="true"] { overflow: hidden; }
     <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
 
       <!-- All reviews — verified short link -->
-      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.147356,11.5224959,17z/data=!4m8!3m7!1s0x479e77aa5473eb4b:0x455ea372be1216c!8m2!3d48.147356!4d11.5224959!9m1!1b1!16s%2Fg%2F11n9hgvl29!18m1!1e1?entry=ttu"
+      <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.145755,11.5227558,17z/data=!4m8!3m7!1s0x479e77aa5473eb4b:0x455ea372be1216c!8m2!3d48.145755!4d11.5227558!9m1!1b1!16s%2Fg%2F11n9hgvl29!18m1!1e1?entry=ttu"
          target="_blank"
          rel="noopener noreferrer"
          style="display:inline-block;background:linear-gradient(180deg,#D0A040 0%,#B08030 100%);color:#0A0A08;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;padding:15px 40px;text-decoration:none;">
@@ -2755,6 +2764,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <p class="brand-line">Pineapple Park · 80639 München</p>
           <div class="footer-socials">
             <a href="https://www.instagram.com/bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="icon" aria-hidden="true"><svg><use href="#i-instagram"/></svg></i></a>
+            <a href="https://www.youtube.com/@BomayeGymMunich" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube"><i class="icon" aria-hidden="true"><svg><use href="#i-youtube"/></svg></i></a>
             <a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i></a>
             <a href="https://wa.me/491737513627" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp"><i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i></a>
           </div>

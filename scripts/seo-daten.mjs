@@ -54,24 +54,14 @@ export const ADRESSE = {
 export const TELEFON = '+491737513627';
 export const EMAIL = 'support@bomayegym.com';
 
-/* ── TODO-OWNER: GEO UND OEFFNUNGSZEITEN GEGENPRUEFEN ────────────────────
-   Beide Werte stehen unveraendert so, wie sie im Repo standen. Sie sind
-   NICHT gegen eine Quelle geprueft:
+/* ── Oeffnungszeiten ─────────────────────────────────────────────────────
+   TODO-OWNER: Die Zeiten unten stehen unveraendert so, wie sie im Repo
+   standen, und sind NICHT gegen das Google-Unternehmensprofil geprueft.
+   Weichen Schema und Profil voneinander ab, zeigt Google die Profilzeiten
+   und wertet die Abweichung als Zeichen fuer veraltete Daten.
 
-     1. geo (48.1472 / 11.5235) mit der Stecknadel im Google-
-        Unternehmensprofil vergleichen. Der Kartenlink unten zeigt auf
-        48.147356 / 11.5224959 - also rund 30 m daneben. Eine der beiden
-        Angaben ist falsch, und maßgeblich ist, wohin die Stecknadel im
-        Profil zeigt.
-     2. openingHoursSpecification mit den Zeiten im Google-
-        Unternehmensprofil vergleichen. Weichen Schema und Profil
-        voneinander ab, zeigt Google die Profilzeiten und wertet die
-        Abweichung als Signal fuer veraltete Daten.
-
-   Bis das geprueft ist, bleibt beides unangetastet: lieber der bekannte
-   Stand als ein geratener neuer. */
-/* Gebaut aus GEO_BREITE und GEO_LAENGE ganz unten in dieser Datei -
-   dort stehen die zwei Zahlen, die der Betreiber setzt. */
+   Die Koordinaten sind seit dem 01.11.2026 geklaert, siehe GEO_BREITE und
+   GEO_LAENGE am Ende dieser Datei. */
 export const GEO = { '@type': 'GeoCoordinates',
   get latitude() { return GEO_BREITE; },
   get longitude() { return GEO_LAENGE; } };
@@ -92,13 +82,21 @@ export const LOGO = BASIS + '/assets/images/bomaye-logo.webp';
 export const BILD = BASIS + '/assets/images/gym-hall.webp';
 
 /* ── sameAs ──────────────────────────────────────────────────────────────
-   HIER STAND https://www.youtube.com/@bomayegym UND DAS WAR EIN 404.
-   Ein sameAs auf eine Seite, die es nicht gibt, hilft keiner Suchmaschine
-   bei der Zuordnung und kann die Verknuepfung der Profile schwaechen.
-   Wieder aufnehmen, sobald es den Kanal gibt. */
+   Die Profile, die zur Marke gehoeren. Google nutzt sie, um das
+   Unternehmen den Profilen zuzuordnen.
+
+   HIER STAND https://www.youtube.com/@bomayegym UND DAS WAR EIN 404. Der
+   Betreiber hat am 01.11.2026 den richtigen Kanal geliefert:
+   @BomayeGymMunich. Gross- und Kleinschreibung ist bei YouTube-Handles
+   Teil der Adresse, also genau so uebernehmen.
+
+   Dieselbe Liste steht sichtbar im Fuss jeder Seite. Wer hier etwas
+   aendert, aendert auch die Icon-Reihe .footer-socials in den HTML-Dateien;
+   das Skript schreibt nur den @graph, nicht den Fuss. */
 export const SAME_AS = [
   'https://www.instagram.com/bomayegym_munich',
   'https://www.tiktok.com/@bomayegym_munich',
+  'https://www.youtube.com/@BomayeGymMunich',
   'https://apps.apple.com/de/app/bomaye-gym-munich/id6784623484',
   'https://play.google.com/store/apps/details?id=com.bsport_799__5473',
 ];
@@ -307,39 +305,46 @@ SEITEN['kinderboxen-muenchen.html'] = {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── 1. Der Standort ─────────────────────────────────────────────────────
-   TODO-OWNER: DIESE ZWEI ZAHLEN AUS DEM GOOGLE-UNTERNEHMENSPROFIL EINTRAGEN.
-   Das Profil ist die maßgebliche Quelle - weicht das Schema davon ab, wertet
-   Google das als Zeichen fuer veraltete Daten.
+   Die Stecknadel aus dem Google-Unternehmensprofil, vom Betreiber am
+   01.11.2026 geliefert. Das Profil ist die maßgebliche Quelle: weicht das
+   Schema davon ab, wertet Google das als Zeichen fuer veraltete Daten.
 
-   Die Zahlen unten sind der ALTE Stand aus dem Repo und noch nicht geprueft.
-   Zum Vergleich: der Kartenlink der Startseite zeigt auf
-   48.147356 / 11.5224959, also rund 30 m daneben. Eine der beiden Angaben
-   ist falsch.
-
-   Sonst ist nichts zu tun: GEO und der hasMap-Link weiter unten werden
-   daraus gebaut, danach einmal
-     node scripts/seo-bauen.mjs && node scripts/seo-pruefen.mjs           */
-export const GEO_BREITE = 48.1472;    /* TODO-OWNER: Wert aus dem Profil */
-export const GEO_LAENGE = 11.5235;    /* TODO-OWNER: Wert aus dem Profil */
+   HIER STANDEN DREI VERSCHIEDENE ORTE, UND ZWEI WAREN FALSCH:
+     48.1472   / 11.5235      im Schema, auf 23 Seiten
+     48.147356 / 11.5224959   im Kartenlink der Startseite, 30 m daneben
+     48.1408   / 11.5358      in assets/js/config.js, Stecknadel der
+                              OpenStreetMap-Karte - 1,2 km daneben
+   Jetzt steht der Wert an genau einer Stelle, und alle drei Orte holen ihn
+   sich von hier. Wer ihn aendert, laesst danach
+   "node scripts/seo-bauen.mjs" laufen - das schreibt Schema und
+   Kartenlink; config.js wird von Hand nachgezogen, dort steht der Wert im
+   Kommentar als Verweis. */
+export const GEO_BREITE = 48.145755;
+export const GEO_LAENGE = 11.5227558;
 
 /* ── 2. Die Google-Bewertung ─────────────────────────────────────────────
-   TODO-OWNER: WERT, ANZAHL UND STAND EINTRAGEN.
+   Vom Betreiber am 01.11.2026 geliefert.
+
+   DIESE ZAHLEN WERDEN VON HAND GEPFLEGT. Nichts im Repo ruft das
+   Google-Unternehmensprofil ab, und niemand aktualisiert sie automatisch.
+   Wer sie aendert, aendert die drei Zeilen unten - wert, anzahl UND stand -
+   und laesst danach "node scripts/seo-bauen.mjs" laufen. Das Datum ohne die
+   Zahl nachzuziehen ist schlimmer als ein altes Datum: dann behauptet die
+   Seite Aktualitaet, die sie nicht hat.
 
    Vorher stand die Bewertung an zwei Stellen mit zwei verschiedenen Zahlen:
    die Startseite zeigte 4.9 ohne sichtbares Datum, /probetraining
    "5,0 · 204 Bewertungen auf Google". Mindestens eine davon war falsch, und
    gemerkt haette es niemand.
 
-   Jetzt stehen sie hier, und seo-bauen.mjs traegt sie auf beiden Seiten ein.
-   Der Stand steht auf beiden Seiten sichtbar: eine Bewertung ohne Datum
-   liest sich wie ein Live-Wert, und das ist sie nicht - abgerufen wird
-   nichts, die Zahl ist von Hand gepflegt.
+   Der Stand steht auf BEIDEN Seiten sichtbar: eine Bewertung ohne Datum
+   liest sich wie ein Live-Wert, und das ist sie nicht.
 
    Deutsche Schreibweise mit Komma. KEIN AggregateRating im Schema: dafuer
    muesste die Zahl nachpruefbar aus einer Quelle kommen, und sie kommt von
    Hand.                                                                   */
 export const BEWERTUNG = {
-  wert:   '4,9',          /* TODO-OWNER: Durchschnitt aus dem Profil */
-  anzahl: '204',          /* TODO-OWNER: Anzahl der Bewertungen */
-  stand:  '16.09.2026',   /* TODO-OWNER: Datum des Abrufs */
+  wert:   '5,0',          /* Durchschnitt im Google-Unternehmensprofil */
+  anzahl: '218',          /* Anzahl der Bewertungen */
+  stand:  '01.11.2026',   /* Tag, an dem beides abgelesen wurde */
 };

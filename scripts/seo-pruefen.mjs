@@ -13,7 +13,7 @@
         #gym-Knoten, beide MIT www.
      3. Keine Kennung ohne www, nirgends.
      4. Jede @id-Verweisung zeigt auf einen Knoten, den es gibt.
-     5. Kein sameAs auf den YouTube-Kanal (404).
+     5. Der alte YouTube-Kanal @bomayegym (404) kommt nirgends mehr vor.
      6. Titel hoechstens 60 Zeichen, Beschreibung 120 bis 155.
      7. og:title und og:description gleichlautend mit title und description.
      8. Auf /faq stimmen die Fragen im HTML mit denen im FAQPage-Schema
@@ -88,17 +88,23 @@ for (const name of dateien) {
     }
   }
 
-  /* ── 5. Kein toter YouTube-Kanal in sameAs ──────────────────────────────
-     Geprueft wird NUR sameAs, nicht die ganze Seite: derselbe Link steht auf
-     20 Seiten auch als Symbol im Fuss. Der ist ein 404 und gehoert weg, aber
-     das ist eine sichtbare Aenderung am Seitenfuss und gehoerte nicht zum
-     Auftrag - siehe TODO-OWNER in der PR-Beschreibung. */
-  for (const k of knoten) {
-    const sa = k.sameAs;
-    const liste = Array.isArray(sa) ? sa : (sa ? [sa] : []);
-    if (liste.some((u) => /youtube\.com\/@bomayegym/.test(String(u)))) {
-      melde(name, `sameAs von ${k['@type']} zeigt auf den YouTube-Kanal (404)`);
-    }
+  /* ── 5. Der alte, tote YouTube-Kanal kommt nirgends mehr vor ────────────
+     youtube.com/@bomayegym war ein 404 und stand an zwei Stellen: in sameAs
+     und als Symbol im Fuss. Der richtige Kanal ist @BomayeGymMunich.
+
+     Geprueft wird die ganze Datei, nicht nur sameAs - der Fuss ist die
+     Stelle, an der ein Besucher den toten Link anklickt.
+
+     Das Muster ist genauer, als es aussieht, und das ist Absicht. Es gibt
+     drei Handles, die mit denselben Zeichen anfangen:
+       @bomayegym          der alte, tote Kanal        -> Befund
+       @bomayegym_munich   Instagram und TikTok        -> kein Befund
+       @BomayeGymMunich    der richtige YouTube-Kanal  -> kein Befund
+     Deshalb: nach "@bomayegym" darf kein weiteres Wortzeichen folgen, und
+     verglichen wird GROSS/klein-genau. Ein schlichtes grep auf "@bomayegym"
+     meldet alle drei. */
+  if (/youtube\.com\/@bomayegym(?![A-Za-z0-9_-])/.test(text)) {
+    melde(name, 'der alte YouTube-Kanal @bomayegym (404) steht noch in der Datei');
   }
 
   if (!indexierbar) continue;

@@ -445,8 +445,11 @@ function loadMap() {
   const gate  = document.getElementById('map-gate');
   const frame = document.getElementById('map-frame');
   if (!frame) return;
-  const lat   = (typeof BOMAYE !== 'undefined') ? BOMAYE.address.mapLat : 48.1408;
-  const lon   = (typeof BOMAYE !== 'undefined') ? BOMAYE.address.mapLon : 11.5358;
+  /* Die Rueckfallwerte muessen zu config.js passen, sonst zeigt die Karte
+     ohne geladene Konfiguration woanders hin. Beide standen auf
+     48.1408 / 11.5358 und damit 1,2 km neben dem Gym. */
+  const lat   = (typeof BOMAYE !== 'undefined') ? BOMAYE.address.mapLat : 48.145755;
+  const lon   = (typeof BOMAYE !== 'undefined') ? BOMAYE.address.mapLon : 11.5227558;
   const bboxW = (lon - 0.01).toFixed(4), bboxE = (lon + 0.01).toFixed(4);
   const bboxS = (lat - 0.005).toFixed(4), bboxN = (lat + 0.005).toFixed(4);
   frame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bboxW}%2C${bboxS}%2C${bboxE}%2C${bboxN}&layer=mapnik&marker=${lat}%2C${lon}`;

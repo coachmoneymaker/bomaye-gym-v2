@@ -841,6 +841,24 @@ body.bsport-modal-open .pt-sticky {
   white-space: nowrap;
 }
 .pt-hero__note b { font-weight: 700; color: #F5F0E8; }
+
+/* Der Stand der Bewertung, sichtbar statt nur im Kommentar. Eine Zahl ohne
+   Datum liest sich wie ein Live-Wert; abgerufen wird hier nichts, die Zahl
+   steht fest in scripts/seo-daten.mjs und wird von Hand gepflegt.
+
+   flex: 0 0 100% erzwingt die eigene Zeile. In derselben Zeile ginge es
+   nicht: .pt-hero__note traegt white-space: nowrap und braucht auf 320px
+   schon fast die ganze Breite, das Datum daneben wuerde ueberlaufen.
+   Kleiner und blasser als die Zahl selbst, damit die Zeile die Bewertung
+   nicht ueberschreit.                                                      */
+.pt-hero__stand {
+  flex: 0 0 100%;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: rgba(245, 240, 232, 0.7);
+  letter-spacing: 0.02em;
+}
 .pt-hero__google:hover .pt-hero__note,
 .pt-hero__google:focus-visible .pt-hero__note {
   text-decoration: underline;
