@@ -250,11 +250,28 @@ export const SEITEN = {
   },
   'kickboxen-muenchen.html': {
     titel: 'Kickboxen München',
-    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene — Training mit Kickbox-Weltmeister Alfonso Fusco. Jetzt Early-Bird-Platz im Bomaye Gym sichern.',
+    /* Hier stand "Training mit Kickbox-Weltmeister Alfonso Fusco". Eine
+       Aussage ueber eine einzelne Person mit Titel, und zwar in der
+       Beschreibung, die Google als Textauszug zeigt. Sie faellt nach
+       derselben Regel weg wie der alte Titel von /coaches: nicht
+       nachpruefbar aus dem Repo, und sie veraltet still, wenn der Trainer
+       geht. Die Early-Bird-Erwaehnung bleibt OHNE Zahl, sonst muesste der
+       Preis hier gepflegt werden. */
+    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit und Kondition. Early-Bird, solange Plätze frei sind.',
   },
   'personal-training-boxen-muenchen.html': {
     titel: 'Personal Training Boxen München',
-    beschr: 'Personal Training Boxen München: 1:1 Boxtraining mit Olympic Coach und Kickbox-Weltmeister. 60 Minuten 125 €, Mitglieder 90 €. Termin online buchen.',
+    /* Hier stand "1:1 Boxtraining mit Olympic Coach und Kickbox-Weltmeister".
+       Zwei Titel, und im Gym gibt es genau zwei Gruender - die Aussage zeigt
+       also auf zwei benannte Personen, auch ohne die Namen zu nennen. Faellt
+       nach derselben Regel weg wie bei /kickboxen-muenchen.
+
+       Jede Angabe unten steht sichtbar auf der Seite: "60 Minuten · 125 € pro
+       Session · Mitglieder 90 €" im ersten Bildschirm, "NUR DU UND DEIN
+       COACH", "Termine auch vormittags und mittags. Online buchen".
+       ACHTUNG, PREISE: 125 und 90 stimmen mit der Seite ueberein. Aendern
+       sich die Preise dort, aendert sich diese Zeile mit. */
+    beschr: 'Personal Training Boxen München: 60 Minuten eins zu eins mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen.',
   },
   'downloads.html': {
     titel: 'Downloads',
