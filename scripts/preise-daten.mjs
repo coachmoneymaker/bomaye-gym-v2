@@ -333,4 +333,10 @@ export const FLEX_FRAGE = {
    selbst. Die Vorgabe steht im Kopf jeder Seite auf denied, dazu
    ads_data_redaction true. Googles Tag entscheidet daraufhin selbst, ob es
    eine vollstaendige Konversion oder nur einen cookielosen Ping sendet.   */
-export const ADS_CHECKOUT_SEND_TO = '';
+export const ADS_CHECKOUT_SEND_TO = 'AW-18136756611/qeVXCKXiobAdEIPjo8hD';
+/* Conversion-Action "Checkout gestartet", Konto 679-214-0688, Kategorie
+   "Bezahlvorgang starten", SEKUNDAER und nicht in den Kontozielen. Damit
+   zaehlt sie in Berichten mit, steuert aber kein Gebot. Eingetragen am
+   01.11.2026 vom Betreiber geliefert, zeichenweise gegengeprueft:
+   nach "qeVXCKX" folgt "iobA", und das I in "EIP" ist ein grosses I
+   (U+0049), kein kleines L. */
