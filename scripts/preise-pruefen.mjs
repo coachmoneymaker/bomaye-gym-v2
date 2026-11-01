@@ -14,12 +14,15 @@
      7. Flex: Betraege, gerechnete Ersparnis, Vertragskennungen und die drei
         Kaufadressen stimmen mit den Daten. Steht FLEX_AKTIV auf false, darf
         von Flex nichts auf der Seite stehen.
+     8. Jeder Paketknopf traegt die Messattribute, und die Zahlen darin
+        stimmen mit preise-daten.mjs ueberein.
 
      node scripts/preise-pruefen.mjs
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile } from 'node:fs/promises';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro,
-         FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis } from './preise-daten.mjs';
+         FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis,
+         ADS_CHECKOUT_SEND_TO } from './preise-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const befunde = [];
@@ -125,7 +128,90 @@ if (!FLEX_AKTIV) {
   if (!sichtbar.includes(FLEX_FRAGE.f)) melde('Die Flex-Frage fehlt im sichtbaren FAQ');
 }
 
+/* ── 8. Messattribute an den Paketknoepfen ────────────────────────────────
+   plan-tracking.js tippt keine Zahl selbst, es liest diese Attribute. Fehlt
+   eines oder weicht es ab, meldet die Seite stillschweigend falsche Preise
+   an GA4 und Meta - und das faellt sonst erst in der Auswertung auf, wenn
+   die Zahlen schon gesammelt sind.                                       */
+const knopfVon = (html, kennung) => {
+  const m = html.match(new RegExp(`<a[^>]*data-abo-contract="${kennung}"[^>]*>`, 's'));
+  return m ? m[0] : null;
+};
+const attrVon = (tag, name) => {
+  const m = tag.match(new RegExp(`${name}="([^"]*)"`));
+  return m ? m[1] : null;
+};
+const SEITEN_MIT_KNOEPFEN = [['preise.html', sichtbar], ['index.html', startseite],
+                             ['mitglied-werden.html', await readFile(WURZEL + '/mitglied-werden.html', 'utf8')]];
+let geprueftAttr = 0;
+for (const [datei, html] of SEITEN_MIT_KNOEPFEN) {
+  for (const m of MITGLIEDSCHAFTEN) {
+    const tag = knopfVon(html, m.contract);
+    if (!tag) { melde(`${datei}: Paketknopf ${m.contract} nicht gefunden`); continue; }
+    const soll = {
+      'data-item-category': 'membership_earlybird',
+      'data-item-name': m.name,
+      'data-price': m.monat.toFixed(2),
+      'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
+      'data-offer': 'earlybird',
+      'data-ga-event': 'begin_checkout',
+    };
+    for (const [k, v] of Object.entries(soll)) {
+      const ist = attrVon(tag, k);
+      if (ist !== v) melde(`${datei}, Knopf ${m.contract}: ${k} ist "${ist}", erwartet "${v}"`);
+      else geprueftAttr++;
+    }
+  }
+}
+if (FLEX_AKTIV) {
+  for (const f of FLEX) {
+    const tag = knopfVon(sichtbar, f.contract);
+    if (!tag) { melde(`preise.html: Flex-Knopf ${f.contract} nicht gefunden`); continue; }
+    const soll = {
+      'data-item-category': 'membership_flex',
+      'data-item-name': f.name,
+      'data-price': f.monat.toFixed(2),
+      'data-first-payment': (f.monat + AUFNAHME).toFixed(2),
+      'data-offer': 'flex',
+      'data-ga-event': 'begin_checkout',
+    };
+    for (const [k, v] of Object.entries(soll)) {
+      const ist = attrVon(tag, k);
+      if (ist !== v) melde(`preise.html, Flex-Knopf ${f.contract}: ${k} ist "${ist}", erwartet "${v}"`);
+      else geprueftAttr++;
+    }
+  }
+}
+/* Die Pass-Knoepfe tragen den bsport-Namen, nicht den Alltagsnamen. */
+for (const w of WEITERE) {
+  const m = sichtbar.match(new RegExp(`<a[^>]*data-item-id="${w.id}"[^>]*>`, 's'));
+  if (!m) { melde(`preise.html: Pass-Knopf "${w.id}" ohne Messattribute`); continue; }
+  if (attrVon(m[0], 'data-ga-event') !== 'select_item')
+    melde(`preise.html, Pass "${w.id}": data-ga-event ist "${attrVon(m[0], 'data-ga-event')}", erwartet "select_item" (der Knopf fuehrt auf ${w.ziel}, nicht in einen Checkout)`);
+  else if (attrVon(m[0], 'data-item-name') !== w.bsport)
+    melde(`preise.html, Pass "${w.id}": data-item-name ist "${attrVon(m[0], 'data-item-name')}", erwartet "${w.bsport}"`);
+  else if (attrVon(m[0], 'data-price') !== w.preis.toFixed(2))
+    melde(`preise.html, Pass "${w.id}": data-price ist "${attrVon(m[0], 'data-price')}", erwartet "${w.preis.toFixed(2)}"`);
+  else geprueftAttr += 2;
+}
+
+/* Die Ads-Kennung steht entweder nirgends oder ueberall gleich.
+   Hier zaehlt die GANZE Datei, nicht nur <main>: der Skript-Tag steht
+   darunter, am Ende des Rumpfes. */
+const GANZ = [['preise.html', seite], ['index.html', startseite],
+              ['mitglied-werden.html', await readFile(WURZEL + '/mitglied-werden.html', 'utf8')]];
+for (const [datei, html] of GANZ) {
+  const tag = html.match(/<script src="\/assets\/js\/plan-tracking\.js"[^>]*>/);
+  if (!tag) { melde(`${datei}: plan-tracking.js wird nicht geladen`); continue; }
+  const ist = attrVon(tag[0], 'data-ads-send-to');
+  if (ADS_CHECKOUT_SEND_TO && ist !== ADS_CHECKOUT_SEND_TO)
+    melde(`${datei}: data-ads-send-to ist "${ist}", erwartet "${ADS_CHECKOUT_SEND_TO}"`);
+  if (!ADS_CHECKOUT_SEND_TO && ist !== null)
+    melde(`${datei}: ADS_CHECKOUT_SEND_TO ist leer, am Skript-Tag steht aber "${ist}"`);
+}
+
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`
+  + `, ${geprueftAttr} Messattribute`
   + `, Flex ${FLEX_AKTIV ? 'an (' + FLEX.length + ' Angebote)' : 'aus'} geprueft.`);
 if (befunde.length) {
   console.log('\n' + befunde.map((b) => '  • ' + b).join('\n'));

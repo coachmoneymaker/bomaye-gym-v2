@@ -2490,6 +2490,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <li>Strukturiertes Training für 6–9-Jährige</li>
         </ul>
         <a href="/mitglied-werden#packages" data-abo-contract="45432"
+           data-ga-event="begin_checkout" data-item-category="membership_earlybird" data-item-name="Kids" data-price="59.60" data-first-payment="159.60" data-plan="kids" data-offer="earlybird"
            class="mw-card-btn">MITGLIED WERDEN</a>
       </article>
       <article class="mw-card mw-card--popular reveal" aria-label="Unlimited Paket — Most Popular">
@@ -2511,6 +2512,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <li>Echte Struktur. Echte Coaches.</li>
         </ul>
         <a href="/mitglied-werden#packages" data-abo-contract="45433"
+           data-ga-event="begin_checkout" data-item-category="membership_earlybird" data-item-name="Unlimited" data-price="75.60" data-first-payment="175.60" data-plan="unlimited" data-offer="earlybird"
            class="mw-card-btn">JETZT MITGLIED WERDEN</a>
       </article>
       <article class="mw-card mw-card--youth reveal" aria-label="Youth Paket">
@@ -2531,6 +2533,7 @@ body[data-modal-open="true"] { overflow: hidden; }
           <li>Starke Community von Anfang an</li>
         </ul>
         <a href="/mitglied-werden#packages" data-abo-contract="45434"
+           data-ga-event="begin_checkout" data-item-category="membership_earlybird" data-item-name="Youth" data-price="63.60" data-first-payment="163.60" data-plan="youth" data-offer="earlybird"
            class="mw-card-btn">MITGLIED WERDEN</a>
       </article>
     </div>
@@ -3143,6 +3146,9 @@ function MountBsportWidget(config, repeat=1) {
      Knopf in der Ecke, 8px Polsterung, der Rahmen scrollte selbst. -->
 
 <script src="/assets/js/abo-embed.js"></script>
+<!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
+     Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
+<script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
 <!-- DIAGNOSE NUR MIT ?ptdom=1
      Bewusst nachgeladen statt fest eingebunden: ohne den Parameter entsteht
      keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
