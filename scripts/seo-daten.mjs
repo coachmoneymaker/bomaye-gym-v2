@@ -175,11 +175,11 @@ export const ALTE_IDS = [
 
    WAS HIER BEWUSST NICHT STEHT
    Keine erfundene Zahl, kein Preis, der nicht auf der Seite steht, und keine
-   Aussage ueber einen einzelnen Trainer. Zwei Beschreibungen tragen solche
-   Aussagen noch (kickboxen-muenchen und personal-training-boxen-muenchen,
-   beide mit Namen und Titel eines Trainers). Sie stammen nicht von hier,
-   liegen in der Laenge und bleiben deshalb unangetastet - siehe TODO-OWNER
-   in der PR-Beschreibung.
+   Aussage ueber einen einzelnen Trainer. Die beiden Beschreibungen, die
+   solche Aussagen noch trugen (kickboxen-muenchen und
+   personal-training-boxen-muenchen, beide mit Namen oder Titel eines
+   Trainers), sind am 01.11.2026 neu geschrieben. Siehe die Kommentare an
+   den jeweiligen Eintraegen weiter unten.
    ═══════════════════════════════════════════════════════════════════════════ */
 export const SEITEN = {
   'index.html': {

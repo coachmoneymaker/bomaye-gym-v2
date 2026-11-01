@@ -141,9 +141,11 @@ export const MITGLIEDSCHAFTEN = [
    Stand 01.11.2026, gleichlautend mit der sichtbaren Preistabelle auf
    /personal-training-boxen-muenchen und mit assets/js/pricing.js.
 
-   TODO-OWNER: In bsport steht fuer die Zehnerkarte der Nichtmitglieder noch
-   1.090 €. Der Betreiber zieht das dort nach. Bis dahin weicht der Preis im
-   Buchungsfenster von dem auf dieser Seite ab.                            */
+   Die Zehnerkarte der Nichtmitglieder lief dreimal: 950 € im alten
+   pricing.js, 1.090 € auf der PT-Seite, dann 1.150 €. Der Betreiber hat am
+   01.11.2026 endgueltig 1.050 € entschieden; Repo und Seite stehen darauf.
+   Den Wert im bsport-Backoffice pflegt der Betreiber selbst, er ist von
+   hier aus nicht pruefbar.                                                */
 export const PT = {
   nicht: {
     label: 'Nichtmitglieder',
