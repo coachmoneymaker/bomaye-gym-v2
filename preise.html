@@ -566,15 +566,24 @@
     grid-template-columns: repeat(4, 1fr);
   }
   .pr-schalter li { margin: 0; }
+  /* MOBIL EINZEILIG, AUCH "PERSONAL TRAINING"
+     Mit 0.62rem und 1,6px Sperrung brauchte diese Beschriftung bei 320 bis
+     430px mehr Platz als das Viertel, das ihr im Raster zusteht, und
+     rutschte auf zwei Zeilen: die Leiste wurde dadurch 60 statt 44px hoch.
+     Gemessen wurde durchprobiert, nicht geschaetzt. Bei 360px und darueber
+     traegt 0.58rem mit 0,4px Sperrung (Text 77,8px in 84px Platz), bei
+     320px reicht das noch nicht, dort sind es 0.56rem mit 0,2px (72,4px in
+     76px). Die Beschriftung bleibt dadurch vollstaendig, nichts wird
+     gekuerzt oder versteckt. Ab 560px gilt wie bisher 0.72rem/2,5px. */
   .pr-schalter a {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 12px 6px;
+    padding: 12px 3px;
     font-family: var(--font-head);
-    font-size: 0.62rem;
-    letter-spacing: 1.6px;
+    font-size: 0.58rem;
+    letter-spacing: 0.4px;
     text-transform: uppercase;
     text-align: center;
     color: rgba(245,240,232,0.55);
@@ -582,6 +591,9 @@
     border-bottom: 2px solid transparent;
     transition: color var(--dur-normal) var(--ease-out),
                 border-color var(--dur-normal) var(--ease-out);
+  }
+  @media (max-width: 359px) {
+    .pr-schalter a { font-size: 0.56rem; letter-spacing: 0.2px; padding: 12px 2px; }
   }
   @media (min-width: 560px) {
     .pr-schalter a { font-size: 0.72rem; letter-spacing: 2.5px; padding: 14px 12px; }
