@@ -49,7 +49,7 @@ function karten() {
             </p>
             <p class="pr-karte__zusatz">+ ${esc(euro(AUFNAHME))} einmalig, inkl. Fighter-Kit</p>
             <p class="pr-karte__vertrag">${esc(LAUFZEIT.rechnungen)} ${esc(LAUFZEIT.verlaengerung)} ${esc(LAUFZEIT.kuendigung)}</p>
-            <span class="pr-karte__marke">EARLY BIRD, DAUERHAFT</span>
+            <span class="pr-karte__marke">EARLY BIRD, FÜR DIE LAUFZEIT</span>
             <ul>
 ${m.leistungen.map((l) => `              <li>${esc(l)}</li>`).join('\n')}
             </ul>
