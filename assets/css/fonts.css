@@ -189,3 +189,71 @@
   src: url('/assets/fonts/oswald-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MASSGLEICHE RUECKFALLSCHRIFTEN
+   ═══════════════════════════════════════════════════════════════════════════
+
+   WOFUER, UND WARUM ERST JETZT
+   Jede Regel hier traegt font-display: swap - Text erscheint sofort in der
+   Systemschrift und wird ersetzt, sobald die echte Schrift da ist. Solange
+   die Seite erst nach dem CSS zeichnete, war das unsichtbar: die Schriften
+   waren immer schon da, wenn das erste Bild kam.
+
+   Seit /probetraining sein kritisches CSS inline hat, zeichnet sie rund
+   800 ms frueher - und der Austausch faellt mitten ins Bild. Gemessen mit
+   Lighthouse (langsames 4G): CLS 0,21 statt 0,004. Mit blockierten
+   Schriftdateien lag derselbe Lauf bei 0,0000. Es ist also genau der
+   Austausch, nichts anderes.
+
+   WAS size-adjust TUT
+   Bebas Neue ist eine schmale Condensed-Schrift. Dieselbe Zeile ist in der
+   Systemschrift 75 Prozent breiter - gemessen mit dem echten Text des ersten
+   Bildschirms: 1121 px gegen 1958 px bei 100 px Schriftgroesse. Deshalb
+   bricht die Ueberschrift vor dem Austausch anders um als danach, und beim
+   Austausch rutscht die halbe Seite.
+
+   size-adjust skaliert die Rueckfallschrift so, dass sie dieselbe Breite
+   einnimmt. Der Umbruch stimmt damit von der ersten Sekunde an, und beim
+   Austausch bewegt sich nichts mehr. Fuer den Bruchteil einer Sekunde ist
+   der Text etwas kleiner - das ist der Preis, und er ist deutlich kleiner
+   als eine springende Seite.
+
+   DIE ZAHLEN
+   Gemessen in Chromium gegen dessen sans-serif, mit dem echten Text:
+     Bebas Neue  1121/1958 = 0,5726
+     Oswald      1468/2021 = 0,7265
+     DM Sans     2622/2552 = 1,0276   (praktisch gleich, trotzdem gesetzt,
+                                       damit alle drei denselben Weg gehen)
+
+   UNGEPRUEFT: die Messung lief gegen Liberation Sans, die Rueckfallschrift
+   dieser Bauumgebung. Arial ist damit metrisch deckungsgleich und Helvetica
+   praktisch auch, Roboto auf Android ist eine Spur schmaler. Die Zahl ist
+   also fuer iOS und Windows genau und fuer Android eine gute Annaeherung.
+   Nachmessen laesst sich das nur am Geraet.
+
+   KEIN ascent-override: jede Stelle, an der es auf die Zeilenhoehe ankommt,
+   setzt in unserem CSS ein eigenes line-height. Dort bestimmt also nicht die
+   Schrift, wie hoch die Zeile ist, sondern die Regel.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'Bebas Rueckfall';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'),
+       local('Liberation Sans'), local('Roboto');
+  size-adjust: 57.26%;
+  ascent-override: 100%;
+  descent-override: 0%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Oswald Rueckfall';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'),
+       local('Liberation Sans'), local('Roboto');
+  size-adjust: 72.65%;
+}
+@font-face {
+  font-family: 'DM Sans Rueckfall';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'),
+       local('Liberation Sans'), local('Roboto');
+  size-adjust: 102.76%;
+}

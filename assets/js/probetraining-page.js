@@ -116,9 +116,14 @@
 
   function _ptLoadBsport(cb) {
     if (window.BsportWidget) { cb(); return; }
-    if (!document.getElementById('bsport-cdn')) {
+    /* bsport-widget-cdn, nicht bsport-cdn: dieselbe Kennung, die Bsports
+       eigener Loader auf allen uebrigen Seiten setzt und abfragt. Mit der
+       eigenen Kennung fand das Bundle seine Basis-URL nicht und forderte
+       /undefined/locales/de/translation.json an. Begruendung im Kopf von
+       probetraining.html. */
+    if (!document.getElementById('bsport-widget-cdn')) {
       var sc = document.createElement('script');
-      sc.id = 'bsport-cdn';
+      sc.id = 'bsport-widget-cdn';
       sc.src = PT_CDN;
       document.head.appendChild(sc);
     }
@@ -1934,7 +1939,21 @@
     if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Probetraining Seite' });
   }
 
-  if (document.readyState === 'loading') {
+  /* defer: DIESE BEDINGUNG MUSSTE MIT
+     Mit defer laeuft ein Skript, wenn das Parsen fertig ist. Dann steht
+     readyState schon auf "interactive", nicht mehr auf "loading" - der
+     alte Zweig haette also sofort losgelegt, noch bevor die uebrigen
+     deferred Skripte dran waren. Auf dieser Seite haette das
+     den Kalenderstart zerlegt: es braucht
+     window.bomayeGateBsport aus consent-bridge.js, und das steht in der
+     Reihenfolge weiter hinten. Ergebnis waere "Consent-Bruecke nicht
+     geladen" und ein Kalender, der nie laedt.
+
+     Mit !== 'complete' wird in beiden Faellen auf DOMContentLoaded
+     gewartet. Dann sind alle deferred Skripte durch, und die Reihenfolge
+     ist dieselbe wie vorher: alle haengen am selben Ereignis, in der
+     Reihenfolge, in der sie im Markup stehen. */
+  if (document.readyState !== 'complete') {
     document.addEventListener('DOMContentLoaded', _ptBoot);
   } else {
     _ptBoot();
