@@ -65,6 +65,27 @@ function ersetze(t, marke, inhalt) {
   return t.slice(0, a + auf.length) + '\n' + inhalt + '\n        ' + t.slice(b);
 }
 
+/* ── Messattribute ─────────────────────────────────────────────────────────
+   plan-tracking.js liest diese Attribute und tippt keine Zahl selbst. Was
+   hier nicht steht, wird nicht gemeldet.
+
+     data-item-category  membership_earlybird | membership_flex
+                         | personal_training | pass
+     data-item-name      Produktname
+     data-price          laufender Preis (Monat bzw. Einmalpreis)
+     data-first-payment  erste Abbuchung inkl. Aufnahmegebuehr, nur Abos
+     data-plan           unlimited | youth | kids
+     data-offer          earlybird | flex
+     data-item-id        Kennung, wenn kein data-abo-contract da ist     */
+const PLAN_SCHLUESSEL = { erwachsene: 'unlimited', youth: 'youth', kids: 'kids',
+                          'unlimited-flex': 'unlimited', 'youth-flex': 'youth',
+                          'kids-flex': 'kids' };
+function messen(o) {
+  return Object.keys(o)
+    .filter((k) => o[k] !== null && o[k] !== undefined && o[k] !== '')
+    .map((k) => `${k}="${esc(o[k])}"`).join(' ');
+}
+
 /* ── Mitgliedschaftskarten ─────────────────────────────────────────────── */
 function karten() {
   return '        <div class="mw-cards-inner">\n' + MITGLIEDSCHAFTEN.map((m) => {
@@ -87,6 +108,12 @@ ${beliebt ? '            <span class="mw-popular-badge" aria-label="Beliebtestes
 ${m.leistungen.map((l) => `              <li>${esc(l)}</li>`).join('\n')}
             </ul>
             <a href="/mitglied-werden#packages" data-abo-contract="${esc(m.contract)}"
+               ${messen({ 'data-item-category': 'membership_earlybird',
+                          'data-item-name': m.name,
+                          'data-price': m.monat.toFixed(2),
+                          'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
+                          'data-plan': PLAN_SCHLUESSEL[m.id],
+                          'data-offer': 'earlybird' })}
                class="mw-card-btn">EARLY BIRD SICHERN</a>
           </article>`;
   }).join('\n') + '\n        </div>';
@@ -123,7 +150,7 @@ ${gruppe.zeilen.map((z) => `                <tr>
                   <th scope="row">${esc(z.name)}</th>
                   <td class="pr-tab__preis" data-spalte="Preis">${esc(euro(z.preis))}</td>
                   <td data-spalte="pro Einheit">${esc(euro(z.proEinheit))}</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" ${messen({ 'data-item-category': 'personal_training', 'data-item-id': `pt-${art}-${z.id}`, 'data-item-name': `Personal Training ${z.name} (${gruppe.label})`, 'data-price': z.preis.toFixed(2) })} class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>`).join('\n')}
               </tbody>
             </table>
@@ -156,7 +183,9 @@ function weitere() {
               <p class="pr-option__dazu">${esc(w.dazu)}</p>
             </div>
             <p class="pr-option__preis">${esc(euro(w.preis))}</p>
-            <a href="${esc(w.ziel)}" class="pr-zeilenknopf pr-zeilenknopf--hell">${esc(w.knopf.toUpperCase())}</a>
+            <a href="${esc(w.ziel)}" ${messen({ 'data-item-category': 'pass',
+                 'data-item-id': w.id, 'data-item-name': w.bsport,
+                 'data-price': w.preis.toFixed(2) })} class="pr-zeilenknopf pr-zeilenknopf--hell">${esc(w.knopf.toUpperCase())}</a>
           </li>`).join('\n')
     + '\n        </ul>';
 }
@@ -295,6 +324,12 @@ ${FLEX.map((f) => `            <li class="pr-option">
               </div>
               <p class="pr-option__preis">${esc(euro(f.monat))}<span class="pr-option__promonat">im Monat</span></p>
               <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}"
+                 ${messen({ 'data-item-category': 'membership_flex',
+                            'data-item-name': f.name,
+                            'data-price': f.monat.toFixed(2),
+                            'data-first-payment': (f.monat + AUFNAHME).toFixed(2),
+                            'data-plan': PLAN_SCHLUESSEL[f.id],
+                            'data-offer': 'flex' })}
                  class="pr-zeilenknopf pr-zeilenknopf--hell">FLEX STARTEN</a>
             </li>`).join('\n')}
           </ul>
@@ -392,6 +427,27 @@ function startseiteEinbauen(t) {
   return t.slice(0, i) + block + t.slice(i);
 }
 
+/* ── Messattribute auf den Paketknoepfen anderer Seiten ───────────────────
+   Die drei Knoepfe auf index.html und mitglied-werden.html stehen von Hand
+   im HTML. Statt die Zahlen dort zu tippen, setzt dieses Skript die
+   Messattribute anhand der Vertragskennung aus derselben Quelle. Der Lauf
+   ist wiederholbar: vorhandene Attribute werden ersetzt, nicht gestapelt. */
+function knoepfeMessbar(t) {
+  for (const m of MITGLIEDSCHAFTEN) {
+    const attr = messen({ 'data-item-category': 'membership_earlybird',
+                          'data-item-name': m.name,
+                          'data-price': m.monat.toFixed(2),
+                          'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
+                          'data-plan': PLAN_SCHLUESSEL[m.id],
+                          'data-offer': 'earlybird' });
+    const muster = new RegExp(
+      `(data-abo-contract="${m.contract}")((?:\\s+data-[a-z-]+="[^"]*")*)(\\s*\\n(\\s*))`, 'g');
+    t = t.replace(muster, (_, kennung, __, ___, einzug) =>
+      `${kennung}\n${einzug}${attr}\n${einzug}`);
+  }
+  return t;
+}
+
 /* ── Lauf ──────────────────────────────────────────────────────────────── */
 let t = await readFile(DATEI, 'utf8');
 const vorher = t;
@@ -409,6 +465,7 @@ const STARTSEITE = WURZEL + '/index.html';
 let h = await readFile(STARTSEITE, 'utf8');
 const hVorher = h;
 h = startseiteEinbauen(h);
+h = knoepfeMessbar(h);
 if (h !== hVorher) {
   if (NUR_PRUEFEN) {
     console.log('index.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
@@ -416,6 +473,21 @@ if (h !== hVorher) {
   } else {
     await writeFile(STARTSEITE, h);
     console.log(`index.html: ${FLEX_AKTIV ? FLEX.length + ' Flex-Zeilen geschrieben' : 'Flex-Zeilen entfernt'}.`);
+  }
+}
+
+/* /mitglied-werden traegt dieselben drei Knoepfe. */
+const MITGLIED = WURZEL + '/mitglied-werden.html';
+let mw = await readFile(MITGLIED, 'utf8');
+const mwVorher = mw;
+mw = knoepfeMessbar(mw);
+if (mw !== mwVorher) {
+  if (NUR_PRUEFEN) {
+    console.log('mitglied-werden.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
+    process.exitCode = 1;
+  } else {
+    await writeFile(MITGLIED, mw);
+    console.log('mitglied-werden.html: Messattribute auf den Paketknoepfen gesetzt.');
   }
 }
 
