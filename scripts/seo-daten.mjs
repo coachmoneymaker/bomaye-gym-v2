@@ -226,7 +226,7 @@ export const SEITEN = {
   },
   'mitglied-werden.html': {
     titel: 'Mitglied werden',
-    beschr: 'Sichere dir deinen Early-Bird-Preis im Bomaye Boxgym München, dauerhaft und unwiderruflich. Mitgliedschaften für Kids, Youth und Unlimited im Überblick.',
+    beschr: 'Sichere dir deinen Early-Bird-Preis im Bomaye Boxgym München für die gesamte Vertragslaufzeit. Mitgliedschaften für Kids, Youth und Unlimited im Überblick.',
   },
   'boxgym-muenchen.html': {
     titel: 'Boxgym München',
