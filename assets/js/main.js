@@ -836,16 +836,90 @@ async function submitCorporateInquiryInline(e) {
 
 /* ── Weitere Preise (removed — now navigates to separate view) ─ */
 
-/* ── Scroll reveal ─────────────────────────────────────────── */
+/* ── Scroll reveal ───────────────────────────────────────────────────────
+   WAS HIER SCHIEFGING
+   Vorher stand hier threshold: 0.08. Ein Element gilt damit erst als
+   sichtbar, wenn ACHT PROZENT SEINER EIGENEN FLAECHE im Bild stehen. Fuer
+   kleine Bloecke faellt das nicht auf, fuer hohe schon: ein 729px hoher
+   Abschnitt stand bei 390px Bildbreite mit 32px im Bild, das sind 4,4
+   Prozent. Er haette 58px gebraucht. Der Beobachter meldete nie, das
+   Element blieb auf opacity 0 stehen, und zwar fuer immer.
+
+   Dazu kam ein zweiter Fall, unabhaengig von der Schwelle: wer schnell
+   springt oder die Seite mitten im Dokument neu laedt, hat Elemente OBER
+   der Bildkante. Ein IntersectionObserver meldet die nie mehr, weil sie
+   nie wieder hineinlaufen.
+
+   WAS JETZT GILT
+   1. threshold: 0. Jedes angeschnittene Pixel zaehlt, die Hoehe des
+      Elements spielt keine Rolle mehr. Der Ausloesepunkt bleibt derselbe
+      wie bisher, nur ohne die Flaechenbedingung.
+   2. Beim Start wird alles sichtbar gemacht, was schon ueber der Bildkante
+      liegt. Das faengt die Wiederherstellung der Scrollposition ab.
+   3. Ein Sicherheitsnetz am Scrollereignis holt nach, was der Beobachter
+      verpasst hat: alles, dessen Oberkante ueber der Unterkante des Bildes
+      steht. Passiv, einmal je Bild ueber requestAnimationFrame, und es
+      haengt sich selbst ab, sobald nichts mehr offen ist.
+   4. Wer Bewegung abbestellt hat, bekommt alles sofort und ohne
+      Beobachter.
+
+   ANDERS ALS AUF DEN UEBRIGEN SEITEN ist das hier eine Funktion und kein
+   einmaliger Aufruf: runReveal() laeuft beim Start, nach jedem
+   Ansichtswechsel und nach dem Drehen erneut. Beobachter und
+   Sicherheitsnetz gehoeren deshalb an den Lauf, nicht an die Seite, und
+   das Netz wird nur einmal verdrahtet.                                   */
+let _revealNetz = false;
 function runReveal() {
-  const els = document.querySelectorAll('.reveal:not(.visible)');
-  if (!els.length) return;
+  const offen = Array.prototype.slice.call(document.querySelectorAll('.reveal:not(.visible)'));
+  if (!offen.length) return;
+  const RAND = 20;   /* wie bisher: 20px Luft an der Unterkante */
+
+  const zeigen = (el) => el.classList.add('visible');
+
+  const ruhig = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ruhig || !('IntersectionObserver' in window)) { offen.forEach(zeigen); return; }
+
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      if (e.isIntersecting) { zeigen(e.target); io.unobserve(e.target); }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
-  els.forEach(el => io.observe(el));
+  }, { threshold: 0, rootMargin: '0px 0px -' + RAND + 'px 0px' });
+  offen.forEach(el => io.observe(el));
+
+  /* Nachziehen: alles, was ueber der Unterkante steht, ist faellig. */
+  function nachziehen(nurDarueber) {
+    const grenze = nurDarueber ? 0 : window.innerHeight - RAND;
+    for (let i = offen.length - 1; i >= 0; i--) {
+      const el = offen[i];
+      if (el.classList.contains('visible')) { offen.splice(i, 1); continue; }
+      const r = el.getBoundingClientRect();
+      const faellig = nurDarueber ? r.bottom <= grenze : r.top < grenze;
+      if (faellig) { zeigen(el); io.unobserve(el); offen.splice(i, 1); }
+    }
+  }
+
+  if (!_revealNetz) {
+    _revealNetz = true;
+    let wartet = false;
+    const takt = () => {
+      if (wartet) return;
+      wartet = true;
+      requestAnimationFrame(() => {
+        wartet = false;
+        document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight - RAND) el.classList.add('visible');
+        });
+      });
+    };
+    window.addEventListener('scroll', takt, { passive: true });
+    window.addEventListener('resize', takt, { passive: true });
+  }
+
+  /* Beim Start nur das, was schon durchgelaufen ist. Was gerade im Bild
+     steht, uebernimmt der Beobachter, damit es einblendet statt zu
+     erscheinen. */
+  nachziehen(true);
 }
 
 /* ── Keyboard: service cards + resize ──────────────────────── */
