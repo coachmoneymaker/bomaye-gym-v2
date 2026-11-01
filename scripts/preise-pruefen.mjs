@@ -67,7 +67,11 @@ if (sichtbar.includes('TODO-OWNER')) melde('TODO-OWNER steht ausserhalb eines Ko
 
 /* ── 6. Fragen im HTML und im Schema ───────────────────────────────────── */
 const entity = (s) => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-const imHtml = [...sichtbar.matchAll(/<summary>([\s\S]*?)<\/summary>/g)].map((m) => entity(m[1].trim()));
+/* Das <summary> traegt seit der Gestaltungsrunde am 01.11.2026 hinter dem
+   Fragetext noch das Plus-Symbol der Startseite. Vor dem Vergleich fliegen
+   deshalb alle Marken heraus, sonst liest die Pruefung "undefined". */
+const imHtml = [...sichtbar.matchAll(/<summary[^>]*>([\s\S]*?)<\/summary>/g)]
+  .map((m) => entity(m[1].replace(/<[^>]*>/g, '').trim()));
 let fragenSchema = null;
 for (const m of seite.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
   let d; try { d = JSON.parse(m[1]); } catch { continue; }

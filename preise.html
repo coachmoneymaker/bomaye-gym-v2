@@ -515,252 +515,774 @@
   </noscript>
 
   <style>
-  /* ── Preisseite ──────────────────────────────────────────────────────
-     Keine neue Bibliothek, keine neue Schrift. Alles baut auf den
-     seo-* Klassen auf, die schon auf den anderen Landeseiten stehen. */
+  /* ── Preisseite: Gestaltung ───────────────────────────────────────────
+     GRUNDSATZ
+     /preise erfindet kein zweites Gestaltungssystem. Die Mitgliedskarten
+     tragen dieselben Klassen wie der Preisblock der Startseite, und die
+     Regeln unten sind aus index.html uebernommen, Angabe fuer Angabe
+     gleichlautend. Was dazukommt, traegt das Vorzeichen pr- und betrifft
+     nur Teile, die es auf der Startseite nicht gibt: den Umschalter, den
+     Vertragsblock, die PT-Tabelle und die Zeilen der Einzelangebote.
 
-  /* Der Umschalter. Vier Verweise auf die vier Abschnitte, nicht mehr:
-     so arbeitet er ohne JavaScript, mit der Tastatur und ohne dass
-     beim Umschalten etwas springt. Auf dem Handy bleibt er unter der
-     Kopfleiste stehen. */
+     WARUM DIE mw-REGELN HIER STEHEN UND NICHT IN style.css
+     Sie liegen heute als <style>-Block in index.html UND in
+     mitglied-werden.html. Beides in style.css zu ziehen waere richtig,
+     wuerde aber den ersten Bildschirm dieser zwei Seiten anfassen. Dieser
+     PR aendert nur /preise, deshalb steht hier eine dritte Fassung. Der
+     Vergleich der berechneten Stile belegt, dass sie gleich rechnet. Das
+     Zusammenlegen gehoert in einen eigenen PR, in dem die Startseite
+     ordentlich nachgemessen wird.
+
+     WARUM JEDE REGEL EINEN ELTERNTEIL VORANGESTELLT HAT
+     Die Landeseiten-Vorlage traegt ".seo-section p" und
+     ".seo-section--light p". Das sind (0,1,1), eine einzelne Klasse ist
+     (0,1,0) und verliert. Ohne das vorangestellte ".seo-section" wuerden
+     alle Textfarben der Karten von der Vorlage ueberschrieben, und auf dem
+     cremefarbenen Abschnitt stuende schwarzer Text auf schwarzer Karte.
+     ──────────────────────────────────────────────────────────────────── */
+
+  /* ═══════ 1. UMSCHALTER ═══════
+     Vier Verweise auf vier Abschnitte. Ohne JavaScript sind es gewoehnliche
+     Sprungmarken, mit JavaScript setzt ein IntersectionObserver zusaetzlich
+     aria-current. Er bleibt unter der Kopfleiste stehen, sobald der Held
+     durchgelaufen ist: position: sticky mit top in Hoehe der Leiste macht
+     genau das, ohne Rechnerei und ohne Sprung. */
   .pr-schalter {
     position: sticky;
     top: var(--nav-h, 72px);
     z-index: 40;
-    background: rgba(10,10,8,0.94);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,168,76,0.22);
+    background: rgba(10,10,8,0.92);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-top: 1px solid rgba(201,168,76,0.18);
+    border-bottom: 1px solid rgba(201,168,76,0.18);
   }
   .pr-schalter ul {
-    display: flex;
-    gap: 4px;
-    margin: 0 auto;
-    padding: 8px 16px;
-    max-width: 1100px;
     list-style: none;
-    overflow-x: auto;
-    scrollbar-width: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
   }
-  .pr-schalter ul::-webkit-scrollbar { display: none; }
+  .pr-schalter li { margin: 0; }
+  /* MOBIL EINZEILIG, AUCH "PERSONAL TRAINING"
+     Mit 0.62rem und 1,6px Sperrung brauchte diese Beschriftung bei 320 bis
+     430px mehr Platz als das Viertel, das ihr im Raster zusteht, und
+     rutschte auf zwei Zeilen: die Leiste wurde dadurch 60 statt 44px hoch.
+     Gemessen wurde durchprobiert, nicht geschaetzt. Bei 360px und darueber
+     traegt 0.58rem mit 0,4px Sperrung (Text 77,8px in 84px Platz), bei
+     320px reicht das noch nicht, dort sind es 0.56rem mit 0,2px (72,4px in
+     76px). Die Beschriftung bleibt dadurch vollstaendig, nichts wird
+     gekuerzt oder versteckt. Ab 560px gilt wie bisher 0.72rem/2,5px. */
   .pr-schalter a {
-    display: block;
-    flex: 1 0 auto;
-    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 44px;
+    padding: 12px 3px;
     font-family: var(--font-head);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
+    font-size: 0.58rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
     text-align: center;
-    white-space: nowrap;
-    color: rgba(245,240,232,0.72);
+    color: rgba(245,240,232,0.55);
     text-decoration: none;
-    border: 1px solid rgba(245,240,232,0.14);
-    background: rgba(245,240,232,0.03);
+    border-bottom: 2px solid transparent;
+    transition: color var(--dur-normal) var(--ease-out),
+                border-color var(--dur-normal) var(--ease-out);
   }
-  .pr-schalter a:hover { color: var(--brand-cream); border-color: rgba(201,168,76,0.5); }
-  .pr-schalter a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  /* Die Abschnitte bekommen Luft nach oben, damit der stehende
-     Umschalter nach einem Sprung nicht die Ueberschrift verdeckt. */
-  /* Abstand beim Sprung: Kopfleiste plus die Hoehe des stehenden
-     Umschalters plus etwas Luft. Ohne das verdeckt der Umschalter nach
-     einem Sprung genau die Zeile, derentwegen man gesprungen ist. */
-  .pr-ziel,
-  .pr-karte { scroll-margin-top: calc(var(--nav-h, 72px) + 110px); }
+  @media (max-width: 359px) {
+    .pr-schalter a { font-size: 0.56rem; letter-spacing: 0.2px; padding: 12px 2px; }
+  }
+  @media (min-width: 560px) {
+    .pr-schalter a { font-size: 0.72rem; letter-spacing: 2.5px; padding: 14px 12px; }
+  }
+  .pr-schalter a:hover { color: var(--gold); }
+  .pr-schalter a[aria-current="true"] {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
 
-  /* Mitgliedschaftskarten */
-  .pr-karten { display: grid; gap: 16px; margin-top: 28px; }
-  /* Erst ab 1000px drei Spalten. Bei 900px waren drei Karten plus
-     Abstaende 978px breit und liefen 77px aus dem Bild. */
-  /* minmax(0, 1fr) statt 1fr: mit 1fr darf eine Spalte nicht unter ihre
-     Mindestinhaltsbreite schrumpfen, und das Raster baut breiter als der
-     Kasten. Gemessen bei 1024px mit Handy-Emulation: Dokument 1086px.
-     Ausserdem erst ab 1100px drei Spalten, davor zwei. */
-  @media (min-width: 700px)  { .pr-karten { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1100px) { .pr-karten { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  .pr-karte {
-    border: 1px solid rgba(245,240,232,0.14);
-    background: rgba(245,240,232,0.03);
-    padding: 24px 20px;
+  /* ═══════ 1b. BREITER RAHMEN ═══════
+     Die Landeseiten-Vorlage deckelt .seo-section-inner auf 760px. Das ist
+     das richtige Mass fuer Fliesstext, aber zu eng fuer drei Preiskarten:
+     gemessen blieben davon 234,7px je Karte, auf der Startseite sind es
+     348px. Die vier Abschnitte mit breitem Inhalt bekommen deshalb
+     dasselbe Mass wie der Preisblock der Startseite, 1100px, und der
+     Einleitungstext behaelt sein eigenes, schmaleres Mass.           */
+  .seo-section .pr-weit { max-width: 1100px; }
+  .seo-section .pr-weit > .reveal > p { max-width: 640px; }
+
+  /* ═══════ 2. MITGLIEDSKARTEN ═══════
+     Ab hier: aus index.html uebernommen. */
+  .seo-section .mw-cards-inner {
+    max-width: 1100px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
+    gap: 20px;
   }
-  .pr-karte--top { border-color: rgba(201,168,76,0.55); }
-  .pr-karte__kopf { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .pr-karte__name {
+  /* Reihenfolge auf dem Handy: UNLIMITED, YOUTH, KIDS */
+  .seo-section .mw-card--popular { order: 1; }
+  .seo-section .mw-card--youth   { order: 2; }
+  .seo-section .mw-card--kids    { order: 3; }
+
+  @media (min-width: 900px) {
+    .seo-section .mw-cards-inner {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      align-items: stretch;
+    }
+    /* Reihenfolge auf dem Rechner: KIDS, UNLIMITED, YOUTH */
+    .seo-section .mw-card--kids    { order: 1; }
+    .seo-section .mw-card--popular { order: 2; }
+    .seo-section .mw-card--youth   { order: 3; }
+  }
+
+  .seo-section .mw-card {
+    background: #0A0A08;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+    transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
+  }
+  @media (min-width: 900px) {
+    .seo-section .mw-card { padding: 32px; }
+  }
+  @media (hover: hover) {
+    .seo-section .mw-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 64px rgba(0,0,0,0.2);
+    }
+  }
+  .seo-section .mw-card--popular {
+    border: 1.5px solid #C9A84C;
+    box-shadow: 0 8px 48px rgba(201,168,76,0.12);
+  }
+  @media (hover: hover) {
+    .seo-section .mw-card--popular:hover {
+      box-shadow: 0 16px 64px rgba(201,168,76,0.2);
+    }
+  }
+
+  .seo-section .mw-popular-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #C9A84C;
+    color: #000;
     font-family: var(--font-head);
-    font-size: 1.35rem;
-    letter-spacing: 0.04em;
-    color: var(--brand-cream);
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    padding: 6px 20px;
+    border-radius: 0;
+    white-space: nowrap;
+  }
+
+  .seo-section .mw-card-label {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    line-height: 1.85;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    color: #C9A84C;
     margin: 0;
   }
-  .pr-karte__alter { font-family: var(--font-body); font-size: 0.82rem; color: rgba(245,240,232,0.6); }
-  .pr-karte__preis {
-    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    margin: 16px 0 0;
-  }
-  .pr-karte__monat {
+  .seo-section .mw-card-name {
     font-family: var(--font-display);
-    font-size: clamp(2.6rem, 11vw, 3.4rem);
-    line-height: 0.9;
-    color: var(--gold);
+    font-size: 2.2rem;
+    color: #F5F0E8;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin: 8px 0 0;
+    font-weight: bold;
   }
-  .pr-karte .pr-karte__proMonat { font-family: var(--font-body); font-size: 0.9rem; color: rgba(245,240,232,0.72); }
-  /* WARUM DIE SELEKTOREN EINEN ELTERNTEIL TRAGEN
-     Der Stilblock der Landeseiten weiter oben setzt ".seo-section p"
-     (Spezifitaet 0,1,1) auf 0.97rem und rgba(245,240,232,0.62). Eine
-     einzelne Klasse (0,1,0) verliert dagegen, und die ganze Karte stand
-     in einer Groesse: Monatsbetrag, Wochenpreis und Vertragstext sahen
-     gleich wichtig aus. Mit dem Elternteil davor gewinnen die Regeln hier.
-
-     Die Laufzeit steht direkt unter dem Monatsbetrag, nicht erst in den
-     Bedingungen: der Preis gilt nur fuer sie, und das muss am Preis
-     stehen, nicht zwanzig Zeilen tiefer. */
-  .pr-karte .pr-karte__laufzeit {
-    font-family: var(--font-body); font-size: 0.86rem; color: var(--gold);
-    margin: 4px 0 0; letter-spacing: 0.01em;
+  @media (min-width: 900px) {
+    .seo-section .mw-card-name { font-size: 2.8rem; }
   }
-  .pr-karte .pr-karte__woche { font-family: var(--font-body); font-size: 0.92rem; color: rgba(245,240,232,0.8); margin: 8px 0 0; }
-  /* Was der Vertrag bedeutet, woertlich aus § 2 Abs. 2 und § 6 Abs. 1. */
-  .pr-karte .pr-karte__vertrag {
-    font-family: var(--font-body); font-size: 0.8rem; line-height: 1.55;
-    color: rgba(245,240,232,0.55); margin: 10px 0 0;
-    padding: 10px 0 0; border-top: 1px solid rgba(245,240,232,0.1);
+  .seo-section .mw-card-age {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.45);
+    margin: 4px 0 0;
   }
-  .pr-karte__alt { color: rgba(245,240,232,0.45); text-decoration: line-through; }
-  .pr-karte .pr-karte__zusatz { font-family: var(--font-body); font-size: 0.86rem; color: rgba(245,240,232,0.62); margin: 10px 0 0; }
-  .pr-karte__marke {
-    display: inline-block; margin: 14px 0 0; padding: 4px 10px;
-    font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.12em;
-    color: var(--gold); border: 1px solid rgba(201,168,76,0.45);
+  .seo-section .mw-card-divider {
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+    border: none;
+    margin: 24px 0;
   }
-  .pr-karte ul { list-style: none; margin: 16px 0 0; padding: 0; }
-  .pr-karte li {
-    font-family: var(--font-body); font-size: 0.9rem; line-height: 1.5;
-    color: rgba(245,240,232,0.72); padding: 0 0 0 18px; position: relative; margin: 0 0 6px;
+  /* Punkt 4 der Vorgabe: der durchgestrichene Preis darf nie umbrechen. */
+  .seo-section .mw-card-reg-price {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.3);
+    text-decoration: line-through;
+    margin: 0;
+    white-space: nowrap;
   }
-  .pr-karte li::before {
-    content: ''; position: absolute; left: 0; top: 0.55em;
-    width: 7px; height: 7px; background: var(--gold);
+  .seo-section .mw-card-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 4px 0 0;
+    line-height: 1;
   }
-  .pr-karte .btn { margin-top: auto; width: 100%; justify-content: center; }
-  .pr-karte__btnwrap { margin-top: 20px; }
-
-  /* Bedingungen unter den Karten */
-  .pr-bedingungen { list-style: none; margin: 24px 0 0; padding: 0; max-width: 760px; }
-  .pr-bedingungen li {
-    font-family: var(--font-body); font-size: 0.88rem; line-height: 1.6;
-    color: rgba(245,240,232,0.62); padding: 0 0 0 18px; position: relative; margin: 0 0 6px;
+  .seo-section .mw-card-price {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    color: #C9A84C;
+    line-height: 1;
+    font-weight: bold;
+    white-space: nowrap;
   }
-  .pr-bedingungen li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 6px; height: 1px; background: rgba(201,168,76,0.8); }
-
-  /* Umschalter Personal Training: zwei Radioknoepfe, per CSS gekoppelt.
-     Ohne JavaScript, mit der Tastatur bedienbar, und beide Tabellen
-     sind gleich hoch, es springt also nichts. */
-  .pr-ptschalter { display: flex; gap: 8px; margin: 22px 0 0; flex-wrap: wrap; }
-  /* Die Tabellen liegen im selben Flex-Kasten wie die beiden Knoepfe,
-     weil die CSS-Kopplung Geschwister braucht. Ohne diese Zeile waeren
-     sie ein Flex-Element neben den Knoepfen und nur halb so breit. */
-  .pr-ptschalter .pr-pttabellen { flex: 0 0 100%; width: 100%; }
-  .pr-ptschalter input { position: absolute; opacity: 0; pointer-events: none; }
-  .pr-ptschalter label {
-    padding: 10px 18px; min-height: 44px; display: inline-flex; align-items: center;
-    font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em;
-    color: rgba(8,8,8,0.6); border: 1px solid rgba(8,8,8,0.2); cursor: pointer;
+  @media (min-width: 900px) {
+    .seo-section .mw-card-price { font-size: 3.2rem; }
   }
-  .pr-ptschalter input:checked + label { color: var(--ink); border-color: var(--gold-dark); background: rgba(201,168,76,0.16); }
-  .pr-ptschalter input:focus-visible + label { outline: 2px solid var(--gold-dark); outline-offset: 2px; }
-  .pr-pttabelle { display: none; }
-  #pt-wahl-nicht:checked ~ .pr-pttabellen .pr-pttabelle--nicht { display: block; }
-  #pt-wahl-mitglied:checked ~ .pr-pttabellen .pr-pttabelle--mitglied { display: block; }
-
-  /* Tabellen: auf dem Handy je Zeile ein Block, ab 700px echte Spalten. */
-  .pr-tab { width: 100%; border-collapse: collapse; margin: 18px 0 0; font-family: var(--font-body); }
-  .pr-tab th, .pr-tab td { text-align: left; font-size: 0.95rem; }
-  .pr-tab thead { display: none; }
-  .pr-tab tbody tr { display: block; border: 1px solid rgba(8,8,8,0.14); padding: 14px 16px; margin: 0 0 10px; }
-  .pr-tab tbody th { display: block; font-family: var(--font-head); font-size: 1rem; letter-spacing: 0.04em; color: var(--ink); padding: 0 0 6px; }
-  .pr-tab tbody td { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; color: rgba(8,8,8,0.74); }
-  .pr-tab tbody td::before { content: attr(data-spalte); color: rgba(8,8,8,0.5); font-size: 0.82rem; }
-  .pr-tab td.pr-tab__btn { display: block; padding: 12px 0 0; }
-  .pr-tab td.pr-tab__btn::before { content: none; }
-  .pr-tab .btn { width: 100%; justify-content: center; }
-  @media (min-width: 700px) {
-    .pr-tab thead { display: table-header-group; }
-    .pr-tab thead th {
-      font-family: var(--font-head); font-size: 0.74rem; letter-spacing: 0.1em;
-      color: rgba(8,8,8,0.55); padding: 0 12px 10px 0; border-bottom: 1px solid rgba(8,8,8,0.18);
+  .seo-section .mw-card-price-unit {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: rgba(245,240,232,0.5);
+    align-self: flex-end;
+    margin-left: 8px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+  .seo-section .mw-card-fee {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.35);
+    margin: 6px 0 0;
+  }
+  .seo-section .mw-card-savings {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    color: #C9A84C;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border: 1px solid rgba(201,168,76,0.25);
+    margin: 12px 0 0;
+    border-radius: 0;
+    align-self: flex-start;
+  }
+  .seo-section .mw-card-features {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    flex: 1;
+  }
+  .seo-section .mw-card-features li {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.75);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .seo-section .mw-card-features li:last-child { margin-bottom: 0; }
+  .seo-section .mw-card-features li::before {
+    content: '✓';
+    color: #C9A84C;
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+  .seo-section .mw-card-btn {
+    display: block;
+    width: 100%;
+    background: #C9A84C;
+    color: #000;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    padding: 16px;
+    border-radius: 0;
+    text-decoration: none;
+    transition: filter var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
+    margin-top: 28px;
+  }
+  @media (hover: hover) {
+    .seo-section .mw-card-btn:hover {
+      filter: brightness(1.1);
+      transform: scale(1.01);
     }
-    .pr-tab tbody tr { display: table-row; border: 0; border-bottom: 1px solid rgba(8,8,8,0.1); padding: 0; }
-    .pr-tab tbody th, .pr-tab tbody td { display: table-cell; padding: 14px 12px 14px 0; vertical-align: middle; }
-    .pr-tab tbody td::before { content: none; }
-    .pr-tab td.pr-tab__btn { padding: 10px 0; width: 1%; }
-    .pr-tab .btn { width: auto; white-space: nowrap; }
   }
-  .pr-tab--dunkel tbody tr { border-color: rgba(245,240,232,0.14); }
-  .pr-tab--dunkel tbody th { color: var(--brand-cream); }
-  .pr-tab--dunkel tbody td { color: rgba(245,240,232,0.72); }
-  .pr-tab--dunkel tbody td::before { color: rgba(245,240,232,0.5); }
-  @media (min-width: 700px) {
-    .pr-tab--dunkel thead th { color: rgba(245,240,232,0.55); border-bottom-color: rgba(245,240,232,0.2); }
+  .seo-section .mw-card-btn:active { transform: scale(0.99); }
+  @media (max-width: 360px) {
+    .seo-section .mw-card-btn { font-size: 0.76rem; letter-spacing: 0.06em; padding: 15px 10px; }
   }
-  .seo-section .pr-hinweis { font-family: var(--font-body); font-size: 0.86rem; line-height: 1.6; margin: 16px 0 0; }
 
-  /* Drei Zusagen */
-  .pr-zusagen { display: grid; gap: 14px; margin: 26px 0 0; }
-  @media (min-width: 760px) { .pr-zusagen { grid-template-columns: repeat(3, 1fr); } }
-  .pr-zusage {
-    border: 1px solid rgba(245,240,232,0.14); padding: 18px;
-    font-family: var(--font-body); font-size: 0.95rem; line-height: 1.5;
-    color: rgba(245,240,232,0.78);
+  /* ═══════ 3. ZWEI ZEILEN, DIE ES NUR HIER GIBT ═══════
+     Die Startseite zeigt den Wochenpreis gross. /preise zeigt den
+     Monatsbetrag gross, dazu die Laufzeit in Gold und den Wochenpreis
+     klein darunter. */
+  .seo-section .pr-karte__laufzeit {
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    color: var(--gold);
+    margin: 10px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
   }
-  .pr-zusage strong { display: block; font-family: var(--font-head); font-size: 0.88rem; letter-spacing: 0.06em; color: var(--brand-cream); margin: 0 0 4px; }
+  .seo-section .pr-karte__vertraglink {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.5);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+  .seo-section .pr-karte__vertraglink:hover { color: var(--gold); }
+  .seo-section .pr-karte__woche {
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    color: rgba(245,240,232,0.6);
+    margin: 6px 0 0;
+    white-space: nowrap;
+  }
 
-  /* FAQ: details/summary, klappt ohne JavaScript auf und zu. */
-  .pr-faq { margin: 26px 0 0; }
-  .pr-faq details { border-bottom: 1px solid rgba(245,240,232,0.14); }
-  .pr-faq summary {
-    list-style: none; cursor: pointer; padding: 18px 36px 18px 0; position: relative;
-    font-family: var(--font-body); font-size: 1rem; line-height: 1.45; color: var(--brand-cream);
+  /* ═══════ 4. VERTRAGSBLOCK, EINMAL UNTER DEN KARTEN ═══════ */
+  .seo-section .pr-vertrag {
+    max-width: 1100px;
+    margin: clamp(32px, 5vw, 56px) auto 0;
+    padding: clamp(24px, 4vw, 36px);
+    border: 1px solid rgba(8,8,8,0.12);
+    background: rgba(8,8,8,0.02);
+    scroll-margin-top: calc(var(--nav-h, 72px) + 110px);
+  }
+  .seo-section .pr-vertrag__h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+  .seo-section .pr-vertrag__liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  @media (min-width: 860px) {
+    .seo-section .pr-vertrag__liste { grid-template-columns: 1fr 1fr; gap: 10px 36px; }
+  }
+  .seo-section .pr-vertrag__liste li {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: rgba(8,8,8,0.68);
+    padding-left: 18px;
+    position: relative;
+  }
+  .seo-section .pr-vertrag__liste li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 7px;
+    height: 1px;
+    background: var(--gold-dark);
+  }
+  .seo-section .pr-vertrag__fuss {
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: rgba(8,8,8,0.5);
+    margin: 20px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(8,8,8,0.1);
+  }
+  .seo-section .pr-vertrag__fuss a { color: var(--gold-dark); }
+
+  /* ═══════ 5. PERSONAL TRAINING, DUNKLER ABSCHNITT ═══════
+     Zwei Radioknoepfe steuern, welche Tabelle sichtbar ist. Ohne JavaScript,
+     mit der Tastatur bedienbar, und der Zustand ist sichtbar. */
+  .seo-section .pr-ptschalter {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .seo-section .pr-ptschalter input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .seo-section .pr-ptschalter label {
+    flex: 1 1 0;
+    min-width: 0;
     min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(245,240,232,0.55);
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.22);
+    cursor: pointer;
+    transition: color var(--dur-normal) var(--ease-out),
+                background var(--dur-normal) var(--ease-out),
+                border-color var(--dur-normal) var(--ease-out);
   }
-  .pr-faq summary::-webkit-details-marker { display: none; }
-  .pr-faq summary::after {
-    content: '+'; position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-    font-family: var(--font-head); font-size: 1.3rem; color: var(--gold);
+  .seo-section .pr-ptschalter label + input + label { border-left: none; }
+  .seo-section .pr-ptschalter label:hover { color: var(--gold); }
+  .seo-section #pt-wahl-nicht:checked + label,
+  .seo-section #pt-wahl-mitglied:checked + label {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #0A0A08;
+    font-weight: bold;
   }
-  .pr-faq details[open] summary::after { content: '\2212'; }
-  .pr-faq summary:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
-  .pr-faq .pr-faq__a {
-    padding: 0 0 18px; font-family: var(--font-body); font-size: 0.95rem; line-height: 1.65;
-    color: rgba(245,240,232,0.72);
+  .seo-section .pr-ptschalter input:focus-visible + label {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
   }
-  .pr-faq a { color: var(--gold); }
+  .seo-section .pr-pttabellen { flex: 0 0 100%; width: 100%; }
+  .seo-section .pr-pttabelle { display: none; }
+  .seo-section #pt-wahl-nicht:checked ~ .pr-pttabellen .pr-pttabelle--nicht { display: block; }
+  .seo-section #pt-wahl-mitglied:checked ~ .pr-pttabellen .pr-pttabelle--mitglied { display: block; }
 
-  /* Der Knopf im ersten Bildschirm traegt den vorgegebenen Text
-     "Kostenlos Probetraining buchen". Mit dem white-space: nowrap der
-     .btn-Grundregel ist er 377px breit; mit 24px Innenabstand des
-     Kastens braucht er 401px. Gemessen lief die Seite damit zwischen
-     375 und 409px Sichtbreite 11px nach rechts.
+  /* Tabelle: auf dem Handy je Zeile ein Block, ab 700px echte Spalten. */
+  .seo-section .pr-tab {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0 0;
+    font-family: var(--font-body);
+  }
+  .seo-section .pr-tab th,
+  .seo-section .pr-tab td { text-align: left; font-size: 0.95rem; }
+  .seo-section .pr-tab thead { display: none; }
+  .seo-section .pr-tab tbody tr {
+    display: block;
+    border-bottom: 1px solid rgba(245,240,232,0.12);
+    padding: 20px 0;
+  }
+  .seo-section .pr-tab tbody tr:first-child { border-top: 1px solid rgba(245,240,232,0.12); }
+  .seo-section .pr-tab tbody th {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #F5F0E8;
+    padding: 0 0 8px;
+    font-weight: bold;
+  }
+  .seo-section .pr-tab tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 3px 0;
+    color: rgba(245,240,232,0.65);
+  }
+  .seo-section .pr-tab tbody td::before {
+    content: attr(data-spalte);
+    color: rgba(245,240,232,0.42);
+    font-size: 0.82rem;
+  }
+  .seo-section .pr-tab tbody td.pr-tab__preis {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+    align-items: baseline;
+  }
+  .seo-section .pr-tab td.pr-tab__btn { display: block; padding: 16px 0 0; }
+  .seo-section .pr-tab td.pr-tab__btn::before { content: none; }
+  @media (min-width: 700px) {
+    .seo-section .pr-tab thead { display: table-header-group; }
+    .seo-section .pr-tab thead th {
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.42);
+      padding: 0 16px 12px 0;
+      border-bottom: 1px solid rgba(245,240,232,0.18);
+      font-weight: 600;
+    }
+    .seo-section .pr-tab tbody tr {
+      display: table-row;
+      border-top: 0;
+      padding: 0;
+    }
+    .seo-section .pr-tab tbody tr:first-child { border-top: 0; }
+    .seo-section .pr-tab tbody th,
+    .seo-section .pr-tab tbody td {
+      display: table-cell;
+      padding: 22px 16px 22px 0;
+      vertical-align: middle;
+    }
+    .seo-section .pr-tab tbody td::before { content: none; }
+    .seo-section .pr-tab td.pr-tab__btn { padding: 16px 0; width: 1%; white-space: nowrap; }
+  }
 
-     Die Grundregel in style.css laesst Knoepfe erst unter 361px
-     umbrechen; dort steht sie wegen des kuerzeren "KOSTENLOS
-     PROBETRAINIEREN" der anderen Landeseiten. Statt diese Grenze fuer
-     alle Seiten zu verschieben, gilt hier eine eigene, und nur fuer den
-     einen Knopf im ersten Bildschirm. */
+  /* Zeilenknopf: ein Knopf je Zeile, auf dem Handy volle Breite. */
+  .seo-section .pr-zeilenknopf {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 18px;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: var(--gold);
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.55);
+    border-radius: 0;
+    transition: background var(--dur-normal) var(--ease-out),
+                border-color var(--dur-normal) var(--ease-out),
+                color var(--dur-normal) var(--ease-out);
+  }
+  .seo-section .pr-zeilenknopf:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+  .seo-section .pr-zeilenknopf--hell {
+    color: var(--gold-dark);
+    border-color: rgba(166,124,46,0.5);
+  }
+  .seo-section .pr-zeilenknopf--hell:hover {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold-dark);
+    color: var(--gold-dark);
+  }
+  @media (min-width: 700px) {
+    .seo-section .pr-zeilenknopf { width: auto; }
+  }
+
+  /* ═══════ 6. EINZELANGEBOTE: SCHLANKE ZEILEN ═══════ */
+  .seo-section .pr-optionen {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1100px;
+  }
+  .seo-section .pr-option {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(8,8,8,0.12);
+  }
+  .seo-section .pr-option:first-child { border-top: 1px solid rgba(8,8,8,0.12); }
+  .seo-section .pr-option__text { grid-column: 1; }
+  .seo-section .pr-option__name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+  }
+  .seo-section .pr-option__dazu {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: rgba(8,8,8,0.6);
+    margin: 4px 0 0;
+  }
+  .seo-section .pr-option__preis {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--gold-dark);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .seo-section .pr-option .pr-zeilenknopf {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+  }
+  @media (min-width: 700px) {
+    .seo-section .pr-option {
+      grid-template-columns: 1fr auto auto;
+      gap: 24px 28px;
+      padding: 26px 0;
+    }
+    .seo-section .pr-option__preis { grid-column: 2; justify-self: end; }
+    .seo-section .pr-option .pr-zeilenknopf {
+      grid-column: 3;
+      grid-row: 1;
+      margin-top: 0;
+    }
+  }
+
+  /* ═══════ 7. FAQ ═══════
+     Die Klassen .faq-list, .faq-item, .faq-q, .faq-q--light, .faq-icon und
+     .faq-a-inner kommen aus style.css und sind dieselben wie im FAQ der
+     Startseite. Nur drei Dinge fehlen dort, weil die Startseite einen Knopf
+     mit JavaScript nutzt und hier ein <details> steht. */
+  .seo-section .pr-faq summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .seo-section .pr-faq summary::-webkit-details-marker { display: none; }
+  .seo-section .pr-faq summary::marker { content: ''; }
+  .seo-section .pr-faq details[open] .faq-icon { transform: rotate(45deg); }
+  .seo-section--light .pr-faq .faq-a-inner { color: rgba(8,8,8,0.7); }
+  .seo-section .pr-faq .faq-a-inner a { color: var(--gold-dark); }
+
+  /* ═══════ 8. DREI ZUSAGEN ═══════ */
+  .seo-section .pr-zusagen {
+    display: grid;
+    gap: 14px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  @media (min-width: 760px) {
+    .seo-section .pr-zusagen { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  }
+  .seo-section .pr-zusage {
+    border: 1px solid rgba(245,240,232,0.14);
+    padding: 22px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.62);
+  }
+  .seo-section .pr-zusage strong {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* ═══════ 9. SCHLUSS ═══════ */
+  .pr-schluss {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  /* ═══════ 10. HELD: VERTRAUENSZEILE ═══════
+     Zahl und Stand kommen aus BEWERTUNG in scripts/seo-daten.mjs, derselben
+     Konstante wie auf /probetraining, und werden von seo-bauen.mjs
+     eingesetzt. Der Stand steht sichtbar daneben: eine Bewertung ohne Datum
+     liest sich wie ein Live-Wert, und das ist sie nicht. */
+  .pr-hero__vertrauen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin: 18px 0 0;
+  }
+  .pr-hero__note {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.7);
+  }
+  .pr-hero__note b { font-weight: 700; color: #F5F0E8; }
+  .pr-hero__stand {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.4);
+  }
+
+  /* ═══════ 11. KLEINIGKEITEN ═══════ */
+  .pr-nur-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .seo-section .pr-hinweis {
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    line-height: 1.7;
+    max-width: 860px;
+    margin: 24px auto 0;
+  }
+  .seo-section .pr-hinweis--dunkel { color: rgba(245,240,232,0.55); }
+  .seo-section .pr-hinweis--dunkel a { color: var(--gold); }
+
+  /* Sprungziele muessen unter dem stehenden Umschalter landen, nicht
+     dahinter. Kopfleiste plus Umschalter plus Luft.
+
+     style.css setzt "section[id] { scroll-margin-top: var(--nav-h) }". Das ist
+     (0,1,1), ".pr-ziel" allein waere (0,1,0) und verliert: der PT-Abschnitt
+     landete gemessen 52 bis 62px HINTER dem stehenden Umschalter. Mit dem
+     vorangestellten ".seo-section" sind es (0,2,0) und die Regel greift. */
+  .seo-section.pr-ziel,
+  .seo-section .mw-card,
+  .seo-section .pr-vertrag { scroll-margin-top: calc(var(--nav-h, 72px) + 110px); }
+
+  /* Tastatur: der Fokus muss sichtbar sein, auch auf Gold. */
+  .pr-schalter a:focus-visible,
+  .seo-section .mw-card-btn:focus-visible,
+  .seo-section .pr-zeilenknopf:focus-visible,
+  .seo-section .pr-karte__vertraglink:focus-visible,
+  .seo-section .pr-faq summary:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+  .seo-section .mw-card-btn:focus-visible { outline-color: #0A0A08; }
+
+  /* Der Held-Knopf ist auf schmalen Geraeten breiter als das Bild. Die
+     Grundregel in style.css laesst Knoepfe erst unter 361px umbrechen. */
   @media (max-width: 409px) {
     .seo-hero .btn {
       white-space: normal;
-      max-width: 100%;
-      padding-left: 1.1rem;
-      padding-right: 1.1rem;
       text-align: center;
+      line-height: 1.3;
+      padding-left: 14px;
+      padding-right: 14px;
     }
   }
-
-  /* Schlussknoepfe */
-  .pr-schluss { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 24px; }
-  .pr-schluss .btn { flex: 1 1 260px; justify-content: center; }
   </style>
 </head>
 
@@ -858,6 +1380,12 @@
       <div class="seo-hero-btns">
         <a href="/probetraining" class="btn btn--gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;"><i class="icon" aria-hidden="true"><svg><use href="#i-bolt"/></svg></i> KOSTENLOS PROBETRAINING BUCHEN</a>
       </div>
+      <!-- Zahl und Stand setzt seo-bauen.mjs aus BEWERTUNG ein, derselben
+           Konstante wie auf /probetraining. Nicht von Hand aendern. -->
+      <p class="pr-hero__vertrauen">
+        <span class="pr-hero__note"><b>5,0</b> auf Google, 218 Bewertungen</span>
+        <span class="pr-hero__stand">Stand 01.11.2026</span>
+      </p>
     </div>
   </section>
 
@@ -872,122 +1400,111 @@
   </nav>
 
   <!-- ── Mitgliedschaften ── -->
-  <section class="seo-section seo-section--smoke" aria-labelledby="mitglied-h2">
+  <section class="seo-section seo-section--light" aria-labelledby="mitglied-h2">
     <div class="container">
-      <div class="seo-section-inner">
+      <div class="seo-section-inner pr-weit">
         <div class="reveal">
-          <span class="tag tag--dark">MITGLIEDSCHAFT</span>
+          <span class="tag tag--light-inv">MITGLIEDSCHAFT</span>
           <h2 id="mitglied-h2" style="margin-top:1.25rem;">EARLY BIRD.<br><span>FÜR DIE LAUFZEIT.</span></h2>
           <p style="margin-top:1.25rem;">
             Der Early-Bird-Preis bleibt für die gesamte Vertragslaufzeit, nur solange Plätze frei sind.
           </p>
         </div>
         <!-- PREISE:KARTEN -->
-        <div class="pr-karten">
-          <article class="pr-karte pr-karte--top reveal" id="erwachsene" aria-labelledby="k-erwachsene">
-            <div class="pr-karte__kopf">
-              <h3 class="pr-karte__name" id="k-erwachsene">Unlimited</h3>
-              <span class="pr-karte__alter">Erwachsene, ab 18 Jahren</span>
+        <div class="mw-cards-inner">
+          <article class="mw-card mw-card--popular reveal" id="erwachsene" aria-labelledby="k-erwachsene">
+            <span class="mw-popular-badge" aria-label="Beliebtestes Paket">Most Popular</span>
+            <p class="mw-card-label">ERWACHSENE</p>
+            <h3 class="mw-card-name" id="k-erwachsene">UNLIMITED</h3>
+            <p class="mw-card-age">ab 18 Jahren</p>
+            <hr class="mw-card-divider" />
+            <p class="mw-card-reg-price">Regulär 22,90 € pro Woche</p>
+            <div class="mw-card-price-row">
+              <span class="mw-card-price">75,60 €</span>
+              <span class="mw-card-price-unit">im Monat</span>
             </div>
-            <p class="pr-karte__preis">
-              <span class="pr-karte__monat">75,60 €</span>
-              <span class="pr-karte__proMonat">im Monat</span>
-            </p>
-            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
-            <p class="pr-karte__woche">
-              18,90 € pro Woche,
-              <span class="pr-karte__alt">regulär 22,90 € pro Woche</span>
-            </p>
-            <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
-            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
-            <span class="pr-karte__marke">EARLY BIRD, FÜR DIE LAUFZEIT</span>
-            <ul>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit<a class="pr-karte__vertraglink" href="#vertrag">Vertragsbedingungen</a></p>
+            <p class="pr-karte__woche">18,90 € pro Woche</p>
+            <p class="mw-card-fee">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+            <span class="mw-card-savings">EARLY BIRD, FÜR DIE LAUFZEIT</span>
+            <ul class="mw-card-features">
               <li>Unbegrenzter Zugang zu allen Kursen</li>
               <li>Olympic Boxing, Kickboxing, Frauenkurs und mehr</li>
               <li>Training mit Struktur und echten Coaches</li>
             </ul>
-            <div class="pr-karte__btnwrap">
-              <a href="/mitglied-werden#packages" data-abo-contract="45433"
-                 class="btn btn--gold" style="text-decoration:none;">EARLY BIRD SICHERN</a>
-            </div>
+            <a href="/mitglied-werden#packages" data-abo-contract="45433"
+               class="mw-card-btn">EARLY BIRD SICHERN</a>
           </article>
-          <article class="pr-karte reveal" id="youth" aria-labelledby="k-youth">
-            <div class="pr-karte__kopf">
-              <h3 class="pr-karte__name" id="k-youth">Youth</h3>
-              <span class="pr-karte__alter">Jugendliche, 10 bis 17 Jahre</span>
+          <article class="mw-card mw-card--youth reveal" id="youth" aria-labelledby="k-youth">
+            <p class="mw-card-label">JUGENDLICHE</p>
+            <h3 class="mw-card-name" id="k-youth">YOUTH</h3>
+            <p class="mw-card-age">10 bis 17 Jahre</p>
+            <hr class="mw-card-divider" />
+            <p class="mw-card-reg-price">Regulär 18,90 € pro Woche</p>
+            <div class="mw-card-price-row">
+              <span class="mw-card-price">63,60 €</span>
+              <span class="mw-card-price-unit">im Monat</span>
             </div>
-            <p class="pr-karte__preis">
-              <span class="pr-karte__monat">63,60 €</span>
-              <span class="pr-karte__proMonat">im Monat</span>
-            </p>
-            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
-            <p class="pr-karte__woche">
-              15,90 € pro Woche,
-              <span class="pr-karte__alt">regulär 18,90 € pro Woche</span>
-            </p>
-            <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
-            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
-            <span class="pr-karte__marke">EARLY BIRD, FÜR DIE LAUFZEIT</span>
-            <ul>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit<a class="pr-karte__vertraglink" href="#vertrag">Vertragsbedingungen</a></p>
+            <p class="pr-karte__woche">15,90 € pro Woche</p>
+            <p class="mw-card-fee">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+            <span class="mw-card-savings">EARLY BIRD, FÜR DIE LAUFZEIT</span>
+            <ul class="mw-card-features">
               <li>Kursplan für Jugendliche</li>
               <li>Echte Technik, echter Sport</li>
               <li>Eigene Gruppen, keine gemischten Erwachsenenkurse</li>
             </ul>
-            <div class="pr-karte__btnwrap">
-              <a href="/mitglied-werden#packages" data-abo-contract="45434"
-                 class="btn btn--gold" style="text-decoration:none;">EARLY BIRD SICHERN</a>
-            </div>
+            <a href="/mitglied-werden#packages" data-abo-contract="45434"
+               class="mw-card-btn">EARLY BIRD SICHERN</a>
           </article>
-          <article class="pr-karte reveal" id="kids" aria-labelledby="k-kids">
-            <div class="pr-karte__kopf">
-              <h3 class="pr-karte__name" id="k-kids">Kids</h3>
-              <span class="pr-karte__alter">Kinder, 6 bis 9 Jahre</span>
+          <article class="mw-card mw-card--kids reveal" id="kids" aria-labelledby="k-kids">
+            <p class="mw-card-label">KINDER</p>
+            <h3 class="mw-card-name" id="k-kids">KIDS</h3>
+            <p class="mw-card-age">6 bis 9 Jahre</p>
+            <hr class="mw-card-divider" />
+            <p class="mw-card-reg-price">Regulär 17,90 € pro Woche</p>
+            <div class="mw-card-price-row">
+              <span class="mw-card-price">59,60 €</span>
+              <span class="mw-card-price-unit">im Monat</span>
             </div>
-            <p class="pr-karte__preis">
-              <span class="pr-karte__monat">59,60 €</span>
-              <span class="pr-karte__proMonat">im Monat</span>
-            </p>
-            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit</p>
-            <p class="pr-karte__woche">
-              14,90 € pro Woche,
-              <span class="pr-karte__alt">regulär 17,90 € pro Woche</span>
-            </p>
-            <p class="pr-karte__zusatz">+ 100 € einmalig, inkl. Fighter-Kit</p>
-            <p class="pr-karte__vertrag">12 monatliche Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</p>
-            <span class="pr-karte__marke">EARLY BIRD, FÜR DIE LAUFZEIT</span>
-            <ul>
+            <p class="pr-karte__laufzeit">bei 12 Monaten Laufzeit<a class="pr-karte__vertraglink" href="#vertrag">Vertragsbedingungen</a></p>
+            <p class="pr-karte__woche">14,90 € pro Woche</p>
+            <p class="mw-card-fee">+ 100 € einmalig, inkl. Fighter‑Kit</p>
+            <span class="mw-card-savings">EARLY BIRD, FÜR DIE LAUFZEIT</span>
+            <ul class="mw-card-features">
               <li>Kursplan speziell für Kinder</li>
               <li>Kleingruppen für individuelle Förderung</li>
               <li>Sicheres, geführtes Boxen lernen</li>
             </ul>
-            <div class="pr-karte__btnwrap">
-              <a href="/mitglied-werden#packages" data-abo-contract="45432"
-                 class="btn btn--gold" style="text-decoration:none;">EARLY BIRD SICHERN</a>
-            </div>
+            <a href="/mitglied-werden#packages" data-abo-contract="45432"
+               class="mw-card-btn">EARLY BIRD SICHERN</a>
           </article>
         </div>
         <!-- /PREISE:KARTEN -->
         <!-- PREISE:BEDINGUNGEN -->
-        <ul class="pr-bedingungen reveal" aria-label="Vertragsbedingungen">
-          <li>Abrechnung monatlich im Voraus per SEPA-Lastschrift.</li>
-          <li>Laufzeit 12 Monate, 12 monatliche Rechnungen.</li>
-          <li>Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst.</li>
-          <li>Die Kündigung geht schriftlich per E-Mail oder Brief.</li>
-          <li>Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.</li>
-          <li>Early Bird gilt für die gesamte Vertragslaufzeit.</li>
-        </ul>
-        <p class="pr-hinweis" style="color:rgba(245,240,232,0.55);">Alle Preise inklusive Mehrwertsteuer. Die vollständigen Bedingungen stehen in den <a href="/agb" style="color:var(--gold);">AGB</a>.</p>
+        <div class="pr-vertrag reveal" id="vertrag">
+          <h3 class="pr-vertrag__h3">So läuft dein Vertrag</h3>
+          <ul class="pr-vertrag__liste">
+            <li>Abrechnung monatlich im Voraus per SEPA-Lastschrift.</li>
+            <li>Laufzeit 12 Monate, 12 monatliche Rechnungen.</li>
+            <li>Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst.</li>
+            <li>Die Kündigung geht schriftlich per E-Mail oder Brief.</li>
+            <li>Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.</li>
+            <li>Early Bird gilt für die gesamte Vertragslaufzeit.</li>
+          </ul>
+          <p class="pr-vertrag__fuss">Alle Preise inklusive Mehrwertsteuer. Die vollständigen Bedingungen stehen in den <a href="/agb">AGB</a>.</p>
+        </div>
         <!-- /PREISE:BEDINGUNGEN -->
       </div>
     </div>
   </section>
 
   <!-- ── Personal Training ── -->
-  <section class="seo-section seo-section--light pr-ziel" id="personal-training" aria-labelledby="pt-h2">
+  <section class="seo-section seo-section--dark pr-ziel" id="personal-training" aria-labelledby="pt-h2">
     <div class="container">
-      <div class="seo-section-inner">
+      <div class="seo-section-inner pr-weit">
         <div class="reveal">
-          <span class="tag">PERSONAL TRAINING</span>
+          <span class="tag tag--dark">PERSONAL TRAINING</span>
           <h2 id="pt-h2" style="margin-top:1.25rem;">EINS ZU EINS.<br><span>NACH TERMIN.</span></h2>
           <p style="margin-top:1.25rem;">
             60 Minuten mit deinem Coach. Mitglieder zahlen weniger, sobald sie eingeloggt buchen.
@@ -1003,26 +1520,26 @@
           <div class="pr-pttabelle pr-pttabelle--nicht">
             <table class="pr-tab" aria-label="Personal Training, Preise für Nichtmitglieder">
               <thead>
-                <tr><th scope="col">Paket</th><th scope="col">Preis</th><th scope="col">pro Einheit</th><th scope="col"><span class="pr-nur-sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Buchen</span></th></tr>
+                <tr><th scope="col">Paket</th><th scope="col">Preis</th><th scope="col">pro Einheit</th><th scope="col"><span class="pr-nur-sr">Buchen</span></th></tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">Einzelsession</th>
-                  <td data-spalte="Preis">125 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">125 €</td>
                   <td data-spalte="pro Einheit">125 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">5er Karte</th>
-                  <td data-spalte="Preis">575 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">575 €</td>
                   <td data-spalte="pro Einheit">115 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">10er Karte</th>
-                  <td data-spalte="Preis">1.090 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">1.090 €</td>
                   <td data-spalte="pro Einheit">109 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
               </tbody>
             </table>
@@ -1030,36 +1547,36 @@
           <div class="pr-pttabelle pr-pttabelle--mitglied">
             <table class="pr-tab" aria-label="Personal Training, Preise für Mitglieder">
               <thead>
-                <tr><th scope="col">Paket</th><th scope="col">Preis</th><th scope="col">pro Einheit</th><th scope="col"><span class="pr-nur-sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Buchen</span></th></tr>
+                <tr><th scope="col">Paket</th><th scope="col">Preis</th><th scope="col">pro Einheit</th><th scope="col"><span class="pr-nur-sr">Buchen</span></th></tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">Einzelsession</th>
-                  <td data-spalte="Preis">90 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">90 €</td>
                   <td data-spalte="pro Einheit">90 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">5er Karte</th>
-                  <td data-spalte="Preis">425 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">425 €</td>
                   <td data-spalte="pro Einheit">85 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
                 <tr>
                   <th scope="row">10er Karte</th>
-                  <td data-spalte="Preis">800 €</td>
+                  <td class="pr-tab__preis" data-spalte="Preis">800 €</td>
                   <td data-spalte="pro Einheit">80 €</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="btn btn--gold btn--sm" style="text-decoration:none;">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
           </div>
         </div>
-        <p class="pr-hinweis" style="color:rgba(8,8,8,0.6);">
+        <p class="pr-hinweis pr-hinweis--dunkel">
           Mitglieder zahlen automatisch ihren Preis, sobald sie eingeloggt buchen.
           Alles zum Ablauf steht auf
-          <a href="/personal-training-boxen-muenchen" style="color:var(--gold-dark);">Personal Training</a>.
+          <a href="/personal-training-boxen-muenchen">Personal Training</a>.
         </p>
         <!-- /PREISE:PT -->
       </div>
@@ -1067,49 +1584,50 @@
   </section>
 
   <!-- ── Weitere Optionen ── -->
-  <section class="seo-section seo-section--dark" aria-labelledby="weitere-h2">
+  <section class="seo-section seo-section--light" aria-labelledby="weitere-h2">
     <div class="container">
-      <div class="seo-section-inner">
+      <div class="seo-section-inner pr-weit">
         <div class="reveal">
-          <span class="tag tag--dark">OHNE MITGLIEDSCHAFT</span>
+          <span class="tag tag--light-inv">OHNE MITGLIEDSCHAFT</span>
           <h2 id="weitere-h2" style="margin-top:1.25rem;">EINZELN<br><span>TRAINIEREN.</span></h2>
         </div>
         <!-- PREISE:WEITERE -->
-        <table class="pr-tab pr-tab--dunkel reveal" aria-label="Einzelne Karten ohne Mitgliedschaft">
-          <thead>
-            <tr><th scope="col">Angebot</th><th scope="col">Preis</th><th scope="col">Enthalten</th><th scope="col"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Buchen</span></th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Tageskarte</th>
-              <td data-spalte="Preis">20 €</td>
-              <td data-spalte="Enthalten">Ein Tag, alle Kurse dieses Tages.</td>
-              <td class="pr-tab__btn"><a href="/stundenplan" class="btn btn--outline-gold btn--sm" style="text-decoration:none;">ZUM STUNDENPLAN</a></td>
-            </tr>
-            <tr>
-              <th scope="row">Open Gym</th>
-              <td data-spalte="Preis">18 €</td>
-              <td data-spalte="Enthalten">Ein Credit für freies Training.</td>
-              <td class="pr-tab__btn"><a href="/stundenplan" class="btn btn--outline-gold btn--sm" style="text-decoration:none;">ZUM STUNDENPLAN</a></td>
-            </tr>
-            <tr>
-              <th scope="row">10er Karte Gruppenkurse</th>
-              <td data-spalte="Preis">150 €</td>
-              <td data-spalte="Enthalten">Zehn Kurse, freie Kurswahl.</td>
-              <td class="pr-tab__btn"><a href="/stundenplan" class="btn btn--outline-gold btn--sm" style="text-decoration:none;">ZUM STUNDENPLAN</a></td>
-            </tr>
-          </tbody>
-        </table>
+        <ul class="pr-optionen reveal" aria-label="Einzelne Karten ohne Mitgliedschaft">
+          <li class="pr-option">
+            <div class="pr-option__text">
+              <h3 class="pr-option__name">Tageskarte</h3>
+              <p class="pr-option__dazu">Ein Tag, alle Kurse dieses Tages.</p>
+            </div>
+            <p class="pr-option__preis">20 €</p>
+            <a href="/stundenplan" class="pr-zeilenknopf pr-zeilenknopf--hell">ZUM STUNDENPLAN</a>
+          </li>
+          <li class="pr-option">
+            <div class="pr-option__text">
+              <h3 class="pr-option__name">Open Gym</h3>
+              <p class="pr-option__dazu">Ein Credit für freies Training.</p>
+            </div>
+            <p class="pr-option__preis">18 €</p>
+            <a href="/stundenplan" class="pr-zeilenknopf pr-zeilenknopf--hell">ZUM STUNDENPLAN</a>
+          </li>
+          <li class="pr-option">
+            <div class="pr-option__text">
+              <h3 class="pr-option__name">10er Karte Gruppenkurse</h3>
+              <p class="pr-option__dazu">Zehn Kurse, freie Kurswahl.</p>
+            </div>
+            <p class="pr-option__preis">150 €</p>
+            <a href="/stundenplan" class="pr-zeilenknopf pr-zeilenknopf--hell">ZUM STUNDENPLAN</a>
+          </li>
+        </ul>
         <!-- /PREISE:WEITERE -->
       </div>
     </div>
   </section>
 
   <!-- ── Drei Zusagen ── -->
-  <section class="seo-section seo-section--smoke" aria-labelledby="zusagen-h2">
+  <section class="seo-section seo-section--dark" aria-labelledby="zusagen-h2">
     <div class="container">
-      <div class="seo-section-inner">
-        <h2 id="zusagen-h2" class="pr-nur-sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Was beim Einstieg gilt</h2>
+      <div class="seo-section-inner pr-weit">
+        <h2 id="zusagen-h2" class="pr-nur-sr">Was beim Einstieg gilt</h2>
         <div class="pr-zusagen reveal">
           <div class="pr-zusage"><strong>Erstes Training kostenlos</strong> Einmal mittrainieren, unverbindlich.</div>
           <div class="pr-zusage"><strong>Keine Vorkenntnisse nötig</strong> Dein Coach holt dich dort ab, wo du stehst.</div>
@@ -1120,34 +1638,34 @@
   </section>
 
   <!-- ── FAQ ── -->
-  <section class="seo-section seo-section--dark" aria-labelledby="faq-h2">
+  <section class="seo-section seo-section--light" aria-labelledby="faq-h2">
     <div class="container">
       <div class="seo-section-inner">
         <div class="reveal">
-          <span class="tag tag--dark">FAQ</span>
+          <span class="tag tag--light-inv">FAQ</span>
           <h2 id="faq-h2" style="margin-top:1.25rem;">FRAGEN ZU<br><span>PREISEN UND VERTRAG</span></h2>
         </div>
         <!-- PREISE:FAQ -->
-        <div class="pr-faq reveal">
-          <details>
-            <summary>Wie wird der Beitrag abgerechnet?</summary>
-            <div class="pr-faq__a">Der Mitgliedsbeitrag wird wöchentlich berechnet und ist monatlich im Voraus zu entrichten. Die Zahlung läuft per SEPA-Lastschrift.</div>
+        <div class="pr-faq faq-list faq-list--light reveal">
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Wie wird der Beitrag abgerechnet?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Der Mitgliedsbeitrag wird wöchentlich berechnet und ist monatlich im Voraus zu entrichten. Die Zahlung läuft per SEPA-Lastschrift.</div>
           </details>
-          <details>
-            <summary>Kommt zum Beitrag noch etwas dazu?</summary>
-            <div class="pr-faq__a">Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit. Sie ist nicht erstattungsfähig.</div>
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Kommt zum Beitrag noch etwas dazu?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Einmalig 100 € Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit. Sie ist nicht erstattungsfähig.</div>
           </details>
-          <details>
-            <summary>Wie lange läuft der Vertrag und wie kündige ich?</summary>
-            <div class="pr-faq__a">Die Laufzeit beträgt 12 Monate, abgerechnet in 12 monatlichen Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</div>
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Wie lange läuft der Vertrag und wie kündige ich?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Die Laufzeit beträgt 12 Monate, abgerechnet in 12 monatlichen Rechnungen. Danach verlängert sich der Vertrag automatisch um jeweils einen Monat, sofern du nicht mit einer Frist von einem Monat zum Laufzeitende kündigst. Die Kündigung geht schriftlich per E-Mail oder Brief.</div>
           </details>
-          <details>
-            <summary>Wie lange gilt der Early-Bird-Preis?</summary>
-            <div class="pr-faq__a">Für die gesamte Vertragslaufzeit, sofern die Mitgliedschaft nicht unterbrochen wird. Zu haben ist er nur solange Plätze frei sind.</div>
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Wie lange gilt der Early-Bird-Preis?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Für die gesamte Vertragslaufzeit, sofern die Mitgliedschaft nicht unterbrochen wird. Zu haben ist er nur solange Plätze frei sind.</div>
           </details>
-          <details>
-            <summary>Kann ich vorher kostenlos testen?</summary>
-            <div class="pr-faq__a">Ja. Das erste Training ist kostenlos und unverbindlich. Du wählst online einen Termin, meldest dich kurz an und kommst vorbei. <a href="/probetraining">Zur Buchung: Probetraining</a>.</div>
+          <details class="faq-item">
+            <summary class="faq-q faq-q--light">Kann ich vorher kostenlos testen?<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-a-inner">Ja. Das erste Training ist kostenlos und unverbindlich. Du wählst online einen Termin, meldest dich kurz an und kommst vorbei. <a href="/probetraining">Zur Buchung: Probetraining</a>.</div>
           </details>
         </div>
         <!-- /PREISE:FAQ -->
@@ -1156,7 +1674,7 @@
   </section>
 
   <!-- ── Schluss ── -->
-  <section class="seo-section seo-section--smoke" style="text-align:center;" aria-labelledby="schluss-h2">
+  <section class="seo-section seo-section--dark" style="text-align:center;" aria-labelledby="schluss-h2">
     <div class="container">
       <div class="seo-section-inner reveal">
         <h2 id="schluss-h2">ERST TESTEN,<br><span>DANN ENTSCHEIDEN.</span></h2>
@@ -1378,6 +1896,59 @@ function MountBsportWidget(config, repeat) {
     containerId:    'bsport-widget-342467',
     uniqueWidgetId: 'bomaye-abo-preise'
   });
+</script>
+
+<script>
+  /* ── Umschalter: welcher Abschnitt ist gerade zu sehen ──────────────────
+     Verbesserung, keine Voraussetzung. Ohne JavaScript bleiben es vier
+     gewoehnliche Sprungmarken, nur ohne Markierung. Kein Scroll-Horchen,
+     ein IntersectionObserver genuegt und kostet nichts pro Bild.
+
+     Die Wurzellinie liegt in Hoehe von Kopfleiste plus Umschalter: ein
+     Abschnitt gilt als der aktuelle, sobald er diese Linie kreuzt. Ohne
+     den Abzug waere bei jedem Sprung kurz der vorige Abschnitt markiert,
+     weil er dann noch hinter dem stehenden Umschalter liegt.             */
+  (function () {
+    var verweise = document.querySelectorAll('.pr-schalter a[href^="#"]');
+    if (!verweise.length || !('IntersectionObserver' in window)) return;
+
+    var paare = [];
+    verweise.forEach(function (a) {
+      var ziel = document.getElementById(a.getAttribute('href').slice(1));
+      if (ziel) paare.push({ a: a, ziel: ziel });
+    });
+    if (!paare.length) return;
+
+    function leiste() {
+      var h = getComputedStyle(document.documentElement).getPropertyValue('--nav-h');
+      var n = parseInt(h, 10);
+      return (isNaN(n) ? 72 : n) + 56;
+    }
+
+    var sichtbar = new Set();
+    function markiere() {
+      var beste = null;
+      paare.forEach(function (p) {
+        if (!sichtbar.has(p.ziel)) return;
+        var o = p.ziel.getBoundingClientRect().top;
+        if (beste === null || o < beste.o) beste = { p: p, o: o };
+      });
+      paare.forEach(function (p) {
+        if (beste && p === beste.p) p.a.setAttribute('aria-current', 'true');
+        else p.a.removeAttribute('aria-current');
+      });
+    }
+
+    var wache = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) {
+        if (e.isIntersecting) sichtbar.add(e.target);
+        else sichtbar.delete(e.target);
+      });
+      markiere();
+    }, { rootMargin: '-' + leiste() + 'px 0px -55% 0px', threshold: 0 });
+
+    paare.forEach(function (p) { wache.observe(p.ziel); });
+  })();
 </script>
 
 </body>
