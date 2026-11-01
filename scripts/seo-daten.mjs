@@ -175,11 +175,11 @@ export const ALTE_IDS = [
 
    WAS HIER BEWUSST NICHT STEHT
    Keine erfundene Zahl, kein Preis, der nicht auf der Seite steht, und keine
-   Aussage ueber einen einzelnen Trainer. Zwei Beschreibungen tragen solche
-   Aussagen noch (kickboxen-muenchen und personal-training-boxen-muenchen,
-   beide mit Namen und Titel eines Trainers). Sie stammen nicht von hier,
-   liegen in der Laenge und bleiben deshalb unangetastet - siehe TODO-OWNER
-   in der PR-Beschreibung.
+   Aussage ueber einen einzelnen Trainer. Die beiden Beschreibungen, die
+   solche Aussagen noch trugen (kickboxen-muenchen und
+   personal-training-boxen-muenchen, beide mit Namen oder Titel eines
+   Trainers), sind am 01.11.2026 neu geschrieben. Siehe die Kommentare an
+   den jeweiligen Eintraegen weiter unten.
    ═══════════════════════════════════════════════════════════════════════════ */
 export const SEITEN = {
   'index.html': {
@@ -226,7 +226,7 @@ export const SEITEN = {
   },
   'mitglied-werden.html': {
     titel: 'Mitglied werden',
-    beschr: 'Sichere dir deinen Early-Bird-Preis im Bomaye Boxgym München, dauerhaft und unwiderruflich. Mitgliedschaften für Kids, Youth und Unlimited im Überblick.',
+    beschr: 'Sichere dir deinen Early-Bird-Preis im Bomaye Boxgym München für die gesamte Vertragslaufzeit. Mitgliedschaften für Kids, Youth und Unlimited im Überblick.',
   },
   'boxgym-muenchen.html': {
     titel: 'Boxgym München',
@@ -308,6 +308,19 @@ SEITEN['boxen-muenchen.html'] = {
   titel: 'Boxen München: Boxgym in Neuhausen',
   beschr: 'Boxen in München: Bomaye Boxgym im Pineapple Park, Neuhausen-Nymphenburg. Boxen, Kickboxen, Kinderboxen und Personal Training. Erstes Training kostenlos.',
 };
+/* ── /preise ─────────────────────────────────────────────────────────────
+   Titel und Beschreibung hat der Betreiber am 01.11.2026 wortgenau
+   vorgegeben. Der Titel traegt "Bomaye" statt der vollen Marke, sonst
+   laege er ueber 60 Zeichen. Die Zahlen in der Beschreibung stehen
+   gleichlautend in scripts/preise-daten.mjs und damit auf der Seite:
+   59,60 € ist der Monatsbetrag von Kids, 90 € der Mitgliederpreis einer
+   PT-Einheit, 20 € die Tageskarte.                                      */
+SEITEN['preise.html'] = {
+  titel: 'Boxen München Preise: Mitgliedschaft & PT',
+  marke: 'Bomaye',
+  beschr: 'Boxen München Preise: Early Bird ab 59,60 € im Monat, Personal Training ab 90 € pro Session, Tageskarte 20 €. Erstes Training gratis.',
+};
+
 SEITEN['kinderboxen-muenchen.html'] = {
   titel: 'Kinder Boxen München: Kids Boxing ab 6',
   marke: 'Bomaye Boxgym',

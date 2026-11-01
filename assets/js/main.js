@@ -317,7 +317,7 @@ async function initEarlyBirdFOMO() {
 
   // Badge text
   const badgeEl = document.getElementById('spots-badge-text');
-  if (badgeEl) badgeEl.textContent = `Early Bird — noch ${spotsLeft} Plätze`;
+  if (badgeEl) badgeEl.textContent = 'Early Bird, nur solange Plätze frei sind.';
 
   // Sub-label
   const totalEl = document.getElementById('eb-total-label');
