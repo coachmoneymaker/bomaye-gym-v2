@@ -142,7 +142,27 @@ const BOMAYE_PRICING = {
     },
   },
 
-  /* ── Personal Training ─────────────────────────────────── */
+  /* ── Personal Training ───────────────────────────────────
+     STAND 01.11.2026, vom Betreiber bestaetigt, und gleichlautend mit der
+     sichtbaren Preistabelle auf /personal-training-boxen-muenchen. Diese
+     Seite ist die massgebliche Quelle, nicht diese Datei.
+
+     HIER STANDEN FUER NICHTMITGLIEDER ANDERE ZAHLEN:
+       pricePerSession      110  ->  125
+       tenCardPrice         950  ->  1090
+       tenCardPricePerUnit   95  ->  109
+     Die Mitgliederpreise (90 / 800 / 80) stimmten bereits.
+
+     ZWEI DINGE, DIE MAN WISSEN MUSS:
+     1. DIESE WERTE WERDEN VON NICHTS GELESEN. BOMAYE_PRICING wird nur in
+        index.html eingebunden, und kein Skript im Repo greift darauf zu.
+        Die Preise auf index.html und /mitglied-werden stehen fest im HTML.
+        Die Datei ist damit Dokumentation, keine Quelle - die falschen
+        Zahlen sind nie jemandem aufgefallen, weil sie nie jemand gesehen
+        hat.
+     2. Die Fuenferkarte (575 € / 115 € je Einheit, Mitglieder 425 € / 85 €)
+        steht auf der Seite, aber nicht hier. Nicht ergaenzt, weil der
+        Auftrag nur die drei Zahlen oben nannte.                           */
   personalTraining: {
     label: 'Personal Training',
     icon:  'fa-user-check',
@@ -155,10 +175,10 @@ const BOMAYE_PRICING = {
       note:                'Individuelle Terminbuchung',
     },
     forNonMembers: {
-      pricePerSession:     110,
+      pricePerSession:     125,
       comparePrice:        null,
-      tenCardPrice:        950,
-      tenCardPricePerUnit: 95,
+      tenCardPrice:        1090,
+      tenCardPricePerUnit: 109,
       note:                null,
     },
   },
