@@ -30,7 +30,8 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, writeFile } from 'node:fs/promises';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro,
-         FLEX_AKTIV, FLEX, FLEX_BEDINGUNGEN, FLEX_FRAGE, ersparnis }
+         FLEX_AKTIV, FLEX, FLEX_BEDINGUNGEN, FLEX_FRAGE, ersparnis,
+         ADS_CHECKOUT_SEND_TO }
   from './preise-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
@@ -77,6 +78,23 @@ function ersetze(t, marke, inhalt) {
      data-plan           unlimited | youth | kids
      data-offer          earlybird | flex
      data-item-id        Kennung, wenn kein data-abo-contract da ist     */
+/* Welches GA4-Ereignis ein Knopf ausloest.
+
+   begin_checkout gehoert nur Knoepfen, die wirklich einen bsport-Checkout
+   oeffnen: die mit data-abo-contract, und solche, deren Ziel auf eine
+   bsport-Kaufadresse zeigt. Die PT- und Pass-Knoepfe fuehren heute auf
+   /personal-training-boxen-muenchen und /stundenplan, also auf Seiten mit
+   einem Kalender. Sie als Checkout zu zaehlen mischte Navigationen unter
+   Kaufabsichten; sie melden deshalb select_item.
+
+   Bekommt einer dieser Knoepfe spaeter eine echte Kaufadresse, schaltet
+   diese Funktion ihn von selbst auf begin_checkout um.                  */
+function gaEreignis({ contract, ziel }) {
+  if (contract) return 'begin_checkout';
+  if (ziel && /bsport\.io|\/checkout\/|\/subscription\//.test(ziel)) return 'begin_checkout';
+  return 'select_item';
+}
+
 const PLAN_SCHLUESSEL = { erwachsene: 'unlimited', youth: 'youth', kids: 'kids',
                           'unlimited-flex': 'unlimited', 'youth-flex': 'youth',
                           'kids-flex': 'kids' };
@@ -108,7 +126,8 @@ ${beliebt ? '            <span class="mw-popular-badge" aria-label="Beliebtestes
 ${m.leistungen.map((l) => `              <li>${esc(l)}</li>`).join('\n')}
             </ul>
             <a href="/mitglied-werden#packages" data-abo-contract="${esc(m.contract)}"
-               ${messen({ 'data-item-category': 'membership_earlybird',
+               ${messen({ 'data-ga-event': gaEreignis({ contract: m.contract }),
+                          'data-item-category': 'membership_earlybird',
                           'data-item-name': m.name,
                           'data-price': m.monat.toFixed(2),
                           'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
@@ -150,7 +169,7 @@ ${gruppe.zeilen.map((z) => `                <tr>
                   <th scope="row">${esc(z.name)}</th>
                   <td class="pr-tab__preis" data-spalte="Preis">${esc(euro(z.preis))}</td>
                   <td data-spalte="pro Einheit">${esc(euro(z.proEinheit))}</td>
-                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" ${messen({ 'data-item-category': 'personal_training', 'data-item-id': `pt-${art}-${z.id}`, 'data-item-name': `Personal Training ${z.name} (${gruppe.label})`, 'data-price': z.preis.toFixed(2) })} class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
+                  <td class="pr-tab__btn"><a href="/personal-training-boxen-muenchen#pt-booking" ${messen({ 'data-ga-event': gaEreignis({ ziel: '/personal-training-boxen-muenchen#pt-booking' }), 'data-item-category': 'personal_training', 'data-item-id': `pt-${art}-${z.id}`, 'data-item-name': `Personal Training ${z.name} (${gruppe.label})`, 'data-price': z.preis.toFixed(2) })} class="pr-zeilenknopf">PERSONAL TRAINING BUCHEN</a></td>
                 </tr>`).join('\n')}
               </tbody>
             </table>
@@ -183,7 +202,7 @@ function weitere() {
               <p class="pr-option__dazu">${esc(w.dazu)}</p>
             </div>
             <p class="pr-option__preis">${esc(euro(w.preis))}</p>
-            <a href="${esc(w.ziel)}" ${messen({ 'data-item-category': 'pass',
+            <a href="${esc(w.ziel)}" ${messen({ 'data-ga-event': gaEreignis({ ziel: w.ziel }), 'data-item-category': 'pass',
                  'data-item-id': w.id, 'data-item-name': w.bsport,
                  'data-price': w.preis.toFixed(2) })} class="pr-zeilenknopf pr-zeilenknopf--hell">${esc(w.knopf.toUpperCase())}</a>
           </li>`).join('\n')
@@ -324,7 +343,8 @@ ${FLEX.map((f) => `            <li class="pr-option">
               </div>
               <p class="pr-option__preis">${esc(euro(f.monat))}<span class="pr-option__promonat">im Monat</span></p>
               <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}"
-                 ${messen({ 'data-item-category': 'membership_flex',
+                 ${messen({ 'data-ga-event': gaEreignis({ contract: f.contract }),
+                            'data-item-category': 'membership_flex',
                             'data-item-name': f.name,
                             'data-price': f.monat.toFixed(2),
                             'data-first-payment': (f.monat + AUFNAHME).toFixed(2),
@@ -434,7 +454,8 @@ function startseiteEinbauen(t) {
    ist wiederholbar: vorhandene Attribute werden ersetzt, nicht gestapelt. */
 function knoepfeMessbar(t) {
   for (const m of MITGLIEDSCHAFTEN) {
-    const attr = messen({ 'data-item-category': 'membership_earlybird',
+    const attr = messen({ 'data-ga-event': gaEreignis({ contract: m.contract }),
+                          'data-item-category': 'membership_earlybird',
                           'data-item-name': m.name,
                           'data-price': m.monat.toFixed(2),
                           'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
@@ -448,6 +469,18 @@ function knoepfeMessbar(t) {
   return t;
 }
 
+/* ── Ads-Kennung an den Skript-Tag ────────────────────────────────────────
+   plan-tracking.js liest sie von seinem eigenen <script>-Tag. Damit steht
+   die Kennung an genau einer Stelle im Repo, naemlich in
+   ADS_CHECKOUT_SEND_TO, und nicht in JavaScript. Leer heisst: das Attribut
+   faellt ganz weg und das Skript ruft kein gtag.                        */
+function adsKennung(t) {
+  const attr = ADS_CHECKOUT_SEND_TO ? ` data-ads-send-to="${esc(ADS_CHECKOUT_SEND_TO)}"` : '';
+  return t.replace(
+    /(<script src="\/assets\/js\/plan-tracking\.js")(?: data-ads-send-to="[^"]*")?( defer><\/script>)/g,
+    `$1${attr}$2`);
+}
+
 /* ── Lauf ──────────────────────────────────────────────────────────────── */
 let t = await readFile(DATEI, 'utf8');
 const vorher = t;
@@ -458,6 +491,7 @@ t = ersetze(t, 'PT', pt());
 t = ersetze(t, 'WEITERE', weitere());
 t = ersetze(t, 'FAQ', faq());
 t = flexEinbauen(t, flex(), '        <!-- PREISE:BEDINGUNGEN -->');
+t = adsKennung(t);
 
 /* Die Startseite wird nur angefasst, wenn sich dort wirklich etwas
    aendert. Mit ausgeschaltetem Flex ist das nie der Fall. */
@@ -466,6 +500,7 @@ let h = await readFile(STARTSEITE, 'utf8');
 const hVorher = h;
 h = startseiteEinbauen(h);
 h = knoepfeMessbar(h);
+h = adsKennung(h);
 if (h !== hVorher) {
   if (NUR_PRUEFEN) {
     console.log('index.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
@@ -481,6 +516,7 @@ const MITGLIED = WURZEL + '/mitglied-werden.html';
 let mw = await readFile(MITGLIED, 'utf8');
 const mwVorher = mw;
 mw = knoepfeMessbar(mw);
+mw = adsKennung(mw);
 if (mw !== mwVorher) {
   if (NUR_PRUEFEN) {
     console.log('mitglied-werden.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');

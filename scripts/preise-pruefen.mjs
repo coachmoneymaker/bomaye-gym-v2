@@ -21,7 +21,8 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile } from 'node:fs/promises';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro,
-         FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis } from './preise-daten.mjs';
+         FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis,
+         ADS_CHECKOUT_SEND_TO } from './preise-daten.mjs';
 
 const WURZEL = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const befunde = [];
@@ -153,6 +154,7 @@ for (const [datei, html] of SEITEN_MIT_KNOEPFEN) {
       'data-price': m.monat.toFixed(2),
       'data-first-payment': (m.monat + AUFNAHME).toFixed(2),
       'data-offer': 'earlybird',
+      'data-ga-event': 'begin_checkout',
     };
     for (const [k, v] of Object.entries(soll)) {
       const ist = attrVon(tag, k);
@@ -171,6 +173,7 @@ if (FLEX_AKTIV) {
       'data-price': f.monat.toFixed(2),
       'data-first-payment': (f.monat + AUFNAHME).toFixed(2),
       'data-offer': 'flex',
+      'data-ga-event': 'begin_checkout',
     };
     for (const [k, v] of Object.entries(soll)) {
       const ist = attrVon(tag, k);
@@ -183,11 +186,28 @@ if (FLEX_AKTIV) {
 for (const w of WEITERE) {
   const m = sichtbar.match(new RegExp(`<a[^>]*data-item-id="${w.id}"[^>]*>`, 's'));
   if (!m) { melde(`preise.html: Pass-Knopf "${w.id}" ohne Messattribute`); continue; }
-  if (attrVon(m[0], 'data-item-name') !== w.bsport)
+  if (attrVon(m[0], 'data-ga-event') !== 'select_item')
+    melde(`preise.html, Pass "${w.id}": data-ga-event ist "${attrVon(m[0], 'data-ga-event')}", erwartet "select_item" (der Knopf fuehrt auf ${w.ziel}, nicht in einen Checkout)`);
+  else if (attrVon(m[0], 'data-item-name') !== w.bsport)
     melde(`preise.html, Pass "${w.id}": data-item-name ist "${attrVon(m[0], 'data-item-name')}", erwartet "${w.bsport}"`);
   else if (attrVon(m[0], 'data-price') !== w.preis.toFixed(2))
     melde(`preise.html, Pass "${w.id}": data-price ist "${attrVon(m[0], 'data-price')}", erwartet "${w.preis.toFixed(2)}"`);
   else geprueftAttr += 2;
+}
+
+/* Die Ads-Kennung steht entweder nirgends oder ueberall gleich.
+   Hier zaehlt die GANZE Datei, nicht nur <main>: der Skript-Tag steht
+   darunter, am Ende des Rumpfes. */
+const GANZ = [['preise.html', seite], ['index.html', startseite],
+              ['mitglied-werden.html', await readFile(WURZEL + '/mitglied-werden.html', 'utf8')]];
+for (const [datei, html] of GANZ) {
+  const tag = html.match(/<script src="\/assets\/js\/plan-tracking\.js"[^>]*>/);
+  if (!tag) { melde(`${datei}: plan-tracking.js wird nicht geladen`); continue; }
+  const ist = attrVon(tag[0], 'data-ads-send-to');
+  if (ADS_CHECKOUT_SEND_TO && ist !== ADS_CHECKOUT_SEND_TO)
+    melde(`${datei}: data-ads-send-to ist "${ist}", erwartet "${ADS_CHECKOUT_SEND_TO}"`);
+  if (!ADS_CHECKOUT_SEND_TO && ist !== null)
+    melde(`${datei}: ADS_CHECKOUT_SEND_TO ist leer, am Skript-Tag steht aber "${ist}"`);
 }
 
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`

@@ -1,7 +1,7 @@
-/* PAKETKLICKS MESSEN. begin_checkout in den dataLayer; InitiateCheckout an
-   Meta nur, wenn window.fbq existiert (also nach Einwilligung) und
-   pixel-events.js nicht auf der Seite liegt. Kein preventDefault, kein
-   Nachladen, kein Cookie. Felder und GTM: docs/tracking-events.md */
+/* PAKETKLICKS MESSEN. Checkout -> begin_checkout, blosse Navigation ->
+   select_item. Meta und Ads nur beim Checkout und nur, wenn fbq bzw. gtag
+   schon da sind. Kein preventDefault, kein Cookie, nie gtag("consent").
+   Alles weitere: docs/tracking-events.md */
 (function () {
   'use strict';
 
@@ -10,6 +10,10 @@
 
   /* Liegt pixel-events.js hier, gehoert Meta ihm. */
   var fremderPixelHoerer = !!document.querySelector('script[src*="pixel-events"]');
+
+  /* Ads-Kennung vom eigenen Skript-Tag, aus ADS_CHECKOUT_SEND_TO. Leer = aus. */
+  var eigenes = document.querySelector('script[src*="plan-tracking"]');
+  var ADS = (eigenes && eigenes.getAttribute('data-ads-send-to')) || '';
 
   function dl() {
     window.dataLayer = window.dataLayer || [];
@@ -21,7 +25,7 @@
     try { return location.origin + location.pathname; } catch (e) { return ''; }
   }
 
-  /* Eigene Kennung je Klick. Der Webhook sendet nie InitiateCheckout. */
+  /* Eigene Kennung je Klick; der Webhook sendet nie InitiateCheckout. */
   function kennung() {
     try {
       if (window.crypto && window.crypto.randomUUID) return 'ic-' + window.crypto.randomUUID();
@@ -48,9 +52,12 @@
     var plan  = el.getAttribute('data-plan') || '';
     var art   = el.getAttribute('data-offer') || '';
     var wert  = erst == null ? preis : erst;
+    /* Ohne Angabe die vorsichtige Lesart: kein Checkout. */
+    var name2 = el.getAttribute('data-ga-event') || 'select_item';
+    var checkout = name2 === 'begin_checkout';
 
     dl().push({
-      event: 'begin_checkout',
+      event: name2,
       ecommerce: {
         currency: 'EUR',
         value: wert,
@@ -61,8 +68,8 @@
       offer_type: art
     });
 
-    /* Meta nur, wenn der Pixel laeuft und sonst niemand feuert. */
-    if (!fremderPixelHoerer && typeof window.fbq === 'function') {
+    /* Meta nur beim Checkout, nur wenn der Pixel laeuft und sonst niemand. */
+    if (checkout && !fremderPixelHoerer && typeof window.fbq === 'function') {
       window.fbq('track', 'InitiateCheckout', {
         value: wert,
         currency: 'EUR',
@@ -70,6 +77,12 @@
         content_name: name,
         content_category: kat
       }, { eventID: kennung() });
+    }
+
+    /* Ads-Mikrokonversion. Ueber die Einwilligung entscheidet allein
+       Consent Mode (Vorgabe denied, ads_data_redaction an). */
+    if (checkout && ADS && typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', { send_to: ADS, value: wert, currency: 'EUR' });
     }
   }
 
@@ -82,8 +95,7 @@
     melde(el);
   }, { capture: true, passive: true });
 
-  /* Overlay offen: abo-embed.js setzt "is-open". Von aussen beobachtbar,
-     ohne abo-embed.js anzufassen. Nur der Wechsel zaehlt. */
+  /* Overlay offen: abo-embed.js setzt "is-open", von aussen beobachtbar. */
   var auf = document.querySelector('.bsport-modal-overlay');
   if (auf && window.MutationObserver) {
     var warOffen = auf.classList.contains('is-open');

@@ -317,3 +317,20 @@ export const FLEX_FRAGE = {
          + `${euro(AUFNAHME)} einmalig. Early Bird ist günstiger, solange Plätze frei sind.`;
   },
 };
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. GOOGLE-ADS-MIKROKONVERSION AUF DEN CHECKOUT-KLICK
+   ═══════════════════════════════════════════════════════════════════════════
+   Leer heisst AUS. Solange hier nichts steht, ruft plan-tracking.js kein
+   gtag auf, und zwar gar nicht, nicht einmal einen leeren Aufruf.
+
+   Eintragen ist die vollstaendige Kennung aus Google Ads, Form
+   "AW-18136756611/XXXXXXXXXXXXXXXXXXX". Die Conversion-Action legt der
+   Betreiber in Google Ads an; aus dem Repo laesst sie sich nicht ableiten.
+
+   EINWILLIGUNG
+   Wir rufen hier NIEMALS gtag("consent", ...) und setzen ad_storage nicht
+   selbst. Die Vorgabe steht im Kopf jeder Seite auf denied, dazu
+   ads_data_redaction true. Googles Tag entscheidet daraufhin selbst, ob es
+   eine vollstaendige Konversion oder nur einen cookielosen Ping sendet.   */
+export const ADS_CHECKOUT_SEND_TO = '';

@@ -31,9 +31,27 @@ Auf allen anderen Seiten wird es nicht geladen.
 
 ## Die Ereignisse
 
-### `begin_checkout`
+### `begin_checkout` und `select_item`
 
-Feuert bei jedem Klick auf einen Knopf mit `data-item-category`.
+Welches der beiden feuert, steht am Knopf in `data-ga-event` und wird im
+Bauskript entschieden:
+
+* **`begin_checkout`** nur für Knöpfe, die wirklich einen bsport-Checkout
+  öffnen: alle mit `data-abo-contract` (Early Bird, Flex) und alle, deren Ziel
+  auf eine bsport-Kaufadresse zeigt.
+* **`select_item`** für Knöpfe, die nur auf eine Buchungsseite führen. Das
+  sind heute die PT- und Pass-Knöpfe: sie landen auf
+  `/personal-training-boxen-muenchen` und `/stundenplan`, wo erst der Kalender
+  steht. Als Checkout gezählt hätten sie Navigationen unter Kaufabsichten
+  gemischt.
+
+Bekommt ein PT- oder Pass-Knopf später eine echte Kaufadresse, schaltet das
+Bauskript ihn von selbst auf `begin_checkout` um.
+
+**Meta und Google Ads feuern ausschließlich beim `begin_checkout`.** Ein
+`select_item` geht nur in den `dataLayer`.
+
+Die Nutzlast ist bei beiden gleich aufgebaut:
 
 ```js
 {
@@ -63,16 +81,11 @@ Feuert bei jedem Klick auf einen Knopf mit `data-item-category`.
 | `personal_training` | PERSONAL TRAINING BUCHEN | `pt-nicht-zehn` usw. | Kartenpreis |
 | `pass` | ZUM STUNDENPLAN | `daypass` / `opengym` / `zehner` | Kartenpreis |
 
+Die ersten zwei Zeilen melden `begin_checkout`, die letzten zwei
+`select_item`.
+
 **Vertragskennungen, aus dem Code bestätigt, nicht geraten:**
 45433 = Unlimited, 45434 = Youth, 45432 = Kids.
-
-> **Zu beachten bei `personal_training` und `pass`:** diese zwei Knöpfe öffnen
-> **keinen bsport-Checkout**. Sie führen auf `/personal-training-boxen-muenchen`
-> beziehungsweise `/stundenplan`, wo erst der Kalender steht. Sie als
-> `begin_checkout` zu zählen war eine bewusste Vorgabe, blendet in GA4 aber
-> Navigationen in denselben Trichter wie echte Kaufabsichten. Wer das trennen
-> will, ändert für diese zwei Kategorien den Ereignisnamen auf `select_item`,
-> das ist eine Zeile in `plan-tracking.js`.
 
 ### `plan_overlay_opened`
 
@@ -126,6 +139,39 @@ automatisch den vollständigen Aufruf mit Wert und Produktkennung.
 trägt keinen Wert und keine `content_ids`. Auf `/preise` und
 `/mitglied-werden` trägt es beides.
 
+### Google Ads: Mikrokonversion auf den Checkout-Klick
+
+```js
+gtag('event', 'conversion', { send_to: ADS_CHECKOUT_SEND_TO, value: 175.60, currency: 'EUR' });
+```
+
+Läuft **nur**, wenn alle drei Bedingungen stimmen:
+
+1. Es ist ein `begin_checkout`, also ein echter bsport-Checkout.
+2. `ADS_CHECKOUT_SEND_TO` in `scripts/preise-daten.mjs` ist **nicht leer**.
+   Leer ist der Auslieferungszustand: dann wird `gtag` **gar nicht gerufen**.
+3. `typeof window.gtag === 'function'`.
+
+Die Kennung steht an genau einer Stelle im Repo und wird vom Bauskript als
+`data-ads-send-to` an den `<script>`-Tag von `plan-tracking.js` geschrieben.
+Ist sie leer, fällt das Attribut ganz weg. **In JavaScript steht sie nie.**
+
+Einzutragen ist die vollständige Kennung aus Google Ads, Form
+`AW-18136756611/XXXXXXXXXXXXXXXXXXX`. Die Conversion-Action legt der Betreiber
+dort selbst an.
+
+**Einwilligung:** `plan-tracking.js` ruft **nie** `gtag('consent', …)` und setzt
+`ad_storage` nicht. Im Kopf jeder Seite steht `gtag('consent','default', …)`
+mit `ad_storage`, `ad_user_data`, `ad_personalization` und
+`analytics_storage` auf `denied`, dazu `ads_data_redaction: true`,
+`url_passthrough: false` und `wait_for_update: 500`. Googles Tag entscheidet
+daraufhin selbst: im abgelehnten Zustand geht nur ein **cookieloser Ping** ohne
+Klickkennung hinaus, eine vollständige Konversion erst nach dem
+`consent update` aus Cookiebot. Dieses Verhalten kommt vom Google-Tag, nicht
+von uns, und wurde hier nicht verändert.
+
+**Nicht zusätzlich im GTM auslösen.** Das wäre eine zweite Zählung.
+
 ## Entprellung
 
 Ein zweiter Klick auf **denselben** Knopf innerhalb von **1500 ms** wird
@@ -159,6 +205,7 @@ rendert:
 
 | Attribut | Inhalt |
 |---|---|
+| `data-ga-event` | `begin_checkout` oder `select_item`. Fehlt es, gilt `select_item`. |
 | `data-item-category` | Pflicht. Ohne sie meldet das Skript nichts. |
 | `data-item-name` | Produktname |
 | `data-price` | laufender Preis |
