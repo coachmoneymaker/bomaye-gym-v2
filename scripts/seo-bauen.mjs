@@ -248,6 +248,19 @@ for (const name of dateien) {
       `$1Stand ${BEWERTUNG.stand}$2`);
     if (text !== vorZahl) tat.push('Bewertung und Stand auf /probetraining gesetzt');
   }
+  /* Dieselbe Konstante, dieselben zwei Spannen, nur auf /preise. Der Held
+     dieser Seite nennt die Bewertung in einem Satz statt mit Mittelpunkt,
+     sonst ist es wortgleich mit /probetraining. */
+  if (name === 'preise.html') {
+    const vorZahl = text;
+    text = text.replace(
+      /(<span class="pr-hero__note">)<b>[^<]*<\/b>[^<]*(<\/span>)/,
+      `$1<b>${BEWERTUNG.wert}</b> auf Google, ${BEWERTUNG.anzahl} Bewertungen$2`);
+    text = text.replace(
+      /(<span class="pr-hero__stand">)[^<]*(<\/span>)/,
+      `$1Stand ${BEWERTUNG.stand}$2`);
+    if (text !== vorZahl) tat.push('Bewertung und Stand auf /preise gesetzt');
+  }
 
   if (text !== vorher) {
     if (!NUR_PRUEFEN) await writeFile(pfad, text);
