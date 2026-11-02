@@ -14,12 +14,17 @@
      7. Flex: Betraege, gerechnete Ersparnis, Vertragskennungen und die drei
         Kaufadressen stimmen mit den Daten. Steht FLEX_AKTIV auf false, darf
         von Flex nichts auf der Seite stehen.
+     9. Die Kassenvorlage in abo-embed.js stimmt mit den Flex-Adressen
+        aus preise-daten.mjs ueberein.
+    10. Jedes Skript, das abo-embed.js laedt oder bomayeAbo aufruft, traegt
+        data-cookieconsent="ignore" - sonst blockiert Cookiebot es und das
+        Overlay oeffnet sich ohne Einwilligung nicht.
      8. Jeder Paketknopf traegt die Messattribute, und die Zahlen darin
         stimmen mit preise-daten.mjs ueberein.
 
      node scripts/preise-pruefen.mjs
    ═══════════════════════════════════════════════════════════════════════════ */
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro,
          FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis,
          ADS_CHECKOUT_SEND_TO } from './preise-daten.mjs';
@@ -210,8 +215,61 @@ for (const [datei, html] of GANZ) {
     melde(`${datei}: ADS_CHECKOUT_SEND_TO ist leer, am Skript-Tag steht aber "${ist}"`);
 }
 
+/* ── 9. Die Kassenadresse in abo-embed.js darf nicht abdriften ────────────
+   abo-embed.js baut aus der Vertragskennung die Kassenadresse des Pakets:
+   fuer den Streifen im Overlay, fuer den Rueckfall im neuen Tab und fuer
+   ?abo=kasse. Dieselbe Adresse steht fuer Flex hier in den Daten. Zwei
+   Stellen, eine Wahrheit - also wird sie hier gegengerechnet. Driften sie
+   auseinander, fuehrt ein Knopf woandershin als der Streifen daneben. */
+const abo = await readFile(WURZEL + '/assets/js/abo-embed.js', 'utf8');
+const vorlage = abo.match(/var KASSE = '([^']+)';/);
+if (!vorlage) melde('abo-embed.js: die Vorlage KASSE wurde nicht gefunden');
+else {
+  for (const f of FLEX) {
+    const gebaut = vorlage[1].replace('%ID%', f.contract);
+    if (gebaut !== f.url)
+      melde(`abo-embed.js baut fuer ${f.contract} "${gebaut}", in den Daten steht "${f.url}"`);
+  }
+  if (vorlage[1].indexOf('%ID%') === -1)
+    melde('abo-embed.js: die Vorlage KASSE enthaelt keinen Platzhalter %ID%');
+}
+
+/* ── 10. Die Buchung darf nie an der Einwilligung haengen ─────────────────
+   Cookiebots automatische Blockade stellt jedes Skript, das sie fuer
+   Marketing haelt, bis zur Einwilligung auf type="text/plain". Traf das
+   abo-embed.js oder den Inline-Aufruf von bomayeAbo.init, gab es ohne
+   Einwilligung gar keinen Klick-Horcher: ein Klick auf einen Paket-Knopf
+   landete auf dem href statt im Overlay. Genau so gemeldet zu PR #177.
+
+   Geprueft wird JEDE Seite des Projekts, nicht nur die drei bekannten -
+   eine vierte Seite mit Paket-Knoepfen soll nicht still durchrutschen.
+
+   Dass das zulaessig ist: abo-embed.js laedt nichts von bsport.io, setzt
+   keinen Keks und schreibt in keinen Speicher. Alles, was von bsport
+   kommt, haengt weiterhin an bsport-gate.js. */
+const SKRIPT = /<script\b[^>]*>(?:(?!<\/script>)[\s\S])*?<\/script>/g;
+let geprueftFrei = 0;
+for (const datei of await readdir(WURZEL)) {
+  if (!datei.endsWith('.html')) continue;
+  const html = await readFile(WURZEL + '/' + datei, 'utf8');
+  for (const block of html.match(SKRIPT) || []) {
+    const kopf = block.slice(0, block.indexOf('>') + 1);
+    const betrifft = /\/assets\/js\/abo-embed\.js/.test(kopf) || /bomayeAbo/.test(block);
+    if (!betrifft) continue;
+    geprueftFrei++;
+    if (!/data-cookieconsent="ignore"/.test(kopf)) {
+      melde(`${datei}: Skript mit abo-embed/bomayeAbo ohne data-cookieconsent="ignore" - `
+          + `Cookiebot blockiert es, und ohne Einwilligung oeffnet sich das Overlay nicht: ${kopf}`);
+    }
+  }
+}
+if (geprueftFrei < 6)
+  melde(`Nur ${geprueftFrei} Skripte mit abo-embed/bomayeAbo gefunden, erwartet mindestens 6 `
+      + `(je Datei und Inline-Aufruf auf /preise, Startseite und /mitglied-werden)`);
+
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`
   + `, ${geprueftAttr} Messattribute`
+  + `, ${geprueftFrei} einwilligungsfreie Buchungsskripte`
   + `, Flex ${FLEX_AKTIV ? 'an (' + FLEX.length + ' Angebote)' : 'aus'} geprueft.`);
 if (befunde.length) {
   console.log('\n' + befunde.map((b) => '  • ' + b).join('\n'));

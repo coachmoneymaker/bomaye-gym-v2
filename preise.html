@@ -2173,12 +2173,12 @@ function MountBsportWidget(config, repeat) {
 
 <!-- BSPORT — Abo-Overlay: Mount und Nachricht uebernimmt abo-embed.js.
      Montiert wird erst beim ersten Klick, nicht beim Seitenaufruf. -->
-<script src="/assets/js/abo-embed.js"></script>
+<script src="/assets/js/abo-embed.js" data-cookieconsent="ignore"></script>
 <!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
      Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
 <script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
 
-<script>
+<script data-cookieconsent="ignore">
   /* Gleiche Verdrahtung wie auf /mitglied-werden. Die Knoepfe tragen
      data-abo-contract, abo-embed.js faengt den Klick ab und legt das
      Paket im Bsport-Overlay in den Warenkorb. uniqueWidgetId ist pro
