@@ -105,10 +105,31 @@
    nie eine Liste. Verborgene Flex-Pakete koennen dort nicht auftauchen.
 
    DER RUECKFALL OHNE OVERLAY
-   Fehlt die ID, fehlt das Overlay oder fehlt MountBsportWidget, wird der
-   Klick nicht mehr abgefangen. Stattdessen oeffnet die Kasse des Pakets in
-   einem neuen Tab (opener gekappt). Laesst der Browser das Fenster nicht zu,
-   bleibt es beim gewoehnlichen href - wie ohne JavaScript.
+   Fehlt die ID oder fehlt das Overlay, wird der Klick nicht abgefangen.
+   Stattdessen oeffnet die Kasse des Pakets in einem neuen Tab (opener
+   gekappt). Laesst der Browser das Fenster nicht zu, bleibt es beim
+   gewoehnlichen href - wie ohne JavaScript.
+
+   OHNE MARKETING-EINWILLIGUNG IST DAS KEIN RUECKFALL
+   In PR #177 stand in dieser Bedingung zusaetzlich MountBsportWidget. Das
+   war falsch: die beiden Bsport-Skripte im Seitenfuss tragen kein
+   data-cookieconsent="ignore", Cookiebot stellt sie bis zur Einwilligung
+   auf type="text/plain", und damit ist die Funktion nicht definiert.
+   Abgemeldete Besucher ohne Einwilligung landeten deshalb auf
+   /mitglied-werden#packages statt im Overlay.
+
+   Richtig ist: das Overlay geht bei JEDEM Klick auf. Ohne Einwilligung malt
+   bsport-gate.js seinen Hinweis an die Stelle des Widgets, darueber steht
+   der Streifen mit dem gewaehlten Paket und dem Weg zur Kasse. Der
+   Sendelauf beginnt erst, wenn wirklich montiert wurde. Wird die
+   Einwilligung im Overlay erteilt, taucht MountBsportWidget nachtraeglich
+   auf; dann wird nachmontiert und der Deeplink laeuft doch noch.
+
+   Warum das kein Test gefunden hat: im Nachbau steht MountBsportWidget als
+   gewoehnliches Inline-Skript immer zur Verfuegung, weil Cookiebots
+   automatische Blockade von hier aus nicht nachstellbar ist
+   (consent.cookiebot.com ist nicht erreichbar). Der Satz prueft diesen Fall
+   jetzt direkt: er liefert die Seite mit entschaerftem Mount-Skript aus.
 
    DIAGNOSEMODUS ?abo=kasse
    Damit zeigt das Overlay statt des Widgets die Kassenseite des Pakets in
@@ -282,6 +303,7 @@
     var o = overlay();
     if (!o) return;
     laufBeenden('Overlay geschlossen');
+    wacheAus();
     o.classList.remove('is-open');
     o.setAttribute('aria-hidden', 'true');
     entsperren();
@@ -325,12 +347,25 @@
 
   /* ── Widget montieren (erst beim ersten Klick) ──────────────────────────── */
   function montieren() {
-    if (montiert) return;
+    if (montiert) return true;
     var ziel = document.getElementById(einst.containerId);
-    if (!ziel) { spur('FEHLER: Container', einst.containerId, 'fehlt'); return; }
+    if (!ziel) { spur('FEHLER: Container', einst.containerId, 'fehlt'); return false; }
+    /* OHNE MARKETING-EINWILLIGUNG GIBT ES DIESE FUNKTION NICHT.
+       Die beiden Bsport-Skripte im Seitenfuss tragen kein
+       data-cookieconsent="ignore"; Cookiebot stellt sie bis zur
+       Einwilligung auf type="text/plain", und dann ist
+       MountBsportWidget schlicht nicht definiert.
+
+       Das ist KEIN Grund, den Klick nicht abzufangen. Genau dafuer malt
+       bsport-gate.js seinen Einwilligungshinweis an die Stelle des
+       Widgets: der Besucher soll ihn im Overlay sehen, zusammen mit dem
+       Streifen, der sagt, welches Paket er gewaehlt hat. In PR #177 stand
+       diese Pruefung faelschlich in bereit(), und abgemeldete Besucher
+       landeten deshalb auf /mitglied-werden#packages statt im Overlay. */
     if (typeof window.MountBsportWidget !== 'function') {
-      spur('FEHLER: MountBsportWidget fehlt - Bsport-Loader nicht eingebunden?');
-      return;
+      spur('MountBsportWidget noch nicht da - vermutlich fehlt die '
+         + 'Marketing-Einwilligung. Overlay bleibt offen, kein Deeplink.');
+      return false;
     }
     montiert = true;
     spur('montiere Subscription-Widget in', einst.containerId,
@@ -357,6 +392,40 @@
       uniqueWidgetId:  einst.uniqueWidgetId,
       config:          { subscription: { uniqueWidgetId: einst.uniqueWidgetId } }
     });
+    return true;
+  }
+
+  /* Wird die Einwilligung erst IM Overlay erteilt, taucht
+     MountBsportWidget nachtraeglich auf. Dann wird nachmontiert und der
+     Deeplink laeuft doch noch. Ohne das bliebe der Hinweis stehen, auch
+     nachdem der Besucher zugestimmt hat.
+
+     Gebunden an das offene Overlay und gedeckelt: ein Blick alle
+     MONTIER_TAKT ms, hoechstens MONTIER_MAX lang. */
+  var MONTIER_TAKT = 400;
+  var MONTIER_MAX  = 30000;
+  var montierWache = null;
+
+  function wacheAus() {
+    if (!montierWache) return;
+    clearInterval(montierWache.uhr);
+    montierWache = null;
+  }
+
+  function nachmontieren(contractId) {
+    wacheAus();
+    var w = { bis: Date.now() + MONTIER_MAX, uhr: null };
+    montierWache = w;
+    w.uhr = setInterval(function () {
+      if (montierWache !== w) { clearInterval(w.uhr); return; }
+      var o = overlay();
+      if (!o || !o.classList.contains('is-open')) { wacheAus(); return; }
+      if (Date.now() > w.bis) { wacheAus(); spur('Nachmontieren aufgegeben'); return; }
+      if (typeof window.MountBsportWidget !== 'function') return;
+      wacheAus();
+      spur('MountBsportWidget ist da - wird nachmontiert');
+      if (montieren()) { laufStarten(contractId); }
+    }, MONTIER_TAKT);
   }
 
   /* ?abo=kasse: die Kassenseite EINES Pakets, ohne Widget und ohne
@@ -552,16 +621,18 @@
     sperren();
     streifen(contractId, el);
     if (kasseModus()) { kasseRahmen(contractId); return; }
-    montieren();
-    laufStarten(contractId);
+    /* Der Sendelauf beginnt erst, wenn das Widget wirklich montiert ist. */
+    if (montieren()) { wacheAus(); laufStarten(contractId); }
+    else { laufBeenden('nicht montiert'); nachmontieren(contractId); }
   }
 
-  /* Alles da, was das Overlay braucht? Sonst uebernimmt der Rueckfall. */
+  /* Der Rueckfall greift NUR, wenn das Overlay selbst fehlt oder keine
+     Kennung am Knopf steht. Ob Bsport geladen ist, spielt hier bewusst
+     keine Rolle mehr: ohne Einwilligung gehoert der Einwilligungshinweis
+     ins Overlay und nicht ein Sprung auf eine andere Seite. */
   function bereit(contractId) {
     if (!contractId) return false;
-    if (!overlay()) return false;
-    if (kasseModus()) return true;
-    return typeof window.MountBsportWidget === 'function';
+    return !!overlay();
   }
 
   /* ── Verdrahtung ────────────────────────────────────────────────────────── */
