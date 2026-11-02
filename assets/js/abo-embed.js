@@ -90,6 +90,18 @@
    Anmeldemaske mit rohen Uebersetzungsschluesseln ist schlimmer, und der
    sichtbare Streifen fuehrt in beiden Faellen direkt zum richtigen Paket.
 
+   NICHT JEDES PAKET GEHT DURCH DAS WIDGET
+   Knoepfe mit data-abo-direkt werden nicht abgefangen. Gesetzt ist das
+   Attribut an den drei Flex-Knoepfen (59649, 59650, 59651): diese
+   Vertraege sind im eingebetteten Subscription-Widget nicht zu zeigen.
+   Am Geraet gemessen meldet 59649 "Vertrag nicht gefunden", und 59651
+   zeigt unter dem Streifen "Gewaehlt: Youth Flex" die Early-Bird-Liste.
+   Fuer sie fuehrt das href unmittelbar auf
+
+     https://backoffice.bsport.io/checkout/5473/subscription/<id>?force=true
+
+   Die Early-Bird-Knoepfe (45432, 45433, 45434) bleiben beim Overlay.
+
    DER SICHTBARE STREIFEN
    Oben im Overlay steht eine Zeile: das gewaehlte Paket (aus data-item-name
    des geklickten Knopfes) und ein Link DIREKT ZUR KASSE auf
@@ -649,6 +661,26 @@
       var el = e.target && e.target.closest ? e.target.closest('[data-abo-contract]') : null;
       if (!el) return;
       var id = el.getAttribute('data-abo-contract');
+
+      /* data-abo-direkt: Finger weg, das bleibt ein gewoehnlicher Verweis.
+         Die Flex-Vertraege sind im eingebetteten Subscription-Widget nicht
+         zu zeigen - am Geraet gemessen meldet 59649 "Vertrag nicht
+         gefunden", und 59651 zeigt unter dem Streifen "Gewaehlt: Youth
+         Flex" die Early-Bird-Liste. Ein Overlay, das das falsche oder gar
+         kein Paket zeigt, ist schlechter als der Verweis auf die
+         Kaufadresse. Kein preventDefault, kein window.open: das href der
+         Seite macht seine Arbeit.
+
+         plan-tracking.js laeuft davon unberuehrt weiter. Es hoert in der
+         Erfassungsphase und ist durch, bevor diese Zeile ueberhaupt
+         erreicht wird; begin_checkout feuert also unveraendert mit
+         derselben Nutzlast. plan_overlay_opened kann fuer diese Knoepfe
+         nicht mehr feuern, weil kein Overlay mehr aufgeht - das ist die
+         gewollte Folge und keine Luecke. */
+      if (el.hasAttribute && el.hasAttribute('data-abo-direkt')) {
+        spur('direkt: contract', id, 'geht ueber das href, kein Overlay');
+        return;
+      }
 
       if (!bereit(id)) {
         if (id) {

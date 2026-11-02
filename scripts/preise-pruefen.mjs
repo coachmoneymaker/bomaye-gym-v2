@@ -19,12 +19,17 @@
     10. Jedes Skript, das abo-embed.js laedt oder bomayeAbo aufruft, traegt
         data-cookieconsent="ignore" - sonst blockiert Cookiebot es und das
         Overlay oeffnet sich ohne Einwilligung nicht.
+    11. Jeder Verweis auf abo-embed.js traegt ?v=<8 Zeichen aus sha256 der
+        Datei>, und die Kennung stimmt mit dem Inhalt ueberein.
+    12. Die drei Flex-Knoepfe tragen data-abo-direkt, die Early-Bird-
+        Knoepfe nicht.
      8. Jeder Paketknopf traegt die Messattribute, und die Zahlen darin
         stimmen mit preise-daten.mjs ueberein.
 
      node scripts/preise-pruefen.mjs
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, readdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro,
          FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis,
          ADS_CHECKOUT_SEND_TO } from './preise-daten.mjs';
@@ -267,9 +272,66 @@ if (geprueftFrei < 6)
   melde(`Nur ${geprueftFrei} Skripte mit abo-embed/bomayeAbo gefunden, erwartet mindestens 6 `
       + `(je Datei und Inline-Aufruf auf /preise, Startseite und /mitglied-werden)`);
 
+/* ── 11. Versionskennung an abo-embed.js ──────────────────────────────────
+   Die Datei wird mit max-age=600 und stale-while-revalidate=86400
+   ausgeliefert; ein Browser darf also bis zu einen Tag lang die alte
+   Fassung weiterbenutzen. Die Kennung aus dem Inhalt sorgt dafuer, dass
+   eine geaenderte Datei eine andere Adresse bekommt. Hier wird sie
+   nachgerechnet: steht irgendwo eine alte oder gar keine, faellt es auf. */
+const ABO_IST = createHash('sha256')
+  .update(await readFile(WURZEL + '/assets/js/abo-embed.js'))
+  .digest('hex')
+  .slice(0, 8);
+let geprueftVersion = 0;
+for (const datei of await readdir(WURZEL)) {
+  if (!datei.endsWith('.html')) continue;
+  const html = await readFile(WURZEL + '/' + datei, 'utf8');
+  for (const m of html.matchAll(/<script src="\/assets\/js\/abo-embed\.js([^"]*)"/g)) {
+    geprueftVersion++;
+    const treffer = /^\?v=([0-9a-f]{8})$/.exec(m[1]);
+    if (!treffer) {
+      melde(`${datei}: Verweis auf abo-embed.js ohne gueltige Versionskennung ("${m[1]}") - `
+          + `der Browser darf dann bis zu einen Tag lang die alte Fassung weiterbenutzen`);
+    } else if (treffer[1] !== ABO_IST) {
+      melde(`${datei}: abo-embed.js?v=${treffer[1]}, der Inhalt ergibt aber ${ABO_IST} - `
+          + `"node scripts/preise-bauen.mjs" laufen lassen`);
+    }
+  }
+}
+if (geprueftVersion < 3)
+  melde(`Nur ${geprueftVersion} Verweise auf abo-embed.js gefunden, erwartet mindestens 3`);
+
+/* ── 12. Flex geht am Widget vorbei, Early Bird nicht ─────────────────────
+   Die Flex-Vertraege sind im eingebetteten Subscription-Widget nicht zu
+   zeigen (59649 meldet "Vertrag nicht gefunden", 59651 zeigt die
+   Early-Bird-Liste). Ihre Knoepfe tragen deshalb data-abo-direkt und
+   werden von abo-embed.js nicht abgefangen. Die Early-Bird-Knoepfe duerfen
+   das Attribut gerade NICHT tragen, sonst ginge das Overlay nirgends auf. */
+const knopfMit = (html, kennung) => {
+  const t = knopfVon(html, kennung);
+  return t ? /\sdata-abo-direkt(?=[\s>])/.test(t) : null;
+};
+for (const [datei, html] of SEITEN_MIT_KNOEPFEN) {
+  for (const m of MITGLIEDSCHAFTEN) {
+    const ist = knopfMit(html, m.contract);
+    if (ist === null) continue;
+    if (ist) melde(`${datei}: Early-Bird-Knopf ${m.contract} traegt data-abo-direkt - `
+                 + `dann oeffnet sich das Overlay dort nicht mehr`);
+  }
+}
+if (FLEX_AKTIV) {
+  for (const f of FLEX) {
+    const ist = knopfMit(sichtbar, f.contract);
+    if (ist === null) melde(`preise.html: Flex-Knopf ${f.contract} nicht gefunden`);
+    else if (!ist) melde(`preise.html: Flex-Knopf ${f.contract} ohne data-abo-direkt - `
+                       + `abo-embed.js wuerde ihn abfangen und ein Paket zeigen, das es nicht zeigen kann`);
+  }
+}
+
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`
   + `, ${geprueftAttr} Messattribute`
   + `, ${geprueftFrei} einwilligungsfreie Buchungsskripte`
+  + `, ${geprueftVersion} Verweise mit Version ${ABO_IST}`
   + `, Flex ${FLEX_AKTIV ? 'an (' + FLEX.length + ' Angebote)' : 'aus'} geprueft.`);
 if (befunde.length) {
   console.log('\n' + befunde.map((b) => '  • ' + b).join('\n'));

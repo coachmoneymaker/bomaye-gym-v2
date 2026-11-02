@@ -29,6 +29,7 @@
    BEDINGUNGEN, wortgleich.
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro,
          FLEX_AKTIV, FLEX, FLEX_BEDINGUNGEN, FLEX_FRAGE, ersparnis,
          ADS_CHECKOUT_SEND_TO }
@@ -237,10 +238,20 @@ function faq() {
    auf derselben Seite. Dazu kommen genau zwei Zeilen, die es dort nicht
    gibt: die Aufnahmegebuehr und die gerechnete Ersparnis.
 
-   DER KNOPF ARBEITET WIE DIE EARLY-BIRD-KNOEPFE
-   data-abo-contract traegt die Vertragskennung, abo-embed.js faengt den
-   Klick ab und oeffnet das Overlay auf unserer Domain. Das href ist der
-   Rueckweg ohne JavaScript und zeigt auf die Kaufadresse des Betreibers.  */
+   DER KNOPF ARBEITET ANDERS ALS DIE EARLY-BIRD-KNOEPFE
+   Er traegt data-abo-direkt und wird von abo-embed.js NICHT abgefangen:
+   das href fuehrt unmittelbar auf die Kaufadresse des Betreibers.
+
+   WARUM
+   Im eingebetteten Subscription-Widget sind die Flex-Vertraege nicht zu
+   zeigen. Am Geraet gemessen: 59649 meldet "Vertrag nicht gefunden",
+   59651 zeigt unter dem Streifen "Gewaehlt: Youth Flex" die
+   Early-Bird-Liste. Ein Overlay, das das falsche oder gar kein Paket
+   zeigt, ist schlechter als ein gewoehnlicher Verweis.
+
+   data-abo-contract bleibt stehen: plan-tracking.js liest daraus die
+   item_id, und begin_checkout soll unveraendert mit 59649, 59650, 59651
+   feuern. Nur das Abfangen entfaellt.                                    */
 function flex() {
   if (!FLEX_AKTIV) return '';
   return `        <!-- PREISE:FLEX -->
@@ -342,7 +353,7 @@ ${FLEX.map((f) => `            <li class="pr-option">
                 <p class="pr-option__spar">Early Bird spart dir ${esc(euro(ersparnis(f)))} im Jahr</p>
               </div>
               <p class="pr-option__preis">${esc(euro(f.monat))}<span class="pr-option__promonat">im Monat</span></p>
-              <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}"
+              <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}" data-abo-direkt
                  ${messen({ 'data-ga-event': gaEreignis({ contract: f.contract }),
                             'data-item-category': 'membership_flex',
                             'data-item-name': f.name,
@@ -504,8 +515,8 @@ function adsKennung(t) {
 function einwilligungFrei(t) {
   /* 1. Die Datei selbst. */
   t = t.replace(
-    /<script src="\/assets\/js\/abo-embed\.js"(?! [^>]*data-cookieconsent=)/g,
-    '<script src="/assets/js/abo-embed.js" data-cookieconsent="ignore"');
+    /<script src="(\/assets\/js\/abo-embed\.js(?:\?v=[0-9a-f]{8})?)"(?! [^>]*data-cookieconsent=)/g,
+    '<script src="$1" data-cookieconsent="ignore"');
   /* 2. Der Inline-Aufruf. Gesucht wird der oeffnende Tag des Blocks, der
      bomayeAbo nennt - ohne alles davor mitzunehmen, deshalb der
      Negativ-Blick auf ein zwischenzeitliches </script>. */
@@ -513,6 +524,33 @@ function einwilligungFrei(t) {
     /<script(?![^>]*data-cookieconsent=)([^>]*)>((?:(?!<\/script>)[\s\S])*?bomayeAbo(?:(?!<\/script>)[\s\S])*?)<\/script>/g,
     '<script data-cookieconsent="ignore"$1>$2</script>');
   return t;
+}
+
+/* ── Versionskennung an abo-embed.js ─────────────────────────────────────
+   Die Datei wird mit "Cache-Control: public, max-age=600,
+   stale-while-revalidate=86400" ausgeliefert. Ein Browser darf sie damit
+   bis zu einen Tag lang in der alten Fassung weiterbenutzen - beobachtet
+   nach der Ruecknahme von PR #175, wo das alte Skript noch lief, obwohl
+   auf dem Server das neue lag.
+
+   Deshalb haengt an jedem Verweis eine Kennung aus dem INHALT der Datei.
+   Aendert sich die Datei, aendert sich die Adresse, und der Browser muss
+   neu laden. Aendert sie sich nicht, bleibt die Adresse gleich und der
+   Zwischenspeicher taugt weiter.
+
+   Acht Zeichen aus sha256 genuegen: es geht um das Erkennen einer
+   Aenderung, nicht um Faelschungssicherheit. preise-pruefen.mjs rechnet
+   sie nach. */
+const ABO_DATEI = WURZEL + '/assets/js/abo-embed.js';
+const ABO_VERSION = createHash('sha256')
+  .update(await readFile(ABO_DATEI))
+  .digest('hex')
+  .slice(0, 8);
+
+function aboVersion(t) {
+  return t.replace(
+    /(<script src="\/assets\/js\/abo-embed\.js)(\?v=[0-9a-f]{8})?(")/g,
+    `$1?v=${ABO_VERSION}$3`);
 }
 
 /* ── Lauf ──────────────────────────────────────────────────────────────── */
@@ -527,6 +565,7 @@ t = ersetze(t, 'FAQ', faq());
 t = flexEinbauen(t, flex(), '        <!-- PREISE:BEDINGUNGEN -->');
 t = adsKennung(t);
 t = einwilligungFrei(t);
+t = aboVersion(t);
 
 /* Die Startseite wird nur angefasst, wenn sich dort wirklich etwas
    aendert. Mit ausgeschaltetem Flex ist das nie der Fall. */
@@ -537,6 +576,7 @@ h = startseiteEinbauen(h);
 h = knoepfeMessbar(h);
 h = adsKennung(h);
 h = einwilligungFrei(h);
+h = aboVersion(h);
 if (h !== hVorher) {
   if (NUR_PRUEFEN) {
     console.log('index.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
@@ -554,6 +594,7 @@ const mwVorher = mw;
 mw = knoepfeMessbar(mw);
 mw = adsKennung(mw);
 mw = einwilligungFrei(mw);
+mw = aboVersion(mw);
 if (mw !== mwVorher) {
   if (NUR_PRUEFEN) {
     console.log('mitglied-werden.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
