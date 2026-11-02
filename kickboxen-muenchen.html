@@ -441,6 +441,28 @@
     }
   }
   </script>
+  <!-- ── Reveal-Wache ──────────────────────────────────────────────────────
+       .reveal steht in style.css auf opacity: 0 und wird erst von einem
+       Beobachter auf .visible gesetzt. Laeuft dieser Beobachter aus
+       IRGENDEINEM Grund nicht, bleibt der halbe Seiteninhalt dauerhaft
+       unsichtbar. Moegliche Gruende gibt es viele und sie liegen nicht
+       alle in unserer Hand: ein Fehler frueher im selben Skriptblock, ein
+       Blocker, der den Block neutralisiert, eine Erweiterung im Browser
+       des Besuchers.
+
+       Diese Wache macht das Symptom unmoeglich, ohne die Ursache kennen zu
+       muessen: meldet sich der Beobachter nicht binnen 2,5 Sekunden, wird
+       alles sichtbar gemacht. Laeuft er normal, loescht er den Wecker als
+       erste Handlung und niemand merkt etwas.
+
+       Eigener Skript-Tag mit Absicht: so kann ihn kein Fehler in einem
+       anderen Block mitreissen. -->
+  <script data-cookieconsent="ignore">
+    window.__revealWache = setTimeout(function () {
+      var e = document.querySelectorAll('.reveal:not(.visible)');
+      for (var i = 0; i < e.length; i++) e[i].classList.add('visible');
+    }, 2500);
+  </script>
 </head>
 
 <body>
@@ -930,6 +952,8 @@ function toggleFaq(btn) {
    werden weiterhin erst beim Eintreten sichtbar und blenden ueber die
    CSS-Transition ein.                                                   */
 (function () {
+  /* Erste Handlung: der Wache sagen, dass wir laufen. */
+  clearTimeout(window.__revealWache);
   var offen = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
   if (!offen.length) return;
   var RAND = 20;   /* wie bisher: 20px Luft an der Unterkante */

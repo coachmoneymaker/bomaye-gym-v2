@@ -870,6 +870,8 @@ async function submitCorporateInquiryInline(e) {
    das Netz wird nur einmal verdrahtet.                                   */
 let _revealNetz = false;
 function runReveal() {
+  /* Erste Handlung: der Wache im Seitenkopf sagen, dass wir laufen. */
+  clearTimeout(window.__revealWache);
   const offen = Array.prototype.slice.call(document.querySelectorAll('.reveal:not(.visible)'));
   if (!offen.length) return;
   const RAND = 20;   /* wie bisher: 20px Luft an der Unterkante */
