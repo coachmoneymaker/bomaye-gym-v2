@@ -14,8 +14,6 @@
      7. Flex: Betraege, gerechnete Ersparnis, Vertragskennungen und die drei
         Kaufadressen stimmen mit den Daten. Steht FLEX_AKTIV auf false, darf
         von Flex nichts auf der Seite stehen.
-     9. Die Kassenvorlage in abo-embed.js stimmt mit den Flex-Adressen
-        aus preise-daten.mjs ueberein.
      8. Jeder Paketknopf traegt die Messattribute, und die Zahlen darin
         stimmen mit preise-daten.mjs ueberein.
 
@@ -210,25 +208,6 @@ for (const [datei, html] of GANZ) {
     melde(`${datei}: data-ads-send-to ist "${ist}", erwartet "${ADS_CHECKOUT_SEND_TO}"`);
   if (!ADS_CHECKOUT_SEND_TO && ist !== null)
     melde(`${datei}: ADS_CHECKOUT_SEND_TO ist leer, am Skript-Tag steht aber "${ist}"`);
-}
-
-/* ── 9. Die Kassenadresse in abo-embed.js darf nicht abdriften ────────────
-   abo-embed.js baut aus der Vertragskennung die Kassenadresse des Pakets:
-   fuer den Streifen im Overlay, fuer den Rueckfall im neuen Tab und fuer
-   ?abo=kasse. Dieselbe Adresse steht fuer Flex hier in den Daten. Zwei
-   Stellen, eine Wahrheit - also wird sie hier gegengerechnet. Driften sie
-   auseinander, fuehrt ein Knopf woandershin als der Streifen daneben. */
-const abo = await readFile(WURZEL + '/assets/js/abo-embed.js', 'utf8');
-const vorlage = abo.match(/var KASSE = '([^']+)';/);
-if (!vorlage) melde('abo-embed.js: die Vorlage KASSE wurde nicht gefunden');
-else {
-  for (const f of FLEX) {
-    const gebaut = vorlage[1].replace('%ID%', f.contract);
-    if (gebaut !== f.url)
-      melde(`abo-embed.js baut fuer ${f.contract} "${gebaut}", in den Daten steht "${f.url}"`);
-  }
-  if (vorlage[1].indexOf('%ID%') === -1)
-    melde('abo-embed.js: die Vorlage KASSE enthaelt keinen Platzhalter %ID%');
 }
 
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`

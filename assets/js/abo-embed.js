@@ -15,83 +15,22 @@
 
    WARUM DAS WIDGET SICHTBAR IST UND NICHT display:none
    Bsports Beispiel zeigt einen unsichtbaren Container. Fuer eine Zahlung ist
-   das die falsche Wahl: von hier aus ist weder die Doku lesbar noch das
-   Backoffice einsehbar noch das Widget testbar - intercom.help,
-   backoffice.bsport.io und cdn.bsport.io sind alle nicht erreichbar. Ob
-   45432/45433/45434 wirklich contract_ids im Sinne dieser Nachricht sind,
-   ist damit UNBESTAETIGT. Waere das Widget unsichtbar, wuerde eine falsche
-   ID still das falsche Produkt in den Warenkorb legen. Sichtbar kann das
-   nicht passieren: der Kunde sieht Paket und Preis in Bsports eigener
-   Oberflaeche, bevor er bestaetigt. Greift die Nachricht nicht, waehlt er
-   einmal selbst - der Rueckfallweg, der ohnehin freigegeben war.
+   das die falsche Wahl, und zwar aus einem Grund, der nichts mit Technik zu
+   tun hat: wir koennen von hier aus weder die Doku lesen noch das Backoffice
+   einsehen noch das Widget testen - intercom.help, backoffice.bsport.io und
+   cdn.bsport.io sind alle nicht erreichbar. Ob 45432/45433/45434 wirklich
+   contract_ids im Sinne dieser Nachricht sind, ist damit UNBESTAETIGT.
 
-   ───────────────────────────────────────────────────────────────────────────
-   WARUM EARLY BIRD AUF DER LISTE LANDETE (Meldung vom 02.11.)
-   ───────────────────────────────────────────────────────────────────────────
-   Gemeldet: EARLY BIRD SICHERN (Unlimited, 45433) oeffnete das Overlay mit
-   der GANZEN Early-Bird-Liste. FLEX STARTEN (59649) sprang dagegen direkt in
-   das Formular des Pakets, in einem Browser mit aktiver Bsport-Sitzung.
+   Waere das Widget unsichtbar, wuerde eine falsche ID still das falsche
+   Produkt in den Warenkorb legen - der Kunde zahlte fuer etwas anderes, als
+   auf der Karte stand. Sichtbar kann das nicht passieren: der Kunde sieht
+   Paket und Preis in Bsports eigener Oberflaeche, bevor er bestaetigt.
 
-   Die Abbruchbedingung des Sendens war zu frueh:
-
-     hatInhalt = behaelter.children.length > 0
-     if (hatInhalt && ++nachInhalt >= 2) return
-
-   children.length > 0 ist wahr, sobald Bsport sein erstes <div> einhaengt -
-   also sobald das Widget MONTIERT ist, nicht sobald es BEREIT ist. Zwei
-   Runden spaeter war Schluss, bei 500 ms Abstand also rund eine Sekunde nach
-   dem Klick: von zwoelf vorgesehenen Versuchen wurden regelmaessig drei
-   verbraucht. Wer laenger braucht - Liste nachladen, Anmeldestand pruefen,
-   langsames Netz, kaltes CDN -, bekam die Nachricht nie zu sehen und blieb
-   auf der Vorgabeansicht des Widgets: der Liste. Wer schneller bereit war,
-   sah den Deeplink wirken. Genau diese Zweiteilung wurde gemeldet.
-
-   WAS DARAUS NICHT FOLGT
-   Dass die Nachricht bei 45433 ueberhaupt greift, ist damit nicht bewiesen.
-   Moeglich bleibt, dass die Early-Bird-IDs im Sinne dieser Nachricht keine
-   contract_ids sind. Beides laesst sich von hier aus nicht trennen, weil
-   cdn.bsport.io und backoffice.bsport.io nicht erreichbar sind. Darum tut
-   diese Datei zwei Dinge statt einem: sie schickt die Nachricht robust nach,
-   UND sie nennt dem Besucher sichtbar das gewaehlte Paket samt Direktweg zur
-   Kasse. Der zweite Weg braucht keine Annahme ueber Bsports Inneres.
-
-   SO WIRD JETZT GESENDET
-     - alle 300 ms, bis zu 15 s lang, solange das Overlay offen ist
-     - zusaetzlich bei jeder Neuzeichnung im Container (MutationObserver):
-       jede Neuzeichnung ist eine neue Gelegenheit, dass ein Hoerer steht
-     - zusaetzlich sofort, wenn ueberhaupt eine bsport:*-Nachricht eintrifft
-     - Schluss bei: Overlay zu, 15 s um, oder Besucher tippt im Overlay
-   Der letzte Punkt ist der wichtige: waehlt der Besucher dort selbst ein
-   anderes Paket, darf ihm das Nachschicken nicht hineinreden.
-
-   DER SICHTBARE STREIFEN
-   Oben im Overlay steht eine Zeile: das gewaehlte Paket (aus data-item-name
-   des geklickten Knopfes) und ein Link DIREKT ZUR KASSE auf
-
-     https://backoffice.bsport.io/checkout/5473/subscription/<id>?force=true
-
-   Diese Adresse ist nicht geraten. Die Flex-Pakete tragen sie seit PR #170
-   als href, vom Eigentuemer geliefert; die Early-Bird-Pakete trugen genau
-   dieselbe Form bis Commit 2e33108 als href auf allen drei Seiten (siehe
-   Git-Verlauf zu 45433). Fuer alle sechs IDs ist sie also belegt.
-
-   Der Streifen nennt immer nur EIN Paket, naemlich das geklickte. Er baut
-   nie eine Liste. Verborgene Flex-Pakete koennen dort nicht auftauchen.
-
-   DER RUECKFALL OHNE OVERLAY
-   Fehlt die ID, fehlt das Overlay oder fehlt MountBsportWidget, wird der
-   Klick nicht mehr abgefangen. Stattdessen oeffnet die Kasse des Pakets in
-   einem neuen Tab (opener gekappt). Laesst der Browser das Fenster nicht zu,
-   bleibt es beim gewoehnlichen href - wie ohne JavaScript.
-
-   DIAGNOSEMODUS ?abo=kasse
-   Damit zeigt das Overlay statt des Widgets die Kassenseite des Pakets in
-   einem iframe - der einzige Weg, der ohne jede Annahme ueber Bsports
-   Nachrichten auf GENAU ein Paket zeigt. Ob backoffice.bsport.io sich
-   einbetten laesst, ist von hier aus nicht pruefbar (X-Frame-Options,
-   Content-Security-Policy). Darum ein Schalter und nicht die Vorgabe: auf
-   der Vorschau ist das in einer Minute beantwortet. Bleibt das Feld leer,
-   laesst Bsport das Einbetten nicht zu und der Schalter ist erledigt.
+   Damit ist der Kurzschluss eine Abkuerzung auf einem sicheren Weg, kein
+   Blindflug: greift die Nachricht, steht das richtige Paket schon im
+   Warenkorb. Greift sie nicht, waehlt der Kunde einmal selbst - genau der
+   Rueckfallweg, der ohnehin freigegeben war. In beiden Faellen bleibt die
+   Adresszeile auf bomayegym.com.
 
    DIAGNOSE
    ?bsdebug=1 protokolliert unter [bomaye-abo], was gesendet wurde und was
@@ -125,14 +64,8 @@
 
   var PREFIX   = '[bomaye-abo]';
   var NACHRICHT = 'bsport:subscription:add-to-cart:contract';
-  var TAKT     = 300;      /* ms zwischen zwei Sendungen */
-  var FENSTER  = 15000;    /* ms, danach ist Schluss */
-  var MIN_ABSTAND = 100;   /* ms, damit eine Zeichensalve nicht Dutzende sendet */
-
-  /* Die Kasse EINES Pakets. Belegte Form, siehe Kopf der Datei: die
-     Flex-Knoepfe tragen sie als href, die Early-Bird-Knoepfe trugen sie
-     bis Commit 2e33108. companyId steht schon im Mount darunter. */
-  var KASSE = 'https://backoffice.bsport.io/checkout/5473/subscription/%ID%?force=true';
+  var VERSUCHE = 12;      /* Sendeversuche, bis das Widget bereit ist */
+  var ABSTAND  = 500;     /* ms zwischen den Versuchen */
 
   /* Bsports eigenes Anmelde- und Profilfenster bei dialogMode 1. Belegt
      im Repository sind nur __container und __iframe. */
@@ -147,7 +80,6 @@
   var einst = null;       /* Einstellungen der Seite */
   var montiert = false;
   var scrollY = 0;
-  var lauf = null;        /* der laufende Deeplink-Lauf, siehe laufStarten */
 
   function debug() {
     try {
@@ -171,18 +103,6 @@
       var v = new URLSearchParams(window.location.search).get('dm');
       return v === '3' ? 3 : 1;
     } catch (e) { return 1; }
-  }
-
-  /* ?abo=kasse: Kassenseite im iframe statt Widget. Reiner Diagnoseweg,
-     siehe Kopf der Datei. Vorgabe ist aus. */
-  function kasseModus() {
-    try {
-      return new URLSearchParams(window.location.search).get('abo') === 'kasse';
-    } catch (e) { return false; }
-  }
-
-  function kasse(contractId) {
-    return KASSE.replace('%ID%', encodeURIComponent(String(contractId)));
   }
 
   var spurAn = false;
@@ -229,46 +149,10 @@
   function schliessen() {
     var o = overlay();
     if (!o) return;
-    laufBeenden('Overlay geschlossen');
     o.classList.remove('is-open');
     o.setAttribute('aria-hidden', 'true');
     entsperren();
     spur('Overlay geschlossen');
-  }
-
-  /* ── Der sichtbare Streifen: welches Paket, und der Direktweg ───────────
-     Immer nur EIN Paket, naemlich das geklickte. Nie eine Liste - sonst
-     koennten verborgene Flex-Pakete dort auftauchen.
-
-     Gebaut wird er hier und nicht im HTML der drei Seiten: so bleibt die
-     Wahrheit darueber, welches Paket gemeint ist, an genau einer Stelle. */
-  function streifen(contractId, el) {
-    var o = overlay();
-    if (!o) return;
-    var inhalt = o.querySelector('.bsport-modal-content');
-    if (!inhalt) return;
-
-    var s = document.getElementById('bomaye-abo-wahl');
-    if (!s) {
-      s = document.createElement('p');
-      s.id = 'bomaye-abo-wahl';
-      s.className = 'bomaye-abo-wahl';
-      inhalt.insertBefore(s, inhalt.firstChild);
-    }
-
-    var name = (el && el.getAttribute('data-item-name')) || '';
-    var teile = [];
-    if (name) {
-      /* Sichtbarer Text, also mit Umlaut - anders als die Kommentare. */
-      teile.push('<span class="bomaye-abo-wahl__text">Gew\u00E4hlt: <strong></strong></span>');
-    }
-    teile.push('<a class="bomaye-abo-wahl__link" target="_blank" rel="noopener">'
-             + 'Direkt zur Kasse</a>');
-    s.innerHTML = teile.join('');
-
-    /* Der Name kommt aus dem Dokument, wird aber nicht als HTML gesetzt. */
-    if (name) { s.querySelector('strong').textContent = name; }
-    s.querySelector('a').setAttribute('href', kasse(contractId));
   }
 
   /* ── Widget montieren (erst beim ersten Klick) ──────────────────────────── */
@@ -307,24 +191,6 @@
     });
   }
 
-  /* ?abo=kasse: die Kassenseite EINES Pakets, ohne Widget und ohne
-     Nachricht. Diagnoseweg, siehe Kopf der Datei. */
-  function kasseRahmen(contractId) {
-    var ziel = document.getElementById(einst.containerId);
-    if (!ziel) { spur('FEHLER: Container', einst.containerId, 'fehlt'); return; }
-    var alt = ziel.querySelector('iframe[data-abo-kasse]');
-    var url = kasse(contractId);
-    if (alt) { if (alt.getAttribute('src') !== url) alt.setAttribute('src', url); return; }
-    var f = document.createElement('iframe');
-    f.setAttribute('data-abo-kasse', '');
-    f.setAttribute('src', url);
-    f.setAttribute('title', 'Kasse');
-    f.setAttribute('frameborder', '0');
-    f.className = 'bomaye-abo-kasse';
-    ziel.appendChild(f);
-    spur('?abo=kasse: Kassenseite eingebettet:', url);
-  }
-
   /* ── Die Nachricht senden ───────────────────────────────────────────────── */
   function senden(contractId) {
     var nutzlast = {
@@ -334,81 +200,41 @@
 
     /* An das eigene Fenster: das Widget laeuft in unserem Dokument und hoert
        dort. window.parent ist im obersten Rahmen dasselbe Fenster - Bsports
-       Beispiel steht in einem iframe, unser Knopf nicht. Zusaetzlich an JEDES
-       iframe im Dokument, nicht nur an die im Container: wo das Widget seine
-       Oberflaeche baut, ist nicht belegt, und postMessage kann von sich aus
-       nichts ausloesen ausser einem Ereignis - mehrere Empfaenger sind daher
-       unbedenklich. */
+       Beispiel steht in einem iframe, unser Knopf nicht. Zusaetzlich an jedes
+       iframe im Container, falls das Widget seine Oberflaeche doch dort baut.
+       postMessage kann von sich aus nichts ausloesen ausser einem Ereignis -
+       mehrere Empfaenger sind daher unbedenklich. */
     var ziele = 0;
     try { window.postMessage(nutzlast, '*'); ziele++; } catch (e) {}
     if (window.parent && window.parent !== window) {
       try { window.parent.postMessage(nutzlast, '*'); ziele++; } catch (e) {}
     }
-    if (window.top && window.top !== window && window.top !== window.parent) {
-      try { window.top.postMessage(nutzlast, '*'); ziele++; } catch (e) {}
-    }
-    var rahmen = document.querySelectorAll('iframe');
-    for (var i = 0; i < rahmen.length; i++) {
-      try { rahmen[i].contentWindow.postMessage(nutzlast, '*'); ziele++; } catch (e) {}
+    var behaelter = document.getElementById(einst.containerId);
+    if (behaelter) {
+      var rahmen = behaelter.querySelectorAll('iframe');
+      for (var i = 0; i < rahmen.length; i++) {
+        try { rahmen[i].contentWindow.postMessage(nutzlast, '*'); ziele++; } catch (e) {}
+      }
     }
     spur('gesendet an', ziele, 'Ziel(e):', JSON.stringify(nutzlast));
   }
 
-  /* ── Nachschicken, bis einer zuhoert ───────────────────────────────────────
-     Die alte Fassung hoerte zwei Runden nach dem ersten Kindknoten auf -
-     also rund eine Sekunde nach dem Klick, lange bevor Bsports Oberflaeche
-     fertig war. Das war die Ursache der Meldung; siehe Kopf der Datei.
-
-     Jetzt gilt: Takt plus jede Neuzeichnung plus jede eingehende
-     bsport-Nachricht, gedeckelt auf FENSTER Millisekunden, und sofort
-     Schluss, wenn der Besucher im Overlay selbst etwas tippt. Der letzte
-     Punkt ist kein Detail: ohne ihn redete das Nachschicken einem
-     Besucher hinein, der sich dort gerade fuer ein anderes Paket
-     entscheidet. */
-  function laufBeenden(grund) {
-    if (!lauf) return;
-    var l = lauf;
-    lauf = null;
-    clearTimeout(l.uhr);
-    if (l.beobachter) { l.beobachter.disconnect(); }
-    spur('Deeplink beendet:', grund, '| Sendungen:', l.anzahl);
-  }
-
-  function nachschicken(l) {
-    if (lauf !== l) return;
-    var jetzt = Date.now();
-    if (jetzt > l.bis) { laufBeenden('Fenster abgelaufen'); return; }
-    if (jetzt - l.zuletzt < MIN_ABSTAND) return;
-    l.zuletzt = jetzt;
-    l.anzahl++;
-    senden(l.id);
-  }
-
-  function laufStarten(contractId) {
-    laufBeenden('neuer Lauf');
-    var l = { id: String(contractId), anzahl: 0, zuletzt: 0, uhr: null,
-              beobachter: null, bis: Date.now() + FENSTER };
-    lauf = l;
-
+  /* Mehrfach senden, weil das Widget erst nachlaedt. Sobald es Inhalt hat,
+     noch zweimal - danach ist Schluss. */
+  function sendenBisBereit(contractId) {
+    var n = 0, nachInhalt = 0;
     (function runde() {
-      if (lauf !== l) return;
-      if (Date.now() > l.bis) { laufBeenden('Fenster abgelaufen'); return; }
-      nachschicken(l);
-      l.uhr = setTimeout(runde, TAKT);
+      if (n++ >= VERSUCHE) { spur('Sendeversuche aufgebraucht'); return; }
+      var behaelter = document.getElementById(einst.containerId);
+      var hatInhalt = behaelter && behaelter.children.length > 0;
+      senden(contractId);
+      if (hatInhalt && ++nachInhalt >= 2) { spur('Widget hat Inhalt, fertig gesendet'); return; }
+      setTimeout(runde, ABSTAND);
     }());
-
-    /* Jede Neuzeichnung im Container ist eine neue Gelegenheit, dass
-       gerade jetzt ein Hoerer steht. Unsere eigenen Sendungen aendern
-       den Container nicht, es gibt also keine Rueckkopplung. */
-    var behaelter = document.getElementById(einst.containerId);
-    if (behaelter && window.MutationObserver) {
-      l.beobachter = new MutationObserver(function () { nachschicken(l); });
-      l.beobachter.observe(behaelter, { childList: true, subtree: true });
-    }
   }
 
   /* ── Oeffnen ────────────────────────────────────────────────────────────── */
-  function oeffnen(contractId, el) {
+  function oeffnen(contractId) {
     if (!einst) { return; }
     var o = overlay();
     if (!o) { spur('FEHLER: Overlay', einst.modalId, 'fehlt'); return; }
@@ -416,18 +242,8 @@
     o.classList.add('is-open');
     o.setAttribute('aria-hidden', 'false');
     sperren();
-    streifen(contractId, el);
-    if (kasseModus()) { kasseRahmen(contractId); return; }
     montieren();
-    laufStarten(contractId);
-  }
-
-  /* Alles da, was das Overlay braucht? Sonst uebernimmt der Rueckfall. */
-  function bereit(contractId) {
-    if (!contractId) return false;
-    if (!overlay()) return false;
-    if (kasseModus()) return true;
-    return typeof window.MountBsportWidget === 'function';
+    sendenBisBereit(contractId);
   }
 
   /* ── Verdrahtung ────────────────────────────────────────────────────────── */
@@ -435,36 +251,14 @@
     einst  = einstellungen;
     spurAn = debug();
 
-    /* Klicks auf alles mit data-abo-contract abfangen - aber nur, wenn das
-       Overlay das Paket wirklich zeigen kann. Kann es das nicht, bleibt der
-       Klick ein Klick: dann oeffnet die Kasse DIESES Pakets in einem neuen
-       Tab, und laesst der Browser auch das nicht zu, greift das href der
-       Seite. Ausgestiegen wird damit nie ins Leere. */
+    /* Klicks auf alles mit data-abo-contract abfangen. Das href der Knoepfe
+       bleibt als Rueckfall ohne JavaScript erhalten und zeigt auf die eigene
+       Domain - ausgestiegen wird also auch dann nicht. */
     document.addEventListener('click', function (e) {
       var el = e.target && e.target.closest ? e.target.closest('[data-abo-contract]') : null;
       if (!el) return;
-      var id = el.getAttribute('data-abo-contract');
-
-      if (!bereit(id)) {
-        if (id) {
-          var w = null;
-          /* Ohne "noopener" im dritten Argument, weil der Rueckgabewert
-             sonst null ist und wir nicht erkennen koennten, ob das Fenster
-             aufging. Gekappt wird der opener gleich danach. */
-          try { w = window.open(kasse(id), '_blank'); } catch (err) {}
-          if (w) {
-            try { w.opener = null; } catch (err2) {}
-            e.preventDefault();
-            spur('Rueckfall: Kasse im neuen Tab, contract', id);
-            return;
-          }
-        }
-        spur('Rueckfall: gewoehnlicher Link (href), contract', id || '(fehlt)');
-        return;   /* kein preventDefault - das href der Seite uebernimmt */
-      }
-
       e.preventDefault();
-      oeffnen(id, el);
+      oeffnen(el.getAttribute('data-abo-contract'));
     });
 
     var o = overlay();
@@ -474,16 +268,6 @@
           schliessen();
         }
       });
-      /* Tippt oder tastet der Besucher im Overlay, hoert das Nachschicken
-         auf. Seine eigene Wahl wiegt mehr als unsere Abkuerzung. Klicks in
-         einem fremden iframe erreichen uns nie - dort greift dafuer das
-         Zeitfenster. */
-      o.addEventListener('pointerdown', function () {
-        laufBeenden('Besucher tippt im Overlay');
-      }, true);
-      o.addEventListener('keydown', function () {
-        laufBeenden('Besucher tastet im Overlay');
-      }, true);
     }
     document.addEventListener('keydown', function (e) {
       if ((e.key === 'Escape' || e.key === 'Esc') && o && o.classList.contains('is-open')) {
@@ -536,15 +320,15 @@
       }, true);
     }
 
-    /* Eine eingehende bsport-Nachricht ist der einzige harte Beleg, dass
-       auf der anderen Seite ueberhaupt jemand lebt. Dann sofort noch
-       einmal nachschicken, statt auf den naechsten Takt zu warten. */
-    window.addEventListener('message', function (e) {
-      var t = e && e.data && e.data.type;
-      if (typeof t !== 'string' || t.indexOf('bsport') !== 0 || t === NACHRICHT) return;
-      if (lauf) { nachschicken(lauf); }
-      spur('Antwort von Bsport:', t, JSON.stringify(e.data).slice(0, 300));
-    });
+    /* Antworten von Bsport mitschreiben - nur zur Diagnose. */
+    if (spurAn) {
+      window.addEventListener('message', function (e) {
+        var t = e && e.data && e.data.type;
+        if (typeof t === 'string' && t.indexOf('bsport') === 0 && t !== NACHRICHT) {
+          spur('Antwort von Bsport:', t, JSON.stringify(e.data).slice(0, 300));
+        }
+      });
+    }
 
     spur('bereit | Knoepfe:', document.querySelectorAll('[data-abo-contract]').length);
   }
