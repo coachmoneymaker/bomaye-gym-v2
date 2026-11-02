@@ -481,6 +481,40 @@ function adsKennung(t) {
     `$1${attr}$2`);
 }
 
+/* ── Die Buchung darf nie an der Einwilligung haengen ────────────────────
+   Cookiebots automatische Blockade stellt jedes Skript, das sie fuer
+   Marketing haelt, bis zur Einwilligung auf type="text/plain". Das traf
+   auch abo-embed.js und den Inline-Aufruf von bomayeAbo.init: ohne
+   Einwilligung gab es dann gar keinen Klick-Horcher, und ein Klick auf
+   einen Paket-Knopf landete auf dem href statt im Overlay.
+
+   data-cookieconsent="ignore" nimmt beide von der Blockade aus. Das ist
+   zulaessig und keine Umgehung: abo-embed.js laedt NICHTS von bsport.io,
+   setzt keinen Keks und schreibt in keinen Speicher. Es oeffnet ein
+   Overlay auf unserer Seite und schickt eine postMessage. Alles, was
+   wirklich von bsport kommt, haengt weiterhin an bsport-gate.js und am
+   Einwilligungshinweis.
+
+   Dasselbe Vorgehen wie bei bsport-gate.js selbst, das aus genau diesem
+   Grund schon immer data-cookieconsent="ignore" traegt: die Sperre darf
+   nie blockiert werden, und das Fenster, das sie anzeigt, auch nicht.
+
+   Idempotent: schon vorhandene Attribute bleiben, es entsteht kein
+   zweites. preise-pruefen.mjs prueft es fuer JEDE Seite nach. */
+function einwilligungFrei(t) {
+  /* 1. Die Datei selbst. */
+  t = t.replace(
+    /<script src="\/assets\/js\/abo-embed\.js"(?! [^>]*data-cookieconsent=)/g,
+    '<script src="/assets/js/abo-embed.js" data-cookieconsent="ignore"');
+  /* 2. Der Inline-Aufruf. Gesucht wird der oeffnende Tag des Blocks, der
+     bomayeAbo nennt - ohne alles davor mitzunehmen, deshalb der
+     Negativ-Blick auf ein zwischenzeitliches </script>. */
+  t = t.replace(
+    /<script(?![^>]*data-cookieconsent=)([^>]*)>((?:(?!<\/script>)[\s\S])*?bomayeAbo(?:(?!<\/script>)[\s\S])*?)<\/script>/g,
+    '<script data-cookieconsent="ignore"$1>$2</script>');
+  return t;
+}
+
 /* ── Lauf ──────────────────────────────────────────────────────────────── */
 let t = await readFile(DATEI, 'utf8');
 const vorher = t;
@@ -492,6 +526,7 @@ t = ersetze(t, 'WEITERE', weitere());
 t = ersetze(t, 'FAQ', faq());
 t = flexEinbauen(t, flex(), '        <!-- PREISE:BEDINGUNGEN -->');
 t = adsKennung(t);
+t = einwilligungFrei(t);
 
 /* Die Startseite wird nur angefasst, wenn sich dort wirklich etwas
    aendert. Mit ausgeschaltetem Flex ist das nie der Fall. */
@@ -501,6 +536,7 @@ const hVorher = h;
 h = startseiteEinbauen(h);
 h = knoepfeMessbar(h);
 h = adsKennung(h);
+h = einwilligungFrei(h);
 if (h !== hVorher) {
   if (NUR_PRUEFEN) {
     console.log('index.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
@@ -517,6 +553,7 @@ let mw = await readFile(MITGLIED, 'utf8');
 const mwVorher = mw;
 mw = knoepfeMessbar(mw);
 mw = adsKennung(mw);
+mw = einwilligungFrei(mw);
 if (mw !== mwVorher) {
   if (NUR_PRUEFEN) {
     console.log('mitglied-werden.html WUERDE sich aendern - "node scripts/preise-bauen.mjs" laufen lassen.');
