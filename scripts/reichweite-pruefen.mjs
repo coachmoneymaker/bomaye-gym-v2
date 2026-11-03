@@ -453,6 +453,104 @@ if (!seiten.length) {
   seiten = (await readdir(WURZEL)).filter((f) => f.endsWith('.html')).sort();
 }
 
+/* ── Dritter Teil: aufgeklappte FAQ-Antworten muessen sichtbar sein ───────
+   Gemeldet am 03.11.: auf /preise blieben alle sechs Antworten nach dem
+   Aufklappen unsichtbar. Die Regel haftete an
+   .faq-q--light[aria-expanded="true"], das Markup ist dort aber ein
+   <details> mit <summary> - und ein <summary> traegt kein aria-expanded.
+   Die Antwort stand aufgeklappt und 71px hoch da, mit opacity 0.
+
+   Genau das faellt mit blossem Augenmass auf und mit keiner der bisherigen
+   Pruefungen: der Knopf ist erreichbar, die Seite laeuft nicht ueber, das
+   Schema stimmt, und im Quelltext steht die Antwort. Also wird hier
+   nachgesehen, was der Browser wirklich zeigt.
+
+   Geprueft wird JEDER Aufklapp-Eintrag jeder Seite, in beiden Mechaniken
+   (<details>/<summary> und <button aria-expanded>), und zwar auf:
+     - Deckkraft mindestens 0,99
+     - sichtbare Hoehe mindestens 8px
+     - Textfarbe mit mindestens 4,5:1 gegen den Hintergrund dahinter   */
+async function faqPruefen(browser, basis, datei, viewport) {
+  const ctx = await browser.newContext({ viewport });
+  const page = await ctx.newPage();
+  await page.addInitScript(() => {
+    window.Cookiebot = { consent: { marketing: false, statistics: false, preferences: false, necessary: true } };
+  });
+  await page.route('**://**', (r) => (r.request().url().startsWith(basis) ? r.continue() : r.abort()));
+  try {
+    await page.goto(basis + datei, { waitUntil: 'domcontentloaded', timeout: 20000 });
+  } catch (e) {
+    await ctx.close();
+    return { fehler: String(e).split('\n')[0].slice(0, 120), eintraege: [] };
+  }
+  await page.waitForTimeout(400);
+  await page.evaluate(() => document.querySelectorAll('.reveal').forEach((e) => e.classList.add('visible')));
+  const eintraege = await page.evaluate(async () => {
+    /* Relative Leuchtdichte nach WCAG. Halbdurchsichtige Textfarben werden
+       vorher gegen den gefundenen Hintergrund gemischt. */
+    const zahl = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+    const lum = (r, g, b) => {
+      const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    };
+    const hintergrund = (el) => {
+      let n = el;
+      while (n && n !== document.documentElement) {
+        const c = zahl(getComputedStyle(n).backgroundColor);
+        if (c.length >= 3 && (c.length < 4 || c[3] > 0.95)) return c.slice(0, 3);
+        n = n.parentElement;
+      }
+      return [255, 255, 255];
+    };
+    const r = [];
+    const items = document.querySelectorAll('.faq-item, .faqp-item');
+    for (const it of items) {
+      const auf = it.querySelector('summary, .faq-q, .faqp-question, button');
+      /* EINZELN abfragen, nicht als Liste: querySelector liefert das erste
+         Element in DOKUMENTREIHENFOLGE, nicht das des ersten Selektors.
+         Mit ".faq-a-inner, .faq-a" kam der Wrapper .faq-a zurueck, der
+         keinen eigenen Text traegt und die Farbe nur erbt. */
+      const inner = it.querySelector('.faq-a-inner')
+                 || it.querySelector('.faqp-answer')
+                 || it.querySelector('.faq-a');
+      const frage = ((auf && auf.textContent) || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+      if (!auf || !inner) { r.push({ frage, fehlt: true }); continue; }
+      auf.click();
+      await new Promise((x) => setTimeout(x, 450));
+      /* Fuer die Farbe zaehlt das Element, das den Text WIRKLICH traegt.
+         Auf /faq steht er in ".faqp-answer p", nicht im Behaelter darum;
+         der erbt nur und faelschte den Kontrast auf 1:1. */
+      const traeger = (() => {
+        const kandidaten = [inner].concat([].slice.call(inner.querySelectorAll('*')));
+        for (const k of kandidaten) {
+          for (const n of k.childNodes) {
+            if (n.nodeType === 3 && n.textContent.trim().length > 1) return k;
+          }
+        }
+        return inner;
+      })();
+      const cs = getComputedStyle(inner);
+      const csText = getComputedStyle(traeger);
+      const rect = inner.getBoundingClientRect();
+      const vg = zahl(csText.color);
+      const bg = hintergrund(traeger);
+      const a = vg.length > 3 ? vg[3] : 1;
+      const misch = [0, 1, 2].map((i) => vg[i] * a + bg[i] * (1 - a));
+      const l1 = lum(misch[0], misch[1], misch[2]), l2 = lum(bg[0], bg[1], bg[2]);
+      const kontrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      const sum = auf.getBoundingClientRect();
+      r.push({ frage,
+        deckkraft: Math.round(parseFloat(cs.opacity) * 100) / 100,
+        hoehe: Math.round(rect.height),
+        kontrast: Math.round(kontrast * 10) / 10,
+        tippflaeche: Math.round(sum.height) });
+    }
+    return r;
+  });
+  await ctx.close();
+  return { eintraege };
+}
+
 const chromium = await chromiumHolen();
 const { srv, basis } = await serverStarten();
 const browser = await chromium.launch();
@@ -528,9 +626,35 @@ for (const viewport of [SCHMAL, QUER]) {
   if (!hier) console.log('   kein Überlauf');
 }
 
+/* Dritter Teil: aufgeklappte FAQ-Antworten. */
+let faqs = 0;
+for (const viewport of auchBreit ? [HANDY, BREIT] : [HANDY]) {
+  console.log(`\n━━━ FAQ aufgeklappt · ${viewport.width}×${viewport.height} ━━━`);
+  let hier = 0;
+  for (const datei of seiten) {
+    const f = await faqPruefen(browser, basis, datei, viewport);
+    if (f.fehler) { console.log(`✗  ${datei}: ${f.fehler}`); befunde++; continue; }
+    if (!f.eintraege.length) continue;
+    faqs += f.eintraege.length;
+    const schlecht = [];
+    for (const e of f.eintraege) {
+      if (e.fehlt) { schlecht.push(`kein Antwortfeld zu "${e.frage}"`); continue; }
+      if (e.deckkraft < 0.99) schlecht.push(`"${e.frage}" aufgeklappt, aber opacity ${e.deckkraft}`);
+      else if (e.hoehe < 8) schlecht.push(`"${e.frage}" aufgeklappt, aber nur ${e.hoehe}px hoch`);
+      else if (e.kontrast < 4.5) schlecht.push(`"${e.frage}" Kontrast nur ${e.kontrast}:1`);
+    }
+    if (schlecht.length) {
+      hier++; befunde += schlecht.length;
+      console.log(`✗  ${datei.padEnd(40)} ${schlecht.length} von ${f.eintraege.length}`);
+      schlecht.forEach((z) => console.log(`      ${z}`));
+    }
+  }
+  if (!hier) console.log(`   alle Antworten sichtbar`);
+}
+
 await browser.close();
 srv.close();
-console.log(`\n═══ ${knoepfe} Knöpfe, ${container} Widget-Container · ${befunde} Befund(e)`);
+console.log(`\n═══ ${knoepfe} Knöpfe, ${container} Widget-Container, ${faqs} FAQ-Antworten · ${befunde} Befund(e)`);
 if (befunde) {
   console.log('\nIm Reichweitenteil heißt "✗": dieser Knopf ist durch Scrollen nicht');
   console.log('zu erreichen. Erster Blick: hat ein Vorfahr overflow: hidden mit');

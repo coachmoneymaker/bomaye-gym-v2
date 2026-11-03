@@ -220,7 +220,21 @@ function fragenAlle() {
 /* ── FAQ ───────────────────────────────────────────────────────────────────
    Aufklappen mit <details>, nicht mit einem Knopf und JavaScript wie auf der
    Startseite: ohne JavaScript bliebe dort jede Antwort zu. Das Aussehen ist
-   dasselbe, die Mechanik die robustere.                                   */
+   dasselbe, die Mechanik die robustere.
+
+   ACHTUNG BEIM AENDERN DES AUSSEHENS
+   Ein <summary> traegt KEIN aria-expanded; der Browser fuehrt den Zustand
+   ueber das Attribut open am <details>. Jede Regel in style.css, die am
+   aufgeklappten Zustand haengt, braucht deshalb beide Selektoren:
+
+     .faq-q--light[aria-expanded="true"]   fuer die Knopf-Variante
+     .faq-item[open] .faq-q--light         fuer dieses Markup hier
+
+   Genau das fehlte bis zum 03.11. bei der Deckkraft der Antwort: die
+   Antwort klappte auf, war 71px hoch und blieb bei opacity 0 unsichtbar.
+   Der dritte Teil von reichweite-pruefen.mjs klappt seitdem jede Antwort
+   jeder Seite im Browser auf und misst nach; er laeuft in
+   "npm run pruefen:alles" mit.                                           */
 function faq() {
   return '        <div class="pr-faq faq-list faq-list--light reveal">\n' + fragenAlle().map((q) => `          <details class="faq-item">
             <summary class="faq-q faq-q--light">${esc(q.f)}<i class="icon faq-icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>

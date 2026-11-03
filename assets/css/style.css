@@ -1496,7 +1496,19 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
 }
 .faq-q:hover { color: var(--gold); }
 .faq-icon { font-size: 0.82rem; transition: transform var(--dur-normal) var(--ease-out); color: var(--gold); flex-shrink: 0; margin-left: 1rem; }
-.faq-q[aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
+/* ZWEI MECHANIKEN, DIESELBE OPTIK
+   Die meisten Seiten bauen das FAQ aus <button class="faq-q"
+   aria-expanded> und toggleFaq(). /preise baut es aus <details
+   class="faq-item"><summary class="faq-q">, damit es ohne JavaScript
+   aufgeht, und /faq aus <details class="faqp-item">. Ein <summary> hat
+   KEIN aria-expanded - der Browser verwaltet den Zustand ueber das
+   Attribut open am <details>.
+
+   Jede Regel, die am aufgeklappten Zustand haengt, braucht deshalb beide
+   Selektoren. Fehlt der zweite, bleibt die Antwort auf /preise
+   unsichtbar: genau so gemeldet, opacity 0 bei geoeffnetem <details>. */
+.faq-q[aria-expanded="true"] .faq-icon,
+.faq-item[open] .faq-q .faq-icon { transform: rotate(45deg); }
 .faq-a { max-height: 0; overflow: hidden; transition: max-height var(--dur-ruhig) var(--ease-expo); }
 .faq-a-inner { padding: 0 0 1.35rem; font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
 
@@ -3427,7 +3439,8 @@ footer .footer-grid + div {
 .faq-q--light:hover {
   color: var(--gold-dark) !important;
 }
-.faq-q--light[aria-expanded="true"] {
+.faq-q--light[aria-expanded="true"],
+.faq-item[open] .faq-q--light {
   color: var(--gold-dark) !important;
 }
 .faq-q--light .faq-icon {
@@ -6232,10 +6245,14 @@ a.mn-contact-text:hover { color: var(--gold); }
   font-family: var(--font-body);
   line-height: 1;
 }
-.faq-list--light .faq-q--light[aria-expanded="true"]::after {
+/* Beide Mechaniken, siehe die Begruendung bei .faq-q .faq-icon weiter
+   oben: ein <summary> traegt kein aria-expanded. */
+.faq-list--light .faq-q--light[aria-expanded="true"]::after,
+.faq-list--light .faq-item[open] .faq-q--light::after {
   transform: rotate(90deg);
 }
-.faq-list--light .faq-q--light[aria-expanded="true"] {
+.faq-list--light .faq-q--light[aria-expanded="true"],
+.faq-list--light .faq-item[open] .faq-q--light {
   color: #C9A84C !important;
 }
 
@@ -6252,7 +6269,16 @@ a.mn-contact-text:hover { color: var(--gold); }
   transform: translateY(-8px);
   transition: opacity var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
 }
-.faq-list--light .faq-item:has(.faq-q--light[aria-expanded="true"]) .faq-a-inner {
+/* HIER STECKTE DER FEHLER
+   Nur der erste Selektor stand hier. Auf /preise ist .faq-item ein
+   <details>, dessen <summary> kein aria-expanded traegt; :has() fand
+   also nie etwas, und die Antwort blieb bei opacity 0 und
+   translateY(-8px) stehen - aufgeklappt, 71px hoch, und unsichtbar.
+
+   Der zweite Selektor haengt am Attribut open, das der Browser selbst
+   setzt. Ueberblendung und Verschiebung bleiben unveraendert. */
+.faq-list--light .faq-item:has(.faq-q--light[aria-expanded="true"]) .faq-a-inner,
+.faq-list--light .faq-item[open] .faq-a-inner {
   opacity: 1;
   transform: translateY(0);
 }
