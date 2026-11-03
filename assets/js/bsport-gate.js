@@ -98,6 +98,23 @@
           blockedScripts.push({ el: this, url: String(value) });
           return;
         }
+        /* MIT EINWILLIGUNG: Cookiebot aus dem Weg nehmen, bevor src steht.
+
+           Das deckt den Ladeweg ab, den das Nachladen in release() nicht
+           erreicht. Bsports eigener Schnipsel
+           (<script id="insert-bsport-widget-cdn">) baut sein Element
+           selbst und setzt nur eine id. Wer mit bereits erteilter
+           Marketing-Einwilligung auf die Seite kommt, laeuft gar nicht
+           durch das Tor; dann haengt dieses Element ohne Attribut im Kopf,
+           und Cookiebot sperrt es erneut, weil das Bundle wegen
+           RudderStack als Statistik eingestuft ist. Derselbe tote
+           Zustand, nur ohne sichtbares Tor.
+
+           Gesetzt wird nur, wenn consented() wahr ist: ohne Einwilligung
+           greift der Zweig darueber und es wird gar nichts gesetzt. */
+        if (isBsport(value) && this.setAttribute) {
+          try { this.setAttribute('data-cookieconsent', 'ignore'); } catch (e) {}
+        }
         scriptSrc.set.call(this, value);
       }
     });
@@ -436,7 +453,7 @@
       }
       fail.hidden = false;
       fail.textContent = 'Der Einwilligungsdialog laesst sich auf diesem Geraet nicht '
-        + 'oeffnen. Bitte buche telefonisch oder per WhatsApp - oder nutze den Link '
+        + 'oeffnen. Bitte buche telefonisch oder per WhatsApp, oder nutze den Link '
         + '"Cookie-Einstellungen" ganz unten auf der Seite. (Grund: ' + reason + ')';
       btn.disabled = false;
       btn.textContent = 'ERNEUT VERSUCHEN';
@@ -678,11 +695,8 @@
       if (old.parentNode) old.parentNode.removeChild(old);
       if (seen[url]) continue;
       seen[url] = true;
-      var s = document.createElement('script');
-      if (old.id) s.id = old.id;
-      s.async = true;
-      s.src = url;
-      document.head.appendChild(s);
+      nachgeladen.push({ url: url, id: old.id || '' });
+      skriptEinhaengen(url, old.id || '');
     }
 
     /* Die Seitenskripte warten in Wiederholungsschleifen darauf, dass
@@ -694,20 +708,101 @@
     setTimeout(checkStillEmpty, 10000);
   }
 
+  /* Was beim Freigeben nachgeladen wurde. Wird fuer die Wiederholung
+     gebraucht: blockedScripts ist danach leer. */
+  var nachgeladen = [];
+  var wiederholungen = 0;
+
+  /* EIN SCRIPT EINHAENGEN, DAS COOKIEBOT NICHT MEHR ANFASST
+
+     HIER LAG DIE BUCHUNGSSCHLEIFE. Das Element wurde ohne
+     data-cookieconsent="ignore" erzeugt. Cookiebot faengt auch
+     nachtraeglich eingehaengte Scripts ab und entscheidet nach SEINER
+     eigenen Einstufung, nicht nach unserer.
+
+     cdn.bsport.io/scripts/widget.js bringt RudderStack mit
+     (rl_anonymous_id, rl_session), siehe den Kopf dieser Datei. Cookiebots
+     Scan stuft es deshalb als Statistik ein. Wer nur Marketing erlaubt,
+     bekam das Script also sofort wieder gesperrt: window.BsportWidget
+     erschien nie, nach 10 Sekunden kam der Hinweis "Buchungssystem laden",
+     und der lud die Seite neu. Danach dasselbe von vorn, mit verlorener
+     Paketwahl und verlorenem Scrollstand.
+
+     Mit "Alle zulassen" war auch Statistik erlaubt, deshalb lief es dort.
+
+     Das Attribut ist hier richtig und weicht die Einwilligung nicht auf:
+     diese Funktion laeuft ausschliesslich aus release(), und release()
+     laeuft nur, wenn consented() wahr ist, also die Marketing-Einwilligung
+     vorliegt. Unser Tor fragt genau diese eine Kategorie ab, und der
+     Besucher hat ihr zugestimmt, um die Buchung zu laden.
+
+     ZUSAETZLICH ZU KLAEREN, NICHT IM CODE: in Cookiebot sollte
+     cdn.bsport.io auf Marketing stehen, damit Einstufung und Tor dasselbe
+     sagen. Das ist eine Einstellung im Cookiebot-Konto. */
+  function skriptEinhaengen(url, id) {
+    var s = document.createElement('script');
+    if (id) s.id = id;
+    s.async = true;
+    s.setAttribute('data-cookieconsent', 'ignore');
+    s.src = url;
+    document.head.appendChild(s);
+    return s;
+  }
+
+  /* Erneut versuchen, ohne Neuladen. Die Paketwahl und der Scrollstand
+     bleiben damit erhalten, und der Hinweis ist keine Sackgasse mehr. */
+  function nochmalLaden(halter) {
+    wiederholungen++;
+    var hinweis = halter.querySelector('.' + GATE_CLASS + '__reload');
+    if (hinweis) hinweis.remove();
+    for (var i = 0; i < nachgeladen.length; i++) {
+      skriptEinhaengen(nachgeladen[i].url, '');
+    }
+    setTimeout(function () { checkStillEmpty(); }, 8000);
+  }
+
+  /* Der Hinweis, wenn nach dem Freigeben nichts erschienen ist.
+
+     VORHER WAR DAS EINE SACKGASSE: ein Link "Buchungssystem laden", der
+     nichts weiter tat als location.reload(). Nach dem Neuladen war die
+     Paketwahl weg, der Scrollstand oben, und weil die Ursache dieselbe
+     blieb, endete der naechste Versuch wieder hier. Genau das war die
+     gemeldete Schleife.
+
+     Jetzt wird zweimal an Ort und Stelle nachgeladen, ohne die Seite
+     anzufassen. Hilft das nicht, steht da kein Link mehr, sondern der
+     Weg, der sicher funktioniert: Telefon und WhatsApp. */
+  function hinweisBauen(halter) {
+    var p = document.createElement('p');
+    p.className = GATE_CLASS + '__reload';
+
+    if (wiederholungen >= 2) {
+      p.innerHTML = 'Das Buchungssystem laedt gerade nicht. '
+        + 'Buche direkt bei uns: '
+        + '<a href="tel:+491737513627">+49 173 7513627</a> '
+        + 'oder <a href="https://wa.me/491737513627" '
+        + 'target="_blank" rel="noopener">WhatsApp</a>.';
+      return p;
+    }
+
+    var a = document.createElement('a');
+    a.href = '#';
+    a.textContent = 'Erneut versuchen';
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      nochmalLaden(halter);
+    });
+    p.appendChild(a);
+    return p;
+  }
+
   function checkStillEmpty() {
     var divs = document.querySelectorAll('[id^="bsport-widget-"]');
     for (var i = 0; i < divs.length; i++) {
       var d = divs[i];
       if (d.tagName === 'SCRIPT') continue;
       if (d.children.length === 0 && !d.querySelector('.' + GATE_CLASS + '__reload')) {
-        var p = document.createElement('p');
-        p.className = GATE_CLASS + '__reload';
-        var a = document.createElement('a');
-        a.href = '#';
-        a.textContent = 'Buchungssystem laden';
-        a.addEventListener('click', function (e) { e.preventDefault(); location.reload(); });
-        p.appendChild(a);
-        d.appendChild(p);
+        d.appendChild(hinweisBauen(d));
       }
     }
   }
