@@ -318,7 +318,7 @@ function buildUserConfirmationEmailHtml(lead, siteUrl) {
                               font-size:10px;font-weight:700;
                               letter-spacing:0.32em;text-transform:uppercase;
                               color:#C9A84C;">
-                      Founding Member &mdash; Bestätigt
+                      Early Bird Platz bestätigt
                     </p>
 
                     <!-- Headline -->

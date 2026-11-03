@@ -208,6 +208,21 @@ for (const name of dateien) {
    "Kein Vertrag" stand neben Mitgliedschaftstexten, obwohl die
    Mitgliedschaft 12 Monate laeuft. Auch das ist raus.
 
+   "Founding Member" war ein zweiter Name fuer dieselbe Gruppe. Es gibt nur
+   noch einen Namen: Early Bird.
+
+   Prozentangaben wie "spare 17 %" rechnen gegen den Regulaerpreis und
+   gelten nur so lange, wie dieser Regulaerpreis gilt. Sie stehen nicht
+   mehr auf den Early-Bird-Karten. Der Flex-Vergleich auf /preise
+   ("Early Bird spart dir 640,80 Euro im Jahr") bleibt: er rechnet gegen
+   einen Preis, den es wirklich gibt, und wird gerechnet, nicht getippt.
+
+   Verglichen wird ohne Ruecksicht auf Gross- und Kleinschreibung. Grund:
+   eine Suche mit "grep -i" und einer Klammer wie [uae] faellt im
+   C-Gebietsschema bei Grossumlauten stillschweigend aus. Genau so blieben
+   "DEIN PREIS. FUER DIE LAUFZEIT." auf /about und /kurse unentdeckt.
+   JavaScript faltet Unicode richtig, also faellt das hier auf.
+
    Dazu die Schreibweise: im Deutschen steht ein geschuetztes oder normales
    Leerzeichen vor dem Euro-Zeichen. "14,90€" ist falsch, "14,90 €" richtig.
    Das gilt fuer ganze Betraege genauso: "20€" ist falsch, "20 €" richtig.
@@ -217,9 +232,12 @@ for (const name of dateien) {
    Begruendung stehen, so wie hier.                                      */
 {
   const VERBOTEN = [
-    ['Lifetime',       'verspricht mehr als der Vertrag hergibt'],
-    ['unwiderruflich', 'verspricht mehr als der Vertrag hergibt'],
-    ['Kein Vertrag',   'die Mitgliedschaft laeuft 12 Monate'],
+    ['Lifetime',                'verspricht mehr als der Vertrag hergibt'],
+    ['unwiderruflich',          'verspricht mehr als der Vertrag hergibt'],
+    ['Kein Vertrag',            'die Mitgliedschaft laeuft 12 Monate'],
+    ['Founding Member',         'der Early Bird hat nur einen Namen'],
+    ['für die Laufzeit',        'der Preis bleibt, solange jemand Mitglied bleibt'],
+    ['gesamte Vertragslaufzeit', 'der Preis bleibt, solange jemand Mitglied bleibt'],
   ];
   for (const datei of dateien) {
     const roh = await readFile(WURZEL + '/' + datei, 'utf8');
@@ -228,8 +246,16 @@ for (const name of dateien) {
       .replace(/<style[\s\S]*?<\/style>/g, ' ')
       .replace(/<!--[\s\S]*?-->/g, ' ');
     for (const [wort, grund] of VERBOTEN) {
-      if (sicht.includes(wort)) melde(datei, `"${wort}" steht im sichtbaren Text: ${grund}`);
+      const treffer = new RegExp(wort.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      if (treffer.test(sicht)) melde(datei, `"${wort}" steht im sichtbaren Text: ${grund}`);
     }
+    /* Prozent-Ersparnis auf einer Early-Bird-Karte. Zwei Wege, weil die
+       Angabe in der Plakette stand und auch im Fliesstext stehen koennte. */
+    for (const m of sicht.matchAll(/<span class="mw-card-savings">([\s\S]*?)<\/span>/g)) {
+      if (m[1].includes('%')) melde(datei, `Prozent-Ersparnis auf der Early-Bird-Karte: "${m[1].trim()}"`);
+    }
+    const prozent = [...sicht.replace(/<[^>]+>/g, ' ').matchAll(/spar\w*\s+\d+\s*%/gi)].map((m) => m[0]);
+    if (prozent.length) melde(datei, `Prozent-Ersparnis im Text: ${[...new Set(prozent)].join(', ')}`);
     /* Preis ohne Leerzeichen vor dem Euro. &nbsp; zaehlt als Leerzeichen. */
     const text = sicht.replace(/&nbsp;/g, ' ').replace(/<[^>]+>/g, ' ');
     /* Auch ganze Betraege: "20€" und "1.090€" sind genauso falsch wie
