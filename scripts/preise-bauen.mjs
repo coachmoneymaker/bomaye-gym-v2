@@ -31,6 +31,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { MITGLIEDSCHAFTEN, PT, WEITERE, BEDINGUNGEN, FRAGEN, AUFNAHME, LAUFZEIT, euro,
+         FLEX_ZIEL, FLEX_ZIEL_ABS,
          FLEX_AKTIV, FLEX, FLEX_BEDINGUNGEN, FLEX_FRAGE, ersparnis,
          ADS_CHECKOUT_SEND_TO }
   from './preise-daten.mjs';
@@ -238,20 +239,18 @@ function faq() {
    auf derselben Seite. Dazu kommen genau zwei Zeilen, die es dort nicht
    gibt: die Aufnahmegebuehr und die gerechnete Ersparnis.
 
-   DER KNOPF ARBEITET ANDERS ALS DIE EARLY-BIRD-KNOEPFE
-   Er traegt data-abo-direkt und wird von abo-embed.js NICHT abgefangen:
-   das href fuehrt unmittelbar auf die Kaufadresse des Betreibers.
+   DER KNOPF ARBEITET WIE DIE EARLY-BIRD-KNOEPFE
+   data-abo-contract traegt die Vertragskennung, abo-embed.js faengt den
+   Klick ab und oeffnet das Overlay auf unserer Domain. Das href ist der
+   Weg ohne JavaScript und zeigt auf den Flex-Block DIESER Seite.
 
-   WARUM
-   Im eingebetteten Subscription-Widget sind die Flex-Vertraege nicht zu
-   zeigen. Am Geraet gemessen: 59649 meldet "Vertrag nicht gefunden",
-   59651 zeigt unter dem Streifen "Gewaehlt: Youth Flex" die
-   Early-Bird-Liste. Ein Overlay, das das falsche oder gar kein Paket
-   zeigt, ist schlechter als ein gewoehnlicher Verweis.
-
-   data-abo-contract bleibt stehen: plan-tracking.js liest daraus die
-   item_id, und begin_checkout soll unveraendert mit 59649, 59650, 59651
-   feuern. Nur das Abfangen entfaellt.                                    */
+   ZWISCHENSTAND PR #178, JETZT ERLEDIGT
+   Dort trug der Knopf data-abo-direkt und fuehrte unmittelbar auf
+   backoffice.bsport.io, weil die drei Flex-Vertraege im Widget auf "fuer
+   Kunden unsichtbar" standen: 59649 meldete "Vertrag nicht gefunden",
+   59651 zeigte die Early-Bird-Liste. Der Eigentuemer hat den Schalter im
+   Backoffice umgelegt, seitdem stehen sie im Widget neben Early Bird.
+   Damit gilt wieder: die Adresszeile verlaesst bomayegym.com nie.      */
 function flex() {
   if (!FLEX_AKTIV) return '';
   return `        <!-- PREISE:FLEX -->
@@ -353,7 +352,7 @@ ${FLEX.map((f) => `            <li class="pr-option">
                 <p class="pr-option__spar">Early Bird spart dir ${esc(euro(ersparnis(f)))} im Jahr</p>
               </div>
               <p class="pr-option__preis">${esc(euro(f.monat))}<span class="pr-option__promonat">im Monat</span></p>
-              <a href="${esc(f.url)}" rel="noopener" data-abo-contract="${esc(f.contract)}" data-abo-direkt
+              <a href="${esc(FLEX_ZIEL)}" data-abo-contract="${esc(f.contract)}"
                  ${messen({ 'data-ga-event': gaEreignis({ contract: f.contract }),
                             'data-item-category': 'membership_flex',
                             'data-item-name': f.name,
@@ -394,7 +393,7 @@ function schema() {
       '@type': 'ListItem', position: i + 1,
       item: {
         '@type': 'Offer', name: text(f.name),
-        price: f.monat.toFixed(2), priceCurrency: 'EUR', url: f.url,
+        price: f.monat.toFixed(2), priceCurrency: 'EUR', url: FLEX_ZIEL_ABS,
       },
     })),
   };

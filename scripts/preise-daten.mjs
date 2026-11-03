@@ -279,16 +279,27 @@ export const FRAGEN = [
    Early-Bird-Vertraege (45432 bis 45434) haben mit diesen nichts zu tun.  */
 export const FLEX_AKTIV = true;
 
+/* ZIEL IST DIE EIGENE SEITE, NICHT DAS BACKOFFICE
+   Bis PR #178 stand hier je eine Adresse auf backoffice.bsport.io. Das war
+   richtig, solange die drei Flex-Vertraege im Widget auf "fuer Kunden
+   unsichtbar" standen - sichtbar waren sie nur ueber ihre eigene
+   Kassenseite. Der Eigentuemer hat den Schalter im Backoffice umgelegt,
+   seitdem stehen sie im Widget neben Early Bird.
+
+   Damit gilt wieder die Regel, mit der die ganze Abo-Buchung angefangen
+   hat: die Adresszeile verlaesst bomayegym.com nie. Der Klick oeffnet das
+   Overlay, genau wie bei Early Bird. Das href ist nur noch der Weg ohne
+   JavaScript und zeigt auf den Flex-Block dieser Seite. */
+export const FLEX_ZIEL = '/preise#flex';
+export const FLEX_ZIEL_ABS = 'https://www.bomayegym.com/preise#flex';
+
 export const FLEX = [
   { id: 'unlimited-flex', name: 'Unlimited Flex', bezug: 'erwachsene', monat: 129,
-    contract: '59649',
-    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59649?force=true' },
+    contract: '59649' },
   { id: 'youth-flex',     name: 'Youth Flex',     bezug: 'youth',      monat: 109,
-    contract: '59651',
-    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59651?force=true' },
+    contract: '59651' },
   { id: 'kids-flex',      name: 'Kids Flex',      bezug: 'kids',       monat: 99,
-    contract: '59650',
-    url: 'https://backoffice.bsport.io/checkout/5473/subscription/59650?force=true' },
+    contract: '59650' },
 ];
 
 /* Was Early Bird gegenueber Flex im Jahr spart. Immer gerechnet. */

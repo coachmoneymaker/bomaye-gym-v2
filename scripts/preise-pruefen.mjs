@@ -14,15 +14,16 @@
      7. Flex: Betraege, gerechnete Ersparnis, Vertragskennungen und die drei
         Kaufadressen stimmen mit den Daten. Steht FLEX_AKTIV auf false, darf
         von Flex nichts auf der Seite stehen.
-     9. Die Kassenvorlage in abo-embed.js stimmt mit den Flex-Adressen
-        aus preise-daten.mjs ueberein.
+     9. Nichts auf der Seite fuehrt den Besucher nach backoffice.bsport.io:
+        kein href, keine Adresse im JSON-LD, kein data-abo-direkt, und auch
+        abo-embed.js baut keine solche Adresse mehr.
     10. Jedes Skript, das abo-embed.js laedt oder bomayeAbo aufruft, traegt
         data-cookieconsent="ignore" - sonst blockiert Cookiebot es und das
         Overlay oeffnet sich ohne Einwilligung nicht.
     11. Jeder Verweis auf abo-embed.js traegt ?v=<8 Zeichen aus sha256 der
         Datei>, und die Kennung stimmt mit dem Inhalt ueberein.
-    12. Die drei Flex-Knoepfe tragen data-abo-direkt, die Early-Bird-
-        Knoepfe nicht.
+    12. Alle sechs Kaufknoepfe laufen ueber dasselbe Overlay: kein Knopf
+        traegt data-abo-direkt.
      8. Jeder Paketknopf traegt die Messattribute, und die Zahlen darin
         stimmen mit preise-daten.mjs ueberein.
 
@@ -30,7 +31,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 import { readFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro,
+import { MITGLIEDSCHAFTEN, PT, WEITERE, FRAGEN, AUFNAHME, euro, FLEX_ZIEL,
          FLEX_AKTIV, FLEX, FLEX_FRAGE, ersparnis,
          ADS_CHECKOUT_SEND_TO } from './preise-daten.mjs';
 
@@ -122,16 +123,21 @@ if (!FLEX_AKTIV) {
   if (seite.includes('PREISE:FLEX')) melde('FLEX_AKTIV ist false, aber preise.html traegt noch eine PREISE:FLEX-Marke');
   if (/pr-flex|Flex STARTEN|FLEX STARTEN/i.test(sichtbar)) melde('FLEX_AKTIV ist false, aber auf /preise steht noch Flex-Markup');
   if (startseite.includes('PREISE:FLEX')) melde('FLEX_AKTIV ist false, aber index.html traegt noch eine PREISE:FLEX-Marke');
+  if (seite.includes(`href="${FLEX_ZIEL}"`))
+    melde('FLEX_AKTIV ist false, aber ein Knopf zeigt noch auf den Flex-Block');
   for (const f of FLEX) {
-    if (seite.includes(f.url)) melde(`FLEX_AKTIV ist false, aber die Kaufadresse von ${f.name} steht auf /preise`);
     if (sichtbar.includes(`data-abo-contract="${f.contract}"`)) melde(`FLEX_AKTIV ist false, aber die Kennung ${f.contract} steht auf /preise`);
   }
 } else {
   for (const f of FLEX) {
-    const knopf = new RegExp(`<a href="${f.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*data-abo-contract="${f.contract}"`);
-    if (!knopf.test(sichtbar)) melde(`${f.name}: Knopf mit genau dieser Adresse und Kennung ${f.contract} fehlt auf /preise`);
-    if (!/rel="noopener"/.test(sichtbar.slice(Math.max(0, sichtbar.indexOf(f.url) - 10), sichtbar.indexOf(f.url) + f.url.length + 120)))
-      melde(`${f.name}: rel="noopener" fehlt am Knopf`);
+    /* Dieselbe Form wie bei Early Bird: ein Verweis auf die eigene Domain,
+       die Kennung am Knopf, abgefangen von abo-embed.js. Kein target und
+       kein rel noetig, weil nichts mehr in ein fremdes Fenster fuehrt. */
+    const knopf = new RegExp(`<a href="${FLEX_ZIEL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*data-abo-contract="${f.contract}"`);
+    if (!knopf.test(sichtbar)) melde(`${f.name}: Knopf mit Ziel ${FLEX_ZIEL} und Kennung ${f.contract} fehlt auf /preise`);
+    const tag = (sichtbar.match(new RegExp(`<a[^>]*data-abo-contract="${f.contract}"[^>]*>`, 's')) || [''])[0];
+    if (/target="_blank"/.test(tag))
+      melde(`${f.name}: der Knopf oeffnet ein neues Fenster - alle sechs Pakete bleiben im Overlay`);
     if (!sichtbar.includes(euro(ersparnis(f)))) melde(`${f.name}: die gerechnete Ersparnis ${euro(ersparnis(f))} fehlt auf der Seite`);
     if (!startseite.includes(euro(f.monat))) melde(`${f.name}: ${euro(f.monat)} fehlt in der Preistabelle der Startseite`);
   }
@@ -220,25 +226,6 @@ for (const [datei, html] of GANZ) {
     melde(`${datei}: ADS_CHECKOUT_SEND_TO ist leer, am Skript-Tag steht aber "${ist}"`);
 }
 
-/* ── 9. Die Kassenadresse in abo-embed.js darf nicht abdriften ────────────
-   abo-embed.js baut aus der Vertragskennung die Kassenadresse des Pakets:
-   fuer den Streifen im Overlay, fuer den Rueckfall im neuen Tab und fuer
-   ?abo=kasse. Dieselbe Adresse steht fuer Flex hier in den Daten. Zwei
-   Stellen, eine Wahrheit - also wird sie hier gegengerechnet. Driften sie
-   auseinander, fuehrt ein Knopf woandershin als der Streifen daneben. */
-const abo = await readFile(WURZEL + '/assets/js/abo-embed.js', 'utf8');
-const vorlage = abo.match(/var KASSE = '([^']+)';/);
-if (!vorlage) melde('abo-embed.js: die Vorlage KASSE wurde nicht gefunden');
-else {
-  for (const f of FLEX) {
-    const gebaut = vorlage[1].replace('%ID%', f.contract);
-    if (gebaut !== f.url)
-      melde(`abo-embed.js baut fuer ${f.contract} "${gebaut}", in den Daten steht "${f.url}"`);
-  }
-  if (vorlage[1].indexOf('%ID%') === -1)
-    melde('abo-embed.js: die Vorlage KASSE enthaelt keinen Platzhalter %ID%');
-}
-
 /* ── 10. Die Buchung darf nie an der Einwilligung haengen ─────────────────
    Cookiebots automatische Blockade stellt jedes Skript, das sie fuer
    Marketing haelt, bis zur Einwilligung auf type="text/plain". Traf das
@@ -301,37 +288,56 @@ for (const datei of await readdir(WURZEL)) {
 if (geprueftVersion < 3)
   melde(`Nur ${geprueftVersion} Verweise auf abo-embed.js gefunden, erwartet mindestens 3`);
 
-/* ── 12. Flex geht am Widget vorbei, Early Bird nicht ─────────────────────
-   Die Flex-Vertraege sind im eingebetteten Subscription-Widget nicht zu
-   zeigen (59649 meldet "Vertrag nicht gefunden", 59651 zeigt die
-   Early-Bird-Liste). Ihre Knoepfe tragen deshalb data-abo-direkt und
-   werden von abo-embed.js nicht abgefangen. Die Early-Bird-Knoepfe duerfen
-   das Attribut gerade NICHT tragen, sonst ginge das Overlay nirgends auf. */
-const knopfMit = (html, kennung) => {
-  const t = knopfVon(html, kennung);
-  return t ? /\sdata-abo-direkt(?=[\s>])/.test(t) : null;
-};
-for (const [datei, html] of SEITEN_MIT_KNOEPFEN) {
-  for (const m of MITGLIEDSCHAFTEN) {
-    const ist = knopfMit(html, m.contract);
-    if (ist === null) continue;
-    if (ist) melde(`${datei}: Early-Bird-Knopf ${m.contract} traegt data-abo-direkt - `
-                 + `dann oeffnet sich das Overlay dort nicht mehr`);
+/* ── 9. und 12. Die Adresszeile verlaesst bomayegym.com nie ───────────────
+   Der Besucher bucht im Overlay auf unserer Domain. In PR #178 fuehrten
+   die drei Flex-Knoepfe kurz unmittelbar auf backoffice.bsport.io, weil
+   die Vertraege im Backoffice auf "fuer Kunden unsichtbar" standen. Der
+   Schalter ist umgelegt, der Umweg ist weg, und diese Pruefung sorgt
+   dafuer, dass er nicht zurueckkommt.
+
+   Geprueft wird JEDE Seite des Projekts:
+     - kein href auf backoffice.bsport.io
+     - keine solche Adresse im JSON-LD (dort steht die Offer-url)
+     - kein data-abo-direkt
+   Die blosse Nennung im Fliesstext bleibt erlaubt: die Datenschutz-
+   erklaerung muss den Auftragsverarbeiter beim Namen nennen duerfen. */
+const BACKOFFICE = /backoffice\.bsport\.io/;
+let geprueftDomain = 0;
+for (const datei of await readdir(WURZEL)) {
+  if (!datei.endsWith('.html')) continue;
+  const html = await readFile(WURZEL + '/' + datei, 'utf8');
+  geprueftDomain++;
+  for (const m of html.matchAll(/href="([^"]*)"/g)) {
+    if (BACKOFFICE.test(m[1]))
+      melde(`${datei}: href fuehrt nach backoffice.bsport.io ("${m[1]}") - `
+          + `der Besucher soll bomayegym.com nie verlassen`);
   }
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    for (const u of m[1].matchAll(/"url"\s*:\s*"([^"]*)"/g)) {
+      if (BACKOFFICE.test(u[1]))
+        melde(`${datei}: JSON-LD nennt backoffice.bsport.io als url ("${u[1]}")`);
+    }
+  }
+  if (/\sdata-abo-direkt(?=[\s>])/.test(html))
+    melde(`${datei}: data-abo-direkt steht noch im Markup - alle sechs Pakete `
+        + `laufen jetzt ueber dasselbe Overlay`);
 }
-if (FLEX_AKTIV) {
-  for (const f of FLEX) {
-    const ist = knopfMit(sichtbar, f.contract);
-    if (ist === null) melde(`preise.html: Flex-Knopf ${f.contract} nicht gefunden`);
-    else if (!ist) melde(`preise.html: Flex-Knopf ${f.contract} ohne data-abo-direkt - `
-                       + `abo-embed.js wuerde ihn abfangen und ein Paket zeigen, das es nicht zeigen kann`);
-  }
+/* Und die Datei selbst baut keine solche Adresse mehr zusammen. Kommentare
+   duerfen sie nennen, Code nicht. */
+{
+  const abo = await readFile(WURZEL + '/assets/js/abo-embed.js', 'utf8');
+  const ohneKommentar = abo.replace(/\/\*[\s\S]*?\*\//g, '');
+  if (BACKOFFICE.test(ohneKommentar))
+    melde('abo-embed.js: im Code steht noch eine Adresse auf backoffice.bsport.io');
+  if (/data-abo-direkt/.test(ohneKommentar))
+    melde('abo-embed.js: data-abo-direkt wird noch ausgewertet, im Markup gibt es das nicht mehr');
 }
 
 console.log(`/preise: ${erwartet.size} Preise, ${kennungen.length} Kaufknoepfe, ${imHtml.length} Fragen`
   + `, ${geprueftAttr} Messattribute`
   + `, ${geprueftFrei} einwilligungsfreie Buchungsskripte`
   + `, ${geprueftVersion} Verweise mit Version ${ABO_IST}`
+  + `, ${geprueftDomain} Seiten ohne Weg nach backoffice`
   + `, Flex ${FLEX_AKTIV ? 'an (' + FLEX.length + ' Angebote)' : 'aus'} geprueft.`);
 if (befunde.length) {
   console.log('\n' + befunde.map((b) => '  • ' + b).join('\n'));
