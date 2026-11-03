@@ -333,9 +333,13 @@
       margin-top: 2px;
     }
     .sp-neu {
+      /* Die Marke sass in .sp-name. Dort nahm sie bei 320 px dem Titel
+         "BOMAYE KICKBOXING" die letzte Zeile weg: der Block wurde 61 px
+         hoch, weil die Marke als eigene Zeile umbrach. In der Unterzeile
+         hat sie an jeder Breite Platz, "Alle Level" braucht nur 55 px. */
       display: inline-block;
-      vertical-align: 3px;
-      margin-left: 7px;
+      vertical-align: 1px;
+      margin-left: 8px;
       padding: 2px 5px;
       background: #C9A84C;
       font-family: 'Oswald', sans-serif;
@@ -473,6 +477,12 @@
         padding-left: 20px;
         padding-right: 20px;
       }
+      /* Die Zeitspalte war 76 px breit, gebraucht werden 48: "18:30"
+         misst 32 px, die Marke GLEICH mit Punkt 48 px. Die gewonnenen
+         24 px gehen an den Titel, damit "BOMAYE KICKBOXING" ab 375 px
+         auf eine Zeile passt statt auf zwei. */
+      .sp-time { flex: 0 0 52px; }
+      .sp-row  { gap: 12px; }
     }
     @media (min-width: 1024px) {
       section#schedule .container {
@@ -738,8 +748,8 @@
       <div class="sp-row" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
-          <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span></div>
-          <div class="sp-sub">Advanced</div>
+          <div class="sp-name">BOMAYE</div>
+          <div class="sp-sub">Advanced<span class="sp-neu">NEU</span></div>
         </div>
         <a class="sp-book" href="/stundenplan?kurs=advanced" aria-label="Bomaye Boxing Advanced buchen">BUCHEN</a>
       </div>
@@ -781,8 +791,8 @@
       <div class="sp-row" data-s="20:00" data-e="21:30">
         <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
-          <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span></div>
-          <div class="sp-sub">Alle Level</div>
+          <div class="sp-name">BOMAYE KICKBOXING</div>
+          <div class="sp-sub">Alle Level<span class="sp-neu">NEU</span></div>
         </div>
         <a class="sp-book" href="/stundenplan?kurs=kickboxing" aria-label="Bomaye Kickboxing buchen">BUCHEN</a>
       </div>
@@ -859,8 +869,8 @@
       <div class="sp-row" data-s="18:30" data-e="20:00">
         <div class="sp-time"><span>18:30</span><span class="sp-time-end">20:00</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
-          <div class="sp-name">BOMAYE<span class="sp-neu">NEU</span></div>
-          <div class="sp-sub">Advanced</div>
+          <div class="sp-name">BOMAYE</div>
+          <div class="sp-sub">Advanced<span class="sp-neu">NEU</span></div>
         </div>
         <a class="sp-book" href="/stundenplan?kurs=advanced" aria-label="Bomaye Boxing Advanced buchen">BUCHEN</a>
       </div>
@@ -875,8 +885,8 @@
       <div class="sp-row" data-s="20:00" data-e="21:30">
         <div class="sp-time"><span>20:00</span><span class="sp-time-end">21:30</span><span class="sp-live" hidden></span></div>
         <div class="sp-main">
-          <div class="sp-name">BOMAYE KICKBOXING<span class="sp-neu">NEU</span></div>
-          <div class="sp-sub">Alle Level</div>
+          <div class="sp-name">BOMAYE KICKBOXING</div>
+          <div class="sp-sub">Alle Level<span class="sp-neu">NEU</span></div>
         </div>
         <a class="sp-book" href="/stundenplan?kurs=kickboxing" aria-label="Bomaye Kickboxing buchen">BUCHEN</a>
       </div>
@@ -1277,10 +1287,10 @@ function MountBsportWidget(config, repeat=1) {
 var SP_KURSE = {
   advanced:   { id: 236749, name: 'Bomaye Boxing Advanced' },
   kickboxing: { id: 236751, name: 'Bomaye Kickboxing'      },
-  kids:       { id: 244420, name: 'Boxing Kids 6–9'        },
+  kids:       { id: 244420, name: 'Boxing Kids 6 bis 9'        },
   basics:     { id: 244426, name: 'Boxing Basic'           },
   queens:     { id: 244539, name: 'Bomaye Queens'          },
-  youth:      { id: 244563, name: 'Boxing Youth 10–17'     }
+  youth:      { id: 244563, name: 'Boxing Youth 10 bis 17'     }
 };
 
 function spBereit(fn) {
