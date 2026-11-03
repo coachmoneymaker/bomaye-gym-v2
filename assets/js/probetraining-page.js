@@ -35,6 +35,65 @@
   /* ─────────────────── Buchungs-Tracking ───────────────────
      Unveraendert aus probetraining-modal.js uebernommen. Die Ereignisnamen
      muessen exakt bleiben, an ihnen haengen die GTM-Trigger. */
+  /* GOOGLE ADS: DIE LEAD-KONVERSION FUER DIE PROBETRAININGSBUCHUNG
+     ─────────────────────────────────────────────────────────────────────
+     Steht an GENAU DIESER Stelle, nirgends sonst im Code, wie
+     ADS_CHECKOUT_SEND_TO fuer die Paketklicks.
+
+     Warum hier ueberhaupt etwas noetig war: auf /probetraining liegt KEIN
+     GTM-Container, nur gtag.js fuer AW-18136756611. Die Buchung schob
+     bisher allein ein probetraining_booking_completed in den dataLayer,
+     und den liest auf dieser Seite niemand. Die Conversion-Action
+     "Probetraining-Buchung Server-Side" meldete deshalb zu Recht
+     "Conversion has never received data".
+
+     KENNUNG AUS EINEM SCREENSHOT ABGELESEN, NOCH NICHT GEGENGEPRUEFT.
+     Kleines L und grosses I sehen in vielen Schriften gleich aus. Vor dem
+     Scharfschalten einmal mit dem Tag Assistant oder gegen die Oberflaeche
+     von Google Ads vergleichen. Stimmt ein Zeichen nicht, meldet Google
+     weiterhin nichts, und zwar ohne Fehlermeldung.
+
+     Kein value und kein currency: die 30 EUR stehen in der
+     Conversion-Action selbst. Zwei Quellen fuer denselben Wert waeren eine
+     zu viel.
+
+     Keine personenbezogenen Daten. Gesendet wird ausschliesslich send_to. */
+  var ADS_PROBETRAINING_SEND_TO = 'AW-18136756611/rNbMCMrqlq4cEIPjo8hD';
+
+  /* Ein Schluessel je Sitzung. _ptBookingTracked schuetzt nur innerhalb
+     eines Seitenaufbaus; ein Neuladen oder der Zurueck-Knopf setzt es
+     zurueck und wuerde dieselbe Buchung ein zweites Mal melden. */
+  var ADS_PT_SITZUNGSSCHLUESSEL = 'bomaye:pt-konversion-gesendet';
+
+  /* Meldet die Buchung an Google Ads und gibt zurueck, was passiert ist,
+     damit die Zeile in der Konsole es mitschreiben kann.
+
+     EINWILLIGUNG, zweifach abgesichert, beides schon vorhanden:
+       1. Diese Datei traegt kein data-cookieconsent="ignore". Ohne
+          Marketing-Einwilligung schreibt Cookiebot sie auf
+          type="text/plain" um, dann laeuft hier gar nichts.
+       2. Im Kopf jeder Seite steht gtag("consent","default", ...) mit
+          ad_storage, ad_user_data und ad_personalization auf "denied".
+          Googles Tag entscheidet daraufhin selbst, was hinausgeht.
+     Hier wird kein consent gesetzt und keiner abgefragt. */
+  function _ptSendeAdsKonversion() {
+    if (!ADS_PROBETRAINING_SEND_TO) return 'keine Kennung hinterlegt';
+    if (typeof window.gtag !== 'function') return 'kein gtag auf der Seite';
+    try {
+      if (window.sessionStorage &&
+          window.sessionStorage.getItem(ADS_PT_SITZUNGSSCHLUESSEL)) {
+        return 'in dieser Sitzung schon gemeldet';
+      }
+    } catch (e) { /* privates Fenster: dann schuetzt nur _ptBookingTracked */ }
+    window.gtag('event', 'conversion', { send_to: ADS_PROBETRAINING_SEND_TO });
+    try {
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(ADS_PT_SITZUNGSSCHLUESSEL, '1');
+      }
+    } catch (e) { /* siehe oben */ }
+    return 'an Google Ads gemeldet';
+  }
+
   var _ptBookingTracked = false;
   var _ptMessageListener = null;
   var _ptDataLayerUnwatch = null;
@@ -44,7 +103,9 @@
     if (_ptBookingTracked) return;
     _ptBookingTracked = true;
     _ptStopBookingTracking();
-    console.log('🎯 Probetraining booking tracked via:', source);
+    var adsErgebnis = _ptSendeAdsKonversion();
+    console.log('🎯 Probetraining booking tracked via:', source,
+                '| Google Ads:', adsErgebnis);
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'probetraining_booking_completed',

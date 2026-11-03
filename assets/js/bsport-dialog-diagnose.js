@@ -769,6 +769,26 @@
     s('  ptfix: ' + (/[?&]ptfix=1/.test(window.location.search) ? 'AN (alter Weg)' : 'aus'));
     s('  UA  ' + navigator.userAgent);
 
+    /* Google Ads: Stand der Probetrainings-Konversion.
+       Zeigt auf einen Blick, warum nichts gemeldet wurde: fehlt gtag,
+       wurde in dieser Sitzung schon gemeldet, oder ist das Buchungs-
+       ereignis noch gar nicht gelaufen. Nur Lesen, nichts Senden. */
+    s('');
+    s('GOOGLE ADS, PROBETRAININGS-KONVERSION');
+    s('  gtag vorhanden: ' + (typeof window.gtag === 'function' ? 'JA' : 'NEIN'));
+    var ptGemeldet = null;
+    try { ptGemeldet = window.sessionStorage
+      ? window.sessionStorage.getItem('bomaye:pt-konversion-gesendet') : null; }
+    catch (e) { ptGemeldet = '(sessionStorage gesperrt)'; }
+    s('  in dieser Sitzung gemeldet: ' + (ptGemeldet === '1' ? 'JA' : 'nein'));
+    var dlTreffer = 0;
+    try {
+      dlTreffer = (window.dataLayer || []).filter(function (x) {
+        return x && x.event === 'probetraining_booking_completed';
+      }).length;
+    } catch (e) { dlTreffer = -1; }
+    s('  probetraining_booking_completed im dataLayer: ' + dlTreffer + 'x');
+
     s('');
     s('BODY UND KOPFLEISTE');
     s('  body class="' + (document.body.className || '-') + '"');

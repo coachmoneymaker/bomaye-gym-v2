@@ -297,3 +297,91 @@ Serverereignis passt. Meta würde jeden Kauf doppelt zählen. Der saubere Weg
 wäre, den vorhandenen Webhook zusätzlich ein GA4-Measurement-Protocol-Ereignis
 senden zu lassen, mit der Rechnungsnummer als `transaction_id`. Das ist eine
 Änderung an `api/bsport-webhook.js` und wurde hier **nicht** vorgenommen.
+
+---
+
+# Probetrainingsbuchung an Google Ads
+
+Stand 03.11.2026.
+
+## Der Befund
+
+Die Conversion-Action **„Probetraining-Buchung Server-Side"** (Typ Website,
+primär, Ziel Lead-Formulare senden, 30 EUR) meldete „Conversion has never
+received data". Der Grund steht an drei Stellen:
+
+1. Auf `/probetraining` liegt **kein GTM-Container**, nur `gtag.js` für
+   `AW-18136756611`. Nachgezählt: `GTM-W2T9NXMN` steht heute allein auf der
+   Startseite.
+2. `probetraining-page.js` meldete eine bestätigte Buchung ausschließlich als
+   `dataLayer.push({ event: 'probetraining_booking_completed' })`. Auf dieser
+   Seite liest den `dataLayer` niemand.
+3. Der serverseitige Weg in `api/bsport-webhook.js` (`sendGoogleConversion`)
+   ruft den alten Pixel-Endpunkt `googleadservices.com/pagead/conversion/…`
+   per GET aus Vercel auf, **ohne gclid**. Die Datei sagt das selbst: „Aus dem
+   Bsport-Widget kommt keine Klick-Kennung … Deshalb kann Google die Buchung
+   keiner Anzeige zuordnen."
+
+## Was jetzt feuert
+
+In `assets/js/probetraining-page.js`, in `_ptFireBookingConfirmed()`, direkt
+neben dem bestehenden `dataLayer`-Push:
+
+```js
+gtag('event', 'conversion', { send_to: ADS_PROBETRAINING_SEND_TO });
+```
+
+* **Kennung:** `ADS_PROBETRAINING_SEND_TO`, eine Konstante am Kopf der Datei,
+  sonst nirgends im Code. Wie `ADS_CHECKOUT_SEND_TO` für die Paketklicks.
+* **Kein `value`, keine `currency`.** Die 30 EUR stehen in der
+  Conversion-Action. Zwei Quellen für denselben Wert wären eine zu viel.
+* **Keine personenbezogenen Daten.** Gesendet wird ausschließlich `send_to`.
+* **Einmal je Buchung.** `_ptBookingTracked` schützt innerhalb eines
+  Seitenaufbaus, `sessionStorage['bomaye:pt-konversion-gesendet']` über
+  Neuladen und Zurück-Navigation hinweg.
+
+## Einwilligung
+
+Zweifach abgesichert, beides war schon da:
+
+1. `probetraining-page.js` trägt **kein** `data-cookieconsent="ignore"`. Ohne
+   Marketing-Einwilligung schreibt Cookiebot die Datei auf
+   `type="text/plain"` um, dann läuft dort nichts.
+2. Im Kopf jeder Seite steht `gtag("consent","default", …)` mit `ad_storage`,
+   `ad_user_data`, `ad_personalization` und `analytics_storage` auf `denied`.
+
+Die Datei ruft **nie** `gtag('consent', …)` und fragt den Stand nicht ab.
+
+## Das Erfolgssignal, mit seiner Einschränkung
+
+`_ptStartBookingTracking()` läuft erst, wenn das bsport-Widget montiert ist,
+und erkennt eine Buchung auf zwei Wegen:
+
+* **postMessage:** `e.origin` enthält `bsport.io` **und** der Rumpf enthält
+  eines von `booking`, `success`, `confirmed`, `buchung`, `viel spa`.
+* **dataLayer:** ein Ereignisname mit `booking`, `purchase` oder `conversion`.
+
+**Das ist eine Textsuche, kein dokumentiertes Signal.** bsport sendet
+Nachrichten mit strukturiertem `data.type`, der mit `bsport:` beginnt
+(belegt in `abo-embed.js`), aber welcher Typ eine abgeschlossene Buchung
+meldet, steht nirgends. Eine bsport-Nachricht, die eines dieser Wörter aus
+einem anderen Grund enthält, zählt mit. Das Fenster ist eng (nur bei
+montiertem Widget auf `/probetraining`, höchstens 30 Minuten), ausgeschlossen
+ist es nicht.
+
+**Vor dem Vertrauen in die Zahlen einmal gegenprüfen:** eine Buchung
+durchführen, in der Konsole die Zeile `🎯 Probetraining booking tracked via:`
+lesen. Dort steht der Auslöser und dahinter `| Google Ads:` mit dem Ergebnis.
+`?ptdom=1` zeigt denselben Stand als Messleiste auf dem Schirm.
+
+## Was noch offen ist
+
+* **Kennung gegenprüfen.** `AW-18136756611/rNbMCMrqlq4cEIPjo8hD` ist von
+  einem Screenshot abgelesen. Kleines L und großes I sind in vielen
+  Schriften nicht zu unterscheiden. Stimmt ein Zeichen nicht, meldet Google
+  weiterhin nichts, ohne Fehlermeldung.
+* **Eine eigene Dankeseite `/danke`** wäre das einzige wirklich sichere
+  Signal. Sie setzt voraus, dass bsport eine Rückkehradresse nach der
+  Buchung unterstützt.
+* **Der serverseitige Weg** (`sendGoogleConversion`, Data-Manager-Upload)
+  bleibt unberührt und ist weiterhin standardmäßig aus.
