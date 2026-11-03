@@ -78,6 +78,8 @@ export const AUFNAHME = 100;          /* AGB § 2 Abs. 3, einmalig, inkl. MwSt. 
    gebracht. Nichts dazuerfunden, nichts weggelassen ausser den drei
    Laufzeiten, die nicht verkauft werden. */
 export const LAUFZEIT = {
+  /* Eine Zahl, eine Stelle. Vorher stand die 12 an drei Orten im Klartext. */
+  monate:      12,
   kurz:        'bei 12 Monaten Laufzeit',
   rechnungen:  '12 monatliche Rechnungen.',
   verlaengerung:
@@ -208,7 +210,7 @@ export const BEDINGUNGEN = [
   LAUFZEIT.verlaengerung,
   LAUFZEIT.kuendigung,
   `Einmalig ${euro(AUFNAHME)} Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.`,
-  'Early Bird gilt für die gesamte Vertragslaufzeit.',
+  'Dein Early Bird Preis bleibt, solange du Mitglied bleibst.',
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -241,8 +243,8 @@ export const FRAGEN = [
   {
     f: 'Wie lange gilt der Early-Bird-Preis?',
     /* AGB § 5 Abs. 2 */
-    a: 'Für die gesamte Vertragslaufzeit, sofern die Mitgliedschaft nicht unterbrochen '
-     + 'wird. Zu haben ist er nur solange Plätze frei sind.',
+    a: 'Dein Early Bird Preis bleibt, solange du Mitglied bleibst. Wer kündigt und später neu abschließt, '
+     + 'zahlt den dann gültigen Preis. Early Bird endet, sobald alle Plätze vergeben sind.',
   },
   {
     f: 'Kann ich vorher kostenlos testen?',
@@ -325,7 +327,7 @@ export const FLEX_FRAGE = {
     const b = (id) => euro(FLEX.find((x) => x.id === id).monat);
     return `Ja, Bomaye Flex, monatlich kündbar, ab ${b('kids-flex')} im Monat (Kids), `
          + `${b('youth-flex')} (Youth), ${b('unlimited-flex')} (Unlimited), plus `
-         + `${euro(AUFNAHME)} einmalig. Early Bird ist günstiger, solange Plätze frei sind.`;
+         + `${euro(AUFNAHME)} einmalig. Early Bird endet, sobald alle Plätze vergeben sind.`;
   },
 };
 

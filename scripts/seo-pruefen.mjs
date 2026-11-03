@@ -198,6 +198,44 @@ for (const name of dateien) {
   }
 }
 
+/* ── Verbotene Versprechen und das Leerzeichen vor dem Euro ──────────────
+   Der Early-Bird-Preis bleibt, solange jemand Mitglied bleibt. Er bleibt
+   nicht "dauerhaft", er ist keine "Lifetime Garantie" und er ist nicht
+   "unwiderruflich": wer kuendigt und spaeter neu abschliesst, zahlt den
+   dann gueltigen Preis. Genau diese drei Woerter standen auf der Seite und
+   versprachen mehr, als der Vertrag hergibt.
+
+   "Kein Vertrag" stand neben Mitgliedschaftstexten, obwohl die
+   Mitgliedschaft 12 Monate laeuft. Auch das ist raus.
+
+   Dazu die Schreibweise: im Deutschen steht ein geschuetztes oder normales
+   Leerzeichen vor dem Euro-Zeichen. "14,90€" ist falsch, "14,90 €" richtig.
+
+   Geprueft werden die GEBAUTEN Seiten, also das, was ein Besucher sieht.
+   Kommentare und Skripte bleiben aussen vor: dort darf das Wort in einer
+   Begruendung stehen, so wie hier.                                      */
+{
+  const VERBOTEN = [
+    ['Lifetime',       'verspricht mehr als der Vertrag hergibt'],
+    ['unwiderruflich', 'verspricht mehr als der Vertrag hergibt'],
+    ['Kein Vertrag',   'die Mitgliedschaft laeuft 12 Monate'],
+  ];
+  for (const datei of dateien) {
+    const roh = await readFile(WURZEL + '/' + datei, 'utf8');
+    const sicht = roh
+      .replace(/<script[\s\S]*?<\/script>/g, ' ')
+      .replace(/<style[\s\S]*?<\/style>/g, ' ')
+      .replace(/<!--[\s\S]*?-->/g, ' ');
+    for (const [wort, grund] of VERBOTEN) {
+      if (sicht.includes(wort)) melde(datei, `"${wort}" steht im sichtbaren Text: ${grund}`);
+    }
+    /* Preis ohne Leerzeichen vor dem Euro. &nbsp; zaehlt als Leerzeichen. */
+    const text = sicht.replace(/&nbsp;/g, ' ').replace(/<[^>]+>/g, ' ');
+    const eng = [...text.matchAll(/\d[\d.]*,\d{2}€/g)].map((m) => m[0]);
+    if (eng.length) melde(datei, `Preis ohne Leerzeichen vor dem Euro: ${[...new Set(eng)].join(', ')}`);
+  }
+}
+
 console.log(`${dateien.length} Seiten, ${geprueft} JSON-LD-Bloecke geprueft.`);
 if (!befunde.length) { console.log('\n═══ 0 Befunde'); process.exit(0); }
 console.log('');

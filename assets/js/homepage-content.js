@@ -33,9 +33,9 @@ const BOMAYE_HOMEPAGE = {
   earlyBird: {
     enabled:         true,
     sectionBadge:    'EARLY BIRD OFFER',
-    headline:        'Sichere dir deinen Early-Bird-Preis für die gesamte Vertragslaufzeit.',
-    subtext:         'Early-Bird-Mitglieder zahlen den Gründerpreis für die gesamte Vertragslaufzeit, auch wenn unsere regulären Preise später steigen. Nur solange Plätze frei sind.',
-    spotsLabel:      'Early Bird, nur solange Plätze frei sind.',
+    headline:        'Dein Early Bird Preis bleibt, solange du Mitglied bleibst.',
+    subtext:         'Early Bird Mitglieder zahlen den Gründerpreis weiter, auch wenn unsere regulären Preise später steigen. Early Bird endet, sobald alle Plätze vergeben sind.',
+    spotsLabel:      'Early Bird endet, sobald alle Plätze vergeben sind.',
     spotsBarEnabled: true,
     cta:             { label: 'Jetzt Mitglied werden', href: '#membership' },
   },
