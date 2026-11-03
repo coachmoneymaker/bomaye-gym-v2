@@ -61,7 +61,7 @@ const BOMAYE_HOMEPAGE = {
   /* ── Personal Training Teaser ──────────────────────────── */
   personalTrainingTeaser: {
     sectionBadge: 'PERSONAL TRAINING',
-    headline:     '1:1 Training mit Profi-Coach.',
+    headline:     'One on One Training mit Profi-Coach.',
     subtext:      'Individuelles Training, das sich deinen Zielen anpasst. Für Mitglieder und Nicht-Mitglieder buchbar.',
     bulletPoints: [
       'Individuelle Trainingsplanung',

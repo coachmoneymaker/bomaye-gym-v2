@@ -134,6 +134,15 @@
     }
     .mw-back-link:hover { color: var(--white); }
     .mw-back-link i { font-size: 0.6rem; }
+    /* ── BURGER BLEIBT ERREICHBAR ───────────────────────────────────────
+       Gemessen bei 320 px: der Burger lag bei 288 bis 332, also 12 px
+       ausserhalb des Fensters. Dieselbe Ursache wie auf /mitglied-werden:
+       Logo, ZURUECK und Burger passen in der Kopfzeile nicht nebeneinander.
+       Der ZURUECK-Link entfaellt unter 480 px, das Burger-Menue fuehrt alle
+       Ziele. */
+    @media (max-width: 480px) {
+      .mw-back-link { display: none; }
+    }
 
     /* ── Page wrapper ────────────────────────────────────── */
     .mw-page {

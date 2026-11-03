@@ -2187,6 +2187,43 @@ footer {
 /* ── Wide-screen (iMac / 4K) — expand nav + containers ─────── */
 /* At 1440 CSS px the standard 1200px max-width leaves the logo
    visually far from the left edge. Step up gracefully.          */
+/* ── KOPFLEISTE IM BAND 1366 bis 1599 px ────────────────────────────────
+   Gemessen bei 1440 px auf /about, /preise, /kurse, /coaches, /faq und den
+   Landingpages: die Leiste braucht 1325 px (Logo 240, ZURUECK 94,
+   Navigation samt CTA 991), zur Verfuegung stehen 1208 (max-width 1280
+   minus 2 mal 36 Polster). Der rechte Rand der Navigation lag damit bei
+   1472, also 32 px ausserhalb des Fensters: der CTA war angeschnitten.
+   Ein Dokumentenueberlauf entsteht nicht, weil die Kopfleiste fest
+   positioniert ist, deshalb faellt es in keinem Scrolltest auf.
+
+   Zwei Dinge treffen genau ab 1366 px zusammen: der ZURUECK-Knopf wird
+   sichtbar und der Preiszusatz im CTA ebenso, der Knopf waechst dadurch
+   von 174 auf 331 px. Die breitere Spur gab es aber erst ab 1600 px.
+   Jetzt beginnt sie dort, wo die beiden Elemente erscheinen: 1440 minus
+   72 Polster sind 1368 nutzbare Pixel, 43 mehr als gebraucht.
+
+   Nur die Spurbreite, nicht der ganze 1600er-Block: der setzt zusaetzlich
+   ein groesseres Logo, das den Platz wieder aufbrauchen wuerde.        */
+@media (min-width: 1366px) and (max-width: 1599px) {
+  .nav-inner { max-width: 1440px; }
+}
+/* Bei 1366 bis 1399 px deckelt nicht die Spur, sondern das Fenster: 1366
+   minus 72 Polster sind 1294 nutzbare Pixel, gebraucht werden rund 1320.
+   Das seitliche Polster geht dort von 36 auf 20 px zurueck, das sind 32
+   Pixel mehr und damit genug Luft. Ab 1400 bleibt es bei 36. */
+@media (min-width: 1366px) and (max-width: 1439px) {
+  .nav-inner { padding: 0 1.25rem; }
+  /* Das engere Polster allein brachte 16 px, gebraucht wurden 26. Die
+     restlichen 10 kommen aus dem Abstand zwischen den Navigationslinks:
+     acht Luecken, von 0,35rem auf 0,1rem, das sind rund 32 px. Dieselbe
+     Stellschraube nutzen die Baender bei 1024 und 1100 bereits.
+
+     Das Band reicht bis 1439, nicht nur bis 1399: bei 1400 blieben sonst
+     8 px Luft, und 8 px haengen an der Schriftladung. Mit dem engeren
+     Polster sind es 40. */
+  .nav-links { gap: 0.1rem; }
+}
+
 @media (min-width: 1600px) {
   .nav-inner  { max-width: 1440px; }
   .container  { max-width: 1440px; }
@@ -7143,4 +7180,46 @@ i.icon { display: inline-block; font-style: normal; line-height: 1; }
 i.icon > svg {
   width: 1em; height: 1em; display: inline-block;
   vertical-align: -0.125em; fill: currentColor;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DER WEISSE STREIFEN UEBER DEM ANMELDEFENSTER
+
+   GEMESSEN VOM BETREIBER im laufenden Widget auf
+   /personal-training-boxen-muenchen, nicht hier geraten: Bsports
+   Anmeldefenster setzt zwei Flaechen auf reines Weiss,
+
+     div.bsport-user-interaction-modal__innerContainer   rgb(255,255,255)
+     div.bsport-user-interaction-modal__topBar           rgb(255,255,255), 75 px hoch,
+                                                         traegt das Schliesskreuz
+
+   waehrend der Inhalt darunter aus dem inneren Rahmen
+   (iframe.bsport-user-interaction-modal__iframe, backoffice.bsport.io)
+   bereits cremefarben kommt. Sichtbar war dadurch eine harte Kante quer
+   ueber den Dialog, oben weiss, darunter creme.
+
+   Diese beiden Namen sind feste BEM-Namen. Sie sind NICHT die
+   nummerierten MUI-Klassen (MuiPaper-root-889 und Verwandte), an denen
+   das Zuordnen in diesem Projekt zweimal gescheitert ist. Deshalb ist
+   die Regel hier vertretbar, wo eine Regel auf MUI-Klassen es nicht
+   waere.
+
+   Nur background-color. Der Radius oben, die Hoehe der Leiste und damit
+   die Tippflaeche des Kreuzes bleiben unangetastet, ebenso die Farbe des
+   Kreuzes selbst: es stand schon vorher dunkel auf hellem Grund und
+   steht jetzt dunkel auf Creme.
+
+   Der innere Rahmen gehoert backoffice.bsport.io. Was dort gilt,
+   entscheidet Bsport, von hier kommt nichts hinein.
+
+   WO DIESE DATEI REICHT: auf allen 19 Seiten, die den Widget-Behaelter
+   direkt im Seitendokument tragen, also auch im Overlay der sechs Early
+   Bird- und Flex-Plaene (#bsport-sub-modal) und im Kalender-Widget.
+   /personal-training-boxen-muenchen traegt das Widget dagegen in einem
+   iframe mit srcdoc; dorthin kaskadiert diese Datei nicht, deshalb steht
+   dieselbe Regel ein zweites Mal im style-Block jenes srcdoc.
+   ══════════════════════════════════════════════════════════════════════ */
+.bsport-user-interaction-modal__innerContainer,
+.bsport-user-interaction-modal__topBar {
+  background-color: #F5F0E8 !important;
 }
