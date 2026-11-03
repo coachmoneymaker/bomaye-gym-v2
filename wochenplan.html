@@ -259,7 +259,7 @@
 
         total++;
         rowsHtml += '<div class="wp-row' + mod + '">'
-          + '<div class="wp-time">' + esc(start) + (end ? '–' + esc(end) : '') + '</div>'
+          + '<div class="wp-time">' + esc(start) + (end ? ' bis ' + esc(end) : '') + '</div>'
           + '<div class="wp-name">' + esc(name) + (isNeu ? '<span class="wp-neu">NEU</span>' : '') + '</div>'
           + (sub ? '<div class="wp-sub">' + esc(sub) + '</div>' : '')
           + '</div>';

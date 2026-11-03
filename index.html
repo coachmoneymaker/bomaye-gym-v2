@@ -3367,63 +3367,63 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   var SLOT_COACHES = {
-    raschad:    { name: 'COACH RASCHAD', img: '/assets/images/coach-portrait-1-480.webp', alt: 'Raschad Pekpassi — Head Coach & Founder' },
-    fonsi:      { name: 'COACH FONSI',   img: '/assets/images/coach-portrait-2-480.webp', alt: 'Alfonso Fusco — Head Coach & Founder' },
-    nima:       { name: 'COACH NIMA',    img: '/assets/images/coach-nima.webp',    alt: 'Nima — Boxing & Kickboxing Coach' },
-    pavlos:     { name: 'COACH PAVLOS',  img: '/assets/images/coach-pavlos.webp',  alt: 'Pavlos — Boxing & Athletik Coach' },
-    'open-gym': { name: 'OPEN GYM',      img: '/assets/images/bomaye-logo.webp',   alt: 'Bomaye Gym — Freies Training · Drop-in' }
+    raschad:    { name: 'COACH RASCHAD', img: '/assets/images/coach-portrait-1-480.webp', alt: 'Raschad Pekpassi, Gründer und Head Coach des Bomaye Gym Munich' },
+    fonsi:      { name: 'COACH FONSI',   img: '/assets/images/coach-portrait-2-480.webp', alt: 'Alfonso Fusco, Gründer und Head Coach des Bomaye Gym Munich' },
+    nima:       { name: 'COACH NIMA',    img: '/assets/images/coach-nima.webp',    alt: 'Nima, Coach für Boxen, Kickboxen und K1 im Bomaye Gym Munich' },
+    pavlos:     { name: 'COACH PAVLOS',  img: '/assets/images/coach-pavlos.webp',  alt: 'Pavlos, Coach für Boxen und Athletik im Bomaye Gym Munich' },
+    'open-gym': { name: 'OPEN GYM',      img: '/assets/images/bomaye-logo.webp',   alt: 'Logo des Bomaye Gym Munich, Hinweis auf freies Training' }
   };
 
   var SLOT_CLASS_TYPES = {
     'bomaye-burn': {
       discipline: 'BOMAYE BURN', subtitle: 'HIIT BOXING WORKOUT',
       headline: 'Härteste Stunde der Woche. Schnellster Effekt.',
-      body: '60 Minuten HIIT auf Box-Basis. Schlagen, sprinten, atmen, weiter. Du kommst nicht raus ohne dass dein T-Shirt klebt. Wer Ergebnisse will — Fettverbrennung, Kondition, Kraft — bekommt sie hier in der dichtesten Form, die wir anbieten. Keine Boxerfahrung nötig.',
+      body: '60 Minuten HIIT auf Box-Basis. Schlagen, sprinten, atmen, weiter. Du kommst nicht raus ohne dass dein T-Shirt klebt. Wer Ergebnisse will (Fettverbrennung, Kondition, Kraft) bekommt sie hier in der dichtesten Form, die wir anbieten. Keine Boxerfahrung nötig.',
       tags: 'ALLE LEVEL · KEINE BOXERFAHRUNG NÖTIG · 60 MIN'
     },
     'boxing-basic': {
       discipline: 'BOXING', subtitle: 'BASIC',
       headline: 'Boxen, wie es nur wenige in München lernen.',
-      body: 'Olympisches Boxen — die Form, in der Weltmeister gemacht werden. Stand, Schlag, Bewegung, Verteidigung. Sauber aufgebaut, Schritt für Schritt, von Coaches mit echter Wettkampferfahrung. Egal ob erste Stunde oder zehntes Jahr: jeder hier trainiert auf höchstem technischen Niveau.',
+      body: 'Olympisches Boxen, die Form, in der Weltmeister gemacht werden. Stand, Schlag, Bewegung, Verteidigung. Sauber aufgebaut, Schritt für Schritt, von Coaches mit echter Wettkampferfahrung. Egal ob erste Stunde oder zehntes Jahr: jeder hier trainiert auf höchstem technischen Niveau.',
       tags: 'ALLE LEVEL · TECHNIK FOKUS · 90 MIN'
     },
     'fight-team': {
       discipline: 'BOMAYE', subtitle: 'FIGHT TEAM · AUF EINLADUNG',
       headline: 'Wer kämpft, trainiert hier.',
-      body: 'Das Fight Team trainiert auf Wettkampfniveau. Sparring, Konditionierung, Strategie. Kein Einstieg von außen — Aufnahme nur auf direkte Einladung der Coaches nach mehreren Monaten im Basic-Training.',
+      body: 'Das Fight Team trainiert auf Wettkampfniveau. Sparring, Konditionierung, Strategie. Kein Einstieg von außen. Aufnahme nur auf direkte Einladung der Coaches nach mehreren Monaten im Basic-Training.',
       tags: 'WETTKAMPF · AUF EINLADUNG · 90 MIN'
     },
     'queens': {
       discipline: 'BOMAYE QUEENS', subtitle: 'FITNESS · TECHNIK · SELBSTVERTEIDIGUNG',
       headline: 'Die Stunde, die wirklich alles abdeckt.',
-      body: 'Eine Klasse, drei Vorteile: Du verbrennst Kalorien wie in keinem klassischen Fitness-Kurs, lernst echte Box-Technik von erfahrenen Coaches, und nimmst gleichzeitig Selbstverteidigung mit, die im Ernstfall wirklich funktioniert. Bomaye Queens ist für jede Frau gedacht, die mehr will als nur ein Workout — egal ob du gerade anfängst oder schon trainiert hast. Du gehst raus mit Schweiß, neuem Können und einem Gefühl, das die ganze Woche bleibt.',
+      body: 'Eine Klasse, drei Vorteile: Du verbrennst Kalorien wie in keinem klassischen Fitness-Kurs, lernst echte Box-Technik von erfahrenen Coaches, und nimmst gleichzeitig Selbstverteidigung mit, die im Ernstfall wirklich funktioniert. Bomaye Queens ist für jede Frau gedacht, die mehr will als nur ein Workout, egal ob du gerade anfängst oder schon trainiert hast. Du gehst raus mit neuem Können und einem Gefühl, das die ganze Woche bleibt.',
       tags: 'ALLE LEVEL · NUR FRAUEN · 60 MIN'
     },
     'youth-fight-team': {
-      discipline: 'YOUTH FIGHT TEAM', subtitle: '10–17 JAHRE · AUF EINLADUNG',
+      discipline: 'YOUTH FIGHT TEAM', subtitle: '10 BIS 17 JAHRE · AUF EINLADUNG',
       headline: 'Wo aus Talent ein Kämpfer wird.',
-      body: 'Für Jugendliche zwischen 10 und 17, die spüren dass sie mehr drauf haben. Echtes olympisches Boxtraining auf Wettkampfniveau — Technik, Athletik, mentale Stärke. Wir trainieren keine Maschinen, wir formen junge Menschen, die wissen wer sie sind. Aufnahme nur nach Sichtung — weil dieser Weg Verbindlichkeit braucht.',
-      tags: '10–17 JAHRE · AUF EINLADUNG · 90 MIN'
+      body: 'Für Jugendliche zwischen 10 und 17, die spüren dass sie mehr drauf haben. Echtes olympisches Boxtraining auf Wettkampfniveau: Technik, Athletik, mentale Stärke. Wir trainieren keine Maschinen, wir formen junge Menschen, die wissen wer sie sind. Aufnahme nur nach Sichtung, weil dieser Weg Verbindlichkeit braucht.',
+      tags: '10 BIS 17 JAHRE · AUF EINLADUNG · 90 MIN'
     },
     'boxing-kids': {
-      discipline: 'BOXING', subtitle: 'KIDS 6–9 · ANFÄNGER',
+      discipline: 'BOXING', subtitle: 'KIDS 6 BIS 9 · ANFÄNGER',
       headline: 'Mehr als Sport. Selbstvertrauen fürs Leben.',
-      body: 'Kinder zwischen 6 und 9 lernen bei uns nicht nur Bewegung — sie lernen, sich selbst zu vertrauen. Boxen schult Konzentration, Koordination und Mut wie kaum eine andere Sportart. In sicherem Rahmen, ohne Sparring, mit Coaches die wissen wie man Kinder fördert ohne sie zu drücken. Was hier wächst, hält ein Leben lang.',
-      tags: '6–9 JAHRE · ANFÄNGER · 60 MIN'
+      body: 'Kinder zwischen 6 und 9 lernen bei uns nicht nur Bewegung. Sie lernen, sich selbst zu vertrauen. Boxen schult Konzentration, Koordination und Mut wie kaum eine andere Sportart. In sicherem Rahmen, ohne Sparring, mit Coaches die wissen wie man Kinder fördert ohne sie zu drücken. Was hier wächst, hält ein Leben lang.',
+      tags: '6 BIS 9 JAHRE · ANFÄNGER · 60 MIN'
     },
     'boxing-youth': {
-      discipline: 'BOXING', subtitle: 'YOUTH 10–17',
+      discipline: 'BOXING', subtitle: 'YOUTH 10 BIS 17',
       headline: 'Boxen, das junge Menschen formt.',
-      body: 'Für Jugendliche zwischen 10 und 17, die einfach Boxen lernen wollen — ohne Wettkampfdruck, mit echter Technik. Olympisches Boxtraining, an die Altersgruppe angepasst, von Coaches die wissen wie man junge Menschen fördert. Kondition, Koordination, Selbstvertrauen — und richtig viel Spaß an einer der schönsten Sportarten der Welt.',
-      tags: '10–17 JAHRE · OFFEN FÜR ALLE · 90 MIN'
+      body: 'Für Jugendliche zwischen 10 und 17, die einfach Boxen lernen wollen, ohne Wettkampfdruck, mit echter Technik. Olympisches Boxtraining, an die Altersgruppe angepasst, von Coaches die wissen wie man junge Menschen fördert. Kondition, Koordination, Selbstvertrauen und richtig viel Spaß an einer der schönsten Sportarten der Welt.',
+      tags: '10 BIS 17 JAHRE · OFFEN FÜR ALLE · 90 MIN'
     },
     'open-gym': {
       discipline: 'OPEN GYM', subtitle: 'FREIES TRAINING',
       headline: 'Dein Gym, deine Zeit.',
-      body: 'Vier Stunden täglich öffnen wir das Gym für freies Training. Sandsack, Schattenboxen, Cardio, Krafttraining — du entscheidest. Kein Coach, keine Stunde, nur du und das Equipment. Nur für Mitglieder.',
+      body: 'Vier Stunden täglich öffnen wir das Gym für freies Training. Sandsack, Schattenboxen, Cardio, Krafttraining. Du entscheidest. Kein Coach, keine Stunde, nur du und das Equipment. Nur für Mitglieder.',
       tags: 'NUR MITGLIEDER · OHNE COACH · 4 STUNDEN'
     },
-    'kickboxing-kids':  { discipline: 'KICKBOXING',  subtitle: '', headline: '', body: 'Spielerischer Einstieg ins Kickboxen. Technik, Bewegung, Spaß — altersgerecht aufgebaut.', tags: '' },
+    'kickboxing-kids':  { discipline: 'KICKBOXING',  subtitle: '', headline: '', body: 'Spielerischer Einstieg ins Kickboxen. Technik, Bewegung, Spaß, altersgerecht aufgebaut.', tags: '' },
     'kickboxing-basic': { discipline: 'KICKBOXING',  subtitle: '', headline: '', body: 'Kickboxen für alle Levels. Technik, Power, Kondition. Gecoacht von einem Weltmeister.', tags: '' },
     'competition':      { discipline: 'COMPETITION', subtitle: '', headline: '', body: 'Für aktive Wettkämpfer. Olympic Boxing auf Vereinsniveau. Trainiert nach klassischen Regeln.', tags: '' },
     'bomaye-advanced': {
@@ -3435,7 +3435,7 @@ document.addEventListener("DOMContentLoaded", function () {
     'bomaye-kickboxing': {
       discipline: 'BOMAYE KICKBOXING', subtitle: 'ALL LEVELS',
       headline: 'Fäuste, Beine, volles Arsenal.',
-      body: 'Kickboxen auf Bomaye-Niveau. Saubere Technik, echte Kondition, klare Struktur — vom ersten Kick bis zum Sparring. Für alle Levels.',
+      body: 'Kickboxen auf Bomaye-Niveau. Saubere Technik, echte Kondition, klare Struktur. Vom ersten Kick bis zum Sparring. Für alle Levels.',
       tags: 'ALLE LEVEL · 90 MIN'
     },
     'sparring': {

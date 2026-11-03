@@ -339,6 +339,52 @@ for (const name of dateien) {
     }
   }
 
+  /* Sichtbarer Text in Inline-Datenobjekten. Die Startseite baut den
+     Stundenplan-Dialog aus SLOT_COACHES und SLOT_CLASS_TYPES, /kurse das
+     Karussell aus COURSES, /wochenplan die Zeilen aus einer Vorlage. Alles
+     Felder, die per textContent, innerHTML oder alt in die Seite gehen.
+
+     Der Check oben sieht sie nicht, weil er <script> ausblendet. Genau so
+     ueberlebten 24 Striche auf der Startseite, 7 auf /kurse und der
+     Zeittrenner auf /wochenplan die Strich-Bereinigung.
+
+     Geprueft werden nur Felder, die erfahrungsgemaess angezeigt werden.
+     Eine Suche ueber alle Zeichenketten eines Inline-Skripts findet
+     dagegen jeden Kommentar und jeden Selektor.                      */
+  {
+    /* Als Literal geschrieben. Die erste Fassung baute dasselbe Muster mit
+       new RegExp aus Zeichenketten zusammen und verdoppelte dabei die
+       Rueckstriche einmal zu oft: aus \b wurde ein echter Rueckstrich
+       plus b, der Check fand nichts und meldete 0 Befunde.
+       Gruppe 3 ist der Inhalt in einfachen, Gruppe 4 der in doppelten
+       Anfuehrungszeichen.                                            */
+    const feldMuster = /\b(alt|name|body|desc|tags|subtitle|headline|discipline|imgAlt|title|titleMob|strong|span|text)\s*:\s*('((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g;
+
+    for (const datei of dateien) {
+      const roh = await readFile(WURZEL + '/' + datei, 'utf8');
+      for (const blk of roh.matchAll(/<script(?![^>]*src=)(?![^>]*ld\+json)[^>]*>([\s\S]*?)<\/script>/g)) {
+        /* Kommentare im Skript raus, Zeilen bleiben erhalten. */
+        const code = blk[1]
+          .replace(/\/\*[\s\S]*?\*\//g, leeren)
+          .replace(/(^|\n)([ \t]*)\/\/[^\n]*/g, (m, a, b) => a + b);
+        for (const m of code.matchAll(feldMuster)) {
+          const wert = m[3] !== undefined ? m[3] : m[4];
+          if (!wert || !/[A-Za-zÀ-ɏ]/.test(wert)) continue;
+          if (!/[—–]|(?<=\s)-(?=\s)/.test(wert)) continue;
+          const z = roh.slice(0, blk.index + blk[0].indexOf(blk[1]) + m.index).split('\n').length;
+          melde(datei, `Strich in angezeigten Dialogdaten, Zeile ${z}: ${m[1]} = "${wert.slice(0, 60)}"`);
+        }
+        /* Der Zeittrenner auf /wochenplan steht in einer Vorlage, nicht in
+           einem Feld. Deshalb zusaetzlich die Zeichenketten, die wie ein
+           blanker Trenner aussehen.                                    */
+        for (const m of code.matchAll(/'([—–])'|"([—–])"/g)) {
+          const z = roh.slice(0, blk.index + blk[0].indexOf(blk[1]) + m.index).split('\n').length;
+          melde(datei, `blanker Strich als Trenner im Skript, Zeile ${z}`);
+        }
+      }
+    }
+  }
+
   /* Die Datenquellen gleich mit. /faq wird aus faq-data.js erzeugt, die
      Startseite holt ihre Texte zur Laufzeit aus homepage-content.js. Ein
      Strich dort steht spaeter auf der Seite, taucht aber in keiner
