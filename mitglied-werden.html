@@ -144,6 +144,24 @@
     .mw-back-link:hover { color: #F5F0E8; }
     .nav-link-active { color: var(--gold) !important; }
     .mw-back-link i { font-size: 0.6rem; }
+    /* ── BURGER BLEIBT ERREICHBAR ───────────────────────────────────────
+       Gemessen bei 320 px: die Kopfleiste hat 32 px Polster je Seite, innen
+       bleiben 256 px. Darin stehen Logo 187 (nicht schrumpfbar), Luecke 16,
+       ZURUECK 85, Luecke 16 und Burger 44, zusammen 348 px. Der Burger
+       wurde dadurch auf left 336 geschoben und lag ganz ausserhalb des
+       Fensters, bei 375 px war er rechts angeschnitten. Auf dieser Seite
+       gab es damit auf kleinen Telefonen keinen Weg ins Menue.
+    
+       Der ZURUECK-Link entfaellt unter 480 px. Er ist eine Bequemlichkeit,
+       das Burger-Menue fuehrt alle Ziele (HOME, KURSE, PERSONAL TRAINING,
+       SCHEDULE, COACHES, ABOUT US, PREISE). Ohne ihn bleiben 187 plus 16
+       plus 44 gleich 247 von 256 Pixeln, der Burger passt mit 9 px Luft.
+    
+       Logo verkleinern waere die Alternative, kostet aber die Marke an der
+       Stelle, an der sie am meisten zaehlt.                          */
+    @media (max-width: 480px) {
+      .mw-back-link { display: none; }
+    }
 
     /* ── Page wrapper ──────────────────────────────────────────── */
     .mw-page {

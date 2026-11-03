@@ -130,7 +130,7 @@ const BOMAYE = {
     // Special programs (custom pricing)
     personal: {
       name:     'Personal Training',
-      tag:      '1:1',
+      tag:      'ONE ON ONE',
       icon:     'fa-user-check',
       priceLabel: 'ab 90€',
       priceUnit:  '/ Session',

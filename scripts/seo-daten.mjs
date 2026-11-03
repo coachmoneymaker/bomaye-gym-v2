@@ -271,7 +271,7 @@ export const SEITEN = {
        COACH", "Termine auch vormittags und mittags. Online buchen".
        ACHTUNG, PREISE: 125 und 90 stimmen mit der Seite ueberein. Aendern
        sich die Preise dort, aendert sich diese Zeile mit. */
-    beschr: 'Personal Training Boxen München: 60 Minuten eins zu eins mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen.',
+    beschr: 'Personal Training Boxen München: 60 Minuten One on One mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen.',
   },
   'downloads.html': {
     titel: 'Downloads',

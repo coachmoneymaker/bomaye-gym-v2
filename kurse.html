@@ -465,14 +465,23 @@
 
     /* Mobile dots */
     .carousel-dots {
-      display: flex; justify-content: center; gap: 0.5rem;
-      padding: 1.5rem 0 0;
+      /* Die Punkte sind 6 px klein, ihre Tippflaeche darf das nicht sein.
+         Der Abstand steckt jetzt im Polster der Punkte, sonst lagen die
+         44er-Flaechen uebereinander. */
+      display: flex; justify-content: center; gap: 0;
+      padding: 1rem 0 0;
     }
     .carousel-dot {
+      /* Gemessen 6x6 px, also weit unter der Tippgrenze von 44. Polster
+         und content-box ziehen die Flaeche auf 44x44, background-clip
+         laesst den Punkt optisch unveraendert. */
+      box-sizing: content-box;
+      padding: 19px;
+      background-clip: content-box;
       width: 6px; height: 6px; border-radius: 50%;
       background: rgba(245,240,232,0.25);
       transition: background var(--dur-ruhig) var(--ease-out), width     var(--dur-ruhig) var(--ease-out), border-radius var(--dur-ruhig) var(--ease-out);
-      cursor: pointer; border: none; padding: 0;
+      cursor: pointer; border: none;
     }
     .carousel-dot.active { background: var(--gold); width: 20px; border-radius: 0; }
 
@@ -516,12 +525,13 @@
       position: relative;
     }
     .dsk-arrow {
+      /* 38 px lagen unter der Tippgrenze, auch am Schreibtisch. */
       position: absolute;
       top: 50%;
       transform: translateY(calc(-50% - clamp(12px,2vw,20px)));
       z-index: 5;
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: rgba(8, 8, 8, 0.80);
       border: 1px solid rgba(201, 168, 76, 0.22);
@@ -874,7 +884,7 @@
         "item": {
           "@type": "Course",
           "name": "PERSONAL TRAINING",
-          "description": "Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit deinem Coach. Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.",
+          "description": "Die effizienteste Art, deine Ziele zu erreichen. Im One on One Personal Training arbeitest du direkt mit deinem Coach. Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-executive",
           "provider": {
             "@id": "https://www.bomayegym.com/#gym"
@@ -1113,7 +1123,7 @@
           <div class="dsk-card__body">
             <span class="dsk-card__num">06 / 07</span>
             <h3 class="dsk-card__title">PERSONAL TRAINING</h3>
-            <p class="dsk-card__short">1:1 Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
+            <p class="dsk-card__short">One on One Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
           </div>
         </div>
 
@@ -1243,7 +1253,7 @@
           <div class="carousel-card__body">
             <span class="carousel-card__num">06 / 07</span>
             <h3 class="carousel-card__title">PERSONAL TRAINING</h3>
-            <p class="carousel-card__short">1:1 Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
+            <p class="carousel-card__short">One on One Coaching mit Raschad oder Alfonso. Voller Fokus auf dich.</p>
             <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
@@ -1390,7 +1400,7 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" id="kursdetail-executive" role="region">
-              <p class="kursdetail-desc">Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.</p>
+              <p class="kursdetail-desc">Die effizienteste Art, deine Ziele zu erreichen. Im One on One Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.</p>
               <ul class="kursdetail-feats">
                 <li><strong>Individuelle Trainingsplanung</strong> Auf deine Ziele und dein Level abgestimmt</li>
                 <li><strong>Detaillierte Technikanalyse</strong> Feedback von Weltklasse-Trainern</li>
@@ -1622,12 +1632,12 @@ const COURSES = {
     cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
   },
   executive: {
-    tag: '1:1',
-    title: 'PERSONAL TRAINING.<br><span class="gold">1:1. FOKUS. FORTSCHRITT.</span>',
+    tag: 'ONE ON ONE',
+    title: 'PERSONAL TRAINING.<br><span class="gold">ONE ON ONE. FOKUS. FORTSCHRITT.</span>',
     titleMob: 'PERSONAL TRAINING',
     img: '/assets/images/training-pt.webp',
     imgAlt: 'Personal Training Bomaye Gym',
-    desc: 'Die effizienteste Art, deine Ziele zu erreichen. Im 1:1 Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.',
+    desc: 'Die effizienteste Art, deine Ziele zu erreichen. Im One on One Personal Training arbeitest du direkt mit Raschad Pekpassi (Landestrainer BABV) oder Alfonso Fusco (Kickbox-Weltmeister). Volle Aufmerksamkeit. Individuelle Planung. Schneller Fortschritt.',
     feats: [
       { strong: 'Individuelle Trainingsplanung', span: 'Auf deine Ziele und dein Level abgestimmt' },
       { strong: 'Detaillierte Technikanalyse', span: 'Feedback von Weltklasse-Trainern' },
