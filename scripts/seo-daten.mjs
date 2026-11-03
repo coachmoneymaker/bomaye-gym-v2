@@ -257,7 +257,7 @@ export const SEITEN = {
        nachpruefbar aus dem Repo, und sie veraltet still, wenn der Trainer
        geht. Die Early-Bird-Erwaehnung bleibt OHNE Zahl, sonst muesste der
        Preis hier gepflegt werden. */
-    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlagtechnik, Beinarbeit, Kondition. Early Bird endet, sobald alle Plätze vergeben sind.',
+    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit. Early Bird endet, sobald alle Plätze vergeben sind.',
   },
   'personal-training-boxen-muenchen.html': {
     titel: 'Personal Training Boxen München',

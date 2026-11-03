@@ -210,6 +210,7 @@ for (const name of dateien) {
 
    Dazu die Schreibweise: im Deutschen steht ein geschuetztes oder normales
    Leerzeichen vor dem Euro-Zeichen. "14,90€" ist falsch, "14,90 €" richtig.
+   Das gilt fuer ganze Betraege genauso: "20€" ist falsch, "20 €" richtig.
 
    Geprueft werden die GEBAUTEN Seiten, also das, was ein Besucher sieht.
    Kommentare und Skripte bleiben aussen vor: dort darf das Wort in einer
@@ -231,7 +232,10 @@ for (const name of dateien) {
     }
     /* Preis ohne Leerzeichen vor dem Euro. &nbsp; zaehlt als Leerzeichen. */
     const text = sicht.replace(/&nbsp;/g, ' ').replace(/<[^>]+>/g, ' ');
-    const eng = [...text.matchAll(/\d[\d.]*,\d{2}€/g)].map((m) => m[0]);
+    /* Auch ganze Betraege: "20€" und "1.090€" sind genauso falsch wie
+       "14,90€". Die erste Fassung verlangte Nachkommastellen und liess
+       damit acht Preise auf der Startseite durch.                      */
+    const eng = [...text.matchAll(/\d[\d.]*(?:,\d{2})?€/g)].map((m) => m[0]);
     if (eng.length) melde(datei, `Preis ohne Leerzeichen vor dem Euro: ${[...new Set(eng)].join(', ')}`);
   }
 }

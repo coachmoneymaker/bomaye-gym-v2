@@ -327,7 +327,7 @@ export const FLEX_FRAGE = {
     const b = (id) => euro(FLEX.find((x) => x.id === id).monat);
     return `Ja, Bomaye Flex, monatlich kündbar, ab ${b('kids-flex')} im Monat (Kids), `
          + `${b('youth-flex')} (Youth), ${b('unlimited-flex')} (Unlimited), plus `
-         + `${euro(AUFNAHME)} einmalig. Early Bird endet, sobald alle Plätze vergeben sind.`;
+         + `${euro(AUFNAHME)} Aufnahmegebühr einmalig. Early Bird endet, sobald alle Plätze vergeben sind.`;
   },
 };
 
