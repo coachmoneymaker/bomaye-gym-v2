@@ -67,7 +67,7 @@ const BOMAYE_FAQ = [
       },
       {
         q: "Welche Mitgliedschaften gibt es und welche Laufzeiten bietet ihr an?",
-        a: "Wochenpreise: Kids Boxing ab 14,90 €/Woche · Jugend Boxing ab 15,90 €/Woche · Erwachsene Kurse ab 18,90 €/Woche. Hinzu kommt einmalig der Fighter-Kit (100€) beim Start. Alle Details findest du auf der Mitglied-werden-Seite."
+        a: "Early Bird Wochenpreise: Kids 14,90 €, Youth 15,90 €, Unlimited 18,90 €. Abgerechnet wird monatlich: Kids 59,60 €, Youth 63,60 €, Unlimited 75,60 €, bei 12 Monaten Laufzeit. Einmalig kommen 100 € Aufnahmegebühr dazu, inklusive Fighter-Kit. Ohne Bindung: Bomaye Flex, monatlich kündbar, Kids 99 €, Youth 109 €, Unlimited 129 € im Monat, ebenfalls plus 100 € Aufnahmegebühr. Early Bird endet, sobald alle Plätze vergeben sind."
       },
       {
         q: "Gibt es Tageskarten oder 10er/Blockkarten ohne lange Bindung?",

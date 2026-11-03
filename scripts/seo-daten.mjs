@@ -226,7 +226,7 @@ export const SEITEN = {
   },
   'mitglied-werden.html': {
     titel: 'Mitglied werden',
-    beschr: 'Sichere dir deinen Early-Bird-Preis im Bomaye Boxgym München für die gesamte Vertragslaufzeit. Mitgliedschaften für Kids, Youth und Unlimited im Überblick.',
+    beschr: 'Dein Early Bird Preis bleibt, solange du Mitglied bleibst. Mitgliedschaften für Kids, Youth und Unlimited im Bomaye Boxgym München im Überblick.',
   },
   'boxgym-muenchen.html': {
     titel: 'Boxgym München',
@@ -257,7 +257,7 @@ export const SEITEN = {
        nachpruefbar aus dem Repo, und sie veraltet still, wenn der Trainer
        geht. Die Early-Bird-Erwaehnung bleibt OHNE Zahl, sonst muesste der
        Preis hier gepflegt werden. */
-    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit und Kondition. Early-Bird, solange Plätze frei sind.',
+    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit. Early Bird endet, sobald alle Plätze vergeben sind.',
   },
   'personal-training-boxen-muenchen.html': {
     titel: 'Personal Training Boxen München',

@@ -122,8 +122,8 @@ ${beliebt ? '            <span class="mw-popular-badge" aria-label="Beliebtestes
             </div>
             <p class="pr-karte__laufzeit">${esc(LAUFZEIT.kurz)}<a class="pr-karte__vertraglink" href="#vertrag">Vertragsbedingungen</a></p>
             <p class="pr-karte__woche">${esc(euro(m.woche))} pro Woche</p>
-            <p class="mw-card-fee">+ ${esc(euro(AUFNAHME))} einmalig, inkl. ${FIGHTER_KIT}</p>
-            <span class="mw-card-savings">EARLY BIRD, FÜR DIE LAUFZEIT</span>
+            <p class="mw-card-fee">abgerechnet als ${esc(euro(m.monat))} monatlich, ${LAUFZEIT.monate} Monate Laufzeit, einmalig ${esc(euro(AUFNAHME))} Aufnahmegebühr (inklusive ${FIGHTER_KIT})</p>
+            <span class="mw-card-savings">EARLY BIRD</span>
             <ul class="mw-card-features">
 ${m.leistungen.map((l) => `              <li>${esc(l)}</li>`).join('\n')}
             </ul>

@@ -363,7 +363,7 @@ function buildVerificationEmailHtml(lead, verifyUrl) {
                               color:rgba(255,255,255,0.55);
                               line-height:1.85;letter-spacing:0.01em;">
                       du bist fast dabei. Ein Klick genügt, um deinen exklusiven
-                      Early Bird Platz bei BOMAYE GYM Munich dauerhaft zu sichern.<br /><br />
+                      Early Bird Platz bei BOMAYE GYM Munich zu sichern. Dein Early Bird Preis bleibt, solange du Mitglied bleibst.<br /><br />
                       Der Bestätigungslink ist
                       <span style="color:#C9A84C;font-weight:600;">24&nbsp;Stunden</span>
                       gültig.
