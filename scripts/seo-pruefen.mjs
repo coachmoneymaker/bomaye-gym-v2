@@ -266,6 +266,100 @@ for (const name of dateien) {
   }
 }
 
+/* ── Striche als Satzzeichen ─────────────────────────────────────────────
+   Geviert- und Halbgeviertstrich sowie der freistehende Bindestrich sind im
+   deutschen Text dieser Seite keine Satzzeichen. Gesetzt wird Komma, Punkt
+   oder Doppelpunkt. Zahlenbereiche heissen "6 bis 9", nicht "6–9".
+
+   Geprueft werden Textknoten, die Meta-Beschreibungen, der Titel, die
+   JSON-LD-Werte und das data-time Attribut der Startseite. Letzteres steht
+   hier, weil der Stundenplan-Dialog es als Text anzeigt.
+
+   Wortbindestriche (Early-Bird, Wilhelm-Hale-Strasse, 6- bis 9-Jaehrige),
+   der Mittelpunkt in "MITGLIED WERDEN · AB", Adressen, Telefonnummern,
+   Kommentare, Skripte und Styles bleiben aussen vor.
+
+   AUSNAHMEN, drei Stellen, bewusst so:
+   1. Die vier Aufzaehlungszeichen des Fighter-Kits auf /mitglied-werden
+      (span.mw-fk-dot). Das ist ein Listenpunkt, kein Satzzeichen.
+   2. Die zwei Kundenstimmen auf der Startseite. Das sind woertliche
+      Zitate von Besuchern, an denen nichts geaendert wird.            */
+{
+  const AUSNAHMEN = [
+    /<span class="mw-fk-dot">[\u2014\u2013]<\/span>/g,
+    /"Klare Empfehlung f\u00fcr JEDEN[^"]*"/g,
+    /"Gro\u00dfes Boxstudio mit erfahrenen[^"]*"/g,
+  ];
+  const STRICH = /[\u2014\u2013]|(?<=\s)-(?=\s)/;
+
+  const leeren = (t) => t.replace(/[^\n]/g, ' ');
+
+  for (const datei of dateien) {
+    let roh = await readFile(WURZEL + '/' + datei, 'utf8');
+    for (const a of AUSNAHMEN) roh = roh.replace(a, leeren);
+
+    /* Styles, Kommentare und Skripte raus, Zeilen bleiben erhalten.
+       sicht behaelt die JSON-LD-Bloecke, damit deren Werte geprueft werden
+       koennen. nurText blendet sie zusaetzlich aus, sonst meldet die
+       Textknoten-Suche jeden JSON-LD-Fund ein zweites Mal und mit einem
+       unbrauchbaren Ausschnitt.                                        */
+    const sicht = roh
+      .replace(/<script(?![^>]*ld\+json)[\s\S]*?<\/script>/g, leeren)
+      .replace(/<style[\s\S]*?<\/style>/g, leeren)
+      .replace(/<!--[\s\S]*?-->/g, leeren);
+    const nurText = sicht.replace(/<script[^>]*ld\+json[\s\S]*?<\/script>/g, leeren);
+
+    const zeile = (i) => sicht.slice(0, i).split('\n').length;
+    const fund = [];
+
+    /* 1. Textknoten */
+    for (const m of nurText.matchAll(/>([^<]+)</g)) {
+      const t = STRICH.exec(m[1]);
+      if (t) fund.push([zeile(m.index + 1 + t.index), m[1].trim().slice(0, 70)]);
+    }
+    /* 2. Meta-Beschreibungen, Titel, Social-Titel */
+    for (const m of nurText.matchAll(/<meta[^>]*>/g)) {
+      if (!/(?:name|property)="(?:description|og:description|og:title|twitter:description|twitter:title)"/.test(m[0])) continue;
+      const c = /content="([^"]*)"/.exec(m[0]);
+      if (c && STRICH.test(c[1])) fund.push([zeile(m.index), c[1].slice(0, 70)]);
+    }
+    /* 3. JSON-LD Werte */
+    for (const blk of sicht.matchAll(/<script[^>]*ld\+json[^>]*>([\s\S]*?)<\/script>/g)) {
+      for (const m of blk[1].matchAll(/"([^"\\]*(?:\\.[^"\\]*)*)"/g)) {
+        if (STRICH.test(m[1])) fund.push([zeile(blk.index + m.index), m[1].slice(0, 70)]);
+      }
+    }
+    /* 4. data-time, weil der Dialog es als Text ausgibt */
+    for (const m of sicht.matchAll(/data-time="([^"]*)"/g)) {
+      if (STRICH.test(m[1])) fund.push([zeile(m.index), 'data-time="' + m[1] + '"']);
+    }
+
+    for (const [z, text] of fund) {
+      melde(datei, `Strich als Satzzeichen, Zeile ${z}: "${text}"`);
+    }
+  }
+
+  /* Die Datenquellen gleich mit. /faq wird aus faq-data.js erzeugt, die
+     Startseite holt ihre Texte zur Laufzeit aus homepage-content.js. Ein
+     Strich dort steht spaeter auf der Seite, taucht aber in keiner
+     gebauten Datei auf: beim ersten Durchgang wurden genau diese zwoelf
+     Stellen vom naechsten "bauen:seo" wieder hereingeschrieben.      */
+  for (const quelle of ['assets/js/faq-data.js', 'assets/js/homepage-content.js']) {
+    const roh = await readFile(WURZEL + '/' + quelle, 'utf8');
+    /* Kommentare raus, Zeilen bleiben. Dort darf ein Strich stehen. */
+    const code = roh
+      .replace(/\/\*[\s\S]*?\*\//g, leeren)
+      .replace(/(^|\n)([ \t]*)\/\/[^\n]*/g, (m, a, b) => a + b);
+    for (const m of code.matchAll(/'([^'\\]*(?:\\.[^'\\]*)*)'|"([^"\\]*(?:\\.[^"\\]*)*)"/g)) {
+      const wert = m[1] !== undefined ? m[1] : m[2];
+      const t = /[\u2014\u2013]|(?<=\s)-(?=\s)/.exec(wert);
+      if (!t) continue;
+      const z = code.slice(0, m.index).split('\n').length;
+      melde(quelle, `Strich als Satzzeichen, Zeile ${z}: "${wert.slice(0, 70)}"`);
+    }
+  }
+}
+
 console.log(`${dateien.length} Seiten, ${geprueft} JSON-LD-Bloecke geprueft.`);
 if (!befunde.length) { console.log('\n═══ 0 Befunde'); process.exit(0); }
 console.log('');
