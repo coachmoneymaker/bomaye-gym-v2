@@ -17,7 +17,7 @@ const BOMAYE_HOMEPAGE = {
   hero: {
     badge:        'NOW OPEN · EARLY BIRD ACTIVE',
     headline:     'Boxen. Leben. München.',
-    subheadline:  'Das Boxgym im Pineapple Park — für Anfänger, Fortgeschrittene und Wettkämpfer. Sichere dir jetzt deinen Early-Bird-Preis.',
+    subheadline:  'Das Boxgym im Pineapple Park, für Anfänger, Fortgeschrittene und Wettkämpfer. Sichere dir jetzt deinen Early-Bird-Preis.',
     ctaPrimary:   { label: 'JETZT EARLY BIRD SICHERN', href: '#pricing' },
     ctaSecondary: { label: 'MEHR ERFAHREN',            href: '#dna' },
   },
@@ -44,7 +44,7 @@ const BOMAYE_HOMEPAGE = {
   membershipIntro: {
     sectionBadge: 'MEMBERSHIP',
     headline:     'Dein Training. Dein Preis.',
-    subtext:      'Von Kids bis Erwachsene, von Anfänger bis Wettkämpfer — wähle das Programm, das zu dir passt, und profitiere von fairen Wochenpreisen ohne versteckte Kosten.',
+    subtext:      'Von Kids bis Erwachsene, von Anfänger bis Wettkämpfer. Wähle das Programm, das zu dir passt, und profitiere von fairen Wochenpreisen ohne versteckte Kosten.',
     cta:          { label: 'Alle Mitgliedschaften', href: '#pricing' },
   },
 
@@ -86,9 +86,9 @@ const BOMAYE_HOMEPAGE = {
   faqTeaser: {
     sectionBadge:  'FAQ',
     headline:      'Häufig gestellte Fragen.',
-    subtext:       'Alles Wichtige zu Mitgliedschaft, Training, Standort und mehr — übersichtlich auf unserer FAQ-Seite.',
+    subtext:       'Alles Wichtige zu Mitgliedschaft, Training, Standort und mehr, übersichtlich auf unserer FAQ-Seite.',
     cta:           { label: 'Alle FAQs ansehen', href: '/faq' },
-    seoFooterText: 'Bomaye Gym Munich ist ein modernes Boxgym in München Neuhausen-Nymphenburg, direkt im Pineapple Park an der Wilhelm-Hale-Straße. Wir bieten Olympic Boxing, Kickboxen, Women\'s Boxing, Kids & Youth Boxing, Personal Training und Corporate Boxing für alle Leistungsstufen — vom Anfänger bis zum Wettkämpfer. Gut erreichbar mit der S-Bahn (Hirschgarten, 5 Minuten).',
+    seoFooterText: 'Bomaye Gym Munich ist ein modernes Boxgym in München Neuhausen-Nymphenburg, direkt im Pineapple Park an der Wilhelm-Hale-Straße. Wir bieten Olympic Boxing, Kickboxen, Women\'s Boxing, Kids & Youth Boxing, Personal Training und Corporate Boxing für alle Leistungsstufen, vom Anfänger bis zum Wettkämpfer. Gut erreichbar mit der S-Bahn (Hirschgarten, 5 Minuten).',
   },
 
 };
