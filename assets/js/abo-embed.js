@@ -88,39 +88,38 @@
    Zeichnet das Widget erst nach acht Sekunden, bekommt es nichts mehr, und
    der Besucher sieht die Liste. Eine Liste ist aergerlich. Eine flackernde
    Anmeldemaske mit rohen Uebersetzungsschluesseln ist schlimmer, und der
-   sichtbare Streifen fuehrt in beiden Faellen direkt zum richtigen Paket.
+   sichtbare Streifen sagt in beiden Faellen, welches Paket gemeint ist.
 
-   NICHT JEDES PAKET GEHT DURCH DAS WIDGET
-   Knoepfe mit data-abo-direkt werden nicht abgefangen. Gesetzt ist das
-   Attribut an den drei Flex-Knoepfen (59649, 59650, 59651): diese
-   Vertraege sind im eingebetteten Subscription-Widget nicht zu zeigen.
-   Am Geraet gemessen meldet 59649 "Vertrag nicht gefunden", und 59651
-   zeigt unter dem Streifen "Gewaehlt: Youth Flex" die Early-Bird-Liste.
-   Fuer sie fuehrt das href unmittelbar auf
+   ALLE SECHS PAKETE GEHEN DURCH DAS WIDGET
+   Early Bird (45432, 45433, 45434) und Flex (59649, 59650, 59651) laufen
+   ueber denselben Weg. In PR #178 war das kurz anders: die Flex-Knoepfe
+   trugen data-abo-direkt und fuehrten unmittelbar auf
+   backoffice.bsport.io, weil die drei Vertraege im Backoffice auf "fuer
+   Kunden unsichtbar" standen - 59649 meldete "Vertrag nicht gefunden",
+   59651 zeigte die Early-Bird-Liste. Der Eigentuemer hat den Schalter
+   umgelegt, seitdem stehen sie im Widget neben Early Bird.
 
-     https://backoffice.bsport.io/checkout/5473/subscription/<id>?force=true
-
-   Die Early-Bird-Knoepfe (45432, 45433, 45434) bleiben beim Overlay.
+   Damit gilt wieder die Regel vom Anfang dieser Datei, und zwar ohne
+   Ausnahme: DIE ADRESSZEILE VERLAESST BOMAYEGYM.COM NIE. Nichts hier
+   verweist mehr auf backoffice.bsport.io - kein href, kein Link im
+   Streifen, kein window.open, kein iframe.
 
    DER SICHTBARE STREIFEN
-   Oben im Overlay steht eine Zeile: das gewaehlte Paket (aus data-item-name
-   des geklickten Knopfes) und ein Link DIREKT ZUR KASSE auf
+   Oben im Overlay steht eine Zeile: das gewaehlte Paket, aus
+   data-item-name des geklickten Knopfes. Sie nennt immer nur EIN Paket,
+   naemlich das geklickte, und baut nie eine Liste.
 
-     https://backoffice.bsport.io/checkout/5473/subscription/<id>?force=true
-
-   Diese Adresse ist nicht geraten. Die Flex-Pakete tragen sie seit PR #170
-   als href, vom Eigentuemer geliefert; die Early-Bird-Pakete trugen genau
-   dieselbe Form bis Commit 2e33108 als href auf allen drei Seiten (siehe
-   Git-Verlauf zu 45433). Fuer alle sechs IDs ist sie also belegt.
-
-   Der Streifen nennt immer nur EIN Paket, naemlich das geklickte. Er baut
-   nie eine Liste. Verborgene Flex-Pakete koennen dort nicht auftauchen.
+   Bis PR #178 stand dort zusaetzlich ein Link DIREKT ZUR KASSE auf
+   backoffice.bsport.io. Der ist weg: er war ein Notausgang fuer den Fall,
+   dass das Widget das Paket nicht zeigen kann, und genau dieser Fall ist
+   mit dem umgelegten Schalter erledigt. Ein sichtbarer Weg aus der Domain
+   heraus wiegt schwerer als ein Notausgang, den niemand mehr braucht.
 
    DER RUECKFALL OHNE OVERLAY
-   Fehlt die ID oder fehlt das Overlay, wird der Klick nicht abgefangen.
-   Stattdessen oeffnet die Kasse des Pakets in einem neuen Tab (opener
-   gekappt). Laesst der Browser das Fenster nicht zu, bleibt es beim
-   gewoehnlichen href - wie ohne JavaScript.
+   Fehlt die ID oder fehlt das Overlay, wird der Klick nicht abgefangen,
+   und das href der Seite uebernimmt - bei Early Bird
+   /mitglied-werden#packages, bei Flex /preise#flex. Beides auf der
+   eigenen Domain, beides das Verhalten ohne JavaScript.
 
    OHNE MARKETING-EINWILLIGUNG IST DAS KEIN RUECKFALL
    In PR #177 stand in dieser Bedingung zusaetzlich MountBsportWidget. Das
@@ -132,7 +131,7 @@
 
    Richtig ist: das Overlay geht bei JEDEM Klick auf. Ohne Einwilligung malt
    bsport-gate.js seinen Hinweis an die Stelle des Widgets, darueber steht
-   der Streifen mit dem gewaehlten Paket und dem Weg zur Kasse. Der
+   der Streifen mit dem gewaehlten Paket. Der
    Sendelauf beginnt erst, wenn wirklich montiert wurde. Wird die
    Einwilligung im Overlay erteilt, taucht MountBsportWidget nachtraeglich
    auf; dann wird nachmontiert und der Deeplink laeuft doch noch.
@@ -142,15 +141,6 @@
    automatische Blockade von hier aus nicht nachstellbar ist
    (consent.cookiebot.com ist nicht erreichbar). Der Satz prueft diesen Fall
    jetzt direkt: er liefert die Seite mit entschaerftem Mount-Skript aus.
-
-   DIAGNOSEMODUS ?abo=kasse
-   Damit zeigt das Overlay statt des Widgets die Kassenseite des Pakets in
-   einem iframe - der einzige Weg, der ohne jede Annahme ueber Bsports
-   Nachrichten auf GENAU ein Paket zeigt. Ob backoffice.bsport.io sich
-   einbetten laesst, ist von hier aus nicht pruefbar (X-Frame-Options,
-   Content-Security-Policy). Darum ein Schalter und nicht die Vorgabe: auf
-   der Vorschau ist das in einer Minute beantwortet. Bleibt das Feld leer,
-   laesst Bsport das Einbetten nicht zu und der Schalter ist erledigt.
 
    DIAGNOSE
    ?bsdebug=1 protokolliert unter [bomaye-abo], was gesendet wurde und was
@@ -195,11 +185,6 @@
      kein Selektor trifft. */
   var FLIMMER_FENSTER = 1000;
   var FLIMMER_GRENZE  = 20;
-
-  /* Die Kasse EINES Pakets. Belegte Form, siehe Kopf der Datei: die
-     Flex-Knoepfe tragen sie als href, die Early-Bird-Knoepfe trugen sie
-     bis Commit 2e33108. companyId steht schon im Mount darunter. */
-  var KASSE = 'https://backoffice.bsport.io/checkout/5473/subscription/%ID%?force=true';
 
   /* Bsports eigenes Anmelde- und Profilfenster bei dialogMode 1. Belegt
      im Repository sind nur __container und __iframe. */
@@ -256,18 +241,6 @@
       var v = new URLSearchParams(window.location.search).get('dm');
       return v === '3' ? 3 : 1;
     } catch (e) { return 1; }
-  }
-
-  /* ?abo=kasse: Kassenseite im iframe statt Widget. Reiner Diagnoseweg,
-     siehe Kopf der Datei. Vorgabe ist aus. */
-  function kasseModus() {
-    try {
-      return new URLSearchParams(window.location.search).get('abo') === 'kasse';
-    } catch (e) { return false; }
-  }
-
-  function kasse(contractId) {
-    return KASSE.replace('%ID%', encodeURIComponent(String(contractId)));
   }
 
   var spurAn = false;
@@ -343,18 +316,12 @@
     }
 
     var name = (el && el.getAttribute('data-item-name')) || '';
-    var teile = [];
-    if (name) {
-      /* Sichtbarer Text, also mit Umlaut - anders als die Kommentare. */
-      teile.push('<span class="bomaye-abo-wahl__text">Gew\u00E4hlt: <strong></strong></span>');
-    }
-    teile.push('<a class="bomaye-abo-wahl__link" target="_blank" rel="noopener">'
-             + 'Direkt zur Kasse</a>');
-    s.innerHTML = teile.join('');
-
+    if (!name) { s.textContent = ''; s.hidden = true; return; }
+    s.hidden = false;
+    /* Sichtbarer Text, also mit Umlaut - anders als die Kommentare. */
+    s.innerHTML = '<span class="bomaye-abo-wahl__text">Gew\u00E4hlt: <strong></strong></span>';
     /* Der Name kommt aus dem Dokument, wird aber nicht als HTML gesetzt. */
-    if (name) { s.querySelector('strong').textContent = name; }
-    s.querySelector('a').setAttribute('href', kasse(contractId));
+    s.querySelector('strong').textContent = name;
   }
 
   /* ── Widget montieren (erst beim ersten Klick) ──────────────────────────── */
@@ -438,24 +405,6 @@
       spur('MountBsportWidget ist da - wird nachmontiert');
       if (montieren()) { laufStarten(contractId); }
     }, MONTIER_TAKT);
-  }
-
-  /* ?abo=kasse: die Kassenseite EINES Pakets, ohne Widget und ohne
-     Nachricht. Diagnoseweg, siehe Kopf der Datei. */
-  function kasseRahmen(contractId) {
-    var ziel = document.getElementById(einst.containerId);
-    if (!ziel) { spur('FEHLER: Container', einst.containerId, 'fehlt'); return; }
-    var alt = ziel.querySelector('iframe[data-abo-kasse]');
-    var url = kasse(contractId);
-    if (alt) { if (alt.getAttribute('src') !== url) alt.setAttribute('src', url); return; }
-    var f = document.createElement('iframe');
-    f.setAttribute('data-abo-kasse', '');
-    f.setAttribute('src', url);
-    f.setAttribute('title', 'Kasse');
-    f.setAttribute('frameborder', '0');
-    f.className = 'bomaye-abo-kasse';
-    ziel.appendChild(f);
-    spur('?abo=kasse: Kassenseite eingebettet:', url);
   }
 
   /* ── Die Nachricht senden ───────────────────────────────────────────────── */
@@ -631,8 +580,13 @@
     o.classList.add('is-open');
     o.setAttribute('aria-hidden', 'false');
     sperren();
+    /* Oben anfangen. .bsport-modal-content ist der einzige Scrollbereich
+       und behaelt seinen Stand zwischen zwei Oeffnungen; wer beim ersten
+       Mal nach unten gescrollt hat, saehe beim zweiten Mal leere Flaeche,
+       weil das Widget inzwischen etwas Kuerzeres zeichnet. */
+    var inhalt = o.querySelector('.bsport-modal-content');
+    if (inhalt) { inhalt.scrollTop = 0; }
     streifen(contractId, el);
-    if (kasseModus()) { kasseRahmen(contractId); return; }
     /* Der Sendelauf beginnt erst, wenn das Widget wirklich montiert ist. */
     if (montieren()) { wacheAus(); laufStarten(contractId); }
     else { laufBeenden('nicht montiert'); nachmontieren(contractId); }
@@ -662,42 +616,13 @@
       if (!el) return;
       var id = el.getAttribute('data-abo-contract');
 
-      /* data-abo-direkt: Finger weg, das bleibt ein gewoehnlicher Verweis.
-         Die Flex-Vertraege sind im eingebetteten Subscription-Widget nicht
-         zu zeigen - am Geraet gemessen meldet 59649 "Vertrag nicht
-         gefunden", und 59651 zeigt unter dem Streifen "Gewaehlt: Youth
-         Flex" die Early-Bird-Liste. Ein Overlay, das das falsche oder gar
-         kein Paket zeigt, ist schlechter als der Verweis auf die
-         Kaufadresse. Kein preventDefault, kein window.open: das href der
-         Seite macht seine Arbeit.
-
-         plan-tracking.js laeuft davon unberuehrt weiter. Es hoert in der
-         Erfassungsphase und ist durch, bevor diese Zeile ueberhaupt
-         erreicht wird; begin_checkout feuert also unveraendert mit
-         derselben Nutzlast. plan_overlay_opened kann fuer diese Knoepfe
-         nicht mehr feuern, weil kein Overlay mehr aufgeht - das ist die
-         gewollte Folge und keine Luecke. */
-      if (el.hasAttribute && el.hasAttribute('data-abo-direkt')) {
-        spur('direkt: contract', id, 'geht ueber das href, kein Overlay');
-        return;
-      }
-
       if (!bereit(id)) {
-        if (id) {
-          var w = null;
-          /* Ohne "noopener" im dritten Argument, weil der Rueckgabewert
-             sonst null ist und wir nicht erkennen koennten, ob das Fenster
-             aufging. Gekappt wird der opener gleich danach. */
-          try { w = window.open(kasse(id), '_blank'); } catch (err) {}
-          if (w) {
-            try { w.opener = null; } catch (err2) {}
-            e.preventDefault();
-            spur('Rueckfall: Kasse im neuen Tab, contract', id);
-            return;
-          }
-        }
+        /* Kein preventDefault: das href der Seite uebernimmt, und das zeigt
+           auf die eigene Domain. Frueher stand hier ein window.open auf
+           backoffice.bsport.io. Das ist weg - die Adresszeile verlaesst
+           bomayegym.com nie. */
         spur('Rueckfall: gewoehnlicher Link (href), contract', id || '(fehlt)');
-        return;   /* kein preventDefault - das href der Seite uebernimmt */
+        return;
       }
 
       e.preventDefault();

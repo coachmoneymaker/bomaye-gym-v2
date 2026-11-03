@@ -1776,7 +1776,11 @@ footer {
    Dunkler Text auf Creme, der Strich in Gold - das sind die Farben der
    Seite, und 0A0A08 auf F5F0E8 traegt den Kontrast auch im Overlay. Gold
    als Schriftfarbe auf Creme waere zu schwach, es steht daher nur in der
-   Kante und unter der Schrift. */
+   Kante.
+
+   Bis PR #178 stand rechts zusaetzlich ein Link auf backoffice.bsport.io.
+   Der ist weg, siehe abo-embed.js; uebrig bleibt die Zeile mit dem Paket,
+   und space-between setzt sie linksbuendig. */
 .bomaye-abo-wahl {
   display: flex;
   flex-wrap: wrap;
@@ -1794,34 +1798,6 @@ footer {
   color: #0A0A08;
 }
 .bomaye-abo-wahl__text strong { font-weight: 700; }
-.bomaye-abo-wahl__link {
-  color: #0A0A08;
-  font-weight: 700;
-  white-space: nowrap;
-  text-decoration: underline;
-  text-decoration-color: #C9A84C;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-}
-.bomaye-abo-wahl__link:hover,
-.bomaye-abo-wahl__link:focus-visible {
-  text-decoration-thickness: 3px;
-}
-.bomaye-abo-wahl__link:focus-visible {
-  outline: 2px solid #C9A84C;
-  outline-offset: 3px;
-}
-
-/* ?abo=kasse: die Kassenseite eines Pakets im Overlay. Reiner Diagnoseweg,
-   die Begruendung steht in abo-embed.js. 70dvh, damit auf dem iPhone die
-   Adressleiste nicht mitzaehlt. */
-.bomaye-abo-kasse {
-  display: block;
-  width: 100%;
-  min-height: 70vh;
-  min-height: 70dvh;
-  border: 0;
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    DETAILSCHIRM DES ABO-WIDGETS (dialogMode 1, also der Standard)
