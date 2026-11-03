@@ -1215,6 +1215,16 @@
   }
   .seo-section .pr-faq summary::-webkit-details-marker { display: none; }
   .seo-section .pr-faq summary::marker { content: ''; }
+  /* Der Fokusring darf nicht abgeschnitten werden.
+     Weiter oben in dieser Datei steht noch der FAQ-Block des frueheren,
+     dunklen Entwurfs mit ".faq-item { overflow: hidden }". Das Markup hier
+     ist ein <details class="faq-item">, also greift die Regel - und sie
+     schnitt den Fokusring der Tastaturbedienung (2px Gold, Versatz 3px,
+     dazu ein dunkler Halo) links und rechts ab. Uebrig blieben zwei
+     Balken statt eines Rahmens.
+     Der alte Block gehoert insgesamt geloescht, das ist aber eine eigene
+     Aufraeumarbeit; hier steht nur, was dieser Abschnitt braucht. */
+  .seo-section .pr-faq .faq-item { overflow: visible; }
   .seo-section .pr-faq details[open] .faq-icon { transform: rotate(45deg); }
   .seo-section--light .pr-faq .faq-a-inner { color: rgba(8,8,8,0.7); }
   .seo-section .pr-faq .faq-a-inner a { color: var(--gold-dark); }
