@@ -147,6 +147,57 @@ for (const name of dateien) {
   }
 }
 
+/* ── Umleitungen in vercel.json zeigen auf eine Seite, die es gibt ────────
+   Eine dauerhafte Umleitung auf eine Adresse ohne Seite ist schlimmer als
+   gar keine: Suchmaschinen merken sich das Ziel, und der Besucher landet
+   auf 404. Geprueft wird deshalb jedes Ziel.
+
+   Anlass: /alle-preise zeigte dauerhaft auf /mitglied-werden. Seit es
+   /preise gibt, war das die falsche Seite - aufgefallen ist es nur, weil
+   jemand von Hand nachgesehen hat.
+
+   Zusaetzlich wird auf Ketten geachtet. Eine Umleitung, deren Ziel selbst
+   wieder umgeleitet wird, kostet einen zweiten Sprung und verwaessert das
+   Signal. Umleitungen mit einer Bedingung (has) zaehlen dabei nicht als
+   Kettenglied: sie greifen nur, wenn die Bedingung zutrifft.           */
+{
+  const roh = await readFile(WURZEL + '/vercel.json', 'utf8');
+  let conf = null;
+  try { conf = JSON.parse(roh); } catch (e) {
+    melde('vercel.json', 'laesst sich nicht als JSON lesen: ' + e.message);
+  }
+  const umleitungen = (conf && conf.redirects) || [];
+  const datei = (ziel) => (ziel === '/' ? 'index.html' : ziel.replace(/^\//, '').replace(/[?#].*$/, '') + '.html');
+  /* Ohne Bedingung greift eine Umleitung immer, mit Bedingung nur manchmal. */
+  const immer = new Map();
+  for (const r of umleitungen) if (!r.has && !r.missing) immer.set(r.source, r.destination);
+
+  for (const r of umleitungen) {
+    const ziel = String(r.destination || '');
+    if (!ziel.startsWith('/')) continue;       /* fremde Adresse, nicht unsere Sache */
+    if (!dateien.includes(datei(ziel))) {
+      melde('vercel.json', `Umleitung ${r.source} zeigt auf ${ziel}, dazu gibt es keine Seite (${datei(ziel)})`);
+    }
+    if (immer.has(ziel)) {
+      melde('vercel.json', `Umleitung ${r.source} zeigt auf ${ziel}, und ${ziel} wird selbst weitergeleitet `
+                         + `auf ${immer.get(ziel)} - das sind zwei Spruenge`);
+    }
+    if (r.source === ziel) melde('vercel.json', `Umleitung ${r.source} zeigt auf sich selbst`);
+  }
+  /* Und nichts auf der Seite darf auf eine umgeleitete Adresse verweisen:
+     sonst zahlt jeder Besucher den Umweg mit. */
+  const quellen = umleitungen.map((r) => r.source).filter((q) => q && q !== '/' && q !== '/index');
+  for (const d of dateien.concat(['sitemap.xml'])) {
+    let html;
+    try { html = await readFile(WURZEL + '/' + d, 'utf8'); } catch { continue; }
+    for (const q of quellen) {
+      if (new RegExp(`(?:href|loc>)="?${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:["/#?<]|$)`).test(html)) {
+        melde(d, `verweist auf ${q}, das umgeleitet wird - bitte direkt auf das Ziel zeigen`);
+      }
+    }
+  }
+}
+
 console.log(`${dateien.length} Seiten, ${geprueft} JSON-LD-Bloecke geprueft.`);
 if (!befunde.length) { console.log('\n═══ 0 Befunde'); process.exit(0); }
 console.log('');

@@ -14,7 +14,7 @@
     },
     {
       "source": "/alle-preise",
-      "destination": "/mitglied-werden",
+      "destination": "/preise",
       "permanent": true
     },
     {
