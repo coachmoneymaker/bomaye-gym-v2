@@ -7181,3 +7181,45 @@ i.icon > svg {
   width: 1em; height: 1em; display: inline-block;
   vertical-align: -0.125em; fill: currentColor;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   DER WEISSE STREIFEN UEBER DEM ANMELDEFENSTER
+
+   GEMESSEN VOM BETREIBER im laufenden Widget auf
+   /personal-training-boxen-muenchen, nicht hier geraten: Bsports
+   Anmeldefenster setzt zwei Flaechen auf reines Weiss,
+
+     div.bsport-user-interaction-modal__innerContainer   rgb(255,255,255)
+     div.bsport-user-interaction-modal__topBar           rgb(255,255,255), 75 px hoch,
+                                                         traegt das Schliesskreuz
+
+   waehrend der Inhalt darunter aus dem inneren Rahmen
+   (iframe.bsport-user-interaction-modal__iframe, backoffice.bsport.io)
+   bereits cremefarben kommt. Sichtbar war dadurch eine harte Kante quer
+   ueber den Dialog, oben weiss, darunter creme.
+
+   Diese beiden Namen sind feste BEM-Namen. Sie sind NICHT die
+   nummerierten MUI-Klassen (MuiPaper-root-889 und Verwandte), an denen
+   das Zuordnen in diesem Projekt zweimal gescheitert ist. Deshalb ist
+   die Regel hier vertretbar, wo eine Regel auf MUI-Klassen es nicht
+   waere.
+
+   Nur background-color. Der Radius oben, die Hoehe der Leiste und damit
+   die Tippflaeche des Kreuzes bleiben unangetastet, ebenso die Farbe des
+   Kreuzes selbst: es stand schon vorher dunkel auf hellem Grund und
+   steht jetzt dunkel auf Creme.
+
+   Der innere Rahmen gehoert backoffice.bsport.io. Was dort gilt,
+   entscheidet Bsport, von hier kommt nichts hinein.
+
+   WO DIESE DATEI REICHT: auf allen 19 Seiten, die den Widget-Behaelter
+   direkt im Seitendokument tragen, also auch im Overlay der sechs Early
+   Bird- und Flex-Plaene (#bsport-sub-modal) und im Kalender-Widget.
+   /personal-training-boxen-muenchen traegt das Widget dagegen in einem
+   iframe mit srcdoc; dorthin kaskadiert diese Datei nicht, deshalb steht
+   dieselbe Regel ein zweites Mal im style-Block jenes srcdoc.
+   ══════════════════════════════════════════════════════════════════════ */
+.bsport-user-interaction-modal__innerContainer,
+.bsport-user-interaction-modal__topBar {
+  background-color: #F5F0E8 !important;
+}

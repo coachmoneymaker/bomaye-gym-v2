@@ -1267,8 +1267,23 @@
            Am viewport-meta der Seite aendert sich NICHTS. Kein
            maximum-scale, kein user-scalable=no: Zusammenziehen muss
            moeglich bleiben, das ist seit PR #121 so entschieden. -->
-      <div class="pt-widget-wrapper">
-        <iframe frameborder="0" allowfullscreen data-bsport-hoehe data-bsport-srcdoc='<style>input,select,textarea{font-size:16px !important}html{touch-action:manipulation}</style><script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
+      <!-- DER STYLE-BLOCK IM SRCDOC IST UNSER EINZIGER HEBEL IM WIDGET
+
+     Dieses iframe traegt sein Dokument per srcdoc. Es hat zwar unsere
+     Herkunft, ist aber ein eigenes Dokument: assets/css/style.css
+     kaskadiert NICHT hinein, nur der style-Block in data-bsport-srcdoc
+     wirkt dort. Siehe den Kopf von assets/js/pt-dom-diagnose.js.
+
+     Darin stehen jetzt drei Dinge:
+       1. 16px auf Eingabefelder, gegen den Fokuszoom auf dem iPhone
+       2. touch-action: manipulation, gegen den Doppeltipp-Zoom
+       3. Creme auf innerContainer und topBar von Bsports Anmeldefenster.
+          Der Betreiber hat die beiden Flaechen im laufenden Widget als
+          rgb(255,255,255) gemessen; die Begruendung steht ausfuehrlich
+          in assets/css/style.css am Ende. Dort steht dieselbe Regel fuer
+          die 19 Seiten, die das Widget direkt im Seitendokument tragen. -->
+<div class="pt-widget-wrapper">
+        <iframe frameborder="0" allowfullscreen data-bsport-hoehe data-bsport-srcdoc='<style>input,select,textarea{font-size:16px !important}html{touch-action:manipulation}.bsport-user-interaction-modal__innerContainer,.bsport-user-interaction-modal__topBar{background-color:#F5F0E8 !important}</style><script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
         </iframe>
       </div>
     </div>
