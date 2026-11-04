@@ -683,6 +683,57 @@
       b.el[b.prop] = b.value;
     }
 
+    /* VON COOKIEBOT NEUTRALISIERTE INLINE-SCHNIPSEL WIEDERBELEBEN
+
+       HIER LAG DIE SCHLEIFE, DIE PR #188 NICHT GETROFFEN HAT. Cookiebot
+       schreibt Scripts, die es sperrt, auf type="text/plain" um. Bei einem
+       Script MIT src kann unsere Sperre das vorher abfangen, denn sie
+       haengt am src-Setter. Bei einem INLINE-Script gibt es kein src: das
+       Element steht im ausgelieferten HTML, Cookiebot setzt beim Parsen
+       type="text/plain", und damit fuehrt der Browser es nie aus.
+
+       Genau das traf die zwei Schnipsel, die Bsport laden und montieren
+       (insert-bsport-widget-cdn und bsport-widget-mount, dazu auf einigen
+       Seiten der Mount-Aufruf selbst). Sie standen weiter im DOM, mit
+       unveraendertem Inhalt, aber tot. Es entstand nie ein <script src>
+       auf cdn.bsport.io, deshalb hatte unser src-Setter nichts abzufangen
+       und release() nichts nachzuladen: window.BsportWidget blieb
+       undefined, nach 10 Sekunden kam der Hinweis.
+
+       Cookiebot gibt sie auch nach dem Einwilligen nicht frei, weil es das
+       Bundle wegen RudderStack unter Statistik fuehrt. Wer nur Marketing
+       erlaubt, wartet also ewig.
+
+       Die Schnipsel tragen jetzt data-cookieconsent="ignore" im Markup,
+       damit sie gar nicht erst neutralisiert werden. Dieser Block hier ist
+       das Netz darunter: er faengt jede Seite, auf der das Attribut fehlt
+       oder Cookiebot anders entscheidet.
+
+       Wiederbelebt wird in Dokumentreihenfolge und nur, was wirklich zu
+       Bsport gehoert: der Rumpf muss MountBsportWidget oder cdn.bsport.io
+       nennen. Ein Meta-Pixel oder ein Analyseschnipsel faellt damit nicht
+       darunter und bleibt gesperrt.
+
+       Der Inhalt wird unveraendert uebernommen. Keine Buchungskennung,
+       keine companyId und kein widgetType stehen in dieser Datei: sie
+       bleiben dort, wo sie hingehoeren, im Markup der Seite. */
+    var tote = document.querySelectorAll('script[type="text/plain"]');
+    for (var t = 0; t < tote.length; t++) {
+      var alt = tote[t];
+      var rumpf = alt.textContent || '';
+      if (!/MountBsportWidget|cdn\.bsport\.io/.test(rumpf)) continue;
+      var neu = document.createElement('script');
+      neu.setAttribute('data-cookieconsent', 'ignore');
+      if (alt.id) neu.id = alt.id;
+      neu.text = rumpf;
+      /* Erst das tote Element weg, dann das neue einhaengen: sonst gaebe
+         es die id zweimal, und insert-bsport-widget-cdn prueft per id, ob
+         es schon gelaufen ist. */
+      var platz = alt.parentNode;
+      if (platz) platz.removeChild(alt);
+      (platz || document.head).appendChild(neu);
+    }
+
     /* Abgefangene Scripts nachladen (Ladeweg A und C). Bewusst als NEUES
        Element: ein Script, das schon im Dokument haengt, ist ein Sonderfall
        im Standard, ein frisches laedt garantiert. */

@@ -437,9 +437,9 @@
 
   </main>
 
-  <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+  <script id="insert-bsport-widget-cdn" data-cookieconsent="ignore">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
-  <script id="bsport-widget-mount">
+  <script id="bsport-widget-mount" data-cookieconsent="ignore">
     function MountBsportWidget(config, repeat) {
       repeat = repeat || 1;
       if (repeat > 50) { return; }
@@ -450,7 +450,7 @@
     }
   </script>
 
-  <script>
+  <script data-cookieconsent="ignore">
     /*
      * ROOT CAUSE FIX — White screen / empty UI (Bug #4):
      *
