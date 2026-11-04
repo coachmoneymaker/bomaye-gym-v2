@@ -1726,7 +1726,11 @@ footer {
      bleibt bei 80vh stehen - wie Bsports Dialogpapier. */
   max-height: 80vh;
   max-height: 80dvh;
-  background: #FFFFFF;
+  /* Creme statt reinem Weiss. Im Tor- und im Ladezustand ist der Rahmen
+     die einzige sichtbare Flaeche, und reines Weiss gibt es in dieser
+     Marke nicht. Nur die Farbe, der Radius bleibt, das Schliesskreuz
+     misst unveraendert 59 mal 59. */
+  background: #F5F0E8;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
