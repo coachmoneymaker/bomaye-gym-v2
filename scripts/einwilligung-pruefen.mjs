@@ -62,6 +62,43 @@ const BRAUCHT_FREIGABE = [
     trifft: (attr, rumpf) => /bomayeAbo/.test(rumpf) },
 ];
 
+/* ──────────────────────────────────────────────────────────────────────────
+   DIE BSPORT-SCHNIPSEL IM SEITENQUELLTEXT
+
+   PR #188 sollte die Buchungsschleife beheben und tat es nicht. Der Grund:
+   die Sperre faengt Skripte ueber den src-Setzer ab. Die bsport-Schnipsel
+   im Markup haben aber kein src, sie stehen inline. Cookiebot schreibt sie
+   schon beim Einlesen auf type="text/plain" um, und weil Cookiebot
+   cdn.bsport.io unter Statistik einordnet, bleiben sie bei reiner
+   Marketing-Einwilligung fuer immer stillgelegt. Der src-Setzer kommt nie
+   dran, weil nie ein src gesetzt wird.
+
+   Dreizehn Seiten trugen die Ausnahme bereits, fuenf nicht, und genau die
+   fuenf sind die Geldseiten. Von aussen war das nicht zu sehen: ohne
+   echtes Cookiebot bleibt der Unterschied unsichtbar.
+
+   Diese Pruefung sorgt dafuer, dass das nicht ein drittes Mal passiert.
+   Sie ist keine Aufweichung: die Schnipsel laden selbst nichts, solange
+   die Sperre nicht freigibt, denn sie rufen MountBsportWidget, und das
+   geht durch die Sperre. Die Ausnahme sorgt nur dafuer, dass der Code
+   ueberhaupt existiert, wenn die Sperre ihn braucht.
+   ────────────────────────────────────────────────────────────────────── */
+const BSPORT_INLINE = {
+  name: 'bsport-Schnipsel (inline)',
+  grund: 'definiert oder ruft MountBsportWidget; ohne die Ausnahme stellt '
+       + 'Cookiebot ihn auf text/plain und die Buchung laedt nie',
+  trifft: (attr, rumpf) => !/\bsrc\s*=/.test(attr)
+                        && /MountBsportWidget|cdn\.bsport\.io/.test(rumpf),
+};
+
+/* Die PT-Seite traegt ihre Schnipsel im Attribut data-bsport-srcdoc. Das
+   ist ein eigenes Dokument im iframe, dort laeuft kein Cookiebot. Vor der
+   Pruefung wird dieses Attribut deshalb geleert, sonst melden wir drei
+   Befunde, die keine sind. */
+const ohneSrcdoc = (html) =>
+  html.replace(/data-bsport-srcdoc='[^']*'/g, "data-bsport-srcdoc=''")
+      .replace(/data-bsport-srcdoc="[^"]*"/g, 'data-bsport-srcdoc=""');
+
 /* DARF die Ausnahme nicht tragen: alles, was selbst misst.
 
    NICHT in dieser Liste steht der gtag-Lader samt Consent-Mode-Vorgaben.
@@ -84,6 +121,18 @@ const dateien = (await readdir(WURZEL)).filter((d) => d.endsWith('.html')).sort(
 
 for (const datei of dateien) {
   const html = await readFile(WURZEL + '/' + datei, 'utf8');
+
+  /* Die bsport-Schnipsel gesondert, am Markup ohne den srcdoc-Inhalt. */
+  for (const m of ohneSrcdoc(html).matchAll(SKRIPTE)) {
+    const [, attr, rumpf] = m;
+    if (/type="text\/plain"/.test(attr)) continue;
+    if (!BSPORT_INLINE.trifft(attr, rumpf)) continue;
+    if (!frei(attr)) {
+      melde(`${datei}: ${BSPORT_INLINE.name}`
+          + (/id="([^"]+)"/.exec(attr) ? ` #${/id="([^"]+)"/.exec(attr)[1]}` : '')
+          + ` ohne data-cookieconsent="ignore" - ${BSPORT_INLINE.grund}`);
+    }
+  }
   /* Nur echte Vorkommen der Klasse reveal, nicht ab-reveal und Verwandte. */
   const hatReveal = /class="[^"]*(?:^|\s)reveal(?:\s|")/.test(html)
                  || /class="[^"]*\breveal\b/.test(html) && /\.reveal\b/.test(html);
