@@ -374,8 +374,8 @@
     </div>
   </footer>
 
-  <script src="/assets/js/config.js"></script>
-  <script>
+  <script src="/assets/js/config.js" data-cookieconsent="ignore"></script>
+  <script data-cookieconsent="ignore">
     document.querySelectorAll('.logo-img').forEach(img => {
       img.addEventListener('load', () => {
         img.classList.add('loaded');
@@ -399,10 +399,10 @@
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
-<script>
+<script data-cookieconsent="ignore">
 /* ── iOS-compatible scroll lock ── */
 let _scrollLockY = 0;
 function lockBodyScroll() {

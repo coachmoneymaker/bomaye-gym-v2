@@ -484,7 +484,7 @@
     });
   </script>
 
-  <script>
+  <script data-cookieconsent="ignore">
   /*
    * ROOT CAUSE FIX — Flow break after login (Bug #2):
    *
@@ -499,7 +499,23 @@
    * true) — new users should stay on the account page to complete onboarding.
    */
   (function () {
+    /* Origin exakt pruefen. Vorher stand hier KEINE Pruefung: jedes Fenster
+       und jeder eingebettete iframe konnte {type:"logged"} senden, und
+       diese Stelle schrieb daraufhin bsport_auth_complete in den
+       Sitzungsspeicher und leitete auf /mitglied-werden um. Kein
+       Teilstring-Vergleich, sonst passiert
+       https://backoffice.bsport.io.angreifer.example die Pruefung. */
+    var MB_BSPORT_ORIGINS = ['https://backoffice.bsport.io', 'https://cdn.bsport.io'];
+    function mbVonBsport(origin) {
+      if (typeof origin !== 'string') return false;
+      for (var k = 0; k < MB_BSPORT_ORIGINS.length; k++) {
+        if (origin === MB_BSPORT_ORIGINS[k]) return true;
+      }
+      return false;
+    }
+
     window.addEventListener('message', function (event) {
+      if (!mbVonBsport(event.origin)) return;
       /* Accept both string and object postMessages from Bsport */
       var raw = event.data;
       var d;
@@ -511,11 +527,22 @@
         return;
       }
 
-      /* Extract type from all common Bsport event field names */
+      /* Extract type from all common Bsport event field names.
+
+         type ist kleingeschrieben, roherTyp nicht. Die dreizehn Namen
+         weiter unten sind historisch kleingeschrieben und brauchen type.
+         Der EINE Name, der live belegt ist, wird zusaetzlich gegen den
+         Rohwert geprueft, zeichengenau: Bsport sendet
+         IFRAME_LOGIN_SUCCESS in Grossbuchstaben. So haengt dieser
+         Vergleich nicht daran, dass vierzig Zeilen weiter oben ein
+         toLowerCase steht - nimmt das jemand heraus, trifft er
+         weiterhin. */
       var type = '';
+      var roherTyp = '';
       var fields = [d.type, d.event, d.action, d.name, d.message, d.kind];
       for (var i = 0; i < fields.length; i++) {
         if (fields[i] && typeof fields[i] === 'string' && fields[i].length) {
+          roherTyp = fields[i];
           type = fields[i].toLowerCase();
           break;
         }
@@ -525,6 +552,7 @@
         var nf = [nested.type, nested.event, nested.action];
         for (var j = 0; j < nf.length; j++) {
           if (nf[j] && typeof nf[j] === 'string' && nf[j].length) {
+            roherTyp = nf[j];
             type = nf[j].toLowerCase();
             break;
           }
@@ -553,12 +581,24 @@
         type === 'register_success'        ||
         type === 'registered'              ||
         type === 'signup_success'          ||
-        (type.indexOf('login')   !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('auth')    !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('registr') !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('logged')  !== -1) ||
+        /* Der echte Name, live gemessen am 04.11.2026 auf /probetraining:
+           Bsport sendet {"type":"IFRAME_LOGIN_SUCCESS",...} vom Origin
+           https://backoffice.bsport.io, in Grossbuchstaben. Zweimal
+           geprueft: zeichengenau gegen den Rohwert, und ueber den
+           kleingeschriebenen type. Die Liste darueber sind Namen, die hier
+           vorsorglich standen; sie bleiben als exakter Vergleich. */
+        roherTyp === 'IFRAME_LOGIN_SUCCESS' ||
+        type === 'iframe_login_success'    ||
         /* Token-based fallback */
         (!type && hasAuthPayload);
+
+      /* ENTFERNT: die vier Teilstring-Zeilen.
+         Sie trafen jeden Typ, der irgendwo "logged" enthielt, und jede
+         Kombination aus "login"/"auth"/"registr" mit "success". Bsports
+         API_SUCCESS und IFRAME_LOGIN_SUCCESS fallen beide darunter, aber
+         auch alles andere, was zufaellig so heisst. Mit einer Umleitung am
+         anderen Ende ist das zu locker. Gibt es einen weiteren echten
+         Namen, gehoert er oben als exakter Vergleich dazu. */
 
       if (!isAuthEvent) { return; }
 
@@ -582,10 +622,10 @@
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
-<script>
+<script data-cookieconsent="ignore">
 /* ── iOS-compatible scroll lock ── */
 let _scrollLockY = 0;
 function lockBodyScroll() {
