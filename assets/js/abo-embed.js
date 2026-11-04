@@ -706,8 +706,25 @@
 
        Vor der ersten eigenen Sendung sagt eine Antwort nichts ueber unser
        Paket aus - dann laeuft der Plan weiter. */
+    /* Origin exakt pruefen, nicht per indexOf.
+
+       Vorher stand hier KEINE Origin-Pruefung. Jedes Fenster und jeder
+       iframe konnte {type:"bsport-irgendwas"} senden und damit den
+       Nachsendeplan abbrechen. Gemeldet wurde dadurch nichts, aber die
+       Hoehenangleichung des Widgets haette aufgehoert. Jetzt hoert diese
+       Stelle nur auf Bsports eigene Hosts. */
+    var BSPORT_ORIGINS = ['https://backoffice.bsport.io', 'https://cdn.bsport.io'];
+    function vonBsport(origin) {
+      if (typeof origin !== 'string') return false;
+      for (var i = 0; i < BSPORT_ORIGINS.length; i++) {
+        if (origin === BSPORT_ORIGINS[i]) return true;
+      }
+      return false;
+    }
+
     window.addEventListener('message', function (e) {
-      var t = e && e.data && e.data.type;
+      if (!e || !vonBsport(e.origin)) return;
+      var t = e.data && e.data.type;
       if (typeof t !== 'string' || t.indexOf('bsport') !== 0 || t === NACHRICHT) return;
       spur('Antwort von Bsport:', t, JSON.stringify(e.data).slice(0, 300));
       if (lauf && lauf.anzahl > 0) { laufBeenden('Bsport hat geantwortet'); }

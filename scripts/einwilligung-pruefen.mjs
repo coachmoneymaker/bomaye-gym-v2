@@ -91,6 +91,44 @@ const BSPORT_INLINE = {
                         && /MountBsportWidget|cdn\.bsport\.io/.test(rumpf),
 };
 
+/* ──────────────────────────────────────────────────────────────────────────
+   JEDES EIGENE SKRIPT, DAS DIE SEITE ZUM BEDIENEN BRAUCHT
+
+   Cookiebot mit data-blockingmode="auto" stellt bei fehlender Einwilligung
+   JEDES Skript ohne die Ausnahme auf type="text/plain". Nicht nur die
+   fremden. Am 04.11.2026 live auf /probetraining gemessen: ohne die
+   Ausnahme waren probetraining-page.js, kalender-tag.js, pt-einstieg.js,
+   bsport-dialog-wache.js, menue-wache.js und die Inline-Scroll-Sperre
+   stillgelegt, der Buchungskalender blieb leer, und der Code fuer die
+   Ads-Konversion lief nie.
+
+   Die Regel lautet deshalb: ein eigenes Skript (relativer Pfad) traegt die
+   Ausnahme, ausser es misst selbst. Wer messen will, steht in DARF_NICHT
+   und bleibt gesperrt. Fremde Quellen (https://...) bleiben unberuehrt,
+   darum kuemmert sich Cookiebot richtig.
+
+   Dasselbe gilt fuer Inline-Bloecke: ohne die Ausnahme laufen sie nie.
+   Ausgenommen sind nur JSON-LD (kein ausfuehrbarer Code) und Bloecke, die
+   bewusst auf text/plain stehen.
+   ────────────────────────────────────────────────────────────────────── */
+const MESSENDE_EIGENE = ['pixel-events.js', 'plan-tracking.js'];
+const EIGENE_QUELLE = /src\s*=\s*"(?!https?:|\/\/)([^"]+)"/;
+
+function istEigenesSkript(attr) {
+  const m = EIGENE_QUELLE.exec(attr);
+  if (!m) return null;
+  if (MESSENDE_EIGENE.some((n) => m[1].indexOf(n) !== -1)) return null;
+  return m[1];
+}
+
+/* Ein Inline-Block, der ausgefuehrt werden muss. JSON-LD ist Daten, kein
+   Code, und ein type="text/plain" ist bewusst stillgelegt. */
+function istInlineCode(attr) {
+  if (/src\s*=/.test(attr)) return false;
+  if (/type\s*=\s*"(application\/ld\+json|text\/plain)"/i.test(attr)) return false;
+  return true;
+}
+
 /* Die PT-Seite traegt ihre Schnipsel im Attribut data-bsport-srcdoc. Das
    ist ein eigenes Dokument im iframe, dort laeuft kein Cookiebot. Vor der
    Pruefung wird dieses Attribut deshalb geleert, sonst melden wir drei
@@ -121,6 +159,24 @@ const dateien = (await readdir(WURZEL)).filter((d) => d.endsWith('.html')).sort(
 
 for (const datei of dateien) {
   const html = await readFile(WURZEL + '/' + datei, 'utf8');
+
+  /* Eigene Skripte und Inline-Bloecke, am Markup ohne den srcdoc-Inhalt. */
+  for (const m of ohneSrcdoc(html).matchAll(SKRIPTE)) {
+    const [, attr] = m;
+    if (frei(attr)) continue;
+    if (/type="text\/plain"/.test(attr)) continue;
+    const eigen = istEigenesSkript(attr);
+    if (eigen) {
+      melde(`${datei}: ${eigen} ohne data-cookieconsent="ignore" - `
+          + 'Cookiebot stellt es ohne Einwilligung auf text/plain, dann '
+          + 'laeuft es nie');
+    } else if (istInlineCode(attr)) {
+      const zeile = html.slice(0, m.index).split('\n').length;
+      melde(`${datei}: Inline-Block in Zeile ${zeile} ohne `
+          + 'data-cookieconsent="ignore" - Cookiebot stellt ihn ohne '
+          + 'Einwilligung auf text/plain, dann laeuft er nie');
+    }
+  }
 
   /* Die bsport-Schnipsel gesondert, am Markup ohne den srcdoc-Inhalt. */
   for (const m of ohneSrcdoc(html).matchAll(SKRIPTE)) {

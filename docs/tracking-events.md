@@ -336,38 +336,73 @@ gtag('event', 'conversion', { send_to: ADS_PROBETRAINING_SEND_TO });
 * **Kein `value`, keine `currency`.** Die 30 EUR stehen in der
   Conversion-Action. Zwei Quellen für denselben Wert wären eine zu viel.
 * **Keine personenbezogenen Daten.** Gesendet wird ausschließlich `send_to`.
-* **Einmal je Buchung.** `_ptBookingTracked` schützt innerhalb eines
-  Seitenaufbaus, `sessionStorage['bomaye:pt-konversion-gesendet']` über
-  Neuladen und Zurück-Navigation hinweg.
+* **Einmal je Buchung.** Entprellt über 60 Sekunden, Zeitstempel in
+  `sessionStorage['bomaye:pt-konversion-gesendet']`. Nicht einmal je
+  Sitzung: eine zweite echte Buchung wird gezählt.
 
 ## Einwilligung
 
-Zweifach abgesichert, beides war schon da:
+Stand 04.11.2026. Die Absicherung hat sich geändert, weil die alte ein
+Defekt war.
 
-1. `probetraining-page.js` trägt **kein** `data-cookieconsent="ignore"`. Ohne
-   Marketing-Einwilligung schreibt Cookiebot die Datei auf
-   `type="text/plain"` um, dann läuft dort nichts.
+1. **`_ptEinwilligung()` fragt aktiv.** Erste Quelle ist
+   `window.bomayeMarketingConsented()` aus `consent-bridge.js`, dieselbe,
+   die über das bsport-Widget und den Meta-Pixel entscheidet. Fehlt sie,
+   wird `Cookiebot.consent.marketing` direkt gelesen. Fehlt auch das, wird
+   **nichts** gemeldet. Das ist die tragende Absicherung.
 2. Im Kopf jeder Seite steht `gtag("consent","default", …)` mit `ad_storage`,
    `ad_user_data`, `ad_personalization` und `analytics_storage` auf `denied`.
+3. Ohne Marketing-Einwilligung lädt das bsport-Widget nicht, es gibt also
+   keine Buchung, die gemeldet werden könnte.
 
-Die Datei ruft **nie** `gtag('consent', …)` und fragt den Stand nicht ab.
+Die Datei ruft **nie** `gtag('consent', …)`.
 
-## Das Erfolgssignal, mit seiner Einschränkung
+**Was hier vorher stand, war falsch:** „`probetraining-page.js` trägt kein
+`data-cookieconsent="ignore"`, ohne Einwilligung schreibt Cookiebot die
+Datei auf `type="text/plain"` um." Das stimmte, war aber keine Absicherung,
+sondern ein Defekt. Cookiebot führt bsport unter **Statistik**, also
+blockierte es die Datei auch bei erteilter Marketing-Einwilligung. Dann blieb
+der Buchungskalender leer und dieser Code lief nie. Die Datei trägt die
+Ausnahme jetzt, und die Einwilligung wird im Code geprüft.
 
-`_ptStartBookingTracking()` läuft erst, wenn das bsport-Widget montiert ist,
-und erkennt eine Buchung auf zwei Wegen:
+## Das Erfolgssignal
 
-* **postMessage:** `e.origin` enthält `bsport.io` **und** der Rumpf enthält
-  eines von `booking`, `success`, `confirmed`, `buchung`, `viel spa`.
-* **dataLayer:** ein Ereignisname mit `booking`, `purchase` oder `conversion`.
+`_ptStartBookingTracking()` läuft, sobald das bsport-Widget montiert ist, und
+erkennt eine Buchung an **genau einer** Nachricht:
 
-**Das ist eine Textsuche, kein dokumentiertes Signal.** bsport sendet
-Nachrichten mit strukturiertem `data.type`, der mit `bsport:` beginnt
-(belegt in `abo-embed.js`), aber welcher Typ eine abgeschlossene Buchung
-meldet, steht nirgends. Eine bsport-Nachricht, die eines dieser Wörter aus
-einem anderen Grund enthält, zählt mit. Das Fenster ist eng (nur bei
-montiertem Widget auf `/probetraining`, höchstens 30 Minuten), ausgeschlossen
-ist es nicht.
+```json
+{"type":"PAYMENT_SUCCESS","source":"bsport"}
+```
+
+vom Origin **exakt** `https://backoffice.bsport.io`. Geprüft wird: Origin aus
+einer festen Liste (kein Teilstring), `typeof event.data === 'object'`,
+`event.data.type === 'PAYMENT_SUCCESS'`. Kein Textvergleich, nirgends.
+
+Von bsport bestätigt (Luca): `PAYMENT_SUCCESS` kommt auf der
+Bestätigungsseite des Checkouts, auch bei Gratisbuchungen und beim
+Express-Checkout. **Eine offiziell dokumentierte Schnittstelle ist das
+nicht**, deshalb steht die Quelle auch im Code. bsport sendet sie **zweimal**
+im Abstand von etwa vier Sekunden, daher die Entprellung über 60 Sekunden.
+
+Vom selben Origin kommen außerdem `API_ACKNOWLEDGE`, `API_SUCCESS` (mit
+Nutzdaten), `bsport-widget-resize`, `CLOSE_MODAL`, `IFRAME_LOGIN_SUCCESS`
+und `intercom-snippet__ready`. Keine davon bedeutet eine Buchung.
+
+### Der Fehlalarm, den das ablöst
+
+Bis zum 04.11.2026 suchte diese Stelle im zusammengesetzten Text der
+Nachricht nach `booking`, `success`, `confirmed`, `buchung` und `viel spa`.
+`API_SUCCESS` enthält `success`. Live gemessen: das dataLayer-Ereignis und
+die Ads-Konversion feuerten **zehn Sekunden nach dem Laden des Widgets**,
+etwa sieben Minuten vor der echten Buchung. Danach sperrte die Flagge in
+`sessionStorage` die echte Buchung. Jeder, der nur den Kalender aufmachte,
+erzeugte eine Konversion, und jede echte Buchung ging verloren.
+
+Der zweite Weg, ein Haken auf `dataLayer.push`, der Ereignisnamen mit
+`booking`, `purchase` oder `conversion` als Buchung zählte, ist
+**ersatzlos entfernt**. Ein Ereignisname im dataLayer belegt keine Buchung.
+Mit ihm ist auch die 30-Minuten-Uhr weg, die den Horcher wieder abnahm: wer
+nach 35 Minuten auf derselben Seite bucht, soll gezählt werden.
 
 **Vor dem Vertrauen in die Zahlen einmal gegenprüfen:** eine Buchung
 durchführen, in der Konsole die Zeile `🎯 Probetraining booking tracked via:`

@@ -2153,7 +2153,7 @@ function toggleFaq(btn) {
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
 <div id="bsport-sub-modal" class="bsport-modal-overlay"
@@ -2183,7 +2183,7 @@ function MountBsportWidget(config, repeat) {
 
 <!-- BSPORT — Abo-Overlay: Mount und Nachricht uebernimmt abo-embed.js.
      Montiert wird erst beim ersten Klick, nicht beim Seitenaufruf. -->
-<script src="/assets/js/abo-embed.js?v=a1ce1131" data-cookieconsent="ignore"></script>
+<script src="/assets/js/abo-embed.js?v=53ff2980" data-cookieconsent="ignore"></script>
 <!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
      Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
 <script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
@@ -2200,7 +2200,7 @@ function MountBsportWidget(config, repeat) {
   });
 </script>
 
-<script>
+<script data-cookieconsent="ignore">
   /* ── Umschalter: welcher Abschnitt ist gerade zu sehen ──────────────────
      Verbesserung, keine Voraussetzung. Ohne JavaScript bleiben es vier
      gewoehnliche Sprungmarken, nur ohne Markierung. Kein Scroll-Horchen,

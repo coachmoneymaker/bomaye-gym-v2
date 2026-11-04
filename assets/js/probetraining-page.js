@@ -60,49 +60,160 @@
      Keine personenbezogenen Daten. Gesendet wird ausschliesslich send_to. */
   var ADS_PROBETRAINING_SEND_TO = 'AW-18136756611/rNbMCMrqlq4cEIPjo8hD';
 
-  /* Ein Schluessel je Sitzung. _ptBookingTracked schuetzt nur innerhalb
-     eines Seitenaufbaus; ein Neuladen oder der Zurueck-Knopf setzt es
-     zurueck und wuerde dieselbe Buchung ein zweites Mal melden. */
+  /* Im Schluessel steht jetzt der Zeitstempel der letzten Meldung, nicht
+     mehr die Flagge "1".
+
+     VORHER WAR DAS EINE FALLE: eine einmal gesetzte Flagge sperrte die
+     ganze Sitzung. Weil die Erkennung Fehlalarm schlug, war die Sperre
+     schon gesetzt, wenn die echte Buchung kam, und die echte Buchung wurde
+     verschluckt. Ein Zeitstempel entprellt nur die doppelte Nachricht
+     derselben Buchung (Bsport sendet PAYMENT_SUCCESS zweimal im Abstand von
+     etwa vier Sekunden) und laesst eine zweite, echte Buchung in derselben
+     Sitzung durch.
+
+     Ein alter Wert "1" aus einer frueheren Sitzung schadet nicht: parseInt
+     ergibt 1, also 1970, also laengst abgelaufen. */
   var ADS_PT_SITZUNGSSCHLUESSEL = 'bomaye:pt-konversion-gesendet';
+
+  /* Bsport sendet PAYMENT_SUCCESS zweimal, etwa vier Sekunden auseinander.
+     Belegt am 04.11.2026 live auf /probetraining. 60 Sekunden lassen Luft,
+     ohne eine zweite echte Buchung zu verschlucken. */
+  var PT_ENTPRELLUNG_MS = 60 * 1000;
 
   /* Meldet die Buchung an Google Ads und gibt zurueck, was passiert ist,
      damit die Zeile in der Konsole es mitschreiben kann.
 
-     EINWILLIGUNG, zweifach abgesichert, beides schon vorhanden:
-       1. Diese Datei traegt kein data-cookieconsent="ignore". Ohne
-          Marketing-Einwilligung schreibt Cookiebot sie auf
-          type="text/plain" um, dann laeuft hier gar nichts.
+     EINWILLIGUNG, dreifach abgesichert:
+       1. _ptEinwilligung() unten fragt die Marketing-Einwilligung aktiv ab
+          und meldet im Zweifel NICHT. Das ist die tragende Absicherung.
        2. Im Kopf jeder Seite steht gtag("consent","default", ...) mit
           ad_storage, ad_user_data und ad_personalization auf "denied".
           Googles Tag entscheidet daraufhin selbst, was hinausgeht.
-     Hier wird kein consent gesetzt und keiner abgefragt. */
+       3. Ohne Einwilligung laedt das Bsport-Widget gar nicht, es gibt also
+          keine Buchung, die gemeldet werden koennte.
+
+     FRUEHER STAND HIER ETWAS ANDERES, UND DAS WAR DER FEHLER:
+     "Diese Datei traegt kein data-cookieconsent=ignore, ohne Einwilligung
+     schreibt Cookiebot sie auf text/plain um, dann laeuft hier gar nichts."
+     Das stimmte, war aber keine Absicherung, sondern ein Defekt: bei reiner
+     Marketing-Einwilligung blockierte Cookiebot die Datei ebenfalls, weil es
+     Bsport unter Statistik fuehrt. Dann blieb der Kalender leer und dieser
+     Code lief nie. Die Datei traegt die Ausnahme jetzt, und die
+     Einwilligung wird stattdessen hier im Code geprueft. */
+
+  /* Marketing-Einwilligung, im Zweifel NEIN.
+
+     Erste Wahl ist bomayeMarketingConsented aus consent-bridge.js, dieselbe
+     Quelle, die ueber das Bsport-Widget und den Meta-Pixel entscheidet.
+     Fehlt die Bruecke, wird Cookiebot direkt gelesen. Fehlt auch das, wird
+     nichts gemeldet: eine fehlende Einwilligungsquelle ist keine
+     Einwilligung. */
+  function _ptEinwilligung() {
+    try {
+      if (typeof window.bomayeMarketingConsented === 'function') {
+        return !!window.bomayeMarketingConsented();
+      }
+      var cb = window.Cookiebot;
+      return !!(cb && cb.consent && cb.consent.marketing);
+    } catch (e) { return false; }
+  }
   function _ptSendeAdsKonversion() {
     if (!ADS_PROBETRAINING_SEND_TO) return 'keine Kennung hinterlegt';
+    if (!_ptEinwilligung()) return 'ohne Marketing-Einwilligung nicht gemeldet';
     if (typeof window.gtag !== 'function') return 'kein gtag auf der Seite';
-    try {
-      if (window.sessionStorage &&
-          window.sessionStorage.getItem(ADS_PT_SITZUNGSSCHLUESSEL)) {
-        return 'in dieser Sitzung schon gemeldet';
-      }
-    } catch (e) { /* privates Fenster: dann schuetzt nur _ptBookingTracked */ }
     window.gtag('event', 'conversion', { send_to: ADS_PROBETRAINING_SEND_TO });
-    try {
-      if (window.sessionStorage) {
-        window.sessionStorage.setItem(ADS_PT_SITZUNGSSCHLUESSEL, '1');
-      }
-    } catch (e) { /* siehe oben */ }
     return 'an Google Ads gemeldet';
   }
 
-  var _ptBookingTracked = false;
+  /* Zeitstempel der letzten Meldung, ueber einen Seitenaufbau hinaus.
+
+     Der Speicher ist die fuehrende Quelle, damit ein Neuladen mitten in den
+     zwei PAYMENT_SUCCESS nicht doppelt meldet. Im privaten Fenster wirft
+     sessionStorage, dann traegt die Variable allein. */
+  var _ptLetzteMeldung = 0;
+
+  function _ptLetzteMeldungLesen() {
+    try {
+      if (window.sessionStorage) {
+        var v = window.sessionStorage.getItem(ADS_PT_SITZUNGSSCHLUESSEL);
+        var n = v ? parseInt(v, 10) : 0;
+        if (n > 0) return Math.max(n, _ptLetzteMeldung);
+      }
+    } catch (e) { /* privates Fenster */ }
+    return _ptLetzteMeldung;
+  }
+
+  function _ptLetzteMeldungSchreiben(zeit) {
+    _ptLetzteMeldung = zeit;
+    try {
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(ADS_PT_SITZUNGSSCHLUESSEL, String(zeit));
+      }
+    } catch (e) { /* privates Fenster */ }
+  }
+
+  /* ──────────────────────────────────────────────────────────────────────
+     WORAN EINE BUCHUNG ERKANNT WIRD
+
+     Bsport sendet genau eine Nachricht, die eine abgeschlossene Buchung
+     bedeutet: {"type":"PAYMENT_SUCCESS","source":"bsport"} vom Origin
+     https://backoffice.bsport.io. Von Bsport (Luca) bestaetigt: sie kommt
+     auf der Bestaetigungsseite des Checkouts, auch bei Gratisbuchungen und
+     beim Express-Checkout. Eine offiziell dokumentierte Schnittstelle ist
+     das nicht, deshalb steht die Quelle hier im Code.
+
+     Waehrend das Widget laedt und benutzt wird, sendet Bsport ausserdem
+     reihenweise andere Nachrichten vom selben Origin: API_ACKNOWLEDGE,
+     API_SUCCESS (mit Nutzdaten), bsport-widget-resize, CLOSE_MODAL,
+     IFRAME_LOGIN_SUCCESS, intercom-snippet__ready. Keine davon bedeutet
+     eine Buchung.
+
+     HIER LAG DER FEHLER, LIVE GEMESSEN AM 04.11.2026:
+     Vorher suchte diese Stelle im zusammengesetzten Text der Nachricht nach
+     "booking", "success", "confirmed", "buchung" und "viel spa". API_SUCCESS
+     enthaelt "success". Die Folge: das dataLayer-Ereignis
+     probetraining_booking_completed und die Google-Ads-Konversion feuerten
+     zehn Sekunden nach dem Laden des Widgets, etwa sieben Minuten vor der
+     echten Buchung. Danach sperrte der Sitzungsschluessel die echte
+     Buchung. Jeder, der nur den Kalender aufmachte, erzeugte eine
+     Konversion, und jede echte Buchung ging verloren.
+
+     Darum: kein Textvergleich mehr, nirgends. Exakter Origin aus der Liste,
+     Nachricht muss ein Objekt sein, type muss exakt stimmen.
+     ────────────────────────────────────────────────────────────────────── */
+  var PT_BSPORT_ORIGINS = [
+    'https://backoffice.bsport.io',  /* von hier kommt PAYMENT_SUCCESS */
+    'https://cdn.bsport.io'          /* von hier kommt das Widget-Bundle */
+  ];
+  var PT_BUCHUNG_TYP = 'PAYMENT_SUCCESS';
+
+  /* Exakter Vergleich, kein indexOf. Ein Origin wie
+     https://backoffice.bsport.io.angreifer.example passiert diese Pruefung
+     nicht, waehrend indexOf('bsport.io') ihn durchgelassen haette. */
+  function _ptVonBsport(origin) {
+    if (typeof origin !== 'string') return false;
+    for (var i = 0; i < PT_BSPORT_ORIGINS.length; i++) {
+      if (origin === PT_BSPORT_ORIGINS[i]) return true;
+    }
+    return false;
+  }
+
   var _ptMessageListener = null;
-  var _ptDataLayerUnwatch = null;
-  var _ptTrackingTimeout = null;
 
   function _ptFireBookingConfirmed(source) {
-    if (_ptBookingTracked) return;
-    _ptBookingTracked = true;
-    _ptStopBookingTracking();
+    var jetzt = Date.now();
+    var vorher = _ptLetzteMeldungLesen();
+    if (vorher && (jetzt - vorher) < PT_ENTPRELLUNG_MS) {
+      console.log('🎯 Probetraining: zweite PAYMENT_SUCCESS verworfen,',
+                  Math.round((jetzt - vorher) / 1000) + 's nach der ersten');
+      return;
+    }
+    if (!_ptEinwilligung()) {
+      console.log('🎯 Probetraining: Buchung erkannt, ohne '
+                + 'Marketing-Einwilligung aber nicht gemeldet');
+      return;
+    }
+    _ptLetzteMeldungSchreiben(jetzt);
     var adsErgebnis = _ptSendeAdsKonversion();
     console.log('🎯 Probetraining booking tracked via:', source,
                 '| Google Ads:', adsErgebnis);
@@ -119,54 +230,36 @@
   }
 
   function _ptStopBookingTracking() {
-    if (_ptMessageListener) { window.removeEventListener('message', _ptMessageListener); _ptMessageListener = null; }
-    if (_ptDataLayerUnwatch) { _ptDataLayerUnwatch(); _ptDataLayerUnwatch = null; }
-    if (_ptTrackingTimeout) { clearTimeout(_ptTrackingTimeout); _ptTrackingTimeout = null; }
+    if (_ptMessageListener) {
+      window.removeEventListener('message', _ptMessageListener);
+      _ptMessageListener = null;
+    }
   }
 
+  /* ENTFERNT: DER DATALAYER-HAKEN UND DIE 30-MINUTEN-UHR
+
+     Hier lag ein zweiter Weg zum selben Fehlalarm. Der Haken ueberschrieb
+     dataLayer.push und meldete eine Buchung, sobald ein Ereignisname
+     "booking", "purchase" oder "conversion" enthielt oder irgendwo
+     "viel spa" stand. Mit PAYMENT_SUCCESS gibt es ein exaktes Signal, also
+     braucht es keine Heuristik, die ueber fremde GTM-Tags stolpert. Der
+     Haken ist weg, nicht praeziser gemacht: ein Ereignisname im dataLayer
+     belegt keine Buchung.
+
+     Die 30-Minuten-Uhr nahm den Horcher wieder ab. Sie war noetig, weil der
+     dataLayer-Haken ein fremdes Objekt veraenderte und nicht ewig haengen
+     sollte. Der reine Horcher kostet nichts, und wer nach 35 Minuten auf
+     derselben Seite bucht, soll gezaehlt werden. Also keine Uhr mehr. */
   function _ptStartBookingTracking() {
     _ptStopBookingTracking();
-    _ptBookingTracked = false;
 
     _ptMessageListener = function (e) {
-      if (_ptBookingTracked) return;
-      var fromBsport = typeof e.origin === 'string' && e.origin.indexOf('bsport.io') !== -1;
-      var d = e.data;
-      var isConfirmation = false;
-      if (typeof d === 'string') {
-        isConfirmation = d.indexOf('booking') !== -1 || d.indexOf('success') !== -1 ||
-                         d.indexOf('confirmed') !== -1 || d.indexOf('Viel Spa') !== -1;
-      } else if (d && typeof d === 'object') {
-        var ds = JSON.stringify(d).toLowerCase();
-        isConfirmation = ds.indexOf('booking') !== -1 || ds.indexOf('success') !== -1 ||
-                         ds.indexOf('confirmed') !== -1 || ds.indexOf('buchung') !== -1 ||
-                         ds.indexOf('viel spa') !== -1;
-      }
-      if (fromBsport && isConfirmation) { _ptFireBookingConfirmed('postMessage:' + e.origin); }
+      if (!_ptVonBsport(e.origin)) return;
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type !== PT_BUCHUNG_TYP) return;
+      _ptFireBookingConfirmed('postMessage ' + PT_BUCHUNG_TYP + ' von ' + e.origin);
     };
     window.addEventListener('message', _ptMessageListener);
-
-    window.dataLayer = window.dataLayer || [];
-    var _origPush = window.dataLayer.push;
-    window.dataLayer.push = function () {
-      var args = Array.prototype.slice.call(arguments);
-      var result = _origPush.apply(window.dataLayer, args);
-      if (!_ptBookingTracked && args[0] && typeof args[0] === 'object') {
-        var ev = (args[0].event || '').toLowerCase();
-        var ds = JSON.stringify(args[0]).toLowerCase();
-        if (ev.indexOf('booking') !== -1 || ev.indexOf('purchase') !== -1 ||
-            ev.indexOf('conversion') !== -1 || ds.indexOf('viel spa') !== -1 ||
-            ds.indexOf('buchung wurde erfolgreich') !== -1) {
-          _ptFireBookingConfirmed('dataLayer.push:' + args[0].event);
-        }
-      }
-      return result;
-    };
-    _ptDataLayerUnwatch = function () { window.dataLayer.push = _origPush; };
-
-    /* Auf der Seite ist die Sitzung laenger als im alten Overlay - das
-       Formular wird hier in Ruhe ausgefuellt. 30 statt 10 Minuten. */
-    _ptTrackingTimeout = setTimeout(_ptStopBookingTracking, 30 * 60 * 1000);
   }
 
   /* ─────────────────── Einwilligung + Widget ───────────────────
@@ -1990,14 +2083,21 @@
        ProbetrainingModalOpen, weil der bestehende GTM-Trigger
        "Probetraining Modal Open" darauf matcht - inhaltlich ist es jetzt der
        Aufruf der Probetraining-Seite. */
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'ProbetrainingModalOpen' });
+    /* Einwilligung: diese Datei traegt jetzt data-cookieconsent="ignore",
+       damit der Kalender bei reiner Marketing-Einwilligung ueberhaupt
+       erscheint. Damit faellt die Blockade als Schutz weg, also wird hier
+       gefragt. Ohne Einwilligung geht nichts in den dataLayer und nichts an
+       Meta. */
+    if (_ptEinwilligung()) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'ProbetrainingModalOpen' });
 
-    /* Den Buchungsweg zu oeffnen ist Absicht, keine Buchung. Der Lead wird
-       serverseitig aus /api/bsport-webhook gemeldet, sobald die Rechnung
-       finalisiert ist. content_name ist noetig, weil ViewContent auch auf
-       /kurse, /coaches und /about feuert. */
-    if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Probetraining Seite' });
+      /* Den Buchungsweg zu oeffnen ist Absicht, keine Buchung. Der Lead wird
+         serverseitig aus /api/bsport-webhook gemeldet, sobald die Rechnung
+         finalisiert ist. content_name ist noetig, weil ViewContent auch auf
+         /kurse, /coaches und /about feuert. */
+      if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Probetraining Seite' });
+    }
   }
 
   /* defer: DIESE BEDINGUNG MUSSTE MIT

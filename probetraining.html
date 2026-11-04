@@ -155,7 +155,7 @@
        Sitzt der Cursor mit ?ptplain=1 richtig, liegt es an uns. Sitzt er
        schon mit ?ptzoom=1 allein richtig, ist die Zoomsperre die Ursache.
        Sitzt er in beiden Faellen falsch, liegt es an bsport. -->
-  <script>
+  <script data-cookieconsent="ignore">
     (function () {
       try {
         var s = window.location.search || '';
@@ -192,7 +192,7 @@
        Steht so frueh wie moeglich: direkt hinter dem meta, vor dem ersten
        Zeichnen. Die Reihenfolge der vorhandenen Skripte aendert sich
        nicht, hier kommt nur ein Inline-Block zwischen zwei Metazeilen. -->
-  <script>
+  <script data-cookieconsent="ignore">
     (function () {
       try {
         /* Testschalter: ?ptplain=1 und ?ptzoom=1 lassen die Zoomsperre aus.
@@ -1877,7 +1877,7 @@ section#pt-booking .container {
   </div>
 </footer>
 
-<script>
+<script data-cookieconsent="ignore">
 let _scrollLockY = 0;
 function lockBodyScroll() {
   _scrollLockY = window.scrollY;
@@ -1922,15 +1922,15 @@ function toggleMobileMenu() {
 </script>
 
 <!-- Probetraining: Widget inline im Seitenfluss, Tracking, Bsport-Dialog-Wache -->
-<script defer src="/assets/js/probetraining-page.js"></script>
+<script defer src="/assets/js/probetraining-page.js" data-cookieconsent="ignore"></script>
 
 <!-- Kalendertag: stellt den Bsport-Kalender nach dem Mounten auf einen
      Zieltag, ueber die Bedienelemente des Widgets. Dieselbe Datei wie auf
      /stundenplan, dort seit PR #80 im Einsatz. Tut nichts, solange sie
      niemand aufruft. -->
-<script defer src="/assets/js/kalender-tag.js"></script>
+<script defer src="/assets/js/kalender-tag.js" data-cookieconsent="ignore"></script>
 <!-- Einstieg: Wochenend-Hinweis samt Zieltag und der klebende Knopf. -->
-<script defer src="/assets/js/pt-einstieg.js"></script>
+<script defer src="/assets/js/pt-einstieg.js" data-cookieconsent="ignore"></script>
 
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
@@ -1938,7 +1938,7 @@ function toggleMobileMenu() {
 <!-- Dialogwache: blendet die Kopfleiste aus und stellt die Seite fest,
      solange ein Bsport-Dialog offen ist. Dieselbe Datei auf beiden
      Seiten, damit sie nicht wieder auseinanderlaufen. -->
-<script defer src="/assets/js/bsport-dialog-wache.js"></script>
+<script defer src="/assets/js/bsport-dialog-wache.js" data-cookieconsent="ignore"></script>
 <!-- Nur mit ?ptdom=1: misst, was die Wache zu sehen bekommt und warum
      sie urteilt wie sie urteilt. Ohne den Parameter kehrt die Datei in
      ihrer ersten Zeile um. -->
@@ -1947,7 +1947,7 @@ function toggleMobileMenu() {
      keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
      async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
      Bericht laufen, der auf sie zugreift. -->
-<script>
+<script data-cookieconsent="ignore">
 (function () {
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
   ['/assets/js/bsport-diagnose-basis.js', '/assets/js/bsport-dialog-diagnose.js'].forEach(function (q) {
@@ -1957,7 +1957,7 @@ function toggleMobileMenu() {
   });
 }());
 </script>
-<script defer src="/assets/js/menue-wache.js"></script>
+<script defer src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script defer data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 </body>
 </html>

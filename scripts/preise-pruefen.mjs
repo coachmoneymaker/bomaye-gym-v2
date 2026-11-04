@@ -323,10 +323,18 @@ for (const datei of await readdir(WURZEL)) {
         + `laufen jetzt ueber dasselbe Overlay`);
 }
 /* Und die Datei selbst baut keine solche Adresse mehr zusammen. Kommentare
-   duerfen sie nennen, Code nicht. */
+   duerfen sie nennen, Code nicht.
+
+   EINE AUSNAHME, und zwar genau eine: die Liste BSPORT_ORIGINS. Dort steht
+   der Host, um eingehende postMessages zu PRUEFEN, nicht um irgendwohin zu
+   navigieren. Vorher stand in dieser Datei ueberhaupt keine Origin-Pruefung,
+   jedes Fenster konnte sich als Bsport ausgeben. Die Zeile der Liste wird
+   deshalb uebersprungen, alles andere bleibt verboten. */
 {
   const abo = await readFile(WURZEL + '/assets/js/abo-embed.js', 'utf8');
-  const ohneKommentar = abo.replace(/\/\*[\s\S]*?\*\//g, '');
+  const ohneKommentar = abo
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/var BSPORT_ORIGINS = \[[^\]]*\];/, '');
   if (BACKOFFICE.test(ohneKommentar))
     melde('abo-embed.js: im Code steht noch eine Adresse auf backoffice.bsport.io');
   if (/data-abo-direkt/.test(ohneKommentar))

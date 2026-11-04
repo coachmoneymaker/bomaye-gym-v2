@@ -1425,7 +1425,7 @@
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
 <!-- Das Aussehen des Abo-Overlays steht jetzt gemeinsam in
@@ -1460,7 +1460,7 @@ function MountBsportWidget(config, repeat) {
 
 <!-- BSPORT — Abo-Overlay: Mount und Nachricht uebernimmt abo-embed.js.
      Montiert wird erst beim ersten Klick, nicht beim Seitenaufruf. -->
-<script src="/assets/js/abo-embed.js?v=a1ce1131" data-cookieconsent="ignore"></script>
+<script src="/assets/js/abo-embed.js?v=53ff2980" data-cookieconsent="ignore"></script>
 <!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
      Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
 <script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
@@ -1469,7 +1469,7 @@ function MountBsportWidget(config, repeat) {
      keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
      async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
      Bericht laufen, der auf sie zugreift. -->
-<script>
+<script data-cookieconsent="ignore">
 (function () {
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
   ['/assets/js/bsport-diagnose-basis.js', '/assets/js/abo-form-diagnose.js'].forEach(function (q) {
@@ -1489,7 +1489,7 @@ function MountBsportWidget(config, repeat) {
   window.closeBsportModal = window.bomayeAbo.schliessen;
 </script>
 
-<script>
+<script data-cookieconsent="ignore">
 /* ── iOS-compatible scroll lock ── */
 let _scrollLockY = 0;
 function lockBodyScroll() {

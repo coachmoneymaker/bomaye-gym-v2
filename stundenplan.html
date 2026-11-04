@@ -9,8 +9,8 @@
   <!-- Kurs-Deep-Link-Datum: bewusst OHNE defer. Die Seitenskripte stehen
        inline im Body und laufen waehrend des Parsens - ein defer-Skript
        kaeme erst danach, das Modul waere dann noch nicht da. -->
-  <script src="/assets/js/kurs-datum.js"></script>
-  <script src="/assets/js/kalender-tag.js"></script>
+  <script src="/assets/js/kurs-datum.js" data-cookieconsent="ignore"></script>
+  <script src="/assets/js/kalender-tag.js" data-cookieconsent="ignore"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -62,7 +62,7 @@
        Steht so frueh wie moeglich: direkt hinter dem meta, vor dem ersten
        Zeichnen. Die Reihenfolge der vorhandenen Skripte aendert sich
        nicht, hier kommt nur ein Inline-Block zwischen zwei Metazeilen. -->
-  <script>
+  <script data-cookieconsent="ignore">
     (function () {
       try {
         if (!/iPhone|iPod/.test(navigator.userAgent)) return;
@@ -1068,7 +1068,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cookieconsent="ignore">
 let _scrollLockY = 0;
 function lockBodyScroll() {
   _scrollLockY = window.scrollY;
@@ -1428,7 +1428,7 @@ function spKalender(kurs) {
 <!-- Dialogwache: blendet die Kopfleiste aus und stellt die Seite fest,
      solange ein Bsport-Dialog offen ist. Dieselbe Datei auf beiden
      Seiten, damit sie nicht wieder auseinanderlaufen. -->
-<script src="/assets/js/bsport-dialog-wache.js"></script>
+<script src="/assets/js/bsport-dialog-wache.js" data-cookieconsent="ignore"></script>
 <!-- Nur mit ?ptdom=1: misst, was die Wache zu sehen bekommt und warum
      sie urteilt wie sie urteilt. Ohne den Parameter kehrt die Datei in
      ihrer ersten Zeile um. -->
@@ -1437,7 +1437,7 @@ function spKalender(kurs) {
      keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
      async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
      Bericht laufen, der auf sie zugreift. -->
-<script>
+<script data-cookieconsent="ignore">
 (function () {
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
   ['/assets/js/bsport-diagnose-basis.js', '/assets/js/bsport-dialog-diagnose.js'].forEach(function (q) {
@@ -1447,7 +1447,7 @@ function spKalender(kurs) {
   });
 }());
 </script>
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 </body>
 </html>

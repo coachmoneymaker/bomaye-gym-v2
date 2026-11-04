@@ -484,7 +484,7 @@
     });
   </script>
 
-  <script>
+  <script data-cookieconsent="ignore">
   /*
    * ROOT CAUSE FIX — Flow break after login (Bug #2):
    *
@@ -499,7 +499,23 @@
    * true) — new users should stay on the account page to complete onboarding.
    */
   (function () {
+    /* Origin exakt pruefen. Vorher stand hier KEINE Pruefung: jedes Fenster
+       und jeder eingebettete iframe konnte {type:"logged"} senden, und
+       diese Stelle schrieb daraufhin bsport_auth_complete in den
+       Sitzungsspeicher und leitete auf /mitglied-werden um. Kein
+       Teilstring-Vergleich, sonst passiert
+       https://backoffice.bsport.io.angreifer.example die Pruefung. */
+    var MB_BSPORT_ORIGINS = ['https://backoffice.bsport.io', 'https://cdn.bsport.io'];
+    function mbVonBsport(origin) {
+      if (typeof origin !== 'string') return false;
+      for (var k = 0; k < MB_BSPORT_ORIGINS.length; k++) {
+        if (origin === MB_BSPORT_ORIGINS[k]) return true;
+      }
+      return false;
+    }
+
     window.addEventListener('message', function (event) {
+      if (!mbVonBsport(event.origin)) return;
       /* Accept both string and object postMessages from Bsport */
       var raw = event.data;
       var d;
@@ -553,12 +569,21 @@
         type === 'register_success'        ||
         type === 'registered'              ||
         type === 'signup_success'          ||
-        (type.indexOf('login')   !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('auth')    !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('registr') !== -1 && (type.indexOf('success') !== -1 || type.indexOf('complet') !== -1)) ||
-        (type.indexOf('logged')  !== -1) ||
+        /* Der echte Name, live gemessen am 04.11.2026 auf /probetraining:
+           Bsport sendet IFRAME_LOGIN_SUCCESS vom Origin
+           https://backoffice.bsport.io. Die Liste darueber sind Namen, die
+           hier vorsorglich standen; sie bleiben als exakter Vergleich. */
+        type === 'iframe_login_success'    ||
         /* Token-based fallback */
         (!type && hasAuthPayload);
+
+      /* ENTFERNT: die vier Teilstring-Zeilen.
+         Sie trafen jeden Typ, der irgendwo "logged" enthielt, und jede
+         Kombination aus "login"/"auth"/"registr" mit "success". Bsports
+         API_SUCCESS und IFRAME_LOGIN_SUCCESS fallen beide darunter, aber
+         auch alles andere, was zufaellig so heisst. Mit einer Umleitung am
+         anderen Ende ist das zu locker. Gibt es einen weiteren echten
+         Namen, gehoert er oben als exakter Vergleich dazu. */
 
       if (!isAuthEvent) { return; }
 
@@ -582,10 +607,10 @@
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
-<script>
+<script data-cookieconsent="ignore">
 /* ── iOS-compatible scroll lock ── */
 let _scrollLockY = 0;
 function lockBodyScroll() {

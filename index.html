@@ -9,7 +9,7 @@
   <!-- Kurs-Deep-Link-Datum: bewusst OHNE defer. Die Seitenskripte stehen
        inline im Body und laufen waehrend des Parsens - ein defer-Skript
        kaeme erst danach, das Modul waere dann noch nicht da. -->
-  <script src="/assets/js/kurs-datum.js"></script>
+  <script src="/assets/js/kurs-datum.js" data-cookieconsent="ignore"></script>
   <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
        Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
        die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
@@ -773,7 +773,7 @@
   <div class="loader-line" id="loader-line"></div>
   <div class="loader-sub">MUNICH · PINEAPPLE PARK</div>
 </div>
-<script>if(sessionStorage.getItem('introShown')){var _p=document.getElementById('preloader');if(_p)_p.style.display='none';}</script>
+<script data-cookieconsent="ignore">if(sessionStorage.getItem('introShown')){var _p=document.getElementById('preloader');if(_p)_p.style.display='none';}</script>
 
 <!-- ═══════ HEADER ═══════ -->
 <header id="header" role="banner">
@@ -1571,7 +1571,7 @@
   <a href="/wochenplan" class="sched-print-link">ALS PDF DRUCKEN ↗</a>
 </div>
 
-  <script>
+  <script data-cookieconsent="ignore">
   (function() {
     'use strict';
 
@@ -2339,7 +2339,7 @@ body[data-modal-open="true"] { overflow: hidden; }
       <style>@media(min-width:860px){.bom-scroll-dots{display:none;}}</style>
     </div>
 
-    <script>
+    <script data-cookieconsent="ignore">
     /* Reviews: sync pagination dots with scroll-snap position */
     (function () {
       var grid = document.querySelector('.bom-reviews-grid');
@@ -3114,19 +3114,19 @@ body[data-modal-open="true"] { overflow: hidden; }
 
 
 <!-- Core config (contact, address, hours, early bird) -->
-<script src="assets/js/config.js"></script>
+<script src="assets/js/config.js" data-cookieconsent="ignore"></script>
 
 <!-- Content modules -->
-<script src="assets/js/pricing.js"></script>
-<script src="assets/js/family-benefit.js"></script>
-<script src="assets/js/corporate-boxing.js"></script>
-<script src="assets/js/homepage-content.js"></script>
+<script src="assets/js/pricing.js" data-cookieconsent="ignore"></script>
+<script src="assets/js/family-benefit.js" data-cookieconsent="ignore"></script>
+<script src="assets/js/corporate-boxing.js" data-cookieconsent="ignore"></script>
+<script src="assets/js/homepage-content.js" data-cookieconsent="ignore"></script>
 
 <!-- FAQ data -->
-<script src="assets/js/faq-data.js"></script>
+<script src="assets/js/faq-data.js" data-cookieconsent="ignore"></script>
 
 <!-- Main application logic -->
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js" data-cookieconsent="ignore"></script>
 
 <!-- ══════════════════════════════════════════════════════════
      BSPORT WIDGET — Membership Subscription Widget
@@ -3168,7 +3168,7 @@ function MountBsportWidget(config, repeat=1) {
      Die Kopie hier war schmaler geraten: transparenter Schliessen-
      Knopf in der Ecke, 8px Polsterung, der Rahmen scrollte selbst. -->
 
-<script src="/assets/js/abo-embed.js?v=a1ce1131" data-cookieconsent="ignore"></script>
+<script src="/assets/js/abo-embed.js?v=53ff2980" data-cookieconsent="ignore"></script>
 <!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
      Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
 <script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
@@ -3177,7 +3177,7 @@ function MountBsportWidget(config, repeat=1) {
      keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
      async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
      Bericht laufen, der auf sie zugreift. -->
-<script>
+<script data-cookieconsent="ignore">
 (function () {
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
   ['/assets/js/bsport-diagnose-basis.js', '/assets/js/abo-form-diagnose.js'].forEach(function (q) {
@@ -3208,7 +3208,7 @@ function MountBsportWidget(config, repeat=1) {
      · passive rAF-gated scroll listener — zero scroll-jacking
      · resize resets stale inline transforms
 ──────────────────────────────────────────────────────────────────────── -->
-<script>
+<script data-cookieconsent="ignore">
 (function () {
   'use strict';
   if (window.matchMedia('(max-width: 480px)').matches) return;
@@ -3268,7 +3268,7 @@ function MountBsportWidget(config, repeat=1) {
 }());
 </script>
 
-<script>
+<script data-cookieconsent="ignore">
 /* BSport schedule fix — removes inline display:none from widget metadata.
    MutationObserver fires whenever the widget re-renders (day change, filter).
    Debounce (150ms) prevents CPU saturation from rapid React mutations.
@@ -3308,10 +3308,10 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
 <!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
      wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
-<script src="/assets/js/menue-wache.js"></script>
+<script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
-<script src="/assets/js/video-facade.js"></script>
-<script>
+<script src="/assets/js/video-facade.js" data-cookieconsent="ignore"></script>
+<script data-cookieconsent="ignore">
 /* Videoknopf im Ortsstreifen — springt zum vorhandenen Anfahrtsvideo.
  *
  * Bewusst kein Modal und keine zweite Einbettung: das Video haengt an der
@@ -3348,7 +3348,7 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
-<script>
+<script data-cookieconsent="ignore">
 (function() {
   var modal = document.getElementById('slot-modal');
   if (!modal) return;
