@@ -527,11 +527,22 @@
         return;
       }
 
-      /* Extract type from all common Bsport event field names */
+      /* Extract type from all common Bsport event field names.
+
+         type ist kleingeschrieben, roherTyp nicht. Die dreizehn Namen
+         weiter unten sind historisch kleingeschrieben und brauchen type.
+         Der EINE Name, der live belegt ist, wird zusaetzlich gegen den
+         Rohwert geprueft, zeichengenau: Bsport sendet
+         IFRAME_LOGIN_SUCCESS in Grossbuchstaben. So haengt dieser
+         Vergleich nicht daran, dass vierzig Zeilen weiter oben ein
+         toLowerCase steht - nimmt das jemand heraus, trifft er
+         weiterhin. */
       var type = '';
+      var roherTyp = '';
       var fields = [d.type, d.event, d.action, d.name, d.message, d.kind];
       for (var i = 0; i < fields.length; i++) {
         if (fields[i] && typeof fields[i] === 'string' && fields[i].length) {
+          roherTyp = fields[i];
           type = fields[i].toLowerCase();
           break;
         }
@@ -541,6 +552,7 @@
         var nf = [nested.type, nested.event, nested.action];
         for (var j = 0; j < nf.length; j++) {
           if (nf[j] && typeof nf[j] === 'string' && nf[j].length) {
+            roherTyp = nf[j];
             type = nf[j].toLowerCase();
             break;
           }
@@ -570,9 +582,12 @@
         type === 'registered'              ||
         type === 'signup_success'          ||
         /* Der echte Name, live gemessen am 04.11.2026 auf /probetraining:
-           Bsport sendet IFRAME_LOGIN_SUCCESS vom Origin
-           https://backoffice.bsport.io. Die Liste darueber sind Namen, die
-           hier vorsorglich standen; sie bleiben als exakter Vergleich. */
+           Bsport sendet {"type":"IFRAME_LOGIN_SUCCESS",...} vom Origin
+           https://backoffice.bsport.io, in Grossbuchstaben. Zweimal
+           geprueft: zeichengenau gegen den Rohwert, und ueber den
+           kleingeschriebenen type. Die Liste darueber sind Namen, die hier
+           vorsorglich standen; sie bleiben als exakter Vergleich. */
+        roherTyp === 'IFRAME_LOGIN_SUCCESS' ||
         type === 'iframe_login_success'    ||
         /* Token-based fallback */
         (!type && hasAuthPayload);
