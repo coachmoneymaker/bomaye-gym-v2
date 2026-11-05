@@ -271,6 +271,30 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 .cta-textlink:hover,
 .cta-textlink:focus-visible { color: var(--gold-dark); }
 
+/* DERSELBE LINK ALS KNOPF
+   Auf /preise oeffnet diese Geste ein Modal und navigiert nicht. Das
+   gehoert einem <button>, nicht einem <a> mit href="#". Damit er aussieht
+   wie der Textlink daneben, nimmt er dem Betriebssystem die
+   Knopfgestaltung ab und erbt Schrift und Groesse. */
+button.cta-textlink {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  -webkit-text-fill-color: currentColor;
+}
+
+/* DIE FAMILIENZEILE AUF /preise
+   Eine ruhige Zeile unter den Preisen, kein Kasten, kein zweiter Knopf.
+   Der Text steht wortgleich im Modal darunter. */
+.pr-familie {
+  max-width: 1100px;
+  margin: clamp(28px, 4vw, 40px) auto 0;
+  text-align: center;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    STICKY BUCHUNGSLEISTE, NUR AM HANDY
    ══════════════════════════════════════════════════════════════════════════
@@ -2779,34 +2803,13 @@ footer .footer-grid + div {
   padding-bottom: 0.75rem !important;
 }
 
-/* ── Family Benefit Trigger ─────────────────────────────── */
+/* ENTFERNT: #corporate-modal.
+   Das Corporate-Modal der Startseite gibt es nicht mehr. Die Anfrage
+   steht jetzt fest auf der Seite, unter /kurse#corporate, und braucht
+   keine Overlay-Regeln. Die Karte .family-modal-card bleibt: sie traegt
+   weiter das Family-Modal auf /preise. */
 
-
-/* ── Corporate Boxing Modal Overlay ─────────────────────── */
-#corporate-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 2100;
-  background: rgba(8,8,8,0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-normal) var(--ease-out);
-}
-#corporate-modal.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-#corporate-modal.open .family-modal-card {
-  transform: translateY(0);
-}
-
-/* ── Family Modal Overlay ────────────────────────────────── */
+/* ── Family Modal Overlay (jetzt auf /preise) ────────────── */
 #family-modal {
   position: fixed;
   inset: 0;
@@ -2955,9 +2958,10 @@ footer .footer-grid + div {
      ist die Seite vergroessert und seitlich verschoben, beide Kanten sind
      beschnitten, und zurueck kommt man nur von Hand.
 
-     Diese eine Regel traegt alle 32 eigenen Felder der Seite (beide
-     Formulare auf der Startseite, samt der zur Laufzeit erzeugten
-     Namensfelder) - nachgemessen, keines faellt durch eine andere Regel. */
+     Diese eine Regel traegt alle eigenen Felder beider Anfrageformulare,
+     samt der zur Laufzeit erzeugten Namensfelder. Beide standen bis zur
+     Verschlankung der Startseite dort; sie stehen jetzt auf /preise und
+     /kurse#corporate und tragen dieselben Klassen. */
   font-size: 1rem;
   color: var(--ink);
   transition: border-color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
