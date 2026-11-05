@@ -268,7 +268,7 @@
      ein Hinweis; wird sie erteilt, laedt das Widget nach. */
   var PT_CDN = 'https://cdn.bsport.io/scripts/widget.js';
 
-  function _ptLoadBsport(cb) {
+  function _ptLoadBsport(cb, misserfolg) {
     if (window.BsportWidget) { cb(); return; }
     /* bsport-widget-cdn, nicht bsport-cdn: dieselbe Kennung, die Bsports
        eigener Loader auf allen uebrigen Seiten setzt und abfragt. Mit der
@@ -284,7 +284,14 @@
     var tries = 0;
     var t = setInterval(function () {
       if (window.BsportWidget) { clearInterval(t); cb(); return; }
-      if (++tries > 100) clearInterval(t);   /* 100 x 150 ms = 15 s */
+      if (++tries > 100) {                   /* 100 x 150 ms = 15 s */
+        clearInterval(t);
+        /* STUMM AUFGEBEN WAR DER FEHLER. Vorher endete der Zaehler
+           einfach, und weil _ptMounted schon oben gesetzt war, versuchte
+           es niemand mehr. Der Kalender blieb fuer den Rest des
+           Seitenaufrufs leer, ohne eine Zeile in der Konsole. */
+        if (typeof misserfolg === 'function') misserfolg('Bundle kam nicht');
+      }
     }, 150);
   }
 
@@ -350,10 +357,83 @@
     }).observe(widget, { childList: true, subtree: true });
   }
 
+  /* ──────────────────────────────────────────────────────────────────────
+     EIN VERSUCH DARF NICHT DER LETZTE SEIN
+
+     Hier stand eine einzige Flagge, _ptMounted, und sie wurde GANZ OBEN
+     im Rueckruf gesetzt, lange bevor ueberhaupt ein Skript angelegt war.
+     Ging danach irgendetwas schief, war der Kalender fuer den Rest des
+     Seitenaufrufs tot:
+
+       - die Bruecke ruft den Rueckruf in try { mount(); } catch (e) {},
+         eine Ausnahme verschwindet also ohne Spur in der Konsole;
+       - der Zaehler in _ptLoadBsport gab nach 15 Sekunden stumm auf;
+       - und jeder spaetere Anlauf fiel auf "if (_ptMounted) return".
+
+     Dazu faellt die Entscheidung nur EINMAL, bei DOMContentLoaded. Bis PR
+     #190 lief diese Datei dort gar nicht: Cookiebot hatte sie auf
+     text/plain gestellt und spielte sie erst nach der Einwilligung nach.
+     Der Rueckruf lief damit immer in einer Welt, in der der
+     Einwilligungsstand schon feststand. Mit der Ausnahme aus #190 laeuft
+     die Datei sofort, und diese Verlaesslichkeit ist weg.
+
+     Jetzt also zwei Flaggen und ein Neuanlauf:
+       _ptMounted       BsportWidget.mount() ist WIRKLICH gelaufen. Erst
+                        dann ist Schluss.
+       _ptVersuchLaeuft ein Anlauf ist unterwegs. Scheitert er, wird die
+                        Flagge zurueckgenommen, damit der naechste ran darf.
+     Und bei jedem Cookiebot-Ereignis wird neu angelaufen, solange nicht
+     montiert ist. Wann der Stand wirklich feststeht, entscheidet damit
+     nicht mehr der Zufall der Ladereihenfolge.
+     ────────────────────────────────────────────────────────────────────── */
   var _ptMounted = false;
+  var _ptVersuchLaeuft = false;
+
+  function _ptAnlaufGescheitert(grund) {
+    _ptVersuchLaeuft = false;
+    try {
+      console.warn('[pt] Kalender-Anlauf gescheitert:', grund,
+                   '- der naechste Anlauf darf wieder ran.');
+    } catch (e) {}
+  }
+
+  /* Nach einer Einwilligungsaenderung noch einmal anlaufen. Ist schon
+     montiert, passiert nichts. Laeuft ein Anlauf, der bereits ein Skript
+     angelegt hat, wird er nicht gestoert. */
+  function _ptNochmalAnlaufen() {
+    if (_ptMounted) return;
+    if (_ptVersuchLaeuft && document.getElementById('bsport-widget-cdn')) return;
+    _ptVersuchLaeuft = false;
+    _ptMountCalendar();
+  }
+  window.addEventListener('CookiebotOnAccept', _ptNochmalAnlaufen);
+  window.addEventListener('CookiebotOnConsentReady', _ptNochmalAnlaufen);
+
+  /* "ERNEUT VERSUCHEN" MUSS AUF DIESER SEITE AUCH ETWAS TUN
+
+     Der Knopf gehoert bsport-gate.js. Dort laedt er die Scripts nach, die
+     die Sperre abgefangen hat. Auf allen anderen Seiten ist das richtig:
+     dort legt der Schnipsel im Markup das Script an, die Sperre faengt es
+     ab, und beim erneuten Versuch wird genau das nachgeholt.
+
+     /probetraining ist anders. Hier legt kein Schnipsel etwas an, sondern
+     der Rueckruf dieser Datei. Hat der nie gelaufen, gibt es nichts
+     abzufangen und nichts nachzuladen - der Knopf dreht sich im Leeren,
+     und nach dem zweiten Versuch kommt der Rueckfall mit Telefon und
+     WhatsApp. Genau dieser Ablauf wurde am 05.11.2026 live gemeldet.
+
+     Darum hoert diese Datei auf den Knopf mit und laeuft selbst noch
+     einmal an. Der Horcher haengt am Dokument, nicht am Knopf: den baut
+     die Sperre erst spaeter, und sie baut ihn mehrfach neu. */
+  document.addEventListener('click', function (e) {
+    var ziel = e && e.target;
+    if (!ziel || !ziel.closest) return;
+    if (!ziel.closest('.bomaye-consent-gate__reload')) return;
+    _ptNochmalAnlaufen();
+  }, true);
 
   function _ptMountCalendar() {
-    if (_ptMounted) return;
+    if (_ptMounted || _ptVersuchLaeuft) return;
     var view = document.getElementById('pt-cal-view');
     if (!view) return;
 
@@ -363,13 +443,17 @@
     }
 
     window.bomayeGateBsport(view, function () {
-      if (_ptMounted) return;
-      _ptMounted = true;
+      if (_ptMounted || _ptVersuchLaeuft) return;
+      _ptVersuchLaeuft = true;
 
       /* Die Kennung steht jetzt im Markup (probetraining.html), genau wie
          auf /stundenplan. Sie wird nicht mehr zur Laufzeit erzeugt: an
          ihr haengen die Aussehensregeln, und die sollen schon vor dem
          Mounten greifen - sonst blitzt ein ungestylter Kalender auf. */
+      /* Was hier bis zum Laden passiert, laeuft in einem Rueckruf, den die
+         Bruecke in try { mount(); } catch (e) {} aufruft. Eine Ausnahme
+         waere ohne diesen Block unsichtbar. Dass sie den Anlauf nicht mehr
+         fuer immer blockiert, besorgt _ptAnlaufGescheitert. */
       var holderId = 'bsport-widget-172485';
       /* Im Vergleichsmodus bekommt der Einhaengepunkt eine andere Kennung.
          Die rund 210 Regeln in style.css haengen alle an
@@ -381,13 +465,27 @@
         holderId = 'bsport-widget-schlicht';
         if (alt) alt.id = holderId;
       }
-      if (!document.getElementById(holderId)) {
-        var holder = document.createElement('div');
-        holder.id = holderId;
-        view.appendChild(holder);
+      try {
+        if (!document.getElementById(holderId)) {
+          var holder = document.createElement('div');
+          holder.id = holderId;
+          view.appendChild(holder);
+        }
+      } catch (e) {
+        _ptAnlaufGescheitert((e && e.message) ? e.message : String(e));
+        return;
       }
 
       _ptLoadBsport(function () {
+        /* Ein frueherer, gescheiterter Anlauf kann noch einen Zaehler
+           laufen haben. Findet der spaeter doch ein BsportWidget, ruft er
+           hier ein zweites Mal an - im Test montierte der Kalender dann
+           zweimal. Also die Tuer hier zumachen, nicht nur oben. */
+        if (_ptMounted) return;
+        /* ERST HIER ist montiert. Vorher stand das ganz oben im Rueckruf,
+           vor allem, was schiefgehen kann. */
+        _ptMounted = true;
+        _ptVersuchLaeuft = false;
         _ptStartBookingTracking();
         window.BsportWidget.mount({
           parentElement: holderId,
@@ -461,7 +559,7 @@
             }
           }
         });
-      });
+      }, _ptAnlaufGescheitert);
     });
   }
 
