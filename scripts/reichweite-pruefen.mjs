@@ -247,6 +247,18 @@ const LOGIK = (overlayWahl) => {
     knopfKandidaten(wurzel) {
       const m = new Set();
       wurzel.querySelectorAll('button, input[type=submit], [role=button]').forEach((e) => m.add(e));
+      /* DIE STICKY-BUCHUNGSLEISTE BLEIBT AUSSEN VOR
+
+         Diese Pruefung fragt: ist jeder Knopf durch Scrollen erreichbar?
+         Das setzt voraus, dass ein Knopf an seinem Platz steht und dort
+         bleibt. Die Leiste am unteren Rand tut genau das nicht: sie ist
+         absichtlich erst nach dem Preisblock da, verschwindet in der
+         Abschluss-Sektion wieder, schweigt bei offenem Dialog und laesst
+         sich zumachen. An jeder Scrollstelle, die diese Pruefung anfaehrt,
+         kann sie zu Recht unsichtbar sein.
+
+         Geprueft wird sie stattdessen vollstaendig in tests/sticky.mjs,
+         samt Tippflaechen, Ueberlappung und Ein- und Ausblenden. */
       wurzel.querySelectorAll('a').forEach((e) => {
         const k = typeof e.className === 'string' ? e.className : '';
         if (/btn|cta|knopf|card-|trial|member|mitglied|buchen|-link\b/i.test(k)) { m.add(e); return; }
@@ -256,7 +268,7 @@ const LOGIK = (overlayWahl) => {
         const rahmen = parseFloat(cs.borderTopWidth) > 0 || parseFloat(cs.borderBottomWidth) > 0;
         if ((flaeche || rahmen) && parseFloat(cs.paddingTop) >= 6) m.add(e);
       });
-      return [...m];
+      return [...m].filter((e) => !e.closest('.sticky-buchung'));
     },
 
     widgetContainer(wurzel) {
