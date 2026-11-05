@@ -258,13 +258,21 @@
       if (typeof cb.renew === 'function') cb.renew();
     });
 
-    var alt = document.createElement('p');
-    alt.className = PLACEHOLDER_CLASS + '__alt';
-    alt.innerHTML = 'Lieber ohne Cookies buchen? Ruf uns an: '
-      + '<a href="tel:+491737513627">+49 173 7513627</a> '
-      + 'oder schreib uns per <a href="https://wa.me/491737513627" '
-      + 'target="_blank" rel="noopener">WhatsApp</a>.';
+    /* HIER STAND DER ABSATZ "Lieber ohne Cookies buchen? Ruf uns an: ...
+       oder schreib uns per WhatsApp."
 
+       Auf Wunsch des Betreibers entfernt (05.11.2026). Das Tor zeigt jetzt
+       nur noch Titel, Text, Knopf und den Einwilligungshinweis.
+
+       NICHT betroffen und absichtlich geblieben:
+         - der Einwilligungshinweis unter dem Knopf ("Mit Tippen laedst du
+           unseren Buchungskalender von bsport ..."),
+         - der Rueckfall in hinweisBauen() in bsport-gate.js, der erst
+           nach dem zweiten gescheiterten Ladeversuch erscheint ("Das
+           Buchungssystem laedt gerade nicht. Buche direkt bei uns: ..."),
+         - die Zeile unter dem Kalender auf /probetraining ("Kein
+           passender Termin? Schreib uns auf WhatsApp"),
+         - Telefon und WhatsApp ueberall sonst auf der Seite. */
 
     /* Kurze Erklaerung direkt unter dem Knopf. Sie steht dort, weil der
        Knopf jetzt in einem Tipp einwilligt: was dabei passiert, muss man
@@ -300,7 +308,6 @@
     box.appendChild(p);
     box.appendChild(btn);
     box.appendChild(hinweis);
-    box.appendChild(alt);
     container.appendChild(box);
   }
 

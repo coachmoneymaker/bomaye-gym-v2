@@ -6682,6 +6682,12 @@ a.mn-contact-text:hover { color: var(--gold); }
   opacity: 0.75;
 }
 
+/* .bomaye-consent-gate__alt bleibt, obwohl das Buchungstor diesen Absatz
+   seit dem 05.11.2026 nicht mehr baut: die Video-Fassade auf der
+   Startseite (assets/js/video-facade.js) benutzt dieselbe Klasse fuer
+   ihren eigenen Absatz "Lieber ohne Cookies? Route in Google Maps
+   oeffnen oder anrufen". Loescht man die Regeln, verliert der seine
+   Schriftgroesse und, schlimmer, die 44px-Tippflaechen. */
 .bomaye-consent-gate__alt a {
   color: #C9A84C;
   text-decoration: underline;
