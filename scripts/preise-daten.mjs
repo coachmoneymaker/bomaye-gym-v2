@@ -102,7 +102,7 @@ export const MITGLIEDSCHAFTEN = [
     leistungen: [
       'Unbegrenzter Zugang zu allen Kursen',
       'Olympic Boxing, Kickboxing, Frauenkurs und mehr',
-      'Training mit Struktur und echten Coaches',
+      'Training mit Struktur',
     ],
   },
   {
@@ -116,7 +116,7 @@ export const MITGLIEDSCHAFTEN = [
     contract:  '45434',
     leistungen: [
       'Kursplan für Jugendliche',
-      'Echte Technik, echter Sport',
+      'Technik und Athletik',
       'Eigene Gruppen, keine gemischten Erwachsenenkurse',
     ],
   },
@@ -210,7 +210,11 @@ export const BEDINGUNGEN = [
   LAUFZEIT.verlaengerung,
   LAUFZEIT.kuendigung,
   `Einmalig ${euro(AUFNAHME)} Aufnahmegebühr bei Vertragsabschluss, inklusive Fighter-Kit.`,
-  'Dein Early Bird Preis bleibt, solange du Mitglied bleibst.',
+  /* ENTFERNT (05.11.2026): "Dein Early Bird Preis bleibt, solange du
+     Mitglied bleibst." Der Satz stand auf /preise dreimal: hier, im
+     Early-Bird-Block und in der FAQ-Antwort. Er bleibt im
+     Early-Bird-Block, und die FAQ-Antwort sagt dasselbe mit eigenen
+     Worten. AGB § 5 Abs. 2 ist damit auf der Seite weiter abgedeckt. */
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -243,7 +247,9 @@ export const FRAGEN = [
   {
     f: 'Wie lange gilt der Early-Bird-Preis?',
     /* AGB § 5 Abs. 2 */
-    a: 'Dein Early Bird Preis bleibt, solange du Mitglied bleibst. Wer kündigt und später neu abschließt, '
+    /* Beantwortet die Frage direkt, ohne den Satz aus dem
+       Early-Bird-Block Wort fuer Wort zu wiederholen. */
+    a: 'Solange du Mitglied bleibst. Wer kündigt und später neu abschließt, '
      + 'zahlt den dann gültigen Preis. Early Bird endet, sobald alle Plätze vergeben sind.',
   },
   {

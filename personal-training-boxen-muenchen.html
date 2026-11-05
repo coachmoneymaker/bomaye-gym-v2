@@ -2,15 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
-       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
-       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+
   <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
-  <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
-       Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
-       die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
-       data-cookieconsent="ignore" ist zwingend: dieser Block darf von Cookiebot NICHT
-       blockiert werden, sonst gaebe es keinen Default, gegen den das Update laufen kann. -->
+
   <script data-cookieconsent="ignore">
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -27,36 +21,12 @@
     gtag("set", "ads_data_redaction", true);
     gtag("set", "url_passthrough", false);
   </script>
-  <!-- End Google Consent Mode v2 -->
-  <!-- Cookiebot CMP — muss direkt nach dem Consent-Default und VOR GTM/gtag.js stehen. -->
+
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
-  <!-- End Cookiebot CMP -->
-  <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+
+  <script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-  <!-- KEIN AUTOMATISCHER ZOOM AUF DEM iPHONE
-       Gemessen auf einem echten iPhone, nach PR #130: der Zoom steht
-       weiter bei 1.1418 (= 16/14), und die Zoom-Aufzeichnung nennt als
-       fokussiertes Element
-         iframe.widget-8.bsport-user-interaction-modal__iframe
-       Bsport haengt also in unser srcdoc noch einen EIGENEN Rahmen, und
-       der kommt von bsport.io. Fremde Herkunft: weder unser CSS noch die
-       Regel im srcdoc erreichen das Feld darin. Ueberlauf gibt es keinen,
-       scrollWidth und clientWidth standen beide bei 402.
 
-       Damit bleibt genau ein Hebel: das viewport-meta des obersten
-       Dokuments. maximum-scale=1 unterbindet den Fokuszoom, den iOS von
-       sich aus ausloest.
-
-       NUR auf iPhone und iPod, und nur zur Laufzeit. Im Markup bleibt das
-       meta unveraendert, damit Android, Schreibtisch, iPad und
-       Suchmaschinen genau das sehen wie bisher. user-scalable=no steht
-       hier NICHT: Zusammenziehen muss moeglich bleiben, und seit iOS 10
-       laesst Safari es ohnehin zu, egal was hier steht - genau darum ist
-       maximum-scale=1 vertretbar.
-
-       Steht so frueh wie moeglich: direkt hinter dem meta, vor dem ersten
-       Zeichnen. Die Reihenfolge der vorhandenen Skripte aendert sich
-       nicht, hier kommt nur ein Inline-Block zwischen zwei Metazeilen. -->
   <script data-cookieconsent="ignore">
     (function () {
       try {
@@ -77,7 +47,7 @@
     }());
   </script>
   <title>Personal Training Boxen München | Bomaye Boxgym Munich</title>
-  <!-- Favicons -->
+
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
@@ -87,7 +57,6 @@
   <meta name="description" content="Personal Training Boxen München: 60 Minuten One on One mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen." />
   <meta name="robots" content="index, follow" />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Personal Training Boxen München | Bomaye Boxgym Munich" />
   <meta property="og:description" content="Personal Training Boxen München: 60 Minuten One on One mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen." />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
@@ -98,22 +67,16 @@
 
   <link rel="canonical" href="https://www.bomayegym.com/personal-training-boxen-muenchen" />
 
-  <!-- Preload critical assets -->
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
-  <!-- Schriften: selbst gehostet (kein Google-Request, LG Muenchen I).
-       Preload der latin-Dateien, damit sie vor dem ersten Paint da sind. -->
   <link rel="preload" href="/assets/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
 
-
-  <!-- Site styles -->
   <link rel="stylesheet" href="/assets/css/style.css" />
 
-  <!-- Schema.org -->
   <!-- SEO:GRAPH -->
   <!-- ERZEUGT - NICHT VON HAND AENDERN.
        Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
@@ -221,7 +184,6 @@
   </script>
   <!-- /SEO:GRAPH -->
 
-  <!-- FAQ Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -271,12 +233,6 @@
   }
   </script>
 
-  <!-- ANGEBOTS-SCHEMA
-       Nur die oeffentlichen Paketpreise, also genau die Zahlen, die in der
-       Preistabelle stehen. Die Mitgliederpreise sind bewusst NICHT hier:
-       sie gelten erst nach Login und waeren fuer einen anonymen Crawler
-       eine Preisangabe, die er nie bestaetigt bekommt. Wer die Tabelle
-       aendert, aendert diesen Block mit. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -928,7 +884,7 @@
        Grundregel passt sich der Breite selbst an (130/80px), die Ausnahme
        nicht, deshalb ist sie weg. */
   </style>
-  <!-- BreadcrumbList -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -949,22 +905,7 @@
     ]
   }
   </script>
-  <!-- ── Reveal-Wache ──────────────────────────────────────────────────────
-       .reveal steht in style.css auf opacity: 0 und wird erst von einem
-       Beobachter auf .visible gesetzt. Laeuft dieser Beobachter aus
-       IRGENDEINEM Grund nicht, bleibt der halbe Seiteninhalt dauerhaft
-       unsichtbar. Moegliche Gruende gibt es viele und sie liegen nicht
-       alle in unserer Hand: ein Fehler frueher im selben Skriptblock, ein
-       Blocker, der den Block neutralisiert, eine Erweiterung im Browser
-       des Besuchers.
 
-       Diese Wache macht das Symptom unmoeglich, ohne die Ursache kennen zu
-       muessen: meldet sich der Beobachter nicht binnen 2,5 Sekunden, wird
-       alles sichtbar gemacht. Laeuft er normal, loescht er den Wecker als
-       erste Handlung und niemand merkt etwas.
-
-       Eigener Skript-Tag mit Absicht: so kann ihn kein Fehler in einem
-       anderen Block mitreissen. -->
   <script data-cookieconsent="ignore">
     window.__revealWache = setTimeout(function () {
       var e = document.querySelectorAll('.reveal:not(.visible)');
@@ -974,16 +915,11 @@
 </head>
 
 <body>
-<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
-     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
-     https://fontawesome.com/license/free -->
+
 <svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-calendar-plus" viewBox="0 0 448 512"><path d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192zM224 248c13.3 0 24 10.7 24 24v56h56c13.3 0 24 10.7 24 24s-10.7 24-24 24H248v56c0 13.3-10.7 24-24 24s-24-10.7-24-24V376H144c-13.3 0-24-10.7-24-24s10.7-24 24-24h56V272c0-13.3 10.7-24 24-24z"/></symbol><symbol id="i-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol><symbol id="i-instagram" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></symbol><symbol id="i-location-dot" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol><symbol id="i-lock" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></symbol><symbol id="i-phone" viewBox="0 0 512 512"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></symbol><symbol id="i-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></symbol><symbol id="i-tiktok" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></symbol><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></symbol><symbol id="i-youtube" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></symbol></svg>
 
-
-<!-- Noise texture -->
 <div class="noise" aria-hidden="true"></div>
 
-<!-- ═══════ HEADER ═══════ -->
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
@@ -1016,7 +952,6 @@
   </div>
 </header>
 
-<!-- ═══════ MOBILE NAV ═══════ -->
 <div id="page-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
      style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:0.25rem;">
   <a class="mn-item" href="/" style="--mn-i:0">HOME</a>
@@ -1034,16 +969,13 @@
   </a>
 </div>
 
-<!-- ═══════ WHATSAPP FLOAT ═══════ -->
 <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i>
 </a>
 
-<!-- ═══════ MAIN ═══════ -->
 <main>
 
-  <!-- ── Hero ── -->
   <section class="seo-hero" aria-label="Personal Training Boxen München">
     <div class="container">
       <div class="seo-hero-tag">1:1 · PERSONAL TRAINING</div>
@@ -1059,7 +991,6 @@
     </div>
   </section>
 
-  <!-- ── WARUM 1:1 ── -->
   <section class="seo-section seo-section--light">
     <div class="container">
       <div class="pt-mini-grid reveal">
@@ -1082,7 +1013,6 @@
     </div>
   </section>
 
-  <!-- ── WANN ── -->
   <section class="seo-section seo-section--dark pt-schmal" aria-labelledby="pt-wann-h2">
     <div class="container">
       <div class="pt-band reveal">
@@ -1093,11 +1023,6 @@
     </div>
   </section>
 
-  <!-- ── PREISE ──
-       Die Tabelle ist die einzige Preisquelle auf der Seite, auf die sich
-       etwas anderes stuetzt: die Preisfrage im FAQ, das Angebots-Schema im
-       Kopf und die Preiszeile im Hero nennen dieselben Zahlen. Wer hier
-       etwas aendert, aendert diese drei Stellen mit. -->
   <section class="seo-section seo-section--light" aria-labelledby="pt-preise-h2">
     <div class="container">
       <div class="pt-preise-inner">
@@ -1136,22 +1061,7 @@
               <td role="cell" data-spalte="Mitglieder" class="pt-preise-mg">800 €</td>
               <td role="cell" data-spalte="pro Einheit">80 €</td>
             </tr>
-            <!-- ═════ PLATZ FUER DAS PROBETRAINING ═════
-                 Sobald der Pass in bsport scharf ist, kommt die Zeile
-                 HIER hin, direkt vor dieses Ende des tbody. Aufbau genau
-                 wie die drei Zeilen darueber: ein <th role="rowheader"
-                 scope="row"> mit dem Paketnamen, danach vier <td
-                 role="cell"> mit den Attributen data-spalte="Preis",
-                 "pro Einheit", "Mitglieder" (plus class="pt-preise-mg")
-                 und "pro Einheit". Betraege mit geschuetztem Leerzeichen
-                 vor dem Eurozeichen.
 
-                 Am CSS ist nichts zu tun, die Zeile faellt in dieselben
-                 Regeln. Zu aendern sind danach nur noch die drei Stellen,
-                 die auf diese Tabelle zeigen: die Preisfrage im FAQ, das
-                 Angebots-Schema im Kopf und, falls der Preis nach aussen
-                 soll, die Preiszeile im Hero und die Meta-Beschreibung.
-                 ══════════════════════════════════════ -->
           </tbody>
         </table>
         <p class="pt-preise-fuss reveal">Mitglieder zahlen automatisch ihren Preis, sobald sie eingeloggt buchen.</p>
@@ -1159,13 +1069,12 @@
     </div>
   </section>
 
-  <!-- ── Coaches ── -->
   <section class="seo-section seo-section--dark" aria-labelledby="pt-coaches-h2">
     <div class="container">
       <div class="seo-section-inner reveal">
         <span class="tag tag--dark">DEINE COACHES</span>
         <h2 id="pt-coaches-h2" style="margin-top:1rem;">TRAINIERE MIT DEN <span>BESTEN.</span></h2>
-        <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Olympic Coach. Kickbox-Weltmeister. Echte Lizenzen, echte Erfahrung.</p>
+        <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Lizenzierte Coaches. Wettkampferfahrung.</p>
       </div>
       <div class="pt-coaches-grid">
         <a href="#pt-booking" class="pt-coach-card reveal">
@@ -1210,11 +1119,6 @@
     </div>
   </section>
 
-  <!-- ── SO STARTEST DU ──
-       Dieselbe Dreier-Komponente wie WARUM 1:1, nur auf Rauch statt Creme.
-       Rauch und nicht Creme, weil darueber die dunkle Coach-Wand steht und
-       darunter die cremefarbene Buchung beginnt: die Stufe fuehrt von einem
-       zum anderen, zwei Cremeflaechen hintereinander wuerden verschmelzen. -->
   <section class="seo-section seo-section--smoke" aria-labelledby="pt-schritte-h2">
     <div class="container">
       <div class="seo-section-inner reveal" style="text-align:center;">
@@ -1240,7 +1144,6 @@
     </div>
   </section>
 
-  <!-- ── PT Booking Widget ── -->
   <section id="pt-booking" class="seo-section seo-section--light" aria-labelledby="pt-booking-h2">
     <div class="container">
       <div class="seo-section-inner reveal">
@@ -1248,40 +1151,7 @@
         <h2 id="pt-booking-h2" style="margin-top:1rem;color:var(--ink);">DEIN COACH. <span>DEIN TERMIN.</span></h2>
         <p style="margin-top:1.5rem;max-width:600px;opacity:0.85;">Wähle deinen Coach. Wähle deinen Slot. Starte dein One on One Training auf höchstem Niveau.</p>
       </div>
-      <!-- KEIN AUTOMATISCHER ZOOM BEIM TIPPEN INS FELD
-           Gemessen auf einem echten iPhone (Chrome iOS, 402px breit):
-           visualViewport.scale 1.1418, innerWidth 352, offsetLeft 5. Das ist
-           exakt 16/14 - die Signatur des iOS-Zooms, der beim Fokus auf ein
-           Feld mit weniger als 16px Schrift einsetzt. Die Seite wird dabei
-           NICHT breiter (scrollWidth blieb 402 = clientWidth), sie wird
-           vergroessert und verschoben, und dadurch sind beide Kanten
-           beschnitten: Burger rechts, Uhrensymbol links.
 
-           Das Feld steht in Bsports eigenem Dokument im srcdoc. Unser CSS
-           kaskadiert dort nicht hinein, aber das srcdoc ist unser Text -
-           also steht die Regel hier drin, als erstes Element des Dokuments.
-           Zwei Zeilen, mehr nicht:
-             input, select, textarea  auf 16px, damit iOS nicht zoomt
-             html { touch-action: manipulation }  gegen den Doppeltipp-Zoom
-
-           Am viewport-meta der Seite aendert sich NICHTS. Kein
-           maximum-scale, kein user-scalable=no: Zusammenziehen muss
-           moeglich bleiben, das ist seit PR #121 so entschieden. -->
-      <!-- DER STYLE-BLOCK IM SRCDOC IST UNSER EINZIGER HEBEL IM WIDGET
-
-     Dieses iframe traegt sein Dokument per srcdoc. Es hat zwar unsere
-     Herkunft, ist aber ein eigenes Dokument: assets/css/style.css
-     kaskadiert NICHT hinein, nur der style-Block in data-bsport-srcdoc
-     wirkt dort. Siehe den Kopf von assets/js/pt-dom-diagnose.js.
-
-     Darin stehen jetzt drei Dinge:
-       1. 16px auf Eingabefelder, gegen den Fokuszoom auf dem iPhone
-       2. touch-action: manipulation, gegen den Doppeltipp-Zoom
-       3. Creme auf innerContainer und topBar von Bsports Anmeldefenster.
-          Der Betreiber hat die beiden Flaechen im laufenden Widget als
-          rgb(255,255,255) gemessen; die Begruendung steht ausfuehrlich
-          in assets/css/style.css am Ende. Dort steht dieselbe Regel fuer
-          die 19 Seiten, die das Widget direkt im Seitendokument tragen. -->
 <div class="pt-widget-wrapper">
         <iframe frameborder="0" allowfullscreen data-bsport-hoehe data-bsport-srcdoc='<style>input,select,textarea{font-size:16px !important}html{touch-action:manipulation}.bsport-user-interaction-modal__innerContainer,.bsport-user-interaction-modal__topBar{background-color:#F5F0E8 !important}</style><script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script><script id="bsport-widget-mount">function MountBsportWidget(config, repeat=1) {if (repeat > 50) { return }if (!window.BsportWidget) {return setTimeout(() => {MountBsportWidget(config,repeat+1)}, 100 * repeat || 1)}BsportWidget.mount(config)}</script><script>MountBsportWidget({"parentElement": "bsport-widget-810373","companyId": 5473,"franchiseId": null,"dialogMode": 3,"widgetType": "privateService","showFab": false,"fullScreenPopup": false,"styles":undefined,"config": {"privateService": {"type": "list","privateGroups": [7327]}}})</script><div id="bsport-widget-810373"></div>'>
         </iframe>
@@ -1289,7 +1159,6 @@
     </div>
   </section>
 
-  <!-- ── FAQ ── -->
   <section class="seo-section seo-section--dark" aria-labelledby="faq-h2">
     <div class="container">
       <div class="seo-section-inner">
@@ -1356,10 +1225,6 @@
     </div>
   </section>
 
-  <!-- ── SCHLUSS-CTA ──
-       Creme zwischen dem dunklen FAQ und dem dunklen Footer: dieses Band
-       ist die letzte helle Flaeche der Seite und damit der Punkt, an dem
-       das Auge haengen bleibt. -->
   <section class="seo-section seo-section--light pt-schmal" aria-labelledby="pt-final-h2">
     <div class="container">
       <div class="pt-band reveal">
@@ -1371,7 +1236,6 @@
     </div>
   </section>
 
-  <!-- ── Footer ── -->
   <footer>
     <div class="container">
       <div class="footer-grid">
@@ -1464,7 +1328,6 @@
 
 </main>
 
-<!-- ═══════ SCRIPTS ═══════ -->
 <script data-cookieconsent="ignore">
 /* ── Header scroll styling ── */
 (function () {
@@ -1606,14 +1469,11 @@ function toggleFaq(btn) {
 })();
 </script>
 
-<!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
-<!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
-     wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
 <script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
-<!-- Rahmenhoehe: laedt nichts von bsport.io, misst nur unser eigenes iframe. -->
+
 <script data-cookieconsent="ignore" src="/assets/js/bsport-frame-hoehe.js"></script>
-<!-- Diagnose: tut ohne ?ptdom=1 nichts, laedt nichts, misst nur unser iframe. -->
+
 <script data-cookieconsent="ignore" src="/assets/js/pt-dom-diagnose.js"></script>
 </body>
 </html>

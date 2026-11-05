@@ -2,15 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
-       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
-       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+
   <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
-  <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
-       Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
-       die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
-       data-cookieconsent="ignore" ist zwingend: dieser Block darf von Cookiebot NICHT
-       blockiert werden, sonst gaebe es keinen Default, gegen den das Update laufen kann. -->
+
   <script data-cookieconsent="ignore">
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -27,16 +21,15 @@
     gtag("set", "ads_data_redaction", true);
     gtag("set", "url_passthrough", false);
   </script>
-  <!-- End Google Consent Mode v2 -->
-  <!-- Cookiebot CMP — muss direkt nach dem Consent-Default und VOR GTM/gtag.js stehen. -->
+
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
-  <!-- End Cookiebot CMP -->
-  <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+
+  <script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Mitglied werden | Bomaye Boxgym Munich</title>
   <meta name="description" content="Dein Early Bird Preis bleibt, solange du Mitglied bleibst. Mitgliedschaften für Kids, Youth und Unlimited im Bomaye Boxgym München im Überblick." />
   <meta name="robots" content="index, follow" />
-  <!-- Favicons -->
+
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
@@ -44,7 +37,6 @@
   <link rel="manifest" href="/assets/icons/site.webmanifest">
   <meta name="theme-color" content="#0A0A08">
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Mitglied werden | Bomaye Boxgym Munich" />
   <meta property="og:description" content="Dein Early Bird Preis bleibt, solange du Mitglied bleibst. Mitgliedschaften für Kids, Youth und Unlimited im Bomaye Boxgym München im Überblick." />
   <meta property="og:image" content="https://www.bomayegym.com/assets/images/gym-hall.jpg" />
@@ -55,21 +47,14 @@
 
   <link rel="canonical" href="https://www.bomayegym.com/mitglied-werden" />
 
-  <!-- Preload critical assets -->
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
 
-  <!-- bsport warm-up -->
-
-  <!-- Schriften: selbst gehostet (kein Google-Request, LG Muenchen I).
-       Preload der latin-Dateien, damit sie vor dem ersten Paint da sind. -->
   <link rel="preload" href="/assets/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
 
-
-  <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
@@ -151,12 +136,12 @@
        wurde dadurch auf left 336 geschoben und lag ganz ausserhalb des
        Fensters, bei 375 px war er rechts angeschnitten. Auf dieser Seite
        gab es damit auf kleinen Telefonen keinen Weg ins Menue.
-    
+
        Der ZURUECK-Link entfaellt unter 480 px. Er ist eine Bequemlichkeit,
        das Burger-Menue fuehrt alle Ziele (HOME, KURSE, PERSONAL TRAINING,
        SCHEDULE, COACHES, ABOUT US, PREISE). Ohne ihn bleiben 187 plus 16
        plus 44 gleich 247 von 256 Pixeln, der Burger passt mit 9 px Luft.
-    
+
        Logo verkleinern waere die Alternative, kostet aber die Marke an der
        Stelle, an der sie am meisten zaehlt.                          */
     @media (max-width: 480px) {
@@ -487,7 +472,6 @@
       }
     }
     .mw-card-btn:active { transform: scale(0.99); }
-
 
     /* ════════════════════════════════════════════════════════════
        SECTION 3 — TRUST BAR
@@ -870,7 +854,7 @@
       margin: 0;
     }
   </style>
-  <!-- Schema.org -->
+
   <!-- SEO:GRAPH -->
   <!-- ERZEUGT - NICHT VON HAND AENDERN.
        Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
@@ -977,7 +961,7 @@
   }
   </script>
   <!-- /SEO:GRAPH -->
-  <!-- BreadcrumbList -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -998,7 +982,7 @@
     ]
   }
   </script>
-  <!-- Offer — die drei Mitgliedschaften -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1079,22 +1063,7 @@
     ]
   }
   </script>
-  <!-- ── Reveal-Wache ──────────────────────────────────────────────────────
-       .reveal steht in style.css auf opacity: 0 und wird erst von einem
-       Beobachter auf .visible gesetzt. Laeuft dieser Beobachter aus
-       IRGENDEINEM Grund nicht, bleibt der halbe Seiteninhalt dauerhaft
-       unsichtbar. Moegliche Gruende gibt es viele und sie liegen nicht
-       alle in unserer Hand: ein Fehler frueher im selben Skriptblock, ein
-       Blocker, der den Block neutralisiert, eine Erweiterung im Browser
-       des Besuchers.
 
-       Diese Wache macht das Symptom unmoeglich, ohne die Ursache kennen zu
-       muessen: meldet sich der Beobachter nicht binnen 2,5 Sekunden, wird
-       alles sichtbar gemacht. Laeuft er normal, loescht er den Wecker als
-       erste Handlung und niemand merkt etwas.
-
-       Eigener Skript-Tag mit Absicht: so kann ihn kein Fehler in einem
-       anderen Block mitreissen. -->
   <script data-cookieconsent="ignore">
     window.__revealWache = setTimeout(function () {
       var e = document.querySelectorAll('.reveal:not(.visible)');
@@ -1103,13 +1072,9 @@
   </script>
 </head>
 <body>
-<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
-     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
-     https://fontawesome.com/license/free -->
+
 <svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-arrow-left" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></symbol></svg>
 
-
-  <!-- ═══════ MINIMAL HEADER ═══════ -->
   <header class="mw-header">
     <div class="mw-header-inner">
       <a href="/" class="mw-logo" aria-label="Bomaye Gym Startseite">
@@ -1156,13 +1121,8 @@
   <a class="btn btn--gold mn-cta" href="/mitglied-werden" aria-current="page" onclick="togglePageMenu();" style="--mn-i:9;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">MITGLIED WERDEN</a>
 </div>
 
-
-  <!-- ═══════ PAGE CONTENT ═══════ -->
   <main class="mw-page" role="main">
 
-    <!-- ══════════════════════════════════════════════
-         SECTION 1 — HERO
-    ══════════════════════════════════════════════ -->
     <section class="mw-hero" aria-label="Early Bird Pakete">
       <div class="mw-hero-inner reveal">
         <p class="mw-hero-label">Early Bird</p>
@@ -1171,12 +1131,8 @@
       </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         SECTION 2 — THREE PACKAGE CARDS
-    ══════════════════════════════════════════════ -->
     <section class="mw-cards" id="packages" aria-label="Mitgliedschaftspakete">
 
-      <!-- Dokumente-Hinweis -->
       <div style="max-width:1100px;margin:0 auto 1.5rem;">
         <div class="doc-strip" role="note" aria-label="Wichtige Dokumente">
           <span class="doc-strip-label">Wichtige Dokumente:&nbsp;</span>
@@ -1187,7 +1143,6 @@
 
       <div class="mw-cards-inner">
 
-        <!-- CARD: KIDS — DOM pos 1, desktop col 1, mobile col 2 -->
         <article class="mw-card mw-card--kids reveal" aria-label="Kids Paket">
           <p class="mw-card-label">Für Kids</p>
           <h2 class="mw-card-name">Kids</h2>
@@ -1202,7 +1157,7 @@
           <span class="mw-card-savings">Early Bird</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan speziell für Kinder</li>
-            <li>Strukturiertes Training mit echten Coaches</li>
+            <li>Strukturiertes Training</li>
             <li>Sicheres, geführtes Boxen lernen</li>
             <li>Kleingruppen für individuelle Förderung</li>
           </ul>
@@ -1211,7 +1166,6 @@
              class="mw-card-btn">MITGLIED WERDEN</a>
         </article>
 
-        <!-- CARD: UNLIMITED — DOM pos 2, desktop col 2, mobile col 1 -->
         <article class="mw-card mw-card--popular reveal" aria-label="Unlimited Paket — Most Popular">
           <span class="mw-popular-badge" aria-label="Beliebtestes Paket">Most Popular</span>
           <p class="mw-card-label">Erwachsene</p>
@@ -1228,16 +1182,14 @@
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Unbegrenzter Zugang zu allen Kursen</li>
             <li>Olympic Boxing, Kickboxing, Frauenkurs &amp; mehr</li>
-            <li>Trainiere mit echter Struktur &amp; echten Coaches</li>
+            <li>Trainiere mit klarer Struktur</li>
             <li>Stärkstes Community-Erlebnis in München</li>
-            <li>Dein Early Bird Preis bleibt, solange du Mitglied bleibst.</li>
           </ul>
           <a href="/mitglied-werden#packages" data-abo-contract="45433"
              data-ga-event="begin_checkout" data-item-category="membership_earlybird" data-item-name="Unlimited" data-price="75.60" data-first-payment="175.60" data-plan="unlimited" data-offer="earlybird"
              class="mw-card-btn">JETZT MITGLIED WERDEN</a>
         </article>
 
-        <!-- CARD: YOUTH — DOM pos 3, desktop col 3, mobile col 3 -->
         <article class="mw-card mw-card--youth reveal" aria-label="Youth Paket">
           <p class="mw-card-label">Für Jugendliche</p>
           <h2 class="mw-card-name">Youth</h2>
@@ -1252,7 +1204,7 @@
           <span class="mw-card-savings">Early Bird</span>
           <ul class="mw-card-features" aria-label="Enthaltene Leistungen">
             <li>Kursplan für Jugendliche</li>
-            <li>Echte Technik, echter Sport</li>
+            <li>Technik und Athletik</li>
             <li>Disziplin und Fokus durch Boxen</li>
             <li>Starke Community von Anfang an</li>
           </ul>
@@ -1264,9 +1216,6 @@
       </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         SECTION — FIGHTER-KIT
-    ══════════════════════════════════════════════ -->
     <section class="mw-fk" aria-label="Fighter-Kit">
       <div class="mw-fk-inner reveal">
         <p class="mw-fk-label">Zum Start</p>
@@ -1288,9 +1237,6 @@
       </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         SECTION 3 — TRIAL TRAINING
-    ══════════════════════════════════════════════ -->
     <section class="mw-trial" aria-label="Kostenloses Probetraining">
       <div class="mw-trial-inner reveal">
         <p class="mw-trial-label">Kein Risiko</p>
@@ -1302,9 +1248,6 @@
       </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         SECTION 4 — FINAL CTA (NOCH FRAGEN)
-    ══════════════════════════════════════════════ -->
     <section class="mw-final-cta" aria-label="Kontakt">
       <div class="mw-final-cta-inner reveal">
         <h2 class="mw-final-cta-h2">Noch Fragen?</h2>
@@ -1318,7 +1261,6 @@
       </div>
     </section>
 
-    <!-- ── Footer ── -->
     <footer class="mw-footer" role="contentinfo">
       <nav class="mw-footer-links" aria-label="Rechtliches">
         <a href="/impressum">IMPRESSUM</a>
@@ -1422,17 +1364,9 @@
     })();
   </script>
 
-<!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
-<!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
-     wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
 <script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 
-<!-- Das Aussehen des Abo-Overlays steht jetzt gemeinsam in
-     assets/css/style.css, Abschnitt "ABO-OVERLAY (Mitgliedschaft)".
-     Es war hier und in index.html doppelt und auseinandergelaufen. -->
-
-<!-- ═══════ BSPORT SUBSCRIPTION WIDGET MODAL ═══════ -->
 <div id="bsport-sub-modal" class="bsport-modal-overlay"
      role="dialog" aria-modal="true" aria-label="Mitgliedschaft wählen" aria-hidden="true">
   <div class="bsport-modal-frame">
@@ -1443,10 +1377,8 @@
   </div>
 </div>
 
-<!-- BSPORT — CDN loader (guards against double-load) -->
 <script id="insert-bsport-widget-cdn" data-cookieconsent="ignore">!function (b, s, p, o, r, t) { typeof window.BsportWidget === "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { var m = b.createElement(s); m.id = "bsport-widget-cdn"; m.src = p; b.getElementsByTagName("head")[0].appendChild(m); }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
 
-<!-- BSPORT — MountBsportWidget helper with retry -->
 <script id="bsport-widget-mount" data-cookieconsent="ignore">
 function MountBsportWidget(config, repeat) {
   repeat = repeat || 1;
@@ -1458,17 +1390,10 @@ function MountBsportWidget(config, repeat) {
 }
 </script>
 
-<!-- BSPORT — Abo-Overlay: Mount und Nachricht uebernimmt abo-embed.js.
-     Montiert wird erst beim ersten Klick, nicht beim Seitenaufruf. -->
 <script src="/assets/js/abo-embed.js?v=53ff2980" data-cookieconsent="ignore"></script>
-<!-- Paketklicks messen. Nur Lesen und Melden: kein preventDefault, kein
-     Nachladen, kein Cookie. Siehe docs/tracking-events.md -->
+
 <script src="/assets/js/plan-tracking.js" data-ads-send-to="AW-18136756611/qeVXCKXiobAdEIPjo8hD" defer></script>
-<!-- DIAGNOSE NUR MIT ?ptdom=1
-     Bewusst nachgeladen statt fest eingebunden: ohne den Parameter entsteht
-     keine einzige Anfrage, und die Seite ist Zeile fuer Zeile die von vorher.
-     async=false haelt die Reihenfolge ein - die Grundlage muss vor dem
-     Bericht laufen, der auf sie zugreift. -->
+
 <script data-cookieconsent="ignore">
 (function () {
   if (!/[?&]ptdom=1/.test(window.location.search)) return;
