@@ -409,6 +409,29 @@
   window.addEventListener('CookiebotOnAccept', _ptNochmalAnlaufen);
   window.addEventListener('CookiebotOnConsentReady', _ptNochmalAnlaufen);
 
+  /* "ERNEUT VERSUCHEN" MUSS AUF DIESER SEITE AUCH ETWAS TUN
+
+     Der Knopf gehoert bsport-gate.js. Dort laedt er die Scripts nach, die
+     die Sperre abgefangen hat. Auf allen anderen Seiten ist das richtig:
+     dort legt der Schnipsel im Markup das Script an, die Sperre faengt es
+     ab, und beim erneuten Versuch wird genau das nachgeholt.
+
+     /probetraining ist anders. Hier legt kein Schnipsel etwas an, sondern
+     der Rueckruf dieser Datei. Hat der nie gelaufen, gibt es nichts
+     abzufangen und nichts nachzuladen - der Knopf dreht sich im Leeren,
+     und nach dem zweiten Versuch kommt der Rueckfall mit Telefon und
+     WhatsApp. Genau dieser Ablauf wurde am 05.11.2026 live gemeldet.
+
+     Darum hoert diese Datei auf den Knopf mit und laeuft selbst noch
+     einmal an. Der Horcher haengt am Dokument, nicht am Knopf: den baut
+     die Sperre erst spaeter, und sie baut ihn mehrfach neu. */
+  document.addEventListener('click', function (e) {
+    var ziel = e && e.target;
+    if (!ziel || !ziel.closest) return;
+    if (!ziel.closest('.bomaye-consent-gate__reload')) return;
+    _ptNochmalAnlaufen();
+  }, true);
+
   function _ptMountCalendar() {
     if (_ptMounted || _ptVersuchLaeuft) return;
     var view = document.getElementById('pt-cal-view');
