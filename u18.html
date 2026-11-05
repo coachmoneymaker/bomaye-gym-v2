@@ -315,7 +315,13 @@
     /* Document card grid */
     .u18-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      /* min(280px, 100%) STATT 280px
+         Auf 280px Fensterbreite bleiben im Container 232px uebrig. Eine
+         Spur mit fester Untergrenze 280px passte dort nicht und die Karten
+         ragten 20px nach rechts hinaus, die Seite liess sich schieben. Mit
+         min(280px, 100%) gibt die Untergrenze nach, sobald der Platz
+         kleiner ist; oberhalb bleibt alles wie vorher. */
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
       gap: 1.25rem;
       margin-top: 1rem;
     }

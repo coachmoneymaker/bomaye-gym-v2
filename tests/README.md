@@ -14,6 +14,11 @@ Betroffen sind unter anderem `assets/js/bsport-gate.js`,
 `assets/js/pixel-events.js`, der Anmeldehorcher in `mitgliederbereich.html`
 und jedes `data-cookieconsent`-Attribut im Markup.
 
+**Nach jeder Änderung an `assets/css/style.css`, an der Sticky-Leiste oder
+am Layout einer Seite: ebenfalls `npm run test:alles`.** `breiten.mjs` und
+`sticky.mjs` messen die Seiten in vierzehn Fenstergrößen; ein Überlauf auf
+280 px fällt sonst erst auf dem Gerät eines Besuchers auf.
+
 `npm run pruefen:alles` ersetzt das **nicht**. Es prüft Markup und Texte,
 aber keinen laufenden Browser.
 
@@ -34,7 +39,10 @@ Jede Suite endet mit `N/M bestanden, F Fehler` und gibt bei einem Fehler
 den Rückgabewert 1. `tests/alles.mjs` bricht nicht beim ersten Fehler ab,
 sondern lässt alle Suiten laufen und fasst am Ende zusammen.
 
-Dauer: zusammen etwa sieben Minuten (gemessen: 83 + 92 + 176 + 47 Sekunden).
+Dauer: zusammen etwa zwölf Minuten (gemessen am 5.11.2026: 83 + 105 + 22 +
+168 + 92 + 178 + 47 Sekunden, zusammen 637 Prüfungen). Die beiden längsten
+sind `tor-text.mjs` und `sticky.mjs` (die Leiste auf elf Größen, jede frisch
+geladen).
 Zwei Abschnitte in `tor-knopf.mjs` warten absichtlich 15 beziehungsweise 17
 Sekunden, weil der Lader in `probetraining-page.js` nach 15 Sekunden
 aufgibt und genau das geprüft wird.
@@ -67,8 +75,11 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `abo-reveal.mjs` | `ccd458c` (vor PR #190) | 41/43, **2 Fehler** — `https://evil.example` leitet auf `/mitglied-werden` um und setzt `bsport_auth_complete` |
 | `tor-knopf.mjs` | `66173c2` (vor PR #191) | 49/61, **12 Fehler** — kein zweiter Anlauf nach einem Fehlschlag, „Erneut versuchen" wirkungslos |
 | `tor-text.mjs` | `210fe7a` (vor PR #192) | 74/109, **35 Fehler** — der Telefon-Absatz steht noch im Tor |
+| `sticky.mjs` | `6cd3b64` (vor der Sticky-Politur) | 150/205, **55 Fehler** — Knopf 56 px statt 44 (auf 280 px sogar 79 px und drei Zeilen), Luft um den Knopf −0,7 px, das Kreuz ist das Zeichen „×" |
+| `breiten.mjs` | `6cd3b64` (vor der Sticky-Politur) | 110/137, **27 Fehler** — `/u18` 300 px bei 280 px Fenster, `/datenschutz` 285 px, Startseite 334 px und `/probetraining` 402 px bei Systemschrift 130 % |
+| `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
 
-Gegen den aktuellen `main` bestehen alle vier vollständig: 235 Prüfungen,
+Gegen den aktuellen Stand bestehen alle sieben vollständig: 637 Prüfungen,
 0 Fehler.
 
 ### Playwright
@@ -177,6 +188,15 @@ Seitenskript laeuft.
   Vorschalter trotzdem nach etwa vier Sekunden und der Held wird
   eingeblendet.
 
+* `/mitgliederbereich`: der Anmeldehorcher las die gemerkte Sektion
+  (`bsport_pending_section`) ungeschuetzt und brach bei werfendem Speicher
+  mitten im Nachrichten-Behandler ab. Geprueft wird mit einem
+  `MessageEvent`, dessen `origin` auf `https://backoffice.bsport.io` steht:
+  keine Ausnahme, keine Umleitung, der Kopf bleibt bedienbar und ein Klick
+  kommt an. Gegenprobe mit funktionierendem Speicher: dieselbe Nachricht
+  fuehrt weiter auf `/mitglied-werden#abos` und leert den Merker. Fremde
+  Herkunft loest nach wie vor nichts aus.
+
 Gegenprobe gegen den Stand vor der Behebung: **39/46**, unter anderem
 "Vorschalter steht nach 5 s noch" und "hero-revealed false".
 
@@ -195,14 +215,64 @@ Die Leiste am unteren Rand, nur auf den dreizehn eingeschlossenen Seiten.
 * Stumm bei offenem Cookiebot-Dialog und bei einem Feld im Fokus, danach
   wieder da.
 * Das Kreuz haelt die Sitzung durch, auch ueber ein Neuladen.
-* Aussehen und Tippflaechen: dunkles Token, eine Goldlinie oben, Hoehe um
-  56 px, Knopf mindestens 44 px, Kreuz mindestens 44x44, kein Messattribut
-  am Knopf, kein Ueberlappen mit Fusstext und Cookiebot-Abzeichen, kein
-  waagerechtes Schieben.
+* Aussehen und Tippflaechen: dunkles Token, eine Goldlinie oben, Hoehe
+  genau 64 px, `color-scheme: dark`, `text-size-adjust: 100%`, Knopf genau
+  44 px hoch mit mindestens 8 px Luft oben und unten, Text auf **einer**
+  Zeile und ohne Punkte, kein Messattribut am Knopf, kein Ueberlappen mit
+  Fusstext, kein waagerechtes Schieben.
+* Das Kreuz ist ein SVG mit zwei Strichen, ohne Schriftzeichen, 44x44 als
+  Tippflaeche, in der erklaerten Farbe `rgba(245,240,232,0.55)` und
+  ausdruecklich **nicht** in einem der beiden Browserblaus
+  (`rgb(0,0,238)`, `rgb(0,122,255)`). `aria-label` unveraendert.
+* Elf Groessen am Stueck, je frisch geladen: 280, 320, 344, 360, 375, 390,
+  412, 430 hochkant, ein Querformat (667x375, dort 56 px hoch) und zweimal
+  Systemschrift 130 % (320 und 390). Bei 390x260 ist die Leiste aus, weil
+  sie dort mehr als ein Fuenftel des Bildes verdecken wuerde.
+* Die alte Regel, die Cookiebots Abzeichen anhob, ist nachweisbar aus den
+  Stilblaettern verschwunden.
 * `prefers-reduced-motion`: sichtbar, aber ohne Uebergangsdauer.
 * Blockierter `sessionStorage`: die Leiste erscheint trotzdem und das
   Zumachen wirkt im Seitenaufruf.
 * Der Klick fuehrt auf /probetraining.
+
+### `breiten.mjs` — die ganze Seite auf jeder Telefonbreite
+
+Alle sechsundzwanzig Seiten durch vierzehn Fenstergroessen: hochkant 280,
+320, 344, 360, 375, 390, 412, 430, 480, 600 und 768, im Querformat 667x375,
+844x390 und 915x412. An jeder Stelle:
+
+* Die Seite laesst sich nicht waagerecht schieben
+  (`scrollWidth <= innerWidth`), oben und am Dokumentende.
+* Kein Element ist breiter als das Fenster und keines ragt rechts hinaus.
+  Elemente in einem Kasten mit `overflow-x` zaehlen nicht, die Preistabelle
+  ist dort absichtlich breiter.
+* Die Sticky-Leiste verdeckt keinen Fusslink, keinen Rechtslink und kein
+  Eingabefeld, und der letzte Inhalt im Fuss bleibt oberhalb der Leiste.
+* Die Leiste hat die vorgesehene Hoehe: hochkant 64 px, im Querformat 56 px.
+
+Dazu Systemschrift 130 % auf `/`, `/preise` und `/probetraining` bei 320 und
+390 px.
+
+**Groesse umstellen statt neu laden:** 26 Seiten mal 14 Groessen waeren 364
+Ladevorgaenge. Stattdessen wird jede Seite einmal geladen und danach das
+Fenster umgestellt; fuer Ueberlauf und Ueberlappung ist das gleichwertig,
+weil beides beim Neuberechnen des Layouts entsteht. Nicht nachgestellt
+werden Masse, die ein Skript einmal beim Laden ausrechnet - die
+ausfuehrlichen Messungen der Leiste bei frisch geladener Seite stehen in
+`sticky.mjs`.
+
+**Geschlossene Dialoge zaehlen nicht.** `#family-modal` und
+`#corporate-modal` auf der Startseite stehen immer im Markup, `position:
+fixed`, `display: flex`, `visibility: visible`, und sind nur ueber
+`opacity: 0` und `pointer-events: none` zu. Die Felder darin haben eigene
+Masse mitten im Bild. Eine Pruefung, die nur das Element selbst ansieht,
+meldete die Leiste darum in jeder Breite als "verdeckt ein Eingabefeld".
+Jede Pruefung laeuft deshalb die Vorfahren mit ab - dieselbe Falle wie in
+`sticky-buchung.js`.
+
+Gefundene und behobene Befunde beim ersten Lauf: vier (siehe PR zur
+Sticky-Politur) - `/u18` auf 280 px, `/datenschutz` auf 280 px, die
+Startseite und `/probetraining` bei Systemschrift 130 %.
 
 ### `gemeinsam.mjs`
 

@@ -82,9 +82,12 @@ export async function serverStarten(wurzel) {
 export function zaehler() {
   let ok = 0, fehler = 0;
   return {
+    /* Gibt zurueck, ob die Pruefung gut war. So kann der Aufrufer mehrere
+       Pruefungen zu einer Aussage zusammenfassen, ohne zweimal zu zaehlen. */
     pruef(name, gut, zusatz) {
       if (gut) { ok++; console.log('OK   ' + name + (zusatz !== undefined ? '  ' + zusatz : '')); }
       else { fehler++; console.log('FEHL ' + name + (zusatz !== undefined ? '  ' + zusatz : '')); }
+      return !!gut;
     },
     abschluss() {
       console.log(`\n${ok}/${ok + fehler} bestanden, ${fehler} Fehler`);

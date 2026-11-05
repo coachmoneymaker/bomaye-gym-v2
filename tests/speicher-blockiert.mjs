@@ -214,5 +214,113 @@ console.log('\n── C. Das Netz: ohne main.js verschwindet der Vorschalter tro
   await ctx.close();
 }
 
+/* ═══════════ D. /mitgliederbereich: der Nachrichten-Behandler ═══════════ */
+console.log('\n── D. /mitgliederbereich, Anmelde-Nachricht bei werfendem Speicher ──');
+
+/* WORUM ES HIER GEHT
+   Der Behandler fuer die Anmelde-Nachricht von Bsport las die gemerkte
+   Sektion ungeschuetzt:
+
+       var pending = sessionStorage.getItem('bsport_pending_section');
+       sessionStorage.removeItem('bsport_pending_section');
+
+   Wirft der Speicher, brach die Ausnahme den ganzen Behandler ab, also auch
+   alles, was danach noch kommen sollte. Jetzt steht ein try/catch darum und
+   es entfaellt nur die Rueckkehr zur gemerkten Sektion.
+
+   Die Nachricht wird als MessageEvent mit gesetztem origin erzeugt. Nur so
+   kommt sie durch die Herkunftspruefung: der Behandler vergleicht
+   event.origin zeichengenau gegen https://backoffice.bsport.io. */
+async function nachrichtSenden(page, origin) {
+  await page.evaluate((o) => {
+    window.dispatchEvent(new MessageEvent('message', {
+      data: { type: 'IFRAME_LOGIN_SUCCESS' }, origin: o,
+    }));
+  }, origin);
+  await page.waitForTimeout(500);
+}
+
+for (const [b, h, kennung] of GROESSEN) {
+  const { ctx, page, fehler } = await laden('mitgliederbereich.html', b, h);
+  const name = 'mitgliederbereich / ' + kennung;
+  const vorher = page.url();
+
+  await nachrichtSenden(page, 'https://backoffice.bsport.io');
+
+  const eigene = fehler.filter((f) => /mitgliederbereich/.test(f));
+  pruef(name + ': keine Ausnahme aus mitgliederbereich.html', eigene.length === 0,
+        eigene.length ? JSON.stringify(eigene).slice(0, 220) : undefined);
+  pruef(name + ': ueberhaupt keine Ausnahme', fehler.length === 0,
+        fehler.length ? JSON.stringify(fehler).slice(0, 220) : undefined);
+  pruef(name + ': keine Umleitung ohne gemerkte Sektion', page.url() === vorher,
+        page.url().replace(basis, ''));
+
+  /* Die Seite bleibt bedienbar: der Kopf steht, und ein Klick kommt an.
+     /mitgliederbereich hat einen eigenen Kopf, <header class="mw-header">
+     ohne id, nicht den #header der uebrigen Seiten. Darum hier ein eigener
+     Blick statt zustand(). */
+  const b2 = await page.evaluate(() => {
+    const kopf = document.querySelector('.mw-header');
+    const el = window.innerWidth > 768
+      ? document.querySelector('.mw-header .nav-links a')
+      : document.querySelector('.mw-header .burger');
+    const sichtbar = (n) => {
+      if (!n) return false;
+      const cs = getComputedStyle(n);
+      if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+      if (parseFloat(cs.opacity) < 0.05) return false;
+      return n.getClientRects().length > 0;
+    };
+    let an = 'kein Element';
+    if (el) {
+      an = false;
+      const h = () => { an = true; };
+      el.addEventListener('click', h, { once: true });
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      el.removeEventListener('click', h);
+    }
+    return {
+      kopfDa: sichtbar(kopf),
+      elementDa: sichtbar(el),
+      marke: el ? (el.textContent.replace(/\s+/g, ' ').trim() || el.getAttribute('aria-label')) : null,
+      klickt: an,
+    };
+  });
+  pruef(name + ': Kopf bleibt bedienbar', b2.kopfDa === true && b2.elementDa === true,
+        b2.marke + ', Kopf ' + b2.kopfDa + ', Element ' + b2.elementDa);
+  pruef(name + ': Klick kommt an', b2.klickt === true, String(b2.klickt));
+  await ctx.close();
+}
+
+/* Gegenprobe: mit funktionierendem Speicher fuehrt dieselbe Nachricht
+   genau wie vorher auf die gemerkte Sektion. Das Verhalten aendert sich
+   also nur dann, wenn der Speicher ohnehin nicht zu gebrauchen ist. */
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await ctx.newPage();
+  await page.goto(basis + 'mitgliederbereich.html', { waitUntil: 'load' });
+  await page.evaluate(() => window.sessionStorage.setItem('bsport_pending_section', 'abos'));
+  await nachrichtSenden(page, 'https://backoffice.bsport.io');
+  pruef('Speicher funktioniert: Nachricht fuehrt zur gemerkten Sektion',
+        /mitglied-werden#abos$/.test(page.url()), page.url().replace(basis, ''));
+  const rest = await page.evaluate(() => {
+    try { return window.sessionStorage.getItem('bsport_pending_section'); } catch (e) { return 'wirft'; }
+  });
+  pruef('Speicher funktioniert: Merker ist danach geleert', rest === null, String(rest));
+  await ctx.close();
+}
+
+/* Fremde Herkunft bleibt wirkungslos, mit und ohne Speicher. */
+{
+  const { ctx, page, fehler } = await laden('mitgliederbereich.html', 390, 844);
+  const vorher = page.url();
+  await nachrichtSenden(page, 'https://backoffice.bsport.io.angreifer.example');
+  pruef('fremde Herkunft loest nichts aus', page.url() === vorher,
+        page.url().replace(basis, ''));
+  pruef('fremde Herkunft wirft nichts', fehler.length === 0,
+        JSON.stringify(fehler).slice(0, 200));
+  await ctx.close();
+}
+
 await browser.close(); srv.close();
 process.exit(abschluss() ? 1 : 0);

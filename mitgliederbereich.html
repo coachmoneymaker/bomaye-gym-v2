@@ -575,8 +575,17 @@
         /* Persist auth state so /mitglied-werden skips the auth gate */
         try { sessionStorage.setItem('bsport_auth_complete', '1'); } catch (e) {}
 
-        var pending = sessionStorage.getItem('bsport_pending_section');
-        sessionStorage.removeItem('bsport_pending_section');
+        /* Der Speicher kann werfen: privates Fenster, blockierte
+           Seitendaten, manche App-Browser. Ungeschuetzt brach die Ausnahme
+           hier den ganzen Nachrichten-Behandler ab. Mit dem try/catch
+           entfaellt nur die Rueckkehr zur gemerkten Sektion, alles andere
+           laeuft weiter. Bei funktionierendem Speicher ist das Verhalten
+           unveraendert. */
+        var pending = null;
+        try {
+          pending = sessionStorage.getItem('bsport_pending_section');
+          sessionStorage.removeItem('bsport_pending_section');
+        } catch (e) { pending = null; }
         if (pending) {
           /* Return to the subscription page at the correct section */
           window.location.href = '/mitglied-werden#' + pending;
