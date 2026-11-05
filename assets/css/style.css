@@ -274,28 +274,49 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 /* ══════════════════════════════════════════════════════════════════════════
    STICKY BUCHUNGSLEISTE, NUR AM HANDY
    ══════════════════════════════════════════════════════════════════════════
-   Paket 3. Eine ruhige Leiste am unteren Rand mit genau einem Weg:
-   Probetraining. Kein Zaehler, kein Dringlichkeitstext, kein Glanz.
+   Paket 3 hat sie gebaut, diese Politur macht sie auf jedem Telefon gleich.
 
    Das Markup baut assets/js/sticky-buchung.js. Steht hier kein Skript, gibt
    es auch keine Leiste; die Seite funktioniert unveraendert.
 
-   HOEHE: 56px plus der sichere Bereich am unteren Rand, damit die Leiste auf
-   Geraeten mit Gestenbalken nicht darunter rutscht.
+   HOEHE: feste 64px plus der sichere Bereich am unteren Rand. 64 statt 56,
+   weil der Knopf eine feste Hoehe von 44px hat und oben wie unten Luft
+   braucht: 64 minus die Goldlinie minus 44 sind 19px, die das Zentrieren
+   gleichmaessig auf 9,5px oben und 9,5px unten verteilt.
 
    EBENE 900: unter dem Kopf (1000) und weit unter den Dialogen (9000). Die
-   Leiste soll nie ueber einem Dialog liegen, sie versteckt sich dann ohnehin. */
+   Leiste soll nie ueber einem Dialog liegen, sie versteckt sich dann ohnehin.
+
+   SEITLICH: max(16px, sicherer Bereich). Auf Geraeten, die im Querformat
+   links und rechts einen sicheren Bereich melden, waere ein festes 16px zu
+   wenig und der Knopf lehnte an der Kante.
+
+   FARBE ERKLAEREN: color-scheme: dark zusammen mit einem ausgeschriebenen
+   background-color. Manche Browser rechnen an Flaechen ohne erklaertes
+   Farbschema herum; in Chrome iOS sah die Leiste darum blaeulich aus.
+   Beides zusammen nimmt dem Browser diese Entscheidung ab.
+
+   text-size-adjust: 100%: die Groessen stehen unten in clamp() und sollen
+   nicht zusaetzlich vom Browser hochgerechnet werden. */
 .sticky-buchung {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 900;
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: calc(56px + env(safe-area-inset-bottom, 0px));
-  padding: 0 16px env(safe-area-inset-bottom, 0px);
+  gap: 8px;
+  box-sizing: border-box;
+  height: calc(64px + env(safe-area-inset-bottom, 0px));
+  padding-top: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
   background: #0A0A08;
+  background-color: #0A0A08;
+  color-scheme: dark;
   border-top: 1px solid var(--gold);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
@@ -307,31 +328,85 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   pointer-events: auto;
 }
 
-/* Der Knopf traegt .btn .btn--gold .btn--sm, sieht also aus wie der im Kopf.
-   min-height haelt ihn ueber den 44px fuer Tippflaechen, die .btn--sm allein
-   nicht erreicht. */
-.sticky-buchung__knopf {
+/* DER KNOPF: EINE ZEILE, FESTE HOEHE, NIE BREITER ALS DER PLATZ
+
+   Er traegt .btn .btn--gold .btn--sm, sieht also aus wie der im Kopf, hatte
+   damit aber auch dessen Masse: .btn polstert 0.9rem oben und unten, der
+   Knopf wurde 56px hoch und fuellte die Leiste von Linie zu Linie. Das alte
+   min-height: 44px half nicht, weil die Polsterung groesser war als der
+   Mindestwert. Jetzt steht hier eine feste height und die Polsterung oben
+   und unten ist 0.
+
+   Zwei Klassen im Wahlsatz (.sticky-buchung .sticky-buchung__knopf) reichen
+   gegen .btn und auch gegen .btn in der 360px-Regel weiter oben, die dort
+   white-space: normal setzt und den Text auf schmalen Geraeten in eine
+   zweite Zeile brach. Kein !important noetig.
+
+   display: block statt inline-flex: so ist der Knopf selbst der Kasten, der
+   den Text beschneidet, und text-overflow: ellipsis greift wirklich. Bei
+   inline-flex liegt der Text in einem anonymen Flex-Element, das sich nicht
+   ansprechen laesst; dort waere er ohne Zeichen einfach abgeschnitten.
+   line-height 42px ist die Innenhoehe (44 minus die beiden Rahmenlinien),
+   der Text sitzt damit in der Mitte.
+
+   clamp() mit px als unterem Wert, nicht rem: der Mindestwert soll auch
+   dann halten, wenn die Systemschrift auf 130% steht. Mit 0.62rem als
+   Untergrenze waere der Text bei 130% auf 280px breiter als der Platz. */
+.sticky-buchung .sticky-buchung__knopf {
   flex: 1 1 auto;
-  min-height: 44px;
+  min-width: 0;
+  display: block;
+  box-sizing: border-box;
+  height: 44px;
+  line-height: 42px;
+  padding: 0 clamp(8px, 3vw, 20px);
+  font-size: clamp(10px, 2.8vw, 0.8rem);
+  letter-spacing: clamp(0.3px, 0.45vw, 2px);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-decoration: none;
 }
 
-/* Das Kreuz. 44x44 ist die Tippflaeche, das Zeichen darin darf klein und
-   leise sein. */
+/* DAS KREUZ: EIN SVG, KEIN SCHRIFTZEICHEN
+
+   Vorher stand hier das Zeichen × als Text in einem <button>. Auf echten
+   Telefonen kam es in verschiedenen Farben heraus: Chrome iOS faerbt
+   Knopftext blau, andere Browser nehmen ihre eigene Knopffarbe, und welche
+   Schrift das Zeichen ueberhaupt zeichnet, entscheidet der Rueckfall der
+   Schriftfamilie. Jetzt zeichnet ein SVG zwei Striche mit
+   stroke: currentColor, und die Farbe steht hier.
+
+   appearance: none und -webkit-text-fill-color: currentColor nehmen dem
+   Betriebssystem die Knopfgestaltung vollstaendig aus der Hand.
+
+   44x44 bleibt die Tippflaeche, das Kreuz darin ist 14px und leise. */
 .sticky-buchung__zu {
   flex: 0 0 auto;
   width: 44px; height: 44px;
   display: inline-flex; align-items: center; justify-content: center;
+  appearance: none;
+  -webkit-appearance: none;
   background: transparent;
   border: 0;
   padding: 0;
+  margin: 0;
   cursor: pointer;
-  color: rgba(245,240,232,0.45);
-  font-family: var(--font-body);
-  font-size: 22px;
+  color: rgba(245,240,232,0.55);
+  -webkit-text-fill-color: currentColor;
+  font: inherit;
   line-height: 1;
   transition: color var(--dur-normal) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
+}
+.sticky-buchung__zu svg {
+  display: block;
+  width: 14px; height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 .sticky-buchung__zu:hover,
 .sticky-buchung__zu:focus-visible { color: rgba(245,240,232,0.85); }
@@ -352,20 +427,42 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
    Das Polster haengt an der Klasse auf <body>, die das Skript beim Laden
    setzt, nicht am Erscheinen der Leiste. Sonst ruckte der Fuss in dem
    Moment, in dem die Leiste einblendet. So ist der Platz von Anfang an da
-   und nichts verschiebt sich. */
+   und nichts verschiebt sich.
+
+   ENTFERNT: die Regel, die Cookiebots Abzeichen (#CookiebotWidget) ueber
+   die Leiste hob. Das Abzeichen ist in Cookiebot abgeschaltet, es gibt
+   nichts mehr anzuheben. Die Wahlsaetze #CookiebotWidget in
+   bsport-dialog-wache.js und bsport-dialog-diagnose.js erkennen Dialoge
+   und bleiben unberuehrt; die Regel in probetraining-page.css gehoert zum
+   Buchungs-Modal und bleibt auch. */
 @media (max-width: 768px) {
+  body.hat-sticky-buchung footer,
+  body.hat-sticky-buchung .site-footer {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 16px);
+  }
+}
+
+/* QUERFORMAT UND SEHR FLACHE FENSTER
+
+   Im Querformat ist die Hoehe knapp. Dort bleibt die Leiste bei 56px plus
+   sicherem Bereich. Der Knopf behaelt seine 44px, weil die Tippflaeche
+   wichtiger ist als die Luft darum: es bleiben 5,5px oben und unten.
+
+   Unter 280px Fensterhoehe wuerden selbst 56px mehr als ein Fuenftel des
+   Bildes verdecken (56/280 = 20%). Dann verschwindet die Leiste ganz,
+   statt den Inhalt zuzudecken. Beide Wahlsaetze stehen hier, damit auch
+   .ist-sichtbar nicht dagegen ankommt; !important braucht es nicht, weil
+   diese Regel spaeter steht. */
+@media (max-width: 768px) and (max-height: 450px) {
+  .sticky-buchung { height: calc(56px + env(safe-area-inset-bottom, 0px)); }
   body.hat-sticky-buchung footer,
   body.hat-sticky-buchung .site-footer {
     padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
   }
-  /* Cookiebots Abzeichen sitzt unten links und wuerde auf der Leiste
-     liegen. Es wird angehoben, statt in Cookiebots Code einzugreifen: das
-     hier ist eine Regel von aussen, kein Eingriff. Findet der Wahlsatz
-     nichts, passiert nichts. */
-  body.hat-sticky-buchung #CookiebotWidget,
-  body.hat-sticky-buchung .CookiebotWidget-logo {
-    bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 12px) !important;
-  }
+}
+@media (max-height: 279px) {
+  .sticky-buchung,
+  .sticky-buchung.ist-sichtbar { display: none; }
 }
 
 /* Auf dunklem Grund, zum Beispiel im Early-Bird-Abschluss der Startseite. */
@@ -1376,8 +1473,15 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
 @media (max-width: 480px) {
   .schedule-frame {
     border-radius: 0;
-    margin-left: -1.25rem;
-    margin-right: -1.25rem;
+    /* IN PIXEL, NICHT IN REM
+       Dieser Rand zieht den Rahmen um genau das Polster des Containers nach
+       aussen. Die Polster, gegen die er rechnet, stehen in px: 24px aus der
+       480er-Regel in dieser Datei und 20px aus section#pt-booking .container
+       in probetraining-page.css. In rem wuchs der Rand bei Systemschrift
+       130% auf 26px mit, die Polster nicht, und /probetraining lief auf
+       320px und 390px um 12px ueber den Rand hinaus. */
+    margin-left: -20px;
+    margin-right: -20px;
     min-height: 340px;
   }
   .schedule-frame__widget { min-height: 340px; }
@@ -1569,18 +1673,27 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
    LOCATION / MAP
 ══════════════════════════════════════════════════════════════ */
 #location { padding: 0; }
-.location-wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: 500px; }
+/* minmax(0, 1fr) STATT 1fr
+
+   1fr hat als Untergrenze die min-content-Breite des Inhalts. Bei
+   Systemschrift 130% war die Oeffnungszeiten-Zeile 282px breit, dazu 2x26px
+   Polster: die eine Spalte wurde 334px breit und die Startseite liess sich
+   auf 320px Geraeten waagerecht schieben. Mit minmax(0, 1fr) darf die Spur
+   schrumpfen, und min-width: 0 an den Flex-Kindern erlaubt dem Text, dabei
+   umzubrechen statt hinauszuragen. */
+.location-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 500px; }
 .location-info {
   background: #F5F0E8; padding: 4rem 3.5rem;
+  min-width: 0;
   display: flex; flex-direction: column; justify-content: center;
 }
 .location-info h2 { margin: 1.2rem 0 2rem; color: var(--ink); }
-.location-detail  { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+.location-detail  { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; min-width: 0; }
 .location-detail > i { color: var(--gold-dark); font-size: 1rem; margin-top: 4px; flex-shrink: 0; }
-.location-detail-text { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.88rem; }
+.location-detail-text { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.88rem; min-width: 0; }
 .location-detail-text strong { color: var(--ink); font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 1.5px; }
 .location-detail-text span   { color: rgba(8,8,8,0.62); line-height: 1.7; }
-.hours-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1.25rem; color: rgba(8,8,8,0.62); font-size: 0.86rem; }
+.hours-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.2rem 1.25rem; color: rgba(8,8,8,0.62); font-size: 0.86rem; min-width: 0; }
 .hours-grid .day { color: rgba(8,8,8,0.78); font-weight: 500; }
 .location-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem; }
 .location-address-link { text-decoration: none; color: inherit; }
@@ -2119,7 +2232,12 @@ footer {
 .legal-content p  { font-size: 0.92rem; color: var(--muted); margin-bottom: 1rem; }
 .legal-content ul { margin: 0.75rem 0 1rem 1.25rem; }
 .legal-content ul li { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.4rem; list-style: disc; }
-.legal-content a { color: var(--gold); text-decoration: underline; }
+/* LANGE ADRESSEN DUERFEN BRECHEN
+   In der Datenschutzerklaerung stehen ausgeschriebene Links. Auf 280px war
+   https://www.facebook.com/privacy/policy 285px breit und schob die ganze
+   Seite waagerecht. anywhere bricht nur, wenn es sonst nicht passt, und
+   laesst kuerzere Links unberuehrt. */
+.legal-content a { color: var(--gold); text-decoration: underline; overflow-wrap: anywhere; }
 .legal-content a:hover { color: var(--gold-light); }
 
 /* Tabelle in Rechtstexten (Cookie-Uebersicht in der Datenschutzerklaerung).
@@ -2213,7 +2331,7 @@ footer {
   .dna-visual  { display: none; }
 
   
-  .location-wrap    { grid-template-columns: 1fr; }
+  .location-wrap    { grid-template-columns: minmax(0, 1fr); }
   .location-info    { padding: 3rem 1.5rem; }
   #map-frame        { min-height: 360px; }
 

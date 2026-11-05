@@ -69,11 +69,25 @@
     knopf.href = '/probetraining';
     knopf.textContent = 'PROBETRAINING SICHERN';
 
+    /* DAS KREUZ IST EIN SVG, KEIN SCHRIFTZEICHEN
+       Vorher stand hier textContent = '×'. Auf echten Telefonen kam das
+       Zeichen in verschiedenen Farben und Formen heraus: Chrome iOS faerbt
+       Knopftext blau, andere Browser nehmen ihre eigene Knopffarbe, und
+       welche Schrift das Zeichen zeichnet, entscheidet der Rueckfall der
+       Schriftfamilie. Zwei Striche mit stroke="currentColor" sehen ueberall
+       gleich aus; die Farbe steht in style.css.
+       aria-label bleibt unveraendert, das SVG ist aria-hidden. */
     var zu = document.createElement('button');
     zu.type = 'button';
     zu.className = 'sticky-buchung__zu';
     zu.setAttribute('aria-label', 'Leiste ausblenden');
-    zu.textContent = '×';
+    zu.innerHTML = '<svg viewBox="0 0 14 14" width="14" height="14" '
+                 + 'aria-hidden="true" focusable="false">'
+                 + '<line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" '
+                 + 'stroke-width="2" stroke-linecap="round" fill="none"></line>'
+                 + '<line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" '
+                 + 'stroke-width="2" stroke-linecap="round" fill="none"></line>'
+                 + '</svg>';
     zu.addEventListener('click', function () {
       zugemacht = true;
       try { window.sessionStorage.setItem(SCHLUESSEL, '1'); } catch (e) {}

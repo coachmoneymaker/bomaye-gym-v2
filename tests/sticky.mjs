@@ -63,8 +63,30 @@ async function zustand(page) {
       knopfText: k ? k.textContent.trim() : null,
       knopfZiel: k ? k.getAttribute('href') : null,
       knopfH: kr ? Math.round(kr.height) : 0,
+      knopfB: kr ? Math.round(kr.width) : 0,
+      /* Luft zwischen Goldlinie und Knopf, oben und unten. Die Linie ist
+         1px, sie zaehlt nicht als Luft. */
+      luftOben: kr ? Math.round((kr.top - r.top - 1) * 10) / 10 : null,
+      luftUnten: kr ? Math.round((r.bottom - kr.bottom) * 10) / 10 : null,
+      knopfSchrift: k ? getComputedStyle(k).fontSize : null,
+      knopfSperrung: k ? getComputedStyle(k).letterSpacing : null,
+      /* EINE ZEILE: der Inhalt ist nicht hoeher als eine Zeilenhoehe.
+         scrollHeight waechst mit, sobald der Text umbricht. */
+      knopfZeilen: k ? Math.round(k.scrollHeight / parseFloat(getComputedStyle(k).lineHeight)) : null,
+      /* NICHT BESCHNITTEN: der Text braucht nicht mehr Platz als da ist.
+         Ist er breiter, setzt text-overflow Punkte; das waere der
+         Notausgang, nicht der Normalfall. */
+      knopfTextBreit: k ? k.scrollWidth : null,
+      knopfKastenBreit: k ? Math.round(k.clientWidth) : null,
       xB: xr ? Math.round(xr.width) : 0,
       xH: xr ? Math.round(xr.height) : 0,
+      xFarbe: x ? getComputedStyle(x).color : null,
+      xFuellfarbe: x ? getComputedStyle(x)['-webkit-text-fill-color'] : null,
+      xSvg: x ? x.querySelectorAll('svg line').length : 0,
+      xTextinhalt: x ? x.textContent.trim() : null,
+      xMarke: x ? x.getAttribute('aria-label') : null,
+      farbschema: cs.colorScheme,
+      textAnpassung: cs.webkitTextSizeAdjust || cs.textSizeAdjust || null,
       uebergang: cs.transitionDuration,
       datenAttribute: k ? [...k.attributes].map((a) => a.name).filter((n) => n.indexOf('data-') === 0) : [],
     };
@@ -243,50 +265,60 @@ console.log('\n── E. Zumachen haelt die Sitzung durch ──');
 }
 
 /* ═══════════ F. Aussehen, Tippflaechen, kein Ueberlappen ═══════════ */
-console.log('\n── F. Aussehen, Tippflaechen, Fuss und Cookiebot-Abzeichen ──');
+console.log('\n── F. Aussehen, Tippflaechen, Fuss ──');
 {
   const { ctx, page } = await seiteOeffnen(browser, basis, 'index.html', { ...OPT, breite: 390 });
   await page.setViewportSize({ width: 390, height: 844 });
-  /* Cookiebots Abzeichen nachbauen, damit sich die Regel pruefen laesst. */
-  await page.evaluate(() => {
-    const w = document.createElement('div');
-    w.id = 'CookiebotWidget';
-    w.style.cssText = 'position:fixed;left:12px;bottom:12px;width:48px;height:48px;'
-                    + 'background:#123;z-index:950;';
-    document.body.appendChild(w);
-  });
   await hinterDenPreisblock(page);
   const z = await zustand(page);
 
   pruef('Hintergrund ist das dunkle Token', z.hintergrund === 'rgb(10, 10, 8)', z.hintergrund);
   pruef('eine Goldlinie oben', /^1px rgb\(201, 168, 76\)$/.test(z.randOben), z.randOben);
-  pruef('Hoehe um die 56 px', z.hoehe >= 54 && z.hoehe <= 72, z.hoehe + ' px');
+  /* 64px, nicht mehr 56: der Knopf hat feste 44px und braucht oben und
+     unten Luft. */
+  pruef('Hoehe ist 64 px', z.hoehe === 64, z.hoehe + ' px');
+  pruef('Farbschema ist erklaert als dark', z.farbschema === 'dark', String(z.farbschema));
+  pruef('Schriftgroesse wird nicht nachskaliert', z.textAnpassung === '100%',
+        String(z.textAnpassung));
   pruef('Knopf heisst PROBETRAINING SICHERN', z.knopfText === 'PROBETRAINING SICHERN', z.knopfText);
   pruef('Knopf zeigt auf /probetraining', z.knopfZiel === '/probetraining', z.knopfZiel);
-  pruef('Knopf mindestens 44 px hoch', z.knopfH >= 44, z.knopfH + ' px');
-  pruef('Kreuz mindestens 44x44', z.xB >= 44 && z.xH >= 44, z.xB + 'x' + z.xH);
+  pruef('Knopf ist genau 44 px hoch', z.knopfH === 44, z.knopfH + ' px');
+  pruef('Luft ueber dem Knopf mindestens 8 px', z.luftOben >= 8, z.luftOben + ' px');
+  pruef('Luft unter dem Knopf mindestens 8 px', z.luftUnten >= 8, z.luftUnten + ' px');
+  pruef('Knopftext steht auf einer Zeile', z.knopfZeilen === 1, z.knopfZeilen + ' Zeilen');
+  pruef('Knopftext wird nicht beschnitten',
+        z.knopfTextBreit <= z.knopfKastenBreit + 1,
+        z.knopfTextBreit + ' in ' + z.knopfKastenBreit + ' px');
   pruef('kein Messattribut am Knopf', z.datenAttribute.length === 0,
         JSON.stringify(z.datenAttribute));
 
-  const d = await page.evaluate(() => {
-    const l = document.getElementById('sticky-buchung').getBoundingClientRect();
-    const w = document.getElementById('CookiebotWidget').getBoundingClientRect();
-    const ueberlappt = !(w.right < l.left || w.left > l.right || w.bottom < l.top || w.top > l.bottom);
-    return {
-      ueberlappt,
-      abzeichenUnten: Math.round(w.bottom),
-      leisteOben: Math.round(l.top),
-      quer: document.documentElement.scrollWidth > window.innerWidth + 1,
-      breiteDoc: document.documentElement.scrollWidth,
-      breiteFenster: window.innerWidth,
-    };
-  });
-  pruef('kein Ueberlappen mit dem Cookiebot-Abzeichen', d.ueberlappt === false,
-        'Abzeichen endet bei ' + d.abzeichenUnten + ', Leiste beginnt bei ' + d.leisteOben);
+  /* DAS KREUZ
+     Zwei Striche als SVG, kein Schriftzeichen mehr. Die Farbe ist die
+     erklaerte, nicht die vom Browser gewaehlte Knopffarbe: Chrome iOS malt
+     Knopftext blau (rgb(0, 122, 255)), aeltere Browser nehmen das alte
+     Linkblau rgb(0, 0, 238). */
+  pruef('Kreuz mindestens 44x44', z.xB >= 44 && z.xH >= 44, z.xB + 'x' + z.xH);
+  pruef('Kreuz ist ein SVG mit zwei Strichen', z.xSvg === 2, z.xSvg + ' Striche');
+  pruef('kein Schriftzeichen mehr im Kreuz', z.xTextinhalt === '',
+        JSON.stringify(z.xTextinhalt));
+  pruef('Kreuz traegt die erklaerte Farbe', z.xFarbe === 'rgba(245, 240, 232, 0.55)', z.xFarbe);
+  pruef('Kreuzfarbe ist nicht blau',
+        z.xFarbe !== 'rgb(0, 0, 238)' && z.xFarbe !== 'rgb(0, 122, 255)', z.xFarbe);
+  pruef('Beschriftung des Kreuzes unveraendert', z.xMarke === 'Leiste ausblenden', z.xMarke);
+
+  const d = await page.evaluate(() => ({
+    quer: document.documentElement.scrollWidth > window.innerWidth + 1,
+    breiteDoc: document.documentElement.scrollWidth,
+    breiteFenster: window.innerWidth,
+  }));
   pruef('kein waagerechtes Schieben', d.quer === false,
         d.breiteDoc + ' zu ' + d.breiteFenster);
 
-  /* Fusstext: die letzte Zeile im Fuss darf nicht unter der Leiste liegen. */
+  /* Fusstext: die letzte Zeile im Fuss darf nicht unter der Leiste liegen.
+     ENTFALLEN: die Pruefung gegen Cookiebots Abzeichen. Das Abzeichen ist
+     in Cookiebot abgeschaltet, die Regel, die es anhob, ist aus style.css
+     entfernt, und ein nachgebautes Abzeichen wuerde nur noch die eigene
+     Attrappe messen. */
   const f = await page.evaluate(() => {
     const fuss = document.querySelector('footer');
     if (!fuss) return { kein: true };
@@ -295,7 +327,76 @@ console.log('\n── F. Aussehen, Tippflaechen, Fuss und Cookiebot-Abzeichen �
     return { polster: cs.paddingBottom, kein: false };
   });
   pruef('Fuss hat Platz fuer die Leiste',
-        f.kein || parseFloat(f.polster) >= 56, f.kein ? 'kein footer' : f.polster);
+        f.kein || parseFloat(f.polster) >= 64, f.kein ? 'kein footer' : f.polster);
+  pruef('die alte Cookiebot-Regel ist weg',
+        !(await page.evaluate(() => [...document.styleSheets].some((sh) => {
+          try {
+            return [...sh.cssRules].some((r) => /CookiebotWidget/.test(r.cssText)
+                                                && /hat-sticky-buchung/.test(r.cssText));
+          } catch (e) { return false; }
+        }))));
+  await ctx.close();
+}
+
+/* ═══════════ I. Jede Telefonbreite, Querformat, grosse Systemschrift ═══════════ */
+console.log('\n── I. Die Leiste auf jeder Breite ──');
+{
+  /* Hochkant inklusive der beiden Faltmasse 280 und 344, dazu ein
+     Querformat und zweimal Systemschrift 130%. Gemessen wird bei frisch
+     geladener Seite, nicht durch Umstellen des Fensters. */
+  const FAELLE = [
+    [280, 653, 100], [320, 568, 100], [344, 882, 100], [360, 640, 100],
+    [375, 667, 100], [390, 844, 100], [412, 915, 100], [430, 932, 100],
+    [667, 375, 100], [320, 568, 130], [390, 844, 130],
+  ];
+  for (const [b, h, lupe] of FAELLE) {
+    const { ctx, page } = await seiteOeffnen(browser, basis, 'index.html', { ...OPT, breite: b });
+    await page.setViewportSize({ width: b, height: h });
+    if (lupe !== 100) await page.addStyleTag({ content: 'html { font-size: ' + lupe + '% }' });
+    await page.waitForTimeout(500);
+    /* Nicht suchen, sondern den schlimmsten Fall herstellen: die Leiste
+       dort messen, wo sie liegen WUERDE. hinterDenPreisblock() braucht auf
+       elf Groessen zu lange und haengt am Scrollweg der jeweiligen Hoehe. */
+    await page.evaluate(() => {
+      const l = document.getElementById('sticky-buchung');
+      if (l) { l.style.opacity = '1'; l.style.transform = 'none'; }
+    });
+    await page.waitForTimeout(200);
+    const z = await zustand(page);
+    const name = b + 'x' + h + ' @' + lupe + '%';
+    if (!z.da) { pruef(name + ': Leiste gebaut', false, 'keine Leiste im Markup'); continue; }
+
+    const sollHoehe = h < 450 ? 56 : 64;
+    const sollLuft = h < 450 ? 4 : 8;
+    pruef(name + ': Hoehe ' + sollHoehe + ' px', z.hoehe === sollHoehe, z.hoehe + ' px');
+    pruef(name + ': Knopf genau 44 px hoch', z.knopfH === 44, z.knopfH + ' px');
+    pruef(name + ': Knopf liegt vollstaendig in der Leiste',
+          z.luftOben >= sollLuft && z.luftUnten >= sollLuft,
+          z.luftOben + ' / ' + z.luftUnten + ' px');
+    pruef(name + ': Text auf einer Zeile', z.knopfZeilen === 1,
+          z.knopfZeilen + ' Zeilen, ' + z.knopfSchrift + ' / ' + z.knopfSperrung);
+    pruef(name + ': Text passt ohne Punkte',
+          z.knopfTextBreit <= z.knopfKastenBreit + 1,
+          z.knopfTextBreit + ' in ' + z.knopfKastenBreit + ' px');
+    pruef(name + ': Kreuz 44x44', z.xB >= 44 && z.xH >= 44, z.xB + 'x' + z.xH);
+    pruef(name + ': Kreuzfarbe nicht blau',
+          z.xFarbe !== 'rgb(0, 0, 238)' && z.xFarbe !== 'rgb(0, 122, 255)', z.xFarbe);
+    const quer = await page.evaluate(() => ({
+      quer: document.documentElement.scrollWidth > window.innerWidth + 1,
+      doc: document.documentElement.scrollWidth, f: window.innerWidth,
+    }));
+    pruef(name + ': kein waagerechtes Schieben', quer.quer === false, quer.doc + ' zu ' + quer.f);
+    await ctx.close();
+  }
+}
+
+/* Sehr flaches Fenster: die Leiste wuerde mehr als ein Fuenftel verdecken. */
+{
+  const { ctx, page } = await seiteOeffnen(browser, basis, 'index.html', { ...OPT, breite: 390 });
+  await page.setViewportSize({ width: 390, height: 260 });
+  await page.waitForTimeout(400);
+  const z = await zustand(page);
+  pruef('bei 260 px Fensterhoehe ist die Leiste aus', z.anzeige === 'none', String(z.anzeige));
   await ctx.close();
 }
 
