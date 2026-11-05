@@ -1252,14 +1252,14 @@
 
       </div>
 
-      <div class="carousel-dots" id="carousel-dots" aria-hidden="true">
-        <button class="carousel-dot active" onclick="scrollCarouselTo(0)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(1)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(2)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(3)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(4)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(5)"></button>
-        <button class="carousel-dot" onclick="scrollCarouselTo(6)"></button>
+      <div class="carousel-dots" id="carousel-dots">
+        <button type="button" class="carousel-dot active" onclick="scrollCarouselTo(0)" aria-label="Slide 1 von 7" aria-current="true"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(1)" aria-label="Slide 2 von 7"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(2)" aria-label="Slide 3 von 7"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(3)" aria-label="Slide 4 von 7"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(4)" aria-label="Slide 5 von 7"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(5)" aria-label="Slide 6 von 7"></button>
+        <button type="button" class="carousel-dot" onclick="scrollCarouselTo(6)" aria-label="Slide 7 von 7"></button>
       </div>
 
       <div id="mobile-course-detail" class="mobile-course-detail container">
@@ -1402,7 +1402,7 @@
     </div>
   </section>
 
-  <section id="corporate" class="kurse-corporate" aria-labelledby="corporate-h2">
+  <section id="corporate" class="kurse-corporate" aria-labelledby="corporate-h2" data-sticky-still>
     <div class="container">
       <div class="kurse-corporate__panel reveal">
         <div class="family-modal-header" style="text-align:left; padding:0 0 1.5rem;">
@@ -2113,8 +2113,15 @@ function openMobileCourse(id, idx) {
   var cards = Array.from(carousel.querySelectorAll('.carousel-card'));
   var dots  = Array.from(document.querySelectorAll('.carousel-dot'));
 
+  /* Der aktive Punkt wird nicht nur gefaerbt, er sagt es auch.
+     aria-current steht am aktiven Punkt und nirgendwo sonst; die
+     Beschriftung "Slide n von 7" steht fest im Markup. */
   function activateDot(i) {
-    dots.forEach(function (d, j) { d.classList.toggle('active', j === i); });
+    dots.forEach(function (d, j) {
+      d.classList.toggle('active', j === i);
+      if (j === i) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
+    });
   }
 
   /* Update active dot on scroll — find card whose centre is closest to viewport centre */

@@ -231,6 +231,18 @@ Die Leiste am unteren Rand, nur auf den dreizehn eingeschlossenen Seiten.
   sie dort mehr als ein Fuenftel des Bildes verdecken wuerde.
 * Die alte Regel, die Cookiebots Abzeichen anhob, ist nachweisbar aus den
   Stilblaettern verschwunden.
+* **Stille Zonen:** jedes `<form>` und jedes Element mit
+  `data-sticky-still` legt die Leiste schlafen, solange es im Bild ist.
+  Geprüft auf `/kurse`, wo die Corporate-Anfrage **unter** der
+  Abschluss-Sektion steht und `data-sticky-aus` dort nicht mehr greift:
+  über dem Formular schweigt die Leiste, oberhalb davon kommt sie zurück.
+  Dazu die Gegenprobe auf `/preise`: das geschlossene Family-Modal ist
+  `position: fixed` und liegt damit **immer** im Bild, zählt aber nicht
+  als stille Zone, sonst wäre die Leiste dort für immer stumm. Offen
+  schweigt sie, geschlossen ist sie wieder da.
+* **Die Punkte des Karussells auf `/kurse`** tragen `aria-label`
+  („Slide n von 7"), genau einer trägt `aria-current`, und der Behälter
+  ist nicht mehr `aria-hidden`.
 * `prefers-reduced-motion`: sichtbar, aber ohne Uebergangsdauer.
 * Blockierter `sessionStorage`: die Leiste erscheint trotzdem und das
   Zumachen wirkt im Seitenaufruf.

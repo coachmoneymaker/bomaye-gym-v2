@@ -14,6 +14,8 @@
  *      Cookiebot-Abzeichen, kein waagerechtes Schieben.
  *   G  Ohne Bewegung (prefers-reduced-motion) und ohne sessionStorage.
  *   H  Der Klick fuehrt auf /probetraining.
+ *   I  Die Leiste auf jeder Telefonbreite.
+ *   J  Stille Zonen: ein Formular im Bild legt die Leiste schlafen.
  */
 import {
   chromiumHolen, wurzelBestimmen, serverStarten, zaehler,
@@ -457,6 +459,126 @@ console.log('\n── H. Der Klick fuehrt auf /probetraining ──');
   await page.waitForTimeout(1500);
   const u = new URL(page.url());
   pruef('nach dem Klick auf /probetraining', /probetraining/.test(u.pathname), u.pathname);
+  await ctx.close();
+}
+
+/* ═══════════ J. Stille Zonen: Formulare ═══════════ */
+console.log('\n── J. Ein Formular im Bild legt die Leiste schlafen ──');
+
+/* WARUM ES DIESEN ABSCHNITT GIBT
+   Auf /kurse steht die Corporate-Anfrage UNTER der Abschluss-Sektion.
+   data-sticky-aus greift dort also nicht mehr, die Leiste kam zurueck und
+   lag ueber den unteren Feldern. Jedes <form> und jedes Element mit
+   data-sticky-still ist darum jetzt eine stille Zone. */
+{
+  const { ctx, page } = await seiteOeffnen(browser, basis, 'kurse.html', { ...OPT, breite: 390 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(800);
+
+  const lage = await page.evaluate(() => {
+    const m = (sel) => {
+      const e = document.querySelector(sel);
+      return e ? Math.round(e.getBoundingClientRect().top + window.scrollY) : null;
+    };
+    return { still: m('[data-sticky-still]'), form: m('#cbi-form'), aus: m('[data-sticky-aus]') };
+  });
+  pruef('kurse: die Corporate-Sektion traegt data-sticky-still', lage.still !== null,
+        'bei y=' + lage.still);
+  pruef('kurse: sie steht unter der Abschluss-Sektion',
+        lage.still !== null && lage.aus !== null && lage.still > lage.aus,
+        'still ' + lage.still + ', aus ' + lage.aus);
+
+  /* Mitten ins Formular. */
+  await page.evaluate(() => {
+    document.getElementById('cbi-form').scrollIntoView({ block: 'center', behavior: 'instant' });
+  });
+  await page.waitForTimeout(800);
+  let z = await zustand(page);
+  const imBild = await page.evaluate(() => {
+    const r = document.getElementById('cbi-form').getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > 0;
+  });
+  pruef('kurse: das Formular ist wirklich im Bild', imBild === true);
+  pruef('kurse: die Leiste schweigt ueber dem Formular', z.sichtbar === false,
+        'Deckkraft ' + z.deckkraft);
+
+  /* Und wieder hinauf: oberhalb des Formulars, hinter dem Anker, muss sie
+     zurueckkommen. Gesucht wird die erste Stelle von oben, an der sie
+     steht, damit der Test nicht an einer festen Zahl haengt. */
+  const stellen = [];
+  let zurueck = null;
+  for (let y = 300; y < lage.still - 400; y += 400) {
+    await page.evaluate((v) => window.scrollTo(0, v), y);
+    await page.waitForTimeout(400);
+    const da = await page.evaluate(() => {
+      const l = document.getElementById('sticky-buchung');
+      return !!l && l.classList.contains('ist-sichtbar');
+    });
+    stellen.push(y + (da ? '*' : ''));
+    if (da) { zurueck = y; break; }
+  }
+  pruef('kurse: oberhalb des Formulars steht sie wieder da', zurueck !== null,
+        'gefunden bei y=' + zurueck + ', besucht ' + stellen.join(' '));
+
+  /* Die Punkte des Karussells tragen jetzt einen Namen. */
+  const punkte = await page.evaluate(() => {
+    const d = [...document.querySelectorAll('.carousel-dot')];
+    const behaelter = document.getElementById('carousel-dots');
+    return {
+      anzahl: d.length,
+      marken: d.map((x) => x.getAttribute('aria-label')),
+      jetzt: d.map((x) => x.getAttribute('aria-current')),
+      aktiv: d.map((x) => x.classList.contains('active')),
+      versteckt: behaelter ? behaelter.getAttribute('aria-hidden') : 'kein Behaelter',
+    };
+  });
+  pruef('kurse: jeder Punkt des Karussells hat eine Beschriftung',
+        punkte.anzahl > 0 && punkte.marken.every((m) => !!m),
+        JSON.stringify(punkte.marken));
+  pruef('kurse: die Beschriftung nennt Nummer und Anzahl',
+        punkte.marken.every((m, i) => m === 'Slide ' + (i + 1) + ' von ' + punkte.anzahl),
+        JSON.stringify(punkte.marken));
+  pruef('kurse: genau ein Punkt traegt aria-current',
+        punkte.jetzt.filter((x) => x === 'true').length === 1, JSON.stringify(punkte.jetzt));
+  pruef('kurse: und zwar der aktive',
+        punkte.jetzt.findIndex((x) => x === 'true') === punkte.aktiv.indexOf(true),
+        JSON.stringify({ jetzt: punkte.jetzt, aktiv: punkte.aktiv }));
+  pruef('kurse: die Punkte sind nicht mehr vor Vorlesern versteckt',
+        punkte.versteckt === null, String(punkte.versteckt));
+  await ctx.close();
+}
+
+/* EIN GESCHLOSSENES MODAL IST KEINE STILLE ZONE
+   Das Family-Formular auf /preise steckt in einem Modal, das immer im
+   Markup steht, position: fixed ist und damit IMMER im Bild liegt. Zu ist
+   es nur ueber opacity 0 und pointer-events: none. Zaehlte es als stille
+   Zone, waere die Leiste auf /preise fuer immer stumm. Genau das wird
+   hier geprueft, in beide Richtungen. */
+{
+  const { ctx, page } = await seiteOeffnen(browser, basis, 'preise.html', { ...OPT, breite: 390 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(800);
+  const gefunden = await hinterDenPreisblock(page);
+  pruef('preise: die Leiste erscheint trotz des geschlossenen Modals',
+        gefunden.gefunden === true, 'besucht ' + gefunden.besucht.join(' '));
+
+  if (gefunden.gefunden) {
+    await page.evaluate(() => window.openFamilyModal());
+    await page.waitForTimeout(800);
+    const offen = await page.evaluate(() => ({
+      modal: document.getElementById('family-modal').classList.contains('open'),
+      leiste: document.getElementById('sticky-buchung').classList.contains('ist-sichtbar'),
+    }));
+    pruef('preise: das Modal ist offen', offen.modal === true);
+    pruef('preise: die Leiste schweigt, solange das Formular offen ist',
+          offen.leiste === false);
+
+    await page.evaluate(() => window.closeFamilyModal());
+    await page.waitForTimeout(900);
+    const zu = await page.evaluate(() =>
+      document.getElementById('sticky-buchung').classList.contains('ist-sichtbar'));
+    pruef('preise: nach dem Schliessen ist sie wieder da', zu === true);
+  }
   await ctx.close();
 }
 
