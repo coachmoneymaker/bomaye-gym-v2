@@ -8,7 +8,8 @@ Playwright gegen einen kleinen Dateiserver, der diesen Baum ausliefert.
 **Nach jeder Änderung an Einwilligung, bsport, Messung oder dem Buchungstor:
 `npm run test:alles`.**
 
-Betroffen sind unter anderem `assets/js/bsport-gate.js`,
+Betroffen sind unter anderem `assets/js/anfrage-formulare.js`,
+`assets/js/bsport-gate.js`,
 `assets/js/consent-bridge.js`, `assets/js/probetraining-page.js`,
 `assets/js/abo-embed.js`, `assets/js/plan-tracking.js`,
 `assets/js/pixel-events.js`, der Anmeldehorcher in `mitgliederbereich.html`
@@ -234,6 +235,44 @@ Die Leiste am unteren Rand, nur auf den dreizehn eingeschlossenen Seiten.
 * Blockierter `sessionStorage`: die Leiste erscheint trotzdem und das
   Zumachen wirkt im Seitenaufruf.
 * Der Klick fuehrt auf /probetraining.
+
+### `startseite-schlank.mjs` — die verschlankte Startseite und die Umzüge
+
+Die Startseite hatte vierzehn Abschnitte, jetzt sind es zehn. Zwei
+Anfrageformulare sind auf andere Seiten gezogen. Die Suite prüft beides,
+denn ein Umzug, bei dem das Formular am Ziel nicht absendet, wäre schlimmer
+als gar kein Umzug.
+
+* **Die Abschnitte:** genau `hero`, `schedule-preview`, `dna`, `reviews`,
+  `disciplines`, `pricing`, `early-bird`, `faq`, `location`,
+  `anfahrt-video`, in dieser Reihenfolge. Keiner von `money-slots`, `ort`,
+  `bomaye-app`, `pt-teaser`, `family-modal`, `corporate-modal`,
+  `corporate-boxing-form` ist noch da. `data-sticky-ab` sitzt weiter auf
+  `#pricing`, `data-sticky-aus` auf `#early-bird`.
+* **Kein toter Anker:** nichts verweist mehr auf `#ort`. Der Knopf
+  „VIDEO: WEG ZUR TÜR" steht jetzt in `#location` und springt beim Klick
+  wirklich zu `#anfahrt-video`.
+* **Family auf `/preise`:** die Textzeile öffnet das Modal; leer
+  abgesendet erscheinen die Pflichtfeldmeldungen und es geht **nichts**
+  raus; drei Mitglieder ergeben drei Namensfelder; „Haushalt Nein" blendet
+  die Adressfelder ein; ausgefüllt geht genau **eine** Anfrage per POST an
+  `/api/contact` mit `type: 'family'`, allen Namen und dem Haushalt; das
+  Kreuz schließt und setzt zurück.
+* **Corporate auf `/kurse#corporate`:** Anker, Überschrift und der Satz
+  „Stärke dein Team im Boxring."; leer abgesendet sechs
+  Pflichtfeldmeldungen und nichts raus; ausgefüllt genau eine Anfrage mit
+  `type: 'corporate'`, Firma, Personen, Datum, Uhrzeit und Catering.
+* **Wortwahl:** „echt" steht auf der Startseite nur noch in den
+  Google-Zitaten (die wörtlich bleiben); der Early-Bird-Satz steht im
+  sichtbaren Text genau einmal auf `/` und einmal auf `/mitglied-werden`;
+  „Wann öffnet" kommt weder im Text noch im FAQPage-Schema vor.
+* **Nichts verloren:** Kickboxing und Queens stehen weiter auf `/kurse`,
+  `/kickboxen-muenchen` und `/frauenboxen-muenchen`, mit sichtbaren
+  Knöpfen auf `/probetraining`.
+
+**Es geht keine echte Anfrage raus.** `/api/contact` wird abgefangen und
+mit 200 beantwortet; was gesendet *würde*, steht im Protokoll und wird
+geprüft.
 
 ### `breiten.mjs` — die ganze Seite auf jeder Telefonbreite
 
