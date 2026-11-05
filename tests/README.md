@@ -156,6 +156,30 @@ dieser Weg war bis PR #191 ungeprüft.
   44px-Tippflächen. Sie teilt die CSS-Klasse mit dem Buchungstor;
   unterschieden wird am Knopf („… VIDEO LADEN").
 
+### `speicher-blockiert.mjs` — die Seite ohne sessionStorage
+
+`sessionStorage` ist nicht nur manchmal leer, es **wirft**: im privaten
+Fenster, bei blockierten Seitendaten, in manchen App-Browsern. Die Suite
+ersetzt es durch eine Fassung, deren `getItem`, `setItem` und
+`removeItem` eine `SecurityError` werfen, und zwar bevor irgendein
+Seitenskript laeuft.
+
+* Startseite, /preise, /kurse und eine Landingpage, je bei 1440x900 und
+  390x844: keine einzige Ausnahme, der Vorschalter ist binnen fuenf
+  Sekunden aus dem Layout, der Held ist eingeblendet, die Bedienung im Kopf
+  ist sichtbar (am Schreibtisch der Knopf, am Handy der Burger).
+* Mit funktionierendem Speicher: der erste Besuch zeigt das Intro und es
+  ist nach etwa 1,3 Sekunden durch, **nicht** erst durch das Netz; der
+  Merker wird gesetzt; nach einem Neuladen im selben Tab wird das Intro
+  uebersprungen. (Ein zweiter Tab zaehlt nicht: `sessionStorage` gilt je
+  Tab.)
+* Das Netz: wird `main.js` gar nicht ausgeliefert, verschwindet der
+  Vorschalter trotzdem nach etwa vier Sekunden und der Held wird
+  eingeblendet.
+
+Gegenprobe gegen den Stand vor der Behebung: **39/46**, unter anderem
+"Vorschalter steht nach 5 s noch" und "hero-revealed false".
+
 ### `sticky.mjs` — die Buchungsleiste am Handy
 
 Die Leiste am unteren Rand, nur auf den dreizehn eingeschlossenen Seiten.

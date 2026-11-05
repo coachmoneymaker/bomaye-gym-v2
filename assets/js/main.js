@@ -117,7 +117,11 @@ function initPreloader() {
   setTimeout(() => {
     // Start loader fade-out and hero reveal simultaneously — one continuous motion
     pre.classList.add('loader-exit');
-    sessionStorage.setItem('introShown', 'true');
+    /* Ungeschuetzt riss ein werfender sessionStorage genau hier ab: der
+       Vorschalter hatte schon loader-exit, aber der Held wurde nie
+       eingeblendet und display:none nie gesetzt. Der Merker ist Beiwerk,
+       das Einblenden ist die Hauptsache. */
+    try { sessionStorage.setItem('introShown', 'true'); } catch (e) {}
     if (hero) {
       requestAnimationFrame(() => { hero.classList.add('hero-revealed'); });
     }
