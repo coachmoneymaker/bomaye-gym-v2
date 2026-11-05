@@ -75,8 +75,11 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `abo-reveal.mjs` | `ccd458c` (vor PR #190) | 41/43, **2 Fehler** — `https://evil.example` leitet auf `/mitglied-werden` um und setzt `bsport_auth_complete` |
 | `tor-knopf.mjs` | `66173c2` (vor PR #191) | 49/61, **12 Fehler** — kein zweiter Anlauf nach einem Fehlschlag, „Erneut versuchen" wirkungslos |
 | `tor-text.mjs` | `210fe7a` (vor PR #192) | 74/109, **35 Fehler** — der Telefon-Absatz steht noch im Tor |
+| `sticky.mjs` | `6cd3b64` (vor der Sticky-Politur) | 150/205, **55 Fehler** — Knopf 56 px statt 44 (auf 280 px sogar 79 px und drei Zeilen), Luft um den Knopf −0,7 px, das Kreuz ist das Zeichen „×" |
+| `breiten.mjs` | `6cd3b64` (vor der Sticky-Politur) | 110/137, **27 Fehler** — `/u18` 300 px bei 280 px Fenster, `/datenschutz` 285 px, Startseite 334 px und `/probetraining` 402 px bei Systemschrift 130 % |
+| `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
 
-Gegen den aktuellen `main` bestehen alle vier vollständig: 235 Prüfungen,
+Gegen den aktuellen Stand bestehen alle sieben vollständig: 637 Prüfungen,
 0 Fehler.
 
 ### Playwright
