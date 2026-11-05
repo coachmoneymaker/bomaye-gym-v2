@@ -710,7 +710,43 @@
   <div class="loader-line" id="loader-line"></div>
   <div class="loader-sub">MUNICH · PINEAPPLE PARK</div>
 </div>
-<script data-cookieconsent="ignore">if(sessionStorage.getItem('introShown')){var _p=document.getElementById('preloader');if(_p)_p.style.display='none';}</script>
+<script data-cookieconsent="ignore">
+(function () {
+  /* WIEDERKEHRENDER BESUCH: VORSCHALTER SOFORT WEG
+
+     try/catch, weil sessionStorage WIRFT, nicht nur leer ist: im privaten
+     Fenster, bei blockierten Seitendaten und in manchen App-Browsern. Vorher
+     stand der Zugriff nackt da, der Fehler riss dieses Skript ab, und der
+     Vorschalter blieb stehen. Ohne Speicher gilt: Intro noch nicht gesehen,
+     also laeuft es normal. */
+  try {
+    if (sessionStorage.getItem('introShown')) {
+      var p = document.getElementById('preloader');
+      if (p) p.style.display = 'none';
+    }
+  } catch (e) { /* kein Speicher: Intro laeuft wie beim ersten Besuch */ }
+
+  /* DAS NETZ
+
+     Steht der Vorschalter nach vier Sekunden aus IRGENDEINEM Grund immer
+     noch, verschwindet er hier, und der Held wird eingeblendet. Das deckt
+     mehr ab als den Speicher: wenn main.js gar nicht laeuft, wenn
+     initPreloader vorher abbricht, oder wenn das transitionend-Ereignis
+     ausbleibt, das sonst display:none setzt.
+
+     Vier Sekunden sind reichlich: der normale Weg ist nach 1300 ms plus
+     Ueberblendung durch. Im Normalfall findet dieser Zeitgeber nichts mehr
+     zu tun. */
+  setTimeout(function () {
+    var p = document.getElementById('preloader');
+    if (p && p.style.display !== 'none') p.style.display = 'none';
+    var h = document.getElementById('hero');
+    if (h && h.classList && !h.classList.contains('hero-revealed')) {
+      h.classList.add('hero-revealed');
+    }
+  }, 4000);
+}());
+</script>
 
 <header id="header" role="banner">
   <div class="nav-inner">
