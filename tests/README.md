@@ -156,6 +156,30 @@ dieser Weg war bis PR #191 ungeprüft.
   44px-Tippflächen. Sie teilt die CSS-Klasse mit dem Buchungstor;
   unterschieden wird am Knopf („… VIDEO LADEN").
 
+### `sticky.mjs` — die Buchungsleiste am Handy
+
+Die Leiste am unteren Rand, nur auf den dreizehn eingeschlossenen Seiten.
+
+* Oben nicht da, nach dem Anker `data-sticky-ab` da, in der
+  Abschluss-Sektion `data-sticky-aus` wieder weg. Der Test **sucht** die
+  gueltige Stelle, statt eine feste Position anzunehmen: auf der Startseite
+  folgt direkt hinter dem Preisblock schon der Abschluss, auf /kurse der
+  Buchungsbereich, und beides verbirgt die Leiste zu Recht.
+* Am Schreibtisch (1440x900) nie.
+* Auf allen zwoelf ausgeschlossenen Seiten kein Markup, kein Skript, kein
+  Anker.
+* Stumm bei offenem Cookiebot-Dialog und bei einem Feld im Fokus, danach
+  wieder da.
+* Das Kreuz haelt die Sitzung durch, auch ueber ein Neuladen.
+* Aussehen und Tippflaechen: dunkles Token, eine Goldlinie oben, Hoehe um
+  56 px, Knopf mindestens 44 px, Kreuz mindestens 44x44, kein Messattribut
+  am Knopf, kein Ueberlappen mit Fusstext und Cookiebot-Abzeichen, kein
+  waagerechtes Schieben.
+* `prefers-reduced-motion`: sichtbar, aber ohne Uebergangsdauer.
+* Blockierter `sessionStorage`: die Leiste erscheint trotzdem und das
+  Zumachen wirkt im Seitenaufruf.
+* Der Klick fuehrt auf /probetraining.
+
 ### `gemeinsam.mjs`
 
 Keine Suite, sondern die gemeinsame Grundlage: Dateiserver, Cookiebots

@@ -271,6 +271,103 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
 .cta-textlink:hover,
 .cta-textlink:focus-visible { color: var(--gold-dark); }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   STICKY BUCHUNGSLEISTE, NUR AM HANDY
+   ══════════════════════════════════════════════════════════════════════════
+   Paket 3. Eine ruhige Leiste am unteren Rand mit genau einem Weg:
+   Probetraining. Kein Zaehler, kein Dringlichkeitstext, kein Glanz.
+
+   Das Markup baut assets/js/sticky-buchung.js. Steht hier kein Skript, gibt
+   es auch keine Leiste; die Seite funktioniert unveraendert.
+
+   HOEHE: 56px plus der sichere Bereich am unteren Rand, damit die Leiste auf
+   Geraeten mit Gestenbalken nicht darunter rutscht.
+
+   EBENE 900: unter dem Kopf (1000) und weit unter den Dialogen (9000). Die
+   Leiste soll nie ueber einem Dialog liegen, sie versteckt sich dann ohnehin. */
+.sticky-buchung {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px env(safe-area-inset-bottom, 0px);
+  background: #0A0A08;
+  border-top: 1px solid var(--gold);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+  pointer-events: none;
+}
+.sticky-buchung.ist-sichtbar {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Der Knopf traegt .btn .btn--gold .btn--sm, sieht also aus wie der im Kopf.
+   min-height haelt ihn ueber den 44px fuer Tippflaechen, die .btn--sm allein
+   nicht erreicht. */
+.sticky-buchung__knopf {
+  flex: 1 1 auto;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+/* Das Kreuz. 44x44 ist die Tippflaeche, das Zeichen darin darf klein und
+   leise sein. */
+.sticky-buchung__zu {
+  flex: 0 0 auto;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: rgba(245,240,232,0.45);
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1;
+  transition: color var(--dur-normal) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.sticky-buchung__zu:hover,
+.sticky-buchung__zu:focus-visible { color: rgba(245,240,232,0.85); }
+
+/* Am Schreibtisch nie. Dort macht der Knopf im Kopf dieselbe Arbeit. */
+@media (min-width: 769px) {
+  .sticky-buchung { display: none !important; }
+}
+
+/* Wer weniger Bewegung will, bekommt keine: kein Schieben, kein Blenden,
+   die Leiste ist entweder da oder nicht. */
+@media (prefers-reduced-motion: reduce) {
+  .sticky-buchung { transition: none; transform: none; }
+  .sticky-buchung.ist-sichtbar { transform: none; }
+}
+
+/* PLATZ UNTEN, OHNE SPRUNG
+   Das Polster haengt an der Klasse auf <body>, die das Skript beim Laden
+   setzt, nicht am Erscheinen der Leiste. Sonst ruckte der Fuss in dem
+   Moment, in dem die Leiste einblendet. So ist der Platz von Anfang an da
+   und nichts verschiebt sich. */
+@media (max-width: 768px) {
+  body.hat-sticky-buchung footer,
+  body.hat-sticky-buchung .site-footer {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
+  }
+  /* Cookiebots Abzeichen sitzt unten links und wuerde auf der Leiste
+     liegen. Es wird angehoben, statt in Cookiebots Code einzugreifen: das
+     hier ist eine Regel von aussen, kein Eingriff. Findet der Wahlsatz
+     nichts, passiert nichts. */
+  body.hat-sticky-buchung #CookiebotWidget,
+  body.hat-sticky-buchung .CookiebotWidget-logo {
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 12px) !important;
+  }
+}
+
 /* Auf dunklem Grund, zum Beispiel im Early-Bird-Abschluss der Startseite. */
 .cta-textlink--hell { color: rgba(245,240,232,0.72); }
 .cta-textlink--hell:hover,
