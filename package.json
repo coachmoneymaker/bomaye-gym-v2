@@ -13,6 +13,7 @@
     "pruefen:seo": "node scripts/seo-pruefen.mjs",
     "bauen:seo": "node scripts/seo-bauen.mjs && node scripts/faq-bauen.mjs && node scripts/preise-bauen.mjs",
     "pruefen:alles": "node scripts/seo-bauen.mjs --pruefen && node scripts/faq-bauen.mjs --pruefen && node scripts/preise-bauen.mjs --pruefen && node scripts/seo-pruefen.mjs && node scripts/preise-pruefen.mjs && node scripts/einwilligung-pruefen.mjs && node scripts/reichweite-pruefen.mjs",
-    "pruefen:preise": "node scripts/preise-pruefen.mjs"
+    "pruefen:preise": "node scripts/preise-pruefen.mjs",
+    "test:alles": "node tests/alles.mjs"
   }
 }

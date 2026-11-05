@@ -1,0 +1,206 @@
+# Testsuiten
+
+Browsertests für Einwilligung, bsport-Buchung und Messung. Sie laufen mit
+Playwright gegen einen kleinen Dateiserver, der diesen Baum ausliefert.
+
+## Die Regel
+
+**Nach jeder Änderung an Einwilligung, bsport, Messung oder dem Buchungstor:
+`npm run test:alles`.**
+
+Betroffen sind unter anderem `assets/js/bsport-gate.js`,
+`assets/js/consent-bridge.js`, `assets/js/probetraining-page.js`,
+`assets/js/abo-embed.js`, `assets/js/plan-tracking.js`,
+`assets/js/pixel-events.js`, der Anmeldehorcher in `mitgliederbereich.html`
+und jedes `data-cookieconsent`-Attribut im Markup.
+
+`npm run pruefen:alles` ersetzt das **nicht**. Es prüft Markup und Texte,
+aber keinen laufenden Browser.
+
+## Warum dieser Ordner existiert
+
+Diese Suiten lagen bis zum 5. November 2026 in einem Sitzungsordner und
+waren nach jeder Sitzung weg. Drei von ihnen sind dabei verloren gegangen
+(siehe *Was fehlt*). Deshalb liegen sie jetzt im Repo.
+
+## Starten
+
+```bash
+npm run test:alles              # alle Suiten, Zusammenfassung am Ende
+node tests/zahlung.mjs          # eine einzelne Suite
+```
+
+Jede Suite endet mit `N/M bestanden, F Fehler` und gibt bei einem Fehler
+den Rückgabewert 1. `tests/alles.mjs` bricht nicht beim ersten Fehler ab,
+sondern lässt alle Suiten laufen und fasst am Ende zusammen.
+
+Dauer: zusammen etwa sieben Minuten (gemessen: 83 + 92 + 176 + 47 Sekunden).
+Zwei Abschnitte in `tor-knopf.mjs` warten absichtlich 15 beziehungsweise 17
+Sekunden, weil der Lader in `probetraining-page.js` nach 15 Sekunden
+aufgibt und genau das geprüft wird.
+
+Deshalb hängt `test:alles` **nicht** an `pruefen:alles`: das läuft bei
+jedem Bau und soll in Sekunden durch sein. Die Browsertests sind ein
+eigener Schritt.
+
+### Gegen einen anderen Baum
+
+Jede Suite nimmt als erstes Argument ein Wurzelverzeichnis. Damit lässt
+sich zeigen, dass eine Prüfung auf `main` scheitert und mit der Änderung
+besteht:
+
+```bash
+git archive origin/main | tar -x -C /tmp/main
+node tests/zahlung.mjs /tmp/main        # eine Suite gegen main
+node tests/alles.mjs /tmp/main          # alle gegen main
+```
+
+Ohne Argument wird der Baum geprüft, in dem die Datei liegt.
+
+Dass die Suiten wirklich Wächter sind und nicht nur mitlaufen, lässt sich
+an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
+5.11.2026):
+
+| Suite | gegen | Ergebnis |
+|---|---|---|
+| `zahlung.mjs` | `ccd458c` (vor PR #190) | 8/22, **14 Fehler** — unter anderem „Lärm meldet auch hier nichts: Anzahl 1", also die Konversion auf `API_SUCCESS` |
+| `abo-reveal.mjs` | `ccd458c` (vor PR #190) | 41/43, **2 Fehler** — `https://evil.example` leitet auf `/mitglied-werden` um und setzt `bsport_auth_complete` |
+| `tor-knopf.mjs` | `66173c2` (vor PR #191) | 49/61, **12 Fehler** — kein zweiter Anlauf nach einem Fehlschlag, „Erneut versuchen" wirkungslos |
+| `tor-text.mjs` | `210fe7a` (vor PR #192) | 74/109, **35 Fehler** — der Telefon-Absatz steht noch im Tor |
+
+Gegen den aktuellen `main` bestehen alle vier vollständig: 235 Prüfungen,
+0 Fehler.
+
+### Playwright
+
+Erste Wahl ist `playwright` aus `node_modules` (`npm i -D playwright`).
+Findet Node es dort nicht, wird die globale Installation versucht. Es wird
+nur Chromium gestartet; Safari und WebKit sind hier nicht prüfbar.
+
+## Die Suiten
+
+### `zahlung.mjs` — die Buchungserkennung
+
+Dass eine Buchung **nur** an `{"type":"PAYMENT_SUCCESS","source":"bsport"}`
+vom Origin genau `https://backoffice.bsport.io` erkannt wird.
+
+* Die echte Nachrichtenfolge von bsport (`API_ACKNOWLEDGE`, `API_SUCCESS`
+  mit Nutzdaten, `bsport-widget-resize`, `CLOSE_MODAL`,
+  `IFRAME_LOGIN_SUCCESS`, `intercom-snippet__ready`) löst **nichts** aus.
+  `API_SUCCESS` enthält absichtlich `booking`, `confirmed` und `success` im
+  Rumpf: daran ist die alte Textsuche gescheitert.
+* Origin zeichengenau: `https://backoffice.bsport.io.angreifer.example`,
+  `https://evil.example`, `http://backoffice.bsport.io` und
+  `https://bsport.io` feuern nicht.
+* Groß- und Kleinschreibung: `payment_success`, `Payment_Success` und
+  `' PAYMENT_SUCCESS'` feuern nicht.
+* Form: Zeichenkette, JSON-Text, `null`, falscher Schlüssel und
+  verschachtelt feuern nicht.
+* Entprellung: bsport sendet die Nachricht zweimal im Abstand von etwa vier
+  Sekunden, es wird nur **einmal** gemeldet. Die Sperre im
+  `sessionStorage` ist ein Zeitstempel, keine Flagge — eine zweite echte
+  Buchung nach Ablauf der 60 Sekunden wird gezählt.
+* Ohne Einwilligung wird nichts geladen und nichts gemeldet.
+
+### `abo-reveal.mjs` — Overlay, Origins, Anmeldung, Sichtbarkeit
+
+* **Abo-Overlay:** ein Klick auf einen Paketknopf navigiert nie, sondern
+  öffnet das Overlay und nennt das Paket im Streifen — in allen drei
+  Einwilligungszuständen und unter Cookiebots Blockade. Das ist der
+  Rückschritt aus PR #177.
+* **`abo-embed.js`:** eine Antwort von einem fremden Origin darf den
+  Nachsendeplan nicht beenden.
+* **Anmeldehorcher auf `/mitgliederbereich`:** ein fremder Origin darf
+  weder `bsport_auth_complete` setzen noch umleiten, auch nicht mit
+  `{type:'logged_in'}` oder einer Token-Nutzlast. `IFRAME_LOGIN_SUCCESS`
+  von bsport leitet auf den gemerkten Abschnitt; ein neuer Nutzer
+  (`isNewUser`) wird nicht umgeleitet.
+* **Sichtbarkeit:** nach dem Durchscrollen bleibt unter Cookiebots Blockade
+  kein Reveal-Abschnitt auf `opacity: 0` stehen. Auf `index.html` steckt
+  der Beobachter in `main.js`; ohne Ausnahme war die Datei stillgelegt.
+
+### `tor-knopf.mjs` — der Weg über den Tor-Knopf
+
+Einwilligung **erst nach** dem Knopf, nicht schon beim Seitenaufbau. Genau
+dieser Weg war bis PR #191 ungeprüft.
+
+* Beide realistischen Startzustände von Cookiebot: `window.Cookiebot` ist
+  bei `DOMContentLoaded` noch nicht da und erscheint erst später (so live
+  gemessen), und: es ist schon da.
+* Vor dem Knopf null Anfragen an bsport und kein
+  `script#bsport-widget-cdn`; danach existiert es, `BsportWidget` ist
+  geladen und `mount` wird mit `parentElement: 'bsport-widget-172485'`
+  gerufen.
+* Ein **gescheiterter erster Anlauf** blockiert die späteren nicht: nach
+  einem Netzfehler und nach dem Aufgeben des Laders nach 15 Sekunden läuft
+  ein neuer Anlauf, und der Grund steht in der Konsole.
+* „Erneut versuchen" löst auf `/probetraining` wirklich einen neuen Anlauf
+  aus. Der Knopf gehört `bsport-gate.js` und lud dort nur nach, was die
+  Sperre abgefangen hatte — auf dieser Seite nichts.
+* Regression auf `/stundenplan`, `/preise`, `/mitglied-werden`.
+
+### `tor-text.mjs` — der Text im Buchungstor, alle Seiten
+
+Über **alle** HTML-Seiten, ohne Einwilligung:
+
+* Der Absatz „Lieber ohne Cookies buchen? Ruf uns an … WhatsApp" ist weg,
+  als Element mit Klasse `__alt` und als Text (entfernt in PR #192).
+* Wo ein Tor gezeichnet wird, steht der Einwilligungshinweis **Wort für
+  Wort** unverändert da.
+* Der Rückfall nach dem **zweiten** gescheiterten Ladeversuch ist noch da,
+  mit Telefon und WhatsApp — als Verhalten geprüft, nicht als Zeichenkette:
+  cdn.bsport.io wird abgewiesen und zweimal „Erneut versuchen" geklickt.
+* Die Zeile unter dem Kalender auf `/probetraining` und die Kontaktdaten
+  sonst bleiben.
+* Die Video-Fassade auf der Startseite behält ihren eigenen Absatz samt
+  44px-Tippflächen. Sie teilt die CSS-Klasse mit dem Buchungstor;
+  unterschieden wird am Knopf („… VIDEO LADEN").
+
+### `gemeinsam.mjs`
+
+Keine Suite, sondern die gemeinsame Grundlage: Dateiserver, Cookiebots
+Blockade als Nachbau, Platzhalter für bsports Bundle, die
+Einwilligungszustände und die Zählerei. Hier stehen auch die Texte, die
+unverändert bleiben sollen, an einer Stelle.
+
+## Was der Nachbau kann und was nicht
+
+Nachgebaut ist Cookiebots automatische Blockade: jedes `<script>` ohne
+`data-cookieconsent="ignore"` wird beim Ausliefern auf `type="text/plain"`
+gestellt, solange Statistik nicht eingewilligt ist. Nachgespielt wird
+nichts, denn Cookiebot führt `cdn.bsport.io` wegen RudderStack unter
+Statistik und gibt die Skripte bei reiner Marketing-Einwilligung nie
+zurück. Genau daran hing die Buchungsschleife (PR #188, #189, #190).
+
+**Nicht prüfbar aus dieser Umgebung:**
+
+* Das **echte Cookiebot**. `consent.cookiebot.com` ist über den Proxy nicht
+  erreichbar, und Vorschau-Domains auf Vercel können keine Einwilligung
+  speichern. Der Nachbau verhält sich wie die Live-Messungen, ist aber
+  nicht das Original.
+* Das **echte bsport-Widget**. `cdn.bsport.io` und `backoffice.bsport.io`
+  sind nicht erreichbar; statt des Bundles läuft ein Platzhalter, der
+  `BsportWidget.mount` bereitstellt und mitschreibt. Ob das echte Widget
+  nach einem Anlauf sauber montiert, zeigt erst die Live-Seite.
+* Die **tatsächlich ausgehende Google-Ads-Anfrage**.
+  `googletagmanager.com` ist nicht erreichbar. Nachgewiesen wird die
+  Konversion im `dataLayer`, nicht am Netzwerk.
+* **Was GTM** auf `probetraining_booking_completed` weiterschickt. Steht
+  nicht im Repo.
+* **Safari, WebKit und echte Geräte.** Es ist nur Chromium installiert.
+
+## Was fehlt
+
+Fünf ältere Suiten gingen verloren, bevor dieser Ordner existierte: `faq`
+(251 Prüfungen, 132 Antworten), `reveal` (94), `deeplink-abo` (394),
+`plan-tracking` (45) und `tabs`. Sie waren **nie** im Git, nur im
+Sitzungsordner, und sind nicht wiederherstellbar — die genannten Zahlen
+stammen aus alten Berichten und sind hier nur als Hinweis notiert, nicht
+als etwas, das man nachstellen könnte.
+
+Teilweise aufgefangen ist der Verlust an anderer Stelle:
+`npm run pruefen:alles` prüft über `scripts/reichweite-pruefen.mjs` alle
+Knöpfe, die Widget-Container, die FAQ-Antworten und den waagerechten
+Überlauf, und `abo-reveal.mjs` deckt den Abo- und Sichtbarkeitsteil ab, für
+den `deeplink-abo` und `reveal` zuständig waren. Nicht aufgefangen sind die
+Tab-Prüfungen und die Messprüfungen von `plan-tracking`.
