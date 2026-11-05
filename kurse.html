@@ -2,15 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <!-- Bsport-Sperre: MUSS als erstes Skript laufen, vor jedem Markup und jedem
-       Seitenskript, das bsport.io laden koennte. Ohne Marketing-Einwilligung
-       wird nichts von bsport.io geladen (RudderStack, § 25 Abs. 1 TDDDG). -->
+
   <script data-cookieconsent="ignore" src="/assets/js/bsport-gate.js"></script>
-  <!-- Google Consent Mode v2 — muss VOR Cookiebot und vor jedem Tracking-Script stehen.
-       Alle Werbe- und Analyse-Typen sind standardmaessig denied (Art. 6 DSGVO / § 25 TDDDG);
-       die Freigabe erfolgt ausschliesslich per consent update aus Cookiebot.
-       data-cookieconsent="ignore" ist zwingend: dieser Block darf von Cookiebot NICHT
-       blockiert werden, sonst gaebe es keinen Default, gegen den das Update laufen kann. -->
+
   <script data-cookieconsent="ignore">
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -27,16 +21,15 @@
     gtag("set", "ads_data_redaction", true);
     gtag("set", "url_passthrough", false);
   </script>
-  <!-- End Google Consent Mode v2 -->
-  <!-- Cookiebot CMP — muss direkt nach dem Consent-Default und VOR GTM/gtag.js stehen. -->
+
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0712dfb0-9e83-4255-b8c9-0bf0dcb228af" data-blockingmode="auto" type="text/javascript"></script>
-  <!-- End Cookiebot CMP -->
-  <!-- Google Ads --><script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script><!-- End Google Ads -->
+
+  <script async data-cookieconsent="ignore" src="https://www.googletagmanager.com/gtag/js?id=AW-18136756611"></script><script data-cookieconsent="ignore">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-18136756611");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <title>Kurse: Boxen und Kickboxen München | Bomaye Boxgym Munich</title>
   <meta name="description" content="Alle Kurse im Bomaye Boxgym München: Boxen, Kickboxen, Youth Boxing, olympisches Boxen und Mental Coaching. Für jedes Level, vom Anfang an." />
   <meta name="robots" content="index, follow" />
-  <!-- Favicons -->
+
   <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
@@ -54,8 +47,7 @@
 
   <link rel="preload" href="/assets/images/bomaye-logo.webp" as="image" fetchpriority="high" />
   <link rel="preload" href="/assets/css/style.css" as="style" />
-  <!-- Schriften: selbst gehostet (kein Google-Request, LG Muenchen I).
-       Preload der latin-Dateien, damit sie vor dem ersten Paint da sind. -->
+
   <link rel="preload" href="/assets/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -638,7 +630,6 @@
     }
   </style>
 
-  <!-- Schema.org -->
   <!-- SEO:GRAPH -->
   <!-- ERZEUGT - NICHT VON HAND AENDERN.
        Quelle: scripts/seo-daten.mjs, geschrieben von scripts/seo-bauen.mjs.
@@ -745,7 +736,7 @@
   }
   </script>
   <!-- /SEO:GRAPH -->
-  <!-- BreadcrumbList -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -766,7 +757,7 @@
     ]
   }
   </script>
-  <!-- Course — ein Eintrag je Kurs, Inhalte aus dem COURSES-Objekt dieser Seite -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -779,7 +770,7 @@
         "item": {
           "@type": "Course",
           "name": "BOXING",
-          "description": "Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.",
+          "description": "Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-boxing",
           "provider": {
             "@id": "https://www.bomayegym.com/#gym"
@@ -821,7 +812,7 @@
         "item": {
           "@type": "Course",
           "name": "KIDS & YOUTH BOXING",
-          "description": "Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.",
+          "description": "Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und Kampfgeist. In einem sicheren, professionellen Umfeld.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-youth",
           "provider": {
             "@id": "https://www.bomayegym.com/#gym"
@@ -863,7 +854,7 @@
         "item": {
           "@type": "Course",
           "name": "CORPORATE BOXING",
-          "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.",
+          "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.",
           "url": "https://www.bomayegym.com/kurse#kursdetail-firmenfitness",
           "provider": {
             "@id": "https://www.bomayegym.com/#gym"
@@ -923,22 +914,7 @@
     ]
   }
   </script>
-  <!-- ── Reveal-Wache ──────────────────────────────────────────────────────
-       .reveal steht in style.css auf opacity: 0 und wird erst von einem
-       Beobachter auf .visible gesetzt. Laeuft dieser Beobachter aus
-       IRGENDEINEM Grund nicht, bleibt der halbe Seiteninhalt dauerhaft
-       unsichtbar. Moegliche Gruende gibt es viele und sie liegen nicht
-       alle in unserer Hand: ein Fehler frueher im selben Skriptblock, ein
-       Blocker, der den Block neutralisiert, eine Erweiterung im Browser
-       des Besuchers.
 
-       Diese Wache macht das Symptom unmoeglich, ohne die Ursache kennen zu
-       muessen: meldet sich der Beobachter nicht binnen 2,5 Sekunden, wird
-       alles sichtbar gemacht. Laeuft er normal, loescht er den Wecker als
-       erste Handlung und niemand merkt etwas.
-
-       Eigener Skript-Tag mit Absicht: so kann ihn kein Fehler in einem
-       anderen Block mitreissen. -->
   <script data-cookieconsent="ignore">
     window.__revealWache = setTimeout(function () {
       var e = document.querySelectorAll('.reveal:not(.visible)');
@@ -948,14 +924,11 @@
 </head>
 
 <body>
-<!-- Icon-Sprite. Ersetzt den Font-Awesome-Webfont; nur die auf dieser
-     Seite verwendeten Symbole. Icons: Font Awesome Free, CC BY 4.0,
-     https://fontawesome.com/license/free -->
+
 <svg class="icon-sprite" aria-hidden="true" focusable="false"><symbol id="i-arrow-left-long" viewBox="0 0 512 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288 480 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-370.7 0 73.4-73.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-128 128z"/></symbol><symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></symbol><symbol id="i-check-circle" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 320 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></symbol><symbol id="i-chevron-right" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></symbol><symbol id="i-circle-info" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></symbol><symbol id="i-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol><symbol id="i-instagram" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></symbol><symbol id="i-location-dot" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol><symbol id="i-lock" viewBox="0 0 448 512"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></symbol><symbol id="i-phone" viewBox="0 0 512 512"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></symbol><symbol id="i-tiktok" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></symbol><symbol id="i-user" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></symbol><symbol id="i-xmark" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></symbol><symbol id="i-youtube" viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></symbol><symbol id="i-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></symbol></svg>
 
 <div class="noise" aria-hidden="true"></div>
 
-<!-- ═══════ HEADER ═══════ -->
 <header id="header" role="banner">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="BOMAYE GYM Startseite">
@@ -984,7 +957,6 @@
   </div>
 </header>
 
-<!-- ═══════ MOBILE NAV ═══════ -->
 <div id="kurse-mobile-nav" class="mobile-overlay-nav" role="navigation" aria-label="Mobile Navigation"
      style="position:fixed;inset:0;z-index:999;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:0.25rem;">
   <a href="/" class="mn-item" style="--mn-i:0">HOME</a>
@@ -1013,13 +985,11 @@
   <a class="mn-contact-text" href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Mitgliedschaft." target="_blank" rel="noopener noreferrer" style="--mn-i:17">+49 173 7513627</a>
 </div>
 
-<!-- ═══════ WHATSAPP FLOAT ═══════ -->
 <a href="https://wa.me/491737513627?text=Hallo%20Bomaye%20Gym!%20Ich%20habe%20eine%20Frage."
    class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp Kontakt">
   <i class="icon" aria-hidden="true"><svg><use href="#i-whatsapp"/></svg></i>
 </a>
 
-<!-- ═══════ BOOKING MODAL ═══════ -->
 <div id="booking-modal" role="dialog" aria-label="Buchung" aria-modal="true">
   <div class="modal-header">
     <span class="modal-header-title">JETZT BUCHEN</span>
@@ -1032,23 +1002,18 @@
   </div>
 </div>
 
-<!-- ═══════ MAIN ═══════ -->
 <main>
 
-  <!-- ── Hero ── -->
   <section class="kp-hero" aria-label="Unsere Kurse">
     <div class="container">
       <div class="kp-hero-tag">TRAINING</div>
-      <!-- Die H1 traegt das Suchwort, nicht den Slogan: "Kurse" allein sagt
-           weder, worum es geht, noch wo. Der Slogan steht als Unterzeile
-           direkt darunter und behaelt seine Gestalt. -->
+
       <h1>Kurse: Boxen und Kickboxen in München</h1>
       <p class="kp-hero-slogan">TRAIN LIKE A FIGHTER. <span>START WHERE YOU ARE.</span></p>
       <p class="kp-hero-sub">Sieben Programme. Vom ersten Jab bis zum Wettkampf, strukturiertes Boxtraining für jedes Level.</p>
     </div>
   </section>
 
-  <!-- ── Courses (Desktop Marquee + Mobile Carousel) ── -->
   <section class="courses-section">
     <div class="container">
       <div class="courses-section-header reveal">
@@ -1058,7 +1023,6 @@
       </div>
     </div>
 
-    <!-- ── DESKTOP PREMIUM CAROUSEL ── -->
     <div class="desk-carousel-outer" id="dsk-outer">
     <button class="dsk-arrow dsk-arrow--prev" id="dsk-prev" aria-label="Vorheriger Kurs" type="button"><i class="icon" aria-hidden="true"><svg><use href="#i-chevron-left"/></svg></i></button>
     <button class="dsk-arrow dsk-arrow--next" id="dsk-next" aria-label="Nächster Kurs" type="button"><i class="icon" aria-hidden="true"><svg><use href="#i-chevron-right"/></svg></i></button>
@@ -1071,10 +1035,9 @@
           <div class="dsk-card__body">
             <span class="dsk-card__num">01 / 07</span>
             <h3 class="dsk-card__title">BOXING</h3>
-            <p class="dsk-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+            <p class="dsk-card__short">Technik, Sparring und Boxtraining für alle Level.</p>
           </div>
         </div>
-
 
         <div class="dsk-card" data-course="kickboxing">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/training-kick.webp')"></div>
@@ -1106,7 +1069,6 @@
           </div>
         </div>
 
-
         <div class="dsk-card" data-course="firmenfitness">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/training-corporate.jpg');background-image:image-set(url('/assets/images/training-corporate.webp') type('image/webp'),url('/assets/images/training-corporate.jpg') type('image/jpeg'))"></div>
           <div class="dsk-card__overlay"></div>
@@ -1127,7 +1089,6 @@
           </div>
         </div>
 
-
         <div class="dsk-card" data-course="women">
           <div class="dsk-card__bg" style="background-image:url('/assets/images/training-queens.jpg');background-image:image-set(url('/assets/images/training-queens.webp') type('image/webp'),url('/assets/images/training-queens.jpg') type('image/jpeg'))"></div>
           <div class="dsk-card__overlay"></div>
@@ -1138,11 +1099,10 @@
           </div>
         </div>
 
-      </div><!-- /dsk-track -->
-    </div><!-- /desk-carousel -->
-    </div><!-- /desk-carousel-outer -->
+      </div>
+    </div>
+    </div>
 
-    <!-- ── DESKTOP DETAIL PANEL ── -->
     <div id="course-detail" class="course-detail visible" role="tabpanel" aria-live="polite">
       <div class="course-detail__bg-layer" id="detail-bg-a"></div>
       <div class="course-detail__bg-layer" id="detail-bg-b"></div>
@@ -1151,9 +1111,9 @@
           <div class="course-detail__inner">
             <div class="course-detail__text">
               <span class="course-detail__tag" id="detail-tag">BOXING</span>
-              <h2 class="course-detail__title" id="detail-title">BOXING.<br><span class="gold">ECHTE TECHNIK.</span></h2>
+              <h2 class="course-detail__title" id="detail-title">BOXING.<br><span class="gold">SAUBERE TECHNIK.</span></h2>
               <p class="course-detail__desc" id="detail-desc">
-                Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.
+                Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter.
               </p>
               <div class="course-detail__feats" id="detail-feats">
                 <div class="course-detail__feat">
@@ -1186,7 +1146,6 @@
         </div>
       </div>
 
-    <!-- ── MOBILE CAROUSEL ── -->
     <div class="courses-carousel-wrap">
       <div class="courses-carousel" id="courses-carousel" aria-label="Kurs-Karussell">
 
@@ -1196,11 +1155,10 @@
           <div class="carousel-card__body">
             <span class="carousel-card__num">01 / 07</span>
             <h3 class="carousel-card__title">BOXING</h3>
-            <p class="carousel-card__short">Technik, Sparring und echtes Boxtraining für alle Level.</p>
+            <p class="carousel-card__short">Technik, Sparring und Boxtraining für alle Level.</p>
             <span class="carousel-card__cta"><i class="icon" aria-hidden="true"><svg><use href="#i-circle-info"/></svg></i> Details ansehen</span>
           </div>
         </div>
-
 
         <div class="carousel-card" data-course="kickboxing" onclick="openMobileCourse('kickboxing',1)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/training-kick.webp')"></div>
@@ -1235,7 +1193,6 @@
           </div>
         </div>
 
-
         <div class="carousel-card" data-course="firmenfitness" onclick="openMobileCourse('firmenfitness',4)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/training-corporate.jpg');background-image:image-set(url('/assets/images/training-corporate.webp') type('image/webp'),url('/assets/images/training-corporate.jpg') type('image/jpeg'))"></div>
           <div class="carousel-card__overlay"></div>
@@ -1258,7 +1215,6 @@
           </div>
         </div>
 
-
         <div class="carousel-card" data-course="women" onclick="openMobileCourse('women',6)">
           <div class="carousel-card__bg" style="background-image:url('/assets/images/training-queens.jpg');background-image:image-set(url('/assets/images/training-queens.webp') type('image/webp'),url('/assets/images/training-queens.jpg') type('image/jpeg'))"></div>
           <div class="carousel-card__overlay"></div>
@@ -1270,9 +1226,8 @@
           </div>
         </div>
 
-      </div><!-- /courses-carousel -->
+      </div>
 
-      <!-- Dots -->
       <div class="carousel-dots" id="carousel-dots" aria-hidden="true">
         <button class="carousel-dot active" onclick="scrollCarouselTo(0)"></button>
         <button class="carousel-dot" onclick="scrollCarouselTo(1)"></button>
@@ -1283,7 +1238,6 @@
         <button class="carousel-dot" onclick="scrollCarouselTo(6)"></button>
       </div>
 
-      <!-- Mobile detail panel -->
       <div id="mobile-course-detail" class="mobile-course-detail container">
         <span class="mobile-course-detail__tag" id="mob-detail-tag">BOXING</span>
         <h3 class="mobile-course-detail__title" id="mob-detail-title">BOXING</h3>
@@ -1294,28 +1248,10 @@
         </a>
       </div>
 
-    </div><!-- /courses-carousel-wrap -->
+    </div>
 
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════
-       KURSE IM TEXT — aufklappbar, ein Block je Kurs
-
-       Warum es das gibt: das Karussell zeigt die Beschreibungen erst nach
-       einem Klick. Weder Suchmaschinen noch Ueberflieger sehen sie dadurch.
-       Diese Bloecke stehen im Quelltext und tragen dieselben Inhalte.
-
-       ACHTUNG BEIM AENDERN: Text und Merkmale stammen aus dem
-       COURSES-Objekt weiter unten (Felder titleMob, desc, feats) und sind
-       einmalig daraus erzeugt worden. Wer dort etwas aendert, muss es hier
-       nachziehen - sonst sagen Karussell und Text Verschiedenes.
-
-       Muster: dasselbe Akkordeon wie auf den sieben Landingpages
-       (.faq-item / .faq-q / .faq-a, Umschalter per Klasse "open").
-       Der Umschalter setzt zusaetzlich die gemessene Hoehe, weil die
-       Kursbloecke laenger sind als die 300px, mit denen die Landingpages
-       auskommen.
-  ══════════════════════════════════════════════════════════════════ -->
   <section class="kursdetail-section" aria-labelledby="kursdetail-h2">
     <div class="container">
       <div class="kursdetail-head">
@@ -1329,7 +1265,7 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" id="kursdetail-boxing" role="region">
-              <p class="kursdetail-desc">Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.</p>
+              <p class="kursdetail-desc">Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.</p>
               <ul class="kursdetail-feats">
                 <li><strong>Alle Level willkommen</strong> Anfänger, Fortgeschrittene und Wettkämpfer</li>
                 <li><strong>Technisches Einzel-Feedback</strong> Kein anonymes Gruppentraining</li>
@@ -1358,7 +1294,7 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" id="kursdetail-youth" role="region">
-              <p class="kursdetail-desc">Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.</p>
+              <p class="kursdetail-desc">Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und Kampfgeist. In einem sicheren, professionellen Umfeld.</p>
               <ul class="kursdetail-feats">
                 <li><strong>Ab 6 Jahren</strong> Altersgerechtes Training für Kids, Jugend und Teens</li>
                 <li><strong>Disziplin &amp; Charakter</strong> Werte, die weit über den Boxring hinausgehen</li>
@@ -1386,7 +1322,7 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" id="kursdetail-firmenfitness" role="region">
-              <p class="kursdetail-desc">Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.</p>
+              <p class="kursdetail-desc">Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.</p>
               <ul class="kursdetail-feats">
                 <li><strong>Ab 5 Personen</strong> Maßgeschneiderte Einheiten auf Anfrage buchbar</li>
                 <li><strong>Teambuilding durch Sport</strong> Gemeinsam schwitzen, gemeinsam wachsen</li>
@@ -1429,7 +1365,6 @@
     </div>
   </section>
 
-  <!-- ── CTA ── -->
   <section style="background:#F5F0E8;padding:clamp(48px,7vw,80px) 0;text-align:center;">
     <div class="container">
       <span class="tag tag--light-inv">EARLY BIRD</span>
@@ -1443,7 +1378,6 @@
     </div>
   </section>
 
-  <!-- ── Footer ── -->
   <footer>
     <div class="container">
       <div class="footer-grid">
@@ -1507,7 +1441,7 @@
           <div class="footer-contact-item"><i class="icon" aria-hidden="true"><svg><use href="#i-tiktok"/></svg></i><a href="https://www.tiktok.com/@bomayegym_munich" target="_blank" rel="noopener">@bomayegym_munich</a></div>
         </div>
       </div>
-      <!-- SEO footer text -->
+
       <div style="border-top:1px solid rgba(245,240,232,0.08);padding:2rem 0 1rem;">
         <p style="font-size:0.78rem;color:rgba(245,240,232,0.45);line-height:1.7;max-width:680px;">Alle Kurse im Bomaye Gym München, für Anfänger, Fitnesssportler und Wettkämpfer.</p>
         <p style="font-size:0.78rem;color:rgba(245,240,232,0.45);line-height:1.7;max-width:680px;margin-top:0.75rem;">Als <a href="/about" class="footer-seo-link">Boxgym in München</a> bieten wir <a href="/boxtraining-muenchen" class="footer-seo-link">Boxtraining</a> für Einsteiger, die <a href="/boxen-lernen-muenchen" class="footer-seo-link">Boxen lernen</a> wollen, <a href="/fitnessboxen-muenchen" class="footer-seo-link">Fitnessboxen</a> für ambitionierte Hobbysportler, <a href="/kickboxen-muenchen" class="footer-seo-link">Kickboxen</a> und <a href="/frauenboxen-muenchen" class="footer-seo-link">Frauenboxen</a> in eigenen Kursen sowie <a href="/personal-training-boxen-muenchen" class="footer-seo-link">Personal Training</a> auf Wettkampfniveau, in unserem <a href="/boxgym-muenchen" class="footer-seo-link">Boxgym in Neuhausen-Nymphenburg</a>, 5 Minuten vom S-Bahnhof Hirschgarten.</p>
@@ -1535,7 +1469,6 @@
 
 </main>
 
-<!-- ═══════ SCRIPTS ═══════ -->
 <script data-cookieconsent="ignore">
 /* ─── Course data ──────────────────────────────────────────── */
 /* ─── Kurse im Text: Akkordeon ──────────────────────────────
@@ -1566,11 +1499,11 @@ function toggleKursDetail(btn) {
 const COURSES = {
   boxing: {
     tag: 'BOXING',
-    title: 'BOXING.<br><span class="gold">ECHTE TECHNIK.</span>',
+    title: 'BOXING.<br><span class="gold">SAUBERE TECHNIK.</span>',
     titleMob: 'BOXING',
     img: '/assets/images/training-boxing.webp',
     imgAlt: 'Boxing Training Bomaye Gym',
-    desc: 'Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist echtes, strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.',
+    desc: 'Olympic Boxing bei Bomaye Gym Munich ist kein Fitnesskurs. Es ist strukturiertes Boxtraining für alle Level. Ob du nie zuvor Handschuhe getragen hast oder bereits erste Wettkampferfahrung mitbringst: unser System bringt dich weiter. Unter der Leitung von Raschad Pekpassi, Landestrainer des BABV.',
     feats: [
       { strong: 'Alle Level willkommen', span: 'Anfänger, Fortgeschrittene und Wettkämpfer' },
       { strong: 'Technisches Einzel-Feedback', span: 'Kein anonymes Gruppentraining' },
@@ -1597,7 +1530,7 @@ const COURSES = {
     titleMob: 'KIDS & YOUTH BOXING',
     img: '/assets/images/training-youth.webp',
     imgAlt: 'Youth Boxing Bomaye Gym',
-    desc: 'Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und echten Kampfgeist. In einem sicheren, professionellen Umfeld mit erfahrenen Trainern.',
+    desc: 'Unser Youth Boxing Programm richtet sich an Kinder und Jugendliche ab 6 Jahren. Boxen lehrt nicht Gewalt, es lehrt Disziplin, Selbstvertrauen und Kampfgeist. In einem sicheren, professionellen Umfeld.',
     feats: [
       { strong: 'Ab 6 Jahren', span: 'Altersgerechtes Training für Kids, Jugend und Teens' },
       { strong: 'Disziplin & Charakter', span: 'Werte, die weit über den Boxring hinausgehen' },
@@ -1623,7 +1556,7 @@ const COURSES = {
     titleMob: 'CORPORATE BOXING',
     img: '/assets/images/training-corporate.webp',
     imgAlt: 'Corporate Boxing Bomaye Gym',
-    desc: 'Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit echtem Teambuilding, maßgeschneidert für Unternehmen.',
+    desc: 'Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.',
     feats: [
       { strong: 'Ab 5 Personen', span: 'Maßgeschneiderte Einheiten auf Anfrage buchbar' },
       { strong: 'Teambuilding durch Sport', span: 'Gemeinsam schwitzen, gemeinsam wachsen' },
@@ -2347,9 +2280,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking
 
 <script src="/assets/js/pixel-events.js"></script>
 
-<!-- Consent-Bruecke: muss immer laufen, sie gated selbst und trackt nicht. -->
-<!-- Menuewache: schliesst das Burger-Menue und loest die Scroll-Sperre,
-     wenn beim Drehen der Burger verschwindet. Siehe menue-wache.js. -->
 <script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
 </body>
