@@ -167,8 +167,10 @@ console.log('── A. Die Seite /corporate-boxing ──');
         /ab 5 Personen|AB 5 PERSONEN/.test(a.kartenTitel[2] || '')
         && /Catering ist optional/.test(a.kartenText[2] || ''), a.kartenText[2]);
   pruef('Abschnitt 3: das Formular unter #anfrage', a.anfrage === true);
-  pruef('Abschnitt 4: FAQ mit vier Fragen', a.faqFragen.length === 4,
+  pruef('Abschnitt 4: FAQ mit fuenf Fragen', a.faqFragen.length === 5,
         JSON.stringify(a.faqFragen));
+  pruef('darunter die Frage nach den Umkleiden',
+        a.faqFragen.includes('Gibt es Umkleiden?'), JSON.stringify(a.faqFragen));
   pruef('darunter die Frage nach der Theorie',
         a.faqFragen.includes('Was passiert in der Theorie?'),
         JSON.stringify(a.faqFragen));
