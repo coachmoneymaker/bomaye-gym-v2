@@ -421,6 +421,17 @@ console.log('\n── D. Fusslinks, Preistabelle, sitemap ──');
   pruef('je Seite genau ein Corporate-Eintrag im Fuss',
         doppelt.length === 0, JSON.stringify(doppelt));
 
+  /* Und ueberall mit derselben Beschriftung. Vorher sagten fuenfzehn
+     Seiten "Corporate" und drei "Corporate Boxing", bei gleichem Ziel. */
+  const falschBeschriftet = [];
+  for (const d of dateien) {
+    const t = await readFile(wurzel + '/' + d, 'utf8');
+    if (!/class="footer-col"/.test(t)) continue;
+    if (!/<li><a href="\/corporate-boxing">Corporate Boxing<\/a><\/li>/.test(t)) falschBeschriftet.push(d);
+  }
+  pruef('und ueberall heisst er "Corporate Boxing"',
+        falschBeschriftet.length === 0, JSON.stringify(falschBeschriftet));
+
   /* Das Antwortversprechen ist auf beiden Formularen dasselbe. */
   const preise = await readFile(wurzel + '/preise.html', 'utf8');
   pruef('auch die Erfolgsmeldung auf /preise nennt 24 Stunden',

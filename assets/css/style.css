@@ -835,7 +835,11 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
    Die Angaben stehen wortgleich schon auf /kurse (Kursdetails zu
    Kickboxing und Personal Training). Hier wird nichts behauptet, was die
    Seite nicht ohnehin sagt. */
-.dna-gruender {
+/* Zwei Klassen im Wahlsatz: weiter unten steht ".dna-text p" mit
+   font-size: 1rem (0,1,1), und das schlaegt eine einzelne Klasse.
+   Gemessen waere die Zeile sonst genauso gross wie der Fliesstext und
+   damit keine Nebenzeile mehr. */
+.dna-text .dna-gruender {
   font-family: var(--font-body);
   font-size: 0.82rem;
   line-height: 1.6;
