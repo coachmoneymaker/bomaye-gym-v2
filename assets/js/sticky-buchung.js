@@ -57,7 +57,6 @@
   if (!ab) return;                       /* Seite will keine Leiste */
 
   var leiste = null, knopf = null;
-  var vorbei = false;                    /* data-sticky-ab ist durchgelaufen */
   var imAbschluss = false;               /* data-sticky-aus ist im Bild */
   var bsportSichtbar = false;
   var tastatur = false;
@@ -163,9 +162,47 @@
     return false;
   }
 
+  /* IST DER ANKER DURCHGELAUFEN?
+
+     HIER STAND EIN GEMERKTER ZUSTAND, UND DAS WAR DER FEHLER.
+     Vorher setzte der Beobachter eine Variable:
+
+         vorbei = !eintrag.isIntersecting;
+
+     "schneidet nicht" hiess damit "ist oben hinaus". Das stimmt aber nur,
+     solange das Element ueberhaupt gezeichnet wird. Ein Element, das
+     display: none ist, in einer nicht aktiven .view steckt oder beim
+     Laden noch keine Flaeche hat, schneidet ebenfalls nicht, und die
+     Leiste hielt das fuer "vorbei". Auf der Startseite steht der Anker
+     (#pricing) tief unten; die Leiste stand dann vom ersten Bildschirm an
+     da, ueber Held, DNA, Bewertungen und Kursen, und verschwand erst
+     wieder, wenn eine andere Regel sie stumm stellte.
+
+     Nachgestellt in tests/sticky.mjs, Abschnitt K: #pricing kurz auf
+     display: none, und die Leiste ging an. Derselbe Fehler steckte schon
+     vor der Umstellung der Reihenfolge in der Datei, er ist also nicht
+     neu.
+
+     JETZT WIRD GEMESSEN STATT GEMERKT
+     Bei jedem Durchlauf wird die Lage gelesen. Der Beobachter weiter
+     unten bleibt, er loest den Durchlauf aber nur noch aus, statt den
+     Zustand zu setzen. Damit kann nichts mehr haengenbleiben: eine
+     verpasste Meldung, ein kurz ausgeblendeter Anker oder ein Sprung
+     korrigieren sich beim naechsten Blick von selbst.
+
+     bottom <= 0 heisst: der Anker ist vollstaendig oben aus dem Bild.
+     Das ist die Regel, die im Kopf dieser Datei steht, und die Regel,
+     nach der sich /kurse und /preise heute richtig verhalten. */
+  function abVorbei() {
+    var r = ab.getBoundingClientRect();
+    /* Nicht gezeichnet heisst nicht vorbei. */
+    if (r.width === 0 && r.height === 0) return false;
+    return r.bottom <= 0;
+  }
+
   function sollSichtbar() {
     if (zugemacht) return false;
-    if (!vorbei) return false;
+    if (!abVorbei()) return false;
     if (imAbschluss) return false;
     if (bsportSichtbar) return false;
     if (tastatur) return false;
@@ -199,14 +236,16 @@
        Test hat es gefunden.
 
        Mit rootMargin unten 100000px reicht der Beobachtungsraum vom oberen
-       Bildrand bis weit unter das Dokument. Damit gilt:
-         schneidet  = der Anker liegt noch irgendwo unter dem oberen Rand,
-                      ist also noch nicht durchgelaufen
-         schneidet nicht = er ist oben hinaus, die Leiste darf kommen
-       Der Uebergang von wahr nach falsch passiert auch bei einem Sprung,
-       weil der Zustand sich wirklich aendert. */
-    new IntersectionObserver(function (eintraege) {
-      for (var i = 0; i < eintraege.length; i++) vorbei = !eintraege[i].isIntersecting;
+       Bildrand bis weit unter das Dokument. Der Uebergang faellt damit
+       genau auf den Moment, in dem der Anker oben aus dem Bild laeuft,
+       und er faellt auch bei einem Sprung an, weil sich die Lage wirklich
+       aendert.
+
+       WAS DER BEOBACHTER NICHT MEHR TUT: den Zustand setzen. Er ruft nur
+       noch pruefen(), und dort wird die Lage gelesen (siehe abVorbei()).
+       Ein Beobachter sagt, WANN sich etwas geaendert hat; WAS der Fall
+       ist, steht im Dokument und wird dort nachgesehen. */
+    new IntersectionObserver(function () {
       pruefen();
     }, { threshold: 0, rootMargin: '0px 0px 100000px 0px' }).observe(ab);
 
