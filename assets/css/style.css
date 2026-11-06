@@ -7100,6 +7100,21 @@ a.mn-contact-text:hover { color: var(--gold); }
   .anfahrt-video-inner .vfacade { margin: 0; width: 340px; }
 }
 
+/* DER LETZTE KNOPF DER SEITE
+   Nach dem Anfahrtsvideo endet die Startseite. Hier steht die eine
+   Handlung, die die ganze Seite will, noch einmal: Probetraining.
+
+   data-sticky-still: die Buchungsleiste schweigt, solange dieser Block im
+   Bild ist. Sonst staende derselbe Knopf zweimal uebereinander. Die
+   Abschluss-Sektion #early-bird traegt weiter data-sticky-aus; das Skript
+   liest davon nur das erste, darum hier die stille Zone. */
+.anfahrt-video-abschluss {
+  max-width: 1100px;
+  margin: clamp(40px, 6vw, 64px) auto 0;
+  text-align: center;
+}
+.anfahrt-video-abschluss .btn { text-decoration: none; }
+
 .vfacade {
   position: relative;
   width: 100%;
