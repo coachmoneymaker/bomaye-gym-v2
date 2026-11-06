@@ -37,7 +37,11 @@ const { pruef, abschluss } = zaehler();
 
 console.log('Baum: ' + wurzel + '\n');
 
-const SOLL = ['hero', 'schedule-preview', 'dna', 'reviews', 'disciplines',
+/* DIE REIHENFOLGE IST DER INHALT
+   Neu ab Paket B: die Positionierung (#dna) steht gleich hinter dem
+   Hero, der Stundenplan direkt hinter den Kursen. Wer hier etwas
+   umstellt, aendert den Weg durch die Seite, nicht nur das Markup. */
+const SOLL = ['hero', 'dna', 'reviews', 'disciplines', 'schedule-preview',
               'pricing', 'early-bird', 'faq', 'location', 'anfahrt-video'];
 const WEG  = ['money-slots', 'ort', 'bomaye-app', 'pt-teaser', 'family-modal',
               'corporate-modal', 'corporate-boxing-form'];
@@ -95,7 +99,115 @@ console.log('── A. Die Abschnitte der Startseite ──');
   pruef('data-sticky-ab sitzt weiter auf #pricing', anker.ab === 'pricing', String(anker.ab));
   pruef('data-sticky-aus sitzt weiter auf #early-bird', anker.aus === 'early-bird', String(anker.aus));
 
+  /* DER LETZTE KNOPF
+     Die Seite endete mit FAQ, Standort und Anfahrtsvideo, ohne eine
+     einzige Handlung. Jetzt steht am Ende genau ein Probetrainings-
+     Knopf, und zwar nur einer. */
+  const schluss = await page.evaluate(() => {
+    const heim = document.getElementById('view-home');
+    const alle = [...heim.querySelectorAll('a[href="/probetraining"]')];
+    const letzter = alle[alle.length - 1];
+    const video = document.getElementById('anfahrt-video');
+    return {
+      anzahl: alle.length,
+      text: letzter ? letzter.textContent.replace(/\s+/g, ' ').trim() : null,
+      imLetztenAbschnitt: !!(letzter && video && video.contains(letzter)),
+      stilleZone: !!(letzter && letzter.closest('[data-sticky-still]')),
+      /* Nach ihm darf kein weiterer Abschnitt mehr kommen. */
+      danach: letzter ? [...heim.querySelectorAll('section[id]')]
+        .filter((s2) => s2.compareDocumentPosition(letzter) & Node.DOCUMENT_POSITION_PRECEDING)
+        .map((s2) => s2.id) : null,
+    };
+  });
+  pruef('am Ende steht ein Probetrainings-Knopf',
+        schluss.imLetztenAbschnitt === true, JSON.stringify(schluss));
+  pruef('er heisst PROBETRAINING SICHERN',
+        schluss.text === 'PROBETRAINING SICHERN', String(schluss.text));
+  pruef('nach ihm kommt kein Abschnitt mehr',
+        Array.isArray(schluss.danach) && schluss.danach.length === 0,
+        JSON.stringify(schluss.danach));
+  pruef('er liegt in einer stillen Zone, damit die Leiste dort schweigt',
+        schluss.stilleZone === true);
+
+  /* Die Gruenderzeile. Eine Zeile, kein Block. */
+  const gruender = await page.evaluate(() => {
+    const e = document.querySelector('.dna-gruender');
+    const dna = document.getElementById('dna');
+    return e ? {
+      text: e.textContent.replace(/\s+/g, ' ').trim(),
+      imDna: !!(dna && dna.contains(e)),
+      farbe: getComputedStyle(e).color,
+      groesse: parseFloat(getComputedStyle(e).fontSize),
+      bilder: dna ? dna.querySelectorAll('.dna-text img').length : null,
+    } : null;
+  });
+  pruef('die Gruenderzeile steht im DNA-Abschnitt',
+        gruender !== null && gruender.imDna === true);
+  if (gruender) {
+    pruef('und zwar wortgenau',
+          gruender.text === 'Gegründet von Raschad Pekpassi und Alfonso Fusco. '
+            + 'Beide BABV Landestrainer, Alfonso Kickbox-Weltmeister.',
+          gruender.text);
+    pruef('kleiner als der Fliesstext', gruender.groesse < 16,
+          gruender.groesse + ' px');
+    pruef('kein Bild dazu', gruender.bilder === 0, String(gruender.bilder));
+  }
+
   pruef('keine Ausnahme beim Laden', fehler.length === 0, JSON.stringify(fehler).slice(0, 200));
+  await ctx.close();
+}
+
+/* ═══════════ A2. Die Bewertungen sind hell ═══════════ */
+console.log('\n── A2. Der Bewertungsabschnitt ist hell und lesbar ──');
+{
+  const { ctx, page } = await laden('index.html');
+  const r = await page.evaluate(() => {
+    const zahl = (f) => (f.match(/\d+/g) || []).map(Number);
+    const hell = (f) => {
+      const [rr, gg, bb] = zahl(f);
+      /* Wahrgenommene Helligkeit, grob nach BT.601. Reicht, um dunkel
+         von hell zu unterscheiden. */
+      return (0.299 * rr + 0.587 * gg + 0.114 * bb) > 140;
+    };
+    const sek = document.getElementById('reviews');
+    const karte = document.querySelector('.bom-review-card');
+    const zitat = document.querySelector('.bom-review-card__text');
+    const sekBg = getComputedStyle(sek).backgroundColor;
+    const karteBg = getComputedStyle(karte).backgroundColor;
+    return {
+      sekBg, karteBg,
+      sekHell: hell(sekBg),
+      karteHell: hell(karteBg),
+      zitatDunkel: !hell(getComputedStyle(zitat).color),
+      /* Reines Weiss ist verboten, auch als Karte. */
+      weiss: [sekBg, karteBg].some((f) => {
+        const [rr, gg, bb] = zahl(f);
+        return rr === 255 && gg === 255 && bb === 255;
+      }),
+      /* Die Texte, die Anzahl und das Datum bleiben, wie sie sind. */
+      karten: document.querySelectorAll('.bom-review-card').length,
+      stand: (document.querySelector('.bom-reviews__stand') || {}).textContent,
+      namen: [...document.querySelectorAll('.bom-review-card__name')]
+        .map((e) => e.textContent.trim()),
+      nachbarn: {
+        dna: getComputedStyle(document.getElementById('dna')).backgroundColor,
+        disciplines: getComputedStyle(document.getElementById('disciplines')).backgroundColor,
+      },
+    };
+  });
+  pruef('der Abschnitt ist nicht mehr dunkel', r.sekHell === true, r.sekBg);
+  pruef('die Karten sind heller als der Grund', r.karteHell === true, r.karteBg);
+  pruef('der Zitattext ist dunkel', r.zitatDunkel === true);
+  pruef('kein reines Weiss', r.weiss === false, r.sekBg + ' / ' + r.karteBg);
+  pruef('drei Bewertungen, unveraendert', r.karten === 3, r.karten + ' Karten');
+  pruef('das Datum steht unveraendert da',
+        (r.stand || '').trim() === 'Google-Bewertung, Stand 01.11.2026', r.stand);
+  pruef('die drei Namen stehen unveraendert da',
+        JSON.stringify(r.namen) === JSON.stringify(['Emanuele C.', 'Christopher M.', 'Lilian H.']),
+        JSON.stringify(r.namen));
+  pruef('die Nachbarn sind weiter hell, der Uebergang bleibt weich',
+        r.nachbarn.dna === 'rgb(245, 240, 232)' && r.nachbarn.disciplines === 'rgb(245, 240, 232)',
+        JSON.stringify(r.nachbarn));
   await ctx.close();
 }
 
