@@ -16,6 +16,7 @@
  *   H  Der Klick fuehrt auf /probetraining.
  *   I  Die Leiste auf jeder Telefonbreite.
  *   J  Stille Zonen: ein Formular im Bild legt die Leiste schlafen.
+ *   K  Der Anker der Startseite: nicht gemerkt, sondern gemessen.
  *      Seit dem Umzug der Corporate-Anfrage traegt nur noch das
  *      Family-Modal auf /preise diesen Fall.
  */
@@ -577,6 +578,104 @@ console.log('\n── J. Ein Formular im Bild legt die Leiste schlafen ──');
       document.getElementById('sticky-buchung').classList.contains('ist-sichtbar'));
     pruef('preise: nach dem Schliessen ist sie wieder da', zu === true);
   }
+  await ctx.close();
+}
+
+/* ═══════════ K. Der Anker auf der Startseite ═══════════ */
+console.log('\n── K. Die Leiste richtet sich nach der Lage des Ankers ──');
+
+/* WAS HIER SCHIEFGING
+   vorbei wurde als Zustand gemerkt:
+
+       vorbei = !eintrag.isIntersecting;
+
+   "schneidet nicht" hiess "ist oben hinaus". Das stimmt nur, solange das
+   Element gezeichnet wird. Ein Anker, der display: none ist, in einer
+   nicht aktiven .view steckt oder beim Laden noch keine Flaeche hat,
+   schneidet ebenfalls nicht - und die Leiste hielt das fuer "vorbei".
+
+   Auf der Startseite steht der Anker (#pricing) tief unten, bei 390px
+   gemessen auf y=4569. Haengt der Zustand einmal, steht die Leiste vom
+   ersten Bildschirm an da, ueber Held, DNA, Bewertungen und Kursen.
+   /kurse und /preise fallen kaum auf, dort sitzt der Anker oben.
+
+   Geprueft wird deshalb beides: die richtige Abfolge UND dass ein
+   kurzzeitig nicht gezeichneter Anker die Leiste nicht anschaltet. */
+for (const [b, h] of [[390, 844], [320, 640]]) {
+  const { ctx, page } = await seiteOeffnen(browser, basis, 'index.html', { ...OPT, breite: b });
+  await page.setViewportSize({ width: b, height: h });
+  await page.waitForTimeout(900);
+  const name = b + 'px';
+
+  const lage = await page.evaluate(() => {
+    const m = (sel) => {
+      const e = document.querySelector(sel);
+      if (!e) return null;
+      const r = e.getBoundingClientRect();
+      return { oben: Math.round(r.top + window.scrollY), unten: Math.round(r.bottom + window.scrollY) };
+    };
+    return { ab: m('[data-sticky-ab]'), aus: m('[data-sticky-aus]'), dna: m('#dna'),
+             faq: m('#faq'), doc: document.body.scrollHeight };
+  });
+  pruef(name + ': der Anker ist der Preisblock und steht tief unten',
+        lage.ab !== null && lage.ab.oben > h, 'y=' + (lage.ab && lage.ab.oben));
+
+  const sichtbarBei = async (y) => {
+    await page.evaluate((v) => window.scrollTo(0, v), y);
+    await page.waitForTimeout(400);
+    return page.evaluate(() => {
+      const l = document.getElementById('sticky-buchung');
+      return !!l && l.classList.contains('ist-sichtbar');
+    });
+  };
+
+  pruef(name + ': bei scrollY 0 ist die Leiste aus', (await sichtbarBei(0)) === false);
+  pruef(name + ': am Anfang von #dna ist sie aus',
+        (await sichtbarBei(lage.dna.oben + 10)) === false, 'y=' + (lage.dna.oben + 10));
+  pruef(name + ': mitten im Preisblock ist sie noch aus',
+        (await sichtbarBei(lage.ab.oben + 200)) === false, 'y=' + (lage.ab.oben + 200));
+  pruef(name + ': im Abschluss ist sie aus',
+        (await sichtbarBei(lage.aus.oben)) === false, 'y=' + lage.aus.oben);
+  pruef(name + ': hinter dem Preisblock und dem Abschluss ist sie da',
+        (await sichtbarBei(lage.faq.oben + 60)) === true, 'y=' + (lage.faq.oben + 60));
+
+  /* DER EIGENTLICHE RUECKFALL
+     Der Anker verschwindet kurz. Frueher schaltete das die Leiste an,
+     weil "schneidet nicht" als "vorbei" gelesen wurde. */
+  await page.evaluate((v) => window.scrollTo(0, v), 0);
+  await page.waitForTimeout(300);
+  await page.evaluate(() => { document.querySelector('[data-sticky-ab]').style.display = 'none'; });
+  await page.waitForTimeout(600);
+  const beiVerstecktemAnker = await page.evaluate(() => {
+    const l = document.getElementById('sticky-buchung');
+    return !!l && l.classList.contains('ist-sichtbar');
+  });
+  pruef(name + ': ein versteckter Anker schaltet sie NICHT an',
+        beiVerstecktemAnker === false);
+
+  await page.evaluate(() => { document.querySelector('[data-sticky-ab]').style.display = ''; });
+  await page.waitForTimeout(600);
+  const danach = await page.evaluate(() => {
+    const l = document.getElementById('sticky-buchung');
+    return !!l && l.classList.contains('ist-sichtbar');
+  });
+  pruef(name + ': und danach ist sie weiter aus', danach === false);
+
+  /* Dasselbe ueber die Ansicht: #view-home wird kurz inaktiv. */
+  await page.evaluate(() => {
+    const v = document.getElementById('view-home');
+    if (v) v.classList.remove('active');
+  });
+  await page.waitForTimeout(600);
+  const beiAnsicht = await page.evaluate(() => {
+    const l = document.getElementById('sticky-buchung');
+    return !!l && l.classList.contains('ist-sichtbar');
+  });
+  pruef(name + ': eine inaktive Ansicht schaltet sie NICHT an', beiAnsicht === false);
+  await page.evaluate(() => {
+    const v = document.getElementById('view-home');
+    if (v) v.classList.add('active');
+  });
   await ctx.close();
 }
 
