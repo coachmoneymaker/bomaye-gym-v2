@@ -44,6 +44,7 @@ console.log('Baum: ' + wurzel + '\n');
 
 const SEITEN = [
   'index.html', 'preise.html', 'kurse.html', 'about.html', 'coaches.html',
+  'corporate-boxing.html',
   'probetraining.html', 'mitglied-werden.html', 'mitgliederbereich.html',
   'stundenplan.html', 'wochenplan.html', 'downloads.html', 'faq.html', 'u18.html',
   'personal-training-boxen-muenchen.html',

@@ -321,6 +321,20 @@ SEITEN['preise.html'] = {
   beschr: 'Boxen München Preise: Early Bird ab 59,60 € im Monat, Personal Training ab 90 € pro Session, Tageskarte 20 €. Erstes Training gratis.',
 };
 
+/* ── /corporate-boxing ───────────────────────────────────────────────────
+   Die Anfrage fuer Teams und Firmen stand bis November 2026 unten auf
+   /kurse. Jetzt hat sie eine eigene Seite, mit eigenem Ziel in der Suche
+   und als Landeseite fuer Anzeigen.
+
+   Jede Angabe in der Beschreibung steht so schon im Repo: "ab 5 Personen"
+   und "auf Anfrage" aus dem Kursdetail auf /kurse und aus der
+   Preisuebersicht der Startseite. Keine Dauer, kein Preis, kein
+   Catering-Versprechen: dazu steht nichts Belastbares da.              */
+SEITEN['corporate-boxing.html'] = {
+  titel: 'Corporate Boxing München',
+  beschr: 'Corporate Boxing in München: Boxtraining für Teams und Firmen, ab 5 Personen, auf Anfrage. Teambuilding im Bomaye Boxgym im Pineapple Park.',
+};
+
 SEITEN['kinderboxen-muenchen.html'] = {
   titel: 'Kinder Boxen München: Kids Boxing ab 6',
   marke: 'Bomaye Boxgym',

@@ -286,9 +286,41 @@ als gar kein Umzug.
 mit 200 beantwortet; was gesendet *würde*, steht im Protokoll und wird
 geprüft.
 
+### `corporate-seite.mjs` — die eigene Seite /corporate-boxing
+
+Die Corporate-Anfrage stand unten auf `/kurse` und hat seit November 2026
+eine eigene Seite. Die Suite prüft den Umzug in beide Richtungen.
+
+* **Die Seite:** Antwortstatus 200 · genau eine H1 („Corporate Boxing
+  München" im Quelltext, in Versalien gezeigt) · Titel ≤ 60 Zeichen,
+  Beschreibung 120 bis 155, `og:title` gleich dem Titel, canonical richtig ·
+  die vier Abschnitte in dieser Reihenfolge · im Hero genau **ein** Knopf
+  („ANFRAGE SENDEN" auf `#anfrage"`), kein Probetraining-Knopf · drei
+  Punkte unter „Was dein Team bekommt" · drei FAQ-Fragen · alle JSON-LD-
+  Blöcke parsen und die Fragen im FAQPage-Schema sind Zeichen für Zeichen
+  die im HTML · **keine Buchungsleiste** und kein Anker, der eine auslösen
+  würde · kein waagerechtes Schieben auf den elf Breiten von `breiten.mjs`.
+* **Das Formular:** alle zehn Felder da · leer abgesendet sechs
+  Pflichtfeldmeldungen und **nichts** raus · ausgefüllt genau **eine**
+  POST-Anfrage an `/api/contact` mit `type: 'corporate'` und **denselben
+  Schlüsseln wie vorher** (keiner mehr, keiner weniger) · Erfolgsmeldung
+  da, Formular weg · das Antwortversprechen heißt überall „innerhalb von
+  24 Stunden", nirgends mehr „schnellstmöglich".
+* **`/kurse`:** der Anker `#corporate` führt weiter an eine Stelle der
+  Seite, dort steht jetzt eine Karte mit „ZUR ANFRAGE" auf
+  `/corporate-boxing`, das Formular ist weg, `data-sticky-still` ist mit
+  ihm entfallen und `anfrage-formulare.js` wird dort nicht mehr geladen.
+* **Die Wege dorthin:** jede Seite mit Fußmenü verlinkt
+  `/corporate-boxing`, keine mehr `/kurse#corporate`, der Tabellenlink in
+  der Preisübersicht zeigt auf `/corporate-boxing#anfrage`, und die
+  sitemap nennt die Seite genau einmal.
+
+**Es geht keine echte Anfrage raus.** `/api/contact` wird abgefangen und
+mit 200 beantwortet.
+
 ### `breiten.mjs` — die ganze Seite auf jeder Telefonbreite
 
-Alle sechsundzwanzig Seiten durch vierzehn Fenstergroessen: hochkant 280,
+Alle siebenundzwanzig Seiten durch vierzehn Fenstergroessen: hochkant 280,
 320, 344, 360, 375, 390, 412, 430, 480, 600 und 768, im Querformat 667x375,
 844x390 und 915x412. An jeder Stelle:
 
@@ -304,7 +336,7 @@ Alle sechsundzwanzig Seiten durch vierzehn Fenstergroessen: hochkant 280,
 Dazu Systemschrift 130 % auf `/`, `/preise` und `/probetraining` bei 320 und
 390 px.
 
-**Groesse umstellen statt neu laden:** 26 Seiten mal 14 Groessen waeren 364
+**Groesse umstellen statt neu laden:** 27 Seiten mal 14 Groessen waeren 378
 Ladevorgaenge. Stattdessen wird jede Seite einmal geladen und danach das
 Fenster umgestellt; fuer Ueberlauf und Ueberlappung ist das gleichwertig,
 weil beides beim Neuberechnen des Layouts entsteht. Nicht nachgestellt

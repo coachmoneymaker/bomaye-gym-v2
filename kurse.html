@@ -131,12 +131,10 @@
 
     /* ══════════════════════════════════════════════════
        CORPORATE BOXING
-       Das Formular stand bis hierher in der Preisuebersicht der
-       Startseite, auf hellem Grund (#f5f4f1) und in derselben Karte wie
-       die beiden Modale. Diese Seite ist dunkel, also bekommt es hier
-       dieselbe helle Karte wieder: Hintergrund und Rahmen sind die Werte
-       von .family-modal-card, damit Felder und Beschriftungen genau so
-       aussehen wie vorher. Keine neuen Farben.
+       Das Formular selbst steht jetzt auf /corporate-boxing. Hier bleibt
+       eine kurze Karte, die dorthin fuehrt. Hintergrund und Rahmen sind
+       weiter die Werte von .family-modal-card, damit die Karte zu den
+       beiden Anfrageformularen passt. Keine neuen Farben.
     ══════════════════════════════════════════════════ */
     .kurse-corporate {
       background: var(--ink2, #0A0A08);
@@ -144,13 +142,21 @@
       border-top: 1px solid rgba(201,168,76,0.12);
       scroll-margin-top: var(--nav-h);
     }
-    .kurse-corporate__panel {
+    .kurse-corporate__karte {
       max-width: 640px;
       margin: 0 auto;
       background: #faf9f6;
       border: 1px solid rgba(160,124,58,0.28);
       box-shadow: 0 4px 16px rgba(160,124,58,0.1);
-      padding: clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem);
+      padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1.25rem, 4vw, 2.5rem);
+      text-align: center;
+    }
+    .kurse-corporate__karte .family-headline { margin: 0.75rem 0 0.5rem; }
+    .kurse-corporate__text {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: rgba(8,8,8,0.65);
+      margin: 0 0 1.5rem;
     }
     .kursdetail-head {
       text-align: center;
@@ -1402,101 +1408,15 @@
     </div>
   </section>
 
-  <section id="corporate" class="kurse-corporate" aria-labelledby="corporate-h2" data-sticky-still>
+  <section id="corporate" class="kurse-corporate" aria-labelledby="corporate-h2">
     <div class="container">
-      <div class="kurse-corporate__panel reveal">
-        <div class="family-modal-header" style="text-align:left; padding:0 0 1.5rem;">
-          <span class="family-label">TEAMBUILDING</span>
-          <h2 class="family-headline" id="corporate-h2" style="font-size:clamp(1.6rem,4vw,2.4rem);">CORPORATE BOXING</h2>
-          <p class="family-sub">Stärke dein Team im Boxring. Füll das Formular aus. Wir melden uns schnellstmöglich.</p>
-        </div>
-
-      <div id="cbi-success" hidden style="text-align:center; padding:2rem 0;">
-        <p class="fif-success-icon">✅</p>
-        <h3 class="fif-success-title">Anfrage gesendet</h3>
-        <p class="fif-success-text">Vielen Dank!<br>Wir melden uns schnellstmöglich bei dir.</p>
-      </div>
-
-      <form class="family-inquiry-form" id="cbi-form" onsubmit="submitCorporateInquiryInline(event)" novalidate>
-        <div class="fif-row">
-          <div class="fif-field">
-            <label for="cbi-name">Name <span class="fif-required">*</span></label>
-            <input type="text" id="cbi-name" name="name" placeholder="Dein Name">
-            <span class="fif-error" id="cbi-name-error" aria-live="polite"></span>
-          </div>
-          <div class="fif-field">
-            <label for="cbi-email">E-Mail <span class="fif-required">*</span></label>
-            <input type="email" id="cbi-email" name="email" placeholder="deine@email.de">
-            <span class="fif-error" id="cbi-email-error" aria-live="polite"></span>
-          </div>
-        </div>
-        <div class="fif-row">
-          <div class="fif-field">
-            <label for="cbi-phone">Telefon <span class="fif-required">*</span></label>
-            <input type="tel" id="cbi-phone" name="phone" placeholder="0176 000 000">
-            <span class="fif-error" id="cbi-phone-error" aria-live="polite"></span>
-          </div>
-          <div class="fif-field">
-            <label for="cbi-company">Firma / Organisation</label>
-            <input type="text" id="cbi-company" name="company" placeholder="Dein Unternehmen">
-          </div>
-        </div>
-        <div class="fif-row">
-          <div class="fif-field">
-            <label for="cbi-persons">Anzahl Personen <span class="fif-required">*</span></label>
-            <select id="cbi-persons" name="persons">
-              <option value="">Bitte wählen</option>
-              <option value="5–10 Personen">5 bis 10 Personen</option>
-              <option value="11–20 Personen">11 bis 20 Personen</option>
-              <option value="21–50 Personen">21 bis 50 Personen</option>
-              <option value="50+ Personen">50+ Personen</option>
-            </select>
-            <span class="fif-error" id="cbi-persons-error" aria-live="polite"></span>
-          </div>
-          <div class="fif-field">
-            <label for="cbi-date">Gewünschtes Datum <span class="fif-required">*</span></label>
-            <input type="date" id="cbi-date" name="date">
-            <span class="fif-error" id="cbi-date-error" aria-live="polite"></span>
-          </div>
-        </div>
-        <div class="fif-field">
-          <label for="cbi-time">Gewünschte Uhrzeit / Zeitraum <span class="fif-required">*</span></label>
-          <input type="text" id="cbi-time" name="time" placeholder="z.B. 18:00–20:00 Uhr">
-          <span class="fif-error" id="cbi-time-error" aria-live="polite"></span>
-        </div>
-        <div class="fif-field fif-field--radio">
-          <label>Catering gewünscht?</label>
-          <div class="fif-radio-group" role="radiogroup" aria-label="Catering gewünscht">
-            <label class="fif-radio-card">
-              <input type="radio" name="catering" value="Ja">
-              <span class="fif-radio-card__box">
-                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
-                <span class="fif-radio-card__text">Ja</span>
-              </span>
-            </label>
-            <label class="fif-radio-card">
-              <input type="radio" name="catering" value="Nein">
-              <span class="fif-radio-card__box">
-                <span class="fif-radio-card__check" aria-hidden="true">✓</span>
-                <span class="fif-radio-card__text">Nein</span>
-              </span>
-            </label>
-          </div>
-        </div>
-        <div class="fif-field">
-          <label for="cbi-event">Art des Events / Anlass</label>
-          <input type="text" id="cbi-event" name="event" placeholder="z.B. Teambuilding, Firmenfeier, Incentive …">
-        </div>
-        <div class="fif-field">
-          <label for="cbi-message">Nachricht / Wünsche</label>
-          <textarea id="cbi-message" name="message" rows="3" placeholder="Weitere Informationen, spezielle Wünsche …"></textarea>
-        </div>
-        <button type="submit" class="btn btn--gold btn--full">
-          <i class="icon" aria-hidden="true"><svg><use href="#i-paper-plane"/></svg></i> CORPORATE ANFRAGE SENDEN
-        </button>
-        <p class="fif-trust">Wir melden uns schnellstmöglich bei dir.</p>
-        <p class="fif-pflichtfelder">* Pflichtfelder</p>
-      </form>
+      <div class="kurse-corporate__karte reveal">
+        <span class="family-label">TEAMBUILDING</span>
+        <h2 class="family-headline" id="corporate-h2" style="font-size:clamp(1.4rem,4vw,2rem);">CORPORATE BOXING</h2>
+        <p class="kurse-corporate__text">Für Teams und Firmen. Ab 5 Personen, auf Anfrage.</p>
+        <a href="/corporate-boxing" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+          <i class="icon" aria-hidden="true"><svg><use href="#i-paper-plane"/></svg></i> ZUR ANFRAGE
+        </a>
       </div>
     </div>
   </section>
@@ -1527,7 +1447,7 @@
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
             <li><a href="/kinderboxen-muenchen">Kinderboxen</a></li>
             <li><a href="/boxen-muenchen">Boxen München</a></li>
-            <li><a href="/kurse#corporate">Corporate</a></li>
+            <li><a href="/corporate-boxing">Corporate</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -2414,6 +2334,5 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBooking
 <script src="/assets/js/menue-wache.js" data-cookieconsent="ignore"></script>
 <script data-cookieconsent="ignore" src="/assets/js/consent-bridge.js"></script>
   <script defer data-cookieconsent="ignore" src="/assets/js/sticky-buchung.js"></script>
-<script src="/assets/js/anfrage-formulare.js" data-cookieconsent="ignore"></script>
 </body>
 </html>
