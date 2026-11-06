@@ -7,7 +7,11 @@
    and toggle flags come from this object.
 
    Depends on: BOMAYE_FAMILY.enabled, BOMAYE_CORPORATE.enabled
-   Load AFTER pricing.js, family-benefit.js, corporate-boxing.js
+   Load AFTER pricing.js.
+   family-benefit.js und corporate-boxing.js sind im November 2026
+   geloescht worden: reine Textkonfigurationen mit enabled: false,
+   gelesen nur von dieser Datei. Die beiden typeof-Abfragen weiter
+   unten fangen das ab und ergeben jetzt immer false.
    and BEFORE main.js.
    ============================================================ */
 

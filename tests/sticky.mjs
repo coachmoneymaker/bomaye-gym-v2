@@ -16,6 +16,8 @@
  *   H  Der Klick fuehrt auf /probetraining.
  *   I  Die Leiste auf jeder Telefonbreite.
  *   J  Stille Zonen: ein Formular im Bild legt die Leiste schlafen.
+ *      Seit dem Umzug der Corporate-Anfrage traegt nur noch das
+ *      Family-Modal auf /preise diesen Fall.
  */
 import {
   chromiumHolen, wurzelBestimmen, serverStarten, zaehler,
@@ -466,61 +468,57 @@ console.log('\n── H. Der Klick fuehrt auf /probetraining ──');
 console.log('\n── J. Ein Formular im Bild legt die Leiste schlafen ──');
 
 /* WARUM ES DIESEN ABSCHNITT GIBT
-   Auf /kurse steht die Corporate-Anfrage UNTER der Abschluss-Sektion.
-   data-sticky-aus greift dort also nicht mehr, die Leiste kam zurueck und
-   lag ueber den unteren Feldern. Jedes <form> und jedes Element mit
-   data-sticky-still ist darum jetzt eine stille Zone. */
+   Jedes <form> und jedes Element mit data-sticky-still ist eine stille
+   Zone: wer Felder ausfuellt, soll die unteren Felder sehen und nicht die
+   Leiste darueber.
+
+   WO DAS HEUTE GREIFT
+   Auf keiner der dreizehn Seiten mit Leiste steht noch ein Formular fest
+   auf der Seite: die Corporate-Anfrage ist nach /corporate-boxing
+   umgezogen, und diese Seite traegt gar keine Leiste. Uebrig bleibt das
+   Family-Modal auf /preise, und genau daran haengt die heikle Stelle
+   (siehe unten). Dieser Teil prueft deshalb /kurse von der anderen Seite:
+   dass dort wirklich kein Formular mehr steht und die Leiste nach den
+   gewohnten Regeln arbeitet. */
 {
   const { ctx, page } = await seiteOeffnen(browser, basis, 'kurse.html', { ...OPT, breite: 390 });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(800);
 
-  const lage = await page.evaluate(() => {
-    const m = (sel) => {
-      const e = document.querySelector(sel);
-      return e ? Math.round(e.getBoundingClientRect().top + window.scrollY) : null;
+  const k = await page.evaluate(() => {
+    const sek = document.getElementById('corporate');
+    return {
+      karte: !!(sek && sek.querySelector('a.btn')),
+      ziel: sek && sek.querySelector('a.btn') ? sek.querySelector('a.btn').getAttribute('href') : null,
+      formulare: document.querySelectorAll('form').length,
+      still: document.querySelectorAll('[data-sticky-still]').length,
+      aus: (document.querySelector('[data-sticky-aus]') || {}).id || null,
     };
-    return { still: m('[data-sticky-still]'), form: m('#cbi-form'), aus: m('[data-sticky-aus]') };
   });
-  pruef('kurse: die Corporate-Sektion traegt data-sticky-still', lage.still !== null,
-        'bei y=' + lage.still);
-  pruef('kurse: sie steht unter der Abschluss-Sektion',
-        lage.still !== null && lage.aus !== null && lage.still > lage.aus,
-        'still ' + lage.still + ', aus ' + lage.aus);
+  pruef('kurse: statt des Formulars steht dort eine Karte', k.karte === true);
+  pruef('kurse: sie fuehrt auf /corporate-boxing', k.ziel === '/corporate-boxing', String(k.ziel));
+  pruef('kurse: kein Formular mehr auf der Seite', k.formulare === 0, k.formulare + ' Formulare');
+  pruef('kurse: und keine stille Zone mehr', k.still === 0, k.still + ' gefunden');
 
-  /* Mitten ins Formular. */
-  await page.evaluate(() => {
-    document.getElementById('cbi-form').scrollIntoView({ block: 'center', behavior: 'instant' });
-  });
-  await page.waitForTimeout(800);
-  let z = await zustand(page);
-  const imBild = await page.evaluate(() => {
-    const r = document.getElementById('cbi-form').getBoundingClientRect();
-    return r.top < window.innerHeight && r.bottom > 0;
-  });
-  pruef('kurse: das Formular ist wirklich im Bild', imBild === true);
-  pruef('kurse: die Leiste schweigt ueber dem Formular', z.sichtbar === false,
-        'Deckkraft ' + z.deckkraft);
-
-  /* Und wieder hinauf: oberhalb des Formulars, hinter dem Anker, muss sie
-     zurueckkommen. Gesucht wird die erste Stelle von oben, an der sie
-     steht, damit der Test nicht an einer festen Zahl haengt. */
+  /* Die Leiste muss hier wieder ganz normal arbeiten. Gesucht wird die
+     erste Stelle von oben, an der sie steht. */
+  const hoehe = await page.evaluate(() => document.body.scrollHeight - window.innerHeight);
   const stellen = [];
-  let zurueck = null;
-  for (let y = 300; y < lage.still - 400; y += 400) {
+  let gefunden = null;
+  for (let y = 300; y <= hoehe; y += 400) {
     await page.evaluate((v) => window.scrollTo(0, v), y);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(350);
     const da = await page.evaluate(() => {
       const l = document.getElementById('sticky-buchung');
       return !!l && l.classList.contains('ist-sichtbar');
     });
     stellen.push(y + (da ? '*' : ''));
-    if (da) { zurueck = y; break; }
+    if (da) { gefunden = y; break; }
   }
-  pruef('kurse: oberhalb des Formulars steht sie wieder da', zurueck !== null,
-        'gefunden bei y=' + zurueck + ', besucht ' + stellen.join(' '));
+  pruef('kurse: die Leiste erscheint wie gewohnt', gefunden !== null,
+        'bei y=' + gefunden + ', besucht ' + stellen.join(' '));
 
-  /* Die Punkte des Karussells tragen jetzt einen Namen. */
+  /* Die Punkte des Karussells tragen einen Namen. */
   const punkte = await page.evaluate(() => {
     const d = [...document.querySelectorAll('.carousel-dot')];
     const behaelter = document.getElementById('carousel-dots');

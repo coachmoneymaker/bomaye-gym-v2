@@ -13,7 +13,9 @@
  *   A  Die Startseite hat genau zehn Abschnitte, und keinen der entfernten.
  *   B  Kein Verweis mehr auf #ort, der Videoknopf steht jetzt in #location.
  *   C  Die Family-Anfrage auf /preise: oeffnen, pruefen, absenden.
- *   D  Die Corporate-Anfrage auf /kurse#corporate: pruefen, absenden.
+ *   D  Der Weg zur Corporate-Anfrage: die Karte auf /kurse. Das
+ *      Formular selbst steht auf /corporate-boxing und wird in
+ *      tests/corporate-seite.mjs durchgespielt.
  *   E  Wortwahl: kein "echt" ausserhalb der Google-Zitate, der
  *      Early-Bird-Satz genau einmal je Seite, keine Frage "Wann oeffnet".
  *   F  Kickboxing und Queens sind auf ihren Seiten unveraendert da.
@@ -253,70 +255,35 @@ console.log('\n── C. Die Family-Anfrage steht jetzt auf /preise ──');
   await ctx.close();
 }
 
-/* ═══════════ D. Corporate-Anfrage auf /kurse#corporate ═══════════ */
-console.log('\n── D. Die Corporate-Anfrage steht jetzt auf /kurse#corporate ──');
-{
-  const kontakt = [];
-  const { ctx, page, fehler } = await laden('kurse.html#corporate', { kontakt });
+/* ═══════════ D. Corporate: die Karte auf /kurse ═══════════ */
+console.log('\n── D. Auf /kurse fuehrt eine Karte zur Corporate-Anfrage ──');
 
+/* Das Formular stand nach Paket A unten auf /kurse. Es hat inzwischen eine
+   eigene Seite, /corporate-boxing; dort wird es vollstaendig durchgespielt
+   (tests/corporate-seite.mjs). Hier bleibt die Frage, ob der Weg dorthin
+   steht und auf /kurse nichts Halbes zurueckblieb. */
+{
+  const { ctx, page, fehler } = await laden('kurse.html#corporate');
   const d = await page.evaluate(() => {
     const sek = document.getElementById('corporate');
-    const form = document.getElementById('cbi-form');
+    const knopf = sek ? sek.querySelector('a.btn') : null;
     return {
       sektionDa: !!sek,
-      formDrin: !!(form && form.closest('#corporate')),
-      ueberschrift: sek ? (sek.querySelector('h2') || {}).textContent : null,
-      text: sek ? sek.textContent.replace(/\s+/g, ' ') : '',
+      formulare: document.querySelectorAll('form').length,
+      text: sek ? sek.textContent.replace(/\s+/g, ' ').trim() : '',
+      knopfText: knopf ? knopf.textContent.replace(/\s+/g, ' ').trim() : null,
+      knopfZiel: knopf ? knopf.getAttribute('href') : null,
       imBild: sek ? sek.getBoundingClientRect().top < window.innerHeight * 3 : false,
     };
   });
-  pruef('die Sektion #corporate gibt es', d.sektionDa === true);
-  pruef('das Formular liegt darin', d.formDrin === true);
-  pruef('die Ueberschrift heisst CORPORATE BOXING',
-        (d.ueberschrift || '').trim() === 'CORPORATE BOXING', String(d.ueberschrift));
-  pruef('der Satz "Stärke dein Team im Boxring." steht da',
-        d.text.includes('Stärke dein Team im Boxring.'));
+  pruef('die Sektion #corporate gibt es weiterhin', d.sektionDa === true);
   pruef('der Anker fuehrt wirklich dorthin', d.imBild === true);
-
-  await page.evaluate(() => document.getElementById('cbi-form')
-    .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
-  await page.waitForTimeout(400);
-  const leer = await page.evaluate(() => ({
-    meldungen: [...document.querySelectorAll('#cbi-form .fif-error')]
-      .map((e) => e.textContent.trim()).filter(Boolean),
-  }));
-  pruef('leer abgesendet: sechs Pflichtfeldmeldungen', leer.meldungen.length === 6,
-        JSON.stringify(leer.meldungen));
-  pruef('leer abgesendet: nichts gesendet', kontakt.length === 0, JSON.stringify(kontakt));
-
-  await page.fill('#cbi-name', 'Testfirma Schmidt');
-  await page.fill('#cbi-email', 'team@example.de');
-  await page.fill('#cbi-phone', '0176 0000000');
-  await page.fill('#cbi-company', 'Beispiel GmbH');
-  await page.selectOption('#cbi-persons', { index: 1 });
-  await page.fill('#cbi-date', '2027-03-15');
-  await page.fill('#cbi-time', '18:00 bis 20:00 Uhr');
-  await page.click('#cbi-form .fif-radio-card:has(input[value="Ja"]) .fif-radio-card__box');
-  await page.fill('#cbi-event', 'Teambuilding');
-  await page.click('#cbi-form button[type="submit"]');
-  await page.waitForTimeout(900);
-
-  pruef('ausgefuellt abgesendet: genau eine Anfrage', kontakt.length === 1,
-        JSON.stringify(kontakt).slice(0, 200));
-  if (kontakt.length === 1) {
-    const r = kontakt[0].rumpf || {};
-    pruef('type ist corporate', r.type === 'corporate', String(r.type));
-    pruef('Firma, Personen, Datum, Uhrzeit und Catering sind dabei',
-          r.company === 'Beispiel GmbH' && !!r.persons && r.date === '2027-03-15'
-          && !!r.time && r.catering === 'Ja',
-          JSON.stringify({ f: r.company, p: r.persons, d: r.date, u: r.time, c: r.catering }));
-  }
-  const erfolg = await page.evaluate(() => ({
-    sichtbar: !document.getElementById('cbi-success').hidden,
-    formWeg: getComputedStyle(document.getElementById('cbi-form')).display === 'none',
-  }));
-  pruef('die Erfolgsmeldung steht da', erfolg.sichtbar === true);
-  pruef('das Formular ist weg', erfolg.formWeg === true);
+  pruef('das Formular ist weg', d.formulare === 0, d.formulare + ' Formulare');
+  pruef('die Karte nennt Teams und Firmen',
+        /Für Teams und Firmen/.test(d.text), d.text.slice(0, 80));
+  pruef('der Knopf heisst ZUR ANFRAGE', d.knopfText === 'ZUR ANFRAGE', String(d.knopfText));
+  pruef('und fuehrt auf /corporate-boxing', d.knopfZiel === '/corporate-boxing',
+        String(d.knopfZiel));
   pruef('/kurse: keine Ausnahme', fehler.length === 0, JSON.stringify(fehler).slice(0, 200));
   await ctx.close();
 }
