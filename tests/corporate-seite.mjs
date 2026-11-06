@@ -94,8 +94,23 @@ console.log('── A. Die Seite /corporate-boxing ──');
         return k ? { text: k.textContent.replace(/\s+/g, ' ').trim(), ziel: k.getAttribute('href') } : null;
       })(),
       heroKnopfAnzahl: document.querySelectorAll('.seo-hero-btns a, .seo-hero-btns button').length,
+      heroSatz: (() => {
+        const e = document.querySelector('.seo-hero-sub');
+        return e ? e.textContent.replace(/\s+/g, ' ').trim() : null;
+      })(),
       team: !!document.getElementById('team-h2'),
       punkte: document.querySelectorAll('.seo-feature-card').length,
+      /* Die Ueberschriften der Karten stehen in Versalien im Markup, der
+         Text darunter normal. Beides wird mitgenommen, damit eine
+         Textaenderung auffaellt und nicht nur die Anzahl stimmt. */
+      kartenTitel: [...document.querySelectorAll('.seo-feature-card h3')]
+        .map((e) => e.textContent.replace(/\s+/g, ' ').trim()),
+      kartenText: [...document.querySelectorAll('.seo-feature-card p')]
+        .map((e) => e.textContent.replace(/\s+/g, ' ').trim()),
+      einleitung: (() => {
+        const e = document.querySelector('#team-h2').closest('.seo-section-inner').querySelector('p');
+        return e ? e.textContent.replace(/\s+/g, ' ').trim() : null;
+      })(),
       anfrage: !!document.getElementById('anfrage'),
       faqFragen: [...document.querySelectorAll('.faq-q span')].map((s) => s.textContent.trim()),
       schemen,
@@ -125,11 +140,39 @@ console.log('── A. Die Seite /corporate-boxing ──');
         a.heroKnopf && a.heroKnopf.text === 'ANFRAGE SENDEN' && a.heroKnopf.ziel === '#anfrage',
         JSON.stringify(a.heroKnopf));
   pruef('kein Probetraining-Knopf im Hero', a.probetraining === 0, a.probetraining + ' gefunden');
+  pruef('der Satz im Hero nennt Teamtraining und ab 5 Personen',
+        a.heroSatz === 'Boxen als Teamtraining für Firmen. Ab 5 Personen, auf Anfrage.',
+        String(a.heroSatz));
   pruef('Abschnitt 2: Was dein Team bekommt, mit drei Punkten',
         a.team === true && a.punkte === 3, a.punkte + ' Punkte');
+  pruef('die Einleitung nennt die zwei Formate',
+        a.einleitung === 'Zwei Formate, ein Ziel: Ein Team, das zusammen stärker wird.',
+        String(a.einleitung));
+  /* DIE ZWEI FORMATE SIND DER KERN DIESER SEITE
+     60 oder 90 Minuten reines Training, oder rund drei Stunden mit 90
+     Minuten Theorie und 90 Minuten Praxis. Beide Zahlen kommen vom
+     Betreiber; faellt eine aus dem Text, steht die Seite im Widerspruch
+     zur FAQ und zur Beschreibung in der Suche. */
+  pruef('die drei Karten heissen wie abgestimmt',
+        JSON.stringify(a.kartenTitel) ===
+          JSON.stringify(['TRAINING', 'TRAINING PLUS THEORIE', 'AB 5 PERSONEN']),
+        JSON.stringify(a.kartenTitel));
+  pruef('Karte 1 nennt 60 oder 90 Minuten',
+        /60 oder 90 Minuten/.test(a.kartenText[0] || ''), a.kartenText[0]);
+  pruef('Karte 2 nennt rund 3 Stunden, 90 Theorie und 90 Praxis',
+        /rund 3 Stunden/i.test(a.kartenText[1] || '')
+        && /90 Minuten Theorie/.test(a.kartenText[1] || '')
+        && /90 Minuten Praxis/.test(a.kartenText[1] || ''), a.kartenText[1]);
+  pruef('Karte 3 nennt die Gruppengroesse und Catering',
+        /ab 5 Personen|AB 5 PERSONEN/.test(a.kartenTitel[2] || '')
+        && /Catering ist optional/.test(a.kartenText[2] || ''), a.kartenText[2]);
   pruef('Abschnitt 3: das Formular unter #anfrage', a.anfrage === true);
-  pruef('Abschnitt 4: FAQ mit drei Fragen', a.faqFragen.length === 3,
+  pruef('Abschnitt 4: FAQ mit vier Fragen', a.faqFragen.length === 4,
         JSON.stringify(a.faqFragen));
+  pruef('darunter die Frage nach der Theorie',
+        a.faqFragen.includes('Was passiert in der Theorie?'),
+        JSON.stringify(a.faqFragen));
+  pruef('und die Frage nach der Dauer', a.faqFragen.includes('Wie lange dauert ein Termin?'));
 
   /* Schema: jeder Block muss parsen, und die FAQ-Fragen im Schema muessen
      Zeichen fuer Zeichen denen im HTML entsprechen. Genau das prueft
