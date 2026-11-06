@@ -326,13 +326,15 @@ SEITEN['preise.html'] = {
    /kurse. Jetzt hat sie eine eigene Seite, mit eigenem Ziel in der Suche
    und als Landeseite fuer Anzeigen.
 
-   Jede Angabe in der Beschreibung steht so schon im Repo: "ab 5 Personen"
-   und "auf Anfrage" aus dem Kursdetail auf /kurse und aus der
-   Preisuebersicht der Startseite. Keine Dauer, kein Preis, kein
-   Catering-Versprechen: dazu steht nichts Belastbares da.              */
+   Die beiden Formate und ihre Dauer hat der Betreiber am 06.11.2026
+   vorgegeben: reines Training mit 60 oder 90 Minuten, und das komplette
+   Format mit rund drei Stunden, 90 Minuten Theorie und 90 Minuten Praxis.
+   "ab 5 Personen" und "auf Anfrage" standen schon vorher im Repo. Preis,
+   Catering-Details und Vorlauf stehen weiterhin nirgends belastbar und
+   darum auch nicht auf der Seite.                                      */
 SEITEN['corporate-boxing.html'] = {
   titel: 'Corporate Boxing München',
-  beschr: 'Corporate Boxing in München: Boxtraining für Teams und Firmen, ab 5 Personen, auf Anfrage. Teambuilding im Bomaye Boxgym im Pineapple Park.',
+  beschr: 'Corporate Boxing in München: Teamtraining und Teambuilding für Firmen, ab 5 Personen, auf Anfrage. Training oder komplettes Format mit Theorie und Praxis.',
 };
 
 SEITEN['kinderboxen-muenchen.html'] = {
