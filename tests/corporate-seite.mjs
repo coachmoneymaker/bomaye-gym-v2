@@ -332,6 +332,41 @@ console.log('\n── C. Auf /kurse steht nur noch die Karte ──');
         JSON.stringify(c.knopf));
   pruef('data-sticky-still ist mit dem Formular entfallen', c.still === false);
   pruef('und die Formularlogik wird hier nicht mehr geladen', c.skript === false);
+
+  /* DIE AUFKLAPPSTELLE IM KURSTEXT
+     Sie beschrieb Corporate Boxing, hatte aber keinen Knopf: wer dort
+     landete, musste selbst weitersuchen. Jetzt fuehrt sie direkt zum
+     Formular, und ihr Text nennt dieselben zwei Formate wie die Seite. */
+  const slide = await page.evaluate(() => {
+    const el = document.getElementById('kursdetail-firmenfitness');
+    if (!el) return null;
+    const knopf = el.querySelector('a.btn');
+    return {
+      text: el.textContent.replace(/\s+/g, ' ').trim(),
+      knopf: knopf ? { text: knopf.textContent.replace(/\s+/g, ' ').trim(),
+                       ziel: knopf.getAttribute('href') } : null,
+    };
+  });
+  pruef('die Aufklappstelle im Kurstext gibt es noch', slide !== null);
+  if (slide) {
+    pruef('sie hat jetzt einen Knopf',
+          slide.knopf !== null && slide.knopf.text === 'ANFRAGE SENDEN',
+          JSON.stringify(slide.knopf));
+    pruef('der auf /corporate-boxing#anfrage fuehrt',
+          slide.knopf && slide.knopf.ziel === '/corporate-boxing#anfrage',
+          slide.knopf ? slide.knopf.ziel : 'kein Knopf');
+    pruef('ihr Text nennt beide Formate',
+          /60 oder 90 Minuten/.test(slide.text) && /90 Minuten Theorie/.test(slide.text),
+          slide.text.slice(0, 160));
+  }
+
+  /* Die Detailansicht am Schreibtisch holte ihre Knoepfe aus einer
+     Datentabelle. Fuer Corporate stand dort ein mailto; jetzt der Link. */
+  const daten = await page.evaluate(() => {
+    const el = document.getElementById('detail-cta-btn');
+    return { knopfDa: !!el, mailto: document.documentElement.innerHTML.includes("type: 'email', text: 'ANFRAGE SENDEN'") };
+  });
+  pruef('kein mailto mehr fuer die Corporate-Anfrage', daten.mailto === false);
   await ctx.close();
 }
 
@@ -359,6 +394,44 @@ console.log('\n── D. Fusslinks, Preistabelle, sitemap ──');
   pruef('der Tabellenlink in der Preisuebersicht zeigt auf die Anfrage',
         /href="\/corporate-boxing#anfrage"/.test(start),
         /kurse#corporate/.test(start) ? 'zeigt noch auf /kurse#corporate' : undefined);
+
+  /* Kein Eintrag zeigt mehr auf die Aufklappstelle: wer "Corporate
+     Boxing" im Menue anklickt, landet auf der Seite, nicht in einem
+     Akkordeon mitten in der Kursliste. */
+  const altZiel = [];
+  for (const d of dateien) {
+    const t = await readFile(wurzel + '/' + d, 'utf8');
+    if (/href="\/kurse#kursdetail-firmenfitness"/.test(t)) altZiel.push(d);
+  }
+  pruef('kein Eintrag zeigt mehr auf /kurse#kursdetail-firmenfitness',
+        altZiel.length === 0, JSON.stringify(altZiel));
+
+  /* Jede Seite mit Fussmenue hat GENAU EINEN Corporate-Eintrag. Vorher
+     standen auf drei Seiten zwei nebeneinander, beide mit demselben
+     Ziel. */
+  const doppelt = [];
+  for (const d of dateien) {
+    const t = await readFile(wurzel + '/' + d, 'utf8');
+    if (!/class="footer-col"/.test(t)) continue;
+    const n = (t.match(/<li><a href="\/corporate-boxing">/g) || []).length;
+    if (n !== 1) doppelt.push(d + ': ' + n);
+  }
+  pruef('je Seite genau ein Corporate-Eintrag im Fuss',
+        doppelt.length === 0, JSON.stringify(doppelt));
+
+  /* Das Antwortversprechen ist auf beiden Formularen dasselbe. */
+  const preise = await readFile(wurzel + '/preise.html', 'utf8');
+  pruef('auch die Erfolgsmeldung auf /preise nennt 24 Stunden',
+        !/schnellstmöglich/.test(preise)
+        && /Wir melden uns innerhalb von 24 Stunden/.test(preise),
+        /schnellstmöglich/.test(preise) ? 'sagt noch schnellstmoeglich' : undefined);
+  let nochVage = [];
+  for (const d of dateien) {
+    const t = await readFile(wurzel + '/' + d, 'utf8');
+    if (/schnellstmöglich/.test(t)) nochVage.push(d);
+  }
+  pruef('"schnellstmöglich" steht auf keiner Seite mehr',
+        nochVage.length === 0, JSON.stringify(nochVage));
 
   const karte = await readFile(wurzel + '/sitemap.xml', 'utf8');
   pruef('die sitemap kennt die Seite',
