@@ -884,8 +884,8 @@
         "item": {
           "@type": "Course",
           "name": "CORPORATE BOXING",
-          "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.",
-          "url": "https://www.bomayegym.com/kurse#kursdetail-firmenfitness",
+          "description": "Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Zwei Formate: reines Training mit 60 oder 90 Minuten, oder das komplette Format mit rund 3 Stunden, 90 Minuten Theorie und 90 Minuten Praxis.",
+          "url": "https://www.bomayegym.com/corporate-boxing",
           "provider": {
             "@id": "https://www.bomayegym.com/#gym"
           },
@@ -1352,12 +1352,17 @@
               <i class="icon" aria-hidden="true"><svg><use href="#i-plus"/></svg></i>
             </button>
             <div class="faq-a" id="kursdetail-firmenfitness" role="region">
-              <p class="kursdetail-desc">Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.</p>
+              <p class="kursdetail-desc">Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Zwei Formate: reines Training mit 60 oder 90 Minuten, oder das komplette Format mit rund 3 Stunden, 90 Minuten Theorie und 90 Minuten Praxis.</p>
               <ul class="kursdetail-feats">
-                <li><strong>Ab 5 Personen</strong> Maßgeschneiderte Einheiten auf Anfrage buchbar</li>
-                <li><strong>Teambuilding durch Sport</strong> Gemeinsam schwitzen, gemeinsam wachsen</li>
-                <li><strong>Flexible Planung</strong> Regelmäßige Einheiten oder Einzelevents möglich</li>
+                <li><strong>Training</strong> 60 oder 90 Minuten Boxen mit einem Coach</li>
+                <li><strong>Training plus Theorie</strong> Rund 3 Stunden, 90 Minuten Theorie und 90 Minuten Praxis</li>
+                <li><strong>Ab 5 Personen</strong> Termin und Zeitraum auf Anfrage, Catering optional</li>
               </ul>
+              <p style="margin-top:1.25rem;">
+                <a href="/corporate-boxing#anfrage" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+                  <i class="icon" aria-hidden="true"><svg><use href="#i-paper-plane"/></svg></i> ANFRAGE SENDEN
+                </a>
+              </p>
             </div>
           </div>
           <div class="faq-item kursdetail-item reveal delay-3" role="listitem">
@@ -1413,7 +1418,7 @@
       <div class="kurse-corporate__karte reveal">
         <span class="family-label">TEAMBUILDING</span>
         <h2 class="family-headline" id="corporate-h2" style="font-size:clamp(1.4rem,4vw,2rem);">CORPORATE BOXING</h2>
-        <p class="kurse-corporate__text">Für Teams und Firmen. Ab 5 Personen, auf Anfrage.</p>
+        <p class="kurse-corporate__text">Für Teams und Firmen. Teambuilding mit Boxen, ab 5 Personen.</p>
         <a href="/corporate-boxing" class="btn btn--gold btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
           <i class="icon" aria-hidden="true"><svg><use href="#i-paper-plane"/></svg></i> ZUR ANFRAGE
         </a>
@@ -1443,11 +1448,10 @@
             <li><a href="/kurse#kursdetail-youth">Kids &amp; Youth Boxing</a></li>
             <li><a href="/kurse#kursdetail-olympic">Olympisches Boxen</a></li>
             <li><a href="/kurse#kursdetail-women">Bomaye Queens</a></li>
-            <li><a href="/kurse#kursdetail-firmenfitness">Corporate Boxing</a></li>
+            <li><a href="/corporate-boxing">Corporate Boxing</a></li>
             <li><a href="/personal-training-boxen-muenchen">Personal Training</a></li>
             <li><a href="/kinderboxen-muenchen">Kinderboxen</a></li>
             <li><a href="/boxen-muenchen">Boxen München</a></li>
-            <li><a href="/corporate-boxing">Corporate</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -1600,13 +1604,15 @@ const COURSES = {
     titleMob: 'CORPORATE BOXING',
     img: '/assets/images/training-corporate.webp',
     imgAlt: 'Corporate Boxing Bomaye Gym',
-    desc: 'Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Unser Programm verbindet effektives Ganzkörpertraining mit Teambuilding, maßgeschneidert für Unternehmen.',
+    desc: 'Stärke dein Team im Boxring. Corporate Boxing ist kein regulärer Kurs. Es startet auf Anfrage, ab 5 Personen. Zwei Formate: reines Training mit 60 oder 90 Minuten, oder das komplette Format mit rund 3 Stunden, 90 Minuten Theorie und 90 Minuten Praxis.',
     feats: [
-      { strong: 'Ab 5 Personen', span: 'Maßgeschneiderte Einheiten auf Anfrage buchbar' },
-      { strong: 'Teambuilding durch Sport', span: 'Gemeinsam schwitzen, gemeinsam wachsen' },
-      { strong: 'Flexible Planung', span: 'Regelmäßige Einheiten oder Einzelevents möglich' },
+      { strong: 'Training', span: '60 oder 90 Minuten Boxen mit einem Coach' },
+      { strong: 'Training plus Theorie', span: 'Rund 3 Stunden, 90 Minuten Theorie und 90 Minuten Praxis' },
+      { strong: 'Ab 5 Personen', span: 'Termin und Zeitraum auf Anfrage, Catering optional' },
     ],
-    cta: { type: 'email', text: 'ANFRAGE SENDEN', email: 'support@bomayegym.com' }
+    /* Vorher: mailto an support@. Die Anfrage laeuft jetzt ueber das
+       Formular auf /corporate-boxing, mit denselben Feldern fuer alle. */
+    cta: { type: 'link', href: '/corporate-boxing#anfrage', text: 'ANFRAGE SENDEN' }
   },
   executive: {
     tag: '1:1',
