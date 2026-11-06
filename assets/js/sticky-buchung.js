@@ -15,6 +15,11 @@
      - das Element mit data-sticky-aus ist im Bild. Das ist die eigene
        Abschluss-Sektion der Seite: die Leiste soll keinen Knopf doppeln,
        der ohnehin schon dasteht.
+     - ein Formular ist im Bild. Jedes <form> und jedes Element mit
+       data-sticky-still ist eine stille Zone. Wer gerade Felder
+       ausfuellt, soll die unteren Felder sehen und nicht die Leiste
+       darueber. Das Corporate-Formular auf /kurse steht UNTER der
+       Abschluss-Sektion, die Leiste kam dort also wieder.
      - ein Dialog ist offen: Cookiebot, das Buchungs-Overlay, das
        Buchungs-Modal oder irgendein aria-modal.
      - der Besucher tippt in ein Feld, die Bildschirmtastatur ist also oben.
@@ -56,6 +61,13 @@
   var imAbschluss = false;               /* data-sticky-aus ist im Bild */
   var bsportSichtbar = false;
   var tastatur = false;
+
+  /* STILLE ZONEN
+     stilleZonen sind die beobachteten Elemente, stilleImBild merkt je
+     Element, ob es gerade im Bild ist. Zwei Listen statt eines WeakSet:
+     die Zahl ist klein und so laeuft es auch ohne WeakSet. */
+  var stilleZonen = [];
+  var stilleImBild = [];
 
   /* ── Bauen ──────────────────────────────────────────────────────────── */
   function bauen() {
@@ -132,12 +144,32 @@
     return false;
   }
 
+  /* IM BILD UND WIRKLICH SICHTBAR SIND ZWEI DINGE
+
+     Der Beobachter sagt nur, wo ein Element liegt. Ob es auch zu sehen
+     ist, entscheidet sichtbar() - dieselbe Pruefung wie fuer Dialoge, und
+     aus demselben Grund: das Family-Formular auf /preise steckt in einem
+     geschlossenen Modal. Das steht immer im Markup, liegt mitten im Bild
+     und hat Flaeche; zu ist es ueber opacity 0 und pointer-events: none.
+     Nach dem Beobachter allein waere auf /preise jede Leiste fuer immer
+     stumm. Darum wird hier bei JEDEM Durchlauf nachgesehen und nicht nur
+     dann, wenn sich die Lage aendert: ein Modal, das aufgeht, erzeugt
+     keinen Schnittpunkt, wohl aber eine Aenderung am Baum, und die holt
+     der MutationObserver weiter unten ab. */
+  function stilleZoneImBild() {
+    for (var i = 0; i < stilleZonen.length; i++) {
+      if (stilleImBild[i] && sichtbar(stilleZonen[i])) return true;
+    }
+    return false;
+  }
+
   function sollSichtbar() {
     if (zugemacht) return false;
     if (!vorbei) return false;
     if (imAbschluss) return false;
     if (bsportSichtbar) return false;
     if (tastatur) return false;
+    if (stilleZoneImBild()) return false;
     if (dialogOffen()) return false;
     return true;
   }
@@ -183,6 +215,29 @@
         for (var i = 0; i < eintraege.length; i++) imAbschluss = eintraege[i].isIntersecting;
         pruefen();
       }, { threshold: 0 }).observe(aus);
+    }
+
+    /* STILLE ZONEN: jedes Formular und alles mit data-sticky-still.
+       Derselbe Beobachtungsraum wie bei der Abschluss-Sektion, also der
+       reine Bildausschnitt: die Leiste soll genau dann schweigen, wenn
+       das Formular wirklich zu sehen ist, nicht schon weit davor. */
+    /* Einmal beim Start eingesammelt. Ein Formular, das erst spaeter ins
+       Markup kaeme, waere nicht dabei; auf diesen dreizehn Seiten gibt es
+       keines. Was Bsport nachlaedt, steht in einem iframe und ist von
+       hier aus ohnehin nicht beobachtbar; dafuer gibt es den eigenen
+       Bsport-Beobachter weiter unten. */
+    stilleZonen = Array.prototype.slice.call(
+      document.querySelectorAll('form, [data-sticky-still]'));
+    if (stilleZonen.length) {
+      for (var s = 0; s < stilleZonen.length; s++) stilleImBild[s] = false;
+      var so = new IntersectionObserver(function (eintraege) {
+        for (var i = 0; i < eintraege.length; i++) {
+          var stelle = stilleZonen.indexOf(eintraege[i].target);
+          if (stelle >= 0) stilleImBild[stelle] = eintraege[i].isIntersecting;
+        }
+        pruefen();
+      }, { threshold: 0 });
+      for (var t = 0; t < stilleZonen.length; t++) so.observe(stilleZonen[t]);
     }
 
     /* div, nicht script: die Schnipsel heissen bsport-widget-cdn und
