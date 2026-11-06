@@ -26,6 +26,10 @@
   --gold:       var(--brand-gold);
   --gold-dark:  #A67C2E;
   --gold-light: #d4b472;
+  /* Gold fuer KLEINE Schrift auf Creme. --gold-dark erreicht dort nur
+     3,3:1 und reicht damit nur fuer grosse Schrift ab 24px; dieser Ton
+     schafft 5,4:1 (WCAG AA 4,5:1). Derselbe Ton wie --bewertung-gold. */
+  --gold-auf-hell: #7E5B20;
   --muted:      rgba(245,240,232,0.65);
   --border:     rgba(201,168,76,0.25);
 
@@ -198,7 +202,8 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
   padding: 0.9rem 2.2rem; border-radius: 0; border: 1px solid transparent;
-  transition: all var(--dur-normal) var(--ease-out); white-space: nowrap; text-decoration: none;
+  transition: background-color var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out), filter var(--dur-normal) var(--ease-out), opacity var(--dur-normal) var(--ease-out);
+  white-space: nowrap; text-decoration: none;
 }
 /* ── Sehr schmale Geraete: der Knopf darf umbrechen ────────────────────────
    Auf 320px (Galaxy S9+, iPhone SE der ersten Reihe) ist "KOSTENLOS
@@ -1749,7 +1754,7 @@ html:not(.bomaye-dialogwache-aktiv) body:has(#bs-activity--dialog) #header {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 1.5rem; padding: 2rem; text-align: center; background: rgba(240,237,232,0.96);
 }
-.map-gate p { font-size: 0.85rem; color: rgba(8,8,8,0.55); max-width: 280px; }
+.map-gate p { font-size: 0.85rem; color: rgba(8,8,8,0.62); max-width: 280px; }
 .map-gate.hidden { display: none; }
 #map-frame { width: 100%; height: 100%; border: none; min-height: 500px; display: block; }
 
@@ -1834,7 +1839,7 @@ footer {
 }
 .footer-trust {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-body); font-size: 11px; color: rgba(245,240,232,0.45);
+  font-family: var(--font-body); font-size: 11px; color: rgba(245,240,232,0.6);
 }
 .footer-trust i { font-size: 10px; }
 .footer-trust a { display: inline-flex; align-items: center; }
@@ -1847,7 +1852,7 @@ footer {
 .footer-pineapple a:hover { opacity: 0.85; }
 .footer-pineapple-label {
   font-family: var(--font-head); font-size: 9px; font-weight: 600;
-  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.45);
+  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.6);
 }
 /* Mobile: divider follows the last contact row at normal row rhythm */
 @media (max-width: 768px) {
@@ -1860,7 +1865,7 @@ footer {
 .footer-brand .logo-text    { display: block; text-align: center; margin-top: 0.5rem;
                                margin-bottom: 1rem; font-size: 1.8rem; line-height: 1;
                                letter-spacing: 0.12em; }
-.footer-brand p             { font-size: 0.84rem; color: rgba(245,240,232,0.52);
+.footer-brand p             { font-size: 0.84rem; color: rgba(245,240,232,0.6);
                                margin-bottom: 0.35rem; text-align: center; }
 .footer-brand .footer-socials { justify-content: center; }
 .brand-line { font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; }
@@ -1876,7 +1881,7 @@ footer {
 /* Column headings — understated label style */
 .footer-col h4 {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 3.5px;
-  color: rgba(245,240,232,0.35); margin-bottom: 1.5rem;
+  color: rgba(245,240,232,0.55); margin-bottom: 1.5rem;
   text-transform: uppercase;
 }
 .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -1905,7 +1910,7 @@ footer {
   text-align: center; padding: 1.5rem 0 1.25rem;
   margin-bottom: 0;
   border-top: none;
-  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.35);
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.55);
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.4rem;
 }
 .footer-contactbar a { transition: color var(--dur-normal) var(--ease-out); }
@@ -1915,12 +1920,12 @@ footer {
 .footer-bottom {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
   padding-top: 1.5rem; border-top: 1px solid rgba(245,240,232,0.06);
-  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px; color: rgba(245,240,232,0.28);
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px; color: rgba(245,240,232,0.5);
 }
 .footer-legal { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-legal a {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px;
-  color: rgba(245,240,232,0.28); transition: color var(--dur-normal) var(--ease-out);
+  color: rgba(245,240,232,0.5); transition: color var(--dur-normal) var(--ease-out);
 }
 .footer-legal a:hover { color: var(--white); }
 
@@ -2253,7 +2258,7 @@ footer {
   width: 42px; height: 42px;
   background: rgba(245,240,232,0.05); border: 1px solid rgba(245,240,232,0.12);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.05rem; color: var(--muted); transition: all var(--dur-normal) var(--ease-out);
+  font-size: 1.05rem; color: var(--muted); transition: color var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .modal-close:hover { border-color: var(--gold); color: var(--gold); }
 .modal-body {
@@ -5580,7 +5585,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 .tag, .hero-trust-item, .trust-strip-item, .diff-item span,
 .coach-title, .plan-card-security, .plan-card-duration,
 .plan-card-age, .plan-checkout-hint, .widget-header-note,
-.loader-sub, .scroll-hint, .brand-line {
+.loader-sub, .scroll-hint {
   opacity: 0.75;
 }
 /* .footer-col h4 removed — opacity is set directly in its base rule */
@@ -5748,11 +5753,11 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 
 #dna .btn--outline-gold {
-  color: var(--gold-dark) !important;
+  color: var(--gold-auf-hell) !important;
   border-color: rgba(201,168,76,0.55) !important;
 }
 #dna .btn--outline-gold:hover {
-  color: var(--gold) !important;
+  color: var(--ink) !important;
   border-color: var(--gold) !important;
   text-decoration: underline;
   background: rgba(201,168,76,0.08) !important;
@@ -5770,7 +5775,7 @@ a.mn-contact-text:hover { color: var(--gold); }
 
 #disciplines .sec-header h2       { color: var(--ink) !important; }
 #disciplines .sec-header .gold    { color: var(--gold-dark) !important; }
-#disciplines .sec-header p        { color: rgba(8,8,8,0.55) !important; }
+#disciplines .sec-header p        { color: rgba(8,8,8,0.62) !important; }
 
 /* Hier stand dieselbe Ausnahme ein drittes Mal, mit drei !important. Drei
    Stellen sind unabhaengig voneinander bei derselben Loesung gelandet - das
@@ -7518,4 +7523,53 @@ i.icon > svg {
 .bsport-user-interaction-modal__innerContainer,
 .bsport-user-interaction-modal__topBar {
   background-color: #F5F0E8 !important;
+}
+
+/* ── Hover auf Touchgeraeten ───────────────────────────────────────
+   Ein Touchscreen kennt kein Ueberfahren. Der Browser setzt :hover
+   beim ersten Tippen und laesst es stehen, bis woanders getippt wird.
+   Ein Knopf, der beim Ueberfahren hochrutscht und waechst, bleibt
+   nach dem Tippen hochgerutscht und gross stehen, zum Beispiel wenn
+   man aus dem Buchungsdialog zurueckkommt.
+
+   Die Hover-Regeln stehen ueber die ganze Datei verteilt, mehrere mit
+   !important. Statt jede einzelne in eine Medienabfrage zu packen,
+   nimmt dieser eine Block auf Geraeten ohne echtes Ueberfahren nur
+   die BEWEGUNG zurueck (transform, filter). Farbwechsel bleiben, sie
+   stoeren nicht.
+
+   :not(:active) laesst den Druckzustand beim Tippen unberuehrt: der
+   gilt waehrend des Drueckens weiter wie bisher.               */
+@media (hover: none) {
+  .btn--gold:hover:not(:active),
+  .btn--outline-light:hover:not(:active),
+  .btn--outline-dark:hover:not(:active),
+  .btn--outline-gold:hover:not(:active),
+  .btn--hero-secondary:hover:not(:active),
+  .service-card:hover:not(:active),
+  .doc-card:hover:not(:active) {
+    transform: none !important;
+    filter: none !important;
+  }
+  .service-card:hover .service-card-bg,
+  .disc-panel:hover .disc-panel__bg,
+  .coach-card:hover .coach-photo img,
+  .vfacade:hover .vfacade__poster img,
+  .vfacade__play:hover ~ .vfacade__poster img {
+    transform: none !important;
+  }
+}
+
+/* ── Browser-Oberflaechen ──────────────────────────────────────────
+   Markierter Text und das Haekchen in Formularen trugen bisher die
+   Browserfarben (Blau). Jetzt die Markenfarben: Gold auf Schwarz
+   fuer die Markierung, Gold fuer Checkbox, Radio und Schreibmarke.
+   Kein Reinweiss, nur die drei Markentoene.                     */
+::selection {
+  background: var(--gold);
+  color: var(--ink);
+}
+input, textarea, select {
+  accent-color: var(--gold);
+  caret-color: var(--gold-dark);
 }
