@@ -836,27 +836,89 @@
     </div>
   </section>
 
-  <section id="reviews" style="background:#0A0A08;padding:80px 24px 72px;position:relative;overflow:hidden;border-top:1px solid rgba(201,168,76,0.12);border-bottom:1px solid rgba(201,168,76,0.12);">
+  <section id="reviews" class="bom-reviews">
 
-    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse at top,rgba(201,168,76,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+    <div class="bom-reviews__schein" aria-hidden="true"></div>
 
-    <div style="text-align:center;margin-bottom:36px;">
-      <span style="font-family:'Oswald',sans-serif;font-size:11px;color:rgba(201,168,76,0.7);text-transform:uppercase;letter-spacing:0.2em;">Was unsere Community sagt</span>
+    <div class="bom-reviews__kopf">
+      <span class="bom-reviews__marke">Was unsere Community sagt</span>
     </div>
 
-    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:56px;text-align:center;">
-      <div style="display:flex;align-items:baseline;gap:14px;justify-content:center;">
-        <span style="color:#C9A84C;font-size:22px;letter-spacing:4px;">★★★★★</span>
-
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:64px;color:#F5F0E8;line-height:1;">5,0</span>
+    <div class="bom-reviews__note">
+      <div class="bom-reviews__note-zeile">
+        <span class="bom-reviews__sterne" aria-hidden="true">★★★★★</span>
+        <span class="bom-reviews__zahl">5,0</span>
       </div>
-
-      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(245,240,232,0.45);letter-spacing:0.02em;">
-        Google-Bewertung, Stand 01.11.2026
-      </span>
+      <span class="bom-reviews__stand">Google-Bewertung, Stand 01.11.2026</span>
     </div>
 
     <style>
+      /* ══════════════════════════════════════════════════════════════════
+         BEWERTUNGEN: HELL STATT DUNKEL
+
+         Der Abschnitt war der einzige dunkle Block zwischen #dna und
+         #disciplines, die beide cremefarben sind. Nachgemessen auf 320,
+         390 und 1280 px: beide Nachbarn #F5F0E8, dieser Abschnitt
+         #0A0A08. Das war kein Rhythmus, das war ein Bruch.
+
+         Jetzt ein warmes Creme, eine Spur tiefer als die Nachbarn
+         (#EFE8DC gegen #F5F0E8, rund 6 Prozent Helligkeitsabstand). Der
+         Abschnitt bleibt als eigenes Band erkennbar, ohne Kante.
+
+         ZWEI GOLDTOENE, UND ZWAR AUS EINEM GRUND
+         Auf Creme hat das Markengold #C9A84C nur 1,88:1 Kontrast, das
+         gedeckte #A67C2E 3,11:1. Fuer kleine Schrift verlangt WCAG AA
+         4,5:1. Darum steht kleine Schrift in --bewertung-gold (#7E5B20,
+         5,07:1 auf dem Grund und 5,86:1 auf der Karte), waehrend Sterne
+         und Haarlinien beim gedeckten Gold bleiben: als nicht-textliche
+         Elemente brauchen sie 3:1, und das halten sie.
+
+         Gemessen, nicht geschaetzt: Zitat 10,83:1, Datumszeile 6,93:1,
+         Textlink 6,09:1, die 5,0 16,27:1. Reines Weiss kommt nicht vor.
+         ══════════════════════════════════════════════════════════════ */
+      #reviews {
+        --bewertung-gold: #7E5B20;
+        background: #EFE8DC;
+        padding: 80px 24px 72px;
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid rgba(160,124,58,0.22);
+        border-bottom: 1px solid rgba(160,124,58,0.22);
+      }
+      /* Der warme Schein oben bleibt, nur andersherum gedacht: auf Creme
+         ist er kein Leuchten im Dunkeln, sondern ein Hauch Waerme. */
+      .bom-reviews__schein {
+        position: absolute;
+        top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 700px; height: 400px;
+        background: radial-gradient(ellipse at top, rgba(201,168,76,0.18) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .bom-reviews__kopf { text-align: center; margin-bottom: 36px; position: relative; }
+      .bom-reviews__marke {
+        font-family: var(--font-head);
+        font-size: 11px;
+        color: var(--bewertung-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+      .bom-reviews__note {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 6px; margin-bottom: 56px; text-align: center; position: relative;
+      }
+      .bom-reviews__note-zeile {
+        display: flex; align-items: baseline; gap: 14px; justify-content: center;
+      }
+      .bom-reviews__sterne { color: #A67C2E; font-size: 22px; letter-spacing: 4px; }
+      .bom-reviews__zahl {
+        font-family: var(--font-display);
+        font-size: 64px; color: #0A0A08; line-height: 1;
+      }
+      .bom-reviews__stand {
+        font-family: var(--font-body);
+        font-size: 12px; color: rgba(10,10,8,0.70); letter-spacing: 0.02em;
+      }
       .bom-reviews-grid {
         display: flex;
         gap: 16px;
@@ -867,15 +929,20 @@
         margin: 0 auto 16px;
         padding-bottom: 4px;
         scrollbar-width: none;
+        position: relative;
       }
       .bom-reviews-grid::-webkit-scrollbar { display: none; }
+      /* "Leicht erhoben": hellere Karte als der Grund, weicher Rahmen,
+         flacher Schatten. Dieselben Werte wie .family-modal-card, damit
+         die Seite nicht zwei Sprachen fuer dieselbe Sache spricht. */
       .bom-review-card {
         flex: 0 0 100%;
         min-width: 0;
         box-sizing: border-box;
         scroll-snap-align: center;
-        background: #111110;
-        border: 1px solid rgba(201,168,76,0.16);
+        background: #FAF9F6;
+        border: 1px solid rgba(160,124,58,0.22);
+        box-shadow: 0 4px 16px rgba(160,124,58,0.10);
         padding: 28px 24px;
         display: flex;
         flex-direction: column;
@@ -887,10 +954,34 @@
         position: absolute;
         top: 0; left: 16px; right: 16px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+        background: linear-gradient(90deg, transparent, rgba(166,124,46,0.45), transparent);
+      }
+      .bom-review-card__sterne { color: #A67C2E; font-size: 13px; letter-spacing: 3px; }
+      .bom-review-card__text {
+        font-family: var(--font-body);
+        font-size: 15px; line-height: 1.7;
+        color: rgba(10,10,8,0.80);
+        margin: 0; flex: 1;
+      }
+      .bom-review-card__fuss {
+        display: flex; align-items: center; gap: 10px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(160,124,58,0.18);
+      }
+      .bom-review-card__initial {
+        width: 30px; height: 30px;
+        background: rgba(166,124,46,0.14);
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-head); font-size: 13px;
+        color: var(--bewertung-gold); font-weight: 600; flex-shrink: 0;
+      }
+      .bom-review-card__name {
+        font-family: var(--font-head); font-size: 11px;
+        text-transform: uppercase; letter-spacing: 0.14em;
+        color: var(--bewertung-gold);
       }
       @media (max-width: 859px) {
-        /* One card per view: full section width, height adapts to content */
+        /* Eine Karte je Bild: volle Breite, Hoehe nach Inhalt. */
         .bom-reviews-grid { align-items: flex-start; }
       }
       @media (min-width: 860px) {
@@ -901,48 +992,68 @@
         }
         .bom-review-card { min-width: 0; }
       }
+      /* DIE PUNKTE WAREN AM SCHREIBTISCH NIE WEG
+         Die Regel, die sie ab 860px ausblendet, stand in einem <style>
+         INNERHALB des Kastens, der display:flex als Inline-Stil trug.
+         Ein Inline-Stil schlaegt jede Regel aus einem Stilblatt, also
+         standen die drei Striche auch dort, wo alle drei Karten
+         nebeneinander liegen und es nichts zu wischen gibt. Jetzt steht
+         die Anzeige hier, und die Regel greift. */
+      .bom-scroll-dots {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 44px;
+        position: relative;
+      }
+      @media (min-width: 860px) { .bom-scroll-dots { display: none; } }
+
+      .bom-reviews__aktionen {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 14px; position: relative;
+      }
+      .bom-reviews__aktionen .btn { text-decoration: none; }
     </style>
 
     <div class="bom-reviews-grid">
 
       <div class="bom-review-card">
-        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">E</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Emanuele C.</span>
+        <span class="bom-review-card__sterne" aria-hidden="true">★★★★★</span>
+        <p class="bom-review-card__text">"Bestes Gym! Riesige Trainingsfläche und eine richtig coole Community. Die Trainer wissen genau, was sie tun, und pushen dich bis ans Limit. Wer echte Fortschritte machen will, ist hier genau richtig."</p>
+        <div class="bom-review-card__fuss">
+          <div class="bom-review-card__initial" aria-hidden="true">E</div>
+          <span class="bom-review-card__name">Emanuele C.</span>
         </div>
       </div>
 
       <div class="bom-review-card">
-        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Klare Empfehlung für JEDEN, der Interesse an Kampfsport hat. Alles sehr familiär, das Gym ist immer sauber — definitiv die richtige Adresse für Wettkämpfer und Wettkämpferinnen. 10/10."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">C</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Christopher M.</span>
+        <span class="bom-review-card__sterne" aria-hidden="true">★★★★★</span>
+        <p class="bom-review-card__text">"Klare Empfehlung für JEDEN, der Interesse an Kampfsport hat. Alles sehr familiär, das Gym ist immer sauber — definitiv die richtige Adresse für Wettkämpfer und Wettkämpferinnen. 10/10."</p>
+        <div class="bom-review-card__fuss">
+          <div class="bom-review-card__initial" aria-hidden="true">C</div>
+          <span class="bom-review-card__name">Christopher M.</span>
         </div>
       </div>
 
       <div class="bom-review-card">
-        <span style="color:#C9A84C;font-size:13px;letter-spacing:3px;">★★★★★</span>
-        <p style="font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:rgba(245,240,232,0.88);margin:0;flex:1;">"Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — es gibt aber auch die Möglichkeit für Wettkämpfer im Amateurboxen sich weiterzuentwickeln."</p>
-        <div style="display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(201,168,76,0.1);">
-          <div style="width:30px;height:30px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:13px;color:#C9A84C;font-weight:600;flex-shrink:0;">L</div>
-          <span style="font-family:'Oswald',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(201,168,76,0.8);">Lilian H.</span>
+        <span class="bom-review-card__sterne" aria-hidden="true">★★★★★</span>
+        <p class="bom-review-card__text">"Großes Boxstudio mit erfahrenen Coaches. Technik kann von Grund auf erlernt werden — es gibt aber auch die Möglichkeit für Wettkämpfer im Amateurboxen sich weiterzuentwickeln."</p>
+        <div class="bom-review-card__fuss">
+          <div class="bom-review-card__initial" aria-hidden="true">L</div>
+          <span class="bom-review-card__name">Lilian H.</span>
         </div>
       </div>
 
     </div>
 
-    <div style="display:flex;justify-content:center;gap:5px;margin-bottom:44px;" class="bom-scroll-dots">
-      <span style="width:20px;height:2px;background:#C9A84C;transition:width 0.15s ease,background 0.15s ease;"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);transition:width 0.15s ease,background 0.15s ease;"></span>
-      <span style="width:6px;height:2px;background:rgba(201,168,76,0.25);transition:width 0.15s ease,background 0.15s ease;"></span>
-      <style>@media(min-width:860px){.bom-scroll-dots{display:none;}}</style>
+    <div class="bom-scroll-dots" aria-hidden="true">
+      <span style="width:20px;height:2px;background:#A67C2E;transition:width 0.15s ease,background 0.15s ease;"></span>
+      <span style="width:6px;height:2px;background:rgba(166,124,46,0.30);transition:width 0.15s ease,background 0.15s ease;"></span>
+      <span style="width:6px;height:2px;background:rgba(166,124,46,0.30);transition:width 0.15s ease,background 0.15s ease;"></span>
     </div>
 
     <script data-cookieconsent="ignore">
-    /* Reviews: sync pagination dots with scroll-snap position */
+    /* Bewertungen: die Punkte folgen der Wischposition. */
     (function () {
       var grid = document.querySelector('.bom-reviews-grid');
       var dots = document.querySelectorAll('.bom-scroll-dots span');
@@ -956,7 +1067,7 @@
         var idx = Math.max(0, Math.min(dots.length - 1, Math.round(grid.scrollLeft / step)));
         for (var i = 0; i < dots.length; i++) {
           dots[i].style.width = (i === idx) ? '20px' : '6px';
-          dots[i].style.background = (i === idx) ? '#C9A84C' : 'rgba(201,168,76,0.25)';
+          dots[i].style.background = (i === idx) ? '#A67C2E' : 'rgba(166,124,46,0.30)';
         }
       }
       grid.addEventListener('scroll', function () {
@@ -965,19 +1076,19 @@
     }());
     </script>
 
-    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+    <div class="bom-reviews__aktionen">
 
       <a href="https://www.google.com/maps/place/Bomaye+Gym+Munich/@48.145755,11.5227558,17z/data=!4m8!3m7!1s0x479e77aa5473eb4b:0x455ea372be1216c!8m2!3d48.145755!4d11.5227558!9m1!1b1!16s%2Fg%2F11n9hgvl29!18m1!1e1?entry=ttu"
          target="_blank"
          rel="noopener noreferrer"
-         style="display:inline-block;background:linear-gradient(180deg,#D0A040 0%,#B08030 100%);color:#0A0A08;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;padding:15px 40px;text-decoration:none;">
+         class="btn btn--gold">
         ALLE BEWERTUNGEN LESEN
       </a>
 
       <a href="https://g.page/r/CWwh4Ss36lUEEAE/review"
          target="_blank"
          rel="noopener noreferrer"
-         style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(245,240,232,0.38);text-decoration:none;border-bottom:1px solid rgba(245,240,232,0.15);padding-bottom:2px;">
+         class="cta-textlink">
         ✦ Eigene Bewertung hinterlassen
       </a>
 
