@@ -80,8 +80,9 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `breiten.mjs` | `6cd3b64` (vor der Sticky-Politur) | 110/137, **27 Fehler** — `/u18` 300 px bei 280 px Fenster, `/datenschutz` 285 px, Startseite 334 px und `/probetraining` 402 px bei Systemschrift 130 % |
 | `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
 | `kontrast.mjs` | `1ba6135` (nach Premium v3, vor dem Nachzug aus PR #205) | 14/40, **26 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer auf 16 Seiten bis 2,25:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
+| `kontrast.mjs` (mit H, I, J) | `22db43c` (vor dem Kontrast-Nachzug ausserhalb der Premium-Ebene) | 40/71, **31 Fehler**: kleines Gold auf Creme mit 2,0:1 auf allen sieben Seiten, Footer von `/mitgliederbereich` 1,58:1, Social-Symbole auf `/coaches` 2,0:1, Kursnummer auf dem Foto 2,3:1 |
 
-Gegen den aktuellen Stand bestehen alle zehn vollständig: 878 Prüfungen,
+Gegen den aktuellen Stand bestehen alle zehn vollständig: 909 Prüfungen,
 0 Fehler.
 
 ### Playwright
@@ -362,11 +363,21 @@ Startseite und `/probetraining` bei Systemschrift 130 %.
 
 Misst jede sichtbare Textstelle auf einfarbigem Grund gegen WCAG AA
 (4,5:1, ab 24 px oder 18,66 px fett 3:1): Startseite bei 320, 390 und
-430 px, dazu der Footer jeder Seite (ausser `/mitgliederbereich`, der
-einen eigenen Footer hat und beim Inhaber liegt). Text auf Fotos
-(Programmkarten, Hero, Videofassade) ist ausgenommen, dort entscheidet
-das Bild. Die Suite misst das Ergebnis, egal ob die Farbe aus
-`style.css`, einem Inline-Stil oder `premium.css` kommt.
+430 px, dazu der Footer jeder Seite, seit 7.11.2026 auch der eigene
+Footer von `/mitgliederbereich`. Ebenso die ganzen Seiten `/about`,
+`/coaches`, `/kurse`, `/stundenplan`, `/mitgliederbereich`, `/preise` und
+`/faq` bei 320, 390 und 430 px (H). Text auf Fotos (Programmkarten der
+Startseite, Hero, Videofassade, Coachfoto) ist dort ausgenommen;
+abgeschaltete Knoepfe ebenso, die nimmt WCAG aus. Die Suite misst das
+Ergebnis, egal ob die Farbe aus `style.css`, einem Inline-Stil oder
+`premium.css` kommt.
+
+Dazu auf `/coaches` die Instagram- und TikTok-Symbole gegen ihren Grund,
+Soll 3:1 fuer Bedienelemente (I). Und kleine Schrift auf Fotos (die
+Nummer ueber dem Kurstitel auf `/kurse`, die Angaben im Coachfoto auf
+`/coaches`): Schrift ausblenden, die Flaeche dahinter abfotografieren,
+jeden Bildpunkt gegen die Schriftfarbe rechnen; massgeblich ist der
+Bildpunkt beim 95. Perzentil der Helligkeit (J).
 
 Dazu: in der Touch-Emulation bleibt ein goldener Knopf mit erzwungenem
 `:hover` flach, mit Maus hebt er sich weiter; der Early-Bird-Knopf
@@ -375,9 +386,9 @@ Seite nutzt `onmouseover`; keine Regel der Startseite nutzt
 `transition: all`; markierter Text ist Gold auf Schwarz.
 
 Dazu die helle Anfragekarte auf `/corporate-boxing` bei 320, 390 und
-430 px (jede Textstelle in `.cb-anfrage__panel`) und vier Stellen, an
-denen Etiketten und Umriss-Knoepfe fuer dunklen Grund in einem hellen
-Abschnitt standen (`/boxen-muenchen`, `/kinderboxen-muenchen`,
+430 px, jede Textstelle in `.cb-anfrage__panel` (F), und vier Stellen,
+an denen Etiketten und Umriss-Knoepfe fuer dunklen Grund in einem hellen
+Abschnitt standen (G) (`/boxen-muenchen`, `/kinderboxen-muenchen`,
 `/frauenboxen-muenchen`, `/kickboxen-muenchen`). Gegen `main` `22db43c`:
 40/47, **7 Fehler** (Karte 1,05 bis 1,08:1, die vier Stellen je 1,00:1).
 

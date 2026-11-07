@@ -26,10 +26,11 @@
   --gold:       var(--brand-gold);
   --gold-dark:  #A67C2E;
   --gold-light: #d4b472;
-  /* Schrift auf HELLEM Grund (Creme, #faf9f6). --gold-dark erreicht dort
-     nur 3,3:1 und reicht damit nur fuer grosse Schrift; --gold-auf-hell
-     schafft 5,4:1. --grau-auf-hell ist der gedaempfte Text auf Creme
-     (6,3:1), derselbe Ton wie in premium.css. */
+  /* Schrift auf HELLEM Grund (Creme, #faf9f6). Gold #C9A84C erreicht dort
+     nur 2:1, --gold-dark 3,3:1 und reicht damit nur fuer grosse Schrift;
+     --gold-auf-hell schafft 5,4:1. --grau-auf-hell ist der gedaempfte Text
+     auf Creme (6,3:1). Dieselben Werte wie --pr-gold-tief und das Grau der
+     Premium-Ebene in premium.css. */
   --gold-auf-hell: #7E5B20;
   --grau-auf-hell: #5C574C;
   --muted:      rgba(245,240,232,0.65);
@@ -194,6 +195,9 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
    der Rahmen traegt die Marke. Gold auf Creme kaeme nur auf 3.3:1 und
    verfehlt AA fuer Text dieser Groesse. */
 .tag--dark  { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.30); }
+/* Gold auf der Goldtoenung kam auf Dunkel auf 4,4:1. Ausserhalb der
+   Premium-Ebene das hellere Gold; premium.css regelt die drei Premium-Seiten. */
+html:not(.pr) .tag--dark { color: var(--gold-light); }
 
 .tag--gold      { background: var(--gold); color: var(--ink); }
 .tag--light-inv { background: rgba(201,168,76,0.10); color: var(--ink); border: 1px solid rgba(201,168,76,0.45); }
@@ -2914,7 +2918,7 @@ footer .footer-grid + div {
   font-size: 0.67rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--gold-dark);
+  color: var(--gold-auf-hell);
   background: rgba(160,124,58,0.1);
   border: 1px solid rgba(160,124,58,0.22);
   border-radius: 0;

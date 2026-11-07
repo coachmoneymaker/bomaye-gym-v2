@@ -299,7 +299,7 @@ function flex() {
           font-family: var(--font-body);
           font-size: 0.92rem;
           line-height: 1.75;
-          color: rgba(8,8,8,0.55);
+          color: var(--grau-auf-hell);
           margin: 10px 0 0;
           max-width: 640px;
         }
@@ -312,7 +312,7 @@ function flex() {
           font-weight: 600;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: var(--gold-dark);
+          color: var(--gold-auf-hell);
           margin: 22px 0 10px;
         }
         /* Early Bird bleibt der lautere Weg: die Flex-Zeile traegt einen
@@ -329,7 +329,7 @@ function flex() {
           font-family: var(--font-body);
           font-size: 0.74rem;
           letter-spacing: 0.02em;
-          color: rgba(8,8,8,0.5);
+          color: var(--grau-auf-hell);
           margin-top: 2px;
           white-space: nowrap;
         }
@@ -337,7 +337,7 @@ function flex() {
           font-family: var(--font-body);
           font-size: 0.82rem;
           line-height: 1.6;
-          color: rgba(8,8,8,0.55);
+          color: var(--grau-auf-hell);
           margin: 4px 0 0;
           white-space: nowrap;
         }
@@ -345,7 +345,7 @@ function flex() {
           font-family: var(--font-body);
           font-size: 0.82rem;
           line-height: 1.6;
-          color: var(--gold-dark);
+          color: var(--gold-auf-hell);
           margin: 2px 0 0;
         }
         /* 48px Tiefe statt der 44px der uebrigen Zeilenknoepfe. */
