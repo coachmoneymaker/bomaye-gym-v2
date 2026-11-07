@@ -79,8 +79,9 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `sticky.mjs` | `6cd3b64` (vor der Sticky-Politur) | 150/205, **55 Fehler** — Knopf 56 px statt 44 (auf 280 px sogar 79 px und drei Zeilen), Luft um den Knopf −0,7 px, das Kreuz ist das Zeichen „×" |
 | `breiten.mjs` | `6cd3b64` (vor der Sticky-Politur) | 110/137, **27 Fehler** — `/u18` 300 px bei 280 px Fenster, `/datenschutz` 285 px, Startseite 334 px und `/probetraining` 402 px bei Systemschrift 130 % |
 | `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
+| `kontrast.mjs` | `1ba6135` (nach Premium v3, vor dem Nachzug aus PR #205) | 14/40, **26 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer auf 16 Seiten bis 2,25:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
 
-Gegen den aktuellen Stand bestehen alle sieben vollständig: 637 Prüfungen,
+Gegen den aktuellen Stand bestehen alle zehn vollständig: 871 Prüfungen,
 0 Fehler.
 
 ### Playwright
@@ -356,6 +357,25 @@ Jede Pruefung laeuft deshalb die Vorfahren mit ab - dieselbe Falle wie in
 Gefundene und behobene Befunde beim ersten Lauf: vier (siehe PR zur
 Sticky-Politur) - `/u18` auf 280 px, `/datenschutz` auf 280 px, die
 Startseite und `/probetraining` bei Systemschrift 130 %.
+
+### `kontrast.mjs`: Lesbarkeit und Touch nach dem Design-Audit
+
+Misst jede sichtbare Textstelle auf einfarbigem Grund gegen WCAG AA
+(4,5:1, ab 24 px oder 18,66 px fett 3:1): Startseite bei 320, 390 und
+430 px, dazu der Footer jeder Seite (ausser `/mitgliederbereich`, der
+einen eigenen Footer hat und beim Inhaber liegt). Text auf Fotos
+(Programmkarten, Hero, Videofassade) ist ausgenommen, dort entscheidet
+das Bild. Die Suite misst das Ergebnis, egal ob die Farbe aus
+`style.css`, einem Inline-Stil oder `premium.css` kommt.
+
+Dazu: in der Touch-Emulation bleibt ein goldener Knopf mit erzwungenem
+`:hover` flach, mit Maus hebt er sich weiter; der Early-Bird-Knopf
+verschwindet beim Ueberfahren nicht mehr im schwarzen Abschnitt; keine
+Seite nutzt `onmouseover`; keine Regel der Startseite nutzt
+`transition: all`; markierter Text ist Gold auf Schwarz.
+
+Die Touch-Emulation zeigt, welche Regeln greifen. Ob ein Knopf auf einem
+echten iPhone nach dem Tippen haengen bleibt, sieht man nur dort.
 
 ### `gemeinsam.mjs`
 
