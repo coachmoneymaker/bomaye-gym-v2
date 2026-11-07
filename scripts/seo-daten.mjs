@@ -182,9 +182,17 @@ export const ALTE_IDS = [
    den jeweiligen Eintraegen weiter unten.
    ═══════════════════════════════════════════════════════════════════════════ */
 export const SEITEN = {
+  /* Titel und Beschreibungen von index, kurse, kickboxen-muenchen,
+     frauenboxen-muenchen und personal-training-boxen-muenchen am 07.11.2026
+     neu geschrieben: Search Console zeigte Impressionen, aber wenig Klicks.
+     Die Titel hat der Betreiber vorgegeben; sie tragen "Bomaye" statt der
+     vollen Marke, sonst laegen sie ueber 60 Zeichen. Jede Beschreibung
+     nennt einen Nutzen und endet mit einer Aufforderung, und jede Angabe
+     darin steht schon auf der Seite. */
   'index.html': {
-    titel: 'Boxgym und Boxtraining München',
-    beschr: 'Bomaye ist dein Boxgym in München für Anfänger, Fitnesssportler und Wettkämpfer. Boxtraining, Kickboxen und Personal Training im Pineapple Park.',
+    titel: 'Boxgym München: Probetraining gratis',
+    marke: 'Bomaye',
+    beschr: 'Boxen in München im Bomaye Boxgym, Pineapple Park in Neuhausen-Nymphenburg. Keine Erfahrung nötig. Buche jetzt dein kostenloses Probetraining.',
   },
   'about.html': {
     titel: 'Über uns: DNA, Philosophie und Story',
@@ -199,8 +207,9 @@ export const SEITEN = {
     beschr: 'Lerne das Trainerteam im Bomaye Boxgym München kennen. Wer dich im Boxen, Kickboxen und im Jugendtraining betreut und wie du uns erreichst.',
   },
   'kurse.html': {
-    titel: 'Kurse: Boxen und Kickboxen München',
-    beschr: 'Alle Kurse im Bomaye Boxgym München: Boxen, Kickboxen, Youth Boxing, olympisches Boxen und Mental Coaching. Für jedes Level, vom Anfang an.',
+    titel: 'Boxkurse München: Boxen und Kickboxen',
+    marke: 'Bomaye',
+    beschr: 'Boxen und Kickboxen in München: Kurse für Anfänger bis Wettkampf, dazu Youth Boxing und Frauenboxen. Ohne Vorerfahrung. Starte mit einem Probetraining.',
   },
   'stundenplan.html': {
     titel: 'Stundenplan Boxen und Kickboxen',
@@ -245,11 +254,13 @@ export const SEITEN = {
     beschr: 'Fitnessboxen in München im Bomaye Boxgym: ein Box-Workout für Kraft, Ausdauer und Kondition, ohne Vorkenntnisse. Dein erstes Training ist kostenlos.',
   },
   'frauenboxen-muenchen.html': {
-    titel: 'Frauenboxen München',
-    beschr: 'Boxen für Frauen in München: Bomaye Queens ist unser reiner Frauenkurs für jedes Level. Erstes Training im Bomaye Boxgym kostenlos und unverbindlich.',
+    titel: 'Frauenboxen München: Kurs für Frauen',
+    marke: 'Bomaye',
+    beschr: 'Frauenboxen in München: Bomaye Queens ist der Boxkurs nur für Frauen, für jedes Level und ohne Vorerfahrung. Buche dein kostenloses Probetraining.',
   },
   'kickboxen-muenchen.html': {
-    titel: 'Kickboxen München',
+    titel: 'Kickboxen München: Kurse für alle Level',
+    marke: 'Bomaye',
     /* Hier stand "Training mit Kickbox-Weltmeister Alfonso Fusco". Eine
        Aussage ueber eine einzelne Person mit Titel, und zwar in der
        Beschreibung, die Google als Textauszug zeigt. Sie faellt nach
@@ -257,10 +268,11 @@ export const SEITEN = {
        nachpruefbar aus dem Repo, und sie veraltet still, wenn der Trainer
        geht. Die Early-Bird-Erwaehnung bleibt OHNE Zahl, sonst muesste der
        Preis hier gepflegt werden. */
-    beschr: 'Kickboxen in München für Anfänger und Fortgeschrittene. Schlag- und Tritttechnik, Beinarbeit. Early Bird endet, sobald alle Plätze vergeben sind.',
+    beschr: 'Kickboxen in München für jedes Level: Schlag- und Tritttechnik, Beinarbeit, Kondition. Keine Vorerfahrung nötig. Teste es im kostenlosen Probetraining.',
   },
   'personal-training-boxen-muenchen.html': {
     titel: 'Personal Training Boxen München',
+    marke: 'Bomaye',
     /* Hier stand "1:1 Boxtraining mit Olympic Coach und Kickbox-Weltmeister".
        Zwei Titel, und im Gym gibt es genau zwei Gruender - die Aussage zeigt
        also auf zwei benannte Personen, auch ohne die Namen zu nennen. Faellt
@@ -271,7 +283,7 @@ export const SEITEN = {
        COACH", "Termine auch vormittags und mittags. Online buchen".
        ACHTUNG, PREISE: 125 und 90 stimmen mit der Seite ueberein. Aendern
        sich die Preise dort, aendert sich diese Zeile mit. */
-    beschr: 'Personal Training Boxen München: 60 Minuten One on One mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags, Termin online buchen.',
+    beschr: 'Personal Training Boxen in München: 60 Minuten One on One mit deinem Coach. 125 € pro Session, Mitglieder 90 €. Auch vormittags. Jetzt Termin buchen.',
   },
   'downloads.html': {
     titel: 'Downloads',
