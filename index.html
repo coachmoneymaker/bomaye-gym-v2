@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="pr">
 <head>
   <meta charset="UTF-8" />
 
@@ -60,6 +60,7 @@
   <link rel="stylesheet" href="/assets/css/fonts.css">
 
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/premium.css?v=1" />
 
   <!-- SEO:GRAPH -->
   <!-- ERZEUGT - NICHT VON HAND AENDERN.
@@ -756,7 +757,7 @@
   <section id="hero" aria-label="Hero">
     <video class="hero-video" autoplay loop muted playsinline preload="metadata" poster="/assets/images/hero-poster.webp" aria-hidden="true">
       <source media="(max-width: 768px)" src="/assets/videos/hero-loop-mobile.mp4?v=3" type="video/mp4">
-      <source src="/assets/videos/hero-loop.mp4?v=3" type="video/mp4">
+      <source media="(max-width: 1099px)" src="/assets/videos/hero-loop.mp4?v=3" type="video/mp4">
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
@@ -787,6 +788,26 @@
         <span class="hero-cred-v2-item">20+ JAHRE WETTKAMPF</span>
       </div>
     </div>
+    <div class="hero-reel" aria-hidden="true">
+      <div class="hero-reel__rahmen">
+        <video class="hero-reel__video" autoplay loop muted playsinline preload="none" poster="/assets/images/hero-poster.webp">
+          <source media="(min-width: 1100px)" src="/assets/videos/hero-reel.mp4?v=1" type="video/mp4">
+        </video>
+        <span class="hero-reel__ort">Pineapple Park<br><em>München</em></span>
+        <span class="hero-reel__handle">@bomayegym_munich</span>
+      </div>
+      <div class="hero-reel__note">
+        <b>5,0</b>
+        <span><i class="pr-sterne"></i>Google-Bewertung</span>
+      </div>
+      <div class="hero-reel__marke">
+        <span>Ab 6 Jahren<br><em>Kids · Youth · Erwachsene</em></span>
+      </div>
+    </div>
+    <button type="button" class="pr-ruhe-knopf" aria-pressed="false" aria-label="Bewegung anhalten">
+      <svg class="pr-ruhe-knopf__pause" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor"/></svg>
+      <svg class="pr-ruhe-knopf__play" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+    </button>
     <div class="scroll-hint" aria-hidden="true">
       <div class="scroll-hint-line"></div>
     </div>
@@ -813,6 +834,7 @@
         <div class="dna-text reveal">
           <h2 style="margin-top:0;">MEHR ALS EIN<br><span class="gold">FITNESSSTUDIO.</span></h2>
           <p>Boxen. Fokus. Ein klarer Kopf.<br>Für Anfänger, Fortgeschrittene und Wettkämpfer.<br>Keine Erfahrung nötig. Nur die Entscheidung.</p>
+          <p class="dna-kinshasa">Kinshasa, 1974. 60.000 Menschen rufen Alis Namen: <strong>Bomaye.</strong> Es bedeutet: Wir stehen hinter dir.</p>
           <p class="dna-gruender">Gegründet von Raschad Pekpassi und Alfonso Fusco. Beide BABV Landestrainer, Alfonso Kickbox-Weltmeister.</p>
           <div style="margin-top:2rem;">
             <a href="/about" class="btn btn--outline-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
@@ -821,16 +843,15 @@
           </div>
         </div>
 
-        <div class="dna-visual dna-brand-moment reveal delay-2" aria-hidden="true">
-          <div class="dna-brand-line dna-brand-line--top" aria-hidden="true"></div>
-
-          <img src="/assets/images/bomaye-logo.webp" alt="" aria-hidden="true" class="dna-visual-logo"
-               width="720" height="360" loading="lazy" decoding="async"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
-          <div class="dna-visual-wordmark" style="display:none;">BOMAYE</div>
-          <div class="dna-visual-sub">GYM MUNICH</div>
-          <div class="dna-brand-tagline">EST. 2026 · THE SPIRIT OF 1974.</div>
-          <div class="dna-brand-line dna-brand-line--bottom" aria-hidden="true"></div>
+        <div class="dna-visual dna-gruender-bilder reveal delay-2">
+          <figure class="dna-portrait">
+            <img src="/assets/images/coach-portrait-1-720.webp" srcset="/assets/images/coach-portrait-1-480.webp 480w, /assets/images/coach-portrait-1-720.webp 720w" sizes="(max-width: 768px) 46vw, 300px" width="720" height="960" alt="Raschad Pekpassi, Gründer und BABV Landestrainer" loading="lazy" decoding="async" />
+            <figcaption><b>Raschad Pekpassi</b><span>Founder · Olympic Boxing</span></figcaption>
+          </figure>
+          <figure class="dna-portrait dna-portrait--versetzt">
+            <img src="/assets/images/coach-portrait-2-720.webp" srcset="/assets/images/coach-portrait-2-480.webp 480w, /assets/images/coach-portrait-2-720.webp 720w" sizes="(max-width: 768px) 46vw, 300px" width="720" height="960" alt="Alfonso Fusco, Gründer und Kickbox-Weltmeister" loading="lazy" decoding="async" />
+            <figcaption><b>Alfonso Fusco</b><span>Founder · Kickbox-Weltmeister</span></figcaption>
+          </figure>
         </div>
       </div>
     </div>
@@ -1015,7 +1036,7 @@
       .bom-reviews__aktionen .btn { text-decoration: none; }
     </style>
 
-    <div class="bom-reviews-grid">
+    <div class="bom-reviews-grid" tabindex="0" role="region" aria-label="Google-Bewertungen">
 
       <div class="bom-review-card">
         <span class="bom-review-card__sterne" aria-hidden="true">★★★★★</span>
@@ -1089,7 +1110,7 @@
          target="_blank"
          rel="noopener noreferrer"
          class="cta-textlink">
-        ✦ Eigene Bewertung hinterlassen
+        <svg class="pr-icon-stern" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path d="M12 2.6l2.83 6.13 6.67.78-4.95 4.55 1.35 6.57L12 17.3l-5.9 3.33 1.35-6.57L2.5 9.51l6.67-.78z" fill="currentColor"/></svg> Eigene Bewertung hinterlassen
       </a>
 
     </div>
@@ -1148,6 +1169,13 @@
         </div>
       </a>
 
+    </div>
+
+    <div class="disc-laufband" aria-hidden="true">
+      <div class="disc-laufband__spur">
+        <span>Boxing Basic</span><i class="disc-laufband__raute"></i><span>Advanced</span><i class="disc-laufband__raute"></i><span>Kickboxing</span><i class="disc-laufband__raute"></i><span>Bomaye Queens</span><i class="disc-laufband__raute"></i><span>Kids &amp; Youth</span><i class="disc-laufband__raute"></i><span>Fight Team</span><i class="disc-laufband__raute"></i><span>Open Gym</span><i class="disc-laufband__raute"></i><span>Personal Training</span><i class="disc-laufband__raute"></i>
+        <span>Boxing Basic</span><i class="disc-laufband__raute"></i><span>Advanced</span><i class="disc-laufband__raute"></i><span>Kickboxing</span><i class="disc-laufband__raute"></i><span>Bomaye Queens</span><i class="disc-laufband__raute"></i><span>Kids &amp; Youth</span><i class="disc-laufband__raute"></i><span>Fight Team</span><i class="disc-laufband__raute"></i><span>Open Gym</span><i class="disc-laufband__raute"></i><span>Personal Training</span><i class="disc-laufband__raute"></i>
+      </div>
     </div>
 
     <div class="container">
@@ -2127,7 +2155,7 @@ body[data-modal-open="true"] { overflow: hidden; }
   </div>
 
 
-  <section id="early-bird" style="background:#0A0A08;padding:80px 24px;text-align:center;" data-sticky-aus>
+  <section id="early-bird" data-pr-bg style="background:#0A0A08;padding:80px 24px;text-align:center;" data-sticky-aus>
     <style>
       @media(min-width:769px){#early-bird{padding:var(--takt) 40px!important;}}
       #early-bird .fm-benefits{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;flex-direction:column;}
@@ -2256,7 +2284,7 @@ body[data-modal-open="true"] { overflow: hidden; }
         </div>
       </div>
       <div class="map-wrapper">
-        <div class="map-gate" id="map-gate">
+        <div class="map-gate" id="map-gate" data-pr-bg>
           <p>Durch das Laden stimmst du zu, dass Inhalte von OpenStreetMap geladen werden.</p>
           <button onclick="loadMap()" class="btn btn--gold" type="button">KARTE LADEN</button>
         </div>
@@ -2911,5 +2939,6 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
   <script defer data-cookieconsent="ignore" src="/assets/js/sticky-buchung.js"></script>
+  <script defer data-cookieconsent="ignore" src="/assets/js/premium.js"></script>
 </body>
 </html>

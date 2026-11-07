@@ -1,0 +1,627 @@
+/* ══════════════════════════════════════════════════════════════════
+   BOMAYE PREMIUM-EBENE · v2
+
+   Liegt ueber style.css und den Inline-Bloecken der Seiten. Greift nur
+   mit <html class="pr">. Aendert keine IDs, keine Skript-Haken und keine
+   bsport- oder Tracking-Attribute.
+
+   Regeln dieser Fassung (Impeccable, Taste, Emil Kowalski, Nike als
+   Referenz fuer Sport-Typografie):
+   - keine Kicker ueber Ueberschriften, keine Abschnittsnummern
+   - kein Verlaufstext, keine kursive Betonung, keine farbigen
+     Seitenbalken, keine Leuchtringe ohne Versatz
+   - Anzeige-Schrift hoechstens 6rem
+   - kein Einblenden beim Scrollen: Inhalt ist sofort da; die eine
+     bewusste Bewegung ist der Auftritt des Heros
+   - Hover: Karte hebt 2px, Foto zoomt 1.03, Knopf drueckt auf 0.97;
+     UI-Bewegung unter 300 ms, eigene ease-out-Kurve, nie ease-in;
+     Hover nur bei Maus (hover: hover) and (pointer: fine)
+   - Dauerbewegung hat einen Pause-Knopf (WCAG 2.2.2)
+   - Browser-Flaechen tragen die Marke: Auswahl, Fokus, Scrollleiste,
+     Cursor, Unterstreichung, Ziffern
+   Marke: Ecken bleiben eckig, Gold #C9A84C, Tinte #0A0A08, Creme #F5F0E8.
+══════════════════════════════════════════════════════════════════ */
+
+html.pr {
+  --pr-gold: #C9A84C;
+  --pr-gold-hell: #DDBF6A;
+  --pr-gold-tief: #7E5B20;
+  --pr-tinte: #0A0A08;
+  --pr-creme: #F5F0E8;
+  --pr-raus: cubic-bezier(0.23, 1, 0.32, 1);
+  --pr-wandern: cubic-bezier(0.77, 0, 0.175, 1);
+  --pr-stern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%237E5B20' d='M12 2.6l2.83 6.13 6.67.78-4.95 4.55 1.35 6.57L12 17.3l-5.9 3.33 1.35-6.57L2.5 9.51l6.67-.78z'/%3E%3C/svg%3E");
+  --pr-pfeil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='2.2'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E");
+
+  /* Browser-Flaechen */
+  scrollbar-color: #5C4A22 #0A0A08;
+  caret-color: var(--pr-gold);
+}
+html.pr ::selection { background: var(--pr-gold); color: var(--pr-tinte); }
+html.pr a { text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+html.pr :focus-visible {
+  outline: 2px solid var(--pr-gold);
+  outline-offset: 3px;
+}
+html.pr .mw-card-price,
+html.pr .mw-card-reg-price,
+html.pr .mw-card-fee,
+html.pr .sched-row,
+html.pr .sched-meta-num,
+html.pr .hours-grid { font-variant-numeric: tabular-nums; }
+
+/* ── Kicker und Abschnittsnummern: weg. Die Ueberschrift traegt selbst. ── */
+html.pr .sec-header > .tag,
+html.pr .location-info > .tag,
+html.pr .anfahrt-video-copy > .tag,
+html.pr .sched-eyebrow,
+html.pr .disc-panel__kicker,
+html.pr .pt-hero__eyebrow,
+html.pr .mw-hero-label,
+html.pr .mw-fk-label,
+html.pr .mw-trial-label,
+html.pr #early-bird > div > p:first-child { display: none !important; }
+html.pr .sec-header h2,
+html.pr .location-info h2 { margin-top: 0 !important; }
+
+/* ── Der Gold-Schimmer gehoert zur Marke: er bleibt, aber ruhig.
+   Festes Gold als Grund, ein schmaler Lichtstreif zieht alle 7 s einmal
+   durch und ruht dann. Unter reduzierter Bewegung und mit dem
+   Pause-Knopf steht er still. ─────────────────────────────────────── */
+html.pr .shimmer {
+  background: linear-gradient(100deg, #C9A84C 0%, #C9A84C 42%, #F4E3B0 50%, #C9A84C 58%, #C9A84C 100%) !important;
+  background-size: 300% 100% !important;
+  background-position: 100% 0;
+  -webkit-background-clip: text !important; background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: #C9A84C;
+  animation: prSchimmer 7s cubic-bezier(0.77, 0, 0.175, 1) infinite !important;
+}
+@keyframes prSchimmer {
+  0%, 55% { background-position: 100% 0; }
+  100% { background-position: 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.pr .shimmer { animation: none !important; background-position: 100% 0 !important; }
+}
+html.pr.pr-ruhe .shimmer { animation-play-state: paused !important; }
+html.pr #schedule-preview .sched-title .accent { font-style: normal; color: var(--pr-gold-tief); }
+
+/* ── Kein Einblenden beim Scrollen: alles ist sofort sichtbar ──────── */
+html.pr .reveal,
+html.pr .reveal.visible {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ── Kopfleiste: Linie unter dem Menuepunkt ─────────────────────────── */
+html.pr .nav-links .nav-link { position: relative; }
+html.pr .nav-links .nav-link::after {
+  content: "";
+  position: absolute; left: 0.55rem; right: 0.55rem; bottom: 0.15rem;
+  height: 1px; background: var(--pr-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 240ms var(--pr-raus);
+}
+html.pr .nav-links .nav-link.active::after { transform: scaleX(1); }
+
+/* ── Knoepfe: Stufe beim Zeigen, Druck beim Klicken ─────────────────── */
+html.pr .btn,
+html.pr .mw-card-btn,
+html.pr .mw-trial-btn,
+html.pr .pr-ruhe-knopf,
+html.pr #early-bird a[href="/probetraining"] {
+  transition: transform 160ms var(--pr-raus), background-color 200ms ease, color 200ms ease,
+              border-color 200ms ease, box-shadow 200ms ease !important;
+}
+html.pr .btn:active,
+html.pr .mw-card-btn:active,
+html.pr .mw-trial-btn:active,
+html.pr .pr-ruhe-knopf:active,
+html.pr #early-bird a[href="/probetraining"]:active { transform: scale(0.97) !important; }
+
+@media (hover: hover) and (pointer: fine) {
+  html.pr .nav-links .nav-link:hover::after { transform: scaleX(1); }
+  html.pr .btn--gold:hover,
+  html.pr .mw-card-btn:hover,
+  html.pr .mw-trial-btn:hover {
+    background-color: var(--pr-gold-hell) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(10,10,8,0.28);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════════════ */
+html.pr .hero-reel { display: none; }
+
+/* Pause fuer Video und Laufband */
+html.pr .pr-ruhe-knopf {
+  position: absolute; right: 20px; bottom: 20px; z-index: 3;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(10,10,8,0.6); color: var(--pr-creme);
+  border: 1px solid rgba(245,240,232,0.28);
+  cursor: pointer;
+}
+html.pr .pr-ruhe-knopf__play { display: none; }
+html.pr.pr-ruhe .pr-ruhe-knopf__play { display: block; }
+html.pr.pr-ruhe .pr-ruhe-knopf__pause { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .pr-ruhe-knopf:hover { border-color: var(--pr-gold); color: var(--pr-gold); }
+}
+
+@media (min-width: 1100px) {
+  html.pr #hero {
+    justify-content: center;
+    gap: clamp(56px, 7vw, 120px);
+    padding: calc(var(--nav-h) + 24px) 48px 88px;
+    min-height: max(100vh, 820px);
+  }
+  /* Raum hinter dem Reel: dasselbe Video, ruhig und dunkel. Weichzeichner
+     unter 20px, sonst kostet er in Safari jedes Bild. */
+  /* Ab 1100 px hat das Hintergrund-Video keine Quelle: es zeigt nur sein
+     Poster, ruhig und weich. Das Video laeuft einmal, im Reel. */
+  html.pr #hero .hero-video {
+    inset: -32px; width: calc(100% + 64px); height: calc(100% + 64px);
+    filter: blur(16px) saturate(0.8) brightness(0.75);
+  }
+  html.pr #hero .hero-overlay {
+    opacity: 1 !important;
+    background: linear-gradient(90deg, rgba(10,10,8,0.92) 0%, rgba(10,10,8,0.72) 50%, rgba(10,10,8,0.4) 100%) !important;
+  }
+  html.pr #hero .hero-content {
+    text-align: left;
+    padding: 0;
+    max-width: 660px;
+    flex: 0 1 660px;
+  }
+  html.pr #hero .hero-content > * { margin-left: 0 !important; margin-right: 0 !important; align-self: flex-start; }
+  html.pr #hero .hero-h1 { font-size: clamp(4.5rem, 6.9vw, 6rem); line-height: 0.88; letter-spacing: 0; }
+  html.pr #hero .hero-subtitle { font-size: 1.3rem; }
+  html.pr #hero .hero-ctas { justify-content: flex-start; }
+  html.pr #hero .hero-micro-trust { text-align: left; }
+  html.pr #hero .hero-credentials { justify-content: flex-start !important; padding-left: 0 !important; }
+  html.pr #hero .hero-cred-v2-item:first-child { padding-left: 0; }
+
+  html.pr .hero-reel {
+    display: block;
+    position: relative; z-index: 2;
+    flex: 0 0 auto;
+    width: clamp(300px, 24vw, 370px);
+  }
+  /* Die eine bewusste Bewegung der Seite: das Reel oeffnet sich von unten. */
+  html.pr .hero-reel__rahmen {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    background: #000 url('/assets/images/hero-poster.webp') center / cover no-repeat;
+    box-shadow: 0 40px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.4);
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 900ms var(--pr-wandern) 200ms, transform 240ms var(--pr-raus);
+  }
+  html.pr #hero.hero-revealed .hero-reel__rahmen { clip-path: inset(0 0 0 0); }
+  html.pr .hero-reel__rahmen::before,
+  html.pr .hero-reel__rahmen::after {
+    content: ""; position: absolute; width: 26px; height: 26px; z-index: 2;
+    border-color: var(--pr-gold); border-style: solid;
+  }
+  html.pr .hero-reel__rahmen::before { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+  html.pr .hero-reel__rahmen::after { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+  html.pr .hero-reel__video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  html.pr .hero-reel__rahmen > .hero-reel__ort {
+    position: absolute; left: 22px; bottom: 52px; z-index: 2;
+    font-family: var(--font-display); font-size: 2rem; line-height: 0.92; color: var(--pr-creme);
+  }
+  html.pr .hero-reel__ort em { font-style: normal; color: var(--pr-gold); }
+  html.pr .hero-reel__handle {
+    position: absolute; left: 22px; bottom: 24px; z-index: 2;
+    font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.1em; color: rgba(245,240,232,0.82);
+    text-transform: uppercase;
+  }
+  html.pr .hero-reel__rahmen .hero-reel__video + .hero-reel__ort::before {
+    content: ""; position: absolute; left: -22px; right: -400px; bottom: -52px; height: 190px; z-index: -1;
+    background: linear-gradient(0deg, rgba(10,10,8,0.88), transparent);
+  }
+  html.pr .hero-reel__note {
+    position: absolute; left: -60px; top: 56px; z-index: 3;
+    display: flex; align-items: center; gap: 12px;
+    background: var(--pr-creme); color: #141310;
+    padding: 14px 18px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  }
+  html.pr .hero-reel__note b { font-family: var(--font-display); font-weight: 400; font-size: 2.5rem; line-height: 1; }
+  html.pr .hero-reel__note span { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-body); font-size: 0.75rem; color: #3D3A33; }
+  html.pr .hero-reel__marke {
+    position: absolute; right: clamp(-48px, calc(1360px - 100vw), -20px); bottom: 128px; z-index: 3;
+    background: rgba(10,10,8,0.94); border: 1px solid rgba(201,168,76,0.7);
+    padding: 14px 18px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+  }
+  html.pr .hero-reel__marke span {
+    display: block;
+    font-family: var(--font-display); font-size: 1.35rem; line-height: 1.05; color: var(--pr-creme);
+  }
+  html.pr .hero-reel__marke em {
+    font-style: normal; font-family: var(--font-body); font-size: 0.72rem; color: var(--pr-gold);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html.pr .hero-reel:hover .hero-reel__rahmen { transform: translateY(-2px); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.pr .hero-reel__rahmen { clip-path: none !important; transition: none !important; }
+  html.pr .hero-reel__video { display: none; }
+}
+
+/* Sterne als gezeichnetes Symbol statt Schriftzeichen */
+html.pr .pr-sterne {
+  display: block; width: 80px; height: 15px;
+  background: var(--pr-stern) left center / 16px 15px repeat-x;
+}
+html.pr .bom-reviews__sterne,
+html.pr .bom-review-card__sterne {
+  display: inline-block;
+  font-size: 0 !important; letter-spacing: 0 !important; color: transparent !important;
+  width: 100px; height: 18px;
+  background: var(--pr-stern) left center / 20px 18px repeat-x;
+  vertical-align: middle;
+}
+html.pr .bom-review-card__sterne { width: 80px; height: 15px; background-size: 16px 15px; }
+html.pr .pr-icon-stern { vertical-align: -2px; color: var(--pr-gold-tief); }
+
+/* ══════════════════════════════════════════════════════════════════
+   DNA
+══════════════════════════════════════════════════════════════════ */
+html.pr #dna .dna-kinshasa {
+  margin: 1.75rem 0 0;
+  font-size: 1.05rem; line-height: 1.6; color: #3D3A33;
+  max-width: 34em;
+}
+html.pr #dna .dna-kinshasa strong { font-weight: 700; color: #141310; }
+
+html.pr #dna .dna-visual.dna-gruender-bilder {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  transform: none !important;
+  background: none; border: 0; padding: 0; min-height: 0;
+  align-self: center;
+}
+html.pr .dna-portrait {
+  position: relative; margin: 0; overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: #141414;
+}
+html.pr .dna-portrait--versetzt { margin-top: 56px; }
+html.pr .dna-portrait img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 500ms var(--pr-raus);
+}
+html.pr .dna-portrait::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(10,10,8,0.9) 100%);
+  pointer-events: none;
+}
+html.pr .dna-portrait figcaption {
+  position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1;
+  display: flex; flex-direction: column; gap: 4px;
+}
+html.pr .dna-portrait figcaption b {
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(1.25rem, 2.2vw, 1.85rem); line-height: 1; color: var(--pr-creme);
+}
+html.pr .dna-portrait figcaption span {
+  font-family: var(--font-body); font-size: 0.78rem; color: var(--pr-gold);
+}
+@media (hover: hover) and (pointer: fine) {
+  html.pr .dna-portrait:hover img { transform: scale(1.03); }
+}
+@media (max-width: 768px) {
+  html.pr #dna .dna-visual.dna-gruender-bilder { margin-top: 2.5rem; gap: 10px; }
+  html.pr .dna-portrait--versetzt { margin-top: 32px; }
+  html.pr .dna-portrait figcaption { left: 10px; right: 10px; bottom: 10px; }
+  html.pr .dna-portrait figcaption span { font-size: 0.68rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BEWERTUNGEN
+══════════════════════════════════════════════════════════════════ */
+/* Die Marke war ein kleiner Kicker ohne Ueberschrift darunter: sie wird
+   zur Ueberschrift des Abschnitts. */
+html.pr .bom-reviews__marke {
+  font-family: var(--font-display) !important;
+  font-size: clamp(2.6rem, 6vw, 4.5rem) !important;
+  line-height: 0.95 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
+  color: #141310 !important;
+}
+html.pr .bom-review-card { transition: transform 240ms var(--pr-raus), box-shadow 240ms var(--pr-raus), border-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .bom-review-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(20,19,16,0.12);
+    border-color: rgba(126,91,32,0.5) !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PROGRAMME
+══════════════════════════════════════════════════════════════════ */
+html.pr .disc-panel { overflow: hidden; }
+html.pr .disc-panel__bg { transition: transform 500ms var(--pr-raus); }
+html.pr .disc-panel__content::after {
+  content: "Mehr erfahren";
+  display: inline-block; margin-top: 0.9rem; padding-right: 24px;
+  font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--pr-gold);
+  background: var(--pr-pfeil) right center / 16px 16px no-repeat;
+  transition: padding-right 240ms var(--pr-raus);
+}
+@media (hover: hover) and (pointer: fine) {
+  html.pr .disc-panel:hover .disc-panel__bg { transform: scale(1.03); }
+  html.pr .disc-panel:hover .disc-panel__content::after { padding-right: 30px; }
+}
+
+html.pr .disc-laufband {
+  overflow: hidden;
+  margin: 2.5rem 0 0;
+  padding: 1.1rem 0;
+  border-top: 1px solid rgba(126,91,32,0.22);
+  border-bottom: 1px solid rgba(126,91,32,0.22);
+}
+html.pr .disc-laufband__spur {
+  display: flex; align-items: center; gap: 2.2rem; width: max-content;
+  animation: prLaufband 44s linear infinite;
+  font-family: var(--font-display); font-size: clamp(1.8rem, 3.2vw, 2.6rem); line-height: 1;
+  color: rgba(10,10,8,0.62); text-transform: uppercase; white-space: nowrap;
+}
+html.pr .disc-laufband__raute {
+  display: block; width: 8px; height: 8px; flex: none;
+  background: var(--pr-gold); transform: rotate(45deg);
+}
+html.pr .disc-laufband:hover .disc-laufband__spur,
+html.pr.pr-ruhe .disc-laufband__spur { animation-play-state: paused; }
+@keyframes prLaufband { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  html.pr .disc-laufband__spur { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   STUNDENPLAN
+══════════════════════════════════════════════════════════════════ */
+html.pr .sched-row { transition: background-color 200ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .sched-row:hover { background: rgba(201,168,76,0.08); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PREISE
+══════════════════════════════════════════════════════════════════ */
+html.pr .mw-card { transition: transform 240ms var(--pr-raus), box-shadow 240ms var(--pr-raus), border-color 200ms ease !important; }
+html.pr .mw-card--popular { box-shadow: 0 0 0 1px var(--pr-gold), 0 24px 60px rgba(10,10,8,0.28); }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .mw-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 0 1px var(--pr-gold), 0 24px 60px rgba(10,10,8,0.32) !important;
+  }
+}
+html.pr #partner-bar .partner-logo { transition: opacity 200ms ease; opacity: 0.72; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr #partner-bar .partner-link:hover .partner-logo { opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EARLY BIRD: Community-Foto als Raum
+══════════════════════════════════════════════════════════════════ */
+/* Das Foto laedt erst, wenn der Abschnitt naeher kommt (premium.js setzt .pr-nah). */
+html.pr #early-bird.pr-nah {
+  background:
+    linear-gradient(180deg, #0A0A08 0%, rgba(10,10,8,0.74) 45%, #0A0A08 100%),
+    url('/assets/images/dna-community-840.webp') center 40% / cover no-repeat,
+    #0A0A08 !important;
+}
+html.pr #early-bird > div { max-width: 820px !important; }
+html.pr #early-bird h2 { letter-spacing: 0 !important; }
+
+/* ══════════════════════════════════════════════════════════════════
+   FAQ
+══════════════════════════════════════════════════════════════════ */
+html.pr .faq-q { transition: color 200ms ease; }
+html.pr .faq-icon { transition: transform 240ms var(--pr-raus); }
+html.pr .faq-q[aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .faq-q:hover { color: var(--pr-gold-tief); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   STANDORT + ANFAHRT
+══════════════════════════════════════════════════════════════════ */
+html.pr .map-gate { background: #141310 !important; }
+html.pr .map-gate.pr-nah {
+  background:
+    linear-gradient(180deg, rgba(10,10,8,0.55), rgba(10,10,8,0.86)),
+    url('/assets/images/origin-mural-840.webp') center / cover no-repeat !important;
+}
+html.pr .map-gate p { color: rgba(245,240,232,0.88) !important; max-width: 320px; }
+@media (min-width: 1200px) {
+  html.pr #location .location-info { padding-left: max(48px, calc((100vw - 1280px) / 2 + 40px)) !important; }
+}
+html.pr .vfacade { overflow: hidden; }
+html.pr .vfacade__poster img { transition: transform 500ms var(--pr-raus); }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .vfacade:hover .vfacade__poster img { transform: scale(1.03); }
+}
+@media (min-width: 769px) {
+  html.pr .anfahrt-video-abschluss .btn--gold { font-size: 1rem; padding: 1.25rem 2.75rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FUSSZEILE
+══════════════════════════════════════════════════════════════════ */
+html.pr footer a:not(.btn) { transition: color 200ms ease; }
+
+/* ══════════════════════════════════════════════════════════════════
+   PROBETRAINING
+══════════════════════════════════════════════════════════════════ */
+html.pr .pt-hero { position: relative; overflow: hidden; }
+html.pr .pt-hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 55% 75% at 50% 50%, rgba(10,10,8,0.66), rgba(10,10,8,0.3) 80%);
+}
+html.pr .pt-hero__inhalt { position: relative; z-index: 1; }
+html.pr .pt-booking-limit { border-left: 0 !important; padding-left: 0 !important; }
+html.pr .pt-step {
+  padding: 2rem 1.75rem;
+  background: #FCF9F2;
+  border: 1px solid #E3DACB;
+  transition: transform 240ms var(--pr-raus), box-shadow 240ms var(--pr-raus);
+}
+html.pr .pt-step-num { font-family: var(--font-display); font-size: 3.4rem; line-height: 0.9; color: var(--pr-gold-tief); }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .pt-step:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(20,19,16,0.1); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MITGLIED WERDEN
+══════════════════════════════════════════════════════════════════ */
+html.pr .mw-hero {
+  background:
+    linear-gradient(180deg, rgba(10,10,8,0.88), rgba(10,10,8,0.72) 50%, #0A0A08),
+    url('/assets/images/dna-community-840.webp') center 35% / cover no-repeat,
+    #0A0A08 !important;
+}
+@media (min-width: 900px) {
+  html.pr .mw-fk-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr repeat(4, auto) 1fr;
+    column-gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+    text-align: left;
+    max-width: 1180px;
+  }
+  html.pr .mw-fk-inner > * { grid-column: 2; }
+  html.pr .mw-fk-h2 { grid-row: 2; }
+  html.pr .mw-fk-sub { grid-row: 3; }
+  html.pr .mw-fk-items { grid-row: 4; }
+  html.pr .mw-fk-footer { grid-row: 5; }
+  html.pr .mw-fk-img-wrap { grid-column: 1; grid-row: 1 / -1; margin: 0 !important; max-width: none !important; }
+  html.pr .mw-fk-inner > p, html.pr .mw-fk-inner > h2 { margin-left: 0 !important; margin-right: 0 !important; text-align: left !important; }
+  html.pr .mw-fk-items { justify-content: flex-start; align-items: flex-start; margin: 1.5rem 0 !important; padding: 0 !important; text-align: left !important; }
+  html.pr .mw-fk-items li { justify-content: flex-start !important; }
+}
+html.pr .mw-fk-img-wrap { overflow: hidden; }
+html.pr .mw-fk-img { transition: transform 500ms var(--pr-raus); }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .mw-fk-img-wrap:hover .mw-fk-img { transform: scale(1.03); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   UEBERSCHRIFTEN: ab Tablet groesser, hoechstens 6rem. Darunter gilt
+   die Groesse aus style.css, damit 320 px mit 130 % Schrift passt.
+══════════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  html.pr #dna h2,
+  html.pr #disciplines .sec-header h2,
+  html.pr #pricing .sec-header h2,
+  html.pr #faq .sec-header h2,
+  html.pr #location h2,
+  html.pr #anfahrt-video h2 { font-size: clamp(3.2rem, 6vw, 5.5rem); line-height: 0.9; letter-spacing: 0; }
+  html.pr #early-bird h2 { font-size: clamp(3.2rem, 6.6vw, 6rem) !important; line-height: 0.9 !important; }
+  html.pr .bom-reviews__zahl { font-size: clamp(4rem, 7vw, 6rem); line-height: 0.85; }
+  html.pr .mw-hero-h1 { font-size: clamp(3.4rem, 6.6vw, 6rem) !important; line-height: 0.9 !important; }
+  html.pr .mw-fk-h2 { font-size: clamp(3rem, 5vw, 5rem); line-height: 0.9; }
+}
+
+/* Die erste Zeile der Hero-Ueberschrift lief als Weiss-Grau-Verlauf: festes Creme. */
+html.pr .hero-h1 {
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: var(--pr-creme) !important;
+}
+
+
+/* ── Signatur des Heros: "The Spirit of 1974" als Schlusszeile, nicht als
+   Kicker ueber der Ueberschrift. Steht nach den Qualifikationen. ── */
+html.pr #hero .hero-eyebrow {
+  order: 20 !important;
+  display: inline-flex; align-items: center; gap: 14px;
+  margin: 2.25rem auto 0;
+  padding: 0; border: 0; background: none; box-shadow: none;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: 0.72rem; letter-spacing: 0.32em; color: var(--pr-gold);
+  min-height: 44px;
+}
+html.pr #hero .hero-eyebrow .icon { display: none; }
+html.pr #hero .hero-eyebrow::before {
+  content: ""; width: 36px; height: 1px; background: var(--pr-gold); flex: none;
+}
+@media (min-width: 1100px) {
+  html.pr #hero .hero-eyebrow { margin: 2rem 0 0; }
+}
+@media (hover: hover) and (pointer: fine) {
+  html.pr #hero .hero-eyebrow:hover { color: var(--pr-gold-hell); box-shadow: none; }
+}
+
+/* Unter 1100 px laeuft das Video hinter dem Text: etwas dunkler, damit
+   auch die kleinen Zeilen (Unverbindlich, Qualifikationen) gut lesbar sind. */
+@media (max-width: 1099px) {
+  html.pr #hero .hero-overlay {
+    opacity: 1 !important;
+    background: linear-gradient(180deg, rgba(10,10,8,0.6) 0%, rgba(10,10,8,0.66) 55%, rgba(10,10,8,0.8) 100%) !important;
+  }
+}
+@media (max-width: 1099px) {
+  html.pr #hero .hero-content { display: flex; flex-direction: column; align-items: stretch; }
+  html.pr #hero .hero-eyebrow { align-self: center; }
+}
+/* Textschatten scheint durch transparenten Schimmer-Text und macht das Gold
+   matt: Schatten als Filter hinter die Form legen. */
+html.pr .shimmer { text-shadow: none !important; filter: drop-shadow(0 4px 28px rgba(0,0,0,0.55)); }
+
+/* ══════════════════════════════════════════════════════════════════
+   KONTRAST: jeder Text mindestens 4,5:1, grosse Schrift 3:1
+   (gemessen mit axe-core auf Startseite, Probetraining, Mitglied werden)
+══════════════════════════════════════════════════════════════════ */
+/* Auf Tinte: gedaempfte Texte auf ein lesbares Creme anheben */
+html.pr footer a[href$="impressum"], html.pr footer a[href$="datenschutz"], html.pr footer a[href$="agb"],
+html.pr footer a[href$="hausordnung"], html.pr footer a[href$="downloads"],
+html.pr .footer-bottom > span, html.pr .cookie-settings-link, html.pr .footer-legal > a,
+html.pr .footer-contactbar > span, html.pr .footer-contactbar > a,
+html.pr .mw-footer-links > a, html.pr .mw-footer-copy { color: rgba(245,240,232,0.66) !important; }
+html.pr .footer-col h4, html.pr .footer-partner-h { color: rgba(245,240,232,0.62) !important; }
+html.pr .brand-line, html.pr .footer-trust, html.pr .footer-pineapple-label,
+html.pr #partner-bar .pb-inner > span, html.pr .mw-back-link { color: rgba(245,240,232,0.7) !important; }
+html.pr .mw-card-age, html.pr .mw-card-fee { color: rgba(245,240,232,0.7) !important; }
+html.pr .mw-card-reg-price { color: rgba(245,240,232,0.62) !important; }
+html.pr footer .container > div > p, html.pr #sanity-seo-footer { color: rgba(245,240,232,0.7) !important; }
+
+/* Auf Creme: Gold als Text nur in der tiefen Tonlage, Grau dunkler */
+html.pr .btn--outline-gold { color: var(--pr-gold-tief) !important; border-color: rgba(126,91,32,0.6) !important; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr .btn--outline-gold:hover { background: var(--pr-gold-tief) !important; color: var(--pr-creme) !important; }
+}
+html.pr .disciplines-cta a:not(.btn), html.pr .sched-print-link, html.pr .doc-strip-label, html.pr .doc-strip-link,
+html.pr #pricing .container a[href$="preise"], html.pr .cta-textlink:not(.cta-textlink--hell) { color: var(--pr-gold-tief) !important; }
+html.pr .location-info h2 .gold, html.pr #dna h2 .gold, html.pr .sec-header h2 .gold { color: #9A7428 !important; }
+html.pr .sec-header > p, html.pr .sched-meta-label, html.pr .sched-day-tab:not(.active),
+html.pr .sched-row-end, html.pr .slot-modal__close-text, html.pr .pt-booking-note,
+html.pr .doc-strip-items, html.pr .mw-trial-hint, html.pr .mw-fk-footer { color: #5C574C !important; }
+/* Einige Regeln der Seite haben ID-Gewicht: hier mit gleichem Gewicht. */
+html.pr #schedule-preview .sched-meta-label,
+html.pr #schedule-preview .sched-day-tab:not(.active),
+html.pr #schedule-preview .sched-row-end { opacity: 1 !important; color: #5C574C !important; }
+html.pr #disciplines .sec-header > p,
+html.pr #pricing .sec-header > p,
+html.pr #faq .sec-header > p { color: #5C574C !important; }
+html.pr #dna .btn--outline-gold,
+html.pr #location .btn--outline-gold { color: var(--pr-gold-tief) !important; border-color: rgba(126,91,32,0.6) !important; }
+html.pr #pricing a[href$="preise"]:not(.btn):not(.mw-card-btn) { color: var(--pr-gold-tief) !important; }
+@media (hover: hover) and (pointer: fine) {
+  html.pr #dna .btn--outline-gold:hover { background: var(--pr-gold-tief) !important; color: var(--pr-creme) !important; }
+}
