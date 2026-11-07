@@ -198,7 +198,8 @@ p  { color: rgba(245,240,232,0.7); line-height: 1.85; font-size: 1rem; }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   font-family: var(--font-head); font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
   padding: 0.9rem 2.2rem; border-radius: 0; border: 1px solid transparent;
-  transition: all var(--dur-normal) var(--ease-out); white-space: nowrap; text-decoration: none;
+  transition: background-color var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out), filter var(--dur-normal) var(--ease-out), opacity var(--dur-normal) var(--ease-out);
+  white-space: nowrap; text-decoration: none;
 }
 /* ── Sehr schmale Geraete: der Knopf darf umbrechen ────────────────────────
    Auf 320px (Galaxy S9+, iPhone SE der ersten Reihe) ist "KOSTENLOS
@@ -1834,7 +1835,7 @@ footer {
 }
 .footer-trust {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-body); font-size: 11px; color: rgba(245,240,232,0.45);
+  font-family: var(--font-body); font-size: 11px; color: rgba(245,240,232,0.6);
 }
 .footer-trust i { font-size: 10px; }
 .footer-trust a { display: inline-flex; align-items: center; }
@@ -1847,7 +1848,7 @@ footer {
 .footer-pineapple a:hover { opacity: 0.85; }
 .footer-pineapple-label {
   font-family: var(--font-head); font-size: 9px; font-weight: 600;
-  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.45);
+  letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.6);
 }
 /* Mobile: divider follows the last contact row at normal row rhythm */
 @media (max-width: 768px) {
@@ -1864,6 +1865,11 @@ footer {
                                margin-bottom: 0.35rem; text-align: center; }
 .footer-brand .footer-socials { justify-content: center; }
 .brand-line { font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; }
+/* Die Adresszeile traegt zusaetzlich opacity 0.75 (Sammelregel weiter
+   unten). Mit den 0.52 von .footer-brand p kam sie auf 3,3:1; mit 0.8
+   landet sie bei 6,5:1. Auf den Premium-Seiten setzt premium.css die
+   Farbe selbst. */
+.footer-brand .brand-line { color: rgba(245,240,232,0.8); }
 .footer-socials { display: flex; gap: 0.65rem; margin-top: 1.75rem; flex-wrap: wrap; }
 .social-icon {
   width: 36px; height: 36px;
@@ -1876,7 +1882,7 @@ footer {
 /* Column headings — understated label style */
 .footer-col h4 {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 3.5px;
-  color: rgba(245,240,232,0.35); margin-bottom: 1.5rem;
+  color: rgba(245,240,232,0.55); margin-bottom: 1.5rem;
   text-transform: uppercase;
 }
 .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -1905,7 +1911,7 @@ footer {
   text-align: center; padding: 1.5rem 0 1.25rem;
   margin-bottom: 0;
   border-top: none;
-  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.35);
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2.5px; color: rgba(245,240,232,0.55);
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.4rem;
 }
 .footer-contactbar a { transition: color var(--dur-normal) var(--ease-out); }
@@ -1915,12 +1921,12 @@ footer {
 .footer-bottom {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
   padding-top: 1.5rem; border-top: 1px solid rgba(245,240,232,0.06);
-  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px; color: rgba(245,240,232,0.28);
+  font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px; color: rgba(245,240,232,0.5);
 }
 .footer-legal { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-legal a {
   font-family: var(--font-head); font-size: 0.60rem; letter-spacing: 2px;
-  color: rgba(245,240,232,0.28); transition: color var(--dur-normal) var(--ease-out);
+  color: rgba(245,240,232,0.5); transition: color var(--dur-normal) var(--ease-out);
 }
 .footer-legal a:hover { color: var(--white); }
 
@@ -2253,7 +2259,7 @@ footer {
   width: 42px; height: 42px;
   background: rgba(245,240,232,0.05); border: 1px solid rgba(245,240,232,0.12);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.05rem; color: var(--muted); transition: all var(--dur-normal) var(--ease-out);
+  font-size: 1.05rem; color: var(--muted); transition: color var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
 }
 .modal-close:hover { border-color: var(--gold); color: var(--gold); }
 .modal-body {
@@ -7518,4 +7524,53 @@ i.icon > svg {
 .bsport-user-interaction-modal__innerContainer,
 .bsport-user-interaction-modal__topBar {
   background-color: #F5F0E8 !important;
+}
+
+/* ── Hover auf Touchgeraeten ───────────────────────────────────────
+   Ein Touchscreen kennt kein Ueberfahren. Der Browser setzt :hover
+   beim ersten Tippen und laesst es stehen, bis woanders getippt wird.
+   Ein Knopf, der beim Ueberfahren hochrutscht und waechst, bleibt
+   nach dem Tippen hochgerutscht und gross stehen, zum Beispiel wenn
+   man aus dem Buchungsdialog zurueckkommt.
+
+   Die Hover-Regeln stehen ueber die ganze Datei verteilt, mehrere mit
+   !important. Statt jede einzelne in eine Medienabfrage zu packen,
+   nimmt dieser eine Block auf Geraeten ohne echtes Ueberfahren nur
+   die BEWEGUNG zurueck (transform, filter). Farbwechsel bleiben.
+   premium.css schraenkt seine eigenen Hover-Regeln schon auf
+   (hover: hover) and (pointer: fine) ein; dieser Block erledigt die
+   aelteren Regeln aus dieser Datei, die auch auf den Premium-Seiten
+   noch greifen.
+
+   :not(:active) laesst den Druckzustand beim Tippen unberuehrt.  */
+@media (hover: none) {
+  .btn--gold:hover:not(:active),
+  .btn--outline-light:hover:not(:active),
+  .btn--outline-dark:hover:not(:active),
+  .btn--outline-gold:hover:not(:active),
+  .btn--hero-secondary:hover:not(:active),
+  .service-card:hover:not(:active),
+  .doc-card:hover:not(:active) {
+    transform: none !important;
+    filter: none !important;
+  }
+  .service-card:hover .service-card-bg,
+  .disc-panel:hover .disc-panel__bg,
+  .coach-card:hover .coach-photo img,
+  .vfacade:hover .vfacade__poster img,
+  .vfacade__play:hover ~ .vfacade__poster img {
+    transform: none !important;
+  }
+}
+
+/* ── Browser-Oberflaechen ──────────────────────────────────────────
+   Markierter Text und Checkbox/Radio trugen auf den Seiten ohne
+   Premium-Ebene die Browserfarben (Blau). Jetzt die Markenfarben,
+   dieselben Werte wie in premium.css. */
+::selection {
+  background: var(--gold);
+  color: var(--ink);
+}
+input, textarea, select {
+  accent-color: var(--gold);
 }
