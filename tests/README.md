@@ -82,7 +82,7 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `kontrast.mjs` | `1ba6135` (nach Premium v3, vor dem Nachzug aus PR #205) | 14/40, **26 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer auf 16 Seiten bis 2,25:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
 | `kontrast.mjs` (mit H, I, J) | `22db43c` (vor dem Kontrast-Nachzug ausserhalb der Premium-Ebene) | 40/71, **31 Fehler**: kleines Gold auf Creme mit 2,0:1 auf allen sieben Seiten, Footer von `/mitgliederbereich` 1,58:1, Social-Symbole auf `/coaches` 2,0:1, Kursnummer auf dem Foto 2,3:1 |
 
-Gegen den aktuellen Stand bestehen alle zehn vollständig: 878 Prüfungen,
+Gegen den aktuellen Stand bestehen alle zehn vollständig: 909 Prüfungen,
 0 Fehler.
 
 ### Playwright
