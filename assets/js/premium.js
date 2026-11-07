@@ -18,3 +18,16 @@
     }
   });
 }());
+
+/* Hintergrundbilder weiter unten erst laden, wenn der Abschnitt in die
+   Naehe kommt. Ohne IntersectionObserver sofort. */
+(function () {
+  var ziele = document.querySelectorAll('[data-pr-bg]');
+  if (!ziele.length) return;
+  function an(el) { el.classList.add('pr-nah'); }
+  if (!('IntersectionObserver' in window)) { for (var i = 0; i < ziele.length; i++) an(ziele[i]); return; }
+  var io = new IntersectionObserver(function (eintraege) {
+    eintraege.forEach(function (e) { if (e.isIntersecting) { an(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '800px 0px' });
+  for (var j = 0; j < ziele.length; j++) io.observe(ziele[j]);
+}());

@@ -757,7 +757,7 @@
   <section id="hero" aria-label="Hero">
     <video class="hero-video" autoplay loop muted playsinline preload="metadata" poster="/assets/images/hero-poster.webp" aria-hidden="true">
       <source media="(max-width: 768px)" src="/assets/videos/hero-loop-mobile.mp4?v=3" type="video/mp4">
-      <source src="/assets/videos/hero-loop.mp4?v=3" type="video/mp4">
+      <source media="(max-width: 1099px)" src="/assets/videos/hero-loop.mp4?v=3" type="video/mp4">
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
@@ -791,10 +791,10 @@
     <div class="hero-reel" aria-hidden="true">
       <div class="hero-reel__rahmen">
         <video class="hero-reel__video" autoplay loop muted playsinline preload="none" poster="/assets/images/hero-poster.webp">
-          <source media="(min-width: 1100px)" src="/assets/videos/hero-loop.mp4?v=3" type="video/mp4">
+          <source media="(min-width: 1100px)" src="/assets/videos/hero-reel.mp4?v=1" type="video/mp4">
         </video>
         <span class="hero-reel__ort">Pineapple Park<br><em>München</em></span>
-        <span class="hero-reel__handle">The Spirit of 1974</span>
+        <span class="hero-reel__handle">@bomayegym_munich</span>
       </div>
       <div class="hero-reel__note">
         <b>5,0</b>
@@ -1036,7 +1036,7 @@
       .bom-reviews__aktionen .btn { text-decoration: none; }
     </style>
 
-    <div class="bom-reviews-grid">
+    <div class="bom-reviews-grid" tabindex="0" role="region" aria-label="Google-Bewertungen">
 
       <div class="bom-review-card">
         <span class="bom-review-card__sterne" aria-hidden="true">★★★★★</span>
@@ -2155,7 +2155,7 @@ body[data-modal-open="true"] { overflow: hidden; }
   </div>
 
 
-  <section id="early-bird" style="background:#0A0A08;padding:80px 24px;text-align:center;" data-sticky-aus>
+  <section id="early-bird" data-pr-bg style="background:#0A0A08;padding:80px 24px;text-align:center;" data-sticky-aus>
     <style>
       @media(min-width:769px){#early-bird{padding:var(--takt) 40px!important;}}
       #early-bird .fm-benefits{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;flex-direction:column;}
@@ -2284,7 +2284,7 @@ body[data-modal-open="true"] { overflow: hidden; }
         </div>
       </div>
       <div class="map-wrapper">
-        <div class="map-gate" id="map-gate">
+        <div class="map-gate" id="map-gate" data-pr-bg>
           <p>Durch das Laden stimmst du zu, dass Inhalte von OpenStreetMap geladen werden.</p>
           <button onclick="loadMap()" class="btn btn--gold" type="button">KARTE LADEN</button>
         </div>
