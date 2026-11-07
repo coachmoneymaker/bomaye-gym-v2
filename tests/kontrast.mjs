@@ -23,6 +23,8 @@
  *      angehoben stehen; mit Maus hebt er sich weiter.
  *   D  Kein Inline-JavaScript fuer Hover, kein "transition: all".
  *   E  Markierter Text traegt die Markenfarben.
+ *   F  Die helle Anfragekarte auf /corporate-boxing (320/390/430 px).
+ *   G  Etiketten und Umriss-Knoepfe in hellen Abschnitten.
  *
  * AUSGENOMMEN
  * Text, der auf einem Foto steht (die Programmkarten, der Hero). Dort
@@ -174,6 +176,42 @@ const FOOTER_OFFEN = new Set(['mitgliederbereich.html']);
   const text = await page.locator('#disciplines .disciplines-cta p').innerText();
   pruef('B  "Du suchst ein bestimmtes Thema?" steht da', /Du suchst ein bestimmtes Thema\?/.test(text));
   pruef('B  ... und ist lesbar (samt Link)', raus.length === 0, raus.join('; '));
+  await ctx.close();
+}
+
+/* ─── F  Helle Karte im dunklen Abschnitt: Corporate-Formular ──────
+   Die Anfragekarte auf /corporate-boxing ist hell (#faf9f6), der
+   Abschnitt drumherum dunkel. Die Creme-Regeln des Abschnitts schlugen
+   die Formularfarben: Ueberschrift 1,08:1, Einleitung und Hinweise
+   1,05:1. Gemessen wird jede Textstelle in der Karte. */
+for (const breite of [320, 390, 430]) {
+  const { ctx, page } = await laden('corporate-boxing', { viewport: { width: breite, height: 844 } });
+  const raus = await page.evaluate(messen, '.cb-anfrage__panel');
+  const zahl = await page.evaluate(() => document.querySelectorAll('.cb-anfrage__panel label, .cb-anfrage__panel p, .cb-anfrage__panel h2').length);
+  pruef(`F  /corporate-boxing ${breite}px: jeder Text in der Anfragekarte erreicht WCAG AA`,
+        raus.length === 0 && zahl > 10, raus.length ? '\n     ' + raus.join('\n     ') : `${zahl} Elemente`);
+  await ctx.close();
+}
+
+/* ─── G  Creme-Schrift in hellen Abschnitten ────────────────────────
+   Etiketten und Umriss-Knoepfe, die fuer dunklen Grund gebaut sind und
+   in einem hellen Abschnitt standen: unsichtbar (1,0:1). */
+const HELL = [
+  ['boxen-muenchen', '.seo-section--light span.tag', 'FÜR WEN'],
+  ['kinderboxen-muenchen', '.seo-section--light span.tag', 'FÜR ELTERN'],
+  ['frauenboxen-muenchen', '.seo-section--light a.btn[href="/stundenplan"]', 'ZUM STUNDENPLAN'],
+  ['kickboxen-muenchen', '.seo-section--light a.btn[href="/probetraining"]', 'PROBETRAINING'],
+];
+for (const [pfad, sel, text] of HELL) {
+  const { ctx, page } = await laden(pfad);
+  const da = await page.evaluate(([sel, text]) => {
+    const el = [...document.querySelectorAll(sel)].find((e) => e.textContent.includes(text));
+    if (!el) return false;
+    el.setAttribute('data-kontrast-pruef', '');
+    return true;
+  }, [sel, text]);
+  const raus = da ? await page.evaluate(messen, '[data-kontrast-pruef]') : ['fehlt: ' + sel];
+  pruef(`G  /${pfad}: "${text}" im hellen Abschnitt lesbar`, da && raus.length === 0, raus.join('; '));
   await ctx.close();
 }
 

@@ -81,7 +81,7 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
 | `kontrast.mjs` | `1ba6135` (nach Premium v3, vor dem Nachzug aus PR #205) | 14/40, **26 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer auf 16 Seiten bis 2,25:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
 
-Gegen den aktuellen Stand bestehen alle zehn vollständig: 871 Prüfungen,
+Gegen den aktuellen Stand bestehen alle zehn vollständig: 878 Prüfungen,
 0 Fehler.
 
 ### Playwright
@@ -373,6 +373,13 @@ Dazu: in der Touch-Emulation bleibt ein goldener Knopf mit erzwungenem
 verschwindet beim Ueberfahren nicht mehr im schwarzen Abschnitt; keine
 Seite nutzt `onmouseover`; keine Regel der Startseite nutzt
 `transition: all`; markierter Text ist Gold auf Schwarz.
+
+Dazu die helle Anfragekarte auf `/corporate-boxing` bei 320, 390 und
+430 px (jede Textstelle in `.cb-anfrage__panel`) und vier Stellen, an
+denen Etiketten und Umriss-Knoepfe fuer dunklen Grund in einem hellen
+Abschnitt standen (`/boxen-muenchen`, `/kinderboxen-muenchen`,
+`/frauenboxen-muenchen`, `/kickboxen-muenchen`). Gegen `main` `22db43c`:
+40/47, **7 Fehler** (Karte 1,05 bis 1,08:1, die vier Stellen je 1,00:1).
 
 Die Touch-Emulation zeigt, welche Regeln greifen. Ob ein Knopf auf einem
 echten iPhone nach dem Tippen haengen bleibt, sieht man nur dort.
