@@ -26,6 +26,12 @@
   --gold:       var(--brand-gold);
   --gold-dark:  #A67C2E;
   --gold-light: #d4b472;
+  /* Schrift auf HELLEM Grund (Creme, #faf9f6). --gold-dark erreicht dort
+     nur 3,3:1 und reicht damit nur fuer grosse Schrift; --gold-auf-hell
+     schafft 5,4:1. --grau-auf-hell ist der gedaempfte Text auf Creme
+     (6,3:1), derselbe Ton wie in premium.css. */
+  --gold-auf-hell: #7E5B20;
+  --grau-auf-hell: #5C574C;
   --muted:      rgba(245,240,232,0.65);
   --border:     rgba(201,168,76,0.25);
 
@@ -7573,4 +7579,24 @@ i.icon > svg {
 }
 input, textarea, select {
   accent-color: var(--gold);
+}
+
+/* ── Umriss-Knoepfe in hellen Abschnitten ──────────────────────────
+   .btn--outline-dark und .btn--outline-light sind fuer DUNKLEN Grund
+   gebaut: Creme-Schrift, Creme-Rahmen. In einem hellen Abschnitt
+   (.seo-section--light, Creme) waren sie unsichtbar, gemessen 1,0:1,
+   z. B. "ZUM STUNDENPLAN" auf /frauenboxen-muenchen und "PROBETRAINING"
+   auf /kickboxen-muenchen. Hier Tinte auf Creme.                    */
+.seo-section--light .btn--outline-dark,
+.seo-section--light .btn--outline-light {
+  color: var(--ink);
+  border-color: rgba(10,10,8,0.4);
+}
+@media (hover: hover) and (pointer: fine) {
+  .seo-section--light .btn--outline-dark:hover,
+  .seo-section--light .btn--outline-light:hover {
+    color: var(--ink);
+    border-color: var(--gold-auf-hell);
+    background: rgba(201,168,76,0.12);
+  }
 }

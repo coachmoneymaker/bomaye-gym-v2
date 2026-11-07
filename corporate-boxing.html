@@ -354,6 +354,20 @@
       box-shadow: 0 4px 16px rgba(160,124,58,0.1);
       padding: clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem);
     }
+    /* Die Karte ist hell, der Abschnitt drumherum dunkel. Die Regeln
+       .seo-section--dark h2 und .seo-section--dark p setzen Creme und
+       schlugen die Formularfarben: Ueberschrift 1,08:1, Einleitung und
+       Hinweise 1,05:1, also unsichtbar. Dazu lagen Etikett, Feldnamen
+       und Sternchen unter 4,5:1. Hier die Farben fuer hellen Grund,
+       mit dem Gewicht von Abschnitt + Karte, damit sie sicher gewinnen.
+       Felder, Knopf und Texte bleiben, wie sie sind. */
+    .cb-anfrage .cb-anfrage__panel h2.family-headline { color: var(--ink); }
+    .cb-anfrage .cb-anfrage__panel p.family-sub,
+    .cb-anfrage .cb-anfrage__panel p.fif-trust,
+    .cb-anfrage .cb-anfrage__panel p.fif-pflichtfelder,
+    .cb-anfrage .cb-anfrage__panel .fif-field > label { color: var(--grau-auf-hell); }
+    .cb-anfrage .cb-anfrage__panel .family-label,
+    .cb-anfrage .cb-anfrage__panel .fif-required { color: var(--gold-auf-hell); }
 
     /* ── FAQ ────────────────────────────────────── */
     .faq-list {
