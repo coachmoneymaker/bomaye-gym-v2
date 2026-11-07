@@ -79,9 +79,9 @@ an den Ständen vor den jeweiligen Behebungen zeigen (gemessen am
 | `sticky.mjs` | `6cd3b64` (vor der Sticky-Politur) | 150/205, **55 Fehler** — Knopf 56 px statt 44 (auf 280 px sogar 79 px und drei Zeilen), Luft um den Knopf −0,7 px, das Kreuz ist das Zeichen „×" |
 | `breiten.mjs` | `6cd3b64` (vor der Sticky-Politur) | 110/137, **27 Fehler** — `/u18` 300 px bei 280 px Fenster, `/datenschutz` 285 px, Startseite 334 px und `/probetraining` 402 px bei Systemschrift 130 % |
 | `speicher-blockiert.mjs` | `6cd3b64` (vor der Sticky-Politur) | 58/60, **2 Fehler** — `SecurityError` aus dem Anmeldehorcher auf `/mitgliederbereich` |
-| `kontrast.mjs` | `0e82e89` (vor dem Design-Audit) | 3/15, **12 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer und Preis-Kleingedrucktes unter 4,5:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
+| `kontrast.mjs` | `1ba6135` (nach Premium v3, vor dem Nachzug aus PR #205) | 14/40, **26 Fehler**: der Satz unter ALLE PROGRAMME mit 1,0:1 (Creme auf Creme), Footer auf 16 Seiten bis 2,25:1, Knopf bleibt am Handy angehoben, `onmouseover` und `transition: all` |
 
-Gegen den aktuellen Stand bestehen alle zehn vollständig: 846 Prüfungen,
+Gegen den aktuellen Stand bestehen alle zehn vollständig: 871 Prüfungen,
 0 Fehler.
 
 ### Playwright
