@@ -92,7 +92,7 @@
     .coachesp-hero-sub {
       font-family: var(--font-body);
       font-size: 0.92rem;
-      color: rgba(245,240,232,0.45);
+      color: var(--muted);
       max-width: 480px;
       margin: 0 auto;
     }
@@ -145,14 +145,14 @@
          die Beschriftung sonst unsichtbar (cremefarben auf creme).
          Gleiche Werte, andere Schreibweise. */
       color: #0A0A08;
-      opacity: 0.45;
+      opacity: 0.65;
       cursor: pointer;
       text-align: center;
       text-decoration: none;
       position: relative;
       transition: opacity var(--dur-schnell) var(--ease-out), background var(--dur-schnell) var(--ease-out), color var(--dur-schnell) var(--ease-out);
     }
-    .coach-jump-tab:hover { opacity: 0.7; }
+    .coach-jump-tab:hover { opacity: 0.85; }
     .coach-jump-tab.active {
       opacity: 1;
       background: #0A0A08;
@@ -193,11 +193,11 @@
       font-size: 0.68rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(8,8,8,0.45);
+      color: var(--gold-auf-hell);
       text-decoration: none;
       transition: color var(--dur-schnell) var(--ease-out);
     }
-    .coach-oben a:hover { color: var(--gold-dark); }
+    .coach-oben a:hover { color: var(--ink); }
 
     /* Full coach card with bio */
     .coach-card-full {
@@ -270,7 +270,7 @@
       content: '';
       position: absolute; inset: auto 0 0 0; height: 42%;
       background: linear-gradient(to top,
-                  rgba(10,10,8,0.88) 0%, rgba(10,10,8,0.34) 48%, transparent 100%);
+                  rgba(10,10,8,0.9) 0%, rgba(10,10,8,0.78) 40%, rgba(10,10,8,0.34) 72%, transparent 100%);
       z-index: 1; pointer-events: none;
     }
     .coach-full-photo::after {
@@ -301,7 +301,7 @@
       font-family: var(--font-head);
       font-size: 0.65rem;
       letter-spacing: 3px;
-      color: #b8922e;
+      color: var(--gold-auf-hell);
       margin-bottom: 0.5rem;
     }
     .coach-full-role {
@@ -344,8 +344,8 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      border: 1px solid rgba(201, 168, 76, 0.3);
-      color: #C9A84C;
+      border: 1px solid rgba(126, 91, 32, 0.6);
+      color: var(--gold-auf-hell);
       font-size: 1.1rem;
       text-decoration: none;
       transition: all var(--dur-normal) var(--ease-out);
@@ -398,7 +398,7 @@
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.18em;
-      color: var(--gold, #C9A84C);
+      color: var(--gold-auf-hell);
       text-transform: uppercase;
       margin: 12px 0 28px;
       line-height: 1.4;
@@ -441,7 +441,7 @@
       font-family: var(--font-head);
       font-size: 0.6rem;
       letter-spacing: 0.3em;
-      color: var(--gold, #C9A84C);
+      color: var(--gold-auf-hell);
       text-transform: uppercase;
       margin-bottom: 16px;
     }
@@ -490,7 +490,7 @@
       font-size: 0.45rem;
       letter-spacing: 3px;
       color: var(--gold);
-      background: rgba(8,8,8,0.75);
+      background: rgba(8,8,8,0.88);
       backdrop-filter: blur(8px);
       padding: 0.25rem 0.55rem;
       border-radius: 0;
@@ -507,7 +507,7 @@
       font-family: var(--font-head);
       font-size: 0.65rem;
       letter-spacing: 3px;
-      color: #b8922e;
+      color: var(--gold-auf-hell);
       margin-bottom: 0.5rem;
     }
     .coach-team-page-creds {
@@ -515,7 +515,7 @@
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.18em;
-      color: var(--gold, #C9A84C);
+      color: var(--gold-auf-hell);
       text-transform: uppercase;
       margin: 12px 0 28px;
       line-height: 1.4;

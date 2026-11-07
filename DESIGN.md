@@ -17,8 +17,8 @@ colors:
   gold: "#C9A84C"           # --brand-gold / --gold, Primaerknopf, Akzente auf Dunkel
   gold-light: "#d4b472"     # --gold-light, Hover des Primaerknopfs
   gold-dark: "#A67C2E"      # --gold-dark, grosse Akzentwoerter auf Creme (3,3:1)
-  gold-tief: "#7E5B20"      # --pr-gold-tief (premium.css), kleine goldene Schrift auf Creme (5,4:1)
-  grau-auf-creme: "#5C574C" # premium.css, gedaempfter Text auf Creme (6,3:1)
+  gold-tief: "#7E5B20"      # --gold-auf-hell (style.css) = --pr-gold-tief (premium.css), kleine goldene Schrift auf Creme (5,4:1)
+  grau-auf-creme: "#5C574C" # --grau-auf-hell (style.css), gedaempfter Text auf Creme (6,3:1)
   ink2: "#141414"
   smoke: "#1a1a1a"
   anthracite: "#1d1d1d"
@@ -75,7 +75,12 @@ Abschnitte wechseln sich ab; Gold ist die einzige Akzentfarbe.
   - Schwarz auf Creme: mindestens `rgba(10,10,8,0.6)` (5,0:1).
   - Gold `#C9A84C` auf Creme hat nur 2,0:1. Auf Creme gilt daher:
     grosse Akzentwoerter in `--gold-dark`, kleine Schrift und Links in
-    `#7E5B20` (`--pr-gold-tief`). Gold `#C9A84C` als Schrift nur auf Dunkel.
+    `--gold-auf-hell` (`#7E5B20`, in premium.css `--pr-gold-tief`).
+    Gold `#C9A84C` als Schrift nur auf Dunkel. Gedaempfter Text auf Creme
+    in `--grau-auf-hell` (`#5C574C`).
+  - Kleine Schrift auf Fotos braucht einen dunklen Verlauf darunter, der
+    die Stelle der Schrift abdeckt; `tests/kontrast.mjs` (H) misst die
+    Bildpunkte hinter der Schrift.
 
 ## Typography
 

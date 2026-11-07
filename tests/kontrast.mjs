@@ -25,11 +25,23 @@
  *   E  Markierter Text traegt die Markenfarben.
  *   F  Die helle Anfragekarte auf /corporate-boxing (320/390/430 px).
  *   G  Etiketten und Umriss-Knoepfe in hellen Abschnitten.
+ *   H  Die Seiten ausserhalb der Premium-Ebene, die das Audit vom
+ *      7.11.2026 mit kleiner Gold- und Grauschrift unter AA gefunden hat
+ *      (/about, /coaches, /kurse, /stundenplan, /mitgliederbereich,
+ *      /preise, /faq): jeder Text bei 320, 390 und 430 px.
+ *   I  /coaches: die Instagram- und TikTok-Symbole erreichen als
+ *      Bedienelement 3:1 gegen ihren Grund (WCAG 1.4.11).
+ *   J  Kleine Schrift auf Fotos (Nummer ueber dem Kurstitel auf /kurse,
+ *      Angaben im Coachfoto auf /coaches): gemessen gegen die echten
+ *      Bildpunkte hinter der Schrift, nicht gegen eine Farbe.
  *
  * AUSGENOMMEN
- * Text, der auf einem Foto steht (die Programmkarten, der Hero). Dort
- * entscheidet das Bild, nicht die Farbe darunter; das wird per Auge
- * geprueft, nicht hier.
+ * Text, der auf einem Foto steht (die Programmkarten der Startseite, der
+ * Hero), in A und H. Dort entscheidet das Bild, nicht die Farbe darunter;
+ * wo es kleine Schrift ist, misst J die Bildpunkte.
+ * Abgeschaltete Knoepfe ([disabled]): WCAG nimmt inaktive Bedienelemente
+ * aus. Das betrifft den Knopf "Einwilligungsdialog wird geladen", der im
+ * Test stehen bleibt, weil Cookiebot hier nicht laedt.
  */
 import {
   chromiumHolen, wurzelBestimmen, serverStarten, zaehler,
@@ -74,7 +86,7 @@ function messen(bereich) {
   const lum = ({ r, g, b }) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
   const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
   const mix = (t, u) => ({ r: t.r * t.a + u.r * (1 - t.a), g: t.g * t.a + u.g * (1 - t.a), b: t.b * t.a + u.b * (1 - t.a), a: 1 });
-  const AUF_FOTO = '.disc-panel, .hero, #hero, .vfacade, .dna-visual';
+  const AUF_FOTO = '.disc-panel, .hero, #hero, .vfacade, .dna-visual, .coach-full-photo';
   function sichtbar(el) {
     let deck = 1;
     for (let e = el; e && e !== document.documentElement; e = e.parentElement) {
@@ -121,6 +133,7 @@ function messen(bereich) {
     if (gesehen.has(el)) continue;
     gesehen.add(el);
     if (el.closest('script, style, noscript, [aria-hidden="true"], #booking-modal, #family-modal, .slot-modal, ' + AUF_FOTO)) continue;
+    if (el.closest('[disabled]')) continue;
     if (!sichtbar(el)) continue;
     const bg = grund(el);
     if (!bg) continue;
@@ -147,16 +160,11 @@ for (const breite of [320, 390, 430]) {
 /* Der Footer auf jeder Seite, die ihn hat. Die drei Premium-Seiten
    (index, probetraining, mitglied-werden) bekommen ihre Footerfarben aus
    premium.css, alle anderen aus style.css und den Inline-Stilen.
-
-   AUSGENOMMEN: /mitgliederbereich. Die Seite hat einen eigenen, anders
-   gebauten Footer, der nicht Teil des Audits war. Er liegt beim Inhaber
-   zur Entscheidung (gemessen 7.11.2026: 8 Stellen unter AA, schwaechste
-   1,58:1). Wird er behoben, die Ausnahme hier streichen. */
-const FOOTER_OFFEN = new Set(['mitgliederbereich.html']);
+   /mitgliederbereich hat einen eigenen Footer (.mw-footer); bis zum
+   7.11.2026 war er hier ausgenommen (schwaechste Stelle 1,58:1). */
 {
   const seiten = (await readdir(wurzel)).filter((d) => d.endsWith('.html')).sort();
   for (const d of seiten) {
-    if (FOOTER_OFFEN.has(d)) continue;
     const pfad = d === 'index.html' ? '' : d.replace(/\.html$/, '');
     const { ctx, page } = await laden(pfad);
     const hat = await page.evaluate(() => !!document.querySelector('footer'));
@@ -164,6 +172,102 @@ const FOOTER_OFFEN = new Set(['mitgliederbereich.html']);
       const raus = await page.evaluate(messen, 'footer');
       pruef(`A  /${pfad}: Footer erreicht WCAG AA`, raus.length === 0,
             raus.length ? '\n     ' + raus.join('\n     ') : '');
+    }
+    await ctx.close();
+  }
+}
+
+/* ─── H  Seiten ausserhalb der Premium-Ebene, ganze Seite ───────── */
+/* ─── I  Social-Symbole auf /coaches ─────────────────────────────── */
+/* ─── J  Kleine Schrift auf Fotos, gegen die Bildpunkte ──────────── */
+
+/* Kontrast eines Symbols (Bedienelement, kein Text): seine Farbe gegen
+   den ersten deckenden Grund. Soll 3:1. */
+function symbolKontrast(sel) {
+  const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 }; };
+  const lum = ({ r, g, b }) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+  const mix = (t, u) => ({ r: t.r * t.a + u.r * (1 - t.a), g: t.g * t.a + u.g * (1 - t.a), b: t.b * t.a + u.b * (1 - t.a), a: 1 });
+  return [...document.querySelectorAll(sel)].filter((a) => a.getBoundingClientRect().width > 0).map((a) => {
+    let bg = null;
+    for (let e = a; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if (c.a >= 1) { bg = c; break; } }
+    bg = bg || { r: 255, g: 255, b: 255, a: 1 };
+    const fg = mix(parse(getComputedStyle(a.querySelector('svg') || a).color), bg);
+    const x = lum(fg), y = lum(bg);
+    return { name: a.getAttribute('aria-label'), r: (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05) };
+  });
+}
+
+/* Misst Schrift auf einem Foto: Schrift kurz unsichtbar machen, die Flaeche
+   hinter ihr abfotografieren und jeden Bildpunkt gegen die Schriftfarbe
+   rechnen. Massgeblich ist der Bildpunkt beim 95. Perzentil der Helligkeit:
+   einzelne Glanzlichter zaehlen nicht, eine helle Bildzone schon. */
+async function aufFotoMessen(page, el) {
+  await el.evaluate((e) => e.scrollIntoView({ block: 'center', inline: 'center' }));
+  await page.waitForTimeout(500);
+  const farbe = await el.evaluate((e) => {
+    const s = getComputedStyle(e);
+    const farbe = s.color;
+    let d = 1;
+    for (let x = e; x && x !== document.documentElement; x = x.parentElement) d *= Number(getComputedStyle(x).opacity);
+    e.dataset.vorher = e.style.cssText;
+    e.style.setProperty('color', 'transparent', 'important');
+    e.style.setProperty('text-shadow', 'none', 'important');
+    return { farbe, deck: d };
+  });
+  await page.waitForTimeout(50);
+  const bild = (await el.screenshot()).toString('base64');
+  await el.evaluate((e) => { e.style.cssText = e.dataset.vorher; delete e.dataset.vorher; });
+  return page.evaluate(async ({ bild, farbe }) => {
+    const img = new Image();
+    img.src = 'data:image/png;base64,' + bild;
+    await img.decode();
+    const c = document.createElement('canvas');
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d');
+    g.drawImage(img, 0, 0);
+    const px = g.getImageData(0, 0, c.width, c.height).data;
+    const m = farbe.farbe.match(/rgba?\(([^)]+)\)/)[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+    const a = (m.length > 3 ? m[3] : 1) * farbe.deck;
+    const lin = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+    const lum = (r, gg, b) => 0.2126 * lin(r) + 0.7152 * lin(gg) + 0.0722 * lin(b);
+    const werte = [];
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const fr = m[0] * a + r * (1 - a), fg = m[1] * a + gg * (1 - a), fb = m[2] * a + b * (1 - a);
+      const x = lum(fr, fg, fb), y = lum(r, gg, b);
+      werte.push({ hell: y, r: (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05) });
+    }
+    werte.sort((p, q) => p.hell - q.hell);
+    return werte[Math.min(werte.length - 1, Math.floor(werte.length * 0.95))].r;
+  }, { bild, farbe });
+}
+
+const AUSSERHALB_PREMIUM = ['about', 'coaches', 'kurse', 'stundenplan', 'mitgliederbereich', 'preise', 'faq'];
+for (const pfad of AUSSERHALB_PREMIUM) {
+  for (const breite of [320, 390, 430]) {
+    const { ctx, page } = await laden(pfad, { viewport: { width: breite, height: 844 } });
+    const raus = await page.evaluate(messen, 'body');
+    pruef(`H  /${pfad} ${breite}px: jeder Text auf Farbgrund erreicht WCAG AA`,
+          raus.length === 0, raus.length ? '\n     ' + raus.join('\n     ') : '');
+
+    if (pfad === 'coaches') {
+      const sym = await page.evaluate(symbolKontrast, '.coach-social-link');
+      const schwach = sym.filter((s) => s.r < 3);
+      pruef(`I  /coaches ${breite}px: ${sym.length} Social-Symbole erreichen 3:1`
+            + (sym.length ? ` (schwaechstes ${Math.min(...sym.map((s) => s.r)).toFixed(2)}:1)` : ''),
+            sym.length >= 5 && schwach.length === 0,
+            schwach.map((s) => `${s.name} ${s.r.toFixed(2)}:1`).join(', '));
+    }
+
+    const fotoSel = { kurse: '.carousel-card__num', coaches: '.coach-full-cred' }[pfad];
+    if (fotoSel) {
+      const els = await page.locator(fotoSel).all();
+      const werte = [];
+      for (const el of els) if (await el.isVisible()) werte.push(await aufFotoMessen(page, el));
+      const min = werte.length ? Math.min(...werte) : 0;
+      pruef(`J  /${pfad} ${breite}px: ${werte.length}x ${fotoSel} auf dem Foto erreicht 4,5:1`
+            + ` (schwaechste ${min.toFixed(2)}:1)`, werte.length > 0 && min >= 4.5,
+            werte.map((w) => w.toFixed(2)).join(' '));
     }
     await ctx.close();
   }
